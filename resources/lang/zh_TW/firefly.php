@@ -844,14 +844,9 @@ return [
     'import_complete_text'             => '匯入程序已準備妥當。你已完成所有設定。請下載設定檔，當你的匯入出現問題時它將幫上忙。若要執行匯入程序，你可以在您的伺服器上執行以下命令，或運行網頁導入程序。根據您的配置，在伺服器上執行命令或會給你更多的資訊。',
     'import_download_config'           => 'Download configuration',
     'import_start_import'              => '開始匯入',
-    'import_intro_beta'                => 'Firefly III 的匯入功能依然在測試階段。很多 Firefly III 的用戶已經成功使用這個功能匯入不同的檔案。儘管這個匯入功能的每個部分都能夠正常運作（我說真的），但是整個功能或者會有點問題。如果你的檔案不能匯入到 Firefly 內，請閱讀<a href="https://github.com/JC5/firefly-iii/wiki/Submit-issues-with-sensitive-data-in-them">這個維基頁面</a>，以方便我修復你所遇到的問題。',
     'import_data'                      => '匯入資料',
     'import_data_full'                 => '匯入資料到 Firefly III',
     'import'                           => '匯入',
-    'import_intro_what_it_does'        => 'This page allows you to import data into Firefly III. To do so, export data from your bank, or from another financial management system. Upload that file here. Firefly III will convert the data. You need to give it some directions. Please select a file and follow the instructions.',
-    'import_intro_import_conf_title'   => 'Import "configuration"',
-    'import_intro_beta_warning'        => 'Warning',
-    'import_intro_import_conf_text'    => 'As you will discover over the next few pages, this import routine has a lot of settings. These settings are mainly dependent on the bank (or financial management software) your file comes from. There is a good chance somebody else already imported such a file and has shared their <em>configuration file</em>. Please visit the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong> to see if there already is a configuration available for your bank or system. If there is, you should download this configuration file and upload it here as well. It will save you a lot of time!',
     'import_file_help'                 => 'Select your file',
     'import_status_settings_complete'  => '匯入已準備妥當，可以開始。',
     'import_status_import_complete'    => '匯入已完成。',
@@ -867,11 +862,9 @@ return [
     'import_double'                    => '行 #:row： 這行曾被匯入過，並已儲存在<a href=":link">:description</a>。',
     'import_finished_all'              => '匯入已完成。請檢查下列的結果。',
     'import_with_key'                  => '以鍵 \':key\' 作匯入',
-
-    'import_share_configuration' => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
-
-    'import_finished_report' => '匯入已完成。請留意在這行上面的錯誤記錄。這次所匯入的所有交易都已經進行標記，你可以在下面查看。 ',
-    'import_finished_link'   => '匯入成功的所有交易都可以在標籤 <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> 內找到。',
-
-
+    'import_share_configuration'       => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
+    'import_finished_report'           => '匯入已完成。請留意在這行上面的錯誤記錄。這次所匯入的所有交易都已經進行標記，你可以在下面查看。 ',
+    'import_finished_link'             => '匯入成功的所有交易都可以在標籤 <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> 內找到。',
+    'need_at_least_one_account'        => 'You need at least one asset account to be able to create piggy banks',
+    'see_help_top_right'               => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
 ];

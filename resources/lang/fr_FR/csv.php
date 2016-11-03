@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => 'Configurer l\'import',
     'import_configure_intro' => 'Il y a des options pour l\'import CSV. Veuillez indiquer si votre fichier CSV contient les en-têtes dans la première colonne, et quel est le format de la date de votre champs date. Cela peut nécessiter quelques essais. Le délimiteur de champ est généralement un «, », mais pourrait également être un « ; ». Cochez cette case avec soin.',
-    'import_configure_form'  => 'Formulaire',
+    'import_configure_form'  => 'Basic CSV import options',
     'header_help'            => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes',
     'date_help'              => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser les formats comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> cette page</a>. La valeur par défaut va extraire les dates qui ressemblent à ceci: :dateExample.',
     'delimiter_help'         => 'Choisissez le délimiteur de champ qui est utilisé dans votre fichier d’entrée. Si vous n’êtes pas certain, la virgule est l’option la plus sûre.',
@@ -24,7 +24,6 @@ return [
 
     // roles
     'column_roles_title'     => 'Définir le rôle des colonnes',
-    'column_roles_text'      => '<p>Firefly III cannot guess what data each column contains. You must tell Firefly which kinds of data to expect. The example data can guide you into picking the correct type from the dropdown. If a column cannot be matched to a useful data type, please let me know <a href="https://github.com/JC5/firefly-iii/issues/new">by creating an issue</a>.</p><p>Some values in your CSV file, such as account names or categories, may already exist in your Firefly III database. If you select "map these values" Firefly will not attempt to search for matching values itself but allow you to match the CSV values against the values in your database. This allows you to fine-tune the import.</p>',
     'column_roles_table'     => 'Tableau',
     'column_name'            => 'Nom de colonne',
     'column_example'         => 'Exemple',
