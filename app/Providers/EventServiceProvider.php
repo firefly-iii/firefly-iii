@@ -70,7 +70,6 @@ class EventServiceProvider extends ServiceProvider
             'FireflyIII\Events\UpdatedTransactionJournal' => // is a Transaction Journal related event.
                 [
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
-                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@connectToPiggyBank',
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
                 ],
 

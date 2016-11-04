@@ -83,11 +83,7 @@
                         <!-- TAGS -->
                         {{ ExpandedForm.text('tags') }}
 
-                        <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
-                        {% if what == 'transfer' and piggyBankList|length > 0 %}
-                            {{ ExpandedForm.select('piggy_bank_id',piggyBankList,data['piggy_bank_id']) }}
-                        {% endif %}
-
+                        {# NO PIGGY BANK #}
                     </div>
                 </div>
 

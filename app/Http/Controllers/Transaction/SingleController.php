@@ -171,7 +171,6 @@ class SingleController extends Controller
 
         $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
-        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($this->piggyBanks->getPiggyBanks());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
@@ -188,7 +187,6 @@ class SingleController extends Controller
             'process_date'             => TransactionJournal::dateAsString($journal, 'process_date'),
             'category'                 => TransactionJournal::categoryAsString($journal),
             'budget_id'                => TransactionJournal::budgetId($journal),
-            'piggy_bank_id'            => TransactionJournal::piggyBankId($journal),
             'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
             'source_account_id'        => $sourceAccounts->first()->id,
             'source_account_name'      => $sourceAccounts->first()->name,
@@ -225,7 +223,7 @@ class SingleController extends Controller
 
         return view(
             'transactions.edit',
-            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle')
+            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'subTitle')
         )->with('data', $preFilled);
     }
 
