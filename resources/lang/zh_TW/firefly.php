@@ -381,7 +381,7 @@ return [
     'convert_please_set_expense_destination'     => 'Please pick the expense account where the money will go to.',
     'convert_please_set_asset_source'            => 'Please pick the asset account where the money will come from.',
     'convert_explanation_withdrawal_deposit'     => 'If you convert this withdrawal into a deposit, :amount will be deposited into <a href=":sourceRoute">:sourceName</a> instead of taken from it.',
-    'convert_explanation_withdrawal_transfer'    => 'If you convert this withdrawal into a transfer, :amount will be transferred from <a href=":sourceRoute">:sourceName</a> to a new asset account, instead of being paid to <a href=":destinationRoute">:destinationName</a>.',
+    'convert_explanation_withdrawal_transfer'    => '如果你把這個提款（支出）轉換為轉帳， :amount 會從 <a href=":sourceRoute">:sourceName</a> 轉帳到新的資產帳戶，而不會付款到 <a href=":destinationRoute">:destinationName</a> 。',
     'convert_explanation_deposit_withdrawal'     => 'If you convert this deposit into a withdrawal, :amount will be removed from <a href=":destinationRoute">:destinationName</a> instead of added to it.',
     'convert_explanation_deposit_transfer'       => 'If you convert this deposit into a transfer, :amount will be transferred from an asset account of your choice into <a href=":destinationRoute">:destinationName</a>.',
     'convert_explanation_transfer_withdrawal'    => 'If you convert this transfer into a withdrawal, :amount will go from <a href=":sourceRoute">:sourceName</a> to a new destination as an expense, instead of to <a href=":destinationRoute">:destinationName</a> as a transfer.',
