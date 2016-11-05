@@ -22,7 +22,7 @@ return [
     |
     */
 
-    'failed'   => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed'   => '帳號或密碼錯誤。',
+    'throttle' => '登入失敗次數過多，請等待 :seconds 秒後再試。',
 
 ];
