@@ -14,10 +14,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Session;
@@ -200,10 +202,15 @@ class BillController extends Controller
         $year           = $date->year;
         $page           = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
-        $journals       = $repository->getJournals($bill, $page, $pageSize);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
+
+        // use collector:
+        $collector  = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setPage($page)->setLimit($pageSize);
+        $journals   = $collector->getPaginatedJournals();
         $journals->setPath('/bills/show/' . $bill->id);
+
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;
         $subTitle                = e($bill->name);

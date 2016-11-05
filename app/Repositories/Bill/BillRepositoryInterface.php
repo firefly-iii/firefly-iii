@@ -94,16 +94,6 @@ interface BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @param int  $page
-     * @param int  $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator;
-
-    /**
-     * @param Bill $bill
-     *
      * @return string
      */
     public function getOverallAverage(Bill $bill): string;

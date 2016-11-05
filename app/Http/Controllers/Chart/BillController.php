@@ -15,11 +15,13 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Support\Collection;
 use Response;
 
 /**
@@ -64,12 +66,11 @@ class BillController extends Controller
     /**
      * Shows the overview for a bill. The min/max amount and matched journals.
      *
-     * @param BillRepositoryInterface $repository
-     * @param Bill                    $bill
+     * @param Bill $bill
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function single(BillRepositoryInterface $repository, Bill $bill)
+    public function single(Bill $bill)
     {
         $cache = new CacheProperties;
         $cache->addProperty('single');
@@ -80,12 +81,14 @@ class BillController extends Controller
         }
 
         // get first transaction or today for start:
-        $results = $repository->getJournals($bill, 1, 200);
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]));
+        $results = $collector->getJournals();
 
         // resort:
         $results = $results->sortBy(
-            function (TransactionJournal $journal) {
-                return $journal->date->format('U');
+            function (Transaction $transaction) {
+                return $transaction->date->format('U');
             }
         );
 

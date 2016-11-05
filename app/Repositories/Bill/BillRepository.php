@@ -253,30 +253,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * This method also returns the amount of the journal in "journalAmount"
-     * for easy access.
-     *
-     * @param Bill $bill
-     *
-     * @param int  $page
-     * @param int  $pageSize
-     *
-     * @return LengthAwarePaginator|Collection
-     */
-    public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator
-    {
-        $offset    = ($page - 1) * $pageSize;
-        $query     = $bill->transactionJournals()
-                          ->expanded()
-                          ->sortCorrectly();
-        $count     = $query->count();
-        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
-        $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
-
-        return $paginator;
-    }
-
-    /**
      * @param Bill $bill
      *
      * @return string
