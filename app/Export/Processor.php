@@ -15,7 +15,7 @@ namespace FireflyIII\Export;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Collector\AttachmentCollector;
-use FireflyIII\Export\Collector\JournalCollector;
+use FireflyIII\Export\Collector\JournalExportCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
@@ -93,8 +93,8 @@ class Processor
      */
     public function collectJournals(): bool
     {
-        /** @var JournalCollector $collector */
-        $collector = app(JournalCollector::class, [$this->job]);
+        /** @var JournalExportCollector $collector */
+        $collector = app(JournalExportCollector::class, [$this->job]);
         $collector->setDates($this->settings['startDate'], $this->settings['endDate']);
         $collector->setAccounts($this->settings['accounts']);
         $collector->run();
