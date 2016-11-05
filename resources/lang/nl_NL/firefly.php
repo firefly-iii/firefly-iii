@@ -73,7 +73,7 @@ return [
     'user_id_is'                                 => 'Je gebruikersnummer is <strong>:user</strong>',
     'field_supports_markdown'                    => 'Dit veld ondersteunt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Als je meer hulp nodig hebt met Firefly III, <a href="https://github.com/JC5/firefly-iii/issues">open dan een ticket op Github</a>.',
-    'nothing_to_display'                         => 'There are no transactions to show you',
+    'nothing_to_display'                         => 'Er zijn hier geen transacties te zien',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
