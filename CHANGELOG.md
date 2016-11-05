@@ -6,13 +6,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New budget table for multi year report.
 
+
+
 ### Changed
 - Greatly expanded help pages and their function.
+- Built a new transaction collector, which I think was the idea of @roberthorlings originally.
+
 
 ### Fixed
 - #375, thanks to @schoentoon which made it impossible to resurrect currencies.
 - #370 thanks to @ksmolder
-
+- #378, thanks to @HomelessAvatar
 
 ## [4.1.5] - 2016-11-01
 ### Changed
