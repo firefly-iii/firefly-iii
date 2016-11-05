@@ -15,10 +15,12 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -175,7 +177,7 @@ class BudgetController extends Controller
             $allEntries = $allEntries->merge($collection);
 
         }
-        $entry = $this->spentInPeriodWithout($repository, $start, $end);
+        $entry = $this->spentInPeriodWithout($start, $end);
         $allEntries->push($entry);
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
@@ -319,19 +321,22 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
-    private function spentInPeriodWithout(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end):array
+    private function spentInPeriodWithout(Carbon $start, Carbon $end):array
     {
-        $list = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end); // budget
-        $sum  = '0';
-        /** @var TransactionJournal $entry */
-        foreach ($list as $entry) {
-            $sum = bcadd(TransactionJournal::amount($entry), $sum);
+        // collector
+        $collector = new JournalCollector(auth()->user());
+        $types = [TransactionType::WITHDRAWAL];
+        $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
+        $journals = $collector->getJournals();
+        $sum      = '0';
+        /** @var Transaction $entry */
+        foreach ($journals as $entry) {
+            $sum = bcadd($entry->transaction_amount, $sum);
         }
 
         return [trans('firefly.no_budget'), '0', '0', $sum, '0', '0'];

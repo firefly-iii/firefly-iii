@@ -232,12 +232,7 @@ class JournalCollector
      */
     public function setBudget(Budget $budget): JournalCollector
     {
-        if (!$this->joinedBudget) {
-            // join some extra tables:
-            $this->joinedBudget = true;
-            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
-        }
+        $this->joinBudgetTables();
 
         $this->query->where(
             function (EloquentBuilder $q) use ($budget) {
@@ -256,12 +251,7 @@ class JournalCollector
      */
     public function setCategory(Category $category): JournalCollector
     {
-        if (!$this->joinedCategory) {
-            // join some extra tables:
-            $this->joinedCategory = true;
-            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
-        }
+        $this->joinCategoryTables();
 
         $this->query->where(
             function (EloquentBuilder $q) use ($category) {
@@ -357,14 +347,26 @@ class JournalCollector
     /**
      * @return JournalCollector
      */
+    public function withoutBudget(): JournalCollector
+    {
+        $this->joinBudgetTables();
+
+        $this->query->where(
+            function (EloquentBuilder $q) {
+                $q->whereNull('budget_transaction.budget_id');
+                $q->whereNull('budget_transaction_journal.budget_id');
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollector
+     */
     public function withoutCategory(): JournalCollector
     {
-        if (!$this->joinedCategory) {
-            // join some extra tables:
-            $this->joinedCategory = true;
-            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
-        }
+        $this->joinCategoryTables();
 
         $this->query->where(
             function (EloquentBuilder $q) {
@@ -374,6 +376,32 @@ class JournalCollector
         );
 
         return $this;
+    }
+
+    /**
+     *
+     */
+    private function joinBudgetTables()
+    {
+        if (!$this->joinedBudget) {
+            // join some extra tables:
+            $this->joinedBudget = true;
+            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
+        }
+    }
+
+    /**
+     *
+     */
+    private function joinCategoryTables()
+    {
+        if (!$this->joinedCategory) {
+            // join some extra tables:
+            $this->joinedCategory = true;
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+        }
     }
 
     /**

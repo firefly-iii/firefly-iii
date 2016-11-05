@@ -90,15 +90,6 @@ interface BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection;
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): Collection;
-
-    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start

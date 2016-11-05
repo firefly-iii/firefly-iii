@@ -98,6 +98,7 @@ class ReportController extends Controller
         $repository = app(AccountRepositoryInterface::class);
 
         $account = $repository->find(intval($attributes['accountId']));
+        $types   = [TransactionType::WITHDRAWAL];
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
@@ -111,11 +112,25 @@ class ReportController extends Controller
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
                 $budget->name = strval(trans('firefly.no_budget'));
-                $journals     = $budgetRepository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                // collector
+                $collector = new JournalCollector(auth()->user());
+                $collector
+                    ->setAccounts(new Collection([$account]))
+                    ->setTypes($types)
+                    ->setRange($attributes['startDate'], $attributes['endDate'])
+                    ->withoutBudget();
+                $journals = $collector->getJournals();
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
                 // journals no budget, not corrected by a tag.
-                $journals     = $budgetRepository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+                $collector = new JournalCollector(auth()->user());
+                $collector
+                    ->setAccounts(new Collection([$account]))
+                    ->setTypes($types)
+                    ->setRange($attributes['startDate'], $attributes['endDate'])
+                    ->withoutBudget();
+                $journals = $collector->getJournals();
+
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
                 $journals     = $journals->filter(
                     function (TransactionJournal $journal) {
@@ -152,22 +167,21 @@ class ReportController extends Controller
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $budget     = $repository->find(intval($attributes['budgetId']));
+        $collector  = new JournalCollector(auth()->user());
+
+        $collector
+            ->setAccounts($attributes['accounts'])
+            ->setRange($attributes['startDate'], $attributes['endDate']);
+
         if (is_null($budget->id)) {
-            $journals = $repository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+            $collector->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
         }
         if (!is_null($budget->id)) {
             // get all expenses in budget in period:
-            $collector  = new JournalCollector(auth()->user());
-            $collector
-                ->setAccounts($attributes['accounts'])
-                ->setRange($attributes['startDate'], $attributes['endDate'])
-                ->setBudget($budget);
-            $journals   = $collector->getJournals();
-
-
+            $collector->setBudget($budget);
         }
-
-        $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
+        $journals = $collector->getJournals();
+        $view     = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
 
         return $view;
     }
