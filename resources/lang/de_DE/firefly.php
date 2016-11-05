@@ -73,7 +73,7 @@ return [
     'user_id_is'                                 => 'Your user id is <strong>:user</strong>',
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticker on Github</a>.',
-
+    'nothing_to_display'                         => 'There are no transactions to show you',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
