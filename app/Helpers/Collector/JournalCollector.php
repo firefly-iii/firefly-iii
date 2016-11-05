@@ -102,6 +102,7 @@ class JournalCollector
         $countQuery->getQuery()->offset     = null;
         $countQuery->getQuery()->unionLimit = null;
         $countQuery->getQuery()->groups     = null;
+        $countQuery->getQuery()->orders     = null;
         $countQuery->groupBy('accounts.user_id');
         $this->count = $countQuery->count();
 
