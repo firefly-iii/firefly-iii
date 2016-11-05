@@ -14,13 +14,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
 use Navigation;
@@ -180,16 +180,17 @@ class CategoryController extends Controller
         $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
         /** @var Carbon $end */
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $accounts     = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
-        $count        = $set->count();
-        $subSet       = $set->splice($offset, $pageSize);
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
-        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+
+        // use journal collector
+        $collector = new JournalCollector(auth()->user());
+        $collector->setPage($page)->setLimit($pageSize)->setAccounts($accounts)->setRange($start, $end)->setCategory($category);
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
         // oldest transaction in category:
@@ -218,7 +219,7 @@ class CategoryController extends Controller
 
 
         $categoryCollection = new Collection([$category]);
-        $accounts           = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
@@ -233,7 +234,7 @@ class CategoryController extends Controller
         }
         $cache->store($entries);
 
-        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -244,7 +245,7 @@ class CategoryController extends Controller
      *
      * @return View
      */
-    public function showWithDate(CRI $repository, Category $category, string $date)
+    public function showWithDate(AccountRepositoryInterface $repository, Category $category, string $date)
     {
         $carbon       = new Carbon($date);
         $range        = Preferences::get('viewRange', '1M')->data;
@@ -253,13 +254,15 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
-        $count        = $set->count();
-        $subSet       = $set->splice($offset, $pageSize);
-        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $accounts     = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
+        // new collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setPage($page)->setLimit($pageSize)->setAccounts($accounts)->setRange($start, $end)->setCategory($category);
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
+
 
         return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
     }

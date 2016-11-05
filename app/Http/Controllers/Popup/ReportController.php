@@ -17,6 +17,7 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -174,10 +175,14 @@ class ReportController extends Controller
         $repository = app(CategoryRepositoryInterface::class);
         $category   = $repository->find(intval($attributes['categoryId']));
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals   = $repository->journalsInPeriod(
-            new Collection([$category]), $attributes['accounts'], $types, $attributes['startDate'], $attributes['endDate']
-        );
-        $view       = view('popup.report.category-entry', compact('journals', 'category'))->render();
+        // get journal collector instead:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts($attributes['accounts'])->setTypes($types)
+                  ->setRange($attributes['startDate'], $attributes['endDate'])
+                  ->setCategory($category);
+        $journals = $collector->getJournals(); // 7193
+
+        $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
         return $view;
     }

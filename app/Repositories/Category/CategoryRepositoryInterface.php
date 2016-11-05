@@ -85,26 +85,6 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
-     * @param Category $category
-     * @param int      $page
-     * @param int      $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(Category $category, int $page, int $pageSize): LengthAwarePaginator;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriod(Collection $categories, Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
-
-    /**
      * @param Collection $accounts
      * @param array      $types
      * @param Carbon     $start

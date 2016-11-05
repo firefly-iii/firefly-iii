@@ -7,6 +7,7 @@ namespace FireflyIII\Helpers\Collector;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -51,6 +52,8 @@ class JournalCollector
             'account_types.type as account_type',
 
         ];
+    /** @var  bool */
+    private $joinedCategory = false;
     /** @var  int */
     private $limit;
     /** @var  int */
@@ -221,6 +224,46 @@ class JournalCollector
     }
 
     /**
+     * @param Category $category
+     *
+     * @return JournalCollector
+     */
+    public function setCategory(Category $category): JournalCollector
+    {
+        if (!$this->joinedCategory) {
+            // join some extra tables:
+            $this->joinedCategory = true;
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+        }
+
+        $this->query->where(
+            function (EloquentBuilder $q) use ($category) {
+                $q->where('category_transaction.category_id', $category->id);
+                $q->orWhere('category_transaction_journal.category_id', $category->id);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param Collection $accounts
+     *
+     * @return JournalCollector
+     */
+    public function setDestinationAccounts(Collection $accounts): JournalCollector
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('transactions.account_id', $accountIds);
+            $this->query->where('transactions.amount', '>', 0);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param int $limit
      *
      * @return JournalCollector
@@ -282,22 +325,6 @@ class JournalCollector
         if ($start <= $end) {
             $this->query->where('transaction_journals.date', '>=', $start->format('Y-m-d'));
             $this->query->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Collection $accounts
-     *
-     * @return JournalCollector
-     */
-    public function setDestinationAccounts(Collection $accounts): JournalCollector
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereIn('transactions.account_id', $accountIds);
-            $this->query->where('transactions.amount', '>', 0);
         }
 
         return $this;
