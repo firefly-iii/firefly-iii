@@ -144,7 +144,7 @@ class Transaction extends Twig_Extension
             'splitJournalIndicator', function (int $journalId) {
             $count = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
             if ($count > 2) {
-                return '<i class="fa fa-fw fa-share-alt-square" aria-hidden="true"></i>';
+                return '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
             }
 
             return '';
