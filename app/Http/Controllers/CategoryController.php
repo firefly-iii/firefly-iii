@@ -240,10 +240,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                               $repository
-     * @param Category                          $category
-     *
-     * @param                                   $date
+     * @param Category $category
+     * @param          $date
      *
      * @return View
      */

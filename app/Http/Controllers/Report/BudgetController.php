@@ -33,6 +33,8 @@ class BudgetController extends Controller
      * @param Carbon                      $start
      * @param Carbon                      $end
      * @param Collection                  $accounts
+     *
+     * @return mixed|string
      */
     public function budgetMultiYear(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
     {

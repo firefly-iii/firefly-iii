@@ -275,13 +275,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface $tasker
      * @param Account                $account
      * @param string                 $date
      *
      * @return View
      */
-    public function showWithDate(AccountTaskerInterface $tasker, Account $account, string $date)
+    public function showWithDate(Account $account, string $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;

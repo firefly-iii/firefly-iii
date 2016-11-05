@@ -46,8 +46,6 @@ class Note extends Model
 
 
     /**
-     * @param $value
-     *
      * @return string
      */
     public function getMarkdownAttribute(): string

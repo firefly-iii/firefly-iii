@@ -57,19 +57,6 @@ class JournalCollector
         ];
     /** @var  bool */
     private $filterTransfers = false;
-    /** @var array */
-    private $group
-        = [
-            'transaction_journals.id',
-            'transaction_journals.description',
-            'firefly-iii.transaction_journals.date',
-            'transaction_journals.encrypted',
-            'transaction_currencies.code',
-            'transaction_types.type',
-            'transaction_journals.bill_id',
-            'bills.name',
-            'transactions.amount',
-        ];
     /** @var  bool */
     private $joinedBudget = false;
     /** @var  bool */
@@ -285,6 +272,8 @@ class JournalCollector
     public function setOffset(int $offset): JournalCollector
     {
         $this->offset = $offset;
+
+        return $this;
     }
 
     /**

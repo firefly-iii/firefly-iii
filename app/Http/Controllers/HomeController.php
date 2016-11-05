@@ -117,7 +117,7 @@ class HomeController extends Controller
     /**
      * @param ARI $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function index(ARI $repository)
     {

@@ -29,7 +29,8 @@ interface JournalRepositoryInterface
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
-     * @param array              $data
+     * @param Account            $source
+     * @param Account            $destination
      *
      * @return MessageBag
      */

@@ -45,8 +45,6 @@ class Processor
     public $job;
     /** @var array */
     public $settings;
-    /** @var  \FireflyIII\Export\ConfigurationFile */
-    private $configurationMaker;
     /** @var  Collection */
     private $exportEntries;
     /** @var  Collection */
