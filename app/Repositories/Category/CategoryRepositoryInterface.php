@@ -85,16 +85,6 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriodWithoutCategory(Collection $accounts, array $types, Carbon $start, Carbon $end) : Collection;
-
-    /**
      * Return most recent transaction(journal) date.
      *
      * @param Category   $category

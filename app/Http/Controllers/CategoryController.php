@@ -147,28 +147,23 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI $repository
-     *
      * @return View
      */
-    public function noCategory(CRI $repository)
+    public function noCategory()
     {
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->startOfMonth());
+        $end = session('end', Carbon::now()->startOfMonth());
 
         // new collector:
         $collector = new JournalCollector(auth()->user());
         $collector->setAllAssetAccounts()->setRange($start, $end)->withoutCategory();//->groupJournals();
         $journals = $collector->getJournals();
-//        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end); // category
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
-
-
 
         return view('categories.no-category', compact('journals', 'subTitle'));
     }

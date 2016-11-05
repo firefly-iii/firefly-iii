@@ -175,67 +175,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Collection $accounts
-     * @param  array     $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriodWithoutCategory(Collection $accounts, array $types, Carbon $start, Carbon $end) : Collection
-    {
-        /** @var Collection $set */
-        $query = $this->user
-            ->transactionJournals();
-        if (count($types) > 0) {
-            $query->transactionTypes($types);
-        }
-
-        $query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-              ->whereNull('category_transaction_journal.id')
-              ->before($end)
-              ->after($start);
-
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
-            $query->whereIn('t.account_id', $accountIds);
-        }
-
-        $set = $query->get(['transaction_journals.*']);
-
-        if ($set->count() == 0) {
-            return new Collection;
-        }
-
-        // grab all the transactions from this set.
-        // take only the journals with transactions that all have no category.
-        // select transactions left join journals where id in this set
-        // and left join transaction-category where null category
-        $journalIds  = $set->pluck('id')->toArray();
-        $secondQuery = $this->user->transactions()
-                                  ->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id')
-                                  ->whereNull('category_transaction.id')
-                                  ->whereIn('transaction_journals.id', $journalIds);
-
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $secondQuery->whereIn('transactions.account_id', $accountIds);
-        }
-
-        // this second set REALLY doesn't have any categories.
-        $secondSet = $secondQuery->get(['transactions.transaction_journal_id']);
-        $allIds    = $secondSet->pluck('transaction_journal_id')->toArray();
-        $return    = $this->user->transactionJournals()->sortCorrectly()->expanded()->whereIn('transaction_journals.id', $allIds)->get(
-            TransactionJournal::queryFields()
-        );
-
-        return $return;
-
-
-    }
-
-    /**
      * @param Category   $category
      * @param Collection $accounts
      *
