@@ -114,10 +114,6 @@ function displayAjaxPartial(data, holder) {
 
     // trigger list thing
     listLengthInitial();
-
-    // trigger thing for budgets:
-    $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
-
 }
 
 function failAjaxPartial(uri, holder) {

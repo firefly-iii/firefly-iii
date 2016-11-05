@@ -8,6 +8,9 @@ $(function () {
     drawChart();
 
     loadAjaxPartial('budgetOverview',budgetYearOverviewUri);
+
+    // trigger thing for budgets:
+    $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
 });
 
 function drawChart() {
