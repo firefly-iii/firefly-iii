@@ -16,6 +16,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -222,12 +223,12 @@ class AccountController extends Controller
         /** @var Carbon $end */
         $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $page     = intval(Input::get('page'));
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $offset   = ($page - 1) * $pageSize;
-        $set      = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
-        $count    = $set->count();
-        $subSet   = $set->splice($offset, $pageSize);
-        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+
+        // replace with journal collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id);
 
         // grouped other months thing:
@@ -290,12 +291,12 @@ class AccountController extends Controller
         $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
         $page     = intval(Input::get('page'));
         $page     = $page === 0 ? 1 : $page;
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $offset   = ($page - 1) * $pageSize;
-        $set      = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
-        $count    = $set->count();
-        $subSet   = $set->splice($offset, $pageSize);
-        $journals = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+
+        // replace with journal collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
         return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));

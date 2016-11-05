@@ -197,14 +197,14 @@ class ReportController extends Controller
      */
     private function expenseEntry(array $attributes): string
     {
-        /** @var AccountTaskerInterface $tasker */
-        $tasker = app(AccountTaskerInterface::class);
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
-        $account  = $repository->find(intval($attributes['accountId']));
-        $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $journals = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
+        $account   = $repository->find(intval($attributes['accountId']));
+        $types     = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
+        $journals = $collector->getJournals();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter for transfers and withdrawals TO the given $account
@@ -233,13 +233,13 @@ class ReportController extends Controller
      */
     private function incomeEntry(array $attributes): string
     {
-        /** @var AccountTaskerInterface $tasker */
-        $tasker = app(AccountTaskerInterface::class);
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
         $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $journals   = $tasker->getJournalsInPeriod(new Collection([$account]), $types, $attributes['startDate'], $attributes['endDate']);
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
+        $journals = $collector->getJournals();
         $report     = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter the set so the destinations outside of $attributes['accounts'] are not included.

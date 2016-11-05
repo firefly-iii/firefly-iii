@@ -54,7 +54,8 @@ class JournalCollector
             'accounts.encrypted as account_encrypted',
             'account_types.type as account_type',
         ];
-
+    /** @var  bool */
+    private $filterTransfers = false;
     /** @var array */
     private $group
         = [
@@ -68,7 +69,6 @@ class JournalCollector
             'bills.name',
             'transactions.amount',
         ];
-
     /** @var  bool */
     private $joinedCategory = false;
     /** @var  int */
@@ -127,15 +127,17 @@ class JournalCollector
         $set       = $this->query->get(array_values($this->fields));
 
         // filter out transfers:
-        $set = $set->filter(
-            function (Transaction $transaction) {
-                if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
-                    return $transaction;
-                }
+        if ($this->filterTransfers) {
+            $set = $set->filter(
+                function (Transaction $transaction) {
+                    if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
+                        return $transaction;
+                    }
 
-                return false;
-            }
-        );
+                    return false;
+                }
+            );
+        }
 
         // loop for decryption.
         $set->each(
@@ -177,6 +179,10 @@ class JournalCollector
             $this->query->whereIn('transactions.account_id', $accountIds);
         }
 
+        if ($accounts->count() > 1) {
+            $this->filterTransfers = true;
+        }
+
         return $this;
     }
 
@@ -191,6 +197,10 @@ class JournalCollector
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
+        }
+
+        if ($accounts->count() > 1) {
+            $this->filterTransfers = true;
         }
 
         return $this;

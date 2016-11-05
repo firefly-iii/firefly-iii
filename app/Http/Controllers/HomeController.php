@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use Artisan;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -116,11 +117,10 @@ class HomeController extends Controller
 
     /**
      * @param ARI                    $repository
-     * @param AccountTaskerInterface $tasker
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function index(ARI $repository, AccountTaskerInterface $tasker)
+    public function index(ARI $repository)
     {
 
         $types = config('firefly.accountTypesByIdentifier.asset');
@@ -144,8 +144,9 @@ class HomeController extends Controller
         $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
         foreach ($accounts as $account) {
-            $set = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
-            $set = $set->splice(0, 10);
+            $collector = new JournalCollector(auth()->user());
+            $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
+            $set = $collector->getJournals();
 
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];

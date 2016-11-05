@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -150,8 +151,6 @@ class ReportController extends Controller
      */
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        /** @var AccountTaskerInterface $tasker */
-        $tasker    = app(AccountTaskerInterface::class);
         $auditData = [];
         $dayBefore = clone $start;
         $dayBefore->subDay();
@@ -160,9 +159,11 @@ class ReportController extends Controller
             // balance the day before:
             $id               = $account->id;
             $dayBeforeBalance = Steam::balance($account, $dayBefore);
-            $journals         = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
-            $journals         = $journals->reverse();
-            $startBalance     = $dayBeforeBalance;
+            $collector        = new JournalCollector(auth()->user());
+            $collector->setAccounts(new Collection([$account]))->setRange($start, $end);
+            $journals     = $collector->getJournals();
+            $journals     = $journals->reverse();
+            $startBalance = $dayBeforeBalance;
 
 
             /** @var Transaction $journal */
@@ -244,7 +245,6 @@ class ReportController extends Controller
     {
         // need all budgets
         // need all years.
-
 
 
         // and some id's, joined:
