@@ -14,7 +14,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
@@ -49,21 +52,35 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request                $request
-     * @param JournalTaskerInterface $tasker
-     * @param string                 $what
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     * @param string                     $what
      *
      * @return View
      */
-    public function index(Request $request, JournalTaskerInterface $tasker, string $what)
+    public function index(Request $request, AccountRepositoryInterface $repository, string $what)
     {
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
-        $types        = config('firefly.transactionTypesByWhat.' . $what);
-        $subTitle     = trans('firefly.title_' . $what);
-        $page         = intval($request->get('page'));
-        $journals     = $tasker->getJournals($types, $page, $pageSize);
+        $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
+        $subTitleIcon  = config('firefly.transactionIconsByWhat.' . $what);
+        $types         = config('firefly.transactionTypesByWhat.' . $what);
+        $subTitle      = trans('firefly.title_' . $what);
+        $page          = intval($request->get('page'));
+        $assetAccounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $collector     = new JournalCollector(auth()->user());
+        $collector->setTypes($types)->setLimit($pageSize)->setPage($page);
 
+        // depending on the view, we filter the collector to grab the right stuff.
+        switch ($what) {
+            default:
+                $collector->setAccounts($assetAccounts);
+                break;
+            case 'transfer':
+            case 'transfers':
+                $collector->setDestinationAccounts($assetAccounts);
+                break;
+        }
+
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));

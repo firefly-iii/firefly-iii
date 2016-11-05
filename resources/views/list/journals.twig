@@ -1,5 +1,12 @@
 {{ journals.render|raw }}
 
+{% if journals.count == 0 %}
+<p>
+    <em>{{ 'nothing_to_display'|_ }}</em>
+</p>
+{% endif %}
+
+{% if journals.count > 0 %}
 <table class="table table-hover table-compressed {% if sorting %}sortable-table{% endif %}">
     <thead>
     <tr class="ignore">
@@ -130,3 +137,4 @@
     var edit_selected_txt = "{{ 'edit_selected'|_ }}";
     var delete_selected_txt = "{{ 'delete_selected'|_ }}";
 </script>
+{% endif %}
