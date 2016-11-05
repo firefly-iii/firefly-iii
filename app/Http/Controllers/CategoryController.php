@@ -157,13 +157,20 @@ class CategoryController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->startOfMonth());
-        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end); // category
+
+        // new collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setRange($start, $end)->withoutCategory();//->groupJournals();
+        $journals = $collector->getJournals();
+//        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end); // category
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
 
-        return view('categories.noCategory', compact('list', 'subTitle'));
+
+
+        return view('categories.no-category', compact('journals', 'subTitle'));
     }
 
     /**
@@ -189,7 +196,7 @@ class CategoryController extends Controller
 
         // use journal collector
         $collector = new JournalCollector(auth()->user());
-        $collector->setPage($page)->setLimit($pageSize)->setAccounts($accounts)->setRange($start, $end)->setCategory($category);
+        $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
@@ -245,7 +252,7 @@ class CategoryController extends Controller
      *
      * @return View
      */
-    public function showWithDate(AccountRepositoryInterface $repository, Category $category, string $date)
+    public function showWithDate(Category $category, string $date)
     {
         $carbon       = new Carbon($date);
         $range        = Preferences::get('viewRange', '1M')->data;
@@ -255,11 +262,10 @@ class CategoryController extends Controller
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $accounts     = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         // new collector:
         $collector = new JournalCollector(auth()->user());
-        $collector->setPage($page)->setLimit($pageSize)->setAccounts($accounts)->setRange($start, $end)->setCategory($category);
+        $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 

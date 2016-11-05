@@ -7,8 +7,11 @@ namespace FireflyIII\Helpers\Collector;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -50,8 +53,22 @@ class JournalCollector
             'accounts.name as account_name',
             'accounts.encrypted as account_encrypted',
             'account_types.type as account_type',
-
         ];
+
+    /** @var array */
+    private $group
+        = [
+            'transaction_journals.id',
+            'transaction_journals.description',
+            'firefly-iii.transaction_journals.date',
+            'transaction_journals.encrypted',
+            'transaction_currencies.code',
+            'transaction_types.type',
+            'transaction_journals.bill_id',
+            'bills.name',
+            'transactions.amount',
+        ];
+
     /** @var  bool */
     private $joinedCategory = false;
     /** @var  int */
@@ -107,77 +124,17 @@ class JournalCollector
     public function getJournals(): Collection
     {
         $this->run = true;
-        $set       = $this->query->get($this->fields);
+        $set       = $this->query->get(array_values($this->fields));
 
-        // loop for decryption.
-        $set->each(
+        // filter out transfers:
+        $set = $set->filter(
             function (Transaction $transaction) {
-                $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = intval($transaction->encrypted) === 1 ? Crypt::decrypt($transaction->description) : $transaction->description;
-                $transaction->bill_name   = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
+                if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
+                    return $transaction;
+                }
+
+                return false;
             }
-        );
-
-        return $set;
-    }
-
-    /**
-     * It might be worth it to expand this query to include all account information required.
-     *
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
-    {
-        $accountIds = $accounts->pluck('id')->toArray();
-        $query      = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-            ->whereIn('transactions.account_id', $accountIds)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC');
-
-        if (count($types) > 0) {
-            $query->whereIn('transaction_types.type', $types);
-        }
-
-        $set = $query->get(
-            [
-                'transaction_journals.id as journal_id',
-                'transaction_journals.description',
-                'transaction_journals.date',
-                'transaction_journals.encrypted',
-                //'transaction_journals.transaction_currency_id',
-                'transaction_currencies.code as transaction_currency_code',
-                //'transaction_currencies.symbol as transaction_currency_symbol',
-                'transaction_types.type as transaction_type_type',
-                'transaction_journals.bill_id',
-                'bills.name as bill_name',
-                'transactions.id as id',
-                'transactions.amount as transaction_amount',
-                'transactions.description as transaction_description',
-                'transactions.account_id',
-                'transactions.identifier',
-                'transactions.transaction_journal_id',
-                'accounts.name as account_name',
-                'accounts.encrypted as account_encrypted',
-                'account_types.type as account_type',
-
-            ]
         );
 
         // loop for decryption.
@@ -224,6 +181,22 @@ class JournalCollector
     }
 
     /**
+     * @return JournalCollector
+     */
+    public function setAllAssetAccounts(): JournalCollector
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereIn('transactions.account_id', $accountIds);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Category $category
      *
      * @return JournalCollector
@@ -243,22 +216,6 @@ class JournalCollector
                 $q->orWhere('category_transaction_journal.category_id', $category->id);
             }
         );
-
-        return $this;
-    }
-
-    /**
-     * @param Collection $accounts
-     *
-     * @return JournalCollector
-     */
-    public function setDestinationAccounts(Collection $accounts): JournalCollector
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereIn('transactions.account_id', $accountIds);
-            $this->query->where('transactions.amount', '>', 0);
-        }
 
         return $this;
     }
@@ -331,22 +288,6 @@ class JournalCollector
     }
 
     /**
-     * @param Collection $accounts
-     *
-     * @return JournalCollector
-     */
-    public function setSourceAccounts(Collection $accounts): JournalCollector
-    {
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->whereIn('transactions.account_id', $accountIds);
-            $this->query->where('transactions.amount', '<', 0);
-        }
-
-        return $this;
-    }
-
-    /**
      * @param array $types
      *
      * @return JournalCollector
@@ -356,6 +297,28 @@ class JournalCollector
         if (count($types) > 0) {
             $this->query->whereIn('transaction_types.type', $types);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollector
+     */
+    public function withoutCategory(): JournalCollector
+    {
+        if (!$this->joinedCategory) {
+            // join some extra tables:
+            $this->joinedCategory = true;
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+        }
+
+        $this->query->where(
+            function (EloquentBuilder $q) {
+                $q->whereNull('category_transaction.category_id');
+                $q->whereNull('category_transaction_journal.category_id');
+            }
+        );
 
         return $this;
     }

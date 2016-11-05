@@ -53,32 +53,19 @@ class TransactionController extends Controller
 
     /**
      * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
      * @param string                     $what
      *
      * @return View
      */
-    public function index(Request $request, AccountRepositoryInterface $repository, string $what)
+    public function index(Request $request, string $what)
     {
         $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitleIcon  = config('firefly.transactionIconsByWhat.' . $what);
         $types         = config('firefly.transactionTypesByWhat.' . $what);
         $subTitle      = trans('firefly.title_' . $what);
         $page          = intval($request->get('page'));
-        $assetAccounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $collector     = new JournalCollector(auth()->user());
-        $collector->setTypes($types)->setLimit($pageSize)->setPage($page);
-
-        // depending on the view, we filter the collector to grab the right stuff.
-        switch ($what) {
-            default:
-                $collector->setAccounts($assetAccounts);
-                break;
-            case 'transfer':
-            case 'transfers':
-                $collector->setDestinationAccounts($assetAccounts);
-                break;
-        }
+        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
 
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what);
