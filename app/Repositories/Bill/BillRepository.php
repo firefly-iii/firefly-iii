@@ -117,41 +117,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * Returns all journals connected to these bills in the given range. Amount paid
-     * is stored in "journalAmount" as a negative number.
-     *
-     * @param Collection $bills
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection
-    {
-        $ids = $bills->pluck('id')->toArray();
-
-        $set = $this->user->transactionJournals()
-                          ->leftJoin(
-                              'transactions', function (JoinClause $join) {
-                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                          }
-                          )
-                          ->whereIn('bill_id', $ids)
-                          ->before($end)
-                          ->after($start)
-                          ->groupBy(['transaction_journals.bill_id', 'transaction_journals.id'])
-                          ->get(
-                              [
-                                  'transaction_journals.bill_id',
-                                  'transaction_journals.id',
-                                  DB::raw('SUM(transactions.amount) AS journalAmount'),
-                              ]
-                          );
-
-        return $set;
-    }
-
-    /**
      * @return Collection
      */
     public function getBills(): Collection

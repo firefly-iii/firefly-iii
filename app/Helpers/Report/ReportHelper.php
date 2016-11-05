@@ -14,17 +14,17 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -79,7 +79,9 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
+        $collector  = new JournalCollector(auth()->user());
+        $collector->setAccounts($accounts)->setRange($start, $end)->setBills($bills);
+        $journals   = $collector->getJournals();
         $collection = new BillCollection;
 
         /** @var Bill $bill */
@@ -93,14 +95,14 @@ class ReportHelper implements ReportHelperInterface
             // is hit in period?
 
             $entry = $journals->filter(
-                function (TransactionJournal $journal) use ($bill) {
-                    return $journal->bill_id === $bill->id;
+                function (Transaction $transaction) use ($bill) {
+                    return $transaction->bill_id === $bill->id;
                 }
             );
             $first = $entry->first();
             if (!is_null($first)) {
                 $billLine->setTransactionJournalId($first->id);
-                $billLine->setAmount($first->journalAmount);
+                $billLine->setAmount($first->transaction_amount);
                 $billLine->setHit(true);
             }
 

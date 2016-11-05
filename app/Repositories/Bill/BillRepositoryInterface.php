@@ -58,18 +58,6 @@ interface BillRepositoryInterface
     public function getActiveBills(): Collection;
 
     /**
-     * Returns all journals connected to these bills in the given range. Amount paid
-     * is stored in "journalAmount" as a negative number.
-     *
-     * @param Collection $bills
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection;
-
-    /**
      * @return Collection
      */
     public function getBills(): Collection;

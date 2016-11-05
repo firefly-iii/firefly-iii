@@ -207,6 +207,22 @@ class JournalCollector
     }
 
     /**
+     * @param Collection $bills
+     *
+     * @return JournalCollector
+     */
+    public function setBills(Collection $bills): JournalCollector
+    {
+        if ($bills->count() > 0) {
+            $billIds = $bills->pluck('id')->toArray();
+            $this->query->whereIn('transaction_journals.bill_id', $billIds);
+        }
+
+        return $this;
+
+    }
+
+    /**
      * @param Category $category
      *
      * @return JournalCollector
