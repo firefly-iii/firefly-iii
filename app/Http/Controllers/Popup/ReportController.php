@@ -23,7 +23,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
@@ -237,10 +236,10 @@ class ReportController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
         $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $collector = new JournalCollector(auth()->user());
+        $collector  = new JournalCollector(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
         $journals = $collector->getJournals();
-        $report     = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
+        $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter the set so the destinations outside of $attributes['accounts'] are not included.
         $journals = $journals->filter(

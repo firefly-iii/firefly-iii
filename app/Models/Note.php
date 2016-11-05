@@ -52,7 +52,8 @@ class Note extends Model
      */
     public function getMarkdownAttribute(): string
     {
-        $converter  = new CommonMarkConverter;
+        $converter = new CommonMarkConverter;
+
         return $converter->convertToHtml($this->text);
     }
 

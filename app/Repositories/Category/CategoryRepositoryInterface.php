@@ -15,7 +15,6 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Category;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**

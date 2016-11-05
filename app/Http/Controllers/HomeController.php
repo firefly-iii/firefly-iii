@@ -19,7 +19,6 @@ use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -116,7 +115,7 @@ class HomeController extends Controller
     }
 
     /**
-     * @param ARI                    $repository
+     * @param ARI $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */

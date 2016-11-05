@@ -257,7 +257,6 @@ class AccountTasker implements AccountTaskerInterface
                 $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
             }
             )
-
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
             ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
             ->where('transaction_journals.user_id', $this->user->id)
@@ -313,7 +312,7 @@ class AccountTasker implements AccountTaskerInterface
             }
             )
             ->leftJoin('accounts as other_account', 'other_account.id', '=', 'other_side.account_id')
-            ->where('transaction_types.type','!=', TransactionType::OPENING_BALANCE)
+            ->where('transaction_types.type', '!=', TransactionType::OPENING_BALANCE)
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
             ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
             ->where('transaction_journals.user_id', $this->user->id)

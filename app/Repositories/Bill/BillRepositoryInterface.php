@@ -16,7 +16,6 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**

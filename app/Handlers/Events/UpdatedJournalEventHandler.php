@@ -15,11 +15,8 @@ namespace FireflyIII\Handlers\Events;
 
 
 use FireflyIII\Events\UpdatedTransactionJournal;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 

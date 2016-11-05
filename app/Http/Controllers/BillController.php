@@ -206,9 +206,9 @@ class BillController extends Controller
         $overallAverage = $repository->getOverallAverage($bill);
 
         // use collector:
-        $collector  = new JournalCollector(auth()->user());
+        $collector = new JournalCollector(auth()->user());
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setPage($page)->setLimit($pageSize);
-        $journals   = $collector->getPaginatedJournals();
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('/bills/show/' . $bill->id);
 
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);

@@ -350,8 +350,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string
     {
         // collect amount of transaction journals, which is easy:
-        $budgetIds         = $budgets->pluck('id')->toArray();
-        $accountIds        = $accounts->pluck('id')->toArray();
+        $budgetIds  = $budgets->pluck('id')->toArray();
+        $accountIds = $accounts->pluck('id')->toArray();
 
         Log::debug('spentInPeriod: Now in spentInPeriod for these budgets: ', $budgetIds);
         Log::debug('spentInPeriod: and these accounts: ', $accountIds);

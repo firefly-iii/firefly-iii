@@ -15,9 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollector;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
@@ -52,19 +50,19 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param string                     $what
+     * @param Request $request
+     * @param string  $what
      *
      * @return View
      */
     public function index(Request $request, string $what)
     {
-        $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
-        $subTitleIcon  = config('firefly.transactionIconsByWhat.' . $what);
-        $types         = config('firefly.transactionTypesByWhat.' . $what);
-        $subTitle      = trans('firefly.title_' . $what);
-        $page          = intval($request->get('page'));
-        $collector     = new JournalCollector(auth()->user());
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
+        $types        = config('firefly.transactionTypesByWhat.' . $what);
+        $subTitle     = trans('firefly.title_' . $what);
+        $page         = intval($request->get('page'));
+        $collector    = new JournalCollector(auth()->user());
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
 
         $journals = $collector->getPaginatedJournals();

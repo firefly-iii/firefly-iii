@@ -23,22 +23,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property integer                                                             $id
- * @property \Carbon\Carbon                                                      $created_at
- * @property \Carbon\Carbon                                                      $updated_at
- * @property \Carbon\Carbon                                                      $deleted_at
- * @property integer                                                             $account_id
- * @property string                                                              $name
- * @property float                                                               $targetamount
- * @property \Carbon\Carbon                                                      $startdate
- * @property \Carbon\Carbon                                                      $targetdate
- * @property integer                                                             $order
- * @property boolean                                                             $encrypted
- * @property-read Account                                                        $account
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property string                                                              $reminder
- * @property PiggyBankRepetition                                                 $currentRep
+ * @property integer                                                                 $id
+ * @property \Carbon\Carbon                                                          $created_at
+ * @property \Carbon\Carbon                                                          $updated_at
+ * @property \Carbon\Carbon                                                          $deleted_at
+ * @property integer                                                                 $account_id
+ * @property string                                                                  $name
+ * @property float                                                                   $targetamount
+ * @property \Carbon\Carbon                                                          $startdate
+ * @property \Carbon\Carbon                                                          $targetdate
+ * @property integer                                                                 $order
+ * @property boolean                                                                 $encrypted
+ * @property-read Account                                                            $account
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankRepetition[]     $piggyBankRepetitions
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]          $piggyBankEvents
+ * @property string                                                                  $reminder
+ * @property PiggyBankRepetition                                                     $currentRep
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereUpdatedAt($value)
@@ -54,7 +54,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
  * @mixin \Eloquent
- * @property boolean                                                             $active
+ * @property boolean                                                                 $active
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
  */

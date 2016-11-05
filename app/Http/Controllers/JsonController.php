@@ -21,7 +21,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Input;
@@ -282,7 +281,7 @@ class JsonController extends Controller
         $types        = [$type];
 
         // use journal collector instead:
-        $collector     = new JournalCollector(auth()->user());
+        $collector = new JournalCollector(auth()->user());
         $collector->setTypes($types)->setLimit(100)->setPage(1);
         $journals = $collector->getJournals();
         foreach ($journals as $j) {
