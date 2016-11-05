@@ -25,7 +25,7 @@ return [
     'matchedOn'             => '匹配於',
     'matchesOn'             => '匹配於',
     'account_type'          => '帳戶類型',
-    'created_at'            => 'Created at',
+    'created_at'            => '建立於',
     'new_balance'           => '新餘額',
     'account'               => '帳戶',
     'matchingAmount'        => '金額',
