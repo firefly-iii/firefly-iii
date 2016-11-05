@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -69,6 +70,8 @@ class JournalCollector
             'bills.name',
             'transactions.amount',
         ];
+    /** @var  bool */
+    private $joinedBudget = false;
     /** @var  bool */
     private $joinedCategory = false;
     /** @var  int */
@@ -193,7 +196,7 @@ class JournalCollector
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::CASH]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
@@ -220,6 +223,30 @@ class JournalCollector
 
         return $this;
 
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return JournalCollector
+     */
+    public function setBudget(Budget $budget): JournalCollector
+    {
+        if (!$this->joinedBudget) {
+            // join some extra tables:
+            $this->joinedBudget = true;
+            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
+        }
+
+        $this->query->where(
+            function (EloquentBuilder $q) use ($budget) {
+                $q->where('budget_transaction.budget_id', $budget->id);
+                $q->orWhere('budget_transaction_journal.budget_id', $budget->id);
+            }
+        );
+
+        return $this;
     }
 
     /**

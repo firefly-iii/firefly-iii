@@ -101,9 +101,13 @@ class ReportController extends Controller
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
-                $journals = $budgetRepository->journalsInPeriod(
-                    new Collection([$budget]), new Collection([$account]), $attributes['startDate'], $attributes['endDate']
-                );
+                $collector = new JournalCollector(auth()->user());
+                $collector
+                    ->setAccounts(new Collection([$account]))
+                    ->setRange($attributes['startDate'], $attributes['endDate'])
+                    ->setBudget($budget);
+                $journals = $collector->getJournals();
+
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
                 $budget->name = strval(trans('firefly.no_budget'));
@@ -150,9 +154,17 @@ class ReportController extends Controller
         $budget     = $repository->find(intval($attributes['budgetId']));
         if (is_null($budget->id)) {
             $journals = $repository->journalsInPeriodWithoutBudget($attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
-        } else {
+        }
+        if (!is_null($budget->id)) {
             // get all expenses in budget in period:
-            $journals = $repository->journalsInPeriod(new Collection([$budget]), $attributes['accounts'], $attributes['startDate'], $attributes['endDate']);
+            $collector  = new JournalCollector(auth()->user());
+            $collector
+                ->setAccounts($attributes['accounts'])
+                ->setRange($attributes['startDate'], $attributes['endDate'])
+                ->setBudget($budget);
+            $journals   = $collector->getJournals();
+
+
         }
 
         $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
