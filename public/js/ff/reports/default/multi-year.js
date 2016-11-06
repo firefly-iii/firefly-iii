@@ -1,11 +1,11 @@
-/* globals budgetMultiUrl, accountIds */
+/* globals budgetMultiUri, accountIds */
 
 
 $(function () {
     "use strict";
     drawChart();
 
-    loadAjaxPartial('budgetMultiYear', budgetMultiUrl);
+    loadAjaxPartial('budgetMultiYear', budgetMultiUri);
 });
 
 function drawChart() {
