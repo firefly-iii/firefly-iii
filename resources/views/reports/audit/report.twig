@@ -62,7 +62,7 @@
                                     balance: auditData[account.id].endBalance|formatAmount
                                 })|raw }}
                             </p>
-                            {% include 'reports/partials/journals-audit-tasker'  with {'journals': auditData[account.id].journals,'account':account} %}
+                            {% include 'reports.partials.journals-audit-tasker'  with {'journals': auditData[account.id].journals,'account':account} %}
                             <p style="padding:10px;">
                                 {{ trans('firefly.audit_end_balance',
                                 {
