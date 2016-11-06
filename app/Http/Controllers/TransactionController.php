@@ -61,7 +61,7 @@ class TransactionController extends Controller
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $subTitle     = trans('firefly.title_' . $what);
-        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $collector    = new JournalCollector(auth()->user());
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
 
