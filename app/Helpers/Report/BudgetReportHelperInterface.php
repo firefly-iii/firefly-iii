@@ -39,6 +39,15 @@ interface BudgetReportHelperInterface
      * @param Carbon     $end
      * @param Collection $accounts
      *
+     * @return array
+     */
+    public function getBudgetMultiYear(Carbon $start, Carbon $end, Collection $accounts): array;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
      * @return BudgetCollection
      */
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection;
@@ -51,5 +60,13 @@ interface BudgetReportHelperInterface
      * @return Collection
      */
     public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function listOfYears(Carbon $start, Carbon $end): array;
 
 }

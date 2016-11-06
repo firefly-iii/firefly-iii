@@ -99,7 +99,7 @@ class UpgradeDatabase extends Command
                 } catch (QueryException $e) {
                     Log::error($e->getMessage());
                     $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
-                    $this->error('This field is required for Firefly III version ' . config('firefly.version') . ' to run.');
+                    $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
                     $this->error('Please run "php artisan migrate" to add this field to the table.');
                     $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
                     break 2;

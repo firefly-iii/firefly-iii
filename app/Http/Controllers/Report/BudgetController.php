@@ -34,6 +34,35 @@ class BudgetController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
+     * @return mixed|string
+     */
+    public function budgetMultiYear(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget-mult-year-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+
+        $years           = $helper->listOfYears($start, $end);
+        $budgetMultiYear = $helper->getBudgetMultiYear($start, $end, $accounts);
+
+        $result = view('reports.partials.budget-multi-year', compact('budgetMultiYear', 'years'))->render();
+        $cache->store($result);
+
+        return $result;
+    }
+
+    /**
+     * @param BudgetReportHelperInterface $helper
+     * @param Carbon                      $start
+     * @param Carbon                      $end
+     * @param Collection                  $accounts
+     *
      * @return string
      */
     public function budgetReport(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)

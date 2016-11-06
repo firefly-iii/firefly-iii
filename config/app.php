@@ -208,6 +208,7 @@ return [
         FireflyIII\Providers\PiggyBankServiceProvider::class,
         FireflyIII\Providers\RuleServiceProvider::class,
         FireflyIII\Providers\RuleGroupServiceProvider::class,
+        FireflyIII\Providers\SearchServiceProvider::class,
         FireflyIII\Providers\TagServiceProvider::class,
 
 

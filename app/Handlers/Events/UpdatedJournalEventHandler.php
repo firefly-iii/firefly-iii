@@ -15,11 +15,8 @@ namespace FireflyIII\Handlers\Events;
 
 
 use FireflyIII\Events\UpdatedTransactionJournal;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 
@@ -30,50 +27,6 @@ use FireflyIII\Support\Events\BillScanner;
  */
 class UpdatedJournalEventHandler
 {
-    /**
-     * This method will try to reconnect a journal to a piggy bank, updating the piggy bank repetition.
-     *
-     * @param UpdatedTransactionJournal $event
-     *
-     * @return bool
-     */
-    public function connectToPiggyBank(UpdatedTransactionJournal $event): bool
-    {
-        $journal = $event->journal;
-
-        if (!$journal->isTransfer()) {
-            return true;
-        }
-
-        // get the event connected to this journal:
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::where('transaction_journal_id', $journal->id)->first();
-        if (is_null($event)) {
-            return false;
-        }
-        $piggyBank  = $event->piggyBank()->first();
-        $repetition = null;
-        if (!is_null($piggyBank)) {
-            /** @var PiggyBankRepetition $repetition */
-            $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
-        }
-
-        if (is_null($repetition)) {
-            return false;
-        }
-
-        $amount = TransactionJournal::amount($journal);
-        $diff   = bcsub($amount, $event->amount); // update current repetition
-
-        $repetition->currentamount = bcadd($repetition->currentamount, $diff);
-        $repetition->save();
-
-
-        $event->amount = $amount;
-        $event->save();
-
-        return true;
-    }
 
     /**
      * This method will check all the rules when a journal is updated.

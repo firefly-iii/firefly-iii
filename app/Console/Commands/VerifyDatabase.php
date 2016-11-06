@@ -127,8 +127,11 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has budget #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
-                    . '") which has no budget limits.';
+
+            $line = sprintf(
+                'Notice: User #%d (%s) has budget #%d ("%s") which has no budget limits.',
+                $entry->user_id, $entry->email, $entry->id, Crypt::decrypt($entry->name)
+            );
             $this->line($line);
         }
     }

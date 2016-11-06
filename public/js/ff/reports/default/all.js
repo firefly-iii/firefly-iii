@@ -1,4 +1,4 @@
-/* globals startDate, showOnlyTop, showFullList, endDate, reportType, accountIds, inOutReportUrl, accountReportUrl */
+/* globals startDate, showOnlyTop, showFullList, endDate, reportType, expenseReportUri, accountIds, incExpReportUri,accountReportUri, incomeReportUri */
 /*
  * all.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -11,25 +11,20 @@ $(function () {
     "use strict";
 
 
-
     // load the account report, which this report shows:
-    loadAccountReport();
+    loadAjaxPartial('accountReport', accountReportUri);
 
-    // load income / expense / difference:
-    loadInOutReport();
-
-    // trigger info click
-    triggerInfoClick();
-
-    // trigger list length things:
-    listLengthInitial();
+    // load income and expense reports:
+    loadAjaxPartial('incomeReport', incomeReportUri);
+    loadAjaxPartial('expenseReport', expenseReportUri);
+    loadAjaxPartial('incomeVsExpenseReport', incExpReportUri);
 
 });
 
 function triggerInfoClick() {
     "use strict";
     // find the little info buttons and respond to them.
-    $('.firefly-info-button').unbind('clicl').click(clickInfoButton);
+    $('.firefly-info-button').unbind('click').click(clickInfoButton);
 }
 
 function listLengthInitial() {
@@ -56,44 +51,6 @@ function triggerList(e) {
     link.text(showOnlyTop);
 
     return false;
-}
-
-function loadInOutReport() {
-    "use strict";
-    console.log('Going to grab ' + inOutReportUrl);
-    $.get(inOutReportUrl).done(placeInOutReport).fail(failInOutReport);
-}
-
-function placeInOutReport(data) {
-    "use strict";
-    $('#incomeReport').removeClass('loading').html(data.income);
-    $('#expenseReport').removeClass('loading').html(data.expenses);
-    $('#incomeVsExpenseReport').removeClass('loading').html(data.incomes_expenses);
-    listLengthInitial();
-    triggerInfoClick();
-}
-
-function failInOutReport() {
-    "use strict";
-    console.log('Fail in/out report data!');
-    $('#incomeReport').removeClass('loading').addClass('general-chart-error');
-    $('#expenseReport').removeClass('loading').addClass('general-chart-error');
-    $('#incomeVsExpenseReport').removeClass('loading').addClass('general-chart-error');
-}
-
-function loadAccountReport() {
-    "use strict";
-    $.get(accountReportUrl).done(placeAccountReport).fail(failAccountReport);
-}
-
-function placeAccountReport(data) {
-    "use strict";
-    $('#accountReport').removeClass('loading').html(data);
-}
-
-function failAccountReport(data) {
-    "use strict";
-    $('#accountReport').removeClass('loading').addClass('general-chart-error');
 }
 
 function clickInfoButton(e) {
@@ -125,7 +82,111 @@ function respondInfoButton(data) {
     "use strict";
     // remove wait cursor
     $('body').removeClass('waiting');
-    $('#defaultModal').empty().html(data.html);
-    $('#defaultModal').modal('show');
+    $('#defaultModal').empty().html(data.html).modal('show');
 
+}
+
+function loadAjaxPartial(holder, uri) {
+    "use strict";
+    console.log('Going to grab URI ' + uri);
+    $.get(uri).done(function (data) {
+        displayAjaxPartial(data, holder);
+    }).fail(function () {
+        failAjaxPartial(uri, holder);
+    });
+}
+
+function displayAjaxPartial(data, holder) {
+    "use strict";
+    console.log('Display stuff in ' + holder);
+    var obj = $('#' + holder);
+    obj.removeClass('loading').html(data);
+
+    // call some often needed recalculations and what-not:
+
+    // find a sortable table and make it sortable:
+    if (typeof $.bootstrapSortable === "function") {
+        $.bootstrapSortable(true);
+    }
+
+    // find the info click things and respond to them:
+    triggerInfoClick();
+
+    // trigger list thing
+    listLengthInitial();
+
+    // budget thing
+    $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
+}
+
+function failAjaxPartial(uri, holder) {
+    "use strict";
+    console.log('Failed to load' + uri);
+    $('#' + holder).removeClass('loading').addClass('general-chart-error');
+
+}
+
+function clickBudgetChart(e) {
+    "use strict";
+    var link = $(e.target);
+    var budgetId = link.data('budget');
+    var URL = 'chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds;
+    var container = 'budget_chart';
+    // if chart drawn is false, draw the first one, then
+    // set to true
+    if (chartDrawn == false) {
+        // do new chart:
+
+
+        $.getJSON(URL).done(function (data) {
+            console.log('Will draw new columnChart(' + URL + ')');
+
+            var ctx = document.getElementById(container).getContext("2d");
+            var newData = {};
+            newData.datasets = [];
+
+            for (var i = 0; i < data.count; i++) {
+                newData.labels = data.labels;
+                var dataset = data.datasets[i];
+                dataset.backgroundColor = fillColors[i];
+                newData.datasets.push(dataset);
+            }
+            // completely new chart.
+            budgetChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: defaultColumnOptions
+            });
+
+        }).fail(function () {
+            $('#' + container).addClass('general-chart-error');
+        });
+        console.log('URL for column chart : ' + URL);
+        chartDrawn = true;
+    } else {
+        console.log('Will now handle remove data and add new!');
+        $.getJSON(URL).done(function (data) {
+            console.log('Will draw updated columnChart(' + URL + ')');
+            var newData = {};
+            newData.datasets = [];
+
+            for (var i = 0; i < data.count; i++) {
+                newData.labels = data.labels;
+                var dataset = data.datasets[i];
+                dataset.backgroundColor = fillColors[i];
+                newData.datasets.push(dataset);
+            }
+            // update the chart
+            console.log('Now update chart thing.');
+            budgetChart.data.datasets = newData.datasets;
+            budgetChart.update();
+
+        }).fail(function () {
+            $('#' + container).addClass('general-chart-error');
+        });
+
+
+    }
+
+    return false;
 }

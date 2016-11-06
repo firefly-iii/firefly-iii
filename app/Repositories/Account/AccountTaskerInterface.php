@@ -72,18 +72,6 @@ interface AccountTaskerInterface
     public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection;
 
     /**
-     * Experimental getJournals method.
-     *
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
-
-    /**
      * @param Collection $accounts
      * @param Collection $excluded
      * @param Carbon     $start

@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists }}
@@ -11,7 +11,7 @@
                     <h3 class="box-title">{{ 'all_users'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-condensed table-sortable">
+                    <table class="table table-condensed sortable">
                         <thead>
                         <tr>
                             <th colspan="2">&nbsp;</th>
@@ -29,15 +29,15 @@
                         <tbody>
                         {% for user in users %}
                             <tr>
-                                <td>
+                                <td data-value="{{ user.id }}">
                                     <div class="btn-group btn-group-xs">
                                         <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><i class="fa fa-pencil"></i></a>
                                     </div>
                                 </td>
-                                <td>#{{ user.id }}</td>
-                                <td>
+                                <td data-value="{{ user.id }}">#{{ user.id }}</td>
+                                <td data-value="{{ user.email }}">
                                     <a href="{{ route('admin.users.show',user.id) }}">{{ user.email }}</a></td>
-                                <td>
+                                <td data-value="{{ user.created_at.format('Y-m-d-H-i-s') }}">
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
                                 </td>
@@ -47,28 +47,28 @@
                                 <td>
                                     {{ Preferences.getForUser(user,"confirmation_ip_address").data }}
                                 </td>
-                                <td>
+                                <td data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">
                                     {% if user.isAdmin %}
                                         <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
                                     {% else %}
                                         <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-value="{% if user.has2FA %}1{% else %}0{% endif %}">
                                     {% if user.has2FA %}
                                         <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
                                     {% else %}
                                         <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-value="{% if user.activated %}1{% else %}0{% endif %}">
                                     {% if user.activated %}
                                         <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
                                     {% else %}
                                         <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-value="{% if user.blocked %}1{% else %}0{% endif %}">
                                     {% if user.blocked == 1 %}
                                         <small class="text-danger"><i class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></i></small>
                                     {% else %}
@@ -94,4 +94,10 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
 {% endblock %}

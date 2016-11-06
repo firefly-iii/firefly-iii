@@ -29,16 +29,6 @@ interface ReportHelperInterface
 {
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    public function getBudgetMultiYear(Carbon $start, Carbon $end, Collection $accounts): array;
-
-
-    /**
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
@@ -89,14 +79,6 @@ interface ReportHelperInterface
      * @return array
      */
     public function listOfMonths(Carbon $date): array;
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function listOfYears(Carbon $start, Carbon $end): array;
 
     /**
      * Returns an array of tags and their comparitive size with amounts bla bla.

@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => 'Import configureren',
     'import_configure_intro' => 'Hier zie je enkele opties voor jouw CSV bestand. Geef aan of je CSV bestand kolomtitels bevat, en hoe het datumveld is opgebouwd. Hier moet je wellicht wat experimenteren. Het scheidingsteken is meestal een ",", maar dat kan ook een ";" zijn. Controleer dit zorgvuldig.',
-    'import_configure_form'  => 'Formulier',
+    'import_configure_form'  => 'Standaard CSV import opties',
     'header_help'            => 'Vink hier als de eerste rij kolomtitels bevat',
     'date_help'              => 'Datum/tijd formaat in jouw CSV bestand. Volg het formaat zoals ze het <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">op deze pagina</a> uitleggen. Het standaardformaat ziet er zo uit: :dateExample.',
     'delimiter_help'         => 'Kies het veldscheidingsteken dat in jouw bestand wordt gebruikt. Als je het niet zeker weet, is de komma de beste optie.',
@@ -24,7 +24,6 @@ return [
 
     // roles
     'column_roles_title'     => 'Bepaal de inhoud van elke kolom',
-    'column_roles_text'      => '<p>Firefly III kan niet raden welke soort gegevens er in elke kolom staan. Dat moet je er bij vertellen. Gebruik de voorbeeldgegevens en kies het juiste type uit de dropdown. Staat jouw type er niet bij? <a href="https://github.com/JC5/firefly-iii/issues/new">Open dan een ticket</a>.</p><p>Sommige waarden, zoals rekeningnummers en namen staan wellicht al in jouw Firefly III database. Als je dan het vinkje vinkt, kan je zelf de link leggen tussen wat er in het CSV bestand staat en wat er in de database staat. Hiermee kan je de import sturen.</p>',
     'column_roles_table'     => 'Tabel',
     'column_name'            => 'Kolomnaam',
     'column_example'         => 'Voorbeeldgegevens',

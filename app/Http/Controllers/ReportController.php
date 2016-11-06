@@ -15,12 +15,12 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Session;
@@ -150,8 +150,6 @@ class ReportController extends Controller
      */
     private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        /** @var AccountTaskerInterface $tasker */
-        $tasker    = app(AccountTaskerInterface::class);
         $auditData = [];
         $dayBefore = clone $start;
         $dayBefore->subDay();
@@ -160,9 +158,11 @@ class ReportController extends Controller
             // balance the day before:
             $id               = $account->id;
             $dayBeforeBalance = Steam::balance($account, $dayBefore);
-            $journals         = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
-            $journals         = $journals->reverse();
-            $startBalance     = $dayBeforeBalance;
+            $collector        = new JournalCollector(auth()->user());
+            $collector->setAccounts(new Collection([$account]))->setRange($start, $end);
+            $journals     = $collector->getJournals();
+            $journals     = $journals->reverse();
+            $startBalance = $dayBeforeBalance;
 
 
             /** @var Transaction $journal */
@@ -244,8 +244,6 @@ class ReportController extends Controller
     {
         // need all budgets
         // need all years.
-        $years           = $this->helper->listOfYears($start, $end);
-        $budgetMultiYear = $this->helper->getBudgetMultiYear($start, $end, $accounts);
 
 
         // and some id's, joined:
@@ -259,8 +257,7 @@ class ReportController extends Controller
         return view(
             'reports.default.multi-year',
             compact(
-                'accounts', 'start', 'end', 'accountIds', 'reportType',
-                'years', 'budgetMultiYear'
+                'accounts', 'start', 'end', 'accountIds', 'reportType'
             )
         );
     }

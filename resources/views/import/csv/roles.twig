@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
@@ -13,7 +13,9 @@
                     <h3 class="box-title">{{ trans('csv.column_roles_title') }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>{{ trans('csv.column_roles_text')|raw }}</p>
+                    <p>
+                        {{ 'see_help_top_right'|_ }}
+                    </p>
                 </div>
             </div>
 

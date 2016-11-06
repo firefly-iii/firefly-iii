@@ -13,10 +13,11 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
@@ -226,19 +227,27 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag                    $tag
-     * @param TagRepositoryInterface $repository
+     * @param Tag $tag
      *
      * @return View
      */
-    public function show(Tag $tag, TagRepositoryInterface $repository)
+    public function show(Tag $tag)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $journals     = $repository->getJournals($tag);
-        $sum          = $journals->sum(
-            function (TransactionJournal $journal) {
-                return TransactionJournal::amount($journal);
+        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+
+        // use collector:
+        // replace with journal collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('tags/show/' . $tag->id);
+
+        $sum = $journals->sum(
+            function (Transaction $transaction) {
+                return $transaction->transaction_amount;
             }
         );
 

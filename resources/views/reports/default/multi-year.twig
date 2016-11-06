@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
@@ -91,32 +91,8 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
-                <div class="box-body no-padding table-responsive">
-                    <table class="table table-hover sortable">
-                        <thead>
-                        <tr>
-                            <th>Budget</th>
-                            {% for year in years %}
-                                <th>{{ year }}</th>
-                            {% endfor %}
+                <div class="box-body no-padding table-responsive loading" id="budgetMultiYear">
 
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for id, info in budgetMultiYear %}
-                            <tr>
-                                <td><a href="{{ route('budgets.show', id) }}">{{ info.name }}</a></td>
-                                {% for amount in info.entries %}
-                                    <td>
-                                        {{ amount|formatAmount }}
-                                    </td>
-                                {% endfor %}
-
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -142,8 +118,12 @@
         var accountIds = '{{ accountIds }}';
 
         <!-- some URL's -->
-        var accountReportUrl = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var inOutReportUrl = '{{ route('reports.data.inOutReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var accountReportUri = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var incomeReportUri = '{{ route('reports.data.incomeReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var expenseReportUri = '{{ route('reports.data.expenseReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var incExpReportUri = '{{ route('reports.data.incExpReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+
+        var budgetMultiUri = '{{ route('reports.data.budgetMultiYear', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
 
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>

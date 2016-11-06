@@ -458,7 +458,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     private function storeBudgetWithJournal(TransactionJournal $journal, int $budgetId)
     {
-        if (intval($budgetId) > 0 && $journal->transactionType->type !== TransactionType::TRANSFER) {
+        if (intval($budgetId) > 0 && $journal->transactionType->type === TransactionType::WITHDRAWAL) {
             /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::find($budgetId);
             $journal->budgets()->save($budget);

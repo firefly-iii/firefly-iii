@@ -27,6 +27,16 @@ interface JournalRepositoryInterface
 {
 
     /**
+     * @param TransactionJournal $journal
+     * @param TransactionType    $type
+     * @param Account            $source
+     * @param Account            $destination
+     *
+     * @return MessageBag
+     */
+    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
+
+    /**
      * Deletes a journal.
      *
      * @param TransactionJournal $journal
@@ -34,15 +44,6 @@ interface JournalRepositoryInterface
      * @return bool
      */
     public function delete(TransactionJournal $journal): bool;
-
-    /**
-     * @param TransactionJournal $journal
-     * @param TransactionType    $type
-     * @param array              $data
-     *
-     * @return MessageBag
-     */
-    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
     /**
      * Find a specific journal

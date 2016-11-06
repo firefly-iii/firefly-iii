@@ -196,6 +196,7 @@ Route::group(
 
     // budgets:
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
+    Route::get('/chart/budget/period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@period']);
 
     // this chart is used in reports:
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
@@ -215,6 +216,7 @@ Route::group(
     Route::get('/chart/report/in-out/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
     Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
     Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
+
 
     /**
      * IMPORT CONTROLLER
@@ -316,10 +318,20 @@ Route::group(
         ['uses' => 'Report\AccountController@accountReport', 'as' => 'reports.data.accountReport']
     );
 
-    // income report
+    // income and expenses report
     Route::get(
-        '/reports/data/in-out-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\InOutController@inOutReport', 'as' => 'reports.data.inOutReport']
+        '/reports/data/inc-exp-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@incExpReport', 'as' => 'reports.data.incExpReport']
+    );
+    // (income report):
+    Route::get(
+        '/reports/data/income-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@incomeReport', 'as' => 'reports.data.incomeReport']
+    );
+    // (expense report):
+    Route::get(
+        '/reports/data/expense-report/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\InOutController@expenseReport', 'as' => 'reports.data.expenseReport']
     );
 
     // category report:
@@ -343,6 +355,12 @@ Route::group(
     Route::get(
         '/reports/data/budget-year-overview/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\BudgetController@budgetYearOverview', 'as' => 'reports.data.budgetYearOverview']
+    );
+
+    // budget multi year overview
+    Route::get(
+        '/reports/data/budget-multi-year/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BudgetController@budgetMultiYear', 'as' => 'reports.data.budgetMultiYear']
     );
 
 

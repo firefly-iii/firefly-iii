@@ -17,13 +17,13 @@ use Amount;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
 use Log;
@@ -247,31 +247,28 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     *
      * @return View
      */
-    public function noBudget(BudgetRepositoryInterface $repository)
+    public function noBudget()
     {
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end = session('end', Carbon::now()->endOfMonth());
-
+        $end      = session('end', Carbon::now()->endOfMonth());
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriodWithoutBudget(new Collection, $start, $end); // budget
-        $count    = $journals->count();
-        $journals = $journals->slice($offset, $pageSize);
-        $list     = new LengthAwarePaginator($journals, $count, $pageSize);
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans(
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
-        $list->setPath('/budgets/list/noBudget');
 
-        return view('budgets.noBudget', compact('list', 'subTitle'));
+        // collector
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('/budgets/list/noBudget');
+
+        return view('budgets.no-budget', compact('journals', 'subTitle'));
     }
 
     /**
@@ -305,14 +302,13 @@ class BudgetController extends Controller
         $start    = session('first', Carbon::create()->startOfYear());
         $end      = new Carbon;
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end); // budget
-        $count    = $journals->count();
-        $journals = $journals->slice($offset, $pageSize);
-        $journals = new LengthAwarePaginator($journals, $count, $pageSize);
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
 
+        // collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page);
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id);
 
 
@@ -347,16 +343,15 @@ class BudgetController extends Controller
         $start    = $repetition->startdate;
         $end      = $repetition->enddate;
         $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize = Preferences::get('transactionPageSize', 50)->data;
-        $offset   = ($page - 1) * $pageSize;
-        $journals = $repository->journalsInPeriod(new Collection([$budget]), new Collection, $start, $end); // budget
-        $count    = $journals->count();
-        $journals = $journals->slice($offset, $pageSize);
-        $journals = new LengthAwarePaginator($journals, $count, $pageSize);
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
         $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
 
 
+        // collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page);
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
 
 

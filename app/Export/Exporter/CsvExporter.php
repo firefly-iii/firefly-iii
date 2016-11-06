@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
-use FireflyIII\Export\Entry\EntryAccount;
 use FireflyIII\Models\ExportJob;
 use League\Csv\Writer;
 use SplFileObject;

@@ -49,7 +49,7 @@ interface HelpInterface
      *
      * @return bool
      */
-    public function inCache(string $route, string $language ): bool;
+    public function inCache(string $route, string $language): bool;
 
     /**
      * @param string $route

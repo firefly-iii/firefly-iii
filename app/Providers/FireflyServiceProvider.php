@@ -94,7 +94,6 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         $this->app->bind('FireflyIII\Repositories\Currency\CurrencyRepositoryInterface', 'FireflyIII\Repositories\Currency\CurrencyRepository');
-        $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
         $this->app->bind('FireflyIII\Repositories\User\UserRepositoryInterface', 'FireflyIII\Repositories\User\UserRepository');
         $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
         $this->app->bind(

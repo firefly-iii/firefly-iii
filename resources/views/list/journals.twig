@@ -1,5 +1,12 @@
 {{ journals.render|raw }}
 
+{% if journals.count == 0 %}
+<p>
+    <em>{{ 'nothing_to_display'|_ }}</em>
+</p>
+{% endif %}
+
+{% if journals.count > 0 %}
 <table class="table table-hover table-compressed {% if sorting %}sortable-table{% endif %}">
     <thead>
     <tr class="ignore">
@@ -52,7 +59,7 @@
                        title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
                 {% endif %}
                 {% if journal.count_transactions > 2 %}
-                    <i class="fa fa-fw fa-share-alt-square" aria-hidden="true"></i>
+                    <i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>
                 {% endif %}
 
             </td>
@@ -130,3 +137,4 @@
     var edit_selected_txt = "{{ 'edit_selected'|_ }}";
     var delete_selected_txt = "{{ 'delete_selected'|_ }}";
 </script>
+{% endif %}

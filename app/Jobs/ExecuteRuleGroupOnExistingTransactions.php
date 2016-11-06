@@ -14,8 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -129,16 +129,16 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     public function handle()
     {
         // Lookup all journals that match the parameters specified
-        $journals = $this->collectJournals();
+        $transactions = $this->collectJournals();
 
         // Find processors for each rule within the current rule group
         $processors = $this->collectProcessors();
 
         // Execute the rules for each transaction
-        foreach ($journals as $journal) {
+        foreach ($transactions as $transaction) {
             /** @var Processor $processor */
             foreach ($processors as $processor) {
-                $processor->handleTransactionJournal($journal);
+                $processor->handleTransaction($transaction);
 
                 // Stop processing this group if the rule specifies 'stop_processing'
                 if ($processor->getRule()->stop_processing) {
@@ -155,10 +155,10 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
      */
     protected function collectJournals()
     {
-        /** @var JournalTaskerInterface $tasker */
-        $tasker = app(JournalTaskerInterface::class);
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts($this->accounts)->setRange($this->startDate, $this->endDate);
 
-        return $tasker->getJournalsInRange($this->accounts, $this->startDate, $this->endDate);
+        return $collector->getJournals();
     }
 
     /**

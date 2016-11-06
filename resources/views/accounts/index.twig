@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what) }}
@@ -26,7 +26,7 @@
 
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    {% include 'list/accounts.twig' %}
+                    {% include 'list.accounts' %}
                 </div>
             </div>
         </div>

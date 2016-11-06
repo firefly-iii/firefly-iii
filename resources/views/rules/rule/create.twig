@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, ruleGroup) }}
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        {% include '/rules/partials/test-trigger-modal.twig' %}
+        {% include '/rules/partials/test-trigger-modal' %}
 
         <!-- RULE ACTIONS -->
         <div class="row">

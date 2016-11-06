@@ -32,7 +32,7 @@ class Preferences
      */
     public function delete($name): bool
     {
-        $fullName = 'preference' . auth()->user()->id . $name;
+        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -66,7 +66,7 @@ class Preferences
      */
     public function getForUser(User $user, $name, $default = null)
     {
-        $fullName = 'preference' . $user->id . $name;
+        $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -138,7 +138,7 @@ class Preferences
      */
     public function setForUser(User $user, $name, $value): Preference
     {
-        $fullName = 'preference' . $user->id . $name;
+        $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
 

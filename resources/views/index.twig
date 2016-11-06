@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists }}
@@ -8,7 +8,7 @@
 
 
 
-    {% include 'partials/boxes.twig' %}
+    {% include 'partials.boxes' %}
 
     <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12">

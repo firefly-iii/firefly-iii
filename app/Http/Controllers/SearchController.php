@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Support\Search\SearchInterface;
-use Input;
+use Illuminate\Http\Request;
 
 /**
  * Class SearchController
@@ -30,12 +30,6 @@ class SearchController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-
-                return $next($request);
-            }
-        );
     }
 
     /**
@@ -45,16 +39,21 @@ class SearchController extends Controller
      *
      * @return $this
      */
-    public function index(SearchInterface $searcher)
+    public function index(Request $request, SearchInterface $searcher)
     {
-
+        $minSearchLen  = 1;
         $subTitle      = null;
         $query         = null;
         $result        = [];
         $title         = trans('firefly.search');
+        $limit         = 20;
         $mainTitleIcon = 'fa-search';
-        if (!is_null(Input::get('q')) && strlen(Input::get('q')) > 0) {
-            $query    = trim(Input::get('q'));
+
+        // set limit for search:
+        $searcher->setLimit($limit);
+
+        if (!is_null($request->get('q')) && strlen($request->get('q')) >= $minSearchLen) {
+            $query    = trim(strtolower($request->get('q')));
             $words    = explode(' ', $query);
             $subTitle = trans('firefly.search_results_for', ['query' => $query]);
 
@@ -67,7 +66,7 @@ class SearchController extends Controller
 
         }
 
-        return view('search.index', compact('title', 'subTitle', 'mainTitleIcon', 'query', 'result'));
+        return view('search.index', compact('title', 'subTitle', 'limit', 'mainTitleIcon', 'query', 'result'));
     }
 
 }

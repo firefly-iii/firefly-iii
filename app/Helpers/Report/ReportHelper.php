@@ -14,18 +14,17 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -79,7 +78,9 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $journals   = $repository->getAllJournalsInRange($bills, $start, $end);
+        $collector  = new JournalCollector(auth()->user());
+        $collector->setAccounts($accounts)->setRange($start, $end)->setBills($bills);
+        $journals   = $collector->getJournals();
         $collection = new BillCollection;
 
         /** @var Bill $bill */
@@ -93,14 +94,14 @@ class ReportHelper implements ReportHelperInterface
             // is hit in period?
 
             $entry = $journals->filter(
-                function (TransactionJournal $journal) use ($bill) {
-                    return $journal->bill_id === $bill->id;
+                function (Transaction $transaction) use ($bill) {
+                    return $transaction->bill_id === $bill->id;
                 }
             );
             $first = $entry->first();
             if (!is_null($first)) {
                 $billLine->setTransactionJournalId($first->id);
-                $billLine->setAmount($first->journalAmount);
+                $billLine->setAmount($first->transaction_amount);
                 $billLine->setHit(true);
             }
 
@@ -111,67 +112,6 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $collection;
-    }
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    public function getBudgetMultiYear(Carbon $start, Carbon $end, Collection $accounts): array
-    {
-        $accountIds = $accounts->pluck('id')->toArray();
-        $query      = TransactionJournal
-            ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin(
-                'transactions', function (JoinClause $join) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-            }
-            )
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereNull('transactions.deleted_at')
-            ->where('transaction_types.type', 'Withdrawal')
-            ->where('transaction_journals.user_id', auth()->user()->id);
-
-        if (count($accountIds) > 0) {
-            $query->whereIn('transactions.account_id', $accountIds);
-        }
-        $query->groupBy(['budget_transaction_journal.budget_id', 'the_year']);
-        $queryResult = $query->get(
-            [
-                'budget_transaction_journal.budget_id',
-                DB::raw('DATE_FORMAT(transaction_journals.date,"%Y") AS the_year'),
-                DB::raw('SUM(transactions.amount) as sum_of_period'),
-            ]
-        );
-
-        $data    = [];
-        $budgets = $this->budgetRepository->getBudgets();
-        $years   = $this->listOfYears($start, $end);
-
-        // do budget "zero"
-        $emptyBudget       = new Budget;
-        $emptyBudget->id   = 0;
-        $emptyBudget->name = strval(trans('firefly.no_budget'));
-        $budgets->push($emptyBudget);
-
-
-        // get all budgets and years.
-        foreach ($budgets as $budget) {
-            $data[$budget->id] = [
-                'name'    => $budget->name,
-                'entries' => [],
-            ];
-            foreach ($years as $year) {
-                // filter query result here!
-                $data[$budget->id]['entries'][$year] = $this->filterAmount($queryResult, $budget->id, $year);
-            }
-        }
-
-        return $data;
     }
 
     /**
@@ -295,24 +235,6 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function listOfYears(Carbon $start, Carbon $end): array
-    {
-        $begin = clone $start;
-        $years = [];
-        while ($begin < $end) {
-            $years[] = $begin->year;
-            $begin->addYear();
-        }
-
-        return $years;
-    }
-
-    /**
      * Returns an array of tags and their comparitive size with amounts bla bla.
      *
      * @param Carbon     $start
@@ -385,57 +307,5 @@ class ReportHelper implements ReportHelperInterface
 
         return $collection;
     }
-
-    /**
-     * @param Collection $set
-     * @param int        $budgetId
-     * @param int        $year
-     *
-     * @return string
-     */
-    protected function filterAmount(Collection $set, int $budgetId, int $year): string
-    {
-        /** @var stdClass $object */
-        $result = $set->filter(
-            function (TransactionJournal $object) use ($budgetId, $year) {
-                return intval($object->the_year) === $year && $budgetId === intval($object->budget_id);
-            }
-        );
-        $amount = '0';
-        if (!is_null($result->first())) {
-            $amount = $result->first()->sum_of_period;
-        }
-
-        return $amount;
-
-    }
-
-    /**
-     * Take the array as returned by CategoryRepositoryInterface::spentPerDay and CategoryRepositoryInterface::earnedByDay
-     * and sum up everything in the array in the given range.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param array  $array
-     *
-     * @return string
-     */
-    protected function getSumOfRange(Carbon $start, Carbon $end, array $array)
-    {
-        $sum          = '0';
-        $currentStart = clone $start; // to not mess with the original one
-        $currentEnd   = clone $end; // to not mess with the original one
-
-        while ($currentStart <= $currentEnd) {
-            $date = $currentStart->format('Y-m-d');
-            if (isset($array[$date])) {
-                $sum = bcadd($sum, $array[$date]);
-            }
-            $currentStart->addDay();
-        }
-
-        return $sum;
-    }
-
 
 }

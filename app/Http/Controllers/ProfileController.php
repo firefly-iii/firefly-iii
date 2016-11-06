@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Events\DeletedUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\User;

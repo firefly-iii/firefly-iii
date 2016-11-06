@@ -24,7 +24,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
@@ -216,142 +215,13 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
-     */
-    public function journalsInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $return     = new Collection;
-        $accountIds = [];
-        // expand the number of grabbed fields:
-        $fields   = TransactionJournal::queryFields();
-        $fields[] = 'source.account_id';
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-        }
-
-        // first get all journals for all budget(s):
-        $journalQuery = $this->user->transactionJournals()
-                                   ->expanded()
-                                   ->sortCorrectly()
-                                   ->before($end)
-                                   ->after($start)
-                                   ->leftJoin(
-                                       'transactions as source',
-                                       function (JoinClause $join) {
-                                           $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', '0');
-                                       }
-                                   )
-                                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                   ->whereIn('budget_transaction_journal.budget_id', $budgets->pluck('id')->toArray());
-        // add account id's, if relevant:
-        if (count($accountIds) > 0) {
-            $journalQuery->whereIn('source.account_id', $accountIds);
-        }
-        // get them:
-        $journals = $journalQuery->get(TransactionJournal::queryFields());
-
-        // then get transactions themselves.
-        $transactionQuery = $this->user->transactionJournals()
-                                       ->expanded()
-                                       ->before($end)
-                                       ->sortCorrectly()
-                                       ->after($start)
-                                       ->leftJoin('transactions as related', 'related.transaction_journal_id', '=', 'transaction_journals.id')
-                                       ->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'related.id')
-                                       ->leftJoin(
-                                           'transactions as source',
-                                           function (JoinClause $join) {
-                                               $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', '0');
-                                           }
-                                       )
-                                       ->groupBy(['source.account_id'])
-                                       ->whereIn('budget_transaction.budget_id', $budgets->pluck('id')->toArray());
-
-        if (count($accountIds) > 0) {
-            $transactionQuery->whereIn('source.account_id', $accountIds);
-        }
-
-        $transactions = $transactionQuery->get($fields);
-
-        // return complete set:
-        $return = $return->merge($transactions);
-        $return = $return->merge($journals);
-
-        return $return;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function journalsInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $accountIds = [];
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-        }
-
-        /** @var Collection $set */
-        $query = $this->user
-            ->transactionJournals()
-            ->expanded()
-            ->sortCorrectly()
-            ->transactionTypes([TransactionType::WITHDRAWAL])
-            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNull('budget_transaction_journal.id')
-            ->leftJoin(
-                'transactions as source',
-                function (JoinClause $join) {
-                    $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', '0');
-                }
-            )
-            ->before($end)
-            ->after($start)->with(
-                [
-                    'transactions' => function (HasMany $query) {
-                        $query->where('transactions.amount', '<', 0);
-                    },
-                    'transactions.budgets',
-                ]
-            );
-
-        // add account id's, if relevant:
-        if (count($accountIds) > 0) {
-            $query->whereIn('source.account_id', $accountIds);
-        }
-
-        $set = $query->get(TransactionJournal::queryFields());
-        $set = $set->filter(
-            function (TransactionJournal $journal) {
-                foreach ($journal->transactions as $t) {
-                    if ($t->budgets->count() === 0) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        );
-
-        return $set;
-    }
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string
     {
         // collect amount of transaction journals, which is easy:
-        $budgetIds         = $budgets->pluck('id')->toArray();
-        $accountIds        = $accounts->pluck('id')->toArray();
+        $budgetIds  = $budgets->pluck('id')->toArray();
+        $accountIds = $accounts->pluck('id')->toArray();
 
         Log::debug('spentInPeriod: Now in spentInPeriod for these budgets: ', $budgetIds);
         Log::debug('spentInPeriod: and these accounts: ', $accountIds);

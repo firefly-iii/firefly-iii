@@ -54,7 +54,7 @@ class Navigation
         ];
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
+            throw new FireflyException(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
         }
         if (isset($modifierMap[$repeatFreq])) {
             $add = $add * $modifierMap[$repeatFreq];
@@ -108,7 +108,7 @@ class Navigation
         }
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException('Cannot do endOfPeriod for $repeat_freq "' . $repeatFreq . '"');
+            throw new FireflyException(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
         }
         $function = $functionMap[$repeatFreq];
         if (isset($modifierMap[$repeatFreq])) {
@@ -202,7 +202,7 @@ class Navigation
         if (isset($formatMap[$repeatFrequency])) {
             return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
-        throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
+        throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
     }
 
     /**
@@ -252,7 +252,7 @@ class Navigation
         }
 
 
-        throw new FireflyException('Cannot do startOfPeriod for $repeat_freq "' . $repeatFreq . '"');
+        throw new FireflyException(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
     }
 
     /**
@@ -313,7 +313,7 @@ class Navigation
             return $date;
         }
 
-        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq "' . $repeatFreq . '"');
+        throw new FireflyException(sprintf('Cannot do subtractPeriod for $repeat_freq "%s"', $repeatFreq));
     }
 
     /**
@@ -350,7 +350,7 @@ class Navigation
 
             return $end;
         }
-        throw new FireflyException('updateEndDate cannot handle $range "' . $range . '"');
+        throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));
     }
 
     /**
@@ -387,7 +387,7 @@ class Navigation
 
 
         }
-        throw new FireflyException('updateStartDate cannot handle $range "' . $range . '"');
+        throw new FireflyException(sprintf('updateStartDate cannot handle range "%s"', $range));
     }
 
 

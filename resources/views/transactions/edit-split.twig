@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
@@ -212,8 +212,6 @@
                                 {% endif %}
 
                                 <th>{{ trans('list.category') }}</th>
-
-                                <!-- piggy bank -->
                             </tr>
                             </thead>
                             <tbody>

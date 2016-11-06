@@ -206,7 +206,6 @@ class ConvertController extends Controller
         $sourceAccount      = TransactionJournal::sourceAccountList($journal)->first();
         $destinationAccount = TransactionJournal::destinationAccountList($journal)->first();
         $sourceType         = $journal->transactionType;
-        $source             = new Account;
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {
             default:

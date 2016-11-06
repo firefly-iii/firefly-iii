@@ -1,6 +1,6 @@
 <?php
 /**
- * JournalCollector.php
+ * JournalExportCollector.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -21,11 +21,11 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
- * Class JournalCollector
+ * Class JournalExportCollector
  *
  * @package FireflyIII\Export\Collector
  */
-class JournalCollector extends BasicCollector implements CollectorInterface
+class JournalExportCollector extends BasicCollector implements CollectorInterface
 {
     /** @var  Collection */
     private $accounts;

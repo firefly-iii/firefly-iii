@@ -107,6 +107,12 @@ class PiggyBankController extends Controller
         $subTitle     = trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
+        if (count($accounts) === 0) {
+            Session::flash('error', strval(trans('firefly.need_at_least_one_account')));
+
+            return redirect(route('new-user.index'));
+        }
+
         // put previous url in session if not redirect from store (not "create another").
         if (session('piggy-banks.create.fromStore') !== true) {
             Session::put('piggy-banks.create.url', URL::previous());

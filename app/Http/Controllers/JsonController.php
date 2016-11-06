@@ -15,12 +15,12 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
-use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Input;
@@ -270,17 +270,20 @@ class JsonController extends Controller
     }
 
     /**
-     * @param JournalTaskerInterface     $tasker
-     * @param                            $what
+     * @param $what
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function transactionJournals(JournalTaskerInterface $tasker, $what)
+    public function transactionJournals($what)
     {
         $descriptions = [];
         $type         = config('firefly.transactionTypesByWhat.' . $what);
         $types        = [$type];
-        $journals     = $tasker->getJournals($types, 1, 50);
+
+        // use journal collector instead:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setTypes($types)->setLimit(100)->setPage(1);
+        $journals = $collector->getJournals();
         foreach ($journals as $j) {
             $descriptions[] = $j->description;
         }

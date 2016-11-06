@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
@@ -11,7 +11,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3></div>
                 <div class="box-body table-responsive no-padding">
-                    {% include 'list/piggy-banks.twig' %}
+                    {% include 'list/piggy-banks' %}
                 </div>
                 <div class="box-footer">
                     <a href="{{ route('piggy-banks.create') }}" class="btn btn-success pull-right">{{ 'new_piggy_bank'|_ }}</a>

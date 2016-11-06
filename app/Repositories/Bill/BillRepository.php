@@ -22,7 +22,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
@@ -112,41 +111,6 @@ class BillRepository implements BillRepositoryInterface
                                   DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),
                               ]
                           )->sortBy('name');
-
-        return $set;
-    }
-
-    /**
-     * Returns all journals connected to these bills in the given range. Amount paid
-     * is stored in "journalAmount" as a negative number.
-     *
-     * @param Collection $bills
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection
-    {
-        $ids = $bills->pluck('id')->toArray();
-
-        $set = $this->user->transactionJournals()
-                          ->leftJoin(
-                              'transactions', function (JoinClause $join) {
-                              $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                          }
-                          )
-                          ->whereIn('bill_id', $ids)
-                          ->before($end)
-                          ->after($start)
-                          ->groupBy(['transaction_journals.bill_id', 'transaction_journals.id'])
-                          ->get(
-                              [
-                                  'transaction_journals.bill_id',
-                                  'transaction_journals.id',
-                                  DB::raw('SUM(transactions.amount) AS journalAmount'),
-                              ]
-                          );
 
         return $set;
     }
@@ -285,30 +249,6 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $sum;
-    }
-
-    /**
-     * This method also returns the amount of the journal in "journalAmount"
-     * for easy access.
-     *
-     * @param Bill $bill
-     *
-     * @param int  $page
-     * @param int  $pageSize
-     *
-     * @return LengthAwarePaginator|Collection
-     */
-    public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator
-    {
-        $offset    = ($page - 1) * $pageSize;
-        $query     = $bill->transactionJournals()
-                          ->expanded()
-                          ->sortCorrectly();
-        $count     = $query->count();
-        $set       = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
-        $paginator = new LengthAwarePaginator($set, $count, $pageSize, $page);
-
-        return $paginator;
     }
 
     /**

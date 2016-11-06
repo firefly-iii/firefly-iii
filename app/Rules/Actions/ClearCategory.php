@@ -16,6 +16,7 @@ namespace FireflyIII\Rules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 /**
  * Class ClearCategory

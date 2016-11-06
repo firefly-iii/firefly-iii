@@ -16,6 +16,7 @@ namespace FireflyIII\Console;
 use FireflyIII\Console\Commands\CreateImport;
 use FireflyIII\Console\Commands\EncryptFile;
 use FireflyIII\Console\Commands\Import;
+use FireflyIII\Console\Commands\MoveRepository;
 use FireflyIII\Console\Commands\ScanAttachments;
 use FireflyIII\Console\Commands\UpgradeDatabase;
 use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
@@ -63,7 +64,7 @@ class Kernel extends ConsoleKernel
             EncryptFile::class,
             ScanAttachments::class,
             UpgradeDatabase::class,
-
+            MoveRepository::class,
         ];
 
     /**

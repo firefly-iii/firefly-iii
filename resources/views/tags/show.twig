@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag) }}
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% include 'list/journals.twig' %}
+                    {% include 'list/journals-tasker' %}
                 </div>
             </div>
         </div>

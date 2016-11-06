@@ -146,7 +146,7 @@ class Journal extends Twig_Extension
                     $array[] = '<span class="text-success">(cash)</span>';
                     continue;
                 }
-                $array[] = '<a title="' . e($entry->name) . '" href="' . route('accounts.show', $entry->id) . '">' . e($entry->name) . '</a>';
+                $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
             }
             $array  = array_unique($array);
             $result = join(', ', $array);
@@ -221,7 +221,7 @@ class Journal extends Twig_Extension
                     $array[] = '<span class="text-success">(cash)</span>';
                     continue;
                 }
-                $array[] = '<a title="' . e($entry->name) . '" href="' . route('accounts.show', $entry->id) . '">' . e($entry->name) . '</a>';
+                $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
             }
             $array  = array_unique($array);
             $result = join(', ', $array);
@@ -253,12 +253,12 @@ class Journal extends Twig_Extension
             $budgets = [];
             // get all budgets:
             foreach ($journal->budgets as $budget) {
-                $budgets[] = '<a href="' . route('budgets.show', [$budget->id]) . '" title="' . e($budget->name) . '">' . e($budget->name) . '</a>';
+                $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('accounts.show', $budget->id));
             }
             // and more!
             foreach ($journal->transactions as $transaction) {
                 foreach ($transaction->budgets as $budget) {
-                    $budgets[] = '<a href="' . route('budgets.show', [$budget->id]) . '" title="' . e($budget->name) . '">' . e($budget->name) . '</a>';
+                    $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('accounts.show', $budget->id));
                 }
             }
             $string = join(', ', array_unique($budgets));
@@ -288,7 +288,7 @@ class Journal extends Twig_Extension
             $categories = [];
             // get all categories for the journal itself (easy):
             foreach ($journal->categories as $category) {
-                $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name) . '</a>';
+                $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('accounts.show', $category->id));
             }
             if (count($categories) === 0) {
                 $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
@@ -299,8 +299,7 @@ class Journal extends Twig_Extension
                                ->get(['categories.*']);
                 /** @var Category $category */
                 foreach ($set as $category) {
-                    $categories[] = '<a href="' . route('categories.show', [$category->id]) . '" title="' . e($category->name) . '">' . e($category->name)
-                                    . '</a>';
+                    $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('accounts.show', $category->id));
                 }
             }
 
@@ -324,16 +323,16 @@ class Journal extends Twig_Extension
 
             switch (true) {
                 case $journal->isWithdrawal():
-                    $txt = '<i class="fa fa-long-arrow-left fa-fw" title="' . trans('firefly.withdrawal') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
                     break;
                 case $journal->isDeposit():
-                    $txt = '<i class="fa fa-long-arrow-right fa-fw" title="' . trans('firefly.deposit') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
                     break;
                 case $journal->isTransfer():
-                    $txt = '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
                     break;
                 case $journal->isOpeningBalance():
-                    $txt = '<i class="fa-fw fa fa-ban" title="' . trans('firefly.openingBalance') . '"></i>';
+                    $txt = sprintf('<i class="fa-fw fa fa-ban" title="%s"></i>', trans('firefly.openingBalance'));
                     break;
                 default:
                     $txt = '';
