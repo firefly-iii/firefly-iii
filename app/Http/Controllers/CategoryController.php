@@ -184,7 +184,7 @@ class CategoryController extends Controller
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $accounts     = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page'));
+        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
@@ -253,7 +253,7 @@ class CategoryController extends Controller
         $end          = Navigation::endOfPeriod($carbon, $range);
         $subTitle     = $category->name;
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page'));
+        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // new collector:

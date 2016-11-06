@@ -10,6 +10,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -61,6 +62,8 @@ class JournalCollector
     private $joinedBudget = false;
     /** @var  bool */
     private $joinedCategory = false;
+    /** @var bool */
+    private $joinedTag = false;
     /** @var  int */
     private $limit;
     /** @var  int */
@@ -116,19 +119,7 @@ class JournalCollector
     {
         $this->run = true;
         $set       = $this->query->get(array_values($this->fields));
-
-        // filter out transfers:
-        if ($this->filterTransfers) {
-            $set = $set->filter(
-                function (Transaction $transaction) {
-                    if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
-                        return $transaction;
-                    }
-
-                    return false;
-                }
-            );
-        }
+        $set       = $this->filterTransfers($set);
 
         // loop for decryption.
         $set->each(
@@ -184,7 +175,7 @@ class JournalCollector
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::CASH]);
+        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
@@ -321,6 +312,19 @@ class JournalCollector
     }
 
     /**
+     * @param Tag $tag
+     *
+     * @return JournalCollector
+     */
+    public function setTag(Tag $tag): JournalCollector
+    {
+        $this->joinTagTables();
+        $this->query->where('tag_transaction_journal.tag_id', $tag->id);
+
+        return $this;
+    }
+
+    /**
      * @param array $types
      *
      * @return JournalCollector
@@ -369,6 +373,54 @@ class JournalCollector
     }
 
     /**
+     * If the set of accounts used by the collector includes more than one asset
+     * account, chances are the set include double entries: transfers get selected
+     * on both the source, and then again on the destination account.
+     *
+     * This method filters them out.
+     *
+     * @param Collection $set
+     *
+     * @return Collection
+     */
+    private function filterTransfers(Collection $set): Collection
+    {
+        if ($this->filterTransfers) {
+            $set = $set->filter(
+                function (Transaction $transaction) {
+                    if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
+                        Log::debug(
+                            sprintf(
+                                'Included journal #%d (transaction #%d) because its a %s with amount %f',
+                                $transaction->transaction_journal_id,
+                                $transaction->id,
+                                $transaction->transaction_type_type,
+                                $transaction->transaction_amount
+                            )
+                        );
+
+                        return $transaction;
+                    }
+
+                    Log::debug(
+                        sprintf(
+                            'Removed journal #%d (transaction #%d) because its a %s with amount %f',
+                            $transaction->transaction_journal_id,
+                            $transaction->id,
+                            $transaction->transaction_type_type,
+                            $transaction->transaction_amount
+                        )
+                    );
+
+                    return false;
+                }
+            );
+        }
+
+        return $set;
+    }
+
+    /**
      *
      */
     private function joinBudgetTables()
@@ -391,6 +443,18 @@ class JournalCollector
             $this->joinedCategory = true;
             $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+        }
+    }
+
+    /**
+     *
+     */
+    private function joinTagTables()
+    {
+        if (!$this->joinedTag) {
+            // join some extra tables:
+            $this->joinedTag = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
         }
     }
 

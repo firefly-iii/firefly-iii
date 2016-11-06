@@ -221,7 +221,7 @@ class AccountController extends Controller
         $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
         /** @var Carbon $end */
         $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page     = intval(Input::get('page'));
+        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // replace with journal collector:
@@ -275,8 +275,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account                $account
-     * @param string                 $date
+     * @param Account $account
+     * @param string  $date
      *
      * @return View
      */
@@ -287,8 +287,7 @@ class AccountController extends Controller
         $start    = Navigation::startOfPeriod($carbon, $range);
         $end      = Navigation::endOfPeriod($carbon, $range);
         $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
-        $page     = intval(Input::get('page'));
-        $page     = $page === 0 ? 1 : $page;
+        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // replace with journal collector:

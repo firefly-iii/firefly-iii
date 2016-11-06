@@ -66,13 +66,6 @@ interface TagRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param Tag $tag
-     *
-     * @return Collection
-     */
-    public function getJournals(Tag $tag) : Collection;
-
-    /**
      * This method stores a tag.
      *
      * @param array $data

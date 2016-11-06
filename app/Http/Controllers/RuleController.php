@@ -306,7 +306,7 @@ class RuleController extends Controller
         }
 
         // Return json response
-        $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+        $view = view('list.journals-tiny-tasker', ['transactions' => $matchingTransactions])->render();
 
         return Response::json(['html' => $view, 'warning' => $warning]);
     }
