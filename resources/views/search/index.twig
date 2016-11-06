@@ -5,19 +5,35 @@
 {% endblock %}
 
 {% block content %}
-    {% if query %}
+    {% if query == "" %}
         <div class="row">
+            <div class="col-lg-12">
+                <p>{{ 'no_results_for_empty_search'|_ }}</p>
+            </div>
+        </div>
+    {% endif %}
+    {% if query %}
+
+        <div class="row">
+            <div class="col-lg-12">
+                <p>{{ trans('firefly.results_limited', {count: limit}) }}</p>
+            </div>
+        </div>
+
+        <div class="row">
+
+
             {% if result.transactions|length > 0 %}
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Transactions</h3>
+                            <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                         </div>
-                        <div class="box-body no-padding">
-                            {% include 'list.journals-tiny' with {'transactions' : result.transactions} %}
-                        </div>
-                        <div class="box-footer">
-                            <span class="pull-right">Results: {{ result.transactions|length }}</span>
+                        <div class="box-body">
+                            <p>
+                                {{ trans('firefly.search_found_transactions', {count: result.transactions|length}) }}
+                            </p>
+                            {% include 'search.partials.transactions' with {'transactions' : result.transactions} %}
                         </div>
                     </div>
                 </div>
@@ -26,19 +42,13 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Categories</h3>
+                            <h3 class="box-title">{{ 'categories'|_ }}</h3>
                         </div>
-                        <div class="box-body no-padding">
-                            <div class="list-group">
-                                {% for category in result.categories %}
-                                    <a class="list-group-item" title="{{ category.name }}" href="{{ route('categories.show',category.id) }}">
-                                        {{ category.name }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="box-footer">
-                            <span class="pull-right">Results: {{ result['categories']|length }}</span>
+                        <div class="box-body">
+                            <p>
+                                {{ trans('firefly.search_found_categories', {count: result.categories|length}) }}
+                            </p>
+                            {% include 'search.partials.categories' %}
                         </div>
                     </div>
                 </div>
@@ -47,13 +57,13 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Tags</h3>
+                            <h3 class="box-title">{{ 'tags'|_ }}</h3>
                         </div>
-                        <div class="box-body no-padding">
-                            <p>Bla bla</p>
-                        </div>
-                        <div class="box-footer">
-                            <span class="pull-right">Results: {{ result['tags']|length }}</span>
+                        <div class="box-body">
+                            <p>
+                                {{ trans('firefly.search_found_tags', {count: result.tags|length}) }}
+                            </p>
+                            {% include 'search.partials.tags' %}
                         </div>
                     </div>
                 </div>
@@ -62,19 +72,13 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Accounts</h3>
+                            <h3 class="box-title">{{ 'accounts'|_ }}</h3>
                         </div>
-                        <div class="box-body no-padding">
-                            <div class="list-group">
-                                {% for account in result.accounts %}
-                                    <a class="list-group-item" title="{{ account.name }}" href="{{ route('accounts.show',account.id) }}">
-                                        {{ account.name }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="box-footer">
-                            <span class="pull-right">Results: {{ result['accounts'].count() }}</span>
+                        <div class="box-body">
+                            <p>
+                                {{ trans('firefly.search_found_accounts', {count: result.accounts|length}) }}
+                            </p>
+                            {% include 'search.partials.accounts' %}
                         </div>
                     </div>
                 </div>
@@ -83,19 +87,13 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Budgets</h3>
+                            <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                         </div>
                         <div class="box-body">
-                            <div class="list-group">
-                                {% for budget in result.budgets %}
-                                    <a class="list-group-item" title="{{ budget.name }}" href="{{ route('budgets.show',budget.id) }}">
-                                        {{ budget.name }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="box-footer">
-                            <span class="pull-right">Results: {{ result['budgets'].count() }}</span>
+                            <p>
+                                {{ trans('firefly.search_found_budgets', {count: result.budgets|length}) }}
+                            </p>
+                            {% include 'search.partials.budgets' %}
                         </div>
                     </div>
                 </div>
@@ -106,8 +104,8 @@
 
 
 {% endblock %}
-{% block scripts %}
-    <script type="text/javascript">
-        var query = '{{ query }}';
-    </script>
-{% endblock %}
+    {% block scripts %}
+        <script type="text/javascript">
+            var query = '{{ query }}';
+        </script>
+    {% endblock %}

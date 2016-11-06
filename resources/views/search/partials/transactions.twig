@@ -1,0 +1,81 @@
+{{ journals.render|raw }}
+
+<table class="table table-hover table-compressed {% if sorting %}sortable-table{% endif %}">
+    <thead>
+    <tr class="ignore">
+        <th class="hidden-xs" colspan="2">&nbsp;</th>
+        <th>{{ trans('list.description') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for transaction in transactions %}
+        <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
+            <td class="hidden-xs">
+                <div class="btn-group btn-group-xs edit_buttons">
+                    <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
+            </td>
+            <td class="hidden-xs">
+                {{ transaction|typeIconTransaction }}
+            </td>
+            <td>
+                <a href="{{ route('transactions.show',transaction.journal_id) }}">
+
+                    {% if transaction.transaction_description|length > 0 %}
+                        {{ transaction.transaction_description }} ({{ transaction.description }})
+                    {% else %}
+                        {{ transaction.description }}
+                    {% endif %}
+                </a>
+                {{ splitJournalIndicator(transaction.journal_id) }}
+
+                {% if transaction.transactionJournal.attachments|length > 0 %}
+                    <i class="fa fa-paperclip"
+                       title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
+                {% endif %}
+
+            </td>
+            <td>
+                <!-- format amount of transaction -->
+                {{ formatAmountWithCode(transaction.transaction_amount, transaction.transaction_currency_code) }}
+                <!-- and then amount of journal itself. -->
+                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount,
+                transaction.transaction_currency_code, transaction.transaction_type_type) }}
+
+
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="row mass_edit_all" style="display: none;">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="mass_button_options btn-group btn-group" style="display:none;">
+            <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit_selected'|_ }}</span></a>
+            <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete_selected'|_ }}</span></a>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+
+        <div class="mass_buttons btn-group btn-group pull-right">
+            <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
+            <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
+                                                                                          aria-hidden="true"></i> {{ 'stop_selection'|_ }}</a>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        {{ journals.render|raw }}
+    </div>
+</div>
+<script type="text/javascript">
+    var edit_selected_txt = "{{ 'edit_selected'|_ }}";
+    var delete_selected_txt = "{{ 'delete_selected'|_ }}";
+</script>

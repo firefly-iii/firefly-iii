@@ -78,7 +78,7 @@ class TransactionMatcher
         do {
             // Fetch a batch of transactions from the database
             $collector = new JournalCollector(auth()->user());
-            $collector->setAllAssetAccounts()->setLimit($pageSize * 2)->setPage($page)->setTypes($this->transactionTypes);
+            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
             $set = $collector->getPaginatedJournals();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
@@ -105,7 +105,7 @@ class TransactionMatcher
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
 
             // Check for conditions to finish the loop
-            $reachedEndOfList = $set->count() < $pageSize;
+            $reachedEndOfList = $set->count() < 1;
             $foundEnough      = $result->count() >= $this->limit;
             $searchedEnough   = ($processed >= $this->range);
 

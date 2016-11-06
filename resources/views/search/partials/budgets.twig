@@ -1,0 +1,22 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
+        <th>{{ trans('list.name') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for budget in result.budgets %}
+        <tr>
+            <td class="hidden-sm hidden-xs" style="width:10%;">
+                <div class="btn-group btn-group-xs">
+                    <a class="btn btn-default btn-xs" href="{{ route('budgets.edit', budget.id) }}"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a class="btn btn-danger btn-xs" href="{{ route('budgets.delete', budget.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
+            </td>
+            <td><a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
