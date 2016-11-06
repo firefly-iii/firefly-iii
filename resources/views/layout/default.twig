@@ -29,7 +29,7 @@
     <![endif]-->
 
     <!-- favicons -->
-    {% include('partials/favicons.twig') %}
+    {% include('partials/favicons') %}
 
 </head>
 <body class="skin-blue-light sidebar-mini hold-transition">
@@ -98,7 +98,7 @@
             </form>
             <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            {% include('partials/menu-sidebar.twig') %}
+            {% include('partials/menu-sidebar') %}
         </section>
         <!-- /.sidebar -->
     </aside>
@@ -107,14 +107,14 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            {% include('partials/page-header.twig') %}
+            {% include('partials/page-header') %}
             {% block breadcrumbs %}{% endblock %}
 
         </section>
 
         <!-- Main content -->
         <section class="content">
-            {% include('partials/flashes.twig') %}
+            {% include('partials/flashes') %}
 
             <!-- actual content -->
             {% block content %}{% endblock %}
@@ -130,7 +130,7 @@
         <strong><a href="https://github.com/JC5/firefly-iii">Firefly III</a></strong>
     </footer>
 
-    {% include('partials/control-bar.twig') %}
+    {% include('partials/control-bar') %}
 
 </div>
 <!-- ./wrapper -->

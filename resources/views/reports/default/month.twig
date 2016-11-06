@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
@@ -62,7 +62,7 @@
 
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
-            {% include 'reports/partials/tags.twig' %}
+            {% include 'reports/partials/tags' %}
         </div>
     </div>
     <div class="row">
@@ -108,7 +108,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {% include 'reports/partials/bills.twig' %}
+            {% include 'reports/partials/bills' %}
 
         </div>
     </div>
