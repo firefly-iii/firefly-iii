@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
@@ -45,11 +46,11 @@ class IsConfirmed
             return redirect()->guest('login');
         }
         // must the user be confirmed in the first place?
-        $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
+        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
         // user must be logged in, then continue:
         $isConfirmed = Preferences::get('user_confirmed', false)->data;
 
-        if ($isConfirmed === false && $confirmAccount === true) {
+        if ($isConfirmed === false && $mustConfirmAccount === true) {
 
             // user account is not confirmed, redirect to
             // confirmation page:

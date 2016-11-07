@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\User;
 
 
+use FireflyConfig;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -94,10 +95,10 @@ class UserRepository implements UserRepositoryInterface
         }
 
         // is user activated?
-        $confirmAccount         = env('MUST_CONFIRM_ACCOUNT', false);
+        $mustConfirmAccount     = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
         $isConfirmed            = Preferences::getForUser($user, 'user_confirmed', false)->data;
         $return['is_activated'] = true;
-        if ($isConfirmed === false && $confirmAccount === true) {
+        if ($isConfirmed === false && $mustConfirmAccount === true) {
             $return['is_activated'] = false;
         }
 

@@ -123,7 +123,11 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(Request $request)
     {
-        $showDemoWarning = config('firefly.show-demo-warning', false);
+        // is demo site?
+        $isDemoSite = FireflyConfig::get('is_demo_site', Config::get('firefly.configuration.is_demo_site'))->data;
+
+        // activate account?
+        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', Config::get('firefly.configuration.must_confirm_account'))->data;
 
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
@@ -136,7 +140,7 @@ class RegisterController extends Controller
 
         $email = $request->old('email');
 
-        return view('auth.register', compact('showDemoWarning', 'email'));
+        return view('auth.register', compact('isDemoSite', 'email', 'mustConfirmAccount'));
     }
 
     /**
