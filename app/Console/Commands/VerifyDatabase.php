@@ -26,6 +26,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
+use Schema;
 use stdClass;
 
 /**
@@ -61,6 +62,11 @@ class VerifyDatabase extends Command
      */
     public function handle()
     {
+        // if table does not exist, return false
+        if (!Schema::hasTable('users')) {
+            return;
+        }
+
         // accounts with no transactions.
         $this->reportAccounts();
         // budgets with no limits
