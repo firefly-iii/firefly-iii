@@ -123,7 +123,7 @@ class SetDestinationAccount implements ActionInterface
      */
     private function findExpenseAccount()
     {
-        $account = $this->repository->findByName($this->action->action_value, [AccountType::REVENUE]);
+        $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
         if (is_null($account->id)) {
             // create new revenue account with this name:
             $data    = [
