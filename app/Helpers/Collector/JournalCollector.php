@@ -27,7 +27,7 @@ use Log;
  *
  * @package FireflyIII\Helpers\Collector
  */
-class JournalCollector
+class JournalCollector implements JournalCollectorInterface
 {
 
     /** @var  int */
@@ -152,9 +152,9 @@ class JournalCollector
     /**
      * @param Collection $accounts
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setAccounts(Collection $accounts): JournalCollector
+    public function setAccounts(Collection $accounts): JournalCollectorInterface
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
@@ -169,9 +169,9 @@ class JournalCollector
     }
 
     /**
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setAllAssetAccounts(): JournalCollector
+    public function setAllAssetAccounts(): JournalCollectorInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class, [$this->user]);
@@ -191,9 +191,9 @@ class JournalCollector
     /**
      * @param Collection $bills
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setBills(Collection $bills): JournalCollector
+    public function setBills(Collection $bills): JournalCollectorInterface
     {
         if ($bills->count() > 0) {
             $billIds = $bills->pluck('id')->toArray();
@@ -207,9 +207,9 @@ class JournalCollector
     /**
      * @param Budget $budget
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setBudget(Budget $budget): JournalCollector
+    public function setBudget(Budget $budget): JournalCollectorInterface
     {
         $this->joinBudgetTables();
 
@@ -226,9 +226,9 @@ class JournalCollector
     /**
      * @param Category $category
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setCategory(Category $category): JournalCollector
+    public function setCategory(Category $category): JournalCollectorInterface
     {
         $this->joinCategoryTables();
 
@@ -245,9 +245,9 @@ class JournalCollector
     /**
      * @param int $limit
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setLimit(int $limit): JournalCollector
+    public function setLimit(int $limit): JournalCollectorInterface
     {
         $this->limit = $limit;
         $this->query->limit($limit);
@@ -259,9 +259,9 @@ class JournalCollector
     /**
      * @param int $offset
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setOffset(int $offset): JournalCollector
+    public function setOffset(int $offset): JournalCollectorInterface
     {
         $this->offset = $offset;
 
@@ -271,9 +271,9 @@ class JournalCollector
     /**
      * @param int $page
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setPage(int $page): JournalCollector
+    public function setPage(int $page): JournalCollectorInterface
     {
         $this->page = $page;
 
@@ -299,9 +299,9 @@ class JournalCollector
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setRange(Carbon $start, Carbon $end): JournalCollector
+    public function setRange(Carbon $start, Carbon $end): JournalCollectorInterface
     {
         if ($start <= $end) {
             $this->query->where('transaction_journals.date', '>=', $start->format('Y-m-d'));
@@ -314,9 +314,9 @@ class JournalCollector
     /**
      * @param Tag $tag
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setTag(Tag $tag): JournalCollector
+    public function setTag(Tag $tag): JournalCollectorInterface
     {
         $this->joinTagTables();
         $this->query->where('tag_transaction_journal.tag_id', $tag->id);
@@ -327,9 +327,9 @@ class JournalCollector
     /**
      * @param array $types
      *
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function setTypes(array $types): JournalCollector
+    public function setTypes(array $types): JournalCollectorInterface
     {
         if (count($types) > 0) {
             $this->query->whereIn('transaction_types.type', $types);
@@ -339,9 +339,9 @@ class JournalCollector
     }
 
     /**
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function withoutBudget(): JournalCollector
+    public function withoutBudget(): JournalCollectorInterface
     {
         $this->joinBudgetTables();
 
@@ -356,9 +356,9 @@ class JournalCollector
     }
 
     /**
-     * @return JournalCollector
+     * @return JournalCollectorInterface
      */
-    public function withoutCategory(): JournalCollector
+    public function withoutCategory(): JournalCollectorInterface
     {
         $this->joinCategoryTables();
 
