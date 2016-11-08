@@ -68,8 +68,8 @@
                                 <thead>
                                 <tr>
                                     <th colspan="2">{{ 'rule_name'|_ }}</th>
-                                    <th>{{ 'rule_triggers'|_ }}</th>
-                                    <th>{{ 'rule_actions'|_ }}</th>
+                                    <th class="hidden-xs">{{ 'rule_triggers'|_ }}</th>
+                                    <th class="hidden-xs">{{ 'rule_actions'|_ }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -123,7 +123,7 @@
                                             {% endif %}
 
                                             {% if rule.description != "" %}
-                                                <small
+                                                <small  class="hidden-xs"
                                                         {% if not rule.active %}
                                                             class="text-muted"
                                                         {% endif %}
@@ -131,7 +131,7 @@
                                             {% endif %}
 
                                         </td>
-                                        <td>
+                                        <td class="hidden-xs">
                                             {% if rule.ruleTriggers.count > 0 %}
                                                 <ul class="small rule-triggers" data-id="{{ rule.id }}">
                                                     {% for trigger in rule.ruleTriggers %}
@@ -151,7 +151,7 @@
                                                 </ul>
                                             {% endif %}
                                         </td>
-                                        <td>
+                                        <td class="hidden-xs">
                                             {% if rule.ruleActions.count > 0 %}
                                                 <ul class="small rule-actions" data-id="{{ rule.id }}">
                                                     {% for action in rule.ruleActions %}
