@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="robots" content="noindex, nofolllow, noarchive, noodp, NoImageIndex, noydir">
-    <title>Firefly III
-        {% if title != "Firefly III" %}
-            » {{ title }}
-        {% endif %}
+    <title>
         {% if subTitle %}
-            » {{ subTitle }}
+            {{ subTitle }} »
         {% endif %}
+        {% if title != "Firefly III" %}
+            {{ title }} »
+        {% endif %}
+
+        Firefly III
+
     </title>
     <base href="{{ route('index') }}/">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
