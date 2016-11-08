@@ -64,12 +64,12 @@ return [
     'revenue_account_source'      => '收入帳戶 （源頭）',
     'source_account_asset'        => '來源帳戶 （資產帳戶）',
     'destination_account_expense' => 'Destination account (expense account)',
-    'destination_account_asset' => 'Destination account (asset account)',
+    'destination_account_asset'   => 'Destination account (asset account)',
     'source_account_revenue'      => '來源帳戶 （收入帳戶）',
     'type'                        => 'Type',
     'convert_Withdrawal'          => 'Convert withdrawal',
-    'convert_Deposit'          => 'Convert deposit',
-    'convert_Transfer'          => 'Convert transfer',
+    'convert_Deposit'             => 'Convert deposit',
+    'convert_Transfer'            => 'Convert transfer',
 
 
     'amount'                     => '金額',
@@ -150,6 +150,8 @@ return [
     // admin
     'domain'                     => 'Domain',
     'single_user_mode'           => 'Single user mode',
+    'must_confirm_account'       => 'New users must activate account',
+    'is_demo_site'               => 'Is demo site',
 
     // import
     'import_file'                => '匯入檔案',
