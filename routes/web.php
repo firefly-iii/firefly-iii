@@ -308,6 +308,7 @@ Route::group(
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
     Route::get('/reports/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
+    Route::get('/reports/options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'reports.options']);
 
     /**
      * Report AJAX data Controller:

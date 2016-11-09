@@ -26,6 +26,7 @@
                                 <select name="report_type" class="form-control" id="inputReportType">
                                     <option selected label="{{ 'report_type_default'|_ }}" value="default">{{ 'report_type_default'|_ }}</option>
                                     <option label="{{ 'report_type_audit'|_ }}" value="audit">{{ 'report_type_audit'|_ }}</option>
+                                    <option label="{{ 'report_type_category'|_ }}" value="category">{{ 'report_type_category'|_ }}</option>
                                 </select>
                             </div>
                         </div>
@@ -86,10 +87,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'reports_extra_options'|_ }}</h3>
                     </div>
-                    <div class="box-body">
-                        <p id="no_extra_options">
-                            <em>{{ 'report_has_no_extra_options'|_ }}</em>
-                        </p>
+                    <div class="box-body loading" id="extra-options">
                     </div>
                 </div>
 

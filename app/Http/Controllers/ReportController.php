@@ -23,6 +23,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
+use Response;
 use Session;
 use Steam;
 use View;
@@ -83,6 +84,23 @@ class ReportController extends Controller
 
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
+    }
+
+    /**
+     * @param string $reportType
+     *
+     * @return mixed
+     */
+    public function options(string $reportType)
+    {
+        $result = false;
+        switch ($reportType) {
+            default:
+                $result = $this->noReportOptions();
+                break;
+        }
+
+        return Response::json($result);
     }
 
     /**
@@ -291,5 +309,13 @@ class ReportController extends Controller
                 'accountIds', 'end'
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function noReportOptions(): array
+    {
+        return ['html' => view('reports.options.no-options')->render()];
     }
 }

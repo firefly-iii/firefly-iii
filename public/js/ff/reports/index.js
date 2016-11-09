@@ -44,8 +44,23 @@ $(function () {
 
     $('.date-select').on('click', preSelectDate);
     $('#report-form').on('submit', catchSubmit);
+    $('select[name="report_type"]').on('change', getReportOptions);
+    getReportOptions();
 
 });
+
+function getReportOptions() {
+    "use strict";
+    var reportType = $('select[name="report_type"]').val();
+    $('#extra-options').empty();
+    $('#extra-options').addClass('loading');
+    console.log('Changed report type to ' + reportType);
+    $.getJSON('reports/options/' + reportType, function(data) {
+        $('#extra-options').removeClass('loading').html(data.html);
+    }).fail(function(){
+        $('#extra-options').removeClass('loading').addClass('error');
+    });
+}
 
 function catchSubmit() {
     "use strict";
