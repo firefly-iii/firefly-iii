@@ -35,14 +35,16 @@ class ReportGeneratorFactory
     public static function reportGenerator(string $type, Carbon $start, Carbon $end): ReportGeneratorInterface
     {
         $period = 'Month';
-        // more than one year date difference means multi year report.
-        if ($start->diffInMonths($end) > 12) {
-            $period = 'MultiYear';
-        }
         // more than two months date difference means year report.
         if ($start->diffInMonths($end) > 1) {
             $period = 'Year';
         }
+
+        // more than one year date difference means multi year report.
+        if ($start->diffInMonths($end) > 12) {
+            $period = 'MultiYear';
+        }
+
 
         $class = sprintf('FireflyIII\Generator\Report\%s\%sReportGenerator', $type, $period);
         if (class_exists($class)) {
