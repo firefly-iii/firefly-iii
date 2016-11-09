@@ -10,7 +10,7 @@
 
 ## Installation
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://jc5.github.io/firefly-iii/installation-guide/).
+To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/installation-guide/).
 
 ## More about Firefly III
 
@@ -25,6 +25,6 @@ Firefly works on the principle that if you know where you're money is going, you
 - Firefly has lots of features without becoming fancy or bloated.
 - If you feel you're missing something you can just ask me and I'll add it!
 
-Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://jc5.github.io/firefly-iii/).
+Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
 
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
