@@ -307,7 +307,21 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    Route::get('/reports/report/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@report', 'as' => 'reports.report']);
+    Route::post('/reports', ['uses' => 'ReportController@postIndex', 'as' => 'reports.index.post']);
+
+    // default report:
+    Route::get('/reports/default/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@defaultReport', 'as' => 'reports.report.default']);
+
+    // audit report:
+    Route::get('/reports/audit/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@auditReport', 'as' => 'reports.report.audit']);
+
+    // category report:
+    Route::get(
+        '/reports/category/{start_date}/{end_date}/{accountList}/{categoryList}',
+        ['uses' => 'ReportController@categoryReport', 'as' => 'reports.report.category']
+    );
+
+
     Route::get('/reports/options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'reports.options']);
 
     /**

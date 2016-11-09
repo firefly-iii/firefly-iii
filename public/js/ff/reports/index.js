@@ -55,23 +55,17 @@ function getReportOptions() {
     $('#extra-options').empty();
     $('#extra-options').addClass('loading');
     console.log('Changed report type to ' + reportType);
-    $.getJSON('reports/options/' + reportType, function(data) {
+    $.getJSON('reports/options/' + reportType, function (data) {
         $('#extra-options').removeClass('loading').html(data.html);
-    }).fail(function(){
+    }).fail(function () {
         $('#extra-options').removeClass('loading').addClass('error');
     });
 }
 
 function catchSubmit() {
     "use strict";
-    // default;20141201;20141231;4;5
-    // report name:
-    var url = '' + $('select[name="report_type"]').val() + '/';
-
     // date, processed:
     var picker = $('#inputDateRange').data('daterangepicker');
-    url += moment(picker.startDate).format("YYYYMMDD") + '/';
-    url += moment(picker.endDate).format("YYYYMMDD") + '/';
 
     // all account ids:
     var count = 0;
@@ -79,23 +73,24 @@ function catchSubmit() {
     $.each($('.account-checkbox'), function (i, v) {
         var c = $(v);
         if (c.prop('checked')) {
-            url += c.val() + ',';
             accounts.push(c.val());
             count++;
         }
     });
+
+    // all category ids to come
+
+
+    // remember all
     if (count > 0) {
         // set cookie to remember choices.
         createCookie('report-type', $('select[name="report_type"]').val(), 365);
         createCookie('report-accounts', accounts, 365);
         createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
         createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
-
-        window.location.href = reportURL + "/" + url;
     }
-    //console.log(url);
 
-    return false;
+    return true;
 }
 
 function preSelectDate(e) {

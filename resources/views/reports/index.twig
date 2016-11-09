@@ -7,7 +7,7 @@
 {% block content %}
 
     <div class="row">
-        <form class="form-horizontal" id="report-form" action="{{ route('reports.index') }}" method="post">
+        <form class="form-horizontal" id="report-form" action="{{ route('reports.index.post') }}" method="post">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
@@ -116,16 +116,16 @@
                     <h4>{{ 'quick_link_default_report'|_ }}</h4>
                     <ul>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
+                            <a href="{{ route('reports.report.default',
+                            [
                             'currentMonthStart',
                             'currentMonthEnd',
                             accountList
                             ]) }}">{{ 'report_this_month_quick'|_ }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
+                            <a href="{{ route('reports.report.default',
+                            [
                             'currentYearStart',
                             'currentYearEnd',
                             accountList
@@ -133,7 +133,7 @@
                         </li>
                         {% if customFiscalYear == 1 %}
                             <li>
-                                <a href="{{ route('reports.report',
+                                <a href="{{ route('reports.report.default',
                                 ['default',
                                 'currentFiscalYearStart',
                                 'currentFiscalYearEnd',
@@ -142,8 +142,8 @@
                             </li>
                         {% endif %}
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
+                            <a href="{{ route('reports.report.default',
+                            [
                             start.format('Ymd'),
                             'currentMonthEnd',
                             accountList
@@ -154,16 +154,16 @@
                     <h4>{{ 'quick_link_audit_report'|_ }}</h4>
                     <ul>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['audit',
+                            <a href="{{ route('reports.report.audit',
+                            [
                             'currentMonthStart',
                             'currentMonthEnd',
                             accountList
                             ]) }}">{{ 'report_this_month_quick'|_ }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['audit',
+                            <a href="{{ route('reports.report.audit',
+                            [
                             'currentYearStart',
                             'currentYearEnd',
                             accountList
@@ -171,8 +171,8 @@
                         </li>
                         {% if customFiscalYear == 1 %}
                             <li>
-                                <a href="{{ route('reports.report',
-                                ['audit',
+                                <a href="{{ route('reports.report.audit',
+                                [
                                 'currentFiscalYearStart',
                                 'currentFiscalYearEnd',
                                 accountList
@@ -180,15 +180,14 @@
                             </li>
                         {% endif %}
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['audit',
+                            <a href="{{ route('reports.report.audit',
+                            [
                             start.format('Ymd'),
                             'currentMonthEnd',
                             accountList
                             ]) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>
                     </ul>
-
                     <p>
                         <em>{{ 'reports_can_bookmark'|_ }}</em>
                     </p>
@@ -202,8 +201,6 @@
 
 {% block scripts %}
     <script type="text/javascript">
-
-        var reportURL = "{{ route('reports.report', ['','','','']) }}";
         var minDate = "{{ start.format('m/d/Y') }}";
         var picker;
     </script>
