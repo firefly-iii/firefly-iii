@@ -686,6 +686,8 @@ return [
     'reports_extra_options'                      => 'Extra opties',
     'report_has_no_extra_options'                => 'Er zijn geen extra opties voor dit overzicht',
     'reports_submit'                             => 'Bekijk overzicht',
+    'end_after_start_date'                       => 'End date of report must be after start date.',
+    'select_category'                            => 'Select one or more categories.',
 
     // charts:
     'chart'                                      => 'Diagram',
