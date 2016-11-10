@@ -55,6 +55,6 @@ class ReportGeneratorFactory
 
             return $obj;
         }
-        throw new FireflyException(sprintf('Class "%s" does not exist.', $class));
+        throw new FireflyException(sprintf('Cannot generate report. There is no "%s"-report for period "%s".', $type, $period));
     }
 }

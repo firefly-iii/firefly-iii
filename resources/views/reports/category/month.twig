@@ -1,0 +1,65 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-4">
+            Summary here. Accounts and categories involved. Summary of in/out
+        </div>
+        <div class="col-lg-4">
+            Pie chart with spending (aka all withdrawals in category). Optional checkbox to include all other transactions.
+        </div>
+        <div class="col-lg-4">
+            Pie chart with income (aka all deposits in category). Optional checkbox to include all other transactions (for comparison).
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            big chart here
+
+            Show income / expenses per period. Differs per report: month = per day, year = per month, multi-year = per year.
+            In a bar chart, possibly grouped by expense/revenue account.
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            List of spending (withdrawals) by account, if relevant. Grouped:<br>
+
+            BC: 456
+            AH: 123
+
+            order by size
+
+            linked to chart
+
+            use reset button to reset after chart was clicked.
+        </div>
+        <div class="col-lg-3">
+            List of spending (withdrawals) by transaction, if relevant. Not grouped<br>
+
+            more groceries: 456
+            groceries: 123
+
+            ordered by size. top x list?
+        </div>
+
+        <div class="col-lg-6">
+            Same but for income
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block styles %}
+{% endblock %}

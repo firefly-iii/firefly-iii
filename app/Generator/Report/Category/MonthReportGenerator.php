@@ -11,23 +11,24 @@
 
 declare(strict_types = 1);
 
-namespace FireflyIII\Generator\Report\Standard;
+namespace FireflyIII\Generator\Report\Category;
 
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Report\ReportHelperInterface;
 use Illuminate\Support\Collection;
 
 /**
  * Class MonthReportGenerator
  *
- * @package FireflyIII\Generator\Report\Standard
+ * @package FireflyIII\Generator\Report\Category
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
     /** @var  Collection */
     private $accounts;
+    /** @var  Collection */
+    private $categories;
     /** @var  Carbon */
     private $end;
     /** @var  Carbon */
@@ -38,18 +39,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $helper = app(ReportHelperInterface::class);
-        $bills  = $helper->getBillReport($this->start, $this->end, $this->accounts);
-
-        // and some id's, joined:
         $accountIds = join(',', $this->accounts->pluck('id')->toArray());
-        $reportType = 'default';
+        $reportType = 'category';
 
-        // continue!
-        return view(
-            'reports.default.month',
-            compact('bills', 'accountIds', 'reportType')
-        )->with('start', $this->start)->with('end', $this->end)->render();
+        // render!
+        return view('reports.category.month', compact('accountIds', 'reportType'))
+            ->with('start', $this->start)->with('end', $this->end)
+            ->with('categories', $this->categories)
+            ->render();
     }
 
     /**
@@ -60,6 +57,18 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
         $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * @param Collection $categories
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
+        $this->categories = $categories;
 
         return $this;
     }
@@ -86,14 +95,5 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->start = $date;
 
         return $this;
-    }
-
-    /**
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setCategories(Collection $categories): ReportGeneratorInterface
-    {
     }
 }

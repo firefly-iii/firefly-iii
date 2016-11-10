@@ -16,22 +16,15 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorFactory;
-use FireflyIII\Generator\Report\Standard\MonthReportGenerator;
-use FireflyIII\Generator\Report\StandardReportGenerator;
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Requests\ReportFormRequest;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
-use Session;
-use Steam;
 use View;
 
 /**
@@ -56,6 +49,7 @@ class ReportController extends Controller
             function ($request, $next) {
                 View::share('title', trans('firefly.reports'));
                 View::share('mainTitleIcon', 'fa-line-chart');
+                View::share('subTitleIcon', 'fa-calendar');
 
                 $this->helper = app(ReportHelperInterface::class);
 
@@ -75,12 +69,9 @@ class ReportController extends Controller
      */
     public function auditReport(Carbon $start, Carbon $end, Collection $accounts)
     {
-        // throw an error if necessary.
         if ($end < $start) {
-            throw new FireflyException('End date cannot be before start date, silly!');
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
-
-        // lower threshold
         if ($start < session('first')) {
             $start = session('first');
         }
@@ -94,7 +85,7 @@ class ReportController extends Controller
                           ]
                       )
         );
-        View::share('subTitleIcon', 'fa-calendar');
+
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
@@ -112,14 +103,47 @@ class ReportController extends Controller
      * @return string
      * @throws FireflyException
      */
-    public function defaultReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function categoryReport(Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {
-        // throw an error if necessary.
         if ($end < $start) {
-            throw new FireflyException('End date cannot be before start date, silly!');
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
         }
 
-        // lower threshold
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_category',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+        $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
+        $generator->setAccounts($accounts);
+        $generator->setCategories($categories);
+        $result = $generator->generate();
+
+        return $result;
+
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function defaultReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
         if ($start < session('first')) {
             $start = session('first');
         }
@@ -133,7 +157,6 @@ class ReportController extends Controller
                           ]
                       )
         );
-        View::share('subTitleIcon', 'fa-calendar');
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
         $generator->setAccounts($accounts);
@@ -155,16 +178,8 @@ class ReportController extends Controller
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
-
-        // does the user have shared accounts?
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        // get id's for quick links:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds [] = $account->id;
-        }
-        $accountList = join(',', $accountIds);
+        $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accountList      = join(',', $accounts->pluck('id')->toArray());
 
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
@@ -177,7 +192,6 @@ class ReportController extends Controller
      */
     public function options(string $reportType)
     {
-        $result = '';
         switch ($reportType) {
             default:
                 $result = $this->noReportOptions();
@@ -206,7 +220,7 @@ class ReportController extends Controller
         $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
 
         if ($end < $start) {
-            throw new FireflyException('End date cannot be before start date, silly!');
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
 
         // lower threshold

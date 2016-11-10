@@ -80,15 +80,4 @@ interface ReportHelperInterface
      */
     public function listOfMonths(Carbon $date): array;
 
-    /**
-     * Returns an array of tags and their comparitive size with amounts bla bla.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array;
-
 }

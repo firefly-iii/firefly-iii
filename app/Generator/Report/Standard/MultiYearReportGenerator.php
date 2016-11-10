@@ -16,7 +16,6 @@ namespace FireflyIII\Generator\Report\Standard;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Report\ReportHelperInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -59,6 +58,15 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
         $this->accounts = $accounts;
 
         return $this;
+    }
+
+    /**
+     * @param Collection $categories
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
     }
 
     /**

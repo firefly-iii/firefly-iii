@@ -113,81 +113,47 @@
                     <h3 class="box-title">{{ 'quick_link_reports'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <h4>{{ 'quick_link_default_report'|_ }}</h4>
-                    <ul>
-                        <li>
-                            <a href="{{ route('reports.report.default',
-                            [
-                            'currentMonthStart',
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_month_quick'|_ }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('reports.report.default',
-                            [
-                            'currentYearStart',
-                            'currentYearEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_year_quick'|_ }}</a>
-                        </li>
-                        {% if customFiscalYear == 1 %}
-                            <li>
-                                <a href="{{ route('reports.report.default',
-                                ['default',
-                                'currentFiscalYearStart',
-                                'currentFiscalYearEnd',
-                                accountList
-                                ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="{{ route('reports.report.default',
-                            [
-                            start.format('Ymd'),
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_all_time_quick'|_ }}</a>
-                        </li>
-                    </ul>
 
-                    <h4>{{ 'quick_link_audit_report'|_ }}</h4>
-                    <ul>
-                        <li>
-                            <a href="{{ route('reports.report.audit',
-                            [
-                            'currentMonthStart',
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_month_quick'|_ }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('reports.report.audit',
-                            [
-                            'currentYearStart',
-                            'currentYearEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_year_quick'|_ }}</a>
-                        </li>
-                        {% if customFiscalYear == 1 %}
+                    {% for type in ['default','audit'] %}
+                        <h4>{{ ('quick_link_'~type~'_report')|_ }}</h4>
+
+                        <ul>
                             <li>
-                                <a href="{{ route('reports.report.audit',
+                                <a href="{{ route('reports.report.'~type,
                                 [
-                                'currentFiscalYearStart',
-                                'currentFiscalYearEnd',
+                                'currentMonthStart',
+                                'currentMonthEnd',
                                 accountList
-                                ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                                ]) }}">{{ 'report_this_month_quick'|_ }}</a>
                             </li>
-                        {% endif %}
-                        <li>
-                            <a href="{{ route('reports.report.audit',
-                            [
-                            start.format('Ymd'),
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_all_time_quick'|_ }}</a>
-                        </li>
-                    </ul>
+                            <li>
+                                <a href="{{ route('reports.report.'~type,
+                                [
+                                'currentYearStart',
+                                'currentYearEnd',
+                                accountList
+                                ]) }}">{{ 'report_this_year_quick'|_ }}</a>
+                            </li>
+                            {% if customFiscalYear == 1 %}
+                                <li>
+                                    <a href="{{ route('reports.report.'~type,
+                                    ['default',
+                                    'currentFiscalYearStart',
+                                    'currentFiscalYearEnd',
+                                    accountList
+                                    ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="{{ route('reports.report.'~type,
+                                [
+                                start.format('Ymd'),
+                                'currentMonthEnd',
+                                accountList
+                                ]) }}">{{ 'report_all_time_quick'|_ }}</a>
+                            </li>
+                        </ul>
+                    {% endfor %}
                     <p>
                         <em>{{ 'reports_can_bookmark'|_ }}</em>
                     </p>

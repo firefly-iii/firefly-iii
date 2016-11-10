@@ -112,6 +112,15 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $categories
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
+    }
+
+    /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface

@@ -23,15 +23,11 @@ use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use stdClass;
 
@@ -45,20 +41,16 @@ class ReportHelper implements ReportHelperInterface
 
     /** @var  BudgetRepositoryInterface */
     protected $budgetRepository;
-    /** @var  TagRepositoryInterface */
-    protected $tagRepository;
 
     /**
      * ReportHelper constructor.
      *
      *
      * @param BudgetRepositoryInterface $budgetRepository
-     * @param TagRepositoryInterface    $tagRepository
      */
-    public function __construct(BudgetRepositoryInterface $budgetRepository, TagRepositoryInterface $tagRepository)
+    public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
         $this->budgetRepository = $budgetRepository;
-        $this->tagRepository    = $tagRepository;
     }
 
     /**
@@ -232,80 +224,6 @@ class ReportHelper implements ReportHelperInterface
         }
 
         return $months;
-    }
-
-    /**
-     * Returns an array of tags and their comparitive size with amounts bla bla.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    public function tagReport(Carbon $start, Carbon $end, Collection $accounts): array
-    {
-        $ids        = $accounts->pluck('id')->toArray();
-        $set        = Tag::
-        leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
-                         ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->leftJoin(
-                             'transactions AS source', function (JoinClause $join) {
-                             $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', '0');
-                         }
-                         )
-                         ->leftJoin(
-                             'transactions AS destination', function (JoinClause $join) {
-                             $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', '0');
-                         }
-                         )
-                         ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                         ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                         ->where(
-                         // source.account_id in accountIds XOR destination.account_id in accountIds
-                             function (Builder $query) use ($ids) {
-                                 $query->where(
-                                     function (Builder $q1) use ($ids) {
-                                         $q1->whereIn('source.account_id', $ids)
-                                            ->whereNotIn('destination.account_id', $ids);
-                                     }
-                                 )->orWhere(
-                                     function (Builder $q2) use ($ids) {
-                                         $q2->whereIn('destination.account_id', $ids)
-                                            ->whereNotIn('source.account_id', $ids);
-                                     }
-                                 );
-                             }
-                         )
-                         ->get(['tags.id', 'tags.tag', 'transaction_journals.id as journal_id', 'destination.amount']);
-        $collection = [];
-        if ($set->count() === 0) {
-            return $collection;
-        }
-        /** @var Tag $entry */
-        foreach ($set as $entry) {
-            // less than zero? multiply to be above zero.
-            $amount          = $entry->amount;
-            $id              = intval($entry->id);
-            $previousAmount  = $collection[$id]['amount'] ?? '0';
-            $collection[$id] = [
-                'id'     => $id,
-                'tag'    => $entry->tag,
-                'amount' => bcadd($previousAmount, $amount),
-            ];
-        }
-
-        // cleanup collection (match "fonts")
-        $max = strval(max(array_column($collection, 'amount')));
-        foreach ($collection as $id => $entry) {
-            $size = bcdiv($entry['amount'], $max, 4);
-            if (bccomp($size, '0.25') === -1) {
-                $size = '0.5';
-            }
-            $collection[$id]['fontsize'] = $size;
-        }
-
-        return $collection;
     }
 
 }
