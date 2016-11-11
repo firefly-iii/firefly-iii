@@ -686,6 +686,8 @@ return [
     'reports_extra_options'                      => 'Extra options',
     'report_has_no_extra_options'                => 'This report has no extra options',
     'reports_submit'                             => 'View report',
+    'end_after_start_date'                       => 'End date of report must be after start date.',
+    'select_category'                            => 'Select one or more categories.',
 
     // charts:
     'chart'                                      => 'Chart',
