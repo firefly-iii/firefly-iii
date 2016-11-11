@@ -15,6 +15,7 @@ namespace FireflyIII\Generator\Chart\Bill;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Support\ChartColour;
 use Illuminate\Support\Collection;
 
 /**
@@ -37,7 +38,7 @@ class ChartJsBillChartGenerator implements BillChartGeneratorInterface
             'datasets' => [
                 [
                     'data'            => [round($unpaid, 2), round(bcmul($paid, '-1'), 2)],
-                    'backgroundColor' => ['rgba(53, 124, 165,0.7)', 'rgba(0, 141, 76, 0.7)',],
+                    'backgroundColor' => [ChartColour::getColour(0), ChartColour::getColour(1)],
                 ],
 
             ],
