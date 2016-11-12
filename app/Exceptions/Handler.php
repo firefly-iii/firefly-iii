@@ -77,7 +77,8 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
+        $doMailError = env('SEND_ERROR_MESSAGE', true);
+        if (($exception instanceof FireflyException || $exception instanceof ErrorException) && $doMailError) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
