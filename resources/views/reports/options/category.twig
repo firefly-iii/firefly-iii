@@ -3,6 +3,6 @@
 </p>
 {% for category in categories %}
 <label class="checkbox-inline">
-    <input type="checkbox" name="category[]" value="{{ category.id }}"> {{ category.name }}
+    <input type="checkbox" class="category-checkbox" name="category[]" value="{{ category.id }}"> {{ category.name }}
 </label>
 {% endfor %}

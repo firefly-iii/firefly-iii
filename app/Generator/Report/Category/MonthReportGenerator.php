@@ -20,7 +20,6 @@ use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class MonthReportGenerator
@@ -231,7 +230,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $accountIds   = $this->accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $transactions = self::filterExpenses($transactions, $accountIds);
-
 
         return $transactions;
     }

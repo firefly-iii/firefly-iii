@@ -17,7 +17,6 @@ $(function () {
             }
         );
 
-
         // set values from cookies, if any:
         if (readCookie('report-type') !== null) {
             $('select[name="report_type"]').val(readCookie('report-type'));
@@ -26,7 +25,7 @@ $(function () {
         if ((readCookie('report-accounts') !== null)) {
             var arr = readCookie('report-accounts').split(',');
             arr.forEach(function (val) {
-                $('input[type="checkbox"][value="' + val + '"]').prop('checked', true);
+                $('input[class="account-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
             });
         }
 
@@ -55,11 +54,22 @@ function getReportOptions() {
     $('#extra-options').empty();
     $('#extra-options').addClass('loading');
     console.log('Changed report type to ' + reportType);
+
     $.getJSON('reports/options/' + reportType, function (data) {
         $('#extra-options').removeClass('loading').html(data.html);
+        setOptionalFromCookies();
     }).fail(function () {
         $('#extra-options').removeClass('loading').addClass('error');
     });
+}
+
+function setOptionalFromCookies() {
+    if ((readCookie('report-categories') !== null)) {
+        var arr = readCookie('report-categories').split(',');
+        arr.forEach(function (val) {
+            $('input[class="category-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
+        });
+    }
 }
 
 function catchSubmit() {
@@ -78,7 +88,15 @@ function catchSubmit() {
         }
     });
 
-    // all category ids to come
+    // all category ids:
+    //category-checkbox
+    var categories = [];
+    $.each($('.category-checkbox'), function (i, v) {
+        var c = $(v);
+        if (c.prop('checked')) {
+            categories.push(c.val());
+        }
+    });
 
 
     // remember all
@@ -86,6 +104,7 @@ function catchSubmit() {
         // set cookie to remember choices.
         createCookie('report-type', $('select[name="report_type"]').val(), 365);
         createCookie('report-accounts', accounts, 365);
+        createCookie('report-categories', categories, 365);
         createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
         createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
     }
