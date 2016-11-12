@@ -696,6 +696,7 @@ return [
     'expense_per_account'                        => 'Uitgaven per rekening',
     'include_not_in_category'                    => 'Laat ook transacties buiten deze categorieën zien',
     'everything_else'                            => 'De rest',
+    'income_and_expenses'                        => 'Income and expenses',
 
     // charts:
     'chart'                                      => 'Diagram',
