@@ -696,6 +696,7 @@ return [
     'expense_per_account'                        => 'Expense per account',
     'include_not_in_category'                    => 'Include transactions not selected for this report',
     'everything_else'                            => 'Everything else',
+    'income_and_expenses'                        => 'Income and expenses',
 
     // charts:
     'chart'                                      => 'Chart',
