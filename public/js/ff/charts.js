@@ -91,7 +91,9 @@ var defaultPieOptions = {
                 return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
             }
         }
-    }
+    },
+    maintainAspectRatio: true,
+    responsive: true
 };
 
 

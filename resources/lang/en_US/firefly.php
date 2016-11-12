@@ -624,6 +624,7 @@ return [
     // reports:
     'report_default'                             => 'Default financial report for :start until :end',
     'report_audit'                               => 'Transaction history overview for :start until :end',
+    'report_category'                            => 'Category report for :start until :end',
     'quick_link_reports'                         => 'Quick links',
     'quick_link_default_report'                  => 'Default financial report',
     'quick_link_audit_report'                    => 'Transaction history overview',
@@ -689,6 +690,12 @@ return [
     'reports_submit'                             => 'View report',
     'end_after_start_date'                       => 'End date of report must be after start date.',
     'select_category'                            => 'Select one or more categories.',
+    'income_per_category'                        => 'Income per category',
+    'expense_per_category'                       => 'Expense per category',
+    'income_per_account'                         => 'Income per account',
+    'expense_per_account'                        => 'Expense per account',
+    'include_not_in_category'                    => 'Include transactions not selected for this report',
+    'everything_else'                            => 'Everything else',
 
     // charts:
     'chart'                                      => 'Chart',

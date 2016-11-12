@@ -7,7 +7,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-md-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'accounts'|_ }}</h3>
@@ -89,66 +89,67 @@
             </div>
         </div>
         {% if categories.count > 1 %}
-        <div class="col-lg-2">
+        <div class="col-lg-2 col-md-3">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'income_per_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="categories-in-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
-                    <label>
-                        <input type="checkbox" id="categories-in-pie-chart-checked"> Include transactions not in these categories
+                    <canvas id="categories-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                    <label style="font-weight:normal;">
+                        <input type="checkbox" id="categories-in-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
                     </label>
                 </div>
             </div>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 col-md-3">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="categories-out-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
-                    <label>
-                        <input type="checkbox" id="categories-out-pie-chart-checked"> Include transactions not in these categories
+                    <canvas id="categories-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                    <label style="font-weight:normal;">
+                        <input type="checkbox" id="categories-out-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
                     </label>
                 </div>
             </div>
         </div>
         {% endif %}
         {% if accounts.count > 1 %}
-        <div class="col-lg-2">
+        <div class="col-lg-2 col-md-3">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="accounts-in-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
-                    <label>
-                        <input type="checkbox" id="accounts-in-pie-chart-checked"> Include transactions not in these categories
+                    <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                    <label style="font-weight:normal;">
+                        <input type="checkbox" id="accounts-in-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
                     </label>
                 </div>
             </div>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 col-md-3">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="accounts-out-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
-                    <label>
-                        <input type="checkbox" id="accounts-out-pie-chart-checked"> Include transactions not in these categories
+                    <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                    <label style="font-weight:normal;">
+                        <input type="checkbox" id="accounts-out-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
                     </label>
                 </div>
             </div>
         </div>
         {% endif %}
-            {#Pie chart with income (aka all deposits in category). Optional checkbox to include all other transactions (for comparison).#}
     </div>
 
     <div class="row">
         <div class="col-lg-12">
+
+            
             big chart here
 
             Show income / expenses per period. Differs per report: month = per day, year = per month, multi-year = per year.
