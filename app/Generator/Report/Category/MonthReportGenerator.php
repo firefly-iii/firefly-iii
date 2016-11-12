@@ -39,6 +39,68 @@ class MonthReportGenerator implements ReportGeneratorInterface
     private $start;
 
     /**
+     * @param Collection $collection
+     * @param array      $accounts
+     *
+     * @return Collection
+     */
+    public static function filterExpenses(Collection $collection, array $accounts): Collection
+    {
+        $result = $collection->filter(
+            function (Transaction $transaction) use ($accounts) {
+                $opposing = $transaction->opposing_account_id;
+                // remove internal transfer
+                if (in_array($opposing, $accounts)) {
+                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
+
+                    return null;
+                }
+                // remove positive amount
+                if (bccomp($transaction->transaction_amount, '0') === 1) {
+                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
+
+                    return null;
+                }
+
+                return $transaction;
+            }
+        );
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param array      $accounts
+     *
+     * @return Collection
+     */
+    public static function filterIncome(Collection $collection, array $accounts): Collection
+    {
+        $result = $collection->filter(
+            function (Transaction $transaction) use ($accounts) {
+                $opposing = $transaction->opposing_account_id;
+                // remove internal transfer
+                if (in_array($opposing, $accounts)) {
+                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
+
+                    return null;
+                }
+                // remove positive amount
+                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
+
+                    return null;
+                }
+
+                return $transaction;
+            }
+        );
+
+        return $result;
+    }
+
+    /**
      * @return string
      */
     public function generate(): string
@@ -186,7 +248,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     private function getEarnedAccountSummary(): array
     {
-        $transactions = $this->getIncomes();
+        $transactions = $this->getIncome();
         $result       = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
@@ -203,7 +265,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     private function getEarnedCategorySummary(): array
     {
-        $transactions = $this->getIncomes();
+        $transactions = $this->getIncome();
         $result       = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
@@ -230,26 +292,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         $accountIds   = $this->accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
+        $transactions = self::filterExpenses($transactions, $accountIds);
 
-        $transactions = $transactions->filter(
-            function (Transaction $transaction) use ($accountIds) {
-                $opposing = $transaction->opposing_account_id;
-                // remove internal transfer
-                if (in_array($opposing, $accountIds)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
-
-                    return null;
-                }
-                // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === 1) {
-                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
-
-                    return null;
-                }
-
-                return $transaction;
-            }
-        );
 
         return $transactions;
     }
@@ -257,7 +301,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * @return Collection
      */
-    private function getIncomes(): Collection
+    private function getIncome(): Collection
     {
         $collector = new JournalCollector(auth()->user());
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
@@ -265,25 +309,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                   ->setCategories($this->categories)->getOpposingAccount();
         $accountIds   = $this->accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
-        $transactions = $transactions->filter(
-            function (Transaction $transaction) use ($accountIds) {
-                $opposing = $transaction->opposing_account_id;
-                // remove internal transfer
-                if (in_array($opposing, $accountIds)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
-
-                    return null;
-                }
-                // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
-                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
-
-                    return null;
-                }
-
-                return $transaction;
-            }
-        );
+        $transactions = self::filterIncome($transactions, $accountIds);
 
         return $transactions;
     }

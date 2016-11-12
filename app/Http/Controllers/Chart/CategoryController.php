@@ -16,10 +16,12 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
+use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -124,29 +126,50 @@ class CategoryController extends Controller
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
-        $others     = intval($others) === 1;
-        $names      = [];
-        $collector  = new JournalCollector(auth()->user());
-        $collector->setAccounts($accounts)->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setCategories($categories);
-        $set    = $collector->getSumPerCategory();
+        /** @var bool $others */
+        $others = intval($others) === 1;
+        $names  = [];
+
+        // collect journals (just like the category report does):
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->setCategories($categories)->getOpposingAccount()->disableFilter();
+        $accountIds   = $accounts->pluck('id')->toArray();
+        $transactions = $collector->getJournals();
+        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
+
+        // group by category ID:
+        $grouped = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $jrnlCatId  = intval($transaction->transaction_journal_category_id);
+            $transCatId = intval($transaction->transaction_category_id);
+            $categoryId = max($jrnlCatId, $transCatId);
+
+            $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
+            $amount               = bcmul($transaction->transaction_amount, '-1');
+            $grouped[$categoryId] = bcadd($amount, $grouped[$categoryId]);
+        }
+
+        // loop and show the grouped results:
         $result = [];
         $total  = '0';
-        foreach ($set as $categoryId => $amount) {
+        foreach ($grouped as $categoryId => $amount) {
             if (!isset($names[$categoryId])) {
                 $category           = $repository->find(intval($categoryId));
                 $names[$categoryId] = $category->name;
             }
-            $amount   = bcmul($amount, '-1');
             $total    = bcadd($total, $amount);
             $result[] = ['name' => $names[$categoryId], 'id' => $categoryId, 'amount' => $amount];
         }
 
+        // also collect others?
+        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $sum      = bcmul($collector->getSum(), '-1');
+            $journals = $collector->getJournals();
+            $sum      = bcmul(strval($journals->sum('transaction_amount')), '-1');
             $sum      = bcsub($sum, $total);
             $result[] = ['name' => trans('firefly.everything_else'), 'id' => 0, 'amount' => $sum];
         }
@@ -214,14 +237,33 @@ class CategoryController extends Controller
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         /** @var bool $others */
-        $others    = intval($others) === 1;
-        $names     = [];
+        $others = intval($others) === 1;
+        $names  = [];
+
+        // collect journals (just like the category report does):
         $collector = new JournalCollector(auth()->user());
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategories($categories);
-        $set    = $collector->getSumPerCategory();
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->setCategories($categories)->getOpposingAccount();
+        $accountIds   = $accounts->pluck('id')->toArray();
+        $transactions = $collector->getJournals();
+        $set          = MonthReportGenerator::filterIncome($transactions, $accountIds);
+
+        // group by category ID:
+        $grouped = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $jrnlCatId  = intval($transaction->transaction_journal_category_id);
+            $transCatId = intval($transaction->transaction_category_id);
+            $categoryId = max($jrnlCatId, $transCatId);
+
+            $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
+            $grouped[$categoryId] = bcadd($transaction->transaction_amount, $grouped[$categoryId]);
+        }
+
+        // loop and show the grouped results:
         $result = [];
         $total  = '0';
-        foreach ($set as $categoryId => $amount) {
+        foreach ($grouped as $categoryId => $amount) {
             if (!isset($names[$categoryId])) {
                 $category           = $repository->find(intval($categoryId));
                 $names[$categoryId] = $category->name;
@@ -230,10 +272,13 @@ class CategoryController extends Controller
             $result[] = ['name' => $names[$categoryId], 'id' => $categoryId, 'amount' => $amount];
         }
 
+        // also collect others?
+        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
-            $sum      = $collector->getSum();
+            $journals = $collector->getJournals();
+            $sum      = strval($journals->sum('transaction_amount'));
             $sum      = bcsub($sum, $total);
             $result[] = ['name' => trans('firefly.everything_else'), 'id' => 0, 'amount' => $sum];
         }
