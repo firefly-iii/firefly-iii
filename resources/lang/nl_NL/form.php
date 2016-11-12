@@ -151,7 +151,7 @@ return [
     'domain'                     => 'Domein',
     'single_user_mode'           => 'Enkele gebruiker-modus',
     'must_confirm_account'       => 'Nieuwe gebruikers moeten hun account activeren',
-    'is_demo_site'               => 'Is demo site',
+    'is_demo_site'               => 'Is demo website',
 
     // import
     'import_file'                => 'Importbestand',
