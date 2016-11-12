@@ -209,22 +209,38 @@ Route::group(
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
 
     // these charts are used in reports (category reports):
-    Route::get('/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income',
-               ['uses' => 'Chart\CategoryReportController@categoryIncome']);
-    Route::get('/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense',
-               ['uses' => 'Chart\CategoryReportController@categoryExpense']);
+    Route::get(
+        '/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income',
+        ['uses' => 'Chart\CategoryReportController@categoryIncome']
+    );
+    Route::get(
+        '/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense',
+        ['uses' => 'Chart\CategoryReportController@categoryExpense']
+    );
 
-    Route::get('/chart/account/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income',
-               ['uses' => 'Chart\CategoryReportController@accountIncome']);
-    Route::get('/chart/account/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense',
-               ['uses' => 'Chart\CategoryReportController@accountExpense']);
+    Route::get(
+        '/chart/account/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income',
+        ['uses' => 'Chart\CategoryReportController@accountIncome']
+    );
+    Route::get(
+        '/chart/account/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense',
+        ['uses' => 'Chart\CategoryReportController@accountExpense']
+    );
+    Route::get(
+        '/chart/category-report-income/{accountList}/{categoryList}/{start_date}/{end_date}',
+        ['uses' => 'Chart\CategoryReportController@mainIncomeChart']
+    );
+    Route::get(
+        '/chart/category-report-expenses/{accountList}/{categoryList}/{start_date}/{end_date}',
+        ['uses' => 'Chart\CategoryReportController@mainExpenseChart']
+    );
 
     // piggy banks:
     Route::get('/chart/piggy-bank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
     // reports:
-    Route::get('/chart/report/in-out/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
-    Route::get('/chart/report/in-out-sum/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
+    Route::get('/chart/report/in-out/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
+    Route::get('/chart/report/in-out-sum/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
     Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
 
 
