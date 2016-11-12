@@ -397,6 +397,7 @@ class JournalRepository implements JournalRepositoryInterface
             if (strlen(trim($name)) > 0) {
                 $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
                 if (!is_null($tag)) {
+                    Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
                     $tagRepository->connect($journal, $tag);
                 }
             }
@@ -733,6 +734,7 @@ class JournalRepository implements JournalRepositoryInterface
         // connect each tag to journal (if not yet connected):
         /** @var Tag $tag */
         foreach ($tags as $tag) {
+            Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
             $tagRepository->connect($journal, $tag);
         }
 
