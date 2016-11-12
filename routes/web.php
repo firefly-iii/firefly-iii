@@ -227,12 +227,8 @@ Route::group(
         ['uses' => 'Chart\CategoryReportController@accountExpense']
     );
     Route::get(
-        '/chart/category-report-income/{accountList}/{categoryList}/{start_date}/{end_date}',
-        ['uses' => 'Chart\CategoryReportController@mainIncomeChart']
-    );
-    Route::get(
-        '/chart/category-report-expenses/{accountList}/{categoryList}/{start_date}/{end_date}',
-        ['uses' => 'Chart\CategoryReportController@mainExpenseChart']
+        '/chart/category-report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}',
+        ['uses' => 'Chart\CategoryReportController@mainChart']
     );
 
     // piggy banks:

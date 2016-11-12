@@ -119,6 +119,51 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
     }
 
     /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function mainReportChart(array $entries): array
+    {
+
+        $data = [
+            'count'    => 0,
+            'labels'   => array_keys($entries),
+            'datasets' => [],
+        ];
+
+
+        foreach ($entries as $row) {
+            foreach ($row['in'] as $categoryId => $amount) {
+                // get in:
+                $data['datasets'][$categoryId . 'in']['data'][] = round($amount, 2);
+
+                // get out:
+                $opposite                                        = $row['out'][$categoryId];
+                $data['datasets'][$categoryId . 'out']['data'][] = round($opposite, 2);
+
+                // set name:
+                $data['datasets'][$categoryId . 'out']['label'] = $row['name'][$categoryId] . ' (' . strtolower(strval(trans('firefly.expenses'))) . ')';
+                $data['datasets'][$categoryId . 'in']['label']  = $row['name'][$categoryId] . ' (' . strtolower(strval(trans('firefly.income'))) . ')';
+
+            }
+        }
+
+        // remove empty rows:
+        foreach ($data['datasets'] as $key => $content) {
+            if (array_sum($content['data']) === 0.0) {
+                unset($data['datasets'][$key]);
+            }
+        }
+
+        // re-key the datasets array:
+        $data['datasets'] = array_values($data['datasets']);
+        $data['count']    = count($data['datasets']);
+
+        return $data;
+    }
+
+    /**
      *
      * @param Collection $entries
      *

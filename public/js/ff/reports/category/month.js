@@ -42,12 +42,15 @@ function drawChart() {
     "use strict";
 
     // month view:
+    stackedColumnChart('chart/category-report-in-out/' + accountIds + '/' + categoryIds + '/' + startDate + '/' + endDate, 'in-out-chart');
 
     // draw pie chart of income, depending on "show other transactions too":
     redrawPieChart('categories-in-pie-chart', catInUri);
     redrawPieChart('categories-out-pie-chart', catOutUri);
     redrawPieChart('accounts-in-pie-chart', accInUri);
     redrawPieChart('accounts-out-pie-chart', accOutUri);
+
+
 }
 
 function redrawPieChart(container, uri) {

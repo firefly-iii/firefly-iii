@@ -19,12 +19,14 @@ use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Navigation;
 use Response;
 
 
@@ -259,6 +261,57 @@ class CategoryReportController extends Controller
 
         return Response::json($data);
     }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    {
+        // determin optimal period:
+        $period = '1D';
+        $format = 'month_and_day';
+        if ($start->diffInMonths($end) > 1) {
+            $period = '1M';
+            $format = 'month';
+        }
+        if ($start->diffInMonths($end) > 13) {
+            $period = '1Y';
+            $format = 'year';
+        }
+        Log::debug(sprintf('Period is %s', $period));
+        $data    = [];
+        $current = clone $start;
+        while ($current < $end) {
+            $currentEnd   = Navigation::endOfPeriod($current, $period);
+            $expenses     = $this->groupByCategory($this->getExpenses($accounts, $categories, $current, $currentEnd));
+            $income       = $this->groupByCategory($this->getIncome($accounts, $categories, $current, $currentEnd));
+            $label        = $current->formatLocalized(strval(trans('config.' . $format)));
+            $data[$label] = [
+                'in'  => [],
+                'out' => [],
+            ];
+
+            /** @var Category $category */
+            foreach ($categories as $category) {
+                // get sum, and get label:
+                $categoryId                       = $category->id;
+                $data[$label]['name'][$categoryId]             = $category->name;
+                $data[$label]['in'][$categoryId]  = $income[$categoryId] ?? '0';
+                $data[$label]['out'][$categoryId] = $expenses[$categoryId] ?? '0';
+            }
+
+            $current = Navigation::addPeriod($current, $period, 0);
+        }
+
+        $data = $this->generator->mainReportChart($data);
+        return Response::json($data);
+    }
+
 
     /**
      * @param Collection $accounts

@@ -148,15 +148,21 @@
 
     <div class="row">
         <div class="col-lg-12">
-
-            
-            big chart here
-
-            Show income / expenses per period. Differs per report: month = per day, year = per month, multi-year = per year.
-            In a bar chart, possibly grouped by expense/revenue account.
-
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="in-out-chart" style="margin:0 auto;" height="300"></canvas>
+                    </div>
+                </div>
         </div>
     </div>
+    {#
+            big chart here
+            Show income / expenses per period. Differs per report: month = per day, year = per month, multi-year = per year.
+            In a bar chart, possibly grouped by expense/revenue account.
+            #}
 
     <div class="row">
         <div class="col-lg-3">

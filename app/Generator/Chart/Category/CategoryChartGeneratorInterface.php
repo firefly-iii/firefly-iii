@@ -38,6 +38,13 @@ interface CategoryChartGeneratorInterface
     public function all(Collection $entries): array;
 
     /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function mainReportChart(array $entries): array;
+
+    /**
      * @param Collection $categories
      * @param Collection $entries
      *
