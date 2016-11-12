@@ -624,6 +624,7 @@ return [
     // reports:
     'report_default'                             => 'Standaard financieel rapport (:start tot :end)',
     'report_audit'                               => 'Transactiehistorie-overzicht van :start tot :end',
+    'report_category'                            => 'Category report for :start until :end',
     'quick_link_reports'                         => 'Snelle links',
     'quick_link_default_report'                  => 'Standaard financieel rapport',
     'quick_link_audit_report'                    => 'Transactiehistorie-overzicht',
@@ -669,6 +670,7 @@ return [
     'report_type'                                => 'Rapporttype',
     'report_type_default'                        => 'Standard financieel rapport',
     'report_type_audit'                          => 'Transactiehistorie-overzicht (audit)',
+    'report_type_category'                       => 'Category report',
     'report_type_meta-history'                   => 'Overzicht van categorieën, budgetten en contracten',
     'more_info_help'                             => 'Meer informatie over deze rapporten vind je in de hulppagina\'s. Klik daarvoor op het (?) icoontje rechtsboven.',
     'report_included_accounts'                   => 'Accounts in rapport',
@@ -688,6 +690,12 @@ return [
     'reports_submit'                             => 'Bekijk overzicht',
     'end_after_start_date'                       => 'End date of report must be after start date.',
     'select_category'                            => 'Select one or more categories.',
+    'income_per_category'                        => 'Income per category',
+    'expense_per_category'                       => 'Expense per category',
+    'income_per_account'                         => 'Income per account',
+    'expense_per_account'                        => 'Expense per account',
+    'include_not_in_category'                    => 'Include transactions not selected for this report',
+    'everything_else'                            => 'Everything else',
 
     // charts:
     'chart'                                      => 'Diagram',
