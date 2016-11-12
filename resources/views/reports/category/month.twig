@@ -8,14 +8,135 @@
 
     <div class="row">
         <div class="col-lg-4">
-            Summary here. Accounts and categories involved. Summary of in/out
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'accounts'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th>{{ 'name'|_ }}</th>
+                            <th>{{ 'earned'|_ }}</th>
+                            <th>{{ 'spent'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for account in accounts %}
+                            <tr>
+                                <td>
+                                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+                                </td>
+                                <td>
+                                    {% if accountSummary[account.id] %}
+                                        {{ accountSummary[account.id].earned|formatAmount }}
+                                    {% else %}
+                                        {{ 0|formatAmount }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if accountSummary[account.id] %}
+                                        {{ accountSummary[account.id].spent|formatAmount }}
+                                    {% else %}
+                                        {{ 0|formatAmount }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th>{{ 'name'|_ }}</th>
+                            <th>{{ 'earned'|_ }}</th>
+                            <th>{{ 'spent'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td>
+                                    <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
+                                </td>
+                                <td>
+                                    {% if categorySummary[category.id] %}
+                                        {{ categorySummary[category.id].earned|formatAmount }}
+                                    {% else %}
+                                        {{ 0|formatAmount }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if categorySummary[category.id] %}
+                                        {{ categorySummary[category.id].spent|formatAmount }}
+                                    {% else %}
+                                        {{ 0|formatAmount }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-4">
-            Pie chart with spending (aka all withdrawals in category). Optional checkbox to include all other transactions.
+        {% if categories.count > 1 %}
+        <div class="col-lg-2">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_per_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="categories-in-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
+                    <label>
+                        <input type="checkbox" id="categories-in-pie-chart-checked"> Include transactions not in these categories
+                    </label>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-4">
-            Pie chart with income (aka all deposits in category). Optional checkbox to include all other transactions (for comparison).
+        <div class="col-lg-2">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="categories-out-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
+                    <label>
+                        <input type="checkbox" id="categories-out-pie-chart-checked"> Include transactions not in these categories
+                    </label>
+                </div>
+            </div>
         </div>
+        {% endif %}
+        {% if accounts.count > 1 %}
+        <div class="col-lg-2">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+            {#Pie chart with income (aka all deposits in category). Optional checkbox to include all other transactions (for comparison).#}
     </div>
 
     <div class="row">
@@ -59,6 +180,23 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.js"></script>
+
+    <script type="text/javascript">
+        // to report another URL:
+        var startDate = '{{ start.format('Ymd') }}';
+        var endDate = '{{ end.format('Ymd') }}';
+        var accountIds = '{{ accountIds }}';
+        var categoryIds = '{{ categoryIds }}';
+
+
+    </script>
+
+
+    <script type="text/javascript" src="js/ff/reports/category/all.js"></script>
+    <script type="text/javascript" src="js/ff/reports/category/month.js"></script>
+
 {% endblock %}
 
 {% block styles %}

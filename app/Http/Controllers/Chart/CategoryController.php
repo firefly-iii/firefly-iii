@@ -16,10 +16,13 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
+use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -47,7 +50,6 @@ class CategoryController extends Controller
         // create chart generator:
         $this->generator = app(CategoryChartGeneratorInterface::class);
     }
-
 
     /**
      * Show an overview for a category for all time, per month/week/year.
@@ -110,6 +112,51 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param string     $others
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expensePieChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $others     = intval($others) === 1;
+        $names      = [];
+        $collector  = new JournalCollector(auth()->user());
+        $collector->setAccounts($accounts)->setRange($start, $end)
+                  ->setTypes([TransactionType::WITHDRAWAL])
+                  ->setCategories($categories);
+        $set    = $collector->getSumPerCategory();
+        $result = [];
+        $total  = '0';
+        foreach ($set as $categoryId => $amount) {
+            if (!isset($names[$categoryId])) {
+                $category           = $repository->find(intval($categoryId));
+                $names[$categoryId] = $category->name;
+            }
+            $amount   = bcmul($amount, '-1');
+            $total    = bcadd($total, $amount);
+            $result[] = ['name' => $names[$categoryId], 'id' => $categoryId, 'amount' => $amount];
+        }
+
+        if ($others) {
+            $collector = new JournalCollector(auth()->user());
+            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+            $sum      = bcmul($collector->getSum(), '-1');
+            $sum      = bcsub($sum, $total);
+            $result[] = ['name' => trans('firefly.everything_else'), 'id' => 0, 'amount' => $sum];
+        }
+
+        $data = $this->generator->pieChart($result);
+
+        return Response::json($data);
+    }
+
+    /**
      * @param CRI                        $repository
      * @param AccountRepositoryInterface $accountRepository
      *
@@ -151,6 +198,49 @@ class CategoryController extends Controller
 
         return Response::json($data);
 
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param string     $others
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incomePieChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        /** @var bool $others */
+        $others    = intval($others) === 1;
+        $names     = [];
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategories($categories);
+        $set    = $collector->getSumPerCategory();
+        $result = [];
+        $total  = '0';
+        foreach ($set as $categoryId => $amount) {
+            if (!isset($names[$categoryId])) {
+                $category           = $repository->find(intval($categoryId));
+                $names[$categoryId] = $category->name;
+            }
+            $total    = bcadd($total, $amount);
+            $result[] = ['name' => $names[$categoryId], 'id' => $categoryId, 'amount' => $amount];
+        }
+
+        if ($others) {
+            $collector = new JournalCollector(auth()->user());
+            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
+            $sum      = $collector->getSum();
+            $sum      = bcsub($sum, $total);
+            $result[] = ['name' => trans('firefly.everything_else'), 'id' => 0, 'amount' => $sum];
+        }
+
+        $data = $this->generator->pieChart($result);
+
+        return Response::json($data);
     }
 
     /**

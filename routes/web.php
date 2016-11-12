@@ -204,10 +204,13 @@ Route::group(
 
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
-
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
     Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
+
+    // these charts are used in reports:
+    Route::get('/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income', ['uses' => 'Chart\CategoryController@incomePieChart']);
+    Route::get('/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense', ['uses' => 'Chart\CategoryController@expensePieChart']);
 
     // piggy banks:
     Route::get('/chart/piggy-bank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);

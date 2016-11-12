@@ -6,6 +6,7 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use Crypt;
+use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -16,6 +17,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -30,9 +32,10 @@ use Log;
 class JournalCollector implements JournalCollectorInterface
 {
 
+    /** @var array */
+    private $accountIds = [];
     /** @var  int */
     private $count = 0;
-
     /** @var array */
     private $fields
         = [
@@ -62,6 +65,8 @@ class JournalCollector implements JournalCollectorInterface
     private $joinedBudget = false;
     /** @var  bool */
     private $joinedCategory = false;
+    /** @var bool */
+    private $joinedOpposing = false;
     /** @var bool */
     private $joinedTag = false;
     /** @var  int */
@@ -113,6 +118,16 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @return JournalCollectorInterface
+     */
+    public function disableFilter(): JournalCollectorInterface
+    {
+        $this->filterTransfers = false;
+
+        return $this;
+    }
+
+    /**
      * @return Collection
      */
     public function getJournals(): Collection
@@ -131,6 +146,42 @@ class JournalCollector implements JournalCollectorInterface
         );
 
         return $set;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function getOpposingAccount(): JournalCollectorInterface
+    {
+        $this->joinOpposingTables();
+
+        $accountIds = $this->accountIds;
+        $this->query->where(
+            function (EloquentBuilder $q1) use ($accountIds) {
+                // set 1
+                $q1->where(
+                    function (EloquentBuilder $q2) use ($accountIds) {
+                        // transactions.account_id in set
+                        $q2->whereIn('transactions.account_id', $accountIds);
+                        // opposing.account_id not in set
+                        $q2->whereNotIn('opposing.account_id', $accountIds);
+
+                    }
+                );
+                // or set 2
+                $q1->orWhere(
+                    function (EloquentBuilder $q3) use ($accountIds) {
+                        // transactions.account_id not in set
+                        $q3->whereNotIn('transactions.account_id', $accountIds);
+                        // B in set
+                        // opposing.account_id not in set
+                        $q3->whereIn('opposing.account_id', $accountIds);
+                    }
+                );
+            }
+        );
+
+        return $this;
     }
 
     /**
@@ -159,11 +210,14 @@ class JournalCollector implements JournalCollectorInterface
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
+            Log::debug(sprintf('setAccounts: %s', join(', ', $accountIds)));
+            $this->accountIds = $accountIds;
         }
 
         if ($accounts->count() > 1) {
             $this->filterTransfers = true;
         }
+
 
         return $this;
     }
@@ -179,6 +233,7 @@ class JournalCollector implements JournalCollectorInterface
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
+            $this->accountIds = $accountIds;
         }
 
         if ($accounts->count() > 1) {
@@ -217,6 +272,29 @@ class JournalCollector implements JournalCollectorInterface
             function (EloquentBuilder $q) use ($budget) {
                 $q->where('budget_transaction.budget_id', $budget->id);
                 $q->orWhere('budget_transaction_journal.budget_id', $budget->id);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param Collection $categories
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setCategories(Collection $categories): JournalCollectorInterface
+    {
+        $categoryIds = $categories->pluck('id')->toArray();
+        if (count($categoryIds) === 0) {
+            return $this;
+        }
+        $this->joinCategoryTables();
+
+        $this->query->where(
+            function (EloquentBuilder $q) use ($categoryIds) {
+                $q->whereIn('category_transaction.category_id', $categoryIds);
+                $q->orWhereIn('category_transaction_journal.category_id', $categoryIds);
             }
         );
 
@@ -389,6 +467,7 @@ class JournalCollector implements JournalCollectorInterface
             $set = $set->filter(
                 function (Transaction $transaction) {
                     if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
+
                         Log::debug(
                             sprintf(
                                 'Included journal #%d (transaction #%d) because its a %s with amount %f',
@@ -443,6 +522,24 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedCategory = true;
             $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+            $this->fields[] = 'category_transaction_journal.category_id as transaction_journal_category_id';
+            $this->fields[] = 'category_transaction.category_id as transaction_category_id';
+        }
+    }
+
+    private function joinOpposingTables()
+    {
+        if (!$this->joinedOpposing) {
+            // join opposing transaction (hard):
+            $this->query->leftJoin(
+                'transactions as opposing', function (JoinClause $join) {
+                $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
+                     ->where('opposing.identifier', '=', 'transactions.identifier')
+                     ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
+            }
+            );
+
+            $this->fields[] = 'opposing.account_id as opposing_account_id';
         }
     }
 
@@ -481,5 +578,4 @@ class JournalCollector implements JournalCollectorInterface
         return $query;
 
     }
-
 }

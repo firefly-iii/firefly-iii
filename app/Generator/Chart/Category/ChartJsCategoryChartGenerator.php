@@ -12,6 +12,7 @@
 declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Category;
 
+use FireflyIII\Support\ChartColour;
 use Illuminate\Support\Collection;
 
 
@@ -112,6 +113,30 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
                 $data['labels'][]              = $entry->name;
                 $data['datasets'][0]['data'][] = round(bcmul($entry->spent, '-1'), 2);
             }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function pieChart(array $entries): array
+    {
+        $data  = [
+            'datasets' => [
+                0 => [],
+            ],
+            'labels'   => [],
+        ];
+        $index = 0;
+        foreach ($entries as $entry) {
+            $data['datasets'][0]['data'][]            = round($entry['amount'], 2);
+            $data['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $data['labels'][]                         = $entry['name'];
+            $index++;
         }
 
         return $data;

@@ -12,6 +12,7 @@
 declare(strict_types = 1);
 
 namespace FireflyIII\Helpers\Collector;
+
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -33,9 +34,19 @@ interface JournalCollectorInterface
     public function count(): int;
 
     /**
+     * @return JournalCollectorInterface
+     */
+    public function disableFilter(): JournalCollectorInterface;
+
+    /**
      * @return Collection
      */
     public function getJournals(): Collection;
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function getOpposingAccount(): JournalCollectorInterface;
 
     /**
      * @return LengthAwarePaginator
@@ -67,6 +78,13 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setBudget(Budget $budget): JournalCollectorInterface;
+
+    /**
+     * @param Collection $categories
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setCategories(Collection $categories): JournalCollectorInterface;
 
     /**
      * @param Category $category

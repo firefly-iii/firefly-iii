@@ -24,6 +24,13 @@ interface CategoryChartGeneratorInterface
 {
 
     /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function pieChart(array $data): array;
+
+    /**
      * @param Collection $entries
      *
      * @return array

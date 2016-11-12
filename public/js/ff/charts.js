@@ -8,6 +8,8 @@
 
 /* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits */
 
+var allCharts = {};
+
 /*
  Make some colours:
  */
@@ -29,7 +31,6 @@ var colourSet = [
     [240, 98, 146],
     [0, 121, 107],
     [194, 24, 91]
-
 ];
 
 var fillColors = [];
@@ -234,6 +235,11 @@ function lineChart(URL, container, options) {
 function areaChart(URL, container, options) {
     "use strict";
 
+    if ($('#' + container).length === 0) {
+        console.log('No container called ' + container + ' was found.');
+        return;
+    }
+
     $.getJSON(URL).done(function (data) {
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
@@ -358,14 +364,30 @@ function stackedColumnChart(URL, container, options) {
 function pieChart(URL, container, options) {
     "use strict";
 
+    if ($('#' + container).length === 0) {
+        console.log('No container called ' + container + ' was found.');
+        return;
+    }
+
     $.getJSON(URL).done(function (data) {
 
-        var ctx = document.getElementById(container).getContext("2d");
-        new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: defaultPieOptions
-        });
+        if (allCharts.hasOwnProperty(container)) {
+            console.log('Will draw updated pie chart');
+
+            allCharts[container].data.datasets = data.datasets;
+            allCharts[container].data.labels = data.labels;
+            allCharts[container].update();
+        } else {
+            // new chart!
+            console.log('Will draw new pie chart');
+            var ctx = document.getElementById(container).getContext("2d");
+            allCharts[container] = new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: defaultPieOptions
+            });
+        }
+
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');

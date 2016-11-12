@@ -1,4 +1,4 @@
-/* globals $, columnChart,showTour, Tour, google, lineChart, pieChart, stackedColumnChart, areaChart */
+    /* globals $, columnChart,showTour, Tour, google, lineChart, pieChart, stackedColumnChart, areaChart */
 
 $(function () {
     "use strict";
