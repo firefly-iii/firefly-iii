@@ -19,6 +19,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TagRepository
@@ -54,11 +55,14 @@ class TagRepository implements TagRepositoryInterface
          * Already connected:
          */
         if ($journal->tags()->find($tag->id)) {
+            Log::error(sprintf('Cannot find tag #%d', $tag->id));
+
             return false;
         }
 
         switch ($tag->tagMode) {
             case 'nothing':
+                Log::debug(sprintf('Tag #%d connected', $tag->id));
                 $journal->tags()->save($tag);
                 $journal->save();
 
@@ -184,22 +188,23 @@ class TagRepository implements TagRepositoryInterface
      */
     protected function connectAdvancePayment(TransactionJournal $journal, Tag $tag): bool
     {
-        /** @var TransactionType $transfer */
-        $transfer = TransactionType::whereType(TransactionType::TRANSFER)->first();
-        /** @var TransactionType $withdrawal */
-        $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        /** @var TransactionType $deposit */
-        $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+        $type        = $journal->transactionType->type;
+        $withdrawals = $tag->transactionJournals()
+                           ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                           ->where('transaction_types.type', TransactionType::WITHDRAWAL)->count();
+        $deposits    = $tag->transactionJournals()
+                           ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                           ->where('transaction_types.type', TransactionType::DEPOSIT)->count();
 
-        $withdrawals = $tag->transactionJournals()->where('transaction_type_id', $withdrawal->id)->count();
-        $deposits    = $tag->transactionJournals()->where('transaction_type_id', $deposit->id)->count();
+        if ($type === TransactionType::TRANSFER) { // advance payments cannot accept transfers:
+            Log::error(sprintf('Journal #%d is a transfer and cannot connect to tag #%d', $journal->id, $tag->id));
 
-        if ($journal->transaction_type_id == $transfer->id) { // advance payments cannot accept transfers:
             return false;
         }
 
         // the first transaction to be attached to this tag is attached just like that:
         if ($withdrawals < 1 && $deposits < 1) {
+            Log::debug(sprintf('Tag #%d has 0 withdrawals and 0 deposits so its fine.', $tag->id));
             $journal->tags()->save($tag);
             $journal->save();
 
@@ -207,12 +212,16 @@ class TagRepository implements TagRepositoryInterface
         }
 
         // if withdrawal and already has a withdrawal, return false:
-        if ($journal->transaction_type_id == $withdrawal->id && $withdrawals == 1) {
+        if ($type === TransactionType::WITHDRAWAL && $withdrawals > 0) {
+            Log::error(sprintf('Journal #%d is a withdrawal but tag already has %d withdrawal(s).', $journal->id, $withdrawals));
+
             return false;
         }
 
         // if already has transaction journals, must match ALL asset account id's:
         if ($deposits > 0 || $withdrawals == 1) {
+            Log::debug('Need to match all asset accounts.');
+
             return $this->matchAll($journal, $tag);
         }
 
@@ -229,28 +238,39 @@ class TagRepository implements TagRepositoryInterface
      */
     protected function connectBalancingAct(TransactionJournal $journal, Tag $tag): bool
     {
-        /** @var TransactionType $withdrawal */
-        $withdrawal  = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-        $withdrawals = $tag->transactionJournals()->where('transaction_type_id', $withdrawal->id)->count();
-        /** @var TransactionType $transfer */
-        $transfer  = TransactionType::whereType(TransactionType::TRANSFER)->first();
-        $transfers = $tag->transactionJournals()->where('transaction_type_id', $transfer->id)->count();
+        $type        = $journal->transactionType->type;
+        $withdrawals = $tag->transactionJournals()
+                           ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                           ->where('transaction_types.type', TransactionType::WITHDRAWAL)->count();
+        $transfers   = $tag->transactionJournals()
+                           ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                           ->where('transaction_types.type', TransactionType::TRANSFER)->count();
 
+
+        Log::debug(sprintf('Journal #%d is a %s', $journal->id, $type));
 
         // only if this is the only withdrawal.
-        if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+        if ($type === TransactionType::WITHDRAWAL && $withdrawals < 1) {
+            Log::debug('Will connect this journal because it is the only withdrawal in this tag.');
             $journal->tags()->save($tag);
             $journal->save();
 
             return true;
         }
         // and only if this is the only transfer
-        if ($journal->transaction_type_id == $transfer->id && $transfers < 1) {
+        if ($type === TransactionType::TRANSFER && $transfers < 1) {
+            Log::debug('Will connect this journal because it is the only transfer in this tag.');
             $journal->tags()->save($tag);
             $journal->save();
 
             return true;
         }
+        Log::error(
+            sprintf(
+                'Tag #%d has %d withdrawals and %d transfers and cannot contain %s #%d',
+                $tag->id, $withdrawals, $transfers, $type, $journal->id
+            )
+        );
 
         // ignore expense
         return false;
@@ -267,28 +287,42 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return bool
      */
-    protected function matchAll(TransactionJournal $journal, Tag $tag): bool
+    private function matchAll(TransactionJournal $journal, Tag $tag): bool
     {
-        $checkSources      = join(',', TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray());
-        $checkDestinations = join(',', TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray());
+        $journalSources      = join(',', TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray());
+        $journalDestinations = join(',', TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray());
+        $match               = true;
+        $journals            = $tag->transactionJournals()->get(['transaction_journals.*']);
 
-        $match = true;
-        /** @var TransactionJournal $check */
-        foreach ($tag->transactionjournals as $check) {
+        Log::debug(sprintf('Tag #%d has %d journals to verify:', $tag->id, $journals->count()));
+
+        /** @var TransactionJournal $original */
+        foreach ($journals as $original) {
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            $thisSources      = join(',', TransactionJournal::sourceAccountList($check)->pluck('id')->toArray());
-            $thisDestinations = join(',', TransactionJournal::destinationAccountList($check)->pluck('id')->toArray());
+            $originalSources      = join(',', TransactionJournal::sourceAccountList($original)->pluck('id')->toArray());
+            $originalDestinations = join(',', TransactionJournal::destinationAccountList($original)->pluck('id')->toArray());
 
-            if ($check->isWithdrawal() && $thisSources !== $checkSources) {
+            if ($original->isWithdrawal() && $originalSources !== $journalDestinations) {
+                Log::debug(sprintf('Original journal #%d is a withdrawal.', $original->id));
+                Log::debug(sprintf('Journal #%d must have these destination accounts: %s', $journal->id, $originalSources));
+                Log::debug(sprintf('Journal #%d actually these destination accounts: %s', $journal->id, $journalDestinations));
+                Log::debug('So match is FALSE');
+
                 $match = false;
             }
-            if ($check->isDeposit() && $thisDestinations !== $checkDestinations) {
+            if ($original->isDeposit() && $originalDestinations !== $journalSources) {
+                Log::debug(sprintf('Original journal #%d is a deposit.', $original->id));
+                Log::debug(sprintf('Journal #%d must have these destination accounts: %s', $journal->id, $originalSources));
+                Log::debug(sprintf('Journal #%d actually these destination accounts: %s', $journal->id, $journalDestinations));
+                Log::debug('So match is FALSE');
+
                 $match = false;
             }
 
         }
         if ($match) {
+            Log::debug(sprintf('Match is true, connect journal #%d with tag #%d.', $journal->id, $tag->id));
             $journal->tags()->save($tag);
             $journal->save();
 
