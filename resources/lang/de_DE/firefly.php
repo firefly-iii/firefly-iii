@@ -624,6 +624,7 @@ return [
     // reports:
     'report_default'                             => 'Standard Finanzbericht für :start bis :end',
     'report_audit'                               => 'Transaction history overview for :start until :end',
+    'report_category'                            => 'Category report for :start until :end',
     'quick_link_reports'                         => 'Schnellzugriff',
     'quick_link_default_report'                  => 'Standard Finanzbericht',
     'quick_link_audit_report'                    => 'Transaction history overview',
@@ -669,6 +670,7 @@ return [
     'report_type'                                => 'Typ des Berichts',
     'report_type_default'                        => 'Default financial report',
     'report_type_audit'                          => 'Transaction history overview (audit)',
+    'report_type_category'                       => 'Category report',
     'report_type_meta-history'                   => 'Übersicht über Kategorien, Budgets und Rechnungen',
     'more_info_help'                             => 'Weitere Informationen über diese Art von Berichten finden Sie in der Hilfe. Drücken Sie hierfür das (?)-Symbol in der oberen rechten Ecke.',
     'report_included_accounts'                   => 'Eingezogene Konten',
@@ -688,6 +690,12 @@ return [
     'reports_submit'                             => 'View report',
     'end_after_start_date'                       => 'End date of report must be after start date.',
     'select_category'                            => 'Select one or more categories.',
+    'income_per_category'                        => 'Income per category',
+    'expense_per_category'                       => 'Expense per category',
+    'income_per_account'                         => 'Income per account',
+    'expense_per_account'                        => 'Expense per account',
+    'include_not_in_category'                    => 'Include transactions not selected for this report',
+    'everything_else'                            => 'Everything else',
 
     // charts:
     'chart'                                      => 'Chart',
