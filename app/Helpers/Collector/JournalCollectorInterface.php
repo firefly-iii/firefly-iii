@@ -46,7 +46,7 @@ interface JournalCollectorInterface
     /**
      * @return JournalCollectorInterface
      */
-    public function getOpposingAccount(): JournalCollectorInterface;
+    public function withOpposingAccount(): JournalCollectorInterface;
 
     /**
      * @return LengthAwarePaginator

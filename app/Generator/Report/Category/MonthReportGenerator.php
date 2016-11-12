@@ -225,7 +225,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector = new JournalCollector(auth()->user());
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->getOpposingAccount()->disableFilter();
+                  ->setCategories($this->categories)->withOpposingAccount()->disableFilter();
 
         $accountIds   = $this->accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
@@ -242,7 +242,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector = new JournalCollector(auth()->user());
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->getOpposingAccount();
+                  ->setCategories($this->categories)->withOpposingAccount();
         $accountIds   = $this->accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $transactions = self::filterIncome($transactions, $accountIds);

@@ -325,7 +325,7 @@ class CategoryReportController extends Controller
     {
         $collector = new JournalCollector(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->getOpposingAccount()->disableFilter();
+                  ->setCategories($categories)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
@@ -345,7 +345,7 @@ class CategoryReportController extends Controller
     {
         $collector = new JournalCollector(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($categories)->getOpposingAccount();
+                  ->setCategories($categories)->withOpposingAccount();
         $accountIds   = $accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $set          = MonthReportGenerator::filterIncome($transactions, $accountIds);

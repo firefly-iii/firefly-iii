@@ -149,42 +149,6 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
-     * @return JournalCollectorInterface
-     */
-    public function getOpposingAccount(): JournalCollectorInterface
-    {
-        $this->joinOpposingTables();
-
-        $accountIds = $this->accountIds;
-        $this->query->where(
-            function (EloquentBuilder $q1) use ($accountIds) {
-                // set 1
-                $q1->where(
-                    function (EloquentBuilder $q2) use ($accountIds) {
-                        // transactions.account_id in set
-                        $q2->whereIn('transactions.account_id', $accountIds);
-                        // opposing.account_id not in set
-                        $q2->whereNotIn('opposing.account_id', $accountIds);
-
-                    }
-                );
-                // or set 2
-                $q1->orWhere(
-                    function (EloquentBuilder $q3) use ($accountIds) {
-                        // transactions.account_id not in set
-                        $q3->whereNotIn('transactions.account_id', $accountIds);
-                        // B in set
-                        // opposing.account_id not in set
-                        $q3->whereIn('opposing.account_id', $accountIds);
-                    }
-                );
-            }
-        );
-
-        return $this;
-    }
-
-    /**
      * @return LengthAwarePaginator
      * @throws FireflyException
      */
@@ -419,6 +383,42 @@ class JournalCollector implements JournalCollectorInterface
     /**
      * @return JournalCollectorInterface
      */
+    public function withOpposingAccount(): JournalCollectorInterface
+    {
+        $this->joinOpposingTables();
+
+        $accountIds = $this->accountIds;
+        $this->query->where(
+            function (EloquentBuilder $q1) use ($accountIds) {
+                // set 1
+                $q1->where(
+                    function (EloquentBuilder $q2) use ($accountIds) {
+                        // transactions.account_id in set
+                        $q2->whereIn('transactions.account_id', $accountIds);
+                        // opposing.account_id not in set
+                        $q2->whereNotIn('opposing.account_id', $accountIds);
+
+                    }
+                );
+                // or set 2
+                $q1->orWhere(
+                    function (EloquentBuilder $q3) use ($accountIds) {
+                        // transactions.account_id not in set
+                        $q3->whereNotIn('transactions.account_id', $accountIds);
+                        // B in set
+                        // opposing.account_id not in set
+                        $q3->whereIn('opposing.account_id', $accountIds);
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
     public function withoutBudget(): JournalCollectorInterface
     {
         $this->joinBudgetTables();
@@ -538,8 +538,14 @@ class JournalCollector implements JournalCollectorInterface
                      ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
             }
             );
+            $this->query->leftJoin('accounts as opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id');
+            $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');
 
             $this->fields[] = 'opposing.account_id as opposing_account_id';
+            $this->fields[] = 'opposing_accounts.name as opposing_account_name';
+            $this->fields[] = 'opposing_accounts.encrypted as opposing_account_encrypted';
+            $this->fields[] = 'opposing_account_types.type as opposing_account_type';
+
         }
     }
 

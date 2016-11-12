@@ -252,13 +252,21 @@ class Transaction extends Twig_Extension
         return new Twig_SimpleFunction(
             'transactionSourceAccount', function (TransactionModel $transaction): string {
 
+            // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
             $name = intval($transaction->account_encrypted) === 1 ? Crypt::decrypt($transaction->account_name) : $transaction->account_name;
             $id   = intval($transaction->account_id);
             $type = $transaction->account_type;
-            // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
 
-            if (bccomp($transaction->transaction_amount, '0') === 1) {
-                // if the amount is positive, find the opposing account and use that one:
+            // name is present in object, use that one:
+            if (bccomp($transaction->transaction_amount, '0') === 1 && !is_null($transaction->opposing_account_id)) {
+
+                $name = intval($transaction->opposing_account_encrypted) === 1 ? Crypt::decrypt($transaction->opposing_account_name)
+                    : $transaction->opposing_account_name;
+                $id   = intval($transaction->opposing_account_id);
+                $type = intval($transaction->opposing_account_type);
+            }
+            // Find the opposing account and use that one:
+            if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
                 $other = TransactionModel

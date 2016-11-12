@@ -63,7 +63,8 @@ class TransactionController extends Controller
         $subTitle     = trans('firefly.title_' . $what);
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $collector    = new JournalCollector(auth()->user());
-        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
+        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()
+        ->withOpposingAccount();
 
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what);
