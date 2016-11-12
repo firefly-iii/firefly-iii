@@ -119,6 +119,18 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
     }
 
     /**
+     *
+     * @param Collection $entries
+     *
+     * @return array
+     */
+    public function period(Collection $entries): array
+    {
+        return $this->all($entries);
+
+    }
+
+    /**
      * @param array $entries
      *
      * @return array
@@ -133,6 +145,11 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
         ];
         $index = 0;
         foreach ($entries as $entry) {
+
+            if (bccomp($entry['amount'], '0') === -1) {
+                $entry['amount'] = bcmul($entry['amount'], '-1');
+            }
+
             $data['datasets'][0]['data'][]            = round($entry['amount'], 2);
             $data['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $data['labels'][]                         = $entry['name'];
@@ -140,18 +157,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
         }
 
         return $data;
-    }
-
-    /**
-     *
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function period(Collection $entries): array
-    {
-        return $this->all($entries);
-
     }
 
     /**

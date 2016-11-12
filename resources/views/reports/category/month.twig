@@ -123,6 +123,10 @@
                     <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
+                    <canvas id="accounts-in-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
+                    <label>
+                        <input type="checkbox" id="accounts-in-pie-chart-checked"> Include transactions not in these categories
+                    </label>
                 </div>
             </div>
         </div>
@@ -132,6 +136,10 @@
                     <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
+                    <canvas id="accounts-out-pie-chart" style="width:100px;height:100px;" height="100"></canvas>
+                    <label>
+                        <input type="checkbox" id="accounts-out-pie-chart-checked"> Include transactions not in these categories
+                    </label>
                 </div>
             </div>
         </div>

@@ -16,15 +16,10 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
-use FireflyIII\Generator\Report\Category\MonthReportGenerator;
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -114,72 +109,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param string     $others
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function expensePieChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $names  = [];
-
-        // collect journals (just like the category report does):
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->getOpposingAccount()->disableFilter();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
-
-        // group by category ID:
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlCatId  = intval($transaction->transaction_journal_category_id);
-            $transCatId = intval($transaction->transaction_category_id);
-            $categoryId = max($jrnlCatId, $transCatId);
-
-            $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
-            $amount               = bcmul($transaction->transaction_amount, '-1');
-            $grouped[$categoryId] = bcadd($amount, $grouped[$categoryId]);
-        }
-
-        // loop and show the grouped results:
-        $result = [];
-        $total  = '0';
-        foreach ($grouped as $categoryId => $amount) {
-            if (!isset($names[$categoryId])) {
-                $category           = $repository->find(intval($categoryId));
-                $names[$categoryId] = $category->name;
-            }
-            $total    = bcadd($total, $amount);
-            $result[] = ['name' => $names[$categoryId], 'id' => $categoryId, 'amount' => $amount];
-        }
-
-        // also collect others?
-        // TODO include transfers
-        if ($others) {
-            $collector = new JournalCollector(auth()->user());
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals = $collector->getJournals();
-            $sum      = bcmul(strval($journals->sum('transaction_amount')), '-1');
-            $sum      = bcsub($sum, $total);
-            $result[] = ['name' => trans('firefly.everything_else'), 'id' => 0, 'amount' => $sum];
-        }
-
-        $data = $this->generator->pieChart($result);
-
-        return Response::json($data);
-    }
-
-    /**
      * @param CRI                        $repository
      * @param AccountRepositoryInterface $accountRepository
      *
@@ -224,71 +153,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param string     $others
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function incomePieChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $names  = [];
-
-        // collect journals (just like the category report does):
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($categories)->getOpposingAccount();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterIncome($transactions, $accountIds);
-
-        // group by category ID:
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlCatId  = intval($transaction->transaction_journal_category_id);
-            $transCatId = intval($transaction->transaction_category_id);
-            $categoryId = max($jrnlCatId, $transCatId);
-
-            $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
-            $grouped[$categoryId] = bcadd($transaction->transaction_amount, $grouped[$categoryId]);
-        }
-
-        // loop and show the grouped results:
-        $result = [];
-        $total  = '0';
-        foreach ($grouped as $categoryId => $amount) {
-            if (!isset($names[$categoryId])) {
-                $category           = $repository->find(intval($categoryId));
-                $names[$categoryId] = $category->name;
-            }
-            $total    = bcadd($total, $amount);
-            $result[] = ['name' => $names[$categoryId], 'id' => $categoryId, 'amount' => $amount];
-        }
-
-        // also collect others?
-        // TODO include transfers
-        if ($others) {
-            $collector = new JournalCollector(auth()->user());
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
-            $journals = $collector->getJournals();
-            $sum      = strval($journals->sum('transaction_amount'));
-            $sum      = bcsub($sum, $total);
-            $result[] = ['name' => trans('firefly.everything_else'), 'id' => 0, 'amount' => $sum];
-        }
-
-        $data = $this->generator->pieChart($result);
-
-        return Response::json($data);
-    }
-
-    /**
      * @param CRI                         $repository
      * @param Category                    $category
      *
@@ -306,6 +170,7 @@ class CategoryController extends Controller
 
         return Response::json($data);
     }
+
 
     /**
      * @param CRI      $repository

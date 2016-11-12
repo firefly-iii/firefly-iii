@@ -27,7 +27,7 @@ use Log;
  *
  * @package FireflyIII\Generator\Report\Category
  */
-class MonthReportGenerator implements ReportGeneratorInterface
+class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
     /** @var  Collection */
     private $accounts;
@@ -37,68 +37,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
     private $end;
     /** @var  Carbon */
     private $start;
-
-    /**
-     * @param Collection $collection
-     * @param array      $accounts
-     *
-     * @return Collection
-     */
-    public static function filterExpenses(Collection $collection, array $accounts): Collection
-    {
-        $result = $collection->filter(
-            function (Transaction $transaction) use ($accounts) {
-                $opposing = $transaction->opposing_account_id;
-                // remove internal transfer
-                if (in_array($opposing, $accounts)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
-
-                    return null;
-                }
-                // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === 1) {
-                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
-
-                    return null;
-                }
-
-                return $transaction;
-            }
-        );
-
-        return $result;
-    }
-
-    /**
-     * @param Collection $collection
-     * @param array      $accounts
-     *
-     * @return Collection
-     */
-    public static function filterIncome(Collection $collection, array $accounts): Collection
-    {
-        $result = $collection->filter(
-            function (Transaction $transaction) use ($accounts) {
-                $opposing = $transaction->opposing_account_id;
-                // remove internal transfer
-                if (in_array($opposing, $accounts)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
-
-                    return null;
-                }
-                // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
-                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
-
-                    return null;
-                }
-
-                return $transaction;
-            }
-        );
-
-        return $result;
-    }
 
     /**
      * @return string
