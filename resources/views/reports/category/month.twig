@@ -89,73 +89,77 @@
             </div>
         </div>
         {% if categories.count > 1 %}
-        <div class="col-lg-2 col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'income_per_category'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <canvas id="categories-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
-                    <label style="font-weight:normal;">
-                        <input type="checkbox" id="categories-in-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <canvas id="categories-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
-                    <label style="font-weight:normal;">
-                        <input type="checkbox" id="categories-out-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
-                    </label>
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_per_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="categories-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="categories-in-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="categories-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="categories-out-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
         {% endif %}
         {% if accounts.count > 1 %}
-        <div class="col-lg-2 col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
-                    <label style="font-weight:normal;">
-                        <input type="checkbox" id="accounts-in-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
-                    <label style="font-weight:normal;">
-                        <input type="checkbox" id="accounts-out-pie-chart-checked"> <small>{{ 'include_not_in_category'|_ }}</small>
-                    </label>
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="accounts-in-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="accounts-out-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <canvas id="in-out-chart" style="margin:0 auto;" height="300"></canvas>
-                    </div>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
                 </div>
+                <div class="box-body">
+                    <canvas id="in-out-chart" style="margin:0 auto;" height="300"></canvas>
+                </div>
+            </div>
         </div>
     </div>
     {#
@@ -163,6 +167,73 @@
             Show income / expenses per period. Differs per report: month = per day, year = per month, multi-year = per year.
             In a bar chart, possibly grouped by expense/revenue account.
             #}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'average_spending_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th>{{ 'account'|_ }}</th>
+                            <th>{{ 'spent_average'|_ }}</th>
+                            <th>{{ 'transaction_count'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in averageExpenses %}
+                            <tr>
+                                <td data-value="{{ row.name }}">
+                                    <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
+                                </td>
+                                <td>
+                                    {{ row.average|formatAmount }}
+                                </td>
+                                <td>
+                                    {{ row.count }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: 10}) }})</h3>
+                </div>
+                <div class="box-body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'average_income_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: 10}) }})</h3>
+                </div>
+                <div class="box-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-lg-3">
