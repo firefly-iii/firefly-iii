@@ -34,7 +34,7 @@ return [
     'create_transfer'   => 'Erstelle eine neue Überweisung',
     'edit_journal'      => 'Bearbeite Transaktion ":description"',
     'delete_journal'    => 'Lösche Transaktion ":description"',
-    'tags'              => 'Tags',
+    'tags'              => 'Markierungen',
     'createTag'         => 'Neuen Tag erstellen',
     'edit_tag'          => 'Bearbeite Tag ":tag"',
     'delete_tag'        => 'Lösche Tag ":tag"',
