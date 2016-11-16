@@ -64,6 +64,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $categorySummary = $this->getCategorySummary();
         $averageExpenses = $this->getAverageExpenses();
 
+
         // render!
         return view('reports.category.month', compact('accountIds', 'categoryIds', 'reportType', 'accountSummary', 'categorySummary','averageExpenses'))
             ->with('start', $this->start)->with('end', $this->end)
