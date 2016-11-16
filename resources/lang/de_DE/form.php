@@ -90,7 +90,7 @@ return [
     'accountNumber'              => 'Kontonummer',
     'has_headers'                => 'Kopfzeilen',
     'date_format'                => 'Datumsformat',
-    'specifix'                   => 'Bank- or file specific fixes',
+    'specifix'                   => 'Bank- oder Dateispezifischer Korrekturen',
     'attachments[]'              => 'Anhänge',
     'store_new_withdrawal'       => 'Speichere neue Ausgabe',
     'store_new_deposit'          => 'Speichere neue Einnahme',
