@@ -1,4 +1,4 @@
-    /* globals $, columnChart,showTour, Tour, google, lineChart, pieChart, stackedColumnChart, areaChart */
+    /* globals $, columnChart,showTour, Tour, google, pieChart, stackedColumnChart */
 
 $(function () {
     "use strict";
@@ -32,38 +32,38 @@ function endTheTour() {
 
 function drawChart() {
     "use strict";
-    areaChart('chart/account/frontpage', 'accounts-chart');
+    lineChart('chart/account/frontpage', 'accounts-chart');
     pieChart('chart/bill/frontpage', 'bills-chart');
-    stackedColumnChart('chart/budget/frontpage', 'budgets-chart', {beforeDraw: beforeDrawIsEmpty});
-    columnChart('chart/category/frontpage', 'categories-chart', {beforeDraw: beforeDrawIsEmpty});
-    columnChart('chart/account/expense', 'expense-accounts-chart', {beforeDraw: beforeDrawIsEmpty});
-    columnChart('chart/account/revenue', 'revenue-accounts-chart', {beforeDraw: beforeDrawIsEmpty});
+    stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
+    columnChart('chart/category/frontpage', 'categories-chart');
+    columnChart('chart/account/expense', 'expense-accounts-chart');
+    columnChart('chart/account/revenue', 'revenue-accounts-chart');
 
 
     getBoxAmounts();
 }
 
-/**
- * Removes a chart container if there is nothing for the chart to draw.
- *
- * @param data
- * @param options
- * @returns {boolean}
- */
-function beforeDrawIsEmpty(data, options) {
-    "use strict";
-
-    // check if chart holds data.
-    if (data.labels.length === 0) {
-        // remove the chart container + parent
-        console.log(options.container + ' appears empty. Removed.');
-        $('#' + options.container).parent().parent().remove();
-
-        // return false so script stops.
-        return false;
-    }
-    return true;
-}
+// /**
+//  * Removes a chart box if there is nothing for the chart to draw.
+//  *
+//  * @param data
+//  * @param options
+//  * @returns {boolean}
+//  */
+// function beforeDrawIsEmpty(data, options) {
+//     "use strict";
+//
+//     // check if chart holds data.
+//     if (data.labels.length === 0) {
+//         // remove the chart container + parent
+//         console.log(options.container + ' appears empty. Removed.');
+//         $('#' + options.container).parent().parent().remove();
+//
+//         // return false so script stops.
+//         return false;
+//     }
+//     return true;
+// }
 
 
 function getBoxAmounts() {

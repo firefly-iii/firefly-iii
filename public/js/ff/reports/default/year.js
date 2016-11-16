@@ -1,10 +1,7 @@
 /* globals google, accountIds, budgetYearOverviewUri */
 
-var chartDrawn;
-var budgetChart;
 $(function () {
     "use strict";
-    chartDrawn = false;
     drawChart();
 
     loadAjaxPartial('budgetOverview',budgetYearOverviewUri);

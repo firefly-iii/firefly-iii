@@ -47,355 +47,138 @@ Chart.defaults.global.animation.duration = 0;
 Chart.defaults.global.responsive = true;
 Chart.defaults.global.maintainAspectRatio = false;
 
-/*
- Set default options:
- */
-var defaultAreaOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            display: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-
-var defaultPieOptions = {
-    tooltips: {
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                var value = data.datasets[0].data[tooltipItem.index];
-                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
-            }
-        }
-    },
-    maintainAspectRatio: true,
-    responsive: true
-};
-
-
-var defaultLineOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            display: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-var defaultColumnOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-                },
-                beginAtZero: true
-            }
-        }]
-    },
-    elements: {
-        line: {
-            fill: false
-        }
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-var defaultStackedColumnOptions = {
-    stacked: true,
-    scales: {
-        xAxes: [{
-            stacked: true,
-            gridLines: {
-                display: false
-            }
-        }],
-        yAxes: [{
-            stacked: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
 
 /**
- * Function to draw a line chart:
- * @param URL
- * @param container
- * @param options
+ *
+ * @param data
+ * @returns {{}}
  */
-function lineChart(URL, container, options) {
-    "use strict";
-    $.getJSON(URL).done(function (data) {
+function colorizeData(data) {
+    var newData = {};
+    newData.datasets = [];
 
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-
-        new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: defaultLineOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for line chart : ' + URL);
+    for (var i = 0; i < data.count; i++) {
+        newData.labels = data.labels;
+        var dataset = data.datasets[i];
+        dataset.backgroundColor = fillColors[i];
+        newData.datasets.push(dataset);
+    }
+    return newData;
 }
 
 /**
- * Function to draw an area chart:
- *
- * @param URL
+ * @param URI
  * @param container
+ * @param chartType
  * @param options
+ * @param colorData
  */
-function areaChart(URL, container, options) {
-    "use strict";
-
+function drawAChart(URI, container, chartType, options, colorData) {
     if ($('#' + container).length === 0) {
         console.log('No container called ' + container + ' was found.');
         return;
     }
 
-    $.getJSON(URL).done(function (data) {
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
+    // var result = true;
+    // if (options.beforeDraw) {
+    //     result = options.beforeDraw(data, {url: URL, container: container});
+    // }
+    // if (result === false) {
+    //     return;
+    // }
 
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
+    $.getJSON(URI).done(function (data) {
+
+        if (colorData) {
+            data = colorizeData(data);
         }
-
-        new Chart(ctx, {
-            type: 'line',
-            data: newData,
-            options: defaultAreaOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-
-    console.log('URL for area chart: ' + URL);
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
-function columnChart(URL, container, options) {
-    "use strict";
-
-    options = options || {};
-
-    $.getJSON(URL).done(function (data) {
-
-        var result = true;
-        if (options.beforeDraw) {
-            result = options.beforeDraw(data, {url: URL, container: container});
-        }
-        if (result === false) {
-            return;
-        }
-        console.log('Will draw columnChart(' + URL + ')');
-
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: defaultColumnOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for column chart : ' + URL);
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
-function stackedColumnChart(URL, container, options) {
-    "use strict";
-
-    options = options || {};
-
-
-    $.getJSON(URL).done(function (data) {
-
-        var result = true;
-        if (options.beforeDraw) {
-            result = options.beforeDraw(data, {url: URL, container: container});
-        }
-        if (result === false) {
-            return;
-        }
-
-
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: defaultStackedColumnOptions
-        });
-
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for stacked column chart : ' + URL);
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
-function pieChart(URL, container, options) {
-    "use strict";
-
-    if ($('#' + container).length === 0) {
-        console.log('No container called ' + container + ' was found.');
-        return;
-    }
-
-    $.getJSON(URL).done(function (data) {
 
         if (allCharts.hasOwnProperty(container)) {
-            console.log('Will draw updated pie chart');
-
+            console.log('Will draw updated ' + chartType + ' chart');
             allCharts[container].data.datasets = data.datasets;
             allCharts[container].data.labels = data.labels;
             allCharts[container].update();
         } else {
             // new chart!
-            console.log('Will draw new pie chart');
+            console.log('Will draw new ' + chartType + 'chart');
             var ctx = document.getElementById(container).getContext("2d");
             allCharts[container] = new Chart(ctx, {
-                type: 'pie',
+                type: chartType,
                 data: data,
-                options: defaultPieOptions
+                options: options
             });
         }
 
-
     }).fail(function () {
+        console.log('Failed to draw ' + chartType + ' in container ' + container);
         $('#' + container).addClass('general-chart-error');
     });
+    console.log('URL for ' + chartType + ' chart : ' + URL);
+}
 
 
-    console.log('URL for pie chart : ' + URL);
+/**
+ * Function to draw a line chart:
+ * @param URI
+ * @param container
+ */
+function lineChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+    var chartType = 'line';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function columnChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function stackedColumnChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+
+    options.stacked = true;
+    options.scales.xAxes[0].stacked = true;
+
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function pieChart(URI, container) {
+    "use strict";
+
+    var colorData = false;
+    var options = defaultPieOptions;
+    var chartType = 'pie';
+
+    drawAChart(URI, container, chartType, options, colorData);
 
 }

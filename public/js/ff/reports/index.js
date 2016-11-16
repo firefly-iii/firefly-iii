@@ -18,7 +18,8 @@ $(function () {
         );
 
         // set values from cookies, if any:
-        if (readCookie('report-type') !== null) {
+        if (!(readCookie('report-type') === null)) {
+            console.log(readCookie('report-type'));
             $('select[name="report_type"]').val(readCookie('report-type'));
         }
 
