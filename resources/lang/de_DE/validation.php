@@ -81,7 +81,7 @@ return [
     '2fa_code'                       => ':attribute Feld ist ungültig.',
     'dimensions'                     => ':attribute hat ungültige Bilddimensionen.',
     'distinct'                       => ':attribute enthält einen doppelten Wert.',
-    'file'                           => 'The :attribute must be a file.',
+    'file'                           => ':attribute muss eine Datei sein.',
     'in_array'                       => ':attribute existiert nicht in :other.',
     'present'                        => 'The :attribute field must be present.',
 ];
