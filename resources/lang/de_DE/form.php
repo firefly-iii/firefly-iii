@@ -150,7 +150,7 @@ return [
     // admin
     'domain'                     => 'Domain',
     'single_user_mode'           => 'Einzelnutzermodus',
-    'must_confirm_account'       => 'New users must activate account',
+    'must_confirm_account'       => 'Erstanwender müssen ihr Konto aktivieren',
     'is_demo_site'               => 'Is demo site',
 
     // import
