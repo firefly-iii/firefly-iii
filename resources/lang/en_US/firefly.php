@@ -702,6 +702,10 @@ return [
     'transaction_count'                          => 'Transaction count',
     'average_spending_per_account'               => 'Average spending per account',
     'average_income_per_account'                 => 'Average income per account',
+    'total'                                      => 'Total',
+    'description'                                => 'Description',
+
+
     // charts:
     'chart'                                      => 'Chart',
     'dayOfMonth'                                 => 'Day of the month',
