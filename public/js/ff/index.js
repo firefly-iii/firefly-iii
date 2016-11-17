@@ -43,29 +43,6 @@ function drawChart() {
     getBoxAmounts();
 }
 
-// /**
-//  * Removes a chart box if there is nothing for the chart to draw.
-//  *
-//  * @param data
-//  * @param options
-//  * @returns {boolean}
-//  */
-// function beforeDrawIsEmpty(data, options) {
-//     "use strict";
-//
-//     // check if chart holds data.
-//     if (data.labels.length === 0) {
-//         // remove the chart container + parent
-//         console.log(options.container + ' appears empty. Removed.');
-//         $('#' + options.container).parent().parent().remove();
-//
-//         // return false so script stops.
-//         return false;
-//     }
-//     return true;
-// }
-
-
 function getBoxAmounts() {
     "use strict";
     var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];

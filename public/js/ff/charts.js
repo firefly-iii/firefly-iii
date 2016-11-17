@@ -67,57 +67,6 @@ function colorizeData(data) {
 }
 
 /**
- * @param URI
- * @param container
- * @param chartType
- * @param options
- * @param colorData
- */
-function drawAChart(URI, container, chartType, options, colorData) {
-    if ($('#' + container).length === 0) {
-        console.log('No container called ' + container + ' was found.');
-        return;
-    }
-
-    // var result = true;
-    // if (options.beforeDraw) {
-    //     result = options.beforeDraw(data, {url: URL, container: container});
-    // }
-    // if (result === false) {
-    //     return;
-    // }
-
-    $.getJSON(URI).done(function (data) {
-
-        if (colorData) {
-            data = colorizeData(data);
-        }
-
-        if (allCharts.hasOwnProperty(container)) {
-            console.log('Will draw updated ' + chartType + ' chart');
-            allCharts[container].data.datasets = data.datasets;
-            allCharts[container].data.labels = data.labels;
-            allCharts[container].update();
-        } else {
-            // new chart!
-            console.log('Will draw new ' + chartType + 'chart');
-            var ctx = document.getElementById(container).getContext("2d");
-            allCharts[container] = new Chart(ctx, {
-                type: chartType,
-                data: data,
-                options: options
-            });
-        }
-
-    }).fail(function () {
-        console.log('Failed to draw ' + chartType + ' in container ' + container);
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for ' + chartType + ' chart : ' + URL);
-}
-
-
-/**
  * Function to draw a line chart:
  * @param URI
  * @param container
@@ -181,4 +130,61 @@ function pieChart(URI, container) {
 
     drawAChart(URI, container, chartType, options, colorData);
 
+}
+
+
+/**
+ * @param URI
+ * @param container
+ * @param chartType
+ * @param options
+ * @param colorData
+ */
+function drawAChart(URI, container, chartType, options, colorData) {
+    if ($('#' + container).length === 0) {
+        console.log('No container called ' + container + ' was found.');
+        return;
+    }
+
+
+    $.getJSON(URI).done(function (data) {
+
+
+        if (data.labels.length === 0) {
+            console.log(chartType + " chart in " + container + " has no data.");
+            // remove the chart container + parent
+            var holder = $('#' + container).parent().parent();
+            if (holder.hasClass('box')) {
+                // remove box
+                holder.remove();
+            }
+            return;
+        }
+
+
+        if (colorData) {
+            data = colorizeData(data);
+        }
+
+        if (allCharts.hasOwnProperty(container)) {
+            console.log('Will draw updated ' + chartType + ' chart');
+            allCharts[container].data.datasets = data.datasets;
+            allCharts[container].data.labels = data.labels;
+            allCharts[container].update();
+        } else {
+            // new chart!
+            console.log('Will draw new ' + chartType + 'chart');
+            var ctx = document.getElementById(container).getContext("2d");
+            allCharts[container] = new Chart(ctx, {
+                type: chartType,
+                data: data,
+                options: options
+            });
+        }
+
+    }).fail(function () {
+        console.log('Failed to draw ' + chartType + ' in container ' + container);
+        $('#' + container).addClass('general-chart-error');
+    });
+    console.log('URL for ' + chartType + ' chart : ' + URL);
 }

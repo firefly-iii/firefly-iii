@@ -27,32 +27,6 @@ function triggerInfoClick() {
     $('.firefly-info-button').unbind('click').click(clickInfoButton);
 }
 
-function listLengthInitial() {
-    "use strict";
-    $('.overListLength').hide();
-    $('.listLengthTrigger').unbind('click').click(triggerList)
-}
-
-function triggerList(e) {
-    "use strict";
-    var link = $(e.target);
-    var table = link.parent().parent().parent().parent();
-    console.log('data-hidden = ' + table.attr('data-hidden'));
-    if (table.attr('data-hidden') === 'no') {
-        // hide all elements, return false.
-        table.find('.overListLength').hide();
-        table.attr('data-hidden', 'yes');
-        link.text(showFullList);
-        return false;
-    }
-    // show all, return false
-    table.find('.overListLength').show();
-    table.attr('data-hidden', 'no');
-    link.text(showOnlyTop);
-
-    return false;
-}
-
 function clickInfoButton(e) {
     "use strict";
     // find all data tags, regardless of what they are:

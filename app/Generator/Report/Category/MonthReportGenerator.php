@@ -63,10 +63,18 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $accountSummary  = $this->getAccountSummary();
         $categorySummary = $this->getCategorySummary();
         $averageExpenses = $this->getAverageExpenses();
+        $averageIncome   = $this->getAverageIncome();
+        $topExpenses     = $this->getTopExpenses();
+        $topIncome       = $this->getTopIncome();
 
 
         // render!
-        return view('reports.category.month', compact('accountIds', 'categoryIds', 'reportType', 'accountSummary', 'categorySummary','averageExpenses'))
+        return view(
+            'reports.category.month',
+            compact(
+                'accountIds', 'categoryIds', 'topIncome', 'reportType', 'accountSummary', 'categorySummary', 'averageExpenses', 'averageIncome', 'topExpenses'
+            )
+        )
             ->with('start', $this->start)->with('end', $this->end)
             ->with('categories', $this->categories)
             ->with('accounts', $this->accounts)
@@ -201,6 +209,45 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
         return $result;
 
+    }
+
+    private function getAverageIncome(): array
+    {
+        $expenses = $this->getIncome();
+        $result   = [];
+        /** @var Transaction $transaction */
+        foreach ($expenses as $transaction) {
+            // opposing name and ID:
+            $opposingId = $transaction->opposing_account_id;
+
+            // is not set?
+            if (!isset($result[$opposingId])) {
+                $name                = $transaction->opposing_account_name;
+                $encrypted           = intval($transaction->opposing_account_encrypted);
+                $name                = $encrypted === 1 ? Crypt::decrypt($name) : $name;
+                $result[$opposingId] = [
+                    'name'    => $name,
+                    'count'   => 1,
+                    'id'      => $opposingId,
+                    'average' => $transaction->transaction_amount,
+                    'sum'     => $transaction->transaction_amount,
+                ];
+                continue;
+            }
+            $result[$opposingId]['count']++;
+            $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
+            $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], strval($result[$opposingId]['count']));
+        }
+
+        // sort result by average:
+        $average = [];
+        foreach ($result as $key => $row) {
+            $average[$key] = floatval($row['average']);
+        }
+
+        array_multisort($average, SORT_DESC, $result);
+
+        return $result;
     }
 
     /**
@@ -359,5 +406,41 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         return $result;
 
 
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getTopExpenses(): Collection
+    {
+        $transactions = $this->getExpenses()->sortBy('transaction_amount');
+
+        $transactions = $transactions->each(
+            function (Transaction $transaction) {
+                if (intval($transaction->opposing_account_encrypted) === 1) {
+                    $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
+                }
+            }
+        );
+
+        return $transactions;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getTopIncome(): Collection
+    {
+        $transactions = $this->getIncome()->sortByDesc('transaction_amount');
+
+        $transactions = $transactions->each(
+            function (Transaction $transaction) {
+                if (intval($transaction->opposing_account_encrypted) === 1) {
+                    $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
+                }
+            }
+        );
+
+        return $transactions;
     }
 }
