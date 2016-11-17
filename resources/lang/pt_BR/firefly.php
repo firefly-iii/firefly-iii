@@ -697,6 +697,14 @@ return [
     'include_not_in_category'                    => 'Include transactions not selected for this report',
     'everything_else'                            => 'Everything else',
     'income_and_expenses'                        => 'Income and expenses',
+    'spent_average'                              => 'Spent (average)',
+    'income_average'                             => 'Income (average)',
+    'transaction_count'                          => 'Transaction count',
+    'average_spending_per_account'               => 'Average spending per account',
+    'average_income_per_account'                 => 'Average income per account',
+    'total'                                      => 'Total',
+    'description'                                => 'Description',
+
 
     // charts:
     'chart'                                      => 'Gráfico',
