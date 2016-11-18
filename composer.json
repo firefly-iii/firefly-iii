@@ -30,24 +30,24 @@
     "ext-intl": "*",
     "laravel/framework": "5.3.18",
     "davejamesmiller/laravel-breadcrumbs": "^3.0",
-    "watson/validating": "^3.0",
+    "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
-    "league/commonmark": "^0.15.0",
-    "rcrowe/twigbridge": "^0.9.3",
-    "league/csv": "^8.1",
+    "league/commonmark": "0.15.*",
+    "rcrowe/twigbridge": "0.9.*",
+    "league/csv": "8.*",
     "laravelcollective/html": "^5.3",
-    "rmccue/requests": "^1.6",
-    "pragmarx/google2fa": "^1.0",
-    "barryvdh/laravel-debugbar": "^2.2",
-    "barryvdh/laravel-ide-helper": "^2.2",
-    "bacon/bacon-qr-code": "^1.0"
+    "rmccue/requests": "1.*",
+    "pragmarx/google2fa": "1.*",
+    "bacon/bacon-qr-code": "1.*"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
     "mockery/mockery": "0.9.*",
     "phpunit/phpunit": "~5.0",
     "symfony/css-selector": "3.1.*",
-    "symfony/dom-crawler": "3.1.*"
+    "symfony/dom-crawler": "3.1.*",
+    "barryvdh/laravel-debugbar": "2.*",
+    "barryvdh/laravel-ide-helper": "2.*"
   },
   "autoload": {
     "classmap": [
