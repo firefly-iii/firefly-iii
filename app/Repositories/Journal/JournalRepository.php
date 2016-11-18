@@ -510,7 +510,10 @@ class JournalRepository implements JournalRepositoryInterface
      */
     private function storeDepositAccounts(array $data): array
     {
+        Log::debug('Now in storeDepositAccounts().');
         $destinationAccount = Account::where('user_id', $this->user->id)->where('id', $data['destination_account_id'])->first(['accounts.*']);
+
+        Log::debug(sprintf('Destination account is #%d ("%s")', $destinationAccount->id, $destinationAccount->name));
 
         if (strlen($data['source_account_name']) > 0) {
             $sourceType    = AccountType::where('type', 'Revenue account')->first();
@@ -518,12 +521,17 @@ class JournalRepository implements JournalRepositoryInterface
                 ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
             );
 
+            Log::debug(sprintf('source account name is "%s", account is %d', $data['source_account_name'], $sourceAccount->id));
+
             return [
                 'source'      => $sourceAccount,
                 'destination' => $destinationAccount,
             ];
         }
-        $sourceType    = AccountType::where('type', 'Cash account')->first();
+
+        Log::debug('source_account_name is empty, so default to cash account!');
+
+        $sourceType    = AccountType::where('type', AccountType::CASH)->first();
         $sourceAccount = Account::firstOrCreateEncrypted(
             ['user_id' => $this->user->id, 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
         );
@@ -618,7 +626,10 @@ class JournalRepository implements JournalRepositoryInterface
      */
     private function storeWithdrawalAccounts(array $data): array
     {
+        Log::debug('Now in storeWithdrawalAccounts().');
         $sourceAccount = Account::where('user_id', $this->user->id)->where('id', $data['source_account_id'])->first(['accounts.*']);
+
+        Log::debug(sprintf('Source account is #%d ("%s")', $sourceAccount->id, $sourceAccount->name));
 
         if (strlen($data['destination_account_name']) > 0) {
             $destinationType    = AccountType::where('type', AccountType::EXPENSE)->first();
@@ -631,12 +642,15 @@ class JournalRepository implements JournalRepositoryInterface
                 ]
             );
 
+            Log::debug(sprintf('destination account name is "%s", account is %d', $data['destination_account_name'], $destinationAccount->id));
+
             return [
                 'source'      => $sourceAccount,
                 'destination' => $destinationAccount,
             ];
         }
-        $destinationType    = AccountType::where('type', 'Cash account')->first();
+        Log::debug('destination_account_name is empty, so default to cash account!');
+        $destinationType    = AccountType::where('type', AccountType::CASH)->first();
         $destinationAccount = Account::firstOrCreateEncrypted(
             ['user_id' => $this->user->id, 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
         );

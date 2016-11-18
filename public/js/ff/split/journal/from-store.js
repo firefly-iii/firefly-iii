@@ -148,7 +148,7 @@ function resetSplits() {
     // ends with ][source_account_name]
     $.each($('input[name$="][source_account_name]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transaction[' + i + '][source_account_name]');
+        input.attr('name', 'transactions[' + i + '][source_account_name]');
         console.log('source_account_name is now ' + input.attr('name'));
     });
     // ends with ][amount]
