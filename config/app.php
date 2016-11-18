@@ -65,6 +65,7 @@ return [
 
 
         // own stuff:
+
         //Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         //Barryvdh\Debugbar\ServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,

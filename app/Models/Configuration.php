@@ -16,23 +16,6 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * FireflyIII\Models\Configuration
- *
- * @mixin \Eloquent
- * @property integer        $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property string         $name
- * @property string         $data
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration whereData($value)
- */
 class Configuration extends Model
 {
     use SoftDeletes;

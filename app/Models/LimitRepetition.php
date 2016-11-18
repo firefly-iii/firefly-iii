@@ -18,30 +18,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * FireflyIII\Models\LimitRepetition
- *
- * @property integer          $id
- * @property \Carbon\Carbon   $created_at
- * @property \Carbon\Carbon   $updated_at
- * @property integer          $budget_limit_id
- * @property \Carbon\Carbon   $startdate
- * @property \Carbon\Carbon   $enddate
- * @property float            $amount
- * @property-read BudgetLimit $budgetLimit
- * @property int              $budget_id
- * @property string           $spent
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereBudgetLimitId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereEnddate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereAmount($value)
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition after($date)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition before($date)
- */
 class LimitRepetition extends Model
 {
 

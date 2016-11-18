@@ -18,31 +18,6 @@ use Illuminate\Database\Eloquent\Model;
 use Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
-/**
- * FireflyIII\Models\ImportJob
- *
- * @property integer               $id
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
- * @property integer               $user_id
- * @property string                $key
- * @property string                $file_type
- * @property string                $status
- * @property array                 $configuration
- * @property-read \FireflyIII\User $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereKey($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereFileType($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
- * @mixin \Eloquent
- * @property string                $extended_status
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
- */
 class ImportJob extends Model
 {
 

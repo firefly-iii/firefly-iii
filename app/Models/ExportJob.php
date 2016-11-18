@@ -16,25 +16,6 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * Class ExportJob
- *
- * @package FireflyIII
- * @property integer               $id
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
- * @property integer               $user_id
- * @property string                $key
- * @property string                $status
- * @property-read \FireflyIII\User $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ExportJob whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ExportJob whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ExportJob whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ExportJob whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ExportJob whereKey($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ExportJob whereStatus($value)
- * @mixin \Eloquent
- */
 class ExportJob extends Model
 {
     /**

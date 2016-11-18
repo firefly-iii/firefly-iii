@@ -16,24 +16,6 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * FireflyIII\Models\AccountMeta
- *
- * @property integer        $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer        $account_id
- * @property string         $name
- * @property string         $data
- * @property-read Account   $account
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AccountMeta whereData($value)
- * @mixin \Eloquent
- */
 class AccountMeta extends Model
 {
 

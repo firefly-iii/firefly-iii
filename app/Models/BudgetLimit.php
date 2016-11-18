@@ -15,30 +15,6 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * FireflyIII\Models\BudgetLimit
- *
- * @property integer                                                         $id
- * @property \Carbon\Carbon                                                  $created_at
- * @property \Carbon\Carbon                                                  $updated_at
- * @property integer                                                         $budget_id
- * @property \Carbon\Carbon                                                  $startdate
- * @property float                                                           $amount
- * @property boolean                                                         $repeats
- * @property string                                                          $repeat_freq
- * @property-read Budget                                                     $budget
- * @property int                                                             $component_id
- * @property-read \Illuminate\Database\Eloquent\Collection|LimitRepetition[] $limitrepetitions
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereBudgetId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereRepeats($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereRepeatFreq($value)
- * @mixin \Eloquent
- */
 class BudgetLimit extends Model
 {
 
