@@ -45,7 +45,7 @@ return [
     'budget_id'                      => 'Budget',
     'openingBalance'                 => 'Eröffnungsbilanz',
     'tagMode'                        => 'Tag-Modus',
-    'tagPosition'                    => 'Tag location',
+    'tagPosition'                    => 'Ort des Tags',
     'virtualBalance'                 => 'Virtueller Kontostand',
     'longitude_latitude'             => 'Standort',
     'targetamount'                   => 'Zielbetrag',
@@ -67,9 +67,9 @@ return [
     'destination_account_asset'   => 'Zielkonto (Bestandskonto)',
     'source_account_revenue'      => 'Quellkonto (Ertragskonto)',
     'type'                        => 'Type',
-    'convert_Withdrawal'          => 'Convert withdrawal',
-    'convert_Deposit'             => 'Convert deposit',
-    'convert_Transfer'            => 'Convert transfer',
+    'convert_Withdrawal'          => 'Ändere zu Abhebung',
+    'convert_Deposit'             => 'Ändere zu Einzahlng',
+    'convert_Transfer'            => 'Ändere zu Überweisung',
 
 
     'amount'                     => 'Betrag',
@@ -151,7 +151,7 @@ return [
     'domain'                     => 'Domain',
     'single_user_mode'           => 'Einzelnutzermodus',
     'must_confirm_account'       => 'Erstanwender müssen ihr Konto aktivieren',
-    'is_demo_site'               => 'Is demo site',
+    'is_demo_site'               => 'Ist eine Demonstrationsseite',
 
     // import
     'import_file'                => 'Datei importieren',
