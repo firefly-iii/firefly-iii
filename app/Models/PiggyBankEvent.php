@@ -15,6 +15,11 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class PiggyBankEvent
+ *
+ * @package FireflyIII\Models
+ */
 class PiggyBankEvent extends Model
 {
 

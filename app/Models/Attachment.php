@@ -20,6 +20,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class Attachment
+ *
+ * @package FireflyIII\Models
+ */
 class Attachment extends Model
 {
     use SoftDeletes;

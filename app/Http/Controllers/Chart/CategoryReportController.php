@@ -358,25 +358,6 @@ class CategoryReportController extends Controller
      *
      * @return array
      */
-    private function groupByAccount(Collection $set): array
-    {
-        // group by category ID:
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $accountId           = $transaction->account_id;
-            $grouped[$accountId] = $grouped[$accountId] ?? '0';
-            $grouped[$accountId] = bcadd($transaction->transaction_amount, $grouped[$accountId]);
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * @param Collection $set
-     *
-     * @return array
-     */
     private function groupByCategory(Collection $set): array
     {
         // group by category ID:

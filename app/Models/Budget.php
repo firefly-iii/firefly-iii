@@ -20,6 +20,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Budget
+ *
+ * @package FireflyIII\Models
+ */
 class Budget extends Model
 {
 

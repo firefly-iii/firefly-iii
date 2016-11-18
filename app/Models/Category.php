@@ -20,6 +20,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Category
+ *
+ * @package FireflyIII\Models
+ */
 class Category extends Model
 {
     use SoftDeletes, ValidatingTrait;

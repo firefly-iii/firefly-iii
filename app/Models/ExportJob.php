@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class ExportJob
+ *
+ * @package FireflyIII\Models
+ */
 class ExportJob extends Model
 {
     /**

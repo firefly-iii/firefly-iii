@@ -25,6 +25,11 @@ use Preferences;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class TransactionJournal
+ *
+ * @package FireflyIII\Models
+ */
 class TransactionJournal extends TransactionJournalSupport
 {
     use SoftDeletes, ValidatingTrait;

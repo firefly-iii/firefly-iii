@@ -20,6 +20,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class PiggyBank
+ *
+ * @package FireflyIII\Models
+ */
 class PiggyBank extends Model
 {
     use SoftDeletes;

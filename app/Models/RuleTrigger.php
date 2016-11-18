@@ -15,6 +15,11 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class RuleTrigger
+ *
+ * @package FireflyIII\Models
+ */
 class RuleTrigger extends Model
 {
     /**

@@ -27,6 +27,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 
+/**
+ * Class Account
+ *
+ * @package FireflyIII\Models
+ */
 class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;

@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Class Role
+ *
+ * @package FireflyIII\Models
+ */
 class Role extends Model
 {
 

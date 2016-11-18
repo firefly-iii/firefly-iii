@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use League\CommonMark\CommonMarkConverter;
 
+/**
+ * Class Note
+ *
+ * @package FireflyIII\Models
+ */
 class Note extends Model
 {
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];

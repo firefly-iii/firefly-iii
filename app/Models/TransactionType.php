@@ -17,6 +17,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class TransactionType
+ *
+ * @package FireflyIII\Models
+ */
 class TransactionType extends Model
 {
     use SoftDeletes;

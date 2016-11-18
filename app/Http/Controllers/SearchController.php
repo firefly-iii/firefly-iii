@@ -35,6 +35,7 @@ class SearchController extends Controller
     /**
      * Results always come in the form of an array [results, count, fullCount]
      *
+     * @param Request         $request
      * @param SearchInterface $searcher
      *
      * @return $this

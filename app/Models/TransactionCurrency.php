@@ -18,6 +18,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class TransactionCurrency
+ *
+ * @package FireflyIII\Models
+ */
 class TransactionCurrency extends Model
 {
     use SoftDeletes, ValidatingTrait;

@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class AccountType
+ *
+ * @package FireflyIII\Models
+ */
 class AccountType extends Model
 {
     const DEFAULT         = 'Default account';

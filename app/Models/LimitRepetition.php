@@ -18,6 +18,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class LimitRepetition
+ *
+ * @package FireflyIII\Models
+ */
 class LimitRepetition extends Model
 {
 

@@ -19,6 +19,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Transaction
+ *
+ * @package FireflyIII\Models
+ */
 class Transaction extends Model
 {
 

@@ -15,6 +15,11 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class BudgetLimit
+ *
+ * @package FireflyIII\Models
+ */
 class BudgetLimit extends Model
 {
 

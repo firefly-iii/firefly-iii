@@ -22,6 +22,11 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class RuleAction
+ *
+ * @package FireflyIII\Models
+ */
 class RuleAction extends Model
 {
     /**

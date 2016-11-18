@@ -67,6 +67,7 @@ class YearReportGenerator implements ReportGeneratorInterface
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
+        return $this;
     }
 
     /**

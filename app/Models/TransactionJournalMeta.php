@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class TransactionJournalMeta
+ *
+ * @package FireflyIII\Models
+ */
 class TransactionJournalMeta extends Model
 {
 

@@ -118,6 +118,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
+        return $this;
     }
 
     /**

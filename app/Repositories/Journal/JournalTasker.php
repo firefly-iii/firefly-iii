@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use Carbon\Carbon;
 use Crypt;
 use DB;
 use FireflyIII\Models\PiggyBankEvent;
@@ -22,7 +21,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**

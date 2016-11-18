@@ -211,6 +211,9 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
     }
 
+    /**
+     * @return array
+     */
     private function getAverageIncome(): array
     {
         $expenses = $this->getIncome();

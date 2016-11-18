@@ -17,6 +17,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class RuleGroup
+ *
+ * @package FireflyIII\Models
+ */
 class RuleGroup extends Model
 {
     use SoftDeletes;

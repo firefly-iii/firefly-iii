@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Configuration
+ *
+ * @package FireflyIII\Models
+ */
 class Configuration extends Model
 {
     use SoftDeletes;

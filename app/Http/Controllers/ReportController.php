@@ -100,8 +100,9 @@ class ReportController extends Controller
      * @param Carbon     $end
      * @param Collection $accounts
      *
+     * @param Collection $categories
+     *
      * @return string
-     * @throws FireflyException
      */
     public function categoryReport(Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
     {

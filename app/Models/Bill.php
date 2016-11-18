@@ -20,6 +20,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Bill
+ *
+ * @package FireflyIII\Models
+ */
 class Bill extends Model
 {
 

@@ -19,6 +19,11 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Log;
 
+/**
+ * Class Preference
+ *
+ * @package FireflyIII\Models
+ */
 class Preference extends Model
 {
 

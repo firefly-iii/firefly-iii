@@ -16,6 +16,11 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class TransactionGroup
+ *
+ * @package FireflyIII\Models
+ */
 class TransactionGroup extends Model
 {
     use SoftDeletes;

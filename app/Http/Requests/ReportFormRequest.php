@@ -79,6 +79,10 @@ class ReportFormRequest extends Request
         return $collection;
     }
 
+    /**
+     * @return Carbon
+     * @throws FireflyException
+     */
     public function getEndDate(): Carbon
     {
         $date  = new Carbon;

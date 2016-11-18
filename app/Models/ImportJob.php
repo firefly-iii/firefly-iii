@@ -18,6 +18,11 @@ use Illuminate\Database\Eloquent\Model;
 use Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class ImportJob
+ *
+ * @package FireflyIII\Models
+ */
 class ImportJob extends Model
 {
 

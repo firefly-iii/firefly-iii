@@ -18,6 +18,11 @@ use FireflyIII\Support\Models\TagSupport;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Tag
+ *
+ * @package FireflyIII\Models
+ */
 class Tag extends TagSupport
 {
     protected $dates    = ['created_at', 'updated_at', 'date'];

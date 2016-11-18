@@ -17,6 +17,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class PiggyBankRepetition
+ *
+ * @package FireflyIII\Models
+ */
 class PiggyBankRepetition extends Model
 {
 
