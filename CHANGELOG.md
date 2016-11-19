@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.7] - 2015-05-25
+### Added
+- Check for database table presence in console commands.
+- Category report
+- Reinstated old test routines.
+
+
+### Changed
+- Confirm account setting is no longer in `.env` file.
+- Titles are now in reverse (current page > parent > firefly iii)
+- Easier update of language files thanks to Github implementation.
+- Uniform colours for charts.
+
+### Fixed
+- Made all pages more mobile friendly.
+- Fixed #395 found by @marcoveeneman.
+- Fixed #398 found by @marcoveeneman.
+- Fixed #401 found by @marcoveeneman.
+- Many optimizations.
+- Updated many libraries.
+- Various bugs found by myself.
+
+
 ## [4.1.6] - 2016-11-06
 ### Added
 - New budget table for multi year report.
