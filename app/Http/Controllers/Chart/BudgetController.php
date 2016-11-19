@@ -207,7 +207,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('period');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         // the expenses:
