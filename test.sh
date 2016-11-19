@@ -34,8 +34,11 @@ fi
 cp $DATABASECOPY $DATABASE
 
 # run PHPUnit
-
-phpunit
+if [ "$1" == "--notest" ]; then
+    echo "Must not run PHPUnit"
+else
+    phpunit
+fi
 
 # restore current config:
 mv .env.current .env

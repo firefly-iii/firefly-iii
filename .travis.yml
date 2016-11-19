@@ -1,7 +1,8 @@
 language: php
 sudo: false
 php:
-  - 7
+  - '7.0'
+  - hhvm
 
 install:
   - phpenv config-rm xdebug.ini
@@ -13,7 +14,7 @@ install:
   - php artisan env
   - mv -v .env.testing .env
   - php artisan env
-  - test.sh --notest
+  - ./test.sh --notest
 
 script:
   - phpunit
