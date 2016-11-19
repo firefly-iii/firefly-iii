@@ -120,6 +120,20 @@ class Account extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getEditNameAttribute(): string
+    {
+        $name = $this->name;
+
+        if ($this->accountType->type === AccountType::CASH) {
+            return '';
+        }
+
+        return $name;
+    }
+
+    /**
      * FIxxME can return null
      *
      * @param $value
@@ -227,20 +241,6 @@ class Account extends Model
         }
 
         return $journal->date;
-    }
-
-    /**
-     * @return string
-     */
-    public function nameForEdit(): string
-    {
-        $name = $this->name;
-
-        if ($this->accountType->type === AccountType::CASH) {
-            return '';
-        }
-
-        return $name;
     }
 
     /**

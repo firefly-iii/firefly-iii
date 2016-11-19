@@ -134,7 +134,9 @@ class JournalCollector implements JournalCollectorInterface
     {
         $this->run = true;
         $set       = $this->query->get(array_values($this->fields));
-        $set       = $this->filterTransfers($set);
+        Log::debug(sprintf('Count of set is %d', $set->count()));
+        $set = $this->filterTransfers($set);
+        Log::debug(sprintf('Count of set after filterTransfers() is %d', $set->count()));
 
         // loop for decryption.
         $set->each(
@@ -374,6 +376,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setTypes(array $types): JournalCollectorInterface
     {
         if (count($types) > 0) {
+            Log::debug('Set query collector types', $types);
             $this->query->whereIn('transaction_types.type', $types);
         }
 
@@ -390,7 +393,9 @@ class JournalCollector implements JournalCollectorInterface
         $accountIds = $this->accountIds;
         $this->query->where(
             function (EloquentBuilder $q1) use ($accountIds) {
-                // set 1
+                // set 1:
+                // where source is in the set of $accounts
+                // but destination is not.
                 $q1->where(
                     function (EloquentBuilder $q2) use ($accountIds) {
                         // transactions.account_id in set
@@ -400,7 +405,9 @@ class JournalCollector implements JournalCollectorInterface
 
                     }
                 );
-                // or set 2
+                // set 1:
+                // where source is not in the set of $accounts
+                // but destination is.
                 $q1->orWhere(
                     function (EloquentBuilder $q3) use ($accountIds) {
                         // transactions.account_id not in set

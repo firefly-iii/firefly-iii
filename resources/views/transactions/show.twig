@@ -277,14 +277,24 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
+                                {% if transaction.source_account_type == 'Cash account' %}
+                                    <span class="text-success">(cash)</span>
+                                {% else %}
+                                    <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
+                                {% endif %}
+
                             </td>
                             <td>
                                 {{ formatAmountWithCode(transaction.source_account_before,journal.transactionCurrency.code) }}
                                 &longrightarrow; {{ formatAmountWithCode(transaction.source_account_after,journal.transactionCurrency.code) }}
                             </td>
                             <td>
-                                <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
+                                {% if transaction.destination_account_type == 'Cash account' %}
+                                    <span class="text-success">(cash)</span>
+                                {% else %}
+                                    <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
+                                {% endif %}
+
                             </td>
                             <td>
                                 {{ formatAmountWithCode(transaction.destination_account_before,journal.transactionCurrency.code) }}
@@ -313,27 +323,6 @@
                                 {{ transactionIdCategories(transaction.source_id) }}
                             </td>
                         </tr>
-                        {#
-                        <tr>
-                            <td>
-                                {% if (index+1) != transactions|length or what == 'transfer' %}
-                                    {{ t.description }}
-                                {% endif %}
-                            </td>
-                            <td><a href="{{ route('accounts.show',t.account.id) }}">{{ t.account.name }}</a> ({{ t.account.accounttype.type|_ }})</td>
-                            <td>{{ t.sum|formatAmount }}</td>
-                            <td>{{ t.before|formatAmount }} &rarr; {{ (t.sum+t.before)|formatAmount }}</td>
-                            <td>
-                                {% if (index+1) != transactions|length  or what == 'transfer' %}
-                                    {{ transactionBudgets(t)|raw }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if (index+1) != transactions|length  or what == 'transfer' %}
-                                    {{ transactionCategories(t)|raw }}
-                                {% endif %}
-                            </td>
-                            #}
                     {% endfor %}
                     </tbody>
                 </table>

@@ -19,6 +19,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Http\Request;
+use Log;
 use Preferences;
 use Response;
 use View;
@@ -63,8 +64,13 @@ class TransactionController extends Controller
         $subTitle     = trans('firefly.title_' . $what);
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $collector    = new JournalCollector(auth()->user());
-        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()
-        ->withOpposingAccount();
+        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
+
+        // do not filter transfers if $what = transfer.
+        if (!in_array($what, ['transfer', 'transfers'])) {
+            Log::debug('Also get opposing account info.');
+            $collector->withOpposingAccount();
+        }
 
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what);

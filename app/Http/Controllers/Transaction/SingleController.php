@@ -189,9 +189,9 @@ class SingleController extends Controller
             'budget_id'                => TransactionJournal::budgetId($journal),
             'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
             'source_account_id'        => $sourceAccounts->first()->id,
-            'source_account_name'      => $sourceAccounts->first()->name,
+            'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
-            'destination_account_name' => $destinationAccounts->first()->name,
+            'destination_account_name' => $destinationAccounts->first()->edit_name,
             'amount'                   => TransactionJournal::amountPositive($journal),
 
             // new custom fields:
