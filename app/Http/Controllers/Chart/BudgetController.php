@@ -186,6 +186,9 @@ class BudgetController extends Controller
     }
 
     /**
+     *
+     * TODO use the NEW query that will be in the repository. Because that query will be shared between the budget period report (table for all budgets)
+     * TODO and this chart (a single budget)
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      * @param Carbon                    $start
@@ -196,6 +199,9 @@ class BudgetController extends Controller
      */
     public function period(BudgetRepositoryInterface $repository, Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
     {
+
+
+
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);

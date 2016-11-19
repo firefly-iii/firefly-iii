@@ -47,6 +47,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
+     * TODO the query called here must be moved to a repository.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -215,25 +217,29 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function listOfPeriods(Carbon $start, Carbon $end): array
     {
         // define period to increment
-        $increment = 'addDay';
-        $format    = 'Y-m-d';
+        $increment     = 'addDay';
+        $format        = 'Y-m-d';
+        $displayFormat = strval(trans('config.month_and_day'));
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {
-            $increment = 'addMonth';
-            $format    = 'Y-m';
+            $increment     = 'addMonth';
+            $format        = 'Y-m';
+            $displayFormat = strval(trans('config.month'));
         }
 
         // increment by year (for multi year)
         if ($start->diffInMonths($end) > 12) {
-            $increment = 'addYear';
-            $format    = 'Y';
+            $increment     = 'addYear';
+            $format        = 'Y';
+            $displayFormat = strval(trans('config.year'));
         }
 
         $begin   = clone $start;
         $entries = [];
         while ($begin < $end) {
             $formatted           = $begin->format($format);
-            $entries[$formatted] = $formatted;
+            $displayed           = $begin->formatLocalized($displayFormat);
+            $entries[$formatted] = $displayed;
 
             $begin->$increment();
         }
@@ -274,7 +280,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     private function filterAllAmounts(Collection $set, int $budgetId, array $periods):array
     {
         $arr = [];
-        foreach ($periods as $period) {
+        $keys = array_keys($periods);
+        foreach ($keys as $period) {
             /** @var stdClass $object */
             $result = $set->filter(
                 function (TransactionJournal $object) use ($budgetId, $period) {

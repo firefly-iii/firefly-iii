@@ -12,12 +12,7 @@
     {% for id, info in budgets %}
         <tr>
             <td>
-                (<a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>)
-                {% if id == 0 %}
-                    <a href="{{ route('budgets.noBudget') }}">{{ info.name }}</a>
-                {% else %}
-                    <a href="{{ route('budgets.show', id) }}">{{ info.name }}</a>
-                {% endif %}
+                <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>
             </td>
             {% for amount in info.entries %}
                 <td data-value="{{ amount }}">
