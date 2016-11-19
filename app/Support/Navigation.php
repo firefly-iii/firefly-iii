@@ -24,7 +24,6 @@ use FireflyIII\Exceptions\FireflyException;
 class Navigation
 {
 
-
     /**
      * @param \Carbon\Carbon $theDate
      * @param                $repeatFreq
@@ -168,6 +167,46 @@ class Navigation
         }
 
         return $currentEnd;
+    }
+
+    /**
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return array
+     */
+    public function listOfPeriods(Carbon $start, Carbon $end): array
+    {
+        // define period to increment
+        $increment     = 'addDay';
+        $format        = 'Y-m-d';
+        $displayFormat = strval(trans('config.month_and_day'));
+        // increment by month (for year)
+        if ($start->diffInMonths($end) > 1) {
+            $increment     = 'addMonth';
+            $format        = 'Y-m';
+            $displayFormat = strval(trans('config.month'));
+        }
+
+        // increment by year (for multi year)
+        if ($start->diffInMonths($end) > 12) {
+            $increment     = 'addYear';
+            $format        = 'Y';
+            $displayFormat = strval(trans('config.year'));
+        }
+
+        $begin   = clone $start;
+        $entries = [];
+        while ($begin < $end) {
+            $formatted           = $begin->format($format);
+            $displayed           = $begin->formatLocalized($displayFormat);
+            $entries[$formatted] = $displayed;
+
+            $begin->$increment();
+        }
+
+        return $entries;
+
     }
 
     /**

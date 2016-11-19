@@ -53,12 +53,4 @@ interface BudgetReportHelperInterface
      */
     public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function listOfPeriods(Carbon $start, Carbon $end): array;
-
 }

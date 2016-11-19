@@ -15,15 +15,14 @@ namespace FireflyIII\Helpers\Report;
 
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Navigation;
 use stdClass;
 
 /**
@@ -47,8 +46,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * TODO the query called here must be moved to a repository.
-     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -57,50 +54,10 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      */
     public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
-        // get account ID's.
-        $accountIds = $accounts->pluck('id')->toArray();
-
-        // define period to group on:
-        $sqlDateFormat = '%Y-%m-%d';
-        // monthly report (for year)
-        if ($start->diffInMonths($end) > 1) {
-            $sqlDateFormat = '%Y-%m';
-        }
-
-        // yearly report (for multi year)
-        if ($start->diffInMonths($end) > 12) {
-            $sqlDateFormat = '%Y';
-        }
-
-        // build query.
-        $query = TransactionJournal
-            ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin(
-                'transactions', function (JoinClause $join) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-            }
-            )
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereNull('transactions.deleted_at')
-            ->where('transaction_types.type', 'Withdrawal')
-            ->where('transaction_journals.user_id', auth()->user()->id);
-
-        if (count($accountIds) > 0) {
-            $query->whereIn('transactions.account_id', $accountIds);
-        }
-        $query->groupBy(['budget_transaction_journal.budget_id', 'period_marker']);
-        $queryResult = $query->get(
-            [
-                'budget_transaction_journal.budget_id',
-                DB::raw('DATE_FORMAT(transaction_journals.date,"' . $sqlDateFormat . '") AS period_marker'),
-                DB::raw('SUM(transactions.amount) as sum_of_period'),
-            ]
-        );
-
-        $data    = [];
-        $budgets = $this->repository->getBudgets();
-        $periods = $this->listOfPeriods($start, $end);
+        $budgets     = $this->repository->getBudgets();
+        $queryResult = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
+        $data        = [];
+        $periods     = Navigation::listOfPeriods($start, $end);
 
         // do budget "zero"
         $emptyBudget       = new Budget;
@@ -108,12 +65,11 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $emptyBudget->name = strval(trans('firefly.no_budget'));
         $budgets->push($emptyBudget);
 
-
         // get all budgets and years.
         foreach ($budgets as $budget) {
             $data[$budget->id] = [
                 'name'    => $budget->name,
-                'entries' => $this->filterAllAmounts($queryResult, $budget->id, $periods),
+                'entries' => $this->repository->filterAmounts($queryResult, $budget->id, $periods),
                 'sum'     => '0',
             ];
         }
@@ -209,46 +165,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function listOfPeriods(Carbon $start, Carbon $end): array
-    {
-        // define period to increment
-        $increment     = 'addDay';
-        $format        = 'Y-m-d';
-        $displayFormat = strval(trans('config.month_and_day'));
-        // increment by month (for year)
-        if ($start->diffInMonths($end) > 1) {
-            $increment     = 'addMonth';
-            $format        = 'Y-m';
-            $displayFormat = strval(trans('config.month'));
-        }
-
-        // increment by year (for multi year)
-        if ($start->diffInMonths($end) > 12) {
-            $increment     = 'addYear';
-            $format        = 'Y';
-            $displayFormat = strval(trans('config.year'));
-        }
-
-        $begin   = clone $start;
-        $entries = [];
-        while ($begin < $end) {
-            $formatted           = $begin->format($format);
-            $displayed           = $begin->formatLocalized($displayFormat);
-            $entries[$formatted] = $displayed;
-
-            $begin->$increment();
-        }
-
-        return $entries;
-
-    }
-
-    /**
      * @param Budget          $budget
      * @param LimitRepetition $repetition
      * @param Collection      $accounts
@@ -266,37 +182,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         return $array;
 
-    }
-
-    /**
-     * Filters entries from the result set generated by getBudgetPeriodReport
-     *
-     * @param Collection $set
-     * @param int        $budgetId
-     * @param array      $periods
-     *
-     * @return array
-     */
-    private function filterAllAmounts(Collection $set, int $budgetId, array $periods):array
-    {
-        $arr = [];
-        $keys = array_keys($periods);
-        foreach ($keys as $period) {
-            /** @var stdClass $object */
-            $result = $set->filter(
-                function (TransactionJournal $object) use ($budgetId, $period) {
-                    return strval($object->period_marker) === $period && $budgetId === intval($object->budget_id);
-                }
-            );
-            $amount = '0';
-            if (!is_null($result->first())) {
-                $amount = $result->first()->sum_of_period;
-            }
-
-            $arr[$period] = $amount;
-        }
-
-        return $arr;
     }
 
     /**

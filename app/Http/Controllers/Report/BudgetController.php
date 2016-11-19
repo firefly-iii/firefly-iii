@@ -19,6 +19,7 @@ use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Navigation;
 
 /**
  * Class BudgetController
@@ -45,10 +46,10 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get();
+            return $cache->get();
         }
 
-        $periods = $helper->listOfPeriods($start, $end);
+        $periods = Navigation::listOfPeriods($start, $end);
         $budgets = $helper->getBudgetPeriodReport($start, $end, $accounts);
         $result  = view('reports.partials.budget-period', compact('budgets', 'periods'))->render();
         $cache->store($result);

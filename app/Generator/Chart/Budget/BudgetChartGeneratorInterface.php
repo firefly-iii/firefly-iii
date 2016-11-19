@@ -39,12 +39,11 @@ interface BudgetChartGeneratorInterface
     public function frontpage(Collection $entries): array;
 
     /**
-     * @param Collection $entries
-     * @param string     $viewRange
+     * @param array $entries
      *
      * @return array
      */
-    public function period(Collection $entries, string $viewRange) : array;
+    public function period(array $entries) : array;
 
     /**
      * @param Collection $budgets
