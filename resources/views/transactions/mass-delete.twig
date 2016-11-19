@@ -49,18 +49,10 @@
                                         {{ journal.date.formatLocalized(monthAndDayFormat) }}
                                     </td>
                                     <td>
-                                        {% if journal.source_account_type == 'Cash account' %}
-                                            <span class="text-success">(cash)</span>
-                                        {% else %}
-                                            <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
-                                        {% endif %}
+                                        {{ sourceAccount(journal)|raw }}
                                     </td>
                                     <td>
-                                        {% if journal.destination_account_type == 'Cash account' %}
-                                            <span class="text-success">(cash)</span>
-                                        {% else %}
-                                            <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
-                                        {% endif %}
+                                        {{ destinationAccount(journal)|raw }}
                                     </td>
                                 </tr>
                             {% endfor %}

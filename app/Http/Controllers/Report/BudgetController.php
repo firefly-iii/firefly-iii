@@ -19,6 +19,7 @@ use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Navigation;
 
 /**
  * Class BudgetController
@@ -29,6 +30,7 @@ class BudgetController extends Controller
 {
 
     /**
+     *
      * @param BudgetReportHelperInterface $helper
      * @param Carbon                      $start
      * @param Carbon                      $end
@@ -36,22 +38,20 @@ class BudgetController extends Controller
      *
      * @return mixed|string
      */
-    public function budgetMultiYear(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    public function budgetPeriodReport(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('budget-mult-year-report');
+        $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
             return $cache->get();
         }
 
-
-        $years           = $helper->listOfYears($start, $end);
-        $budgetMultiYear = $helper->getBudgetMultiYear($start, $end, $accounts);
-
-        $result = view('reports.partials.budget-multi-year', compact('budgetMultiYear', 'years'))->render();
+        $periods = Navigation::listOfPeriods($start, $end);
+        $budgets = $helper->getBudgetPeriodReport($start, $end, $accounts);
+        $result  = view('reports.partials.budget-period', compact('budgets', 'periods'))->render();
         $cache->store($result);
 
         return $result;
@@ -86,35 +86,4 @@ class BudgetController extends Controller
         return $result;
 
     }
-
-    /**
-     * @param BudgetReportHelperInterface $helper
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     *
-     * @return string
-     */
-    public function budgetYearOverview(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
-    {
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('budget-year-overview');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $budgets = $helper->budgetYearOverview($start, $end, $accounts);
-
-        $result = view('reports.partials.budget-year-overview', compact('budgets'))->render();
-        $cache->store($result);
-
-        return $result;
-
-    }
-
 }

@@ -108,41 +108,12 @@ class AccountController extends Controller
      */
     public function frontpage(AccountRepositoryInterface $repository)
     {
-        $start = clone session('start', Carbon::now()->startOfMonth());
-        $end   = clone session('end', Carbon::now()->endOfMonth());
-
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('frontpage');
-        $cache->addProperty('accounts');
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
+        $start     = clone session('start', Carbon::now()->startOfMonth());
+        $end       = clone session('end', Carbon::now()->endOfMonth());
         $frontPage = Preferences::get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
         $accounts  = $repository->getAccountsById($frontPage->data);
 
-        foreach ($accounts as $account) {
-            $balances = [];
-            $current  = clone $start;
-            $range    = Steam::balanceInRange($account, $start, clone $end);
-            $previous = round(array_values($range)[0], 2);
-            while ($current <= $end) {
-                $format     = $current->format('Y-m-d');
-                $balance    = isset($range[$format]) ? round($range[$format], 2) : $previous;
-                $previous   = $balance;
-                $balances[] = $balance;
-                $current->addDay();
-            }
-            $account->balances = $balances;
-        }
-        $data = $this->generator->frontpage($accounts, $start, $end);
-        $cache->store($data);
-
-        return Response::json($data);
+        return Response::json($this->accountBalanceChart($start, $end, $accounts));
     }
 
     /**
@@ -156,38 +127,7 @@ class AccountController extends Controller
      */
     public function report(Carbon $start, Carbon $end, Collection $accounts)
     {
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('all');
-        $cache->addProperty('accounts');
-        $cache->addProperty('default');
-        $cache->addProperty($accounts);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        foreach ($accounts as $account) {
-            $balances = [];
-            $current  = clone $start;
-            $range    = Steam::balanceInRange($account, $start, clone $end);
-            $previous = round(array_values($range)[0], 2);
-            while ($current <= $end) {
-                $format     = $current->format('Y-m-d');
-                $balance    = isset($range[$format]) ? round($range[$format], 2) : $previous;
-                $previous   = $balance;
-                $balances[] = $balance;
-                $current->addDay();
-            }
-            $account->balances = $balances;
-        }
-
-        // make chart:
-        $data = $this->generator->frontpage($accounts, $start, $end);
-        $cache->store($data);
-
-        return Response::json($data);
+        return Response::json($this->accountBalanceChart($start, $end, $accounts));
     }
 
     /**
@@ -338,6 +278,45 @@ class AccountController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    private function accountBalanceChart(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('account-balance-chart');
+        $cache->addProperty($accounts);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        foreach ($accounts as $account) {
+            $balances = [];
+            $current  = clone $start;
+            $range    = Steam::balanceInRange($account, $start, clone $end);
+            $previous = round(array_values($range)[0], 2);
+            while ($current <= $end) {
+                $format     = $current->format('Y-m-d');
+                $balance    = isset($range[$format]) ? round($range[$format], 2) : $previous;
+                $previous   = $balance;
+                $balances[] = $balance;
+                $current->addDay();
+            }
+            $account->balances = $balances;
+        }
+        $data = $this->generator->frontpage($accounts, $start, $end);
+        $cache->store($data);
+
+        return $data;
     }
 
 }

@@ -17,16 +17,16 @@ $(function () {
             }
         );
 
-
         // set values from cookies, if any:
-        if (readCookie('report-type') !== null) {
+        if (!(readCookie('report-type') === null)) {
+            console.log(readCookie('report-type'));
             $('select[name="report_type"]').val(readCookie('report-type'));
         }
 
         if ((readCookie('report-accounts') !== null)) {
             var arr = readCookie('report-accounts').split(',');
             arr.forEach(function (val) {
-                $('input[type="checkbox"][value="' + val + '"]').prop('checked', true);
+                $('input[class="account-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
             });
         }
 
@@ -44,19 +44,39 @@ $(function () {
 
     $('.date-select').on('click', preSelectDate);
     $('#report-form').on('submit', catchSubmit);
+    $('select[name="report_type"]').on('change', getReportOptions);
+    getReportOptions();
 
 });
 
+function getReportOptions() {
+    "use strict";
+    var reportType = $('select[name="report_type"]').val();
+    $('#extra-options').empty();
+    $('#extra-options').addClass('loading');
+    console.log('Changed report type to ' + reportType);
+
+    $.getJSON('reports/options/' + reportType, function (data) {
+        $('#extra-options').removeClass('loading').html(data.html);
+        setOptionalFromCookies();
+    }).fail(function () {
+        $('#extra-options').removeClass('loading').addClass('error');
+    });
+}
+
+function setOptionalFromCookies() {
+    if ((readCookie('report-categories') !== null)) {
+        var arr = readCookie('report-categories').split(',');
+        arr.forEach(function (val) {
+            $('input[class="category-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
+        });
+    }
+}
+
 function catchSubmit() {
     "use strict";
-    // default;20141201;20141231;4;5
-    // report name:
-    var url = '' + $('select[name="report_type"]').val() + '/';
-
     // date, processed:
     var picker = $('#inputDateRange').data('daterangepicker');
-    url += moment(picker.startDate).format("YYYYMMDD") + '/';
-    url += moment(picker.endDate).format("YYYYMMDD") + '/';
 
     // all account ids:
     var count = 0;
@@ -64,23 +84,33 @@ function catchSubmit() {
     $.each($('.account-checkbox'), function (i, v) {
         var c = $(v);
         if (c.prop('checked')) {
-            url += c.val() + ',';
             accounts.push(c.val());
             count++;
         }
     });
+
+    // all category ids:
+    //category-checkbox
+    var categories = [];
+    $.each($('.category-checkbox'), function (i, v) {
+        var c = $(v);
+        if (c.prop('checked')) {
+            categories.push(c.val());
+        }
+    });
+
+
+    // remember all
     if (count > 0) {
         // set cookie to remember choices.
         createCookie('report-type', $('select[name="report_type"]').val(), 365);
         createCookie('report-accounts', accounts, 365);
+        createCookie('report-categories', categories, 365);
         createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
         createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
-
-        window.location.href = reportURL + "/" + url;
     }
-    //console.log(url);
 
-    return false;
+    return true;
 }
 
 function preSelectDate(e) {

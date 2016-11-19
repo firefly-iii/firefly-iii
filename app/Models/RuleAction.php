@@ -22,30 +22,10 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
- * FireflyIII\Models\RuleAction
+ * Class RuleAction
  *
- * @property integer                      $id
- * @property \Carbon\Carbon               $created_at
- * @property \Carbon\Carbon               $updated_at
- * @property integer                      $rule_id
- * @property integer                      $order
- * @property boolean                      $active
- * @property boolean                      $stop_processing
- * @property string                       $action_type
- * @property string                       $action_value
- * @property-read \FireflyIII\Models\Rule $rule
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereRuleId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereStopProcessing($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereActionType($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleAction whereActionValue($value)
- * @mixin \Eloquent
+ * @package FireflyIII\Models
  */
 class RuleAction extends Model
 {

@@ -14,9 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Journal;
 
 
-use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**

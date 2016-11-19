@@ -130,13 +130,29 @@ class Range
      */
     private function datePicker()
     {
-        $viewRange          = Preferences::get('viewRange', '1M')->data;
-        $start              = Session::get('start');
-        $end                = Session::get('end');
-        $prevStart          = Navigation::subtractPeriod($start, $viewRange);// subtract for previous period
-        $prevEnd            = Navigation::endOfPeriod($prevStart, $viewRange);
-        $nextStart          = Navigation::addPeriod($start, $viewRange, 0); // add for previous period
-        $nextEnd            = Navigation::endOfPeriod($nextStart, $viewRange);
+        $viewRange = Preferences::get('viewRange', '1M')->data;
+        /** @var Carbon $start */
+        $start = Session::get('start');
+        /** @var Carbon $end */
+        $end = Session::get('end');
+        if ($viewRange === 'custom') {
+            $days      = $start->diffInDays($end);
+            $prevStart = clone $start;
+            $prevStart->subDays($days);
+            $prevEnd   = clone $start;
+            $nextStart = clone $end;
+            $nextEnd   = clone $end;
+            $nextEnd->addDays($days);
+            unset($days);
+        }
+
+        if ($viewRange !== 'custom') {
+            $prevStart = Navigation::subtractPeriod($start, $viewRange);// subtract for previous period
+            $prevEnd   = Navigation::endOfPeriod($prevStart, $viewRange);
+            $nextStart = Navigation::addPeriod($start, $viewRange, 0); // add for previous period
+            $nextEnd   = Navigation::endOfPeriod($nextStart, $viewRange);
+        }
+
         $ranges             = [];
         $ranges['current']  = [$start->format('Y-m-d'), $end->format('Y-m-d')];
         $ranges['previous'] = [$prevStart->format('Y-m-d'), $prevEnd->format('Y-m-d')];
@@ -146,6 +162,7 @@ class Range
             default:
                 throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
             case '1D':
+            case 'custom':
                 $format = (string)trans('config.month_and_day');
                 break;
             case '3M':

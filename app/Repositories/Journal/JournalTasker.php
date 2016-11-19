@@ -13,16 +13,15 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use Carbon\Carbon;
 use Crypt;
 use DB;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -116,7 +115,9 @@ class JournalTasker implements JournalTaskerInterface
             )
             ->with(['budgets', 'categories'])
             ->leftJoin('accounts as source_accounts', 'transactions.account_id', '=', 'source_accounts.id')
+            ->leftJoin('account_types as source_account_types', 'source_accounts.account_type_id', '=', 'source_account_types.id')
             ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
+            ->leftJoin('account_types as destination_account_types', 'destination_accounts.account_type_id', '=', 'destination_account_types.id')
             ->where('transactions.amount', '<', 0)
             ->whereNull('transactions.deleted_at')
             ->get(
@@ -125,12 +126,14 @@ class JournalTasker implements JournalTaskerInterface
                     'transactions.account_id',
                     'source_accounts.name as account_name',
                     'source_accounts.encrypted as account_encrypted',
+                    'source_account_types.type as account_type',
                     'transactions.amount',
                     'transactions.description',
                     'destination.id as destination_id',
                     'destination.account_id as destination_account_id',
                     'destination_accounts.name as destination_account_name',
                     'destination_accounts.encrypted as destination_account_encrypted',
+                    'destination_account_types.type as destination_account_type',
                 ]
             );
 
@@ -143,17 +146,18 @@ class JournalTasker implements JournalTaskerInterface
             $budget             = $entry->budgets->first();
             $category           = $entry->categories->first();
             $transaction        = [
-                'source_id'     => $entry->id,
-                'source_amount' => $entry->amount,
-
+                'source_id'                  => $entry->id,
+                'source_amount'              => $entry->amount,
                 'description'                => $entry->description,
                 'source_account_id'          => $entry->account_id,
                 'source_account_name'        => intval($entry->account_encrypted) === 1 ? Crypt::decrypt($entry->account_name) : $entry->account_name,
+                'source_account_type'        => $entry->account_type,
                 'source_account_before'      => $sourceBalance,
                 'source_account_after'       => bcadd($sourceBalance, $entry->amount),
                 'destination_id'             => $entry->destination_id,
                 'destination_amount'         => bcmul($entry->amount, '-1'),
                 'destination_account_id'     => $entry->destination_account_id,
+                'destination_account_type'   => $entry->destination_account_type,
                 'destination_account_name'   =>
                     intval($entry->destination_account_encrypted) === 1 ? Crypt::decrypt($entry->destination_account_name) : $entry->destination_account_name,
                 'destination_account_before' => $destinationBalance,
@@ -161,6 +165,13 @@ class JournalTasker implements JournalTaskerInterface
                 'budget_id'                  => is_null($budget) ? 0 : $budget->id,
                 'category'                   => is_null($category) ? '' : $category->name,
             ];
+            if ($entry->destination_account_type === AccountType::CASH) {
+                $transaction['destination_account_name'] = '';
+            }
+
+            if ($entry->account_type === AccountType::CASH) {
+                $transaction['source_account_name'] = '';
+            }
 
 
             $transactions[] = $transaction;

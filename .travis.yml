@@ -1,0 +1,18 @@
+language: php
+sudo: false
+php:
+  - '7.0'
+
+install:
+  - phpenv config-rm xdebug.ini
+  - composer selfupdate
+  - rm composer.lock
+  - composer update --no-scripts
+  - php artisan clear-compiled
+  - php artisan optimize
+  - php artisan env
+  - ./test.sh -r
+  - php artisan env
+
+script:
+  - phpunit

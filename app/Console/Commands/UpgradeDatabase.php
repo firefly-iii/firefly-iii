@@ -20,6 +20,7 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Log;
+use Schema;
 
 /**
  * Class UpgradeDatabase
@@ -65,6 +66,12 @@ class UpgradeDatabase extends Command
      */
     private function setTransactionIdentifier()
     {
+        // if table does not exist, return false
+        if (!Schema::hasTable('transaction_journals')) {
+            return;
+        }
+
+
         $subQuery = TransactionJournal
             ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNull('transaction_journals.deleted_at')

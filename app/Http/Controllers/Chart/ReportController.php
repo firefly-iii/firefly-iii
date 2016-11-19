@@ -49,20 +49,18 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * @param string     $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function netWorth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function netWorth(Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('netWorth');
         $cache->addProperty($start);
-        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
@@ -92,52 +90,36 @@ class ReportController extends Controller
 
 
     /**
-     * @param AccountTaskerInterface $accountTasker
-     * @param string                 $reportType
-     * @param Carbon                 $start
-     * @param Carbon                 $end
-     * @param Collection             $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
-     * @internal param AccountRepositoryInterface $repository
      */
-    public function yearInOut(AccountTaskerInterface $accountTasker, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOut(Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('yearInOut');
         $cache->addProperty($start);
-        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
 
-        // always per month.
-        $currentStart = clone $start;
-        $spentArray   = [];
-        $earnedArray  = [];
-        while ($currentStart <= $end) {
-            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
-            $date               = $currentStart->format('Y-m');
-            $spent              = $accountTasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $earned             = $accountTasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $spentArray[$date]  = bcmul($spent, '-1');
-            $earnedArray[$date] = $earned;
-            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
-        }
+        $chartSource = $this->getYearData($accounts, $start, $end);
 
         if ($start->diffInMonths($end) > 12) {
             // data = method X
-            $data = $this->multiYearInOut($earnedArray, $spentArray, $start, $end);
+            $data = $this->multiYearInOut($chartSource['earned'], $chartSource['spent'], $start, $end);
             $cache->store($data);
 
             return Response::json($data);
         }
 
         // data = method Y
-        $data = $this->singleYearInOut($earnedArray, $spentArray, $start, $end);
+        $data = $this->singleYearInOut($chartSource['earned'], $chartSource['spent'], $start, $end);
         $cache->store($data);
 
         return Response::json($data);
@@ -146,8 +128,6 @@ class ReportController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface $accountTasker
-     * @param string                 $reportType
      * @param Carbon                 $start
      * @param Carbon                 $end
      * @param Collection             $accounts
@@ -155,7 +135,7 @@ class ReportController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @internal param AccountRepositoryInterface $repository
      */
-    public function yearInOutSummarized(AccountTaskerInterface $accountTasker, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function yearInOutSummarized(Carbon $start, Carbon $end, Collection $accounts)
     {
 
         // chart properties for cache:
@@ -163,35 +143,21 @@ class ReportController extends Controller
         $cache->addProperty('yearInOutSummarized');
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-
-        // always per month.
-        $currentStart = clone $start;
-        $spentArray   = [];
-        $earnedArray  = [];
-        while ($currentStart <= $end) {
-            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
-            $date               = $currentStart->format('Y-m');
-            $spent              = $accountTasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $earned             = $accountTasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $spentArray[$date]  = bcmul($spent, '-1');
-            $earnedArray[$date] = $earned;
-            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
-        }
+        $chartSource = $this->getYearData($accounts, $start, $end);
 
         if ($start->diffInMonths($end) > 12) {
             // per year
-            $data = $this->multiYearInOutSummarized($earnedArray, $spentArray, $start, $end);
+            $data = $this->multiYearInOutSummarized($chartSource['earned'], $chartSource['spent'], $start, $end);
             $cache->store($data);
 
             return Response::json($data);
         }
         // per month!
-        $data = $this->singleYearInOutSummarized($earnedArray, $spentArray, $start, $end);
+        $data = $this->singleYearInOutSummarized($chartSource['earned'], $chartSource['spent'], $start, $end);
         $cache->store($data);
 
         return Response::json($data);
@@ -341,5 +307,34 @@ class ReportController extends Controller
         }
 
         return $sum;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    private function getYearData(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $tasker       = app(AccountTaskerInterface::class);
+        $currentStart = clone $start;
+        $spentArray   = [];
+        $earnedArray  = [];
+        while ($currentStart <= $end) {
+            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
+            $date               = $currentStart->format('Y-m');
+            $spent              = $tasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
+            $earned             = $tasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
+            $spentArray[$date]  = bcmul($spent, '-1');
+            $earnedArray[$date] = $earned;
+            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
+        }
+
+        return [
+            'spent'  => $spentArray,
+            'earned' => $earnedArray,
+        ];
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 
+use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -46,20 +47,20 @@ class UserController extends Controller
      */
     public function index(UserRepositoryInterface $repository)
     {
-        $title          = strval(trans('firefly.administration'));
-        $mainTitleIcon  = 'fa-hand-spock-o';
-        $subTitle       = strval(trans('firefly.user_administration'));
-        $subTitleIcon   = 'fa-users';
-        $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
-        $users          = $repository->all();
+        $title              = strval(trans('firefly.administration'));
+        $mainTitleIcon      = 'fa-hand-spock-o';
+        $subTitle           = strval(trans('firefly.user_administration'));
+        $subTitleIcon       = 'fa-users';
+        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
+        $users              = $repository->all();
 
         // add meta stuff.
         $users->each(
-            function (User $user) use ($confirmAccount) {
+            function (User $user) use ($mustConfirmAccount) {
                 // is user activated?
                 $isConfirmed     = Preferences::getForUser($user, 'user_confirmed', false)->data;
                 $user->activated = true;
-                if ($isConfirmed === false && $confirmAccount === true) {
+                if ($isConfirmed === false && $mustConfirmAccount === true) {
                     $user->activated = false;
                 }
 

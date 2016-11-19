@@ -48,7 +48,6 @@ class CategoryController extends Controller
         $this->generator = app(CategoryChartGeneratorInterface::class);
     }
 
-
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
@@ -171,6 +170,7 @@ class CategoryController extends Controller
 
         return Response::json($data);
     }
+
 
     /**
      * @param CRI      $repository

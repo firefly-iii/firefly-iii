@@ -19,10 +19,12 @@ declare(strict_types = 1);
 
 return [
     'configuration'       => [
-        'single_user_mode' => true,
+        'single_user_mode'     => true,
+        'is_demo_site'         => false,
+        'must_confirm_account' => false,
     ],
     'chart'               => 'chartjs',
-    'version'             => '4.1.6',
+    'version'             => '4.1.7',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
@@ -204,5 +206,4 @@ return [
     ],
     'default_currency'         => 'EUR',
     'default_language'         => 'en_US',
-    'show-demo-warning'        => false,
 ];

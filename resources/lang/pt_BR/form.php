@@ -64,12 +64,12 @@ return [
     'revenue_account_source'      => 'Revenue account (source)',
     'source_account_asset'        => 'Source account (asset account)',
     'destination_account_expense' => 'Destination account (expense account)',
-    'destination_account_asset' => 'Destination account (asset account)',
+    'destination_account_asset'   => 'Destination account (asset account)',
     'source_account_revenue'      => 'Source account (revenue account)',
     'type'                        => 'Type',
     'convert_Withdrawal'          => 'Convert withdrawal',
-    'convert_Deposit'          => 'Convert deposit',
-    'convert_Transfer'          => 'Convert transfer',
+    'convert_Deposit'             => 'Convert deposit',
+    'convert_Transfer'            => 'Convert transfer',
 
 
     'amount'                     => 'Valor',
@@ -150,6 +150,8 @@ return [
     // admin
     'domain'                     => 'Domínio',
     'single_user_mode'           => 'Single user mode',
+    'must_confirm_account'       => 'New users must activate account',
+    'is_demo_site'               => 'Is demo site',
 
     // import
     'import_file'                => 'Importar arquivo',

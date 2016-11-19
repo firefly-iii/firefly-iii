@@ -8,6 +8,8 @@
 
 /* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits */
 
+var allCharts = {};
+
 /*
  Make some colours:
  */
@@ -29,7 +31,6 @@ var colourSet = [
     [240, 98, 146],
     [0, 121, 107],
     [194, 24, 91]
-
 ];
 
 var fillColors = [];
@@ -46,332 +47,144 @@ Chart.defaults.global.animation.duration = 0;
 Chart.defaults.global.responsive = true;
 Chart.defaults.global.maintainAspectRatio = false;
 
-/*
- Set default options:
+
+/**
+ *
+ * @param data
+ * @returns {{}}
  */
-var defaultAreaOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            display: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
+function colorizeData(data) {
+    var newData = {};
+    newData.datasets = [];
 
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
+    for (var i = 0; i < data.count; i++) {
+        newData.labels = data.labels;
+        var dataset = data.datasets[i];
+        dataset.backgroundColor = fillColors[i];
+        newData.datasets.push(dataset);
     }
-};
-
-
-var defaultPieOptions = {
-    tooltips: {
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                var value = data.datasets[0].data[tooltipItem.index];
-                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
-            }
-        }
-    }
-};
-
-
-var defaultLineOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            display: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-var defaultColumnOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-                },
-                beginAtZero: true
-            }
-        }]
-    },
-    elements: {
-        line: {
-            fill: false
-        }
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-var defaultStackedColumnOptions = {
-    stacked: true,
-    scales: {
-        xAxes: [{
-            stacked: true,
-            gridLines: {
-                display: false
-            }
-        }],
-        yAxes: [{
-            stacked: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
+    return newData;
+}
 
 /**
  * Function to draw a line chart:
- * @param URL
+ * @param URI
  * @param container
- * @param options
  */
-function lineChart(URL, container, options) {
-    "use strict";
-    $.getJSON(URL).done(function (data) {
-
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-
-        new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: defaultLineOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for line chart : ' + URL);
-}
-
-/**
- * Function to draw an area chart:
- *
- * @param URL
- * @param container
- * @param options
- */
-function areaChart(URL, container, options) {
+function lineChart(URI, container) {
     "use strict";
 
-    $.getJSON(URL).done(function (data) {
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
+    var colorData = true;
+    var options = defaultChartOptions;
+    var chartType = 'line';
 
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-
-        new Chart(ctx, {
-            type: 'line',
-            data: newData,
-            options: defaultAreaOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-
-    console.log('URL for area chart: ' + URL);
+    drawAChart(URI, container, chartType, options, colorData);
 }
 
 /**
  *
- * @param URL
+ * @param URI
  * @param container
- * @param options
  */
-function columnChart(URL, container, options) {
+function columnChart(URI, container) {
     "use strict";
 
-    options = options || {};
+    var colorData = true;
+    var options = defaultChartOptions;
+    var chartType = 'bar';
 
-    $.getJSON(URL).done(function (data) {
+    drawAChart(URI, container, chartType, options, colorData);
 
-        var result = true;
-        if (options.beforeDraw) {
-            result = options.beforeDraw(data, {url: URL, container: container});
-        }
-        if (result === false) {
-            return;
-        }
-        console.log('Will draw columnChart(' + URL + ')');
-
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: defaultColumnOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for column chart : ' + URL);
 }
 
 /**
  *
- * @param URL
+ * @param URI
  * @param container
- * @param options
  */
-function stackedColumnChart(URL, container, options) {
+function stackedColumnChart(URI, container) {
     "use strict";
 
-    options = options || {};
+    var colorData = true;
+    var options = defaultChartOptions;
+
+    options.stacked = true;
+    options.scales.xAxes[0].stacked = true;
+
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function pieChart(URI, container) {
+    "use strict";
+
+    var colorData = false;
+    var options = defaultPieOptions;
+    var chartType = 'pie';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
 
 
-    $.getJSON(URL).done(function (data) {
+/**
+ * @param URI
+ * @param container
+ * @param chartType
+ * @param options
+ * @param colorData
+ */
+function drawAChart(URI, container, chartType, options, colorData) {
+    if ($('#' + container).length === 0) {
+        console.log('No container called ' + container + ' was found.');
+        return;
+    }
 
-        var result = true;
-        if (options.beforeDraw) {
-            result = options.beforeDraw(data, {url: URL, container: container});
-        }
-        if (result === false) {
+
+    $.getJSON(URI).done(function (data) {
+
+
+        if (data.labels.length === 0) {
+            console.log(chartType + " chart in " + container + " has no data.");
+            // remove the chart container + parent
+            var holder = $('#' + container).parent().parent();
+            if (holder.hasClass('box')) {
+                // remove box
+                holder.remove();
+            }
             return;
         }
 
 
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
+        if (colorData) {
+            data = colorizeData(data);
         }
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: defaultStackedColumnOptions
-        });
 
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for stacked column chart : ' + URL);
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
-function pieChart(URL, container, options) {
-    "use strict";
-
-    $.getJSON(URL).done(function (data) {
-
-        var ctx = document.getElementById(container).getContext("2d");
-        new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: defaultPieOptions
-        });
+        if (allCharts.hasOwnProperty(container)) {
+            console.log('Will draw updated ' + chartType + ' chart');
+            allCharts[container].data.datasets = data.datasets;
+            allCharts[container].data.labels = data.labels;
+            allCharts[container].update();
+        } else {
+            // new chart!
+            console.log('Will draw new ' + chartType + 'chart');
+            var ctx = document.getElementById(container).getContext("2d");
+            allCharts[container] = new Chart(ctx, {
+                type: chartType,
+                data: data,
+                options: options
+            });
+        }
 
     }).fail(function () {
+        console.log('Failed to draw ' + chartType + ' in container ' + container);
         $('#' + container).addClass('general-chart-error');
     });
-
-
-    console.log('URL for pie chart : ' + URL);
-
+    console.log('URL for ' + chartType + ' chart : ' + URL);
 }

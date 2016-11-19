@@ -21,33 +21,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Class Rule
  *
  * @package FireflyIII\Models
- * @property integer                                                                        $id
- * @property \Carbon\Carbon                                                                 $created_at
- * @property \Carbon\Carbon                                                                 $updated_at
- * @property string                                                                         $deleted_at
- * @property integer                                                                        $user_id
- * @property integer                                                                        $rule_group_id
- * @property integer                                                                        $order
- * @property string                                                                         $title
- * @property string                                                                         $description
- * @property boolean                                                                        $active
- * @property boolean                                                                        $stop_processing
- * @property-read \FireflyIII\User                                                          $user
- * @property-read \FireflyIII\Models\RuleGroup                                              $ruleGroup
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleAction[]  $ruleActions
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleTrigger[] $ruleTriggers
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereRuleGroupId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereStopProcessing($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereTitle($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Rule whereDescription($value)
- * @mixin \Eloquent
  */
 class Rule extends Model
 {

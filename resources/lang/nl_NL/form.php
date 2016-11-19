@@ -64,12 +64,12 @@ return [
     'revenue_account_source'      => 'Debiteur (bron)',
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
     'destination_account_expense' => 'Doelrekening (crediteur)',
-    'destination_account_asset' => 'Doelrekening (betaalrekening)',
+    'destination_account_asset'   => 'Doelrekening (betaalrekening)',
     'source_account_revenue'      => 'Bronrekening (debiteur)',
     'type'                        => 'Type',
     'convert_Withdrawal'          => 'Verander uitgave',
-    'convert_Deposit'          => 'Verander inkomsten',
-    'convert_Transfer'          => 'Verander overschrijving',
+    'convert_Deposit'             => 'Verander inkomsten',
+    'convert_Transfer'            => 'Verander overschrijving',
 
 
     'amount'                     => 'Bedrag',
@@ -150,6 +150,8 @@ return [
     // admin
     'domain'                     => 'Domein',
     'single_user_mode'           => 'Enkele gebruiker-modus',
+    'must_confirm_account'       => 'Nieuwe gebruikers moeten hun account activeren',
+    'is_demo_site'               => 'Is demo website',
 
     // import
     'import_file'                => 'Importbestand',

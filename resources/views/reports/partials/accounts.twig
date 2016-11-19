@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th>{{ 'name'|_ }}</th>
-        <th>{{ 'balanceStart'|_ }}</th>
-        <th>{{ 'balanceEnd'|_ }}</th>
+        <th class="hidden-xs">{{ 'balanceStart'|_ }}</th>
+        <th class="hidden-xs">{{ 'balanceEnd'|_ }}</th>
         <th>{{ 'difference'|_ }}</th>
     </tr>
     </thead>
@@ -13,8 +13,8 @@
             <td>
                 <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
             </td>
-            <td data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>
-            <td data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
+            <td class="hidden-xs" data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>
+            <td class="hidden-xs" data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
             <td data-value="{{ (account.endBalance - account.startBalance) }}">{{ (account.endBalance - account.startBalance)|formatAmount }}</td>
         </tr>
     {% endfor %}
@@ -22,8 +22,8 @@
     <tfoot>
     <tr>
         <td><em>{{ 'sumOfSums'|_ }}</em></td>
-        <td>{{ accountReport.getStart|formatAmount }}</td>
-        <td>{{ accountReport.getEnd|formatAmount }}</td>
+        <td class="hidden-xs">{{ accountReport.getStart|formatAmount }}</td>
+        <td class="hidden-xs">{{ accountReport.getEnd|formatAmount }}</td>
         <td>{{ accountReport.getDifference|formatAmount }}</td>
     </tr>
     </tfoot>

@@ -18,7 +18,7 @@ return [
     'sidebar-toggle-text'    => 'Versteckt unter dem Plus-Icon sind alle Schaltflächen zum Erstellen von neuen Dingen. Konten, Überweisungen, Alles!',
     'account-menu-title'     => 'Alle Ihre Konten',
     'account-menu-text'      => 'Hier finden Sie alle Konten, die Sie erstellt haben.',
-    'budget-menu-title'      => 'Budgets',
+    'budget-menu-title'      => 'Budget',
     'budget-menu-text'       => 'Nutzen Sie diese Seite um ihre Finanzen und Ausgabelimits zu organisieren.',
     'report-menu-title'      => 'Berichte',
     'report-menu-text'       => 'Schauen Sie hier nach, wenn Sie einen grundlegenden Überblick über ihre Finanzen erhalten wollen.',

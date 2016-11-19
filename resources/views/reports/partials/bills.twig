@@ -7,8 +7,8 @@
             <thead>
             <tr>
                 <th>{{ trans('form.name') }}</th>
-                <th>{{ trans('form.amount_min') }}</th>
-                <th>{{ trans('form.amount_max') }}</th>
+                <th class="hidden-xs">{{ trans('form.amount_min') }}</th>
+                <th class="hidden-xs">{{ trans('form.amount_max') }}</th>
                 <th>{{ trans('form.amount') }}</th>
                 <th>{{ trans('form.under') }}</th>
             </tr>
@@ -19,8 +19,8 @@
                     <td data-value="{{ line.getBill.name }}">
                         <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
                     </td>
-                    <td data-value="{{ line.getMin }}">{{ line.getMin|formatAmount }}</td>
-                    <td data-value="{{ line.getMax }}">{{ line.getMax|formatAmount }}</td>
+                    <td class="hidden-xs" data-value="{{ line.getMin }}">{{ line.getMin|formatAmount }}</td>
+                    <td class="hidden-xs" data-value="{{ line.getMax }}">{{ line.getMax|formatAmount }}</td>
                     {% if line.isHit %}
                         <td data-value="{{ line.getAmount }}">
                             <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">

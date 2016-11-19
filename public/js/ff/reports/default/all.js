@@ -27,32 +27,6 @@ function triggerInfoClick() {
     $('.firefly-info-button').unbind('click').click(clickInfoButton);
 }
 
-function listLengthInitial() {
-    "use strict";
-    $('.overListLength').hide();
-    $('.listLengthTrigger').unbind('click').click(triggerList)
-}
-
-function triggerList(e) {
-    "use strict";
-    var link = $(e.target);
-    var table = link.parent().parent().parent().parent();
-    console.log('data-hidden = ' + table.attr('data-hidden'));
-    if (table.attr('data-hidden') === 'no') {
-        // hide all elements, return false.
-        table.find('.overListLength').hide();
-        table.attr('data-hidden', 'yes');
-        link.text(showFullList);
-        return false;
-    }
-    // show all, return false
-    table.find('.overListLength').show();
-    table.attr('data-hidden', 'no');
-    link.text(showOnlyTop);
-
-    return false;
-}
-
 function clickInfoButton(e) {
     "use strict";
     // find all data tags, regardless of what they are:
@@ -130,63 +104,9 @@ function clickBudgetChart(e) {
     "use strict";
     var link = $(e.target);
     var budgetId = link.data('budget');
+
     var URL = 'chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds;
     var container = 'budget_chart';
-    // if chart drawn is false, draw the first one, then
-    // set to true
-    if (chartDrawn == false) {
-        // do new chart:
-
-
-        $.getJSON(URL).done(function (data) {
-            console.log('Will draw new columnChart(' + URL + ')');
-
-            var ctx = document.getElementById(container).getContext("2d");
-            var newData = {};
-            newData.datasets = [];
-
-            for (var i = 0; i < data.count; i++) {
-                newData.labels = data.labels;
-                var dataset = data.datasets[i];
-                dataset.backgroundColor = fillColors[i];
-                newData.datasets.push(dataset);
-            }
-            // completely new chart.
-            budgetChart = new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: defaultColumnOptions
-            });
-
-        }).fail(function () {
-            $('#' + container).addClass('general-chart-error');
-        });
-        console.log('URL for column chart : ' + URL);
-        chartDrawn = true;
-    } else {
-        console.log('Will now handle remove data and add new!');
-        $.getJSON(URL).done(function (data) {
-            console.log('Will draw updated columnChart(' + URL + ')');
-            var newData = {};
-            newData.datasets = [];
-
-            for (var i = 0; i < data.count; i++) {
-                newData.labels = data.labels;
-                var dataset = data.datasets[i];
-                dataset.backgroundColor = fillColors[i];
-                newData.datasets.push(dataset);
-            }
-            // update the chart
-            console.log('Now update chart thing.');
-            budgetChart.data.datasets = newData.datasets;
-            budgetChart.update();
-
-        }).fail(function () {
-            $('#' + container).addClass('general-chart-error');
-        });
-
-
-    }
-
+    columnChart(URL, container);
     return false;
 }

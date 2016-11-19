@@ -15,16 +15,16 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Generator\Report\ReportGeneratorFactory;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
-use FireflyIII\Models\Account;
+use FireflyIII\Http\Requests\ReportFormRequest;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Preferences;
-use Session;
-use Steam;
+use Response;
 use View;
 
 /**
@@ -49,12 +49,121 @@ class ReportController extends Controller
             function ($request, $next) {
                 View::share('title', trans('firefly.reports'));
                 View::share('mainTitleIcon', 'fa-line-chart');
+                View::share('subTitleIcon', 'fa-calendar');
 
                 $this->helper = app(ReportHelperInterface::class);
 
                 return $next($request);
             }
         );
+
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function auditReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
+        }
+
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_audit',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+
+        $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
+        $generator->setAccounts($accounts);
+        $result = $generator->generate();
+
+        return $result;
+
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @param Collection $categories
+     *
+     * @return string
+     */
+    public function categoryReport(Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
+        }
+
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_category',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+        $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
+        $generator->setAccounts($accounts);
+        $generator->setCategories($categories);
+        $result = $generator->generate();
+
+        return $result;
+
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function defaultReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
+        }
+
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_default',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+        $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
+        $generator->setAccounts($accounts);
+        $result = $generator->generate();
+
+        return $result;
 
     }
 
@@ -70,35 +179,49 @@ class ReportController extends Controller
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
-
-        // does the user have shared accounts?
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        // get id's for quick links:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds [] = $account->id;
-        }
-        $accountList = join(',', $accountIds);
+        $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accountList      = join(',', $accounts->pluck('id')->toArray());
 
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
     }
 
     /**
-     * @param string     $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param string $reportType
      *
-     * @return View
+     * @return mixed
+     */
+    public function options(string $reportType)
+    {
+        switch ($reportType) {
+            default:
+                $result = $this->noReportOptions();
+                break;
+            case 'category':
+                $result = $this->categoryReportOptions();
+                break;
+        }
+
+        return Response::json(['html' => $result]);
+    }
+
+    /**
+     * @param ReportFormRequest $request
+     *
+     * @return RedirectResponse
      * @throws FireflyException
      */
-    public function report(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function postIndex(ReportFormRequest $request): RedirectResponse
     {
-        // throw an error if necessary.
+        // report type:
+        $reportType = $request->get('report_type');
+        $start      = $request->getStartDate()->format('Ymd');
+        $end        = $request->getEndDate()->format('Ymd');
+        $accounts   = join(',', $request->getAccountList()->pluck('id')->toArray());
+        $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
+
         if ($end < $start) {
-            throw new FireflyException('End date cannot be before start date, silly!');
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
 
         // lower threshold
@@ -106,190 +229,42 @@ class ReportController extends Controller
             $start = session('first');
         }
 
-        View::share(
-            'subTitle', trans(
-                          'firefly.report_' . $reportType,
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
-        );
-        View::share('subTitleIcon', 'fa-calendar');
-
         switch ($reportType) {
             default:
-                throw new FireflyException('Unfortunately, reports of the type "' . e($reportType) . '" are not available at this time.');
+                throw new FireflyException(sprintf('Firefly does not support the "%s"-report yet.', $reportType));
+            case 'category':
+                $uri = route('reports.report.category', [$start, $end, $accounts, $categories]);
+                break;
             case 'default':
-
-                // more than one year date difference means year report.
-                if ($start->diffInMonths($end) > 12) {
-                    return $this->defaultMultiYear($reportType, $start, $end, $accounts);
-                }
-                // more than two months date difference means year report.
-                if ($start->diffInMonths($end) > 1) {
-                    return $this->defaultYear($reportType, $start, $end, $accounts);
-                }
-
-                // otherwise default
-                return $this->defaultMonth($reportType, $start, $end, $accounts);
+                $uri = route('reports.report.default', [$start, $end, $accounts]);
+                break;
             case 'audit':
-                // always default
-                return $this->auditReport($start, $end, $accounts);
+                $uri = route('reports.report.audit', [$start, $end, $accounts]);
+                break;
         }
 
+        return redirect($uri);
+    }
+
+    /**
+     * @return string
+     */
+    private function categoryReportOptions(): string
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
+        $result     = view('reports.options.category', compact('categories'))->render();
+
+        return $result;
 
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
+     * @return string
      */
-    private function auditReport(Carbon $start, Carbon $end, Collection $accounts)
+    private function noReportOptions(): string
     {
-        $auditData = [];
-        $dayBefore = clone $start;
-        $dayBefore->subDay();
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            // balance the day before:
-            $id               = $account->id;
-            $dayBeforeBalance = Steam::balance($account, $dayBefore);
-            $collector        = new JournalCollector(auth()->user());
-            $collector->setAccounts(new Collection([$account]))->setRange($start, $end);
-            $journals     = $collector->getJournals();
-            $journals     = $journals->reverse();
-            $startBalance = $dayBeforeBalance;
-
-
-            /** @var Transaction $journal */
-            foreach ($journals as $transaction) {
-                $transaction->before = $startBalance;
-                $transactionAmount   = $transaction->transaction_amount;
-                $newBalance          = bcadd($startBalance, $transactionAmount);
-                $transaction->after  = $newBalance;
-                $startBalance        = $newBalance;
-            }
-
-            /*
-             * Reverse set again.
-             */
-            $auditData[$id]['journals']         = $journals->reverse();
-            $auditData[$id]['exists']           = $journals->count() > 0;
-            $auditData[$id]['end']              = $end->formatLocalized(strval(trans('config.month_and_day')));
-            $auditData[$id]['endBalance']       = Steam::balance($account, $end);
-            $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(strval(trans('config.month_and_day')));
-            $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
-        }
-
-        $reportType = 'audit';
-        $accountIds = join(',', $accounts->pluck('id')->toArray());
-
-        $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
-                        'interest_date', 'book_date', 'process_date',
-                        // three new optional fields.
-                        'due_date', 'payment_date', 'invoice_date',
-                        'from', 'to', 'budget', 'category', 'bill',
-                        // more new optional fields
-                        'internal_reference', 'notes',
-
-                        'create_date', 'update_date',
-        ];
-        $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
-
-        return view('reports.audit.report', compact('start', 'end', 'reportType', 'accountIds', 'accounts', 'auditData', 'hideable', 'defaultShow'));
-    }
-
-    /**
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
-     */
-    private function defaultMonth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $bills = $this->helper->getBillReport($start, $end, $accounts);
-        $tags  = $this->helper->tagReport($start, $end, $accounts);
-
-        // and some id's, joined:
-        $accountIds = join(',', $accounts->pluck('id')->toArray());
-
-        // continue!
-        return view(
-            'reports.default.month',
-            compact(
-                'start', 'end',
-                'tags',
-                'bills',
-                'accountIds',
-                'reportType'
-            )
-        );
-    }
-
-    /**
-     * @param $reportType
-     * @param $start
-     * @param $end
-     * @param $accounts
-     *
-     * @return View
-     */
-    private function defaultMultiYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        // need all budgets
-        // need all years.
-
-
-        // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
-
-        return view(
-            'reports.default.multi-year',
-            compact(
-                'accounts', 'start', 'end', 'accountIds', 'reportType'
-            )
-        );
-    }
-
-    /**
-     * @param            $reportType
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return View
-     */
-    private function defaultYear(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        Session::flash('gaEventCategory', 'report');
-        Session::flash('gaEventAction', 'year');
-        Session::flash('gaEventLabel', $start->format('Y'));
-
-        // and some id's, joined:
-        $accountIds = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountIds[] = $account->id;
-        }
-        $accountIds = join(',', $accountIds);
-
-        return view(
-            'reports.default.year',
-            compact(
-                'start', 'reportType',
-                'accountIds', 'end'
-            )
-        );
+        return view('reports.options.no-options')->render();
     }
 }

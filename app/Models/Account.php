@@ -26,46 +26,11 @@ use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
+
 /**
- * FireflyIII\Models\Account
+ * Class Account
  *
- * @property integer                                                                        $id
- * @property \Carbon\Carbon                                                                 $created_at
- * @property \Carbon\Carbon                                                                 $updated_at
- * @property \Carbon\Carbon                                                                 $deleted_at
- * @property integer                                                                        $user_id
- * @property integer                                                                        $account_type_id
- * @property string                                                                         $name
- * @property boolean                                                                        $active
- * @property boolean                                                                        $encrypted
- * @property float                                                                          $virtual_balance
- * @property string                                                                         $iban
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read \FireflyIII\Models\AccountType                                            $accountType
- * @property-read mixed                                                                     $name_for_editform
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read \FireflyIII\User                                                          $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account accountTypeIn($types)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account hasMetaValue($name, $value)
- * @property string                                                                         $startBalance
- * @property string                                                                         $endBalance
- * @property float                                                                          $difference
- * @property \Carbon\Carbon                                                                 $lastActivityDate
- * @property float                                                                          $piggyBalance
- * @property float                                                                          $percentage
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereAccountTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereVirtualBalance($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereIban($value)
- * @mixin \Eloquent
+ * @package FireflyIII\Models
  */
 class Account extends Model
 {
@@ -152,6 +117,20 @@ class Account extends Model
     public function accountType(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\Models\AccountType');
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditNameAttribute(): string
+    {
+        $name = $this->name;
+
+        if ($this->accountType->type === AccountType::CASH) {
+            return '';
+        }
+
+        return $name;
     }
 
     /**

@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>{{ 'budget'|_ }}</th>
-        <th>{{ 'date'|_ }}</th>
+        <th class="hidden-xs">{{ 'date'|_ }}</th>
         <th>{{ 'budgeted'|_ }}</th>
         <th>{{ 'spent'|_ }}</th>
         <th>{{ 'left'|_ }}</th>
@@ -19,7 +19,7 @@
                     <em>{{ 'no_budget'|_ }}</em>
                 {% endif %}
             </td>
-            <td>
+            <td class="hidden-xs">
                 {% if budgetLine.getRepetition.id %}
                     <a href="{{ route('budgets.showWithRepetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
                         {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
@@ -62,7 +62,8 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="2"><em>{{ 'sum'|_ }}</em></td>
+        <td><em>{{ 'sum'|_ }}</em></td>
+        <td class="hidden-xs">&nbsp;</td>
         <td>{{ budgets.getBudgeted|formatAmount }}</td>
         <td>
             {% if budgets.getSpent != 0 %}

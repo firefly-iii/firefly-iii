@@ -196,35 +196,33 @@ class MassController extends Controller
                 $journal = $repository->find(intval($journalId));
                 if ($journal) {
                     // get optional fields:
-                    $what = strtolower(TransactionJournal::transactionTypeStr($journal));
-
+                    $what              = strtolower(TransactionJournal::transactionTypeStr($journal));
                     $sourceAccountId   = $request->get('source_account_id')[$journal->id] ??  0;
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
                     $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;
                     $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
-
-                    $budgetId = $journal->budgets->first() ? $journal->budgets->first()->id : 0;
-                    $category = $request->get('category')[$journal->id];
-                    $tags     = $journal->tags->pluck('tag')->toArray();
+                    $budgetId          = $journal->budgets->first() ? $journal->budgets->first()->id : 0;
+                    $category          = $request->get('category')[$journal->id];
+                    $tags              = $journal->tags->pluck('tag')->toArray();
 
                     // build data array
                     $data = [
-                        'id'                        => $journal->id,
-                        'what'                      => $what,
-                        'description'               => $request->get('description')[$journal->id],
-                        'source_account_id'         => intval($sourceAccountId),
-                        'source_account_name'       => $sourceAccountName,
-                        'destination_account_id'    => intval($destAccountId),
-                        'destination_account_name'  => $destAccountName,
-                        'amount'                    => round($request->get('amount')[$journal->id], 4),
-                        'amount_currency_id_amount' => intval($request->get('amount_currency_id_amount_' . $journal->id)),
-                        'date'                      => new Carbon($request->get('date')[$journal->id]),
-                        'interest_date'             => $journal->interest_date,
-                        'book_date'                 => $journal->book_date,
-                        'process_date'              => $journal->process_date,
-                        'budget_id'                 => $budgetId,
-                        'category'                  => $category,
-                        'tags'                      => $tags,
+                        'id'                       => $journal->id,
+                        'what'                     => $what,
+                        'description'              => $request->get('description')[$journal->id],
+                        'source_account_id'        => intval($sourceAccountId),
+                        'source_account_name'      => $sourceAccountName,
+                        'destination_account_id'   => intval($destAccountId),
+                        'destination_account_name' => $destAccountName,
+                        'amount'                   => round($request->get('amount')[$journal->id], 4),
+                        'currency_id'              => intval($request->get('amount_currency_id_amount_' . $journal->id)),
+                        'date'                     => new Carbon($request->get('date')[$journal->id]),
+                        'interest_date'            => $journal->interest_date,
+                        'book_date'                => $journal->book_date,
+                        'process_date'             => $journal->process_date,
+                        'budget_id'                => $budgetId,
+                        'category'                 => $category,
+                        'tags'                     => $tags,
 
                     ];
                     // call repository update function.

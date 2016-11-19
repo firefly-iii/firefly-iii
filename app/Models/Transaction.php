@@ -20,36 +20,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * FireflyIII\Models\Transaction
+ * Class Transaction
  *
- * @property integer                                                                     $id
- * @property \Carbon\Carbon                                                              $created_at
- * @property \Carbon\Carbon                                                              $updated_at
- * @property \Carbon\Carbon                                                              $deleted_at
- * @property integer                                                                     $account_id
- * @property integer                                                                     $transaction_journal_id
- * @property string                                                                      $description
- * @property float                                                                       $amount
- * @property-read Account                                                                $account
- * @property-read TransactionJournal                                                     $transactionJournal
- * @method static \Illuminate\Database\Query\Builder|Transaction after($date)
- * @method static \Illuminate\Database\Query\Builder|Transaction before($date)
- * @property float                                                                       $before
- * @property float                                                                       $after
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereTransactionJournalId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmount($value)
- * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]   $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction transactionTypes($types)
- * @property integer                                                                     $identifier
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereIdentifier($value)
+ * @package FireflyIII\Models
  */
 class Transaction extends Model
 {

@@ -24,7 +24,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -147,7 +146,6 @@ class BudgetController extends Controller
      */
     public function frontpage(BudgetRepositoryInterface $repository)
     {
-        Log::debug('Hello');
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
         // chart properties for cache:
@@ -186,6 +184,10 @@ class BudgetController extends Controller
     }
 
     /**
+     *
+     * TODO use the NEW query that will be in the repository. Because that query will be shared between the budget period report (table for all budgets)
+     * TODO and this chart (a single budget)
+     *
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      * @param Carbon                    $start
@@ -207,38 +209,58 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        // loop over period, add by users range:
-        $current     = clone $start;
-        $viewRange   = Preferences::get('viewRange', '1M')->data;
-        $set         = new Collection;
+
+        // the expenses:
+        $periods  = Navigation::listOfPeriods($start, $end);
+        $result   = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
+        $entries  = $repository->filterAmounts($result, $budget->id, $periods);
+        $budgeted = [];
+
+        // the budget limits:
+        $range = '1D';
+        $key   = 'Y-m-d';
+        if ($start->diffInMonths($end) > 1) {
+            $range = '1M';
+            $key   = 'Y-m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $range = '1Y';
+            $key   = 'Y';
+        }
+
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
-
-
+        $current     = clone $start;
         while ($current < $end) {
-            $currentStart = clone $current;
-            $currentEnd   = Navigation::endOfPeriod($currentStart, $viewRange);
-            $reps         = $repetitions->filter(
-                function (LimitRepetition $repetition) use ($budget, $currentStart) {
-                    if ($repetition->budget_id === $budget->id && $repetition->startdate == $currentStart) {
+            $currentStart     = Navigation::startOfPeriod($current, $range);
+            $currentEnd       = Navigation::endOfPeriod($current, $range);
+            $reps             = $repetitions->filter(
+                function (LimitRepetition $repetition) use ($budget, $currentStart, $currentEnd) {
+                    if ($repetition->budget_id === $budget->id && $repetition->startdate >= $currentStart && $repetition->enddate <= $currentEnd) {
                         return true;
                     }
 
                     return false;
                 }
             );
-            $budgeted     = $reps->sum('amount');
-            $spent        = $repository->spentInPeriod(new Collection([$budget]), $accounts, $currentStart, $currentEnd);
-            $entry        = [
-                'date'     => clone $currentStart,
-                'budgeted' => $budgeted,
-                'spent'    => $spent,
-            ];
-            $set->push($entry);
+            $index            = $currentStart->format($key);
+            $budgeted[$index] = $reps->sum('amount');
             $currentEnd->addDay();
             $current = clone $currentEnd;
-
         }
-        $data = $this->generator->period($set, $viewRange);
+
+        // join them:
+        $result = [];
+        foreach (array_keys($periods) as $period) {
+            $nice = $periods[$period];
+            $result[$nice] = [
+                'spent'    => isset($entries[$period]) ? $entries[$period] : '0',
+                'budgeted' => isset($entries[$period]) ? $budgeted[$period] : 0,
+            ];
+        }
+
+        $data = $this->generator->period($result);
+
         $cache->store($data);
 
         return Response::json($data);
@@ -330,7 +352,7 @@ class BudgetController extends Controller
     {
         // collector
         $collector = new JournalCollector(auth()->user());
-        $types = [TransactionType::WITHDRAWAL];
+        $types     = [TransactionType::WITHDRAWAL];
         $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
         $journals = $collector->getJournals();
         $sum      = '0';

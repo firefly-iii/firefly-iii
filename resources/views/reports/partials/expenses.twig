@@ -24,7 +24,7 @@
     {% endfor %}
     </tbody>
     <tfoot>
-    {% if expenses.getExpenses|length > expenseTopLength %}
+    {% if expenses.getExpenses|length > listLength %}
         <tr>
             <td colspan="2" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>

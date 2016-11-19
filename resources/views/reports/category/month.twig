@@ -1,0 +1,382 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'accounts'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th data-defaultsign="az">{{ 'name'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'earned'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for account in accounts %}
+                            <tr>
+                                <td data-value="{{ account.name }}">
+                                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+                                </td>
+                                {% if accountSummary[account.id] %}
+                                    <td data-value="{{ accountSummary[account.id].earned }}">{{ accountSummary[account.id].earned|formatAmount }}</td>
+                                {% else %}
+                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                {% endif %}
+                                {% if accountSummary[account.id] %}
+                                    <td data-value="{{ accountSummary[account.id].spent }}">{{ accountSummary[account.id].spent|formatAmount }}</td>
+                                {% else %}
+                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th data-defaultsign="az">{{ 'name'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'earned'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td data-value="{{ category.name }}">
+                                    <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
+                                </td>
+                                {% if categorySummary[category.id] %}
+                                    <td data-value="{{ categorySummary[category.id].earned }}">{{ categorySummary[category.id].earned|formatAmount }}</td>
+                                {% else %}
+                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                {% endif %}
+                                {% if categorySummary[category.id] %}
+                                    <td data-value="{{ categorySummary[category.id].spent }}">{{ categorySummary[category.id].spent|formatAmount }}</td>
+                                {% else %}
+                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% if categories.count > 1 %}
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_per_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="categories-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="categories-in-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expense_per_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="categories-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="categories-out-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if accounts.count > 1 %}
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="accounts-in-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                        <label style="font-weight:normal;">
+                            <input type="checkbox" id="accounts-out-pie-chart-checked">
+                            <small>{{ 'include_not_in_category'|_ }}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="in-out-chart" style="margin:0 auto;" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'average_spending_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th data-defaultsign="az">{{ 'account'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'spent_average'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'total'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in averageExpenses %}
+                            <tr>
+                                <td data-value="{{ row.name }}">
+                                    <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
+                                </td>
+                                <td data-value="{{ row.average }}">
+                                    {{ row.average|formatAmount }}
+                                </td>
+                                <td data-value="{{ row.sum }}">
+                                    {{ row.sum|formatAmount }}
+                                </td>
+                                <td data-value="{{ row.count }}">
+                                    {{ row.count }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            {% if topExpenses.count > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
+                                <th data-defaultsign="month">{{ 'date'|_ }}</th>
+                                <th data-defaultsign="az">{{ 'account'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'amount'|_ }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in topExpenses %}
+                                {% if loop.index > listLength %}
+                                    <tr class="overListLength">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
+                                <td data-sortable="false">
+                                    <a href="{{ route('transactions.show', row.journal_id) }}">
+                                        {% if row.transaction_description|length > 0 %}
+                                            {{ row.transaction_description }} ({{ row.description }})
+                                        {% else %}
+                                            {{ row.description }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td data-value="{{ row.date.format('Y-m-d') }}">
+                                    {{ row.date.formatLocalized(monthAndDayFormat) }}
+                                </td>
+                                <td data-value="{{ row.opposing_account_name }}">
+                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
+                                        {{ row.opposing_account_name }}
+                                    </a>
+                                </td>
+                                <td data-value="{{ row.transaction_amount }}">
+                                    {{ row.transaction_amount|formatAmount }}
+                                </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            {% if topExpenses.count > listLength %}
+                                <tr>
+                                    <td colspan="3" class="active">
+                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        {% if averageIncome|length > 0 %}
+            <div class="col-lg-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'average_income_per_account'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th data-defaultsign="az">{{ 'account'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'income_average'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'total'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in averageIncome %}
+                                <tr>
+                                    <td data-value="{{ row.name }}">
+                                        <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
+                                    </td>
+                                    <td>
+                                        {{ row.average|formatAmount }}
+                                    </td>
+                                    <td>
+                                        {{ row.sum|formatAmount }}
+                                    </td>
+                                    <td>
+                                        {{ row.count }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-lg-6">
+            {% if topIncome.count > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-hover sortable">
+                            <thead>
+                            <tr>
+                                <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
+                                <th>{{ 'date'|_ }}</th>
+                                <th data-defaultsign="az">{{ 'account'|_ }}</th>
+                                <th>{{ 'amount'|_ }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in topIncome %}
+                                {% if loop.index > listLength %}
+                                    <tr class="overListLength">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
+                                <td>
+                                    <a href="{{ route('transactions.show', row.journal_id) }}">
+                                        {% if row.transaction_description|length > 0 %}
+                                            {{ row.transaction_description }} ({{ row.description }})
+                                        {% else %}
+                                            {{ row.description }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ row.date.formatLocalized(monthAndDayFormat) }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('accounts.show', row.opposing_account_id) }}">
+                                        {{ row.opposing_account_name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ row.transaction_amount|formatAmount }}
+                                </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            {% if topIncome.count > listLength %}
+                                <tr>
+                                    <td colspan="3" class="active">
+                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
+    <script type="text/javascript" src="js/ff/charts.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+
+    <script type="text/javascript">
+        // to report another URL:
+        var startDate = '{{ start.format('Ymd') }}';
+        var endDate = '{{ end.format('Ymd') }}';
+        var accountIds = '{{ accountIds }}';
+        var categoryIds = '{{ categoryIds }}';
+    </script>
+
+
+    <script type="text/javascript" src="js/ff/reports/category/all.js"></script>
+    <script type="text/javascript" src="js/ff/reports/category/month.js"></script>
+
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+{% endblock %}

@@ -17,7 +17,7 @@
 
     <div class="register-box-body">
         <p class="login-box-msg">Register a new account</p>
-        {% if showDemoWarning %}
+        {% if isDemoSite %}
             <p class="text-info login-box-msg">Please note that an account on this site will only
                 work for one (1) month.</p>
         {% endif %}
@@ -27,9 +27,9 @@
 
             <div class="form-group has-feedback">
                 <input type="email" name="email" value="{{ email }}" class="form-control" placeholder="Email"/>
-                {% if showDemoWarning %}
-                    <p class="help-block">You will receive an email from Firefly III. If your email address
-                        is incorrect, your account may not work.</p>
+                {% if mustConfirmAccount %}
+                    <p class="help-block">
+                        You must activate your account. If your email address is incorrect, your account will not work.</p>
                 {% endif %}
             </div>
             <div class="form-group has-feedback">

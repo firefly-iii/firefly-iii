@@ -4,7 +4,7 @@
     <tr>
         <th colspan="2">{{ 'budgets'|_ }}</th>
         {% for account in balance.getBalanceHeader.getAccounts %}
-            <th><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></th>
+            <th class="hidden-xs"><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></th>
         {% endfor %}
         <th>
             {{ 'leftInBudget'|_ }}
@@ -21,7 +21,7 @@
                 <td>
                     <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
                     {% if balanceLine.getStartdate and balanceLine.getEnddate %}
-                        <span class="small"><br>
+                        <span class="small" class="hidden-xs"><br>
                             {{ balanceLine.getStartdate.formatLocalized(monthAndDayFormat) }}
                             &mdash;
                             {{ balanceLine.getEnddate.formatLocalized(monthAndDayFormat) }}
@@ -40,7 +40,7 @@
             {% endif %}
 
             {% for balanceEntry in balanceLine.getBalanceEntries %}
-                <td>
+                <td class="hidden-xs">
                     {% if balanceEntry.getSpent != 0 %}
                         <span class="text-danger">{{ (balanceEntry.getSpent)|formatAmountPlain }}</span>
                         <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="balance-amount"

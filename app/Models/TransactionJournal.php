@@ -26,75 +26,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * FireflyIII\Models\TransactionJournal
+ * Class TransactionJournal
  *
- * @property integer                                                                                   $id
- * @property \Carbon\Carbon                                                                            $created_at
- * @property \Carbon\Carbon                                                                            $updated_at
- * @property \Carbon\Carbon                                                                            $deleted_at
- * @property integer                                                                                   $user_id
- * @property integer                                                                                   $transaction_type_id
- * @property integer                                                                                   $bill_id
- * @property integer                                                                                   $transaction_currency_id
- * @property string                                                                                    $description
- * @property boolean                                                                                   $completed
- * @property \Carbon\Carbon                                                                            $date
- * @property \Carbon\Carbon                                                                            $interest_date
- * @property \Carbon\Carbon                                                                            $book_date
- * @property boolean                                                                                   $encrypted
- * @property integer                                                                                   $order
- * @property integer                                                                                   $tag_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]             $attachments
- * @property-read \FireflyIII\Models\Bill                                                              $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]                 $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]               $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]         $piggyBankEvents
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]                    $tags
- * @property-read \FireflyIII\Models\TransactionCurrency                                               $transactionCurrency
- * @property-read \FireflyIII\Models\TransactionType                                                   $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[]       $transactiongroups
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionjournalmeta
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]            $transactions
- * @property-read \FireflyIII\User                                                                     $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal after($date)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal before($date)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
- * @property string                                                                                    $transaction_type_type
- * @property-read string                                                                               $transaction_currency_code
- * @property-read string                                                                               $destination_amount
- * @property string                                                                                    $destination_account_id
- * @property string                                                                                    $destination_account_name
- * @property-read string                                                                               $destination_account_type
- * @property-read string                                                                               $source_amount
- * @property string                                                                                    $source_account_id
- * @property string                                                                                    $source_account_name
- * @property-read string                                                                               $source_account_type
- * @property \Carbon\Carbon                                                                            $process_date
- * @property int                                                                                       $account_id
- * @property float                                                                                     $journalAmount
- * @property string                                                                                    $account_name
- * @property int                                                                                       $budget_id
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBillId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCompleted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereInterestDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereBookDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereProcessDate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal expanded()
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal sortCorrectly()
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionJournalMeta
+ * @package FireflyIII\Models
  */
 class TransactionJournal extends TransactionJournalSupport
 {

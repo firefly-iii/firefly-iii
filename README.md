@@ -1,5 +1,7 @@
 # Firefly III [![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php#v7.0.4) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 
+[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)
+
 ## A personal finances manager
 
 [![Screenshot](https://i.nder.be/hhfv03hp/400)](https://i.nder.be/hhfv03hp) [![Screenshot](https://i.nder.be/hhmwmqw9/400)](https://i.nder.be/hhmwmqw9)
@@ -10,7 +12,7 @@
 
 ## Installation
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://jc5.github.io/firefly-iii/installation-guide/).
+To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/installation-guide/).
 
 ## More about Firefly III
 
@@ -25,6 +27,6 @@ Firefly works on the principle that if you know where you're money is going, you
 - Firefly has lots of features without becoming fancy or bloated.
 - If you feel you're missing something you can just ask me and I'll add it!
 
-Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://jc5.github.io/firefly-iii/).
+Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
 
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
