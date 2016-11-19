@@ -11,7 +11,7 @@ install:
   - php artisan clear-compiled
   - php artisan optimize
   - php artisan env
-  - ./test.sh --notest --reset
+  - ./test.sh -r
   - php artisan env
 
 script:
