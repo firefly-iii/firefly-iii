@@ -49,20 +49,18 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * @param string     $reportType
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function netWorth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function netWorth(Carbon $start, Carbon $end, Collection $accounts)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('netWorth');
         $cache->addProperty($start);
-        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {

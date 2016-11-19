@@ -25,14 +25,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetReportHelperInterface
 {
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function budgetYearOverview(Carbon $start, Carbon $end, Collection $accounts): Collection;
 
     /**
      * @param Carbon     $start
@@ -41,7 +33,7 @@ interface BudgetReportHelperInterface
      *
      * @return array
      */
-    public function getBudgetMultiYear(Carbon $start, Carbon $end, Collection $accounts): array;
+    public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
      * @param Carbon     $start
@@ -67,6 +59,6 @@ interface BudgetReportHelperInterface
      *
      * @return array
      */
-    public function listOfYears(Carbon $start, Carbon $end): array;
+    public function listOfPeriods(Carbon $start, Carbon $end): array;
 
 }

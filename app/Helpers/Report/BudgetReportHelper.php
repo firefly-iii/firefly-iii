@@ -22,7 +22,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use stdClass;
@@ -48,70 +47,31 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // at 43, its ok.
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function budgetYearOverview(Carbon $start, Carbon $end, Collection $accounts): Collection
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('budget-year');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $current = clone $start;
-        $return  = new Collection;
-        $set     = $this->repository->getBudgets();
-        $budgets = [];
-        $spent   = [];
-        $headers = $this->createYearHeaders($current, $end);
-
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-            $id           = $budget->id;
-            $budgets[$id] = $budget->name;
-            $current      = clone $start;
-            $budgetData   = $this->getBudgetSpentData($current, $end, $budget, $accounts);
-            $sum          = $budgetData['sum'];
-            $spent[$id]   = $budgetData['spent'];
-
-            if (bccomp('0', $sum) === 0) {
-                // not spent anything.
-                unset($spent[$id]);
-                unset($budgets[$id]);
-            }
-        }
-
-        $return->put('headers', $headers);
-        $return->put('budgets', $budgets);
-        $return->put('spent', $spent);
-
-        $cache->store($return);
-
-        return $return;
-    }
-
-    /**
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return array
      */
-    public function getBudgetMultiYear(Carbon $start, Carbon $end, Collection $accounts): array
+    public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
+        // get account ID's.
         $accountIds = $accounts->pluck('id')->toArray();
-        $query      = TransactionJournal
+
+        // define period to group on:
+        $sqlDateFormat = '%Y-%m-%d';
+        // monthly report (for year)
+        if ($start->diffInMonths($end) > 1) {
+            $sqlDateFormat = '%Y-%m';
+        }
+
+        // yearly report (for multi year)
+        if ($start->diffInMonths($end) > 12) {
+            $sqlDateFormat = '%Y';
+        }
+
+        // build query.
+        $query = TransactionJournal
             ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin(
@@ -127,18 +87,18 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         if (count($accountIds) > 0) {
             $query->whereIn('transactions.account_id', $accountIds);
         }
-        $query->groupBy(['budget_transaction_journal.budget_id', 'the_year']);
+        $query->groupBy(['budget_transaction_journal.budget_id', 'period_marker']);
         $queryResult = $query->get(
             [
                 'budget_transaction_journal.budget_id',
-                DB::raw('DATE_FORMAT(transaction_journals.date,"%Y") AS the_year'),
+                DB::raw('DATE_FORMAT(transaction_journals.date,"' . $sqlDateFormat . '") AS period_marker'),
                 DB::raw('SUM(transactions.amount) as sum_of_period'),
             ]
         );
 
         $data    = [];
         $budgets = $this->repository->getBudgets();
-        $years   = $this->listOfYears($start, $end);
+        $periods = $this->listOfPeriods($start, $end);
 
         // do budget "zero"
         $emptyBudget       = new Budget;
@@ -151,12 +111,12 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         foreach ($budgets as $budget) {
             $data[$budget->id] = [
                 'name'    => $budget->name,
-                'entries' => $this->filterAmounts($queryResult, $budget->id, $years),
+                'entries' => $this->filterAllAmounts($queryResult, $budget->id, $periods),
                 'sum'     => '0',
             ];
         }
         // filter out empty ones and fill sum:
-        $data = $this->getBudgetMultiYearMeta($data);
+        $data = $this->filterBudgetPeriodReport($data);
 
         return $data;
     }
@@ -252,16 +212,34 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      *
      * @return array
      */
-    public function listOfYears(Carbon $start, Carbon $end): array
+    public function listOfPeriods(Carbon $start, Carbon $end): array
     {
-        $begin = clone $start;
-        $years = [];
-        while ($begin < $end) {
-            $years[] = $begin->year;
-            $begin->addYear();
+        // define period to increment
+        $increment = 'addDay';
+        $format    = 'Y-m-d';
+        // increment by month (for year)
+        if ($start->diffInMonths($end) > 1) {
+            $increment = 'addMonth';
+            $format    = 'Y-m';
         }
 
-        return $years;
+        // increment by year (for multi year)
+        if ($start->diffInMonths($end) > 12) {
+            $increment = 'addYear';
+            $format    = 'Y';
+        }
+
+        $begin   = clone $start;
+        $entries = [];
+        while ($begin < $end) {
+            $formatted           = $begin->format($format);
+            $entries[$formatted] = $formatted;
+
+            $begin->$increment();
+        }
+
+        return $entries;
+
     }
 
     /**
@@ -285,38 +263,22 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * @param Carbon $current
-     * @param Carbon $end
+     * Filters entries from the result set generated by getBudgetPeriodReport
      *
-     * @return array
-     */
-    private function createYearHeaders(Carbon $current, Carbon $end): array
-    {
-        $headers = [];
-        while ($current < $end) {
-            $short           = $current->format('m-Y');
-            $headers[$short] = $current->formatLocalized((string)trans('config.month'));
-            $current->addMonth();
-        }
-
-        return $headers;
-    }
-
-    /**
      * @param Collection $set
      * @param int        $budgetId
-     * @param array      $years
+     * @param array      $periods
      *
      * @return array
      */
-    private function filterAmounts(Collection $set, int $budgetId, array $years):array
+    private function filterAllAmounts(Collection $set, int $budgetId, array $periods):array
     {
         $arr = [];
-        foreach ($years as $year) {
+        foreach ($periods as $period) {
             /** @var stdClass $object */
             $result = $set->filter(
-                function (TransactionJournal $object) use ($budgetId, $year) {
-                    return intval($object->the_year) === $year && $budgetId === intval($object->budget_id);
+                function (TransactionJournal $object) use ($budgetId, $period) {
+                    return strval($object->period_marker) === $period && $budgetId === intval($object->budget_id);
                 }
             );
             $amount = '0';
@@ -324,18 +286,20 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 $amount = $result->first()->sum_of_period;
             }
 
-            $arr[$year] = $amount;
+            $arr[$period] = $amount;
         }
 
         return $arr;
     }
 
     /**
+     * Filters empty results from getBudgetPeriodReport
+     *
      * @param array $data
      *
      * @return array
      */
-    private function getBudgetMultiYearMeta(array $data): array
+    private function filterBudgetPeriodReport(array $data): array
     {
         /**
          * @var int   $budgetId
@@ -355,31 +319,4 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         return $data;
     }
 
-    /**
-     * @param Carbon     $current
-     * @param Carbon     $end
-     * @param Budget     $budget
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    private function getBudgetSpentData(Carbon $current, Carbon $end, Budget $budget, Collection $accounts): array
-    {
-        $sum   = '0';
-        $spent = [];
-        while ($current < $end) {
-            $currentEnd = clone $current;
-            $currentEnd->endOfMonth();
-            $format         = $current->format('m-Y');
-            $budgetSpent    = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $current, $currentEnd);
-            $spent[$format] = $budgetSpent;
-            $sum            = bcadd($sum, $budgetSpent);
-            $current->addMonth();
-        }
-
-        return [
-            'spent' => $spent,
-            'sum'   => $sum,
-        ];
-    }
 }

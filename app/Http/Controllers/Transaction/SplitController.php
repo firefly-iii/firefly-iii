@@ -187,6 +187,7 @@ class SplitController extends Controller
             'transactions'                   => $this->getTransactionDataFromRequest($request),
         ];
 
+
         return $array;
     }
 

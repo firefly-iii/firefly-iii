@@ -2,19 +2,19 @@
     <thead>
     <tr>
         <th>{{ 'budget'|_ }}</th>
-        {% for year in years %}
-            <th>{{ year }}</th>
+        {% for period in periods %}
+            <th>{{ period }}</th>
         {% endfor %}
         <th>{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for id, info in budgetMultiYear %}
+    {% for id, info in budgets %}
         <tr>
             <td>
+                (<a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>)
                 {% if id == 0 %}
                     <a href="{{ route('budgets.noBudget') }}">{{ info.name }}</a>
-
                 {% else %}
                     <a href="{{ route('budgets.show', id) }}">{{ info.name }}</a>
                 {% endif %}

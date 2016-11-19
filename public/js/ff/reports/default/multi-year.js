@@ -5,7 +5,7 @@ $(function () {
     "use strict";
     drawChart();
 
-    loadAjaxPartial('budgetMultiYear', budgetMultiUri);
+    loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
 });
 
 function drawChart() {

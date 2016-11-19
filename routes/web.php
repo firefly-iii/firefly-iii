@@ -237,7 +237,7 @@ Route::group(
     // reports:
     Route::get('/chart/report/in-out/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
     Route::get('/chart/report/in-out-sum/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
-    Route::get('/chart/report/net-worth/{reportType}/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
+    Route::get('/chart/report/net-worth/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
 
 
     /**
@@ -388,18 +388,11 @@ Route::group(
         '/reports/data/budget-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\BudgetController@budgetReport', 'as' => 'reports.data.budgetReport']
     );
-    // budget year overview
+    // budget period overview
     Route::get(
-        '/reports/data/budget-year-overview/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\BudgetController@budgetYearOverview', 'as' => 'reports.data.budgetYearOverview']
+        '/reports/data/budget-period/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\BudgetController@budgetPeriodReport', 'as' => 'reports.data.budgetPeriodReport']
     );
-
-    // budget multi year overview
-    Route::get(
-        '/reports/data/budget-multi-year/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\BudgetController@budgetMultiYear', 'as' => 'reports.data.budgetMultiYear']
-    );
-
 
     /**
      * Rules Controller
