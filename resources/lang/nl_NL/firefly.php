@@ -696,14 +696,14 @@ return [
     'expense_per_account'                        => 'Uitgaven per rekening',
     'include_not_in_category'                    => 'Laat ook transacties buiten deze categorieën zien',
     'everything_else'                            => 'De rest',
-    'income_and_expenses'                        => 'Income and expenses',
-    'spent_average'                              => 'Spent (average)',
-    'income_average'                             => 'Income (average)',
-    'transaction_count'                          => 'Transaction count',
-    'average_spending_per_account'               => 'Average spending per account',
-    'average_income_per_account'                 => 'Average income per account',
-    'total'                                      => 'Total',
-    'description'                                => 'Description',
+    'income_and_expenses'                        => 'Inkomsten en uitgaven',
+    'spent_average'                              => 'Uitgegeven (gemiddeld)',
+    'income_average'                             => 'Inkomsten (gemiddeld)',
+    'transaction_count'                          => 'Transacties',
+    'average_spending_per_account'               => 'Gemiddeld uitgegeven per rekening',
+    'average_income_per_account'                 => 'Gemiddeld verdiend per rekening',
+    'total'                                      => 'Totaal',
+    'description'                                => 'Omschrijving',
 
 
     // charts:
