@@ -12,3 +12,4 @@ test-import.sh
 test-import-report.txt
 public/google*.html
 _ide_helper_models.php
+.env.backup
