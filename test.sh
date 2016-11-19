@@ -1,19 +1,24 @@
 #!/bin/bash
 
-DATABASE=storage/database/database.sqlite
-DATABASECOPY=storage/database/databasecopy.sqlite
+DATABASE=./storage/database/database.sqlite
+DATABASECOPY=./storage/database/databasecopy.sqlite
+ORIGINALENV=./.env
+BACKUPENV=./.env.current
+TESTINGENV=./.env.testing
 
-
-# backup current config:
-mv .env .env.current
+# backup current config (if it exists):
+if [ -f $ORIGINALENV ]; then
+    mv $ORIGINALENV $BACKUPENV
+fi
 
 # enable testing config
-cp .env.testing .env
+cp $TESTINGENV $ORIGINALENV
 
 # clear cache:
 php artisan cache:clear
 
-if [ "$1" == "--reset" ]; then
+if [[ "$@" == "--reset" ]]
+then
     echo "Must reset database"
 
     # touch files to make sure they exist.
@@ -34,11 +39,14 @@ fi
 cp $DATABASECOPY $DATABASE
 
 # run PHPUnit
-if [ "$1" == "--notest" ]; then
+if [[ "$@" == "--notest" ]]
+then
     echo "Must not run PHPUnit"
 else
     phpunit
 fi
 
 # restore current config:
-mv .env.current .env
+if [ -f $BACKUPENV ]; then
+    mv $BACKUPENV $ORIGINALENV
+fi

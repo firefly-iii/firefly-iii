@@ -14,7 +14,7 @@ install:
   - php artisan env
   - mv -v .env.testing .env
   - php artisan env
-  - ./test.sh --notest
+  - ./test.sh --notest --reset
 
 script:
   - phpunit
