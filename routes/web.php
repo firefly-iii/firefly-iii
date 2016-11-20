@@ -39,9 +39,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
-    Route::get('/error', 'HomeController@displayError');
+    Route::get('/error', ['uses' => 'HomeController@displayError', 'as' => 'displayError']);
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
-    Route::get('/flush', ['uses' => 'HomeController@flush']);
+    Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 }
 );
 
@@ -83,7 +83,7 @@ Route::group(
     Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'testFlash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-    Route::get('/routes', ['uses' => 'HomeController@routes']);
+    Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'allRoutes']);
     /**
      * Account Controller
      */

@@ -365,11 +365,12 @@ class Navigation
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
         $functionMap = [
-            '1D' => 'endOfDay',
-            '1W' => 'endOfWeek',
-            '1M' => 'endOfMonth',
-            '3M' => 'lastOfQuarter',
-            '1Y' => 'endOfYear',
+            '1D'     => 'endOfDay',
+            '1W'     => 'endOfWeek',
+            '1M'     => 'endOfMonth',
+            '3M'     => 'lastOfQuarter',
+            '1Y'     => 'endOfYear',
+            'custom' => 'startOfMonth', // this only happens in test situations.
         ];
         $end         = clone $start;
 
@@ -402,11 +403,12 @@ class Navigation
     public function updateStartDate(string $range, Carbon $start): Carbon
     {
         $functionMap = [
-            '1D' => 'startOfDay',
-            '1W' => 'startOfWeek',
-            '1M' => 'startOfMonth',
-            '3M' => 'firstOfQuarter',
-            '1Y' => 'startOfYear',
+            '1D'     => 'startOfDay',
+            '1W'     => 'startOfWeek',
+            '1M'     => 'startOfMonth',
+            '3M'     => 'firstOfQuarter',
+            '1Y'     => 'startOfYear',
+            'custom' => 'startOfMonth', // this only happens in test situations.
         ];
         if (isset($functionMap[$range])) {
             $function = $functionMap[$range];

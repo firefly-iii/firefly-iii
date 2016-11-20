@@ -169,8 +169,7 @@ class HomeController extends Controller
                    'admin.users.domains.block-', 'import.json', 'help.',
         ];
         $routes = Route::getRoutes();
-
-        echo '<pre>';
+        $return = '<pre>';
 
         /** @var \Illuminate\Routing\Route $route */
         foreach ($routes as $route) {
@@ -178,15 +177,13 @@ class HomeController extends Controller
             $methods = $route->getMethods();
 
             if (!is_null($name) && strlen($name) > 0 && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo sprintf('touch %s.md', $name) . "\n";
+                $return .= sprintf('touch %s.md', $name) . "\n";
 
             }
         }
-        echo '</pre>';
+        $return .= '</pre><hr />';
 
-        echo '<hr />';
-
-        return '&nbsp;';
+        return $return;
     }
 
     /**
