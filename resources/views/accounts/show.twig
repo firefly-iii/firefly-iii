@@ -38,6 +38,12 @@
                 </div>
                 <div class="box-body">
                     {% include 'list.journals-tasker' with {sorting:true} %}
+                    <p>
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <a href="{{ route('accounts.show.all', [account.id]) }}">
+                            {{ 'show_all_no_filter'|_ }}
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

@@ -278,6 +278,26 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
+     *
+     * @return View
+     */
+    public function showAll(Account $account)
+    {
+        $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
+        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+
+        // replace with journal collector:
+        $collector = new JournalCollector(auth()->user());
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('accounts/show/' . $account->id . '/all');
+
+        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));
+    }
+
+    /**
+     * @param Account $account
      * @param string  $date
      *
      * @return View

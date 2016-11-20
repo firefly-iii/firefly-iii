@@ -92,6 +92,7 @@ Route::group(
     Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
     Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
     Route::get('/accounts/show/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+    Route::get('/accounts/show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'accounts.show.all']);
     Route::get('/accounts/show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'accounts.show.date']);
 
 
@@ -455,10 +456,22 @@ Route::group(
      * Transaction Controller
      */
 
-    // normal controller
+    // normal controller: index for session range
     Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
         ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
     );
+
+    // normal controller: index showing ALL:
+    Route::get('/transactions/{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'transactions.index.all'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
+
+    // normal controller: index for specific date range:
+    Route::get('/transactions/{what}/{date}', ['uses' => 'TransactionController@indexDate', 'as' => 'transactions.index.date'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
+
+
     Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 
