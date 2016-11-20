@@ -1,5 +1,6 @@
 <?php
 namespace Report;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class BudgetControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,14 +17,6 @@ class BudgetControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -49,5 +41,13 @@ class BudgetControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
     }
 }

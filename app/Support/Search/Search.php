@@ -109,7 +109,7 @@ class Search implements SearchInterface
     {
         $categories = $this->user->categories()->get();
         /** @var Collection $result */
-        $result     = $categories->filter(
+        $result = $categories->filter(
             function (Category $category) use ($words) {
                 if ($this->strpos_arr(strtolower($category->name), $words)) {
                     return $category;
@@ -118,7 +118,7 @@ class Search implements SearchInterface
                 return false;
             }
         );
-        $result     = $result->slice(0, $this->limit);
+        $result = $result->slice(0, $this->limit);
 
         return $result;
     }
@@ -131,7 +131,7 @@ class Search implements SearchInterface
      */
     public function searchTags(array $words): Collection
     {
-        $tags   = $this->user->tags()->get();
+        $tags = $this->user->tags()->get();
 
         /** @var Collection $result */
         $result = $tags->filter(

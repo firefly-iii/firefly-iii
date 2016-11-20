@@ -1,5 +1,6 @@
 <?php
 namespace Admin;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class ConfigurationControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,14 +17,6 @@ class ConfigurationControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -47,5 +39,13 @@ class ConfigurationControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
     }
 }

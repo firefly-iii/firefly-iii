@@ -1,5 +1,6 @@
 <?php
 namespace Auth;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class PasswordControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -20,11 +20,39 @@ class PasswordControllerTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
+     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::broker
+     * @todo   Implement testBroker().
      */
-    protected function tearDown()
+    public function testBroker()
     {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::redirectPath
+     * @todo   Implement testRedirectPath().
+     */
+    public function testRedirectPath()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::reset
+     * @todo   Implement testReset().
+     */
+    public function testReset()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 
     /**
@@ -52,38 +80,10 @@ class PasswordControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::reset
-     * @todo   Implement testReset().
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
      */
-    public function testReset()
+    protected function tearDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::broker
-     * @todo   Implement testBroker().
-     */
-    public function testBroker()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\PasswordController::redirectPath
-     * @todo   Implement testRedirectPath().
-     */
-    public function testRedirectPath()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Chart;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class CategoryReportControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,14 +17,6 @@ class CategoryReportControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -85,5 +77,13 @@ class CategoryReportControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
     }
 }

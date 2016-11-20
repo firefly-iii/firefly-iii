@@ -14,7 +14,6 @@ namespace FireflyIII\Generator\Chart\Budget;
 
 
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class ChartJsBudgetChartGenerator

@@ -19,11 +19,9 @@ use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Navigation;
-use stdClass;
 
 /**
  * Class BudgetReportHelper

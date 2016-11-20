@@ -1,5 +1,6 @@
 <?php
 namespace Auth;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class ResetPasswordControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,38 +17,6 @@ class ResetPasswordControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\ResetPasswordController::showResetForm
-     * @todo   Implement testShowResetForm().
-     */
-    public function testShowResetForm()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\ResetPasswordController::reset
-     * @todo   Implement testReset().
-     */
-    public function testReset()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 
     /**
@@ -73,5 +41,37 @@ class ResetPasswordControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\ResetPasswordController::reset
+     * @todo   Implement testReset().
+     */
+    public function testReset()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\ResetPasswordController::showResetForm
+     * @todo   Implement testShowResetForm().
+     */
+    public function testShowResetForm()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
     }
 }

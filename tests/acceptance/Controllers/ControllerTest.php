@@ -7,7 +7,6 @@
 class ControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -16,14 +15,6 @@ class ControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -75,10 +66,10 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\Controller::validateWith
-     * @todo   Implement testValidateWith().
+     * @covers FireflyIII\Http\Controllers\Controller::validate
+     * @todo   Implement testValidate().
      */
-    public function testValidateWith()
+    public function testValidate()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -87,10 +78,10 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\Controller::validate
-     * @todo   Implement testValidate().
+     * @covers FireflyIII\Http\Controllers\Controller::validateWith
+     * @todo   Implement testValidateWith().
      */
-    public function testValidate()
+    public function testValidateWith()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -108,5 +99,13 @@ class ControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
     }
 }

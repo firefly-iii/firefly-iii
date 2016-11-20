@@ -299,16 +299,17 @@ class CategoryReportController extends Controller
             /** @var Category $category */
             foreach ($categories as $category) {
                 // get sum, and get label:
-                $categoryId                       = $category->id;
-                $data[$label]['name'][$categoryId]             = $category->name;
-                $data[$label]['in'][$categoryId]  = $income[$categoryId] ?? '0';
-                $data[$label]['out'][$categoryId] = $expenses[$categoryId] ?? '0';
+                $categoryId                        = $category->id;
+                $data[$label]['name'][$categoryId] = $category->name;
+                $data[$label]['in'][$categoryId]   = $income[$categoryId] ?? '0';
+                $data[$label]['out'][$categoryId]  = $expenses[$categoryId] ?? '0';
             }
 
             $current = Navigation::addPeriod($current, $period, 0);
         }
 
         $data = $this->generator->mainReportChart($data);
+
         return Response::json($data);
     }
 

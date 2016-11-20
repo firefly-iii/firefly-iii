@@ -65,6 +65,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $categories
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
@@ -85,16 +95,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
     {
         $this->start = $date;
 
-        return $this;
-    }
-
-    /**
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setCategories(Collection $categories): ReportGeneratorInterface
-    {
         return $this;
     }
 }

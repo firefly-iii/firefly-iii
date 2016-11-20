@@ -252,7 +252,7 @@ class BudgetController extends Controller
         // join them:
         $result = [];
         foreach (array_keys($periods) as $period) {
-            $nice = $periods[$period];
+            $nice          = $periods[$period];
             $result[$nice] = [
                 'spent'    => isset($entries[$period]) ? $entries[$period] : '0',
                 'budgeted' => isset($entries[$period]) ? $budgeted[$period] : 0,

@@ -1,5 +1,6 @@
 <?php
 namespace Auth;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class LoginControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -20,18 +20,34 @@ class LoginControllerTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
      * @covers FireflyIII\Http\Controllers\Auth\LoginController::login
      * @todo   Implement testLogin().
      */
     public function testLogin()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\LoginController::logout
+     * @todo   Implement testLogout().
+     */
+    public function testLogout()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\LoginController::redirectPath
+     * @todo   Implement testRedirectPath().
+     */
+    public function testRedirectPath()
     {
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete(
@@ -64,26 +80,10 @@ class LoginControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\Auth\LoginController::logout
-     * @todo   Implement testLogout().
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
      */
-    public function testLogout()
+    protected function tearDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\Auth\LoginController::redirectPath
-     * @todo   Implement testRedirectPath().
-     */
-    public function testRedirectPath()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Auth;
+
 use TestCase;
 
 /**
@@ -8,7 +9,6 @@ use TestCase;
 class RegisterControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -20,11 +20,15 @@ class RegisterControllerTest extends TestCase
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
+     * @covers FireflyIII\Http\Controllers\Auth\RegisterController::redirectPath
+     * @todo   Implement testRedirectPath().
      */
-    protected function tearDown()
+    public function testRedirectPath()
     {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 
     /**
@@ -52,14 +56,10 @@ class RegisterControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\Auth\RegisterController::redirectPath
-     * @todo   Implement testRedirectPath().
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
      */
-    public function testRedirectPath()
+    protected function tearDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
     }
 }

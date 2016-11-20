@@ -47,7 +47,8 @@ class JournalServiceProvider extends ServiceProvider
         $this->registerCollector();
     }
 
-    private function registerCollector() {
+    private function registerCollector()
+    {
         $this->app->bind(
             'FireflyIII\Helpers\Collector\JournalCollectorInterface',
             function (Application $app, array $arguments) {

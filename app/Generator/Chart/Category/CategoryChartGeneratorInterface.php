@@ -24,25 +24,11 @@ interface CategoryChartGeneratorInterface
 {
 
     /**
-     * @param array $data
-     *
-     * @return array
-     */
-    public function pieChart(array $data): array;
-
-    /**
      * @param Collection $entries
      *
      * @return array
      */
     public function all(Collection $entries): array;
-
-    /**
-     * @param array $entries
-     *
-     * @return array
-     */
-    public function mainReportChart(array $entries): array;
 
     /**
      * @param Collection $categories
@@ -60,11 +46,25 @@ interface CategoryChartGeneratorInterface
     public function frontpage(Collection $entries): array;
 
     /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function mainReportChart(array $entries): array;
+
+    /**
      * @param Collection $entries
      *
      * @return array
      */
     public function period(Collection $entries): array;
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function pieChart(array $data): array;
 
     /**
      * @param Collection $categories
