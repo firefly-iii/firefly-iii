@@ -334,7 +334,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin(
                 'transactions', function (JoinClause $join) {
-                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', '0');
+                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
             }
             )
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
