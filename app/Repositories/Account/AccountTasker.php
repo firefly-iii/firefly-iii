@@ -317,6 +317,7 @@ class AccountTasker implements AccountTaskerInterface
             ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
             ->where('transaction_journals.user_id', $this->user->id)
             ->whereNull('transactions.deleted_at')
+            ->whereNull('other_side.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->whereIn('transactions.account_id', $accounts['accounts'])
             ->where('other_side.amount', '=', DB::raw('transactions.amount * -1'))
