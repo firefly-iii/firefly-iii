@@ -58,6 +58,30 @@ class Preferences
     }
 
     /**
+     * @param User  $user
+     * @param array $list
+     *
+     * @return array
+     */
+    public function getArrayForUser(User $user, array $list): array
+    {
+        $result      = [];
+        $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
+        /** @var Preference $preference */
+        foreach ($preferences as $preference) {
+            $result[$preference->name] = $preference->data;
+        }
+        foreach ($list as $name) {
+            if (!isset($result[$name])) {
+                $result[$name] = null;
+            }
+        }
+
+        return $result;
+
+    }
+
+    /**
      * @param \FireflyIII\User $user
      * @param      string      $name
      * @param string           $default

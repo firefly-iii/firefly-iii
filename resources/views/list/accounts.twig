@@ -2,15 +2,15 @@
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
+        <th data-defaultsign="az">{{ trans('list.name') }}</th>
         {% if what == 'asset' %}
-            <th class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
+            <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
         {% endif %}
-        <th class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
-        <th>{{ trans('list.currentBalance') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
+        <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
+        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
     </tr>
     </thead>
     <tbody>
@@ -42,11 +42,11 @@
                 {% endif %}
             </td>
             {% if account.lastActivityDate %}
-                <td class="hidden-sm hidden-xs" data-value="{{ account.lastActivityDate.format('U') }} ">
+                <td class="hidden-sm hidden-xs" data-value="{{ account.lastActivityDate.format('Y-m-d-H-i-s') }} ">
                     {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% else %}
-                <td class="hidden-sm hidden-xs" data-value="0">
+                <td class="hidden-sm hidden-xs" data-value="0000-00-00-00-00-00">
                     <em>{{ 'never'|_ }}</em>
                 </td>
             {% endif %}
