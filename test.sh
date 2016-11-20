@@ -10,12 +10,23 @@ TESTINGENV=./.env.testing
 resetestflag=''
 testflag=''
 coverageflag=''
+acceptancetestclass=''
 
-while getopts 'crt' flag; do
+while getopts 'crta:' flag; do
   case "${flag}" in
-    r) resetestflag='true' ;;
-    t) testflag='true' ;;
-    c) coverageflag='true' ;;
+    r)
+        resetestflag='true'
+    ;;
+    t)
+        testflag='true'
+    ;;
+    c)
+        coverageflag='true'
+    ;;
+    a)
+        acceptancetestclass=./tests/acceptance/$OPTARG
+        echo "Will only run acceptance test $OPTARG"
+    ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
@@ -71,10 +82,10 @@ else
     if [[ $coverageflag == "" ]]
     then
         echo "Must run PHPUnit without coverage"
-        phpunit
+        phpunit $acceptancetestclass
     else
         echo "Must run PHPUnit with coverage"
-        phpunit --configuration phpunit.coverage.xml
+        phpunit --configuration phpunit.coverage.xml $acceptancetestclass
     fi
 fi
 
