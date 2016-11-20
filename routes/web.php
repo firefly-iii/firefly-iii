@@ -190,6 +190,19 @@ Route::group(
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
     Route::get('/chart/account/{account}/{date}', ['uses' => 'Chart\AccountController@specificPeriod']);
 
+    Route::get(
+        '/chart/account/income-by-category/{account}/{start_date}/{end_date}',
+        ['uses' => 'Chart\AccountController@incomeByCategory', 'as' => 'chart.account.incomeByCategory']
+    );
+    Route::get(
+        '/chart/account/expense-by-category/{account}/{start_date}/{end_date}',
+        ['uses' => 'Chart\AccountController@expenseByCategory', 'as' => 'chart.account.expenseByCategory']
+    );
+    Route::get(
+        '/chart/account/expense-by-budget/{account}/{start_date}/{end_date}',
+        ['uses' => 'Chart\AccountController@expenseByBudget', 'as' => 'chart.account.expenseByBudget']
+    );
+
 
     // bills:
     Route::get('/chart/bill/frontpage', ['uses' => 'Chart\BillController@frontpage']);

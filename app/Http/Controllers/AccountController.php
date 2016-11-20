@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -209,7 +210,7 @@ class AccountController extends Controller
      *
      * @return View
      */
-    public function show(AccountTaskerInterface $tasker, ARI $repository, Account $account)
+    public function show(JournalCollectorInterface $collector, Account $account)
     {
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
@@ -218,62 +219,20 @@ class AccountController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $start */
-        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        /** @var Carbon $end */
-        $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
-        // replace with journal collector:
-        $collector = new JournalCollector(auth()->user());
+        // grab those journals:
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id);
 
-        // grouped other months thing:
-        // oldest transaction in account:
-        $start   = $repository->oldestJournalDate($account);
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = Navigation::startOfPeriod($start, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
-        $entries = new Collection;
+        // generate entries for each period (and cache those)
+        $entries = $this->periodEntries($account);
 
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('account-show');
-        $cache->addProperty($account->id);
-
-
-        if ($cache->has()) {
-            $entries = $cache->get();
-            Log::debug('Entries are cached, return cache.');
-
-            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
-        }
-
-        // only include asset accounts when this account is an asset:
-        $assets = new Collection;
-        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
-            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        }
-        Log::debug('Going to get period expenses and incomes.');
-        while ($end >= $start) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $tasker->amountOutInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned]);
-            $end = Navigation::subtractPeriod($end, $range, 1);
-
-        }
-        $cache->store($entries);
-
-        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end'));
     }
 
     /**
@@ -318,7 +277,7 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));
+        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end'));
     }
 
     /**
@@ -395,6 +354,63 @@ class AccountController extends Controller
         }
 
         return '';
+    }
+
+    /**
+     * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
+     * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
+     * performance reasons.
+     *
+     * @param Account $account The account involved.
+     *
+     * @return Collection
+     */
+    private function periodEntries(Account $account): Collection
+    {
+        /** @var ARI $repository */
+        $repository = app(ARI::class);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker = app(AccountTaskerInterface::class);
+
+        $start   = $repository->oldestJournalDate($account);
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $start   = Navigation::startOfPeriod($start, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
+
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('account-show-period-entries');
+        $cache->addProperty($account->id);
+
+        if ($cache->has()) {
+            Log::debug('Entries are cached, return cache.');
+
+            return $cache->get();
+        }
+
+        // only include asset accounts when this account is an asset:
+        $assets = new Collection;
+        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
+            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        }
+        Log::debug('Going to get period expenses and incomes.');
+        while ($end >= $start) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $spent      = $tasker->amountOutInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
+            $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+
+        }
+        $cache->store($entries);
+
+        return $entries;
     }
 
     /**

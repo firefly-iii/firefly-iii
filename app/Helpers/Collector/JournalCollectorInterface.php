@@ -134,6 +134,16 @@ interface JournalCollectorInterface
     /**
      * @return JournalCollectorInterface
      */
+    public function withBudgetInformation(): JournalCollectorInterface;
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withCategoryInformation(): JournalCollectorInterface;
+
+    /**
+     * @return JournalCollectorInterface
+     */
     public function withOpposingAccount(): JournalCollectorInterface;
 
     /**

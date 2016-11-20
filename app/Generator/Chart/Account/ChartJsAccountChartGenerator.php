@@ -14,6 +14,7 @@ namespace FireflyIII\Generator\Chart\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Support\ChartColour;
 use Illuminate\Support\Collection;
 
 /**
@@ -79,6 +80,37 @@ class ChartJsAccountChartGenerator implements AccountChartGeneratorInterface
             ];
         }
         $data['count'] = count($data['datasets']);
+
+        return $data;
+    }
+
+    /**
+     * @param array $values
+     * @param array $names
+     *
+     * @return array
+     */
+    public function pieChart(array $values, array $names): array
+    {
+        $data  = [
+            'datasets' => [
+                0 => [],
+            ],
+            'labels'   => [],
+        ];
+        $index = 0;
+        foreach ($values as $categoryId => $value) {
+
+            // make larger than 0
+            if (bccomp($value, '0') === -1) {
+                $value = bcmul($value, '-1');
+            }
+
+            $data['datasets'][0]['data'][]            = round($value, 2);
+            $data['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $data['labels'][]                         = $names[$categoryId];
+            $index++;
+        }
 
         return $data;
     }

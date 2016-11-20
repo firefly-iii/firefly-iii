@@ -259,8 +259,10 @@ class JournalCollector implements JournalCollectorInterface
 
         $this->query->where(
             function (EloquentBuilder $q) use ($categoryIds) {
-                $q->whereIn('category_transaction.category_id', $categoryIds);
-                $q->orWhereIn('category_transaction_journal.category_id', $categoryIds);
+                if (count($categoryIds) > 0) {
+                    $q->whereIn('category_transaction.category_id', $categoryIds);
+                    $q->orWhereIn('category_transaction_journal.category_id', $categoryIds);
+                }
             }
         );
 
@@ -379,6 +381,27 @@ class JournalCollector implements JournalCollectorInterface
             Log::debug('Set query collector types', $types);
             $this->query->whereIn('transaction_types.type', $types);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withBudgetInformation(): JournalCollectorInterface
+    {
+        $this->joinBudgetTables();
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withCategoryInformation(): JournalCollectorInterface
+    {
+
+        $this->joinCategoryTables();
 
         return $this;
     }
@@ -516,6 +539,8 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedBudget = true;
             $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
+            $this->fields[] = 'budget_transaction_journal.budget_id as transaction_journal_budget_id';
+            $this->fields[] = 'budget_transaction.budget_id as transaction_budget_id';
         }
     }
 

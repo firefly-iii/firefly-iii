@@ -6,7 +6,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-/* global $, lineChart, dateString, accountID, token */
+/* global $, lineChart, dateString, accountID, token, incomeByCategoryUri, expenseByCategoryUri, expenseByBudgetUri  */
 
 
 // Return a helper with preserved width of cells
@@ -23,13 +23,13 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    if (typeof(lineChart) === "function" &&
-        typeof accountID !== 'undefined' &&
-        typeof dateString !== 'undefined'
-    ) {
 
-        lineChart('chart/account/' + accountID + '/' + dateString, 'period-specific-account');
-    }
+    lineChart('chart/account/' + accountID + '/' + dateString, 'period-specific-account');
+
+    pieChart(incomeByCategoryUri, 'account-cat-in');
+    pieChart(expenseByCategoryUri, 'account-cat-out');
+    pieChart(expenseByBudgetUri, 'account-budget-out');
+
 
     // sortable!
     if (typeof $(".sortable-table tbody").sortable !== "undefined") {

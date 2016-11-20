@@ -1,4 +1,4 @@
-/* global $, lineChart, accountID, token */
+/* global $, lineChart, accountID, token, incomeByCategoryUri, expenseByCategoryUri, expenseByBudgetUri */
 
 
 // Return a helper with preserved width of cells
@@ -15,10 +15,11 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    if (typeof(lineChart) === "function" && typeof accountID !== 'undefined') {
-
         lineChart('chart/account/' + accountID, 'overview-chart');
-    }
+    pieChart(incomeByCategoryUri, 'account-cat-in');
+    pieChart(expenseByCategoryUri, 'account-cat-out');
+    pieChart(expenseByBudgetUri, 'account-budget-out');
+
 
     // sortable!
     if (typeof $(".sortable-table tbody").sortable !== "undefined") {
