@@ -15,6 +15,7 @@ namespace FireflyIII\Models;
 
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Log;
 use Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -151,6 +152,7 @@ class ImportJob extends Model
         $disk             = Storage::disk('upload');
         $encryptedContent = $disk->get($fileName);
         $content          = Crypt::decrypt($encryptedContent);
+        Log::debug(sprintf('Content size is %d bytes.', $content));
 
         return $content;
     }
