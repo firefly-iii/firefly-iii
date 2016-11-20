@@ -87,9 +87,9 @@ return [
     'need_more_help'                             => 'Als je meer hulp nodig hebt met Firefly III, <a href="https://github.com/JC5/firefly-iii/issues">open dan een ticket op Github</a>.',
     'nothing_to_display'                         => 'Er zijn hier geen transacties te zien',
     'show_all_no_filter'                         => 'Laat alle transacties zien, zonder te groeperen op datum.',
-    'expenses_by_category'                       => 'Expenses by category',
-    'expenses_by_budget'                         => 'Expenses by budget',
-    'income_by_category'                         => 'Income by category',
+    'expenses_by_category'                       => 'Uitgaven per categorie',
+    'expenses_by_budget'                         => 'Uitgaven per budget',
+    'income_by_category'                         => 'Inkomsten per categorie',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
