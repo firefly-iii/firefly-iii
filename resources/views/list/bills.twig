@@ -21,7 +21,7 @@
                     <a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td>
+            <td data-value="{{ entry.name }}">
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
             </td>
             <td class="hidden-sm hidden-xs" data-value="{{ entry.match }}">
@@ -37,33 +37,33 @@
             </td>
 
             {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
-                <td class="text-muted" data-value="0001-00-00-00-00-00">
+                <td class="text-muted" data-value="0001-00-00 00-00-00">
                     {{ 'not_expected_period'|_ }}
                 </td>
-                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d-H-i-s') }}">
+                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
             {% if entry.paidDates.count() == 0 and entry.payDates.count() > 0 and entry.active %}
-                <td class="text-danger" data-value="0002-00-00-00-00-00">
+                <td class="text-danger" data-value="0002-00-00 00-00-00">
                     {{ 'not_or_not_yet'|_ }}
                 </td>
-                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d-H-i-s') }}">
+                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
             {% if entry.paidDates.count() == entry.payDates.count() and entry.payDates.count() > 0 and entry.active %}
-                <td class="text-success" data-value="{{ entry.paidDates.first.format('Y-m-d-H-i-s') }}">
+                <td class="text-success" data-value="{{ entry.paidDates.first.format('Y-m-d H-i-s') }}">
                     {% for date in entry.paidDates %}
                         {{ date.formatLocalized(monthAndDayFormat) }}<br/>
                     {% endfor %}
                 </td>
-                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d-H-i-s') }}">
+                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
             {% if not entry.active %}
-                <td class="text-muted" data-value="0000-00-00-00-00-00">
+                <td class="text-muted" data-value="0000-00-00 00-00-00">
                     ~
                 </td>
                 <td class="text-muted hidden-sm hidden-xs" data-value="0">

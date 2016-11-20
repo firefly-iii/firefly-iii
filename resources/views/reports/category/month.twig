@@ -276,13 +276,13 @@
                                     <td data-value="{{ row.name }}">
                                         <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
                                     </td>
-                                    <td>
+                                    <td data-value="{{ row.average }}">
                                         {{ row.average|formatAmount }}
                                     </td>
-                                    <td>
+                                    <td data-value="{{ row.sum }}">
                                         {{ row.sum|formatAmount }}
                                     </td>
-                                    <td>
+                                    <td data-value="{{ row.count }}">
                                         {{ row.count }}
                                     </td>
                                 </tr>
@@ -304,9 +304,9 @@
                             <thead>
                             <tr>
                                 <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
-                                <th>{{ 'date'|_ }}</th>
+                                <th data-defaultsign="month">{{ 'date'|_ }}</th>
                                 <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th>{{ 'amount'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'amount'|_ }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -325,15 +325,15 @@
                                         {% endif %}
                                     </a>
                                 </td>
-                                <td>
+                                <td data-value="{{ row.date.format('Y-m-d H-i-s') }}">
                                     {{ row.date.formatLocalized(monthAndDayFormat) }}
                                 </td>
-                                <td>
+                                <td data-value="{{ row.opposing_account_name }}">
                                     <a href="{{ route('accounts.show', row.opposing_account_id) }}">
                                         {{ row.opposing_account_name }}
                                     </a>
                                 </td>
-                                <td>
+                                <td data-value="{{ row.transaction_amount }}">
                                     {{ row.transaction_amount|formatAmount }}
                                 </td>
                                 </tr>

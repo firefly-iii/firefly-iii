@@ -37,7 +37,7 @@
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
                                 <td data-value="{{ user.email }}">
                                     <a href="{{ route('admin.users.show',user.id) }}">{{ user.email }}</a></td>
-                                <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d-H-i-s') }}">
+                                <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d H-i-s') }}">
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
                                 </td>

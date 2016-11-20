@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
+        <th data-defaultsign="az">{{ trans('list.name') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -14,7 +14,9 @@
                     <a class="btn btn-danger btn-xs" href="{{ route('budgets.delete', budget.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td><a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a></td>
+            <td data-value="{{ budget.name }}">
+                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

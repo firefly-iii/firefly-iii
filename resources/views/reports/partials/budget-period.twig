@@ -1,17 +1,17 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th>{{ 'budget'|_ }}</th>
+        <th data-defaultsign="az">{{ 'budget'|_ }}</th>
         {% for period in periods %}
-            <th>{{ period }}</th>
+            <th data-defaultsign="_19">{{ period }}</th>
         {% endfor %}
-        <th>{{ 'sum'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
     {% for id, info in budgets %}
         <tr>
-            <td>
+            <td data-value="{{ info.name }}">
                 <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>
             </td>
             {% for amount in info.entries %}

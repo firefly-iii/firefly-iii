@@ -2,10 +2,10 @@
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.type') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
+        <th data-defaultsign="az">{{ trans('list.name') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.type') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -17,7 +17,9 @@
                     <a class="btn btn-danger btn-xs" href="{{ route('accounts.delete',account.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></td>
+            <td data-value="{{ account.name }}">
+                <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
+            </td>
             <td>{{ trans('firefly.'~account.accountType.type) }}</td>
             <td class="hidden-sm hidden-xs">
                 {% for entry in account.accountmeta %}
