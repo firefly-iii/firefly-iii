@@ -103,9 +103,8 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     protected function mock($class)
     {
+        Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);
-
-
         $this->app->instance($class, $object);
 
         return $object;

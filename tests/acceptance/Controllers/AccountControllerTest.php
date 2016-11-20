@@ -7,7 +7,6 @@
 class AccountControllerTest extends TestCase
 {
 
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -16,14 +15,6 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -38,14 +29,12 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::delete
-     * @todo   Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('accounts.delete', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -62,50 +51,61 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::edit
-     * @todo   Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('accounts.edit', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::index
-     * @todo   Implement testIndex().
+     * @covers       FireflyIII\Http\Controllers\AccountController::index
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
-    public function testIndex()
+    public function testIndex(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('accounts.index', ['asset']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::show
-     * @todo   Implement testShow().
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
-    public function testShow()
+    public function testShow(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+
+        $tasker = $this->mock(\FireflyIII\Repositories\Account\AccountTaskerInterface::class);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+
+        $this->call('GET', route('accounts.show', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::showWithDate
-     * @todo   Implement testShowWithDate().
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
-    public function testShowWithDate()
+    public function testShowWithDate(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('accounts.show', [1, '2016-01-01']));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -130,5 +130,13 @@ class AccountControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown()
+    {
     }
 }

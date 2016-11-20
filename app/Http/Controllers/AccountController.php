@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Navigation;
 use Preferences;
 use Session;
@@ -248,6 +249,7 @@ class AccountController extends Controller
 
         if ($cache->has()) {
             $entries = $cache->get();
+            Log::debug('Entries are cached, return cache.');
 
             return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
         }
@@ -257,7 +259,7 @@ class AccountController extends Controller
         if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
             $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         }
-
+        Log::debug('Going to get period expenses and incomes.');
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
