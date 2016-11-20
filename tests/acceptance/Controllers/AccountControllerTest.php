@@ -74,7 +74,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::show
+     * @covers       FireflyIII\Http\Controllers\AccountController::show
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -82,20 +82,18 @@ class AccountControllerTest extends TestCase
     public function testShow(string $range)
     {
 
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-
         $tasker = $this->mock(\FireflyIII\Repositories\Account\AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
-
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.show', [1]));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\AccountController::showWithDate
+     * @covers       FireflyIII\Http\Controllers\AccountController::showWithDate
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -104,7 +102,7 @@ class AccountControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $this->call('GET', route('accounts.show', [1, '2016-01-01']));
+        $this->call('GET', route('accounts.show.date', [1, '2016-01-01']));
         $this->assertResponseStatus(200);
     }
 
