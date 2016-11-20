@@ -38,10 +38,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $helper = app(ReportHelperInterface::class);
-        $bills  = $helper->getBillReport($this->start, $this->end, $this->accounts);
-
-        // and some id's, joined:
+        /** @var ReportHelperInterface $helper */
+        $helper     = app(ReportHelperInterface::class);
+        $bills      = $helper->getBillReport($this->start, $this->end, $this->accounts);
         $accountIds = join(',', $this->accounts->pluck('id')->toArray());
         $reportType = 'default';
 

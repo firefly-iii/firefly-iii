@@ -13,7 +13,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 
+use Carbon\Carbon;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class Bill
@@ -26,7 +29,11 @@ class Bill
     /**
      * @var Collection
      */
-    protected $bills;
+    private $bills;
+    /** @var  Carbon */
+    private $endDate;
+    /** @var  Carbon */
+    private $startDate;
 
     /**
      *
@@ -45,6 +52,43 @@ class Bill
     }
 
     /**
+     *
+     */
+    public function filterBills()
+    {
+        Log::debug('Now in filterBills()');
+        /** @var BillRepositoryInterface $repository */
+        $repository  = app(BillRepositoryInterface::class);
+        $start       = $this->startDate;
+        $end         = $this->endDate;
+        $lines       = $this->bills->filter(
+            function (BillLine $line) use ($repository, $start, $end) {
+                // next expected match?
+                $date = $start;
+                Log::debug(sprintf('Now at bill line for bill "%s"', $line->getBill()->name));
+                Log::debug(sprintf('Default date to use is start date: %s', $date->format('Y-m-d')));
+                if ($line->isHit()) {
+                    $date = $line->getLastHitDate();
+                    Log::debug(sprintf('Line was hit, see date: %s. Always include it.', $date->format('Y-m-d')));
+
+                    return $line;
+                }
+                $expected = $repository->nextExpectedMatch($line->getBill(), $date);
+                Log::debug(sprintf('Next expected match is %s', $expected->format('Y-m-d')));
+                if ($expected <= $end && $expected >= $start) {
+                    Log::debug('This date is inside report limits');
+
+                    return $line;
+                }
+                Log::debug('This date is OUTSIDE report limits');
+
+                return false;
+            }
+        );
+        $this->bills = $lines;
+    }
+
+    /**
      * @return Collection
      */
     public function getBills(): Collection
@@ -60,6 +104,22 @@ class Bill
 
 
         return $set;
+    }
+
+    /**
+     * @param Carbon $endDate
+     */
+    public function setEndDate(Carbon $endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
+     * @param Carbon $startDate
+     */
+    public function setStartDate(Carbon $startDate)
+    {
+        $this->startDate = $startDate;
     }
 
 }
