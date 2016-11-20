@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use Artisan;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
@@ -143,7 +143,7 @@ class HomeController extends Controller
         $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
         foreach ($accounts as $account) {
-            $collector = new JournalCollector(auth()->user());
+            $collector = app(JournalCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
             $set = $collector->getJournals();
 
