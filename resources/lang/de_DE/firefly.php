@@ -86,6 +86,7 @@ return [
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticker on Github</a>.',
     'nothing_to_display'                         => 'There are no transactions to show you',
+    'show_all_no_filter'                         => 'Show all transactions without grouping them by date.',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',
