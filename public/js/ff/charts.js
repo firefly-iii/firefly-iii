@@ -186,5 +186,5 @@ function drawAChart(URI, container, chartType, options, colorData) {
         console.log('Failed to draw ' + chartType + ' in container ' + container);
         $('#' + container).addClass('general-chart-error');
     });
-    console.log('URL for ' + chartType + ' chart : ' + URL);
+    console.log('URL for ' + chartType + ' chart : ' + URI);
 }
