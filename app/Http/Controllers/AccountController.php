@@ -22,6 +22,7 @@ use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -240,7 +241,7 @@ class AccountController extends Controller
      *
      * @return View
      */
-    public function showAll(Account $account)
+    public function showAll(AccountRepositoryInterface $repository, Account $account)
     {
         $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
         $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
@@ -252,7 +253,11 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/all');
 
-        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));
+        // get oldest and newest journal for account:
+        $start = $repository->oldestJournalDate($account);
+        $end   = $repository->newestJournalDate($account);
+
+        return view('accounts.show_with_date', compact('account', 'journals', 'subTitle', 'start', 'end'));
     }
 
     /**

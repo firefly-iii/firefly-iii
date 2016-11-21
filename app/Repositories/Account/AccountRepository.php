@@ -261,6 +261,29 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon
+    {
+        $last = new Carbon;
+        $date = $account->transactions()
+                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                        ->orderBy('transaction_journals.date', 'DESC')
+                        ->orderBy('transaction_journals.order', 'ASC')
+                        ->orderBy('transaction_journals.id', 'DESC')
+                        ->first(['transaction_journals.date']);
+        if (!is_null($date)) {
+            $last = new Carbon($date->date);
+        }
+
+        return $last;
+    }
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
@@ -270,14 +293,12 @@ class AccountRepository implements AccountRepositoryInterface
     public function oldestJournalDate(Account $account): Carbon
     {
         $first = new Carbon;
-
-        /** @var Transaction $first */
-        $date = $account->transactions()
-                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                        ->orderBy('transaction_journals.date', 'ASC')
-                        ->orderBy('transaction_journals.order', 'DESC')
-                        ->orderBy('transaction_journals.id', 'ASC')
-                        ->first(['transaction_journals.date']);
+        $date  = $account->transactions()
+                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                         ->orderBy('transaction_journals.date', 'ASC')
+                         ->orderBy('transaction_journals.order', 'DESC')
+                         ->orderBy('transaction_journals.id', 'ASC')
+                         ->first(['transaction_journals.date']);
         if (!is_null($date)) {
             $first = new Carbon($date->date);
         }
@@ -602,5 +623,4 @@ class AccountRepository implements AccountRepositoryInterface
 
         return false;
     }
-
 }
