@@ -1,6 +1,14 @@
+{# Set box sizes: #}
+{% if billCount > 0 %}
+    {% set boxClasses = 'col-lg-3 col-md-3 col-sm-6 col-xs-12' %}
+{% else %}
+    {# Zero bills? Remove the boxes. #}
+    {% set boxClasses = 'col-lg-4 col-md-4 col-sm-6 col-xs-12' %}
+{% endif %}
+
 <!-- Info boxes -->
 <div class="row hidden-sm hidden-xs">
-    <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="{{ boxClasses }}">
         <div class="info-box">
             <span class="info-box-icon bg-red">
                 <i class="fa fa-upload fa-fw"></i>
@@ -10,12 +18,9 @@
                 <span class="info-box-text">{{ 'moneyOut'|_ }}</span>
                 <span class="info-box-number" id="box-out"></span>
             </div>
-            <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
     </div>
-    <!-- /.col -->
-    <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="{{ boxClasses }}">
         <div class="info-box">
             <span class="info-box-icon bg-green">
                 <i class="fa fa-download faw-fw"></i>
@@ -25,43 +30,34 @@
                 <span class="info-box-text">{{ 'moneyIn'|_ }}</span>
                 <span class="info-box-number" id="box-in"></span>
             </div>
-            <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
     </div>
-    <!-- /.col -->
+    {% if billCount > 0 %}
+        <div class="clearfix visible-sm-block"></div>
 
-    <!-- fix for small devices only -->
-    <div class="clearfix visible-sm-block"></div>
-
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box">
+        <div class="{{ boxClasses }}">
+            <div class="info-box">
             <span class="info-box-icon bg-blue">
                 <i class="fa fa-calendar fa-fw"></i>
             </span>
 
-            <div class="info-box-content">
-                <span class="info-box-text">{{ 'billsToPay'|_ }}</span>
-                <span class="info-box-number" id="box-bills-unpaid"></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ 'billsToPay'|_ }}</span>
+                    <span class="info-box-number" id="box-bills-unpaid"></span>
+                </div>
             </div>
-            <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box">
+        <div class="{{ boxClasses }}">
+            <div class="info-box">
             <span class="info-box-icon bg-aqua">
                 <i class="fa fa-line-chart fa-fw"></i>
             </span>
 
-            <div class="info-box-content">
-                <span class="info-box-text">{{ 'billsPaid'|_ }}</span>
-                <span class="info-box-number" id="box-bills-paid"></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">{{ 'billsPaid'|_ }}</span>
+                    <span class="info-box-number" id="box-bills-paid"></span>
+                </div>
             </div>
-            <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-</div><!-- /.row -->
+    {% endif %}
+</div>

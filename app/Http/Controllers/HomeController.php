@@ -19,6 +19,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -121,7 +122,6 @@ class HomeController extends Controller
      */
     public function index(ARI $repository)
     {
-
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
@@ -142,6 +142,11 @@ class HomeController extends Controller
         $accounts              = $repository->getAccountsById($frontPage->data);
         $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
+        // zero bills? Hide some elements from view.
+        /** @var BillRepositoryInterface $billRepository */
+        $billRepository = app(BillRepositoryInterface::class);
+        $billCount      = $billRepository->getBills()->count();
+
         foreach ($accounts as $account) {
             $collector = app(JournalCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
@@ -153,7 +158,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage')
+            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
         );
     }
 
@@ -205,10 +210,7 @@ class HomeController extends Controller
      *
      * @return bool
      */
-    private
-    function startsWithAny(
-        array $array, string $needle
-    ): bool
+    private function startsWithAny(array $array, string $needle): bool
     {
         foreach ($array as $entry) {
             if ((substr($needle, 0, strlen($entry)) === $entry)) {
