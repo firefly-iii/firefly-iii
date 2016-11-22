@@ -89,6 +89,10 @@ class SplitController extends Controller
      */
     public function edit(Request $request, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies     = ExpandedForm::makeSelectList($this->currencies->get());
         $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
@@ -127,6 +131,10 @@ class SplitController extends Controller
      */
     public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
 
@@ -283,5 +291,6 @@ class SplitController extends Controller
 
         return $return;
     }
+
 
 }

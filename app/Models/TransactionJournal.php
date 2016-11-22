@@ -64,12 +64,12 @@ class TransactionJournal extends TransactionJournalSupport
     public static function routeBinder($value)
     {
         if (auth()->check()) {
-            $validTypes = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER];
-            $object     = TransactionJournal::where('transaction_journals.id', $value)
-                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                            ->whereIn('transaction_types.type', $validTypes)
-                                            ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
-            if ($object) {
+            $object = TransactionJournal
+                ::where('transaction_journals.id', $value)
+                ->with('transactionType')
+                ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
+            if (!is_null($object)) {
                 return $object;
             }
         }

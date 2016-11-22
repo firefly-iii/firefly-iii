@@ -210,6 +210,10 @@ class TransactionController extends Controller
      */
     public function show(TransactionJournal $journal, JournalTaskerInterface $tasker)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $events       = $tasker->getPiggyBankEvents($journal);
         $transactions = $tasker->getTransactionsOverview($journal);
         $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
@@ -219,4 +223,5 @@ class TransactionController extends Controller
 
 
     }
+
 }
