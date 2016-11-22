@@ -36,22 +36,25 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // new event handlers:
-            'FireflyIII\Events\ConfirmedUser'      => // is a User related event.
+            'FireflyIII\Events\ConfirmedUser'        => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@storeConfirmationIpAddress',
                 ],
-            'FireflyIII\Events\RegisteredUser'     => // is a User related event.
+            'FireflyIII\Events\RegisteredUser'       => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                     'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
                     'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessage',
                     'FireflyIII\Handlers\Events\UserEventHandler@storeRegistrationIpAddress',
                 ],
-            'FireflyIII\Events\ResentConfirmation' => // is a User related event.
+            'FireflyIII\Events\RequestedNewPassword' => [ // is a User related event.
+                                                          'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
+            ],
+            'FireflyIII\Events\ResentConfirmation'   => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessageAgain',
                 ],
-            'FireflyIII\Events\StoredBudgetLimit'  => // is a Budget related event.
+            'FireflyIII\Events\StoredBudgetLimit'    => // is a Budget related event.
                 [
                     'FireflyIII\Handlers\Events\BudgetEventHandler@storeRepetition',
                 ],

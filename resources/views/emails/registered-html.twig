@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-
-</head>
-<body>
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Hey there,
-</p>
-
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Welkome to <a style="color:#337ab7" href="{{ address }}">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!
 </p>
@@ -31,17 +21,4 @@
         link very soon!
     </li>
 </ul>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Enjoy!
-</p>
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    James Cole
-</p>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;color:#aaa;">
-    The registration has been created from IP {{ ip }}
-</p>
-
-</body>
-</html>
+{% include 'emails.footer-html' %}

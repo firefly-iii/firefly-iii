@@ -188,7 +188,7 @@ class LoginController extends Controller
             ];
 
             Mail::send(
-                ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email, $user) {
+                ['emails.blocked-login-html', 'emails.blocked-login-text'], $fields, function (Message $message) use ($email, $user) {
                 $message->to($email, $email)->subject('Blocked a login attempt from ' . trim($user->email) . '.');
             }
             );
