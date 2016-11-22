@@ -90,7 +90,7 @@ return [
     'expenses_by_category'                       => 'Expenses by category',
     'expenses_by_budget'                         => 'Expenses by budget',
     'income_by_category'                         => 'Income by category',
-
+    'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => '每月',
