@@ -90,11 +90,12 @@ class SplitJournalFormRequest extends Request
         $return = [];
         // description is leading because it is one of the mandatory fields.
         foreach ($this->get('description') as $index => $description) {
+            $category    = $this->get('category')[$index] ?? '';
             $transaction = [
                 'description'              => $description,
                 'amount'                   => round($this->get('amount')[$index], 2),
                 'budget_id'                => $this->get('budget_id')[$index] ? intval($this->get('budget_id')[$index]) : 0,
-                'category'                 => $this->get('category')[$index] ?? '',
+                'category'                 => trim($category),
                 'source_account_id'        => isset($this->get('source_account_id')[$index])
                     ? intval($this->get('source_account_id')[$index])
                     : intval(
