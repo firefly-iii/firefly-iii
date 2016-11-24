@@ -232,7 +232,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         $sum = $this->sumInPeriod($categories, $accounts, TransactionType::WITHDRAWAL, $start, $end);
-
+        $sum = bcmul($sum, '-1');
         return $sum;
     }
 
