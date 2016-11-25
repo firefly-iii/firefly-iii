@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
@@ -25,6 +26,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Input;
@@ -68,9 +70,18 @@ class AccountController extends Controller
      */
     public function create(string $what = 'asset')
     {
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle     = trans('firefly.make_new_' . $what . '_account');
-        Session::flash('preFilled', []);
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository      = app(CurrencyRepositoryInterface::class);
+        $currencies      = ExpandedForm::makeSelectList($repository->get());
+        $defaultCurrency = Amount::getDefaultCurrency();
+        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
+        $subTitle        = trans('firefly.make_new_' . $what . '_account');
+        Session::flash(
+            'preFilled',
+            [
+                'currency_id' => $defaultCurrency->id,
+            ]
+        );
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {
@@ -80,7 +91,7 @@ class AccountController extends Controller
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'create-' . $what);
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies'));
 
     }
 
@@ -137,6 +148,9 @@ class AccountController extends Controller
         $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $currencies = ExpandedForm::makeSelectList($repository->get());
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {
@@ -160,12 +174,13 @@ class AccountController extends Controller
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
+            'currency_id'          => $account->getMeta('currency_id'),
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'edit-' . $what);
 
-        return view('accounts.edit', compact('account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
+        return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
     }
 
     /**

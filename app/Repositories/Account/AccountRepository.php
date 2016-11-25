@@ -41,7 +41,7 @@ class AccountRepository implements AccountRepositoryInterface
     /** @var User */
     private $user;
     /** @var array */
-    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber','currency_id'];
 
     /**
      * AttachmentRepository constructor.

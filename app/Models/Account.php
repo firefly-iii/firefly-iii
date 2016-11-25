@@ -169,7 +169,7 @@ class Account extends Model
     {
         foreach ($this->accountMeta as $meta) {
             if ($meta->name == $fieldName) {
-                return $meta->data;
+                return strval($meta->data);
             }
         }
 

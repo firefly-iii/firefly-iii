@@ -17,6 +17,10 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('name') }}
+                        {% if what == 'asset' %}
+                            {# Not really mandatory but OK #}
+                            {{ ExpandedForm.select('currency_id', currencies) }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
