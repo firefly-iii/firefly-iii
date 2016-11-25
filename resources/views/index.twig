@@ -82,9 +82,21 @@
 
 
                     </div>
-                    <div class="box-body no-padding">
-                        {% include 'list.journals-tiny-tasker' with {'transactions': data[0],'account': data[1]} %}
-                    </div>
+
+                    {% if data[0].count > 0 %}
+                        <div class="box-body no-padding">
+                            {% include 'list.journals-tiny-tasker' with {'transactions': data[0],'account': data[1]} %}
+                        </div>
+                    {% else %}
+                        <div class="box-body">
+                            <p>
+                                <em>
+                                    {{ trans('firefly.no_transactions_account', {name: data[1].name}) }}
+                                </em>
+                            </p>
+                        </div>
+                    {% endif %}
+
                     <div class="box-footer clearfix">
                         <a class="btn btn-sm btn-default btn-flat pull-right"
                            href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>

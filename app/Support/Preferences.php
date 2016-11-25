@@ -16,6 +16,7 @@ namespace FireflyIII\Support;
 use Cache;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Session;
 
 /**
  * Class Preferences
@@ -128,6 +129,7 @@ class Preferences
     public function mark(): bool
     {
         $this->set('lastActivity', microtime());
+        Session::forget('first');
 
         return true;
     }

@@ -150,11 +150,8 @@ class HomeController extends Controller
         foreach ($accounts as $account) {
             $collector = app(JournalCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
-            $set = $collector->getJournals();
-
-            if (count($set) > 0) {
-                $transactions[] = [$set, $account];
-            }
+            $set            = $collector->getJournals();
+            $transactions[] = [$set, $account];
         }
 
         return view(

@@ -155,7 +155,7 @@ class SingleController extends Controller
         }
 
         $type = TransactionJournal::transactionTypeStr($transactionJournal);
-        Session::flash('success', strval(trans('firefly.deleted_' . $type, ['description' => e($transactionJournal->description)])));
+        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
 

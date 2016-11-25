@@ -25,6 +25,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
+use Session;
 use View;
 
 /**
@@ -145,6 +146,7 @@ class ReportController extends Controller
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
+
         if ($start < session('first')) {
             $start = session('first');
         }
@@ -174,7 +176,6 @@ class ReportController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-
         /** @var Carbon $start */
         $start            = clone session('first');
         $months           = $this->helper->listOfMonths($start);
@@ -219,6 +220,12 @@ class ReportController extends Controller
         $end        = $request->getEndDate()->format('Ymd');
         $accounts   = join(',', $request->getAccountList()->pluck('id')->toArray());
         $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
+
+        if ($request->getAccountList()->count() === 0) {
+            Session::flash('error', trans('firefly.select_more_than_one_account'));
+
+            return redirect(route('reports.index'));
+        }
 
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
