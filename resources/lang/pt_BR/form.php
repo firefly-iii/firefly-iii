@@ -25,6 +25,8 @@ return [
     'match'                          => 'Corresponde em',
     'repeat_freq'                    => 'Repetições',
     'journal_currency_id'            => 'Moeda',
+    'currency_id'                    => 'Currency',
+    'attachments'                    => 'Attachments',
     'journal_amount'                 => 'Quantia',
     'journal_asset_source_account'   => 'Conta de ativo (fonte)',
     'journal_source_account_name'    => 'Conta de receita (fonte)',
