@@ -90,7 +90,7 @@ return [
     'expenses_by_category'                       => 'Uitgaven per categorie',
     'expenses_by_budget'                         => 'Uitgaven per budget',
     'income_by_category'                         => 'Inkomsten per categorie',
-    'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
+    'cannot_redirect_to_account'                 => 'Firefly III kan je niet naar de goede pagina doorsturen. Sorry!',
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
     'repeat_freq_monthly'                        => 'maandelijks',
@@ -521,9 +521,9 @@ return [
     'stored_new_account'                         => 'Nieuwe rekening ":name" opgeslagen!',
     'updated_account'                            => 'Rekening ":name" geüpdatet',
     'credit_card_options'                        => 'Opties voor credit cards',
-    'no_transactions_account'                    => 'There are no transactions (in this period) for asset account ":name".',
-    'no_data_for_chart'                          => 'There is not enough information (yet) to generate this chart.',
-    'select_more_than_one_account'               => 'Please select more than one account',
+    'no_transactions_account'                    => 'Betaalrekening ":name" heeft geen geen transacties (in deze periode).',
+    'no_data_for_chart'                          => 'Er is (nog) niet genoeg informatie om deze grafiek te tekenen.',
+    'select_more_than_one_account'               => 'Selecteer meer dan één rekening',
 
     // categories:
     'new_category'                               => 'Nieuwe categorie',
