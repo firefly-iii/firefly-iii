@@ -78,14 +78,16 @@ class NewUserController extends Controller
         $this->createAssetAccount($request, $repository);
 
         // create savings account
-        if (strlen($request->get('savings_balance')) > 0) {
+        $savingBalance = strval($request->get('savings_balance')) === '' ? '0' : strval($request->get('savings_balance'));
+        if (bccomp($savingBalance, '0') !== 0) {
             $this->createSavingsAccount($request, $repository);
             $count++;
         }
 
 
         // create credit card.
-        if (strlen($request->get('credit_card_limit')) > 0) {
+        $limit = strval($request->get('credit_card_limit')) === '' ? '0' : strval($request->get('credit_card_limit'));
+        if (bccomp($limit, '0') !== 0) {
             $this->storeCreditCard($request, $repository);
             $count++;
         }
