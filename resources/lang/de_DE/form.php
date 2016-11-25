@@ -25,6 +25,8 @@ return [
     'match'                          => 'Reagiert auf',
     'repeat_freq'                    => 'Wiederholungen',
     'journal_currency_id'            => 'Währung',
+    'currency_id'                    => 'Currency',
+    'attachments'                    => 'Attachments',
     'journal_amount'                 => 'Betrag',
     'journal_asset_source_account'   => 'Girokonto (Quelle)',
     'journal_source_account_name'    => 'Kreditor (Quelle)',
