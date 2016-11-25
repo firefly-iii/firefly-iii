@@ -15,6 +15,7 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class TransactionJournalMeta
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TransactionJournalMeta extends Model
 {
 
+    use SoftDeletes;
     protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
     protected $table    = 'journal_meta';
