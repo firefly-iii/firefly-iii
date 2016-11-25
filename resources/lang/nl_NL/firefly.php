@@ -521,6 +521,9 @@ return [
     'stored_new_account'                         => 'Nieuwe rekening ":name" opgeslagen!',
     'updated_account'                            => 'Rekening ":name" geüpdatet',
     'credit_card_options'                        => 'Opties voor credit cards',
+    'no_transactions_account'                    => 'There are no transactions (in this period) for asset account ":name".',
+    'no_data_for_chart'                          => 'There is not enough information (yet) to generate this chart.',
+    'select_more_than_one_account'               => 'Please select more than one account',
 
     // categories:
     'new_category'                               => 'Nieuwe categorie',
