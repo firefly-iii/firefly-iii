@@ -11,7 +11,7 @@ $(function () {
         }
 
     }
-    if (typeof categoryID !== 'undefined' && typeof categoryDate !== undefined) {
+    if (typeof categoryID !== 'undefined' && typeof categoryDate !== 'undefined') {
         columnChart('chart/category/' + categoryID + '/period/' + categoryDate, 'period-specific-period');
     }
 

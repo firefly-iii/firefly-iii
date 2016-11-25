@@ -91,7 +91,7 @@
 {% block scripts %}
     <script type="text/javascript">
         var accountID = {{ account.id }};
-        var dateString = "{{ date }}";
+        var dateString = "{{ date|escape }}";
 
         // uri's for charts:
         var incomeByCategoryUri = '{{ route('chart.account.incomeByCategory', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';

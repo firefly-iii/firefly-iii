@@ -98,7 +98,7 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var jobKey = "{{ job.key }}";
+        var jobKey = "{{ job.key|escape }}";
     </script>
     <script type="text/javascript" src="js/ff/export/index.js"></script>
 {% endblock %}
