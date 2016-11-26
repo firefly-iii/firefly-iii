@@ -154,7 +154,7 @@ class JournalCollector implements JournalCollectorInterface
      * @return LengthAwarePaginator
      * @throws FireflyException
      */
-    public function getPaginatedJournals():LengthAwarePaginator
+    public function getPaginatedJournals(): LengthAwarePaginator
     {
         if ($this->run === true) {
             throw new FireflyException('Cannot getPaginatedJournals after run in JournalCollector.');
@@ -245,6 +245,29 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $budgets
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): JournalCollectorInterface
+    {
+        $budgetIds = $budgets->pluck('id')->toArray();
+        if (count($budgetIds) === 0) {
+            return $this;
+        }
+        $this->joinBudgetTables();
+
+        $this->query->where(
+            function (EloquentBuilder $q) use ($budgetIds) {
+                $q->whereIn('budget_transaction.budget_id', $budgetIds);
+                $q->orWhereIn('budget_transaction_journal.budget_id', $budgetIds);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * @param Collection $categories
      *
      * @return JournalCollectorInterface
@@ -259,10 +282,8 @@ class JournalCollector implements JournalCollectorInterface
 
         $this->query->where(
             function (EloquentBuilder $q) use ($categoryIds) {
-                if (count($categoryIds) > 0) {
-                    $q->whereIn('category_transaction.category_id', $categoryIds);
-                    $q->orWhereIn('category_transaction_journal.category_id', $categoryIds);
-                }
+                $q->whereIn('category_transaction.category_id', $categoryIds);
+                $q->orWhereIn('category_transaction_journal.category_id', $categoryIds);
             }
         );
 

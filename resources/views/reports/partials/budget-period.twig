@@ -14,10 +14,17 @@
             <td data-value="{{ info.name }}">
                 <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>
             </td>
-            {% for amount in info.entries %}
-                <td data-value="{{ amount }}">
-                    {{ amount|formatAmount }}
-                </td>
+            {% for key, period in periods %}
+                {% if(info.entries[key]) %}
+                    <td data-value="{{ info.entries[key] }}">
+                        {{ info.entries[key]|formatAmount }}
+                    </td>
+                {% else %}
+                    <td data-value="0">
+                        {{ 0|formatAmount }}
+                    </td>
+                {% endif %}
+
             {% endfor %}
             <td data-value="{{ info.sum }}">
                 {{ info.sum|formatAmount }}

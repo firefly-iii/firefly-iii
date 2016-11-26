@@ -74,6 +74,14 @@ interface JournalCollectorInterface
      */
     public function setBudget(Budget $budget): JournalCollectorInterface;
 
+
+    /**
+     * @param Collection $budgets
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): JournalCollectorInterface;
+
     /**
      * @param Collection $categories
      *

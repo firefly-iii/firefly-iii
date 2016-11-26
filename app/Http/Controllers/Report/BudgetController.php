@@ -36,7 +36,7 @@ class BudgetController extends Controller
      * @param Carbon                      $end
      * @param Collection                  $accounts
      *
-     * @return mixed|string
+     * @return string
      */
     public function budgetPeriodReport(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
     {
@@ -46,7 +46,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+             return $cache->get();
         }
 
         $periods = Navigation::listOfPeriods($start, $end);
