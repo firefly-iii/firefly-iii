@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
+use Navigation;
 use stdClass;
 
 /**
@@ -233,16 +234,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         // this is the date format we need:
         // define period to group on:
-        $carbonFormat = 'Y-m-d';
-        // monthly report (for year)
-        if ($start->diffInMonths($end) > 1) {
-            $carbonFormat = 'Y-m';
-        }
-
-        // yearly report (for multi year)
-        if ($start->diffInMonths($end) > 12) {
-            $carbonFormat = 'Y';
-        }
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
 
         // this is the set of transactions for this period
         // in these budgets. Now they must be grouped (manually)

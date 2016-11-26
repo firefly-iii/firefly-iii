@@ -183,11 +183,8 @@ class BudgetController extends Controller
         return Response::json($data);
     }
 
+
     /**
-     *
-     * TODO use the NEW query that will be in the repository. Because that query will be shared between the budget period report (table for all budgets)
-     * TODO and this chart (a single budget)
-     *
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      * @param Carbon                    $start
@@ -214,19 +211,8 @@ class BudgetController extends Controller
         $periods  = Navigation::listOfPeriods($start, $end);
         $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
         $budgeted = [];
-
-        // the budget limits:
-        $range = '1D';
-        $key   = 'Y-m-d';
-        if ($start->diffInMonths($end) > 1) {
-            $range = '1M';
-            $key   = 'Y-m';
-        }
-
-        if ($start->diffInMonths($end) > 12) {
-            $range = '1Y';
-            $key   = 'Y';
-        }
+        $key      = Navigation::preferredCarbonFormat($start, $end);
+        $range    = Navigation::preferredRangeFormat($start, $end);
 
         // get budgeted:
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);

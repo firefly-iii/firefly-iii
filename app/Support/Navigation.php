@@ -179,19 +179,17 @@ class Navigation
     {
         // define period to increment
         $increment     = 'addDay';
-        $format        = 'Y-m-d';
+        $format        = self::preferredCarbonFormat($start, $end);
         $displayFormat = strval(trans('config.month_and_day'));
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {
             $increment     = 'addMonth';
-            $format        = 'Y-m';
             $displayFormat = strval(trans('config.month'));
         }
 
         // increment by year (for multi year)
         if ($start->diffInMonths($end) > 12) {
             $increment     = 'addYear';
-            $format        = 'Y';
             $displayFormat = strval(trans('config.year'));
         }
 
@@ -242,6 +240,78 @@ class Navigation
             return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
         throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
+     * method returns "Y-m". If the date difference is larger, method returns "Y".
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function preferredCarbonFormat(Carbon $start, Carbon $end): string
+    {
+        $format = 'Y-m-d';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'Y-m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'Y';
+        }
+
+        return $format;
+
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "1D". If the difference is less than a year,
+     * method returns "1M". If the date difference is larger, method returns "1Y".
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function preferredRangeFormat(Carbon $start, Carbon $end): string
+    {
+        $format = '1D';
+        if ($start->diffInMonths($end) > 1) {
+            $format = '1M';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = '1Y';
+        }
+
+        return $format;
+
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "%Y-%m-%d". If the difference is less than a year,
+     * method returns "%Y-%m". If the date difference is larger, method returns "%Y".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredSqlFormat(Carbon $start, Carbon $end): string
+    {
+        $format = '%Y-%m-%d';
+        if ($start->diffInMonths($end) > 1) {
+            $format = '%Y-%m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = '%Y';
+        }
+
+        return $format;
+
     }
 
     /**
