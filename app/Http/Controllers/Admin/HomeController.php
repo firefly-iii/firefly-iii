@@ -24,7 +24,7 @@ use FireflyIII\Http\Controllers\Controller;
 class HomeController extends Controller
 {
     /**
-     * @return mixed
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
