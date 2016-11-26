@@ -43,14 +43,5 @@ interface BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function period(array $entries) : array;
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function year(Collection $budgets, Collection $entries): array;
-
+    public function period(array $entries): array;
 }

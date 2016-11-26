@@ -60,10 +60,12 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
         $categoryIds     = join(',', $this->categories->pluck('id')->toArray());
         $reportType      = 'category';
-        $accountSummary  = $this->getObjectSummary($this->getSpentAccountSummary(), $this->getEarnedAccountSummary());
-        $categorySummary = $this->getObjectSummary($this->getSpentCategorySummary(), $this->getEarnedCategorySummary());
-        $averageExpenses = $this->getAverages($this->getExpenses(), SORT_ASC);
-        $averageIncome   = $this->getAverages($this->getIncome(), SORT_DESC);
+        $expenses        = $this->getExpenses();
+        $income          = $this->getIncome();
+        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
+        $categorySummary = $this->getObjectSummary($this->summarizeByCategory($expenses), $this->summarizeByCategory($income));
+        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
+        $averageIncome   = $this->getAverages($income, SORT_DESC);
         $topExpenses     = $this->getTopExpenses();
         $topIncome       = $this->getTopIncome();
 
@@ -174,43 +176,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
-     * @return array
-     */
-    private function getEarnedAccountSummary(): array
-    {
-        $transactions = $this->getIncome();
-        $result       = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $accountId          = $transaction->account_id;
-            $result[$accountId] = $result[$accountId] ?? '0';
-            $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    private function getEarnedCategorySummary(): array
-    {
-        $transactions = $this->getIncome();
-        $result       = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $jrnlCatId  = intval($transaction->transaction_journal_category_id);
-            $transCatId = intval($transaction->transaction_category_id);
-            $categoryId = max($jrnlCatId, $transCatId);
-
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
-        }
-
-        return $result;
-    }
-
-    /**
      * @return Collection
      */
     private function getExpenses(): Collection
@@ -269,12 +234,12 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
          * @var int    $accountId
          * @var string $entry
          */
-        foreach ($spent as $accountId => $entry) {
-            if (!isset($return[$accountId])) {
-                $return[$accountId] = ['spent' => 0, 'earned' => 0];
+        foreach ($spent as $objectId => $entry) {
+            if (!isset($return[$objectId])) {
+                $return[$objectId] = ['spent' => 0, 'earned' => 0];
             }
 
-            $return[$accountId]['spent'] = $entry;
+            $return[$objectId]['spent'] = $entry;
         }
         unset($entry);
 
@@ -282,56 +247,18 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
          * @var int    $accountId
          * @var string $entry
          */
-        foreach ($earned as $accountId => $entry) {
-            if (!isset($return[$accountId])) {
-                $return[$accountId] = ['spent' => 0, 'earned' => 0];
+        foreach ($earned as $objectId => $entry) {
+            if (!isset($return[$objectId])) {
+                $return[$objectId] = ['spent' => 0, 'earned' => 0];
             }
 
-            $return[$accountId]['earned'] = $entry;
+            $return[$objectId]['earned'] = $entry;
         }
 
 
         return $return;
     }
 
-    /**
-     * @return array
-     */
-    private function getSpentAccountSummary(): array
-    {
-        $transactions = $this->getExpenses();
-        $result       = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $accountId          = $transaction->account_id;
-            $result[$accountId] = $result[$accountId] ?? '0';
-            $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    private function getSpentCategorySummary(): array
-    {
-        $transactions = $this->getExpenses();
-        $result       = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $jrnlCatId  = intval($transaction->transaction_journal_category_id);
-            $transCatId = intval($transaction->transaction_category_id);
-            $categoryId = max($jrnlCatId, $transCatId);
-
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
-        }
-
-        return $result;
-
-
-    }
 
     /**
      * @return Collection
@@ -367,5 +294,43 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         );
 
         return $transactions;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    private function summarizeByAccount(Collection $collection): array
+    {
+        $result = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            $accountId          = $transaction->account_id;
+            $result[$accountId] = $result[$accountId] ?? '0';
+            $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    private function summarizeByCategory(Collection $collection): array
+    {
+        $result = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            $jrnlCatId           = intval($transaction->transaction_journal_category_id);
+            $transCatId          = intval($transaction->transaction_category_id);
+            $categoryId          = max($jrnlCatId, $transCatId);
+            $result[$categoryId] = $result[$categoryId] ?? '0';
+            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
+        }
+
+        return $result;
     }
 }
