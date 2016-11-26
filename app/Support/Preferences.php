@@ -59,7 +59,7 @@ class Preferences
     }
 
     /**
-     * @param User  $user
+     * @param \FireflyIII\User  $user
      * @param array $list
      *
      * @return array

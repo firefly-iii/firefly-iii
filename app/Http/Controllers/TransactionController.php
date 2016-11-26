@@ -53,8 +53,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $what
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param string                     $what
      *
      * @return View
      */
@@ -140,6 +141,8 @@ class TransactionController extends Controller
     /**
      * @param Request $request
      * @param string  $what
+     *
+     * @param string  $date
      *
      * @return View
      */

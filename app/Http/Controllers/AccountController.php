@@ -251,6 +251,7 @@ class AccountController extends Controller
     }
 
     /**
+     * @param ARI     $repository
      * @param Account $account
      *
      * @return View

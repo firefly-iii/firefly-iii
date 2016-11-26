@@ -203,9 +203,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param JournalCollectorInterface $collector
+     * @param Account                   $account
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function incomeByCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
     {

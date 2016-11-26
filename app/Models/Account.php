@@ -15,7 +15,6 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Crypt;
-use DB;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;

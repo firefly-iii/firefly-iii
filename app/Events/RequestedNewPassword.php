@@ -34,6 +34,7 @@ class RequestedNewPassword extends Event
      *
      * @param  User  $user
      * @param string $token
+     * @param string $ipAddress
      */
     public function __construct(User $user, string $token, string $ipAddress)
     {
