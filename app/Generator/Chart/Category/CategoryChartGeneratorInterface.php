@@ -31,14 +31,6 @@ interface CategoryChartGeneratorInterface
     public function all(Collection $entries): array;
 
     /**
-     * @param Collection $categories
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function earnedInPeriod(Collection $categories, Collection $entries): array;
-
-    /**
      * @param Collection $entries
      *
      * @return array
@@ -66,11 +58,4 @@ interface CategoryChartGeneratorInterface
      */
     public function pieChart(array $data): array;
 
-    /**
-     * @param Collection $categories
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function spentInPeriod(Collection $categories, Collection $entries): array;
 }

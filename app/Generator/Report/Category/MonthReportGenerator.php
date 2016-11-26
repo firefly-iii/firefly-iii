@@ -60,8 +60,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
         $categoryIds     = join(',', $this->categories->pluck('id')->toArray());
         $reportType      = 'category';
-        $accountSummary  = $this->getAccountSummary();
-        $categorySummary = $this->getCategorySummary();
+        $accountSummary  = $this->getObjectSummary($this->getSpentAccountSummary(), $this->getEarnedAccountSummary());
+        $categorySummary = $this->getObjectSummary($this->getSpentCategorySummary(), $this->getEarnedCategorySummary());
         $averageExpenses = $this->getAverages($this->getExpenses(), SORT_ASC);
         $averageIncome   = $this->getAverages($this->getIncome(), SORT_DESC);
         $topExpenses     = $this->getTopExpenses();
@@ -130,45 +130,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
-     * @return array
-     */
-    private function getAccountSummary(): array
-    {
-        $spent  = $this->getSpentAccountSummary();
-        $earned = $this->getEarnedAccountSummary();
-        $return = [];
-
-        /**
-         * @var int    $accountId
-         * @var string $entry
-         */
-        foreach ($spent as $accountId => $entry) {
-            if (!isset($return[$accountId])) {
-                $return[$accountId] = ['spent' => 0, 'earned' => 0];
-            }
-
-            $return[$accountId]['spent'] = $entry;
-        }
-        unset($entry);
-
-        /**
-         * @var int    $accountId
-         * @var string $entry
-         */
-        foreach ($earned as $accountId => $entry) {
-            if (!isset($return[$accountId])) {
-                $return[$accountId] = ['spent' => 0, 'earned' => 0];
-            }
-
-            $return[$accountId]['earned'] = $entry;
-        }
-
-
-        return $return;
-
-    }
-
-    /**
      * @param Collection $collection
      * @param int        $sortFlag
      *
@@ -210,43 +171,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         array_multisort($average, $sortFlag, $result);
 
         return $result;
-    }
-
-    /**
-     * @return array
-     */
-    private function getCategorySummary(): array
-    {
-        $spent  = $this->getSpentCategorySummary();
-        $earned = $this->getEarnedCategorySummary();
-        $return = [];
-
-        /**
-         * @var int    $categoryId
-         * @var string $entry
-         */
-        foreach ($spent as $categoryId => $entry) {
-            if (!isset($return[$categoryId])) {
-                $return[$categoryId] = ['spent' => 0, 'earned' => 0];
-            }
-
-            $return[$categoryId]['spent'] = $entry;
-        }
-        unset($entry);
-
-        /**
-         * @var int    $categoryId
-         * @var string $entry
-         */
-        foreach ($earned as $categoryId => $entry) {
-            if (!isset($return[$categoryId])) {
-                $return[$categoryId] = ['spent' => 0, 'earned' => 0];
-            }
-
-            $return[$categoryId]['earned'] = $entry;
-        }
-
-        return $return;
     }
 
     /**
@@ -329,6 +253,45 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $this->income = $transactions;
 
         return $transactions;
+    }
+
+    /**
+     * @param array $spent
+     * @param array $earned
+     *
+     * @return array
+     */
+    private function getObjectSummary(array $spent, array $earned): array
+    {
+        $return = [];
+
+        /**
+         * @var int    $accountId
+         * @var string $entry
+         */
+        foreach ($spent as $accountId => $entry) {
+            if (!isset($return[$accountId])) {
+                $return[$accountId] = ['spent' => 0, 'earned' => 0];
+            }
+
+            $return[$accountId]['spent'] = $entry;
+        }
+        unset($entry);
+
+        /**
+         * @var int    $accountId
+         * @var string $entry
+         */
+        foreach ($earned as $accountId => $entry) {
+            if (!isset($return[$accountId])) {
+                $return[$accountId] = ['spent' => 0, 'earned' => 0];
+            }
+
+            $return[$accountId]['earned'] = $entry;
+        }
+
+
+        return $return;
     }
 
     /**
