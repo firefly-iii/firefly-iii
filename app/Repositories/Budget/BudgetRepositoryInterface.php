@@ -92,7 +92,6 @@ interface BudgetRepositoryInterface
 
     /**
      *
-     * todo always collects without budget info
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start

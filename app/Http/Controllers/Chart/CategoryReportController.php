@@ -32,8 +32,6 @@ use Response;
 /**
  * Separate controller because many helper functions are shared.
  *
- * TODO much of this code is actually repeated. First for the object (category, account), then for the direction (in / out).
- *
  * Class CategoryReportController
  *
  * @package FireflyIII\Http\Controllers\Chart
@@ -98,7 +96,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect all transactions NOT in these categories.
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
@@ -147,7 +144,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect others?
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
@@ -196,7 +192,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect all transactions NOT in these categories.
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
@@ -245,7 +240,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect others?
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);

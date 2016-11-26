@@ -39,7 +39,6 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
@@ -108,7 +107,6 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
@@ -120,7 +118,6 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\AccountController::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
