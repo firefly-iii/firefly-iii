@@ -207,13 +207,12 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('period');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            // return Response::json($cache->get());
         }
 
         // the expenses:
         $periods  = Navigation::listOfPeriods($start, $end);
-        $result   = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
-        $entries  = $repository->filterAmounts($result, $budget->id, $periods);
+        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
         $budgeted = [];
 
         // the budget limits:
@@ -229,6 +228,7 @@ class BudgetController extends Controller
             $key   = 'Y';
         }
 
+        // get budgeted:
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
         $current     = clone $start;
         while ($current < $end) {
@@ -254,7 +254,7 @@ class BudgetController extends Controller
         foreach (array_keys($periods) as $period) {
             $nice          = $periods[$period];
             $result[$nice] = [
-                'spent'    => isset($entries[$period]) ? $entries[$period] : '0',
+                'spent'    => isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0',
                 'budgeted' => isset($entries[$period]) ? $budgeted[$period] : 0,
             ];
         }
@@ -348,7 +348,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function spentInPeriodWithout(Carbon $start, Carbon $end):array
+    private function spentInPeriodWithout(Carbon $start, Carbon $end): array
     {
         // collector
         $collector = new JournalCollector(auth()->user());

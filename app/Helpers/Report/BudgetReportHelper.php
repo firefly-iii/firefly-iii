@@ -17,10 +17,8 @@ namespace FireflyIII\Helpers\Report;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
@@ -54,66 +52,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         $budgets = $this->repository->getBudgets();
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end);
-        $collector->setBudgets($budgets);
-        $transactions = $collector->getJournals();
-
-        // this is the date format we need:
-        // define period to group on:
-        $carbonFormat = 'Y-m-d';
-        // monthly report (for year)
-        if ($start->diffInMonths($end) > 1) {
-            $carbonFormat = 'Y-m';
-        }
-
-        // yearly report (for multi year)
-        if ($start->diffInMonths($end) > 12) {
-            $carbonFormat = 'Y';
-        }
-
-        // this is the set of transactions for this period
-        // in these budgets. Now they must be grouped (manually)
-        // id, period => amount
-        $data = [];
-        foreach ($transactions as $transaction) {
-            $budgetId = max(intval($transaction->transaction_journal_budget_id), intval($transaction->transaction_budget_id));
-            $date     = $transaction->date->format($carbonFormat);
-
-            if (!isset($data[$budgetId])) {
-                $data[$budgetId]['name']    = $this->getBudgetName($budgetId, $budgets);
-                $data[$budgetId]['sum']     = '0';
-                $data[$budgetId]['entries'] = [];
-            }
-
-            if (!isset($data[$budgetId]['entries'][$date])) {
-                $data[$budgetId]['entries'][$date] = '0';
-            }
-            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date], $transaction->transaction_amount);
-        }
-        // and now the same for stuff without a budget:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end);
-        $collector->setTypes([TransactionType::WITHDRAWAL]);
-        $collector->withoutBudget();
-        $transactions = $collector->getJournals();
-
-        $data[0]['entries'] = [];
-        $data[0]['name']    = strval(trans('firefly.no_budget'));
-        $data[0]['sum']     = '0';
-
-        foreach ($transactions as $transaction) {
-            $date = $transaction->date->format($carbonFormat);
-
-            if (!isset($data[0]['entries'][$date])) {
-                $data[0]['entries'][$date] = '0';
-            }
-            $data[0]['entries'][$date] = bcadd($data[0]['entries'][$date], $transaction->transaction_amount);
-        }
-
-        $data = $this->filterBudgetPeriodReport($data);
+        $report  = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
+        $data    = $this->filterBudgetPeriodReport($report);
 
         return $data;
     }
@@ -249,26 +189,4 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         return $data;
     }
-
-    /**
-     * @param int        $budgetId
-     * @param Collection $budgets
-     *
-     * @return string
-     */
-    private function getBudgetName(int $budgetId, Collection $budgets): string
-    {
-
-        $first = $budgets->filter(
-            function (Budget $budget) use ($budgetId) {
-                return $budgetId === $budget->id;
-            }
-        );
-        if (!is_null($first->first())) {
-            return $first->first()->name;
-        }
-
-        return '(unknown)';
-    }
-
 }
