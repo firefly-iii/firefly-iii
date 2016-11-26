@@ -57,13 +57,13 @@ class Range
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param Closure                   $theNext
+     * @param Closure                   $next
      * @param  string|null              $guard
      *
      * @return mixed
      * @internal param Closure $next
      */
-    public function handle(Request $request, Closure $theNext, $guard = null)
+    public function handle(Request $request, Closure $next, $guard = null)
     {
         if (!Auth::guard($guard)->guest()) {
 
@@ -80,7 +80,7 @@ class Range
             $this->configureList();
         }
 
-        return $theNext($request);
+        return $next($request);
 
     }
 

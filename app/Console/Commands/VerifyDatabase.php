@@ -72,8 +72,6 @@ class VerifyDatabase extends Command
         $this->reportObject('category');
         $this->reportObject('tag');
 
-        return;
-
         // accounts with no transactions.
         $this->reportAccounts();
         // budgets with no limits
@@ -269,8 +267,7 @@ class VerifyDatabase extends Command
         $plural = str_plural($name);
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
         $field  = $name == 'tag' ? 'tag' : 'name';
-        $set    = $class
-            ::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
+        $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
             ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
             ->distinct()
             ->whereNull($name . '_transaction_journal.' . $name . '_id')
@@ -284,7 +281,7 @@ class VerifyDatabase extends Command
             try {
                 $objName = Crypt::decrypt($objName);
             } catch (DecryptException $e) {
-
+                // it probably was not encrypted.
             }
 
             $line = sprintf(
@@ -317,8 +314,7 @@ class VerifyDatabase extends Command
      */
     private function reportTransactions()
     {
-        $set = Transaction
-            ::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $set = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNotNull('transactions.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->get(
