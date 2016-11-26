@@ -374,12 +374,12 @@ Route::group(
         '/reports/data/inc-exp-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\InOutController@incExpReport', 'as' => 'reports.data.incExpReport']
     );
-    // (income report):
+    // income report:
     Route::get(
         '/reports/data/income-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\InOutController@incomeReport', 'as' => 'reports.data.incomeReport']
     );
-    // (expense report):
+    // expense report:
     Route::get(
         '/reports/data/expense-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\InOutController@expenseReport', 'as' => 'reports.data.expenseReport']

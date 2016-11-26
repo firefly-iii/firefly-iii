@@ -220,9 +220,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface $tasker
-     * @param ARI                    $repository
-     * @param Account                $account
+     * @param JournalCollectorInterface $collector
+     * @param Account                   $account
      *
      * @return View
      */

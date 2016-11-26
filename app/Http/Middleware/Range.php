@@ -135,13 +135,14 @@ class Range
         $start = Session::get('start');
         /** @var Carbon $end */
         $end = Session::get('end');
+
+        $prevStart = clone $start;
+        $prevEnd   = clone $start;
+        $nextStart = clone $end;
+        $nextEnd   = clone $end;
         if ($viewRange === 'custom') {
-            $days      = $start->diffInDays($end);
-            $prevStart = clone $start;
+            $days = $start->diffInDays($end);
             $prevStart->subDays($days);
-            $prevEnd   = clone $start;
-            $nextStart = clone $end;
-            $nextEnd   = clone $end;
             $nextEnd->addDays($days);
             unset($days);
         }

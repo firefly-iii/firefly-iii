@@ -292,10 +292,9 @@ class CategoryReportController extends Controller
             $currentEnd = clone $currentStart;
             Log::debug(sprintf('Function is %s', $function));
             $currentEnd = $currentEnd->$function();
-            //$currentEnd = Navigation::endOfPeriod($current, $period);
-            $expenses = $this->groupByCategory($this->getExpenses($accounts, $categories, $currentStart, $currentEnd));
-            $income   = $this->groupByCategory($this->getIncome($accounts, $categories, $currentStart, $currentEnd));
-            $label    = $currentStart->formatLocalized(strval(trans('config.' . $format)));
+            $expenses   = $this->groupByCategory($this->getExpenses($accounts, $categories, $currentStart, $currentEnd));
+            $income     = $this->groupByCategory($this->getIncome($accounts, $categories, $currentStart, $currentEnd));
+            $label      = $currentStart->formatLocalized(strval(trans('config.' . $format)));
 
             Log::debug(sprintf('Now grabbing CMC expenses between %s and %s', $currentStart->format('Y-m-d'), $currentEnd->format('Y-m-d')));
 
@@ -314,7 +313,7 @@ class CategoryReportController extends Controller
             }
 
             $currentStart = clone $currentEnd;
-            $currentStart->addDay();// = Navigation::addPeriod($current, $period, 0);
+            $currentStart->addDay();
         }
 
         $data = $this->generator->mainReportChart($data);
