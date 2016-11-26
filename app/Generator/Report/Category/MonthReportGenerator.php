@@ -62,8 +62,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $reportType      = 'category';
         $accountSummary  = $this->getAccountSummary();
         $categorySummary = $this->getCategorySummary();
-        $averageExpenses = $this->getAverageExpenses();
-        $averageIncome   = $this->getAverageIncome();
+        $averageExpenses = $this->getAverages($this->getExpenses(), SORT_ASC);
+        $averageIncome   = $this->getAverages($this->getIncome(), SORT_DESC);
         $topExpenses     = $this->getTopExpenses();
         $topIncome       = $this->getTopIncome();
 
@@ -169,14 +169,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $collection
+     * @param int        $sortFlag
+     *
      * @return array
      */
-    private function getAverageExpenses(): array
+    private function getAverages(Collection $collection, int $sortFlag): array
     {
-        $expenses = $this->getExpenses();
-        $result   = [];
+        $result = [];
         /** @var Transaction $transaction */
-        foreach ($expenses as $transaction) {
+        foreach ($collection as $transaction) {
             // opposing name and ID:
             $opposingId = $transaction->opposing_account_id;
 
@@ -205,50 +207,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             $average[$key] = floatval($row['average']);
         }
 
-        array_multisort($average, SORT_ASC, $result);
-
-        return $result;
-
-    }
-
-    /**
-     * @return array
-     */
-    private function getAverageIncome(): array
-    {
-        $expenses = $this->getIncome();
-        $result   = [];
-        /** @var Transaction $transaction */
-        foreach ($expenses as $transaction) {
-            // opposing name and ID:
-            $opposingId = $transaction->opposing_account_id;
-
-            // is not set?
-            if (!isset($result[$opposingId])) {
-                $name                = $transaction->opposing_account_name;
-                $encrypted           = intval($transaction->opposing_account_encrypted);
-                $name                = $encrypted === 1 ? Crypt::decrypt($name) : $name;
-                $result[$opposingId] = [
-                    'name'    => $name,
-                    'count'   => 1,
-                    'id'      => $opposingId,
-                    'average' => $transaction->transaction_amount,
-                    'sum'     => $transaction->transaction_amount,
-                ];
-                continue;
-            }
-            $result[$opposingId]['count']++;
-            $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
-            $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], strval($result[$opposingId]['count']));
-        }
-
-        // sort result by average:
-        $average = [];
-        foreach ($result as $key => $row) {
-            $average[$key] = floatval($row['average']);
-        }
-
-        array_multisort($average, SORT_DESC, $result);
+        array_multisort($average, $sortFlag, $result);
 
         return $result;
     }
