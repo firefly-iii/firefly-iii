@@ -16,6 +16,7 @@ namespace FireflyIII\Support;
 use Cache;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Session;
 
 /**
  * Class Preferences
@@ -55,6 +56,30 @@ class Preferences
         }
 
         return $this->getForUser(auth()->user(), $name, $default);
+    }
+
+    /**
+     * @param \FireflyIII\User  $user
+     * @param array $list
+     *
+     * @return array
+     */
+    public function getArrayForUser(User $user, array $list): array
+    {
+        $result      = [];
+        $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
+        /** @var Preference $preference */
+        foreach ($preferences as $preference) {
+            $result[$preference->name] = $preference->data;
+        }
+        foreach ($list as $name) {
+            if (!isset($result[$name])) {
+                $result[$name] = null;
+            }
+        }
+
+        return $result;
+
     }
 
     /**
@@ -104,6 +129,7 @@ class Preferences
     public function mark(): bool
     {
         $this->set('lastActivity', microtime());
+        Session::forget('first');
 
         return true;
     }

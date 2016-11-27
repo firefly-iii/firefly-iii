@@ -78,7 +78,7 @@ class MailError extends Job implements ShouldQueue
                 $args['ip']       = $this->ipAddress;
 
                 Mail::send(
-                    ['emails.error-html', 'emails.error'], $args,
+                    ['emails.error-html', 'emails.error-text'], $args,
                     function (Message $message) use ($email) {
                         if ($email != 'mail@example.com') {
                             $message->to($email, $email)->subject('Caught an error in Firely III.');

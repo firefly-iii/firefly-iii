@@ -44,11 +44,6 @@ interface JournalCollectorInterface
     public function getJournals(): Collection;
 
     /**
-     * @return JournalCollectorInterface
-     */
-    public function withOpposingAccount(): JournalCollectorInterface;
-
-    /**
      * @return LengthAwarePaginator
      */
     public function getPaginatedJournals():LengthAwarePaginator;
@@ -78,6 +73,14 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setBudget(Budget $budget): JournalCollectorInterface;
+
+
+    /**
+     * @param Collection $budgets
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): JournalCollectorInterface;
 
     /**
      * @param Collection $categories
@@ -135,6 +138,21 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setTypes(array $types): JournalCollectorInterface;
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withBudgetInformation(): JournalCollectorInterface;
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withCategoryInformation(): JournalCollectorInterface;
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withOpposingAccount(): JournalCollectorInterface;
 
     /**
      * @return JournalCollectorInterface

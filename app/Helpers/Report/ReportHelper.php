@@ -19,7 +19,7 @@ use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
@@ -70,16 +70,17 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $collector  = new JournalCollector(auth()->user());
+        $collector  = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($accounts)->setRange($start, $end)->setBills($bills);
         $journals   = $collector->getJournals();
         $collection = new BillCollection;
+        $collection->setStartDate($start);
+        $collection->setEndDate($end);
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             $billLine = new BillLine;
             $billLine->setBill($bill);
-            $billLine->setActive(intval($bill->active) === 1);
             $billLine->setMin(strval($bill->amount_min));
             $billLine->setMax(strval($bill->amount_max));
             $billLine->setHit(false);
@@ -94,14 +95,18 @@ class ReportHelper implements ReportHelperInterface
             if (!is_null($first)) {
                 $billLine->setTransactionJournalId($first->id);
                 $billLine->setAmount($first->transaction_amount);
+                $billLine->setLastHitDate($first->date);
                 $billLine->setHit(true);
             }
 
-            // non active AND non hit? do not add:
+            // bill is active, or bill is hit:
             if ($billLine->isActive() || $billLine->isHit()) {
                 $collection->addBill($billLine);
             }
         }
+
+        // do some extra filtering.
+        $collection->filterBills();
 
         return $collection;
     }

@@ -86,7 +86,11 @@ return [
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticker on Github</a>.',
     'nothing_to_display'                         => 'There are no transactions to show you',
-
+    'show_all_no_filter'                         => 'Show all transactions without grouping them by date.',
+    'expenses_by_category'                       => 'Expenses by category',
+    'expenses_by_budget'                         => 'Expenses by budget',
+    'income_by_category'                         => 'Income by category',
+    'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => '每月',
@@ -517,6 +521,9 @@ return [
     'stored_new_account'                         => 'New account ":name" stored!',
     'updated_account'                            => 'Updated account ":name"',
     'credit_card_options'                        => 'Credit card options',
+    'no_transactions_account'                    => 'There are no transactions (in this period) for asset account ":name".',
+    'no_data_for_chart'                          => 'There is not enough information (yet) to generate this chart.',
+    'select_more_than_one_account'               => 'Please select more than one account',
 
     // categories:
     'new_category'                               => 'New category',

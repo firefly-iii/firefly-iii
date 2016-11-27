@@ -57,7 +57,7 @@ class AttachmentController extends Controller
     /**
      * @param Attachment $attachment
      *
-     * @return View
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
     public function delete(Attachment $attachment)
     {

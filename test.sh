@@ -7,13 +7,26 @@ BACKUPENV=./.env.current
 TESTINGENV=./.env.testing
 
 # do something with flags:
-rflag=''
-tflag=''
+resetestflag=''
+testflag=''
+coverageflag=''
+acceptancetestclass=''
 
-while getopts 'rt' flag; do
+while getopts 'crta:' flag; do
   case "${flag}" in
-    r) rflag='true' ;;
-    t) tflag='true' ;;
+    r)
+        resetestflag='true'
+    ;;
+    t)
+        testflag='true'
+    ;;
+    c)
+        coverageflag='true'
+    ;;
+    a)
+        acceptancetestclass=./tests/acceptance/$OPTARG
+        echo "Will only run acceptance test $OPTARG"
+    ;;
     *) error "Unexpected option ${flag}" ;;
   esac
 done
@@ -32,7 +45,7 @@ cp $TESTINGENV $ORIGINALENV
 php artisan cache:clear
 
 # reset database (optional)
-if [[ $rflag == "true" ]]
+if [[ $resetestflag == "true" ]]
 then
     echo "Must reset database"
 
@@ -51,7 +64,7 @@ then
 fi
 
 # do not reset database (optional)
-if [[ $rflag == "" ]]
+if [[ $resetestflag == "" ]]
 then
     echo "Will not reset database"
 fi
@@ -60,12 +73,20 @@ fi
 cp $DATABASECOPY $DATABASE
 
 # run PHPUnit
-if [[ $tflag == "" ]]
+if [[ $testflag == "" ]]
 then
     echo "Must not run PHPUnit"
 else
     echo "Must run PHPUnit"
-    phpunit
+
+    if [[ $coverageflag == "" ]]
+    then
+        echo "Must run PHPUnit without coverage"
+        phpunit $acceptancetestclass
+    else
+        echo "Must run PHPUnit with coverage"
+        phpunit --configuration phpunit.coverage.xml $acceptancetestclass
+    fi
 fi
 
 # restore current config:

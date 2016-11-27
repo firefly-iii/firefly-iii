@@ -14,16 +14,16 @@
                     <table class="table table-condensed sortable">
                         <thead>
                         <tr>
-                            <th class="hidden-xs" colspan="2">&nbsp;</th>
-                            <th>{{ trans('list.email') }}</th>
-                            <th class="hidden-xs">{{ trans('list.registered_at') }}</th>
-                            <th class="hidden-xs">{{ trans('list.registered_from') }}</th>
-                            <th class="hidden-xs">{{ trans('list.confirmed_from') }}</th>
+                            <th data-defaultsign="_19" class="hidden-xs" colspan="2">&nbsp;</th>
+                            <th data-defaultsign="az">{{ trans('list.email') }}</th>
+                            <th data-defaultsign="month" class="hidden-xs">{{ trans('list.registered_at') }}</th>
+                            <th data-defaultsign="az" class="hidden-xs">{{ trans('list.registered_from') }}</th>
+                            <th data-defaultsign="az" class="hidden-xs">{{ trans('list.confirmed_from') }}</th>
                             <th class="hidden-xs">{{ trans('list.is_admin') }}</th>
                             <th class="hidden-xs">{{ trans('list.has_two_factor') }}</th>
                             <th>{{ trans('list.is_activated') }}</th>
                             <th>{{ trans('list.is_blocked') }}</th>
-                            <th class="hidden-xs">{{ trans('list.blocked_code') }}</th>
+                            <th data-defaultsign="az" class="hidden-xs">{{ trans('list.blocked_code') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -37,15 +37,21 @@
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
                                 <td data-value="{{ user.email }}">
                                     <a href="{{ route('admin.users.show',user.id) }}">{{ user.email }}</a></td>
-                                <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d-H-i-s') }}">
+                                <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d H-i-s') }}">
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
                                 </td>
-                                <td class="hidden-xs">
-                                    {{ Preferences.getForUser(user,"registration_ip_address").data }}
+                                <td data-value="{{ user.prefs.registration_ip_address }}" class="hidden-xs">
+                                    {{ user.prefs.registration_ip_address }}
+                                    {% if user.prefs.registration_ip_address|length > 0 %}
+                                        (<a href="http://whois.domaintools.com/{{ user.prefs.registration_ip_address }}">whois</a>)
+                                    {% endif %}
                                 </td>
-                                <td class="hidden-xs">
-                                    {{ Preferences.getForUser(user,"confirmation_ip_address").data }}
+                                <td data-value="{{ user.prefs.confirmation_ip_address }}" class="hidden-xs">
+                                    {{ user.prefs.confirmation_ip_address }}
+                                    {% if user.prefs.confirmation_ip_address|length > 0 %}
+                                        (<a href="http://whois.domaintools.com/{{ user.prefs.confirmation_ip_address }}">whois</a>)
+                                    {% endif %}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">
                                     {% if user.isAdmin %}

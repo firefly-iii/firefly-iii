@@ -15,10 +15,11 @@ namespace FireflyIII\Http\Controllers;
 use Artisan;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -121,7 +122,6 @@ class HomeController extends Controller
      */
     public function index(ARI $repository)
     {
-
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
@@ -142,18 +142,20 @@ class HomeController extends Controller
         $accounts              = $repository->getAccountsById($frontPage->data);
         $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
-        foreach ($accounts as $account) {
-            $collector = new JournalCollector(auth()->user());
-            $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
-            $set = $collector->getJournals();
+        // zero bills? Hide some elements from view.
+        /** @var BillRepositoryInterface $billRepository */
+        $billRepository = app(BillRepositoryInterface::class);
+        $billCount      = $billRepository->getBills()->count();
 
-            if (count($set) > 0) {
-                $transactions[] = [$set, $account];
-            }
+        foreach ($accounts as $account) {
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
+            $set            = $collector->getJournals();
+            $transactions[] = [$set, $account];
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage')
+            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
         );
     }
 
@@ -169,8 +171,7 @@ class HomeController extends Controller
                    'admin.users.domains.block-', 'import.json', 'help.',
         ];
         $routes = Route::getRoutes();
-
-        echo '<pre>';
+        $return = '<pre>';
 
         /** @var \Illuminate\Routing\Route $route */
         foreach ($routes as $route) {
@@ -178,15 +179,13 @@ class HomeController extends Controller
             $methods = $route->getMethods();
 
             if (!is_null($name) && strlen($name) > 0 && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo sprintf('touch %s.md', $name) . "\n";
+                $return .= sprintf('touch %s.md', $name) . "\n";
 
             }
         }
-        echo '</pre>';
+        $return .= '</pre><hr />';
 
-        echo '<hr />';
-
-        return '&nbsp;';
+        return $return;
     }
 
     /**
@@ -208,10 +207,7 @@ class HomeController extends Controller
      *
      * @return bool
      */
-    private
-    function startsWithAny(
-        array $array, string $needle
-    ): bool
+    private function startsWithAny(array $array, string $needle): bool
     {
         foreach ($array as $entry) {
             if ((substr($needle, 0, strlen($entry)) === $entry)) {

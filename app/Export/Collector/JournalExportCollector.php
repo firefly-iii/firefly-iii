@@ -298,7 +298,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                 'transactions AS opposing', function (JoinClause $join) {
                 $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
                      ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'))
-                     ->where('transactions.identifier', '=', 'opposing.identifier');
+                     ->where('transactions.identifier', '=', DB::raw('opposing.identifier'));
             }
             )
             ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')

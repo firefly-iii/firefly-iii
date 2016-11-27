@@ -17,6 +17,10 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
+                    {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
+                        {# Not really mandatory but OK #}
+                        {{ ExpandedForm.select('currency_id', currencies) }}
+                    {% endif %}
                 </div>
             </div>
 

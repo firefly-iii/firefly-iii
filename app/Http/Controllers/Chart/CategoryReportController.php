@@ -26,14 +26,11 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Navigation;
 use Response;
 
 
 /**
  * Separate controller because many helper functions are shared.
- *
- * TODO much of this code is actually repeated. First for the object (category, account), then for the direction (in / out).
  *
  * Class CategoryReportController
  *
@@ -99,7 +96,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect all transactions NOT in these categories.
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
@@ -148,7 +144,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect others?
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
@@ -197,7 +192,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect all transactions NOT in these categories.
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
@@ -246,7 +240,6 @@ class CategoryReportController extends Controller
         }
 
         // also collect others?
-        // TODO include transfers
         if ($others) {
             $collector = new JournalCollector(auth()->user());
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
@@ -273,24 +266,32 @@ class CategoryReportController extends Controller
     public function mainChart(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
         // determin optimal period:
-        $period = '1D';
-        $format = 'month_and_day';
+        $period   = '1D';
+        $format   = 'month_and_day';
+        $function = 'endOfDay';
         if ($start->diffInMonths($end) > 1) {
-            $period = '1M';
-            $format = 'month';
+            $period   = '1M';
+            $format   = 'month';
+            $function = 'endOfMonth';
         }
         if ($start->diffInMonths($end) > 13) {
-            $period = '1Y';
-            $format = 'year';
+            $period   = '1Y';
+            $format   = 'year';
+            $function = 'endOfYear';
         }
         Log::debug(sprintf('Period is %s', $period));
-        $data    = [];
-        $current = clone $start;
-        while ($current < $end) {
-            $currentEnd   = Navigation::endOfPeriod($current, $period);
-            $expenses     = $this->groupByCategory($this->getExpenses($accounts, $categories, $current, $currentEnd));
-            $income       = $this->groupByCategory($this->getIncome($accounts, $categories, $current, $currentEnd));
-            $label        = $current->formatLocalized(strval(trans('config.' . $format)));
+        $data         = [];
+        $currentStart = clone $start;
+        while ($currentStart < $end) {
+            $currentEnd = clone $currentStart;
+            Log::debug(sprintf('Function is %s', $function));
+            $currentEnd = $currentEnd->$function();
+            $expenses   = $this->groupByCategory($this->getExpenses($accounts, $categories, $currentStart, $currentEnd));
+            $income     = $this->groupByCategory($this->getIncome($accounts, $categories, $currentStart, $currentEnd));
+            $label      = $currentStart->formatLocalized(strval(trans('config.' . $format)));
+
+            Log::debug(sprintf('Now grabbing CMC expenses between %s and %s', $currentStart->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+
             $data[$label] = [
                 'in'  => [],
                 'out' => [],
@@ -299,16 +300,18 @@ class CategoryReportController extends Controller
             /** @var Category $category */
             foreach ($categories as $category) {
                 // get sum, and get label:
-                $categoryId                       = $category->id;
-                $data[$label]['name'][$categoryId]             = $category->name;
-                $data[$label]['in'][$categoryId]  = $income[$categoryId] ?? '0';
-                $data[$label]['out'][$categoryId] = $expenses[$categoryId] ?? '0';
+                $categoryId                        = $category->id;
+                $data[$label]['name'][$categoryId] = $category->name;
+                $data[$label]['in'][$categoryId]   = $income[$categoryId] ?? '0';
+                $data[$label]['out'][$categoryId]  = $expenses[$categoryId] ?? '0';
             }
 
-            $current = Navigation::addPeriod($current, $period, 0);
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay();
         }
 
         $data = $this->generator->mainReportChart($data);
+
         return Response::json($data);
     }
 

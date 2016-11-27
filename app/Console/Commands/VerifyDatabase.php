@@ -25,6 +25,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Schema;
 use stdClass;
@@ -67,16 +68,16 @@ class VerifyDatabase extends Command
             return;
         }
 
+        $this->reportObject('budget');
+        $this->reportObject('category');
+        $this->reportObject('tag');
+
         // accounts with no transactions.
         $this->reportAccounts();
         // budgets with no limits
         $this->reportBudgetLimits();
         // budgets with no transactions
-        $this->reportBudgets();
-        // categories with no transactions
-        $this->reportCategories();
-        // tags with no transactions
-        $this->reportTags();
+
         // sum of transactions is not zero.
         $this->reportSum();
         //  any deleted transaction journals that have transactions that are NOT deleted:
@@ -138,48 +139,6 @@ class VerifyDatabase extends Command
                 'Notice: User #%d (%s) has budget #%d ("%s") which has no budget limits.',
                 $entry->user_id, $entry->email, $entry->id, Crypt::decrypt($entry->name)
             );
-            $this->line($line);
-        }
-    }
-
-    /**
-     * Reports on budgets without any transactions.
-     */
-    private function reportBudgets()
-    {
-        $set = Budget
-            ::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-            ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull('budget_transaction_journal.budget_id')
-            ->whereNull('budgets.deleted_at')
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has budget #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
-                    . '") which has no transactions.';
-            $this->line($line);
-        }
-    }
-
-    /**
-     * Reports on categories without any transactions.
-     */
-    private function reportCategories()
-    {
-        $set = Category
-            ::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
-            ->leftJoin('users', 'categories.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull('category_transaction_journal.category_id')
-            ->whereNull('categories.deleted_at')
-            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has category #' . $entry->id . ' ("' . Crypt::decrypt($entry->name)
-                    . '") which has no transactions.';
             $this->line($line);
         }
     }
@@ -301,6 +260,39 @@ class VerifyDatabase extends Command
     }
 
     /**
+     * @param string $name
+     */
+    private function reportObject(string $name)
+    {
+        $plural = str_plural($name);
+        $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
+        $field  = $name == 'tag' ? 'tag' : 'name';
+        $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
+            ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
+            ->distinct()
+            ->whereNull($name . '_transaction_journal.' . $name . '_id')
+            ->whereNull($plural . '.deleted_at')
+            ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+
+            $objName = $entry->name;
+            try {
+                $objName = Crypt::decrypt($objName);
+            } catch (DecryptException $e) {
+                // it probably was not encrypted.
+            }
+
+            $line = sprintf(
+                'Notice: User #%d (%s) has %s #%d ("%s") which has no transactions.',
+                $entry->user_id, $entry->email, $name, $entry->id, $objName
+            );
+            $this->line($line);
+        }
+    }
+
+    /**
      * Reports for each user when the sum of their transactions is not zero.
      */
     private function reportSum()
@@ -318,33 +310,11 @@ class VerifyDatabase extends Command
     }
 
     /**
-     * Reports on tags without any transactions.
-     */
-    private function reportTags()
-    {
-        $set = Tag
-            ::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
-            ->leftJoin('users', 'tags.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull('tag_transaction_journal.tag_id')
-            ->whereNull('tags.deleted_at')
-            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email']);
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = 'Notice: User #' . $entry->user_id . ' (' . $entry->email . ') has tag #' . $entry->id . ' ("' . $entry->tag
-                    . '") which has no transactions.';
-            $this->line($line);
-        }
-    }
-
-    /**
      * Reports on deleted transactions that are connected to a not deleted journal.
      */
     private function reportTransactions()
     {
-        $set = Transaction
-            ::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $set = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNotNull('transactions.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->get(

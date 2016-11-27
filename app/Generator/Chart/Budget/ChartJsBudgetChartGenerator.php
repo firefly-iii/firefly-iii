@@ -14,7 +14,6 @@ namespace FireflyIII\Generator\Chart\Budget;
 
 
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class ChartJsBudgetChartGenerator
@@ -133,43 +132,5 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 
         return $data;
 
-    }
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $entries
-     *
-     * @return array
-     */
-    public function year(Collection $budgets, Collection $entries): array
-    {
-        // language:
-        $format = (string)trans('config.month');
-
-        $data = [
-            'labels'   => [],
-            'datasets' => [],
-        ];
-
-        foreach ($budgets as $budget) {
-            $data['labels'][] = $budget->name;
-        }
-        // also add "no budget"
-        $data['labels'][] = strval(trans('firefly.no_budget'));
-
-        /** @var array $entry */
-        foreach ($entries as $entry) {
-            $array = [
-                'label' => $entry[0]->formatLocalized($format),
-                'data'  => [],
-            ];
-            array_shift($entry);
-            $array['data']      = $entry;
-            $data['datasets'][] = $array;
-
-        }
-        $data['count'] = count($data['datasets']);
-
-        return $data;
     }
 }

@@ -128,9 +128,9 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Carbon                 $start
-     * @param Carbon                 $end
-     * @param Collection             $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      * @internal param AccountRepositoryInterface $repository

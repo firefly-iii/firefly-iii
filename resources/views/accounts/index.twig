@@ -39,7 +39,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        var what = '{{ what }}';
+        var what = '{{ what|escape }}';
     </script>
     <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
 {% endblock %}

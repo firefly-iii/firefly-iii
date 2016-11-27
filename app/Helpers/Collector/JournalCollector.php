@@ -154,7 +154,7 @@ class JournalCollector implements JournalCollectorInterface
      * @return LengthAwarePaginator
      * @throws FireflyException
      */
-    public function getPaginatedJournals():LengthAwarePaginator
+    public function getPaginatedJournals(): LengthAwarePaginator
     {
         if ($this->run === true) {
             throw new FireflyException('Cannot getPaginatedJournals after run in JournalCollector.');
@@ -238,6 +238,29 @@ class JournalCollector implements JournalCollectorInterface
             function (EloquentBuilder $q) use ($budget) {
                 $q->where('budget_transaction.budget_id', $budget->id);
                 $q->orWhere('budget_transaction_journal.budget_id', $budget->id);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param Collection $budgets
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): JournalCollectorInterface
+    {
+        $budgetIds = $budgets->pluck('id')->toArray();
+        if (count($budgetIds) === 0) {
+            return $this;
+        }
+        $this->joinBudgetTables();
+
+        $this->query->where(
+            function (EloquentBuilder $q) use ($budgetIds) {
+                $q->whereIn('budget_transaction.budget_id', $budgetIds);
+                $q->orWhereIn('budget_transaction_journal.budget_id', $budgetIds);
             }
         );
 
@@ -386,6 +409,27 @@ class JournalCollector implements JournalCollectorInterface
     /**
      * @return JournalCollectorInterface
      */
+    public function withBudgetInformation(): JournalCollectorInterface
+    {
+        $this->joinBudgetTables();
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function withCategoryInformation(): JournalCollectorInterface
+    {
+
+        $this->joinCategoryTables();
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
     public function withOpposingAccount(): JournalCollectorInterface
     {
         $this->joinOpposingTables();
@@ -516,6 +560,8 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedBudget = true;
             $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
+            $this->fields[] = 'budget_transaction_journal.budget_id as transaction_journal_budget_id';
+            $this->fields[] = 'budget_transaction.budget_id as transaction_budget_id';
         }
     }
 
@@ -541,12 +587,13 @@ class JournalCollector implements JournalCollectorInterface
             $this->query->leftJoin(
                 'transactions as opposing', function (JoinClause $join) {
                 $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
-                     ->where('opposing.identifier', '=', 'transactions.identifier')
+                     ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
                      ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
             }
             );
             $this->query->leftJoin('accounts as opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id');
             $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');
+            $this->query->whereNull('opposing.deleted_at');
 
             $this->fields[] = 'opposing.account_id as opposing_account_id';
             $this->fields[] = 'opposing_accounts.name as opposing_account_name';

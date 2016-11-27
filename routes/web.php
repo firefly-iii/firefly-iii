@@ -25,7 +25,7 @@ Route::group(
     Route::post('/register', 'Auth\RegisterController@register');
 
     // Password Reset Routes...
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+    Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
     Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
@@ -39,9 +39,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
-    Route::get('/error', 'HomeController@displayError');
+    Route::get('/error', ['uses' => 'HomeController@displayError', 'as' => 'displayError']);
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
-    Route::get('/flush', ['uses' => 'HomeController@flush']);
+    Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 }
 );
 
@@ -83,7 +83,7 @@ Route::group(
     Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'testFlash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-    Route::get('/routes', ['uses' => 'HomeController@routes']);
+    Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'allRoutes']);
     /**
      * Account Controller
      */
@@ -92,6 +92,7 @@ Route::group(
     Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
     Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
     Route::get('/accounts/show/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+    Route::get('/accounts/show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'accounts.show.all']);
     Route::get('/accounts/show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'accounts.show.date']);
 
 
@@ -188,6 +189,19 @@ Route::group(
     Route::get('/chart/account/report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
     Route::get('/chart/account/{account}/{date}', ['uses' => 'Chart\AccountController@specificPeriod']);
+
+    Route::get(
+        '/chart/account/income-by-category/{account}/{start_date}/{end_date}',
+        ['uses' => 'Chart\AccountController@incomeByCategory', 'as' => 'chart.account.incomeByCategory']
+    );
+    Route::get(
+        '/chart/account/expense-by-category/{account}/{start_date}/{end_date}',
+        ['uses' => 'Chart\AccountController@expenseByCategory', 'as' => 'chart.account.expenseByCategory']
+    );
+    Route::get(
+        '/chart/account/expense-by-budget/{account}/{start_date}/{end_date}',
+        ['uses' => 'Chart\AccountController@expenseByBudget', 'as' => 'chart.account.expenseByBudget']
+    );
 
 
     // bills:
@@ -360,12 +374,12 @@ Route::group(
         '/reports/data/inc-exp-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\InOutController@incExpReport', 'as' => 'reports.data.incExpReport']
     );
-    // (income report):
+    // income report:
     Route::get(
         '/reports/data/income-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\InOutController@incomeReport', 'as' => 'reports.data.incomeReport']
     );
-    // (expense report):
+    // expense report:
     Route::get(
         '/reports/data/expense-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\InOutController@expenseReport', 'as' => 'reports.data.expenseReport']
@@ -455,10 +469,22 @@ Route::group(
      * Transaction Controller
      */
 
-    // normal controller
+    // normal controller: index for session range
     Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
         ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
     );
+
+    // normal controller: index showing ALL:
+    Route::get('/transactions/{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'transactions.index.all'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
+
+    // normal controller: index for specific date range:
+    Route::get('/transactions/{what}/{date}', ['uses' => 'TransactionController@indexDate', 'as' => 'transactions.index.date'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
+
+
     Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
     Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
 

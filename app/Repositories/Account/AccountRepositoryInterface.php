@@ -97,6 +97,15 @@ interface AccountRepositoryInterface
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon;
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account

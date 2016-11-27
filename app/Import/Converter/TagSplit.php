@@ -33,8 +33,9 @@ class TagSplit
      *
      * @return Collection
      */
-    public static function createSetFromSplits(User $user, array $mapping, array $parts): Collection {
-        $set   = new Collection;
+    public static function createSetFromSplits(User $user, array $mapping, array $parts): Collection
+    {
+        $set = new Collection;
         Log::debug('Exploded parts.', $parts);
 
         /** @var TagRepositoryInterface $repository */
@@ -77,6 +78,7 @@ class TagSplit
                 $set->push($tag);
             }
         }
+
         return $set;
     }
 

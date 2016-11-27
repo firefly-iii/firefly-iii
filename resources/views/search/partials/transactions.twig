@@ -1,17 +1,17 @@
 {{ journals.render|raw }}
 
-<table class="table table-hover table-compressed {% if sorting %}sortable-table{% endif %}">
+<table class="table table-hover table-compressed sortable">
     <thead>
     <tr class="ignore">
-        <th class="hidden-xs" colspan="2">&nbsp;</th>
-        <th>{{ trans('list.description') }}</th>
-        <th>{{ trans('list.amount') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+        <th data-defaultsort="disabled" class="hidden-xs" colspan="2">&nbsp;</th>
+        <th data-defaultsort="disabled">{{ trans('list.description') }}</th>
+        <th data-defaultsign="_19">{{ trans('list.amount') }}</th>
+        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
     </tr>
     </thead>
     <tbody>
     {% for transaction in transactions %}
-        <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
+        <tr>
             <td class="hidden-xs">
                 <div class="btn-group btn-group-xs edit_buttons">
                     <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
@@ -38,7 +38,7 @@
                 {% endif %}
 
             </td>
-            <td>
+            <td data-value="{{ transaction.transaction_amount }}">
                 <!-- format amount of transaction -->
                 {{ formatAmountWithCode(transaction.transaction_amount, transaction.transaction_currency_code) }}
                 <!-- and then amount of journal itself. -->
@@ -47,7 +47,7 @@
 
 
             </td>
-            <td class="hidden-sm hidden-xs">
+            <td class="hidden-sm hidden-xs" data-value="{{ transaction.date.format('Y-m-d H:i:s') }}">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
             </td>
         </tr>

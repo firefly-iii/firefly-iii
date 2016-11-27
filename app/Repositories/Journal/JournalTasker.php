@@ -74,34 +74,6 @@ class JournalTasker implements JournalTaskerInterface
     public function getTransactionsOverview(TransactionJournal $journal): array
     {
         // get all transaction data + the opposite site in one list.
-        /**
-         * select
-         *
-         * source.id,
-         * source.account_id,
-         * source_accounts.name as account_name,
-         * source_accounts.encrypted as account_encrypted,
-         * source.amount,
-         * source.description,
-         *
-         * destination.id as destination_id,
-         * destination.account_id as destination_account_id,
-         * destination_accounts.name as destination_account_name,
-         * destination_accounts.encrypted as destination_account_encrypted
-         *
-         *
-         * from transactions as source
-         *
-         * left join transactions as destination ON source.transaction_journal_id =
-         * destination.transaction_journal_id AND source.amount = destination.amount * -1 AND source.identifier = destination.identifier
-         * -- left join source account name:
-         * left join accounts as source_accounts ON source.account_id = source_accounts.id
-         * left join accounts as destination_accounts ON destination.account_id = destination_accounts.id
-         *
-         * where source.transaction_journal_id = 6600
-         * and source.amount < 0
-         * and source.deleted_at is null
-         */
         $set = $journal
             ->transactions()// "source"
             ->leftJoin(

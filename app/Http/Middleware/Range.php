@@ -57,13 +57,13 @@ class Range
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param Closure                   $theNext
+     * @param Closure                   $next
      * @param  string|null              $guard
      *
      * @return mixed
      * @internal param Closure $next
      */
-    public function handle(Request $request, Closure $theNext, $guard = null)
+    public function handle(Request $request, Closure $next, $guard = null)
     {
         if (!Auth::guard($guard)->guest()) {
 
@@ -80,7 +80,7 @@ class Range
             $this->configureList();
         }
 
-        return $theNext($request);
+        return $next($request);
 
     }
 
@@ -135,13 +135,14 @@ class Range
         $start = Session::get('start');
         /** @var Carbon $end */
         $end = Session::get('end');
+
+        $prevStart = clone $start;
+        $prevEnd   = clone $start;
+        $nextStart = clone $end;
+        $nextEnd   = clone $end;
         if ($viewRange === 'custom') {
-            $days      = $start->diffInDays($end);
-            $prevStart = clone $start;
+            $days = $start->diffInDays($end);
             $prevStart->subDays($days);
-            $prevEnd   = clone $start;
-            $nextStart = clone $end;
-            $nextEnd   = clone $end;
             $nextEnd->addDays($days);
             unset($days);
         }

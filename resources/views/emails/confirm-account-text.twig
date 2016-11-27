@@ -1,16 +1,11 @@
-Hey there!
-
+{% include 'emails.header-text' %}
 To start using your brand new Firefly III account, you need to activate it. Activating your account allows the website to verify that this email address is valid. Unfortunately, not even the most complex routines can work this out, without actually sending an email message. And here it is!
 
-To active your account, you can click on the following link, or copy/paste it in your web browser:
+To active your account please follow the link below.
+
+PLEASE verify that this activation link goes to the Firefly III installation you expect it to be:
 
 {{ route }}
 
 You should be redirected to the index page right away. The link expires in about four hours.
-
-Thank you, and enjoy!
-
-James Cole
-
-
-You are getting this activation message because a new registration from IP {{ ip }} triggered it.
+{% include 'emails.footer-text' %}

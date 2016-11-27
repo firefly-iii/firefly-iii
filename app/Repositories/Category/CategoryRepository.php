@@ -14,11 +14,11 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
@@ -64,8 +64,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $sum   = bcmul($this->sumInPeriod($categories, $accounts, $types, $start, $end), '-1');
+        $sum = $this->sumInPeriod($categories, $accounts, TransactionType::DEPOSIT, $start, $end);
 
         return $sum;
 
@@ -78,7 +77,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) :string
+    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
         $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $sum   = $this->sumInPeriodWithoutCategory($accounts, $types, $start, $end);
@@ -93,7 +92,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function find(int $categoryId) : Category
+    public function find(int $categoryId): Category
     {
         $category = $this->user->categories()->find($categoryId);
         if (is_null($category)) {
@@ -110,7 +109,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function findByName(string $name) : Category
+    public function findByName(string $name): Category
     {
         $categories = $this->user->categories()->get(['categories.*']);
         foreach ($categories as $category) {
@@ -232,9 +231,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $sum   = $this->sumInPeriod($categories, $accounts, $types, $start, $end);
-
+        $sum = $this->sumInPeriod($categories, $accounts, TransactionType::WITHDRAWAL, $start, $end);
+        $sum = bcmul($sum, '-1');
         return $sum;
     }
 
@@ -245,7 +243,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
         $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $sum   = $this->sumInPeriodWithoutCategory($accounts, $types, $start, $end);
@@ -289,82 +287,86 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param array      $types
+     * @param string     $type
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return string
      */
-    private function sumInPeriod(Collection $categories, Collection $accounts, array $types, Carbon $start, Carbon $end): string
+    private function sumInPeriod(Collection $categories, Collection $accounts, string $type, Carbon $start, Carbon $end): string
     {
-        // first collect actual transaction journals (fairly easy)
-        $query = $this->user
+        $categoryIds = $categories->pluck('id')->toArray();
+        $query       = $this->user
             ->transactionJournals()
-            ->transactionTypes($types)
-            ->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            ->leftJoin( // join source transaction
+                'transactions as source_transactions', function (JoinClause $join) {
+                $join->on('source_transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('source_transactions.amount', '<', 0);
+
             }
             )
-            ->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            ->leftJoin( // join destination transaction (slighly more complex)
+                'transactions as destination_transactions', function (JoinClause $join) {
+                $join->on('destination_transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('destination_transactions.amount', '>', 0)
+                     ->where('destination_transactions.identifier', '=', DB::raw('source_transactions.identifier'));
             }
-            );
-
-        if ($end >= $start) {
-            $query->before($end)->after($start);
-        }
-        if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->where(
-            // source.account_id in accountIds XOR destination.account_id in accountIds
-                function (Builder $query) use ($accountIds) {
-                    $query->where(
-                        function (Builder $q1) use ($accountIds) {
-                            $q1->whereIn('source.account_id', $accountIds)
-                               ->whereNotIn('destination.account_id', $accountIds);
+            )
+            // left join source category:
+            ->leftJoin('category_transaction as source_cat_trans', 'source_transactions.id', '=', 'source_cat_trans.transaction_id')
+            // left join destination category:
+            ->leftJoin('category_transaction as dest_cat_trans', 'source_transactions.id', '=', 'dest_cat_trans.transaction_id')
+            // left join journal category:
+            ->leftJoin('category_transaction_journal as journal_category', 'journal_category.transaction_journal_id', '=', 'transaction_journals.id')
+            // left join transaction type:
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            // where nothing is deleted:
+            ->whereNull('transaction_journals.deleted_at')
+            ->whereNull('source_transactions.deleted_at')
+            ->whereNull('destination_transactions.deleted_at')
+            // in correct date range:
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+            // correct categories (complex)
+            ->where(
+                function ($q1) use ($categoryIds) {
+                    $q1->where(
+                        function ($q2) use ($categoryIds) {
+                            // source and destination transaction have categories, journal does not.
+                            $q2->whereIn('source_cat_trans.category_id', $categoryIds);
+                            $q2->whereIn('dest_cat_trans.category_id', $categoryIds);
+                            $q2->whereNull('journal_category.category_id');
                         }
-                    )->orWhere(
-                        function (Builder $q2) use ($accountIds) {
-                            $q2->whereIn('destination.account_id', $accountIds)
-                               ->whereNotIn('source.account_id', $accountIds);
+                    );
+                    $q1->orWhere(
+                        function ($q3) use ($categoryIds) {
+                            // journal has category, source and destination have not
+                            $q3->whereNull('source_cat_trans.category_id');
+                            $q3->whereNull('dest_cat_trans.category_id');
+                            $q3->whereIn('journal_category.category_id', $categoryIds);
                         }
                     );
                 }
-            );
-        }
-        if ($categories->count() > 0) {
-            $categoryIds = $categories->pluck('id')->toArray();
-            $query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $query->whereIn('category_transaction_journal.category_id', $categoryIds);
-        }
-
-        // that should do it:
-        $first = strval($query->sum('source.amount'));
-
-        // then collection transactions (harder)
-        $query = $this->user->transactions()
-                            ->where('transactions.amount', '<', 0)
-                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 23:59:59'));
-        if (count($types) > 0) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-            $query->whereIn('transaction_types.type', $types);
-        }
+            )
+            // type:
+            ->where('transaction_types.type', $type);
+        // accounts, if present:
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $query->whereIn('transactions.account_id', $accountIds);
+            $query->where(
+                function ($q) use ($accountIds) {
+                    $q->whereIn('source_transactions.account_id', $accountIds);
+                    $q->orWhereIn('destination_transactions.account_id', $accountIds);
+                }
+            );
         }
-        if ($categories->count() > 0) {
-            $categoryIds = $categories->pluck('id')->toArray();
-            $query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
-            $query->whereIn('category_transaction.category_id', $categoryIds);
+        $sum = strval($query->sum('destination_transactions.amount'));
+        if ($sum === '') {
+            $sum = '0';
         }
-        $second = strval($query->sum('transactions.amount'));
 
-        return bcadd($first, $second);
 
+        return $sum;
     }
 
     /**

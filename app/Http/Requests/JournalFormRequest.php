@@ -160,6 +160,7 @@ class JournalFormRequest extends Request
      */
     private function getFieldOrEmptyString(string $field): string
     {
-        return $this->get($field) ?? '';
+        $string = $this->get($field) ?? '';
+        return trim($string);
     }
 }

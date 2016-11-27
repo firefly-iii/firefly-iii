@@ -28,7 +28,44 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:60%;margin:0 auto;">
+                        <canvas id="account-cat-out" style="margin:0 auto;" height="150" width="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:60%;margin:0 auto;">
+                        <canvas id="account-budget-out" style="margin:0 auto;" height="150" width="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:60%;margin:0 auto;">
+                        <canvas id="account-cat-in" style="margin:0 auto;" height="150" width="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-lg-10 col-md-10 col-sm-12">
@@ -38,6 +75,12 @@
                 </div>
                 <div class="box-body">
                     {% include 'list.journals-tasker' with {sorting:true} %}
+                    <p>
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <a href="{{ route('accounts.show.all', [account.id]) }}">
+                            {{ 'show_all_no_filter'|_ }}
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -79,7 +122,13 @@
 {% block scripts %}
     <script type="text/javascript">
         var accountID = {{ account.id }};
+        // uri's for charts:
+        var incomeByCategoryUri = '{{ route('chart.account.incomeByCategory', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseByCategoryUri = '{{ route('chart.account.expenseByCategory', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseByBudgetUri = '{{ route('chart.account.expenseByBudget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+
     </script>
+
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
     <script type="text/javascript" src="js/ff/charts.js"></script>

@@ -25,6 +25,8 @@ return [
     'match'                          => 'Matches on',
     'repeat_freq'                    => 'Repeats',
     'journal_currency_id'            => 'Currency',
+    'currency_id'                    => 'Currency',
+    'attachments'                    => 'Attachments',
     'journal_amount'                 => 'Amount',
     'journal_asset_source_account'   => 'Asset account (source)',
     'journal_source_account_name'    => 'Revenue account (source)',

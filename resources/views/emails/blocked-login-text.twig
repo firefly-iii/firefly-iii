@@ -1,7 +1,5 @@
-Hey there,
-
+{% include 'emails.header-text' %}
 Firefly III has just blocked a login from user #{{ user_id }} ({{ user_address }}).
 
 The blocked code was "{{ code }}".
-
-The login attempt came from IP {{ ip }}
+{% include 'emails.footer-text' %}

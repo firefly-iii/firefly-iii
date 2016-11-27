@@ -19,11 +19,8 @@ use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use Navigation;
-use stdClass;
 
 /**
  * Class BudgetReportHelper
@@ -54,27 +51,9 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      */
     public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
-        $budgets     = $this->repository->getBudgets();
-        $queryResult = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
-        $data        = [];
-        $periods     = Navigation::listOfPeriods($start, $end);
-
-        // do budget "zero"
-        $emptyBudget       = new Budget;
-        $emptyBudget->id   = 0;
-        $emptyBudget->name = strval(trans('firefly.no_budget'));
-        $budgets->push($emptyBudget);
-
-        // get all budgets and years.
-        foreach ($budgets as $budget) {
-            $data[$budget->id] = [
-                'name'    => $budget->name,
-                'entries' => $this->repository->filterAmounts($queryResult, $budget->id, $periods),
-                'sum'     => '0',
-            ];
-        }
-        // filter out empty ones and fill sum:
-        $data = $this->filterBudgetPeriodReport($data);
+        $budgets = $this->repository->getBudgets();
+        $report  = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
+        $data    = $this->filterBudgetPeriodReport($report);
 
         return $data;
     }
@@ -210,5 +189,4 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         return $data;
     }
-
 }

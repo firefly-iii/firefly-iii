@@ -56,7 +56,7 @@ class ExportController extends Controller
     /**
      * @param ExportJob $job
      *
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
      * @throws FireflyException
      */
     public function download(ExportJob $job)

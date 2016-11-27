@@ -91,19 +91,15 @@ interface BudgetRepositoryInterface
     public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection;
 
     /**
-     * This method is being used to generate the budget overview in the year/multi-year report. More specifically, this
-     * method runs the query and returns the result that is used for this report.
-     *
-     * The query is used in both the year/multi-year budget overview AND in the accompanying chart.
      *
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
+     * @return array
      */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): Collection;
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @return Collection

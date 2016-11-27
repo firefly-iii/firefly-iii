@@ -5,19 +5,18 @@
 {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'all_blocked_domains'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive">
+                <div class="box-body table-responsive no-padding">
                     {% if domains|length > 0 %}
-                        <table class="table table-condensed sortable">
+                        <table class="table table-condensed table-hover sortable">
                             <thead>
                             <tr>
-                                <th style="width:20%;">&nbsp;</th>
-                                <th>{{ trans('list.domain') }}</th>
-                                <th>{{ trans('list.is_blocked') }}</th>
+                                <th data-defaultsort="disabled" style="width:20%;">&nbsp;</th>
+                                <th data-defaultsign="az">{{ trans('list.domain') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -27,9 +26,9 @@
                                         <a href="{{ route('admin.users.domains.block-toggle', [domain]) }}" class="btn btn-sm btn-success"><i
                                                     class="fa fa-fw fa-times"></i> unblock</a>
                                     </td>
-                                    <td>{{ domain }}</td>
-                                    <td>
-                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                    <td data-value="{{ domain }}">
+                                        <a href="http://{{ domain }}/">{{ domain }}</a>
+                                        (<a href="http://whois.domaintools.com/{{ domain }}">whois</a>)
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -43,12 +42,9 @@
                 </div>
             </div>
         </div>
-    </div>
 
-
-    <!-- domains found in users (not in top list) -->
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <!-- domains found in users (not in top list) -->
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'all_user_domains'|_ }}</h3>
@@ -59,11 +55,11 @@
                             {{ 'all_domains_is_filtered'|_ }}
 
                         </p>
-                        <table class="table table-condensed sortable">
+                        <table class="table table-condensed table-hover sortable">
                             <thead>
                             <tr>
-                                <th style="width:20%;">&nbsp;</th>
-                                <th>{{ trans('list.domain') }}</th>
+                                <th data-defaultsort="disabled" style="width:20%;">&nbsp;</th>
+                                <th data-defaultsign="az">{{ trans('list.domain') }}</th>
                             </tr>
                             </thead>
                             <tbody>

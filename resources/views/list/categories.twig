@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th data-defaultsort="disabled">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        <th data-defaultsign="az">{{ trans('list.name') }}</th>
+        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -20,15 +20,15 @@
                     <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td>
+            <td data-value="{{ category.name }}">
                 <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
             </td>
             {% if category.lastActivity.year != "1900" %}
-                <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('U') }}">
+                <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('Y-m-d H-i-s') }}">
                     {{ category.lastActivity.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% else %}
-                <td class="hidden-sm hidden-xs" data-value="0">
+                <td class="hidden-sm hidden-xs" data-value="0000-00-00 00-00-00">
                     <em>{{ 'never'|_ }}</em>
                 </td>
             {% endif %}

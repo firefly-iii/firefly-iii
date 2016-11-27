@@ -84,6 +84,17 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'accounts.show.all', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
+    $breadcrumbs->parent('accounts.show', $account);
+
+    $title = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
+
+    $breadcrumbs->push($title, route('accounts.show.all', [$account->id]));
+}
+);
+
+
+Breadcrumbs::register(
     'accounts.delete', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
     $breadcrumbs->push(trans('firefly.delete_account', ['name' => e($account->name)]), route('accounts.delete', [$account->id]));
@@ -573,6 +584,28 @@ Breadcrumbs::register(
     $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
 }
 );
+
+Breadcrumbs::register(
+    'transactions.index.all', function (BreadCrumbGenerator $breadcrumbs, string $what) {
+    $breadcrumbs->parent('transactions.index', $what);
+
+    $title = sprintf('%s (%s)', trans('breadcrumbs.' . $what . '_list'), strtolower(trans('firefly.everything')));
+
+    $breadcrumbs->push($title, route('transactions.index.all', [$what]));
+}
+);
+
+Breadcrumbs::register(
+    'transactions.index.date', function (BreadCrumbGenerator $breadcrumbs, string $what, Carbon $date) {
+    $breadcrumbs->parent('transactions.index', $what);
+
+    $range = Preferences::get('viewRange', '1M')->data;
+    $title = trans('breadcrumbs.' . $what . '_list') . ' (' . Navigation::periodShow($date, $range) . ')';
+
+    $breadcrumbs->push($title, route('transactions.index.date', [$what, $date->format('Y-m-d')]));
+}
+);
+
 Breadcrumbs::register(
     'transactions.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
     $breadcrumbs->parent('transactions.index', $what);

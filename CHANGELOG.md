@@ -2,7 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.1.7] - 2015-05-25
+## [4.2.0] - 2016-11-27
+### Added
+- Lots of (empty) tests
+- Expanded transaction lists (#377)
+- New charts at account view
+- First code for #305
+
+
+### Changed
+- Updated all email messages.
+- Made some fonts local
+
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Issue #408
+- Various issues with split journals
+- Issue #414, thx @zjean
+- Issue #419, thx @schwalberich 
+- Issue #422, thx @xzaz
+- Various import bugs, such as #416 (@zjean)
+
+
+### Security
+- Initial release.
+
+
+## [4.1.7] - 2016-11-19
 ### Added
 - Check for database table presence in console commands.
 - Category report

@@ -6,7 +6,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-/* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits */
+/* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits, noDataForChart */
 
 var allCharts = {};
 
@@ -155,8 +155,10 @@ function drawAChart(URI, container, chartType, options, colorData) {
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();
             if (holder.hasClass('box')) {
-                // remove box
-                holder.remove();
+                // find box-body:
+                var boxBody = holder.find('.box-body');
+                boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
+                //holder.remove();
             }
             return;
         }
@@ -186,5 +188,5 @@ function drawAChart(URI, container, chartType, options, colorData) {
         console.log('Failed to draw ' + chartType + ' in container ' + container);
         $('#' + container).addClass('general-chart-error');
     });
-    console.log('URL for ' + chartType + ' chart : ' + URL);
+    console.log('URL for ' + chartType + ' chart : ' + URI);
 }

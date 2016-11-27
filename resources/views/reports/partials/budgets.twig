@@ -1,45 +1,59 @@
-<table class="table table-hover">
+<table class="table table-hover sortable">
     <thead>
     <tr>
-        <th>{{ 'budget'|_ }}</th>
-        <th class="hidden-xs">{{ 'date'|_ }}</th>
-        <th>{{ 'budgeted'|_ }}</th>
-        <th>{{ 'spent'|_ }}</th>
-        <th>{{ 'left'|_ }}</th>
-        <th>{{ 'overspent'|_ }}</th>
+        <th data-defaultsign="az">{{ 'budget'|_ }}</th>
+        <th data-defaultsign="month" class="hidden-xs">{{ 'date'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'budgeted'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'left'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'overspent'|_ }}</th>
     </tr>
     </thead>
     <tbody>
     {% for budgetLine in budgets.getBudgetLines %}
         <tr>
-            <td>
-                {% if budgetLine.getBudget.id %}
+
+            {% if budgetLine.getBudget.id %}
+                <td data-value="{{ budgetLine.getBudget.name }}">
                     <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
-                {% else %}
+                </td>
+            {% else %}
+                <td data-value="zzzzzzz">
                     <em>{{ 'no_budget'|_ }}</em>
-                {% endif %}
-            </td>
-            <td class="hidden-xs">
-                {% if budgetLine.getRepetition.id %}
+                </td>
+            {% endif %}
+
+
+            {% if budgetLine.getRepetition.id %}
+                <td class="hidden-xs" data-value="{{ budgetLine.getRepetition.startdate.format('Y-m-d') }}">
                     <a href="{{ route('budgets.showWithRepetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
                         {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
                         &mdash;
                         {{ budgetLine.getRepetition.enddate.formatLocalized(monthAndDayFormat) }}
                     </a>
-                {% endif %}
-            </td>
-            <td>
-                {% if budgetLine.getRepetition.id %}
+                </td>
+            {% else %}
+                <td data-value="0000-00-00">
+
+                </td>
+            {% endif %}
+
+
+            {% if budgetLine.getRepetition.id %}
+                <td data-value="{{ budgetLine.getRepetition.amount }}">
                     {{ budgetLine.getRepetition.amount|formatAmount }}
-                {% else %}
+                </td>
+            {% else %}
+                <td data-value="0">
                     {{ 0|formatAmount }}
-                {% endif %}
-            </td>
-            <td>
+                </td>
+            {% endif %}
+
+            <td data-value="{{ budgetLine.getSpent }}">
                 {% if budgetLine.getSpent != 0 %}
-                    {{ budgetLine.getSpent|formatAmount }} <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
-                                                              data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"
-                ></i>
+                    {{ budgetLine.getSpent|formatAmount }}
+                    <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
+                       data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"></i>
                 {% endif %}
 
                 {% if budgetLine.getSpent == 0 %}
@@ -47,12 +61,12 @@
                 {% endif %}
 
             </td>
-            <td>
+            <td data-value="{{ budgetLine.getLeft }}">
                 {% if(budgetLine.getOverspent == 0) %}
                     {{ budgetLine.getLeft|formatAmount }}
                 {% endif %}
             </td>
-            <td>
+            <td data-value="{{ budgetLine.getOverspent }}">
                 {% if budgetLine.getOverspent != 0 %}
                     {{ budgetLine.getOverspent|formatAmount }}
                 {% endif %}

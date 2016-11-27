@@ -221,7 +221,7 @@ class RegisterController extends Controller
             ];
 
             Mail::send(
-                ['emails.blocked-registration-html', 'emails.blocked-registration'], $fields, function (Message $message) use ($email, $domain) {
+                ['emails.blocked-registration-html', 'emails.blocked-registration-text'], $fields, function (Message $message) use ($email, $domain) {
                 $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
             }
             );

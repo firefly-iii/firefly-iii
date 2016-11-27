@@ -17,6 +17,7 @@ use Exception;
 use FireflyConfig;
 use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\RegisteredUser;
+use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -102,6 +103,33 @@ class UserEventHandler
     }
 
     /**
+     * @param RequestedNewPassword $event
+     *
+     * @return bool
+     */
+    public function sendNewPassword(RequestedNewPassword $event): bool
+    {
+        $email     = $event->user->email;
+        $ipAddress = $event->ipAddress;
+        $token     = $event->token;
+
+        $url = route('password.reset', [$token]);
+
+        // send email.
+        try {
+            Mail::send(
+                ['emails.password-html', 'emails.password-text'], ['url' => $url, 'ip' => $ipAddress], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Your password reset request');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
@@ -123,7 +151,7 @@ class UserEventHandler
         // send email.
         try {
             Mail::send(
-                ['emails.registered-html', 'emails.registered'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
+                ['emails.registered-html', 'emails.registered-text'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
                 $message->to($email, $email)->subject('Welcome to Firefly III! ');
             }
             );
@@ -191,7 +219,7 @@ class UserEventHandler
         Preferences::setForUser($user, 'user_confirmed_code', $code);
         try {
             Mail::send(
-                ['emails.confirm-account-html', 'emails.confirm-account'], ['route' => $route, 'ip' => $ipAddress],
+                ['emails.confirm-account-html', 'emails.confirm-account-text'], ['route' => $route, 'ip' => $ipAddress],
                 function (Message $message) use ($email) {
                     $message->to($email, $email)->subject('Please confirm your Firefly III account');
                 }

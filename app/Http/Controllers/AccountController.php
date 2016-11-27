@@ -13,19 +13,24 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Input;
+use Log;
 use Navigation;
 use Preferences;
 use Session;
@@ -65,9 +70,18 @@ class AccountController extends Controller
      */
     public function create(string $what = 'asset')
     {
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle     = trans('firefly.make_new_' . $what . '_account');
-        Session::flash('preFilled', []);
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository      = app(CurrencyRepositoryInterface::class);
+        $currencies      = ExpandedForm::makeSelectList($repository->get());
+        $defaultCurrency = Amount::getDefaultCurrency();
+        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
+        $subTitle        = trans('firefly.make_new_' . $what . '_account');
+        Session::flash(
+            'preFilled',
+            [
+                'currency_id' => $defaultCurrency->id,
+            ]
+        );
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {
@@ -77,7 +91,7 @@ class AccountController extends Controller
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'create-' . $what);
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies'));
 
     }
 
@@ -134,6 +148,9 @@ class AccountController extends Controller
         $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $currencies = ExpandedForm::makeSelectList($repository->get());
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {
@@ -157,12 +174,13 @@ class AccountController extends Controller
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
+            'currency_id'          => $account->getMeta('currency_id'),
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'edit-' . $what);
 
-        return view('accounts.edit', compact('account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
+        return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
     }
 
     /**
@@ -202,13 +220,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface $tasker
-     * @param ARI                    $repository
-     * @param Account                $account
+     * @param JournalCollectorInterface $collector
+     * @param Account                   $account
      *
      * @return View
      */
-    public function show(AccountTaskerInterface $tasker, ARI $repository, Account $account)
+    public function show(JournalCollectorInterface $collector, Account $account)
     {
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
@@ -217,61 +234,45 @@ class AccountController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $start */
-        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        /** @var Carbon $end */
-        $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+
+        // grab those journals:
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('accounts/show/' . $account->id);
+
+        // generate entries for each period (and cache those)
+        $entries = $this->periodEntries($account);
+
+        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end'));
+    }
+
+    /**
+     * @param ARI     $repository
+     * @param Account $account
+     *
+     * @return View
+     */
+    public function showAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
         $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // replace with journal collector:
         $collector = new JournalCollector(auth()->user());
-        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('accounts/show/' . $account->id);
+        $journals->setPath('accounts/show/' . $account->id . '/all');
 
-        // grouped other months thing:
-        // oldest transaction in account:
-        $start   = $repository->oldestJournalDate($account);
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = Navigation::startOfPeriod($start, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
-        $entries = new Collection;
+        // get oldest and newest journal for account:
+        $start = $repository->oldestJournalDate($account);
+        $end   = $repository->newestJournalDate($account);
 
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('account-show');
-        $cache->addProperty($account->id);
-
-
-        if ($cache->has()) {
-            $entries = $cache->get();
-
-            return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
-        }
-
-        // only include asset accounts when this account is an asset:
-        $assets = new Collection;
-        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
-            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        }
-
-        while ($end >= $start) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $tasker->amountOutInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned]);
-            $end = Navigation::subtractPeriod($end, $range, 1);
-
-        }
-        $cache->store($entries);
-
-        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle'));
+        return view('accounts.show_with_date', compact('account', 'journals', 'subTitle', 'start', 'end'));
     }
 
     /**
@@ -296,7 +297,7 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon'));
+        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end'));
     }
 
     /**
@@ -373,6 +374,63 @@ class AccountController extends Controller
         }
 
         return '';
+    }
+
+    /**
+     * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
+     * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
+     * performance reasons.
+     *
+     * @param Account $account The account involved.
+     *
+     * @return Collection
+     */
+    private function periodEntries(Account $account): Collection
+    {
+        /** @var ARI $repository */
+        $repository = app(ARI::class);
+        /** @var AccountTaskerInterface $tasker */
+        $tasker = app(AccountTaskerInterface::class);
+
+        $start   = $repository->oldestJournalDate($account);
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $start   = Navigation::startOfPeriod($start, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
+
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('account-show-period-entries');
+        $cache->addProperty($account->id);
+
+        if ($cache->has()) {
+            Log::debug('Entries are cached, return cache.');
+
+            return $cache->get();
+        }
+
+        // only include asset accounts when this account is an asset:
+        $assets = new Collection;
+        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
+            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        }
+        Log::debug('Going to get period expenses and incomes.');
+        while ($end >= $start) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $spent      = $tasker->amountOutInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
+            $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+
+        }
+        $cache->store($entries);
+
+        return $entries;
     }
 
     /**

@@ -1,24 +1,8 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-
-</head>
-<body itemscope itemtype="http://schema.org/SoftwareApplication">
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Hey there,
-</p>
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Firefly III has just blocked a registration for an email addres at domain {{ blocked_domain }}.
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     The blocked email address was "{{ email_address }}".
 </p>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;color:#aaa;">
-    The login attempt came from IP {{ ip }}.
-</p>
-
-</body>
-</html>
+{% include 'emails.footer-html' %}

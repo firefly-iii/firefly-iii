@@ -326,26 +326,30 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface  $repository
-     * @param AccountRepositoryInterface $accountRepository
-     * @param Budget                     $budget
-     * @param LimitRepetition            $repetition
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
      *
      * @return View
      * @throws FireflyException
      */
-    public function showWithRepetition(
-        BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget, LimitRepetition $repetition
-    ) {
+    public function showWithRepetition(Budget $budget, LimitRepetition $repetition)
+    {
         if ($repetition->budgetLimit->budget->id != $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
-        $start    = $repetition->startdate;
-        $end      = $repetition->enddate;
-        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
-        $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
-        $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $start             = $repetition->startdate;
+        $end               = $repetition->enddate;
+        $page              = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize          = intval(Preferences::get('transactionPageSize', 50)->data);
+        $subTitle          = trans(
+            'firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]
+        );
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
 
 
         // collector:

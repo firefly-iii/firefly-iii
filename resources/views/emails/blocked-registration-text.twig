@@ -1,7 +1,5 @@
-Hey there,
-
+{% include 'emails.header-text' %}
 Firefly III has just blocked a registration for an email addres at domain {{ blocked_domain }}.
 
 The blocked email address was "{{ email_address }}".
-
-The login attempt came from IP {{ ip }}.
+{% include 'emails.footer-text' %}

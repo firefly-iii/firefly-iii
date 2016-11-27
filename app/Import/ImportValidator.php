@@ -416,6 +416,7 @@ class ImportValidator
                 Log::debug('Transaction type is now deposit.');
 
                 return $entry;
+            case AccountType::DEFAULT:
             case AccountType::ASSET:
                 $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::TRANSFER)->first();
                 Log::debug('Transaction type is now transfer.');

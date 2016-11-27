@@ -1,4 +1,4 @@
-    /* globals $, columnChart,showTour, Tour, google, pieChart, stackedColumnChart */
+/* globals $, columnChart,showTour, Tour, google, pieChart, stackedColumnChart, billCount */
 
 $(function () {
     "use strict";
@@ -33,7 +33,9 @@ function endTheTour() {
 function drawChart() {
     "use strict";
     lineChart('chart/account/frontpage', 'accounts-chart');
-    pieChart('chart/bill/frontpage', 'bills-chart');
+    if (billCount > 0) {
+        pieChart('chart/bill/frontpage', 'bills-chart');
+    }
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
     columnChart('chart/account/expense', 'expense-accounts-chart');

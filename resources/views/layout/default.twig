@@ -180,23 +180,23 @@
         currentPeriod: "{{ dpCurrent }}",
         previousPeriod: "{{ dpPrevious }}",
         nextPeriod: "{{ dpNext }}",
-        everything: '{{ 'everything'|_ }}',
-        customRangeLabel: '{{ 'customRange'|_ }}',
-        applyLabel: '{{ 'apply'|_ }}',
-        cancelLabel: '{{ 'cancel'|_ }}',
-        fromLabel: '{{ 'from'|_ }}',
-        toLabel: '{{ 'to'|_ }}',
+        everything: '{{ 'everything'|_|escape }}',
+        customRangeLabel: '{{ 'customRange'|_|escape }}',
+        applyLabel: '{{ 'apply'|_|escape }}',
+        cancelLabel: '{{ 'cancel'|_|escape }}',
+        fromLabel: '{{ 'from'|_|escape }}',
+        toLabel: '{{ 'to'|_|escape }}',
         ranges: {{ dpRanges|json_encode|raw }}
     };
 
     var token = "{{ csrf_token() }}";
-    var language = "{{ language }}";
+    var language = "{{ language|escape }}";
     var currencyCode = '{{ getCurrencyCode()|escape('js') }}';
     var currencySymbol = '{{ getCurrencySymbol()|escape('js') }}';
     var mon_decimal_point = "{{ localeconv.mon_decimal_point|escape('js') }}";
     var mon_thousands_sep = "{{ localeconv.mon_thousands_sep|escape('js') }}";
     var frac_digits = {{ localeconv.frac_digits }};
-
+    var noDataForChart = '{{ trans('firefly.no_data_for_chart')|escape }}';
     var showFullList = '{{ trans('firefly.show_full_list') }}';
     var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength}) }}';
 

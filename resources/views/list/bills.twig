@@ -3,13 +3,13 @@
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
         <th>{{ trans('list.name') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
-        <th colspan="2">{{ trans('list.matchingAmount') }}</th>
-        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">{{ trans('list.paid_current_period') }}</th>
-        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">{{ trans('list.next_expected_match') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
+        <th data-defaultsign="_19" colspan="2">{{ trans('list.matchingAmount') }}</th>
+        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
+        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.automatch') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
                     <a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td>
+            <td data-value="{{ entry.name }}">
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
             </td>
             <td class="hidden-sm hidden-xs" data-value="{{ entry.match }}">
@@ -37,36 +37,36 @@
             </td>
 
             {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
-                <td class="text-muted">
+                <td class="text-muted" data-value="0001-00-00 00-00-00">
                     {{ 'not_expected_period'|_ }}
                 </td>
-                <td class=" hidden-sm hidden-xs">
+                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
             {% if entry.paidDates.count() == 0 and entry.payDates.count() > 0 and entry.active %}
-                <td class="text-danger">
+                <td class="text-danger" data-value="0002-00-00 00-00-00">
                     {{ 'not_or_not_yet'|_ }}
                 </td>
-                <td class=" hidden-sm hidden-xs">
+                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
             {% if entry.paidDates.count() == entry.payDates.count() and entry.payDates.count() > 0 and entry.active %}
-                <td class="text-success">
+                <td class="text-success" data-value="{{ entry.paidDates.first.format('Y-m-d H-i-s') }}">
                     {% for date in entry.paidDates %}
                         {{ date.formatLocalized(monthAndDayFormat) }}<br/>
                     {% endfor %}
                 </td>
-                <td class=" hidden-sm hidden-xs">
+                <td class=" hidden-sm hidden-xs" data-value="{{ entry.nextExpectedMatch.format('Y-m-d H-i-s') }}">
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
             {% if not entry.active %}
-                <td class="text-muted">
+                <td class="text-muted" data-value="0000-00-00 00-00-00">
                     ~
                 </td>
-                <td class="text-muted hidden-sm hidden-xs">
+                <td class="text-muted hidden-sm hidden-xs" data-value="0">
                     ~
                 </td>
             {% endif %}

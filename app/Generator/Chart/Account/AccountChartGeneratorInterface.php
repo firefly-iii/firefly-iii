@@ -24,6 +24,15 @@ use Illuminate\Support\Collection;
  */
 interface AccountChartGeneratorInterface
 {
+
+    /**
+     * @param array $values
+     * @param array $names
+     *
+     * @return array
+     */
+    public function pieChart(array $values, array $names): array;
+
     /**
      * @param Collection $accounts
      * @param Carbon     $start

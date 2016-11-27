@@ -30,10 +30,19 @@ class HomeControllerTest extends TestCase
             'end'   => '2012-04-01',
         ];
 
-        // if date range is > 50, should have flash.
-        $this->call('POST', '/daterange', $args);
+        $this->call('POST', route('daterange'), $args);
         $this->assertResponseStatus(200);
         $this->assertSessionHas('warning', '91 days of data may take a while to load.');
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::displayError
+     */
+    public function testDisplayError()
+    {
+        $this->be($this->user());
+        $this->call('GET', route('displayError'));
+        $this->assertResponseStatus(500);
     }
 
     /**
@@ -42,7 +51,7 @@ class HomeControllerTest extends TestCase
     public function testFlush()
     {
         $this->be($this->user());
-        $this->call('GET', '/flush');
+        $this->call('GET', route('flush'));
         $this->assertResponseStatus(302);
     }
 
@@ -57,7 +66,35 @@ class HomeControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $this->call('GET', '/');
+        $this->call('GET', route('index'));
         $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @covers       FireflyIII\Http\Controllers\HomeController::routes
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testRoutes(string $range)
+    {
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('allRoutes'));
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::testFlash
+     */
+    public function testTestFlash()
+    {
+        $this->be($this->user());
+        $this->call('GET', route('testFlash'));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+        $this->assertSessionHas('info');
+        $this->assertSessionHas('warning');
+        $this->assertSessionHas('error');
     }
 }

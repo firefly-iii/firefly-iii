@@ -64,6 +64,10 @@ class ConvertController extends Controller
      */
     public function convert(TransactionType $destinationType, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $positiveAmount = TransactionJournal::amountPositive($journal);
         $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $sourceType     = $journal->transactionType;
@@ -113,6 +117,10 @@ class ConvertController extends Controller
      */
     public function submit(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $data = $request->all();
 
         // cannot convert to its own type.
@@ -160,7 +168,6 @@ class ConvertController extends Controller
         $sourceAccount      = TransactionJournal::sourceAccountList($journal)->first();
         $destinationAccount = TransactionJournal::destinationAccountList($journal)->first();
         $sourceType         = $journal->transactionType;
-        $destination        = null;
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {
             default:

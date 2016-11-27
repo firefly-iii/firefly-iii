@@ -1,16 +1,16 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th>{{ 'name'|_ }}</th>
-        <th class="hidden-xs">{{ 'balanceStart'|_ }}</th>
-        <th class="hidden-xs">{{ 'balanceEnd'|_ }}</th>
-        <th>{{ 'difference'|_ }}</th>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs">{{ 'balanceStart'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs">{{ 'balanceEnd'|_ }}</th>
+        <th data-defaultsign="_19">{{ 'difference'|_ }}</th>
     </tr>
     </thead>
     <tbody>
     {% for account in accountReport.getAccounts %}
         <tr>
-            <td>
+            <td data-value="{{ account.name }}">
                 <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
             </td>
             <td class="hidden-xs" data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>

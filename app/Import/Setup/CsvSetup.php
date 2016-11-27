@@ -112,14 +112,16 @@ class CsvSetup implements SetupInterface
      */
     public function getDataForSettings(): array
     {
-
+        Log::debug('Now in getDataForSettings()');
         if ($this->doColumnRoles()) {
+            Log::debug('doColumnRoles() is true.');
             $data = $this->getDataForColumnRoles();
 
             return $data;
         }
 
         if ($this->doColumnMapping()) {
+            Log::debug('doColumnMapping() is true.');
             $data = $this->getDataForColumnMapping();
 
             return $data;
@@ -427,10 +429,13 @@ class CsvSetup implements SetupInterface
     }
 
     /**
+     * This method collects the data that will enable a user to choose column content.
+     *
      * @return array
      */
     private function getDataForColumnRoles():array
     {
+        Log::debug('Now in getDataForColumnRoles()');
         $config = $this->job->configuration;
         $data   = [
             'columns'     => [],
@@ -447,15 +452,16 @@ class CsvSetup implements SetupInterface
         $end   = $start + config('csv.example_rows');
 
         // collect example data in $data['columns']
+        Log::debug(sprintf('While %s is smaller than %d', $start, $end));
         while ($start < $end) {
             $row = $reader->fetchOne($start);
-
+            Log::debug(sprintf('Row %d has %d columns', $start, count($row)));
             // run specifics here:
             // and this is the point where the specifix go to work.
             foreach ($config['specifics'] as $name => $enabled) {
                 /** @var SpecificInterface $specific */
                 $specific = app('FireflyIII\Import\Specifics\\' . $name);
-
+                Log::debug(sprintf('Will now apply specific "%s" to row %d.', $name, $start));
                 // it returns the row, possibly modified:
                 $row = $specific->run($row);
             }

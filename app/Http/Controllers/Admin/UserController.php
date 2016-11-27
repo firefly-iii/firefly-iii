@@ -57,20 +57,22 @@ class UserController extends Controller
         // add meta stuff.
         $users->each(
             function (User $user) use ($mustConfirmAccount) {
-                // is user activated?
-                $isConfirmed     = Preferences::getForUser($user, 'user_confirmed', false)->data;
+                $list        = ['user_confirmed', 'twoFactorAuthEnabled', 'twoFactorAuthSecret', 'registration_ip_address', 'confirmation_ip_address'];
+                $preferences = Preferences::getArrayForUser($user, $list);
+
                 $user->activated = true;
-                if ($isConfirmed === false && $mustConfirmAccount === true) {
+                if (!($preferences['user_confirmed'] === true) && $mustConfirmAccount === true) {
                     $user->activated = false;
                 }
 
                 $user->isAdmin = $user->hasRole('owner');
-                $is2faEnabled  = Preferences::getForUser($user, 'twoFactorAuthEnabled', false)->data;
-                $has2faSecret  = !is_null(Preferences::getForUser($user, 'twoFactorAuthSecret'));
+                $is2faEnabled  = $preferences['twoFactorAuthEnabled'] === true;
+                $has2faSecret  = !is_null($preferences['twoFactorAuthSecret']);
                 $user->has2FA  = false;
                 if ($is2faEnabled && $has2faSecret) {
                     $user->has2FA = true;
                 }
+                $user->prefs = $preferences;
             }
         );
 

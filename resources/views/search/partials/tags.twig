@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th>{{ trans('list.name') }}</th>
-        <th>{{ trans('list.type') }}</th>
+        <th data-defaultsign="az">{{ trans('list.name') }}</th>
+        <th data-defaultsign="az">{{ trans('list.type') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -15,7 +15,9 @@
                     <a class="btn btn-danger btn-xs" href="{{ route('tags.delete', tag.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td><a href="{{ route('tags.show',tag.id) }}">{{ tag.tag }}</a></td>
+            <td data-value="{{ tag.tag }}">
+                <a href="{{ route('tags.show',tag.id) }}">{{ tag.tag }}</a><
+                /td>
             <td>{{ ('tag'~tag.tagMode)|_ }}</td>
         </tr>
     {% endfor %}

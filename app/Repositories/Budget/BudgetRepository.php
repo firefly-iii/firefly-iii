@@ -14,9 +14,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Events\StoredBudgetLimit;
 use FireflyIII\Events\UpdatedBudgetLimit;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
+use Navigation;
 use stdClass;
 
 /**
@@ -221,59 +222,61 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
+     * @return array
      */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): Collection
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        // get account ID's.
-        $accountIds = $accounts->pluck('id')->toArray();
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end);
+        $collector->setBudgets($budgets);
+        $transactions = $collector->getJournals();
 
-        // get budget ID's.
-        $budgetIds = $budgets->pluck('id')->toArray();
-
+        // this is the date format we need:
         // define period to group on:
-        $sqlDateFormat = '%Y-%m-%d';
-        // monthly report (for year)
-        if ($start->diffInMonths($end) > 1) {
-            $sqlDateFormat = '%Y-%m';
-        }
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
 
-        // yearly report (for multi year)
-        if ($start->diffInMonths($end) > 12) {
-            $sqlDateFormat = '%Y';
-        }
+        // this is the set of transactions for this period
+        // in these budgets. Now they must be grouped (manually)
+        // id, period => amount
+        $data = [];
+        foreach ($transactions as $transaction) {
+            $budgetId = max(intval($transaction->transaction_journal_budget_id), intval($transaction->transaction_budget_id));
+            $date     = $transaction->date->format($carbonFormat);
 
-        // build query.
-        $query = TransactionJournal
-            ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin(
-                'transactions', function (JoinClause $join) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+            if (!isset($data[$budgetId])) {
+                $data[$budgetId]['name']    = $this->getBudgetName($budgetId, $budgets);
+                $data[$budgetId]['sum']     = '0';
+                $data[$budgetId]['entries'] = [];
             }
-            )
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereNull('transactions.deleted_at')
-            ->where('transaction_types.type', 'Withdrawal')
-            ->where('transaction_journals.user_id', auth()->user()->id);
 
-        if (count($accountIds) > 0) {
-            $query->whereIn('transactions.account_id', $accountIds);
+            if (!isset($data[$budgetId]['entries'][$date])) {
+                $data[$budgetId]['entries'][$date] = '0';
+            }
+            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date], $transaction->transaction_amount);
+        }
+        // and now the same for stuff without a budget:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->withoutBudget();
+        $transactions = $collector->getJournals();
+
+        $data[0]['entries'] = [];
+        $data[0]['name']    = strval(trans('firefly.no_budget'));
+        $data[0]['sum']     = '0';
+
+        foreach ($transactions as $transaction) {
+            $date = $transaction->date->format($carbonFormat);
+
+            if (!isset($data[0]['entries'][$date])) {
+                $data[0]['entries'][$date] = '0';
+            }
+            $data[0]['entries'][$date] = bcadd($data[0]['entries'][$date], $transaction->transaction_amount);
         }
 
-        if (count($budgetIds) > 0) {
-            $query->whereIn('budget_transaction_journal.budget_id', $budgetIds);
-        }
-
-        $query->groupBy(['budget_transaction_journal.budget_id', 'period_marker']);
-
-        return $query->get(
-            [
-                'budget_transaction_journal.budget_id',
-                DB::raw(sprintf('DATE_FORMAT(transaction_journals.date,"%s") AS period_marker', $sqlDateFormat)),
-                DB::raw('SUM(transactions.amount) as sum_of_period'),
-            ]
-        );
+        return $data;
 
     }
 
@@ -319,7 +322,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
         // collect amount of transaction journals, which is easy:
         $budgetIds  = $budgets->pluck('id')->toArray();
@@ -334,7 +337,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin(
                 'transactions', function (JoinClause $join) {
-                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', '0');
+                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
             }
             )
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
@@ -504,7 +507,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount) : BudgetLimit
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount): BudgetLimit
     {
         // there might be a budget limit for this startdate:
         $repeatFreq = config('firefly.range_to_repeat_freq.' . $range);
@@ -546,5 +549,26 @@ class BudgetRepository implements BudgetRepositoryInterface
         // so handled automatically.
 
         return $limit;
+    }
+
+    /**
+     * @param int        $budgetId
+     * @param Collection $budgets
+     *
+     * @return string
+     */
+    private function getBudgetName(int $budgetId, Collection $budgets): string
+    {
+
+        $first = $budgets->filter(
+            function (Budget $budget) use ($budgetId) {
+                return $budgetId === $budget->id;
+            }
+        );
+        if (!is_null($first->first())) {
+            return $first->first()->name;
+        }
+
+        return '(unknown)';
     }
 }

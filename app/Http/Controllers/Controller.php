@@ -13,10 +13,15 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Session;
 use View;
 
 /**
@@ -58,6 +63,39 @@ class Controller extends BaseController
             }
         );
 
+    }
+
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    protected function isOpeningBalance(TransactionJournal $journal): bool
+    {
+        return TransactionJournal::transactionTypeStr($journal) === TransactionType::OPENING_BALANCE;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    protected function redirectToAccount(TransactionJournal $journal)
+    {
+        $valid        = [AccountType::DEFAULT, AccountType::ASSET];
+        $transactions = $journal->transactions;
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $account = $transaction->account;
+            if (in_array($account->accountType->type, $valid)) {
+                return redirect(route('accounts.show', [$account->id]));
+            }
+
+        }
+        Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
+
+        return redirect(route('index'));
     }
 
 }

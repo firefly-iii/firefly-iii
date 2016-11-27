@@ -25,6 +25,8 @@ return [
     'match'                          => '匹配於',
     'repeat_freq'                    => '循環週期',
     'journal_currency_id'            => '貨幣',
+    'currency_id'                    => 'Currency',
+    'attachments'                    => 'Attachments',
     'journal_amount'                 => '金額',
     'journal_asset_source_account'   => '資產帳戶 （源頭）',
     'journal_source_account_name'    => '收入帳戶 （源頭）',

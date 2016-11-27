@@ -43,20 +43,21 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
+            {% if billCount > 0 %}
+                <!-- BILLS -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'bills'|_ }}</h3>
 
-            <!-- BILLS -->
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'bills'|_ }}</h3>
-
-                </div>
-                <div class="box-body">
-                    <div style="width:60%;margin:0 auto;">
-                        <canvas id="bills-chart" style="width:100%;height:175px;" height="175"></canvas>
                     </div>
+                    <div class="box-body">
+                        <div style="width:60%;margin:0 auto;">
+                            <canvas id="bills-chart" style="width:100%;height:175px;" height="175"></canvas>
+                        </div>
 
+                    </div>
                 </div>
-            </div>
+            {% endif %}
 
             <!-- TRANSACTIONS -->
             {% for data in transactions %}
@@ -81,9 +82,21 @@
 
 
                     </div>
-                    <div class="box-body no-padding">
-                        {% include 'list.journals-tiny-tasker' with {'transactions': data[0],'account': data[1]} %}
-                    </div>
+
+                    {% if data[0].count > 0 %}
+                        <div class="box-body no-padding">
+                            {% include 'list.journals-tiny-tasker' with {'transactions': data[0],'account': data[1]} %}
+                        </div>
+                    {% else %}
+                        <div class="box-body">
+                            <p>
+                                <em>
+                                    {{ trans('firefly.no_transactions_account', {name: data[1].name}) }}
+                                </em>
+                            </p>
+                        </div>
+                    {% endif %}
+
                     <div class="box-footer clearfix">
                         <a class="btn btn-sm btn-default btn-flat pull-right"
                            href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
@@ -129,6 +142,7 @@
         {% else %}
         showTour = false;
         {% endif %}
+        var billCount = {{ billCount }};
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>

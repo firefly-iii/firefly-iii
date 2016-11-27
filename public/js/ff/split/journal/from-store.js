@@ -69,13 +69,6 @@ function cloneRow() {
     source.removeClass('initial-row');
     source.find('.count').text('#' + count);
 
-    // // get each input, change the name?
-    // $.each(source.find('input, select'), function (i, v) {
-    //     var obj = $(v);
-    //     var name = obj.attr('name').replace('[0]', '[' + index + ']');
-    //     obj.attr('name', name);
-    // });
-
     source.find('input[name$="][amount]"]').val("").on('input', calculateSum);
     if (destAccounts.length > 0) {
         console.log('Will be able to extend dest-accounts.');
@@ -158,7 +151,7 @@ function resetSplits() {
         console.log('amount is now ' + input.attr('name'));
     });
     // ends with ][budget_id]
-    $.each($('input[name$="][budget_id]"]'), function (i, v) {
+    $.each($('select[name$="][budget_id]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][budget_id]');
         console.log('budget_id is now ' + input.attr('name'));

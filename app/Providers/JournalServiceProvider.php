@@ -44,6 +44,24 @@ class JournalServiceProvider extends ServiceProvider
     {
         $this->registerRepository();
         $this->registerTasker();
+        $this->registerCollector();
+    }
+
+    private function registerCollector()
+    {
+        $this->app->bind(
+            'FireflyIII\Helpers\Collector\JournalCollectorInterface',
+            function (Application $app, array $arguments) {
+                if (!isset($arguments[0]) && $app->auth->check()) {
+                    return app('FireflyIII\Helpers\Collector\JournalCollector', [auth()->user()]);
+                }
+                if (!isset($arguments[0]) && !$app->auth->check()) {
+                    throw new FireflyException('There is no user present.');
+                }
+
+                return app('FireflyIII\Helpers\Collector\JournalCollector', $arguments);
+            }
+        );
     }
 
     private function registerRepository()

@@ -183,11 +183,8 @@ class BudgetController extends Controller
         return Response::json($data);
     }
 
+
     /**
-     *
-     * TODO use the NEW query that will be in the repository. Because that query will be shared between the budget period report (table for all budgets)
-     * TODO and this chart (a single budget)
-     *
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      * @param Carbon                    $start
@@ -207,28 +204,17 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('period');
         if ($cache->has()) {
-            return Response::json($cache->get());
+             return Response::json($cache->get());
         }
 
         // the expenses:
         $periods  = Navigation::listOfPeriods($start, $end);
-        $result   = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
-        $entries  = $repository->filterAmounts($result, $budget->id, $periods);
+        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
         $budgeted = [];
+        $key      = Navigation::preferredCarbonFormat($start, $end);
+        $range    = Navigation::preferredRangeFormat($start, $end);
 
-        // the budget limits:
-        $range = '1D';
-        $key   = 'Y-m-d';
-        if ($start->diffInMonths($end) > 1) {
-            $range = '1M';
-            $key   = 'Y-m';
-        }
-
-        if ($start->diffInMonths($end) > 12) {
-            $range = '1Y';
-            $key   = 'Y';
-        }
-
+        // get budgeted:
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
         $current     = clone $start;
         while ($current < $end) {
@@ -252,9 +238,9 @@ class BudgetController extends Controller
         // join them:
         $result = [];
         foreach (array_keys($periods) as $period) {
-            $nice = $periods[$period];
+            $nice          = $periods[$period];
             $result[$nice] = [
-                'spent'    => isset($entries[$period]) ? $entries[$period] : '0',
+                'spent'    => isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0',
                 'budgeted' => isset($entries[$period]) ? $budgeted[$period] : 0,
             ];
         }
@@ -348,7 +334,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function spentInPeriodWithout(Carbon $start, Carbon $end):array
+    private function spentInPeriodWithout(Carbon $start, Carbon $end): array
     {
         // collector
         $collector = new JournalCollector(auth()->user());

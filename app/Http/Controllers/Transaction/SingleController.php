@@ -125,6 +125,10 @@ class SingleController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
@@ -146,8 +150,12 @@ class SingleController extends Controller
      */
     public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
     {
+        if ($this->isOpeningBalance($transactionJournal)) {
+            return $this->redirectToAccount($transactionJournal);
+        }
+
         $type = TransactionJournal::transactionTypeStr($transactionJournal);
-        Session::flash('success', strval(trans('firefly.deleted_' . $type, ['description' => e($transactionJournal->description)])));
+        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
 
@@ -164,17 +172,23 @@ class SingleController extends Controller
      */
     public function edit(TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $count = $journal->transactions()->count();
+
         if ($count > 2) {
             return redirect(route('transactions.edit-split', [$journal->id]));
         }
 
+        $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
         $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $what     = strtolower(TransactionJournal::transactionTypeStr($journal));
+
 
         // journal related code
         $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
@@ -290,6 +304,10 @@ class SingleController extends Controller
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
         $this->attachments->saveAttachmentsForModel($journal);
@@ -324,6 +342,4 @@ class SingleController extends Controller
         return redirect(session('transactions.edit.url'));
 
     }
-
-
 }
