@@ -78,9 +78,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
         }
 
-        $reportType = 'audit';
-        $accountIds = join(',', $this->accounts->pluck('id')->toArray());
-
+        $reportType  = 'audit';
+        $accountIds  = join(',', $this->accounts->pluck('id')->toArray());
         $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
                         'interest_date', 'book_date', 'process_date',
                         // three new optional fields.

@@ -329,8 +329,7 @@ class VerifyDatabase extends Command
      */
     private function reportTransfersBudgets()
     {
-        $set = TransactionJournal
-            ::distinct()
+        $set = TransactionJournal::distinct()
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
             ->where('transaction_types.type', TransactionType::TRANSFER)
