@@ -524,6 +524,7 @@ return [
     'no_transactions_account'                    => 'Betaalrekening ":name" heeft geen geen transacties (in deze periode).',
     'no_data_for_chart'                          => 'Er is (nog) niet genoeg informatie om deze grafiek te tekenen.',
     'select_more_than_one_account'               => 'Selecteer meer dan één rekening',
+    'select_more_than_one_category'              => 'Selecteer meer dan één categorie',
 
     // categories:
     'new_category'                               => 'Nieuwe categorie',
