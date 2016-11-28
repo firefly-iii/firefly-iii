@@ -227,6 +227,12 @@ class ReportController extends Controller
             return redirect(route('reports.index'));
         }
 
+        if ($request->getCategoryList()->count() === 0 && $reportType === 'category') {
+            Session::flash('error', trans('firefly.select_more_than_one_category'));
+
+            return redirect(route('reports.index'));
+        }
+
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
