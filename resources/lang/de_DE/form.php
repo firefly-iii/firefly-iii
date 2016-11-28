@@ -31,6 +31,7 @@ return [
     'journal_asset_source_account'   => 'Girokonto (Quelle)',
     'journal_source_account_name'    => 'Kreditor (Quelle)',
     'journal_source_account_id'      => 'Girokonto (Quelle)',
+    'BIC'                            => 'BIC',
     'account_from_id'                => 'Vom Konto',
     'account_to_id'                  => 'Auf Konto',
     'source_account'                 => 'Quellkonto',
