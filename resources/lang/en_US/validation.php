@@ -21,6 +21,7 @@ return [
     'file_too_large'                 => 'File ":name" is too large.',
     'belongs_to_user'                => 'The value of :attribute is unknown',
     'accepted'                       => 'The :attribute must be accepted.',
+    'bic'                            => 'This is not a valid BIC.',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',
     'alpha'                          => 'The :attribute may only contain letters.',

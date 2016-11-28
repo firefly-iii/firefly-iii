@@ -41,7 +41,7 @@ class AccountRepository implements AccountRepositoryInterface
     /** @var User */
     private $user;
     /** @var array */
-    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber','currency_id'];
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
 
     /**
      * AttachmentRepository constructor.
@@ -60,7 +60,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return int
      */
-    public function count(array $types):int
+    public function count(array $types): int
     {
         $count = $this->user->accounts()->accountTypeIn($types)->count();
 
@@ -482,7 +482,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    protected function storeOpposingAccount(float $amount, string $name):Account
+    protected function storeOpposingAccount(float $amount, string $name): Account
     {
         $type         = $amount < 0 ? 'expense' : 'revenue';
         $opposingData = [

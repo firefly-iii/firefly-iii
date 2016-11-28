@@ -57,8 +57,6 @@ class FireflyValidator extends Validator
      * @param $value
      *
      * @return bool
-     * @internal param $parameters
-     *
      *
      */
     public function validate2faCode($attribute, $value): bool
@@ -93,6 +91,27 @@ class FireflyValidator extends Validator
 
         return false;
 
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     *
+     * @return bool
+     *
+     */
+    public function validateBic($attribute, $value): bool
+    {
+        $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
+        $result = preg_match($regex, $value);
+        if ($result === false) {
+            return false;
+        }
+        if ($result === 0) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
