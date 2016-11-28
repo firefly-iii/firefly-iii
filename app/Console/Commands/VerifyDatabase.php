@@ -102,8 +102,7 @@ class VerifyDatabase extends Command
      */
     private function reportAccounts()
     {
-        $set = Account
-            ::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+        $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
             ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
             ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
             ->whereNull('transactions.account_id')
@@ -125,8 +124,7 @@ class VerifyDatabase extends Command
      */
     private function reportBudgetLimits()
     {
-        $set = Budget
-            ::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
+        $set = Budget::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
             ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
             ->groupBy(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
             ->whereNull('budget_limits.id')
@@ -148,8 +146,7 @@ class VerifyDatabase extends Command
      */
     private function reportDeletedAccounts()
     {
-        $set = Account
-            ::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+        $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->whereNotNull('accounts.deleted_at')
             ->whereNotNull('transactions.id')
@@ -187,8 +184,7 @@ class VerifyDatabase extends Command
             TransactionType::TRANSFER   => [AccountType::EXPENSE, AccountType::REVENUE],
         ];
         foreach ($configuration as $transactionType => $accountTypes) {
-            $set = TransactionJournal
-                ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            $set = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                 ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
@@ -218,8 +214,7 @@ class VerifyDatabase extends Command
      */
     private function reportJournals()
     {
-        $set = TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNotNull('transaction_journals.deleted_at')// USE THIS
             ->whereNull('transactions.deleted_at')
             ->whereNotNull('transactions.id')
@@ -245,8 +240,7 @@ class VerifyDatabase extends Command
      */
     private function reportNoTransactions()
     {
-        $set = TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->groupBy('transaction_journals.id')
             ->whereNull('transactions.transaction_journal_id')
             ->get(['transaction_journals.id']);

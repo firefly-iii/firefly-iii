@@ -199,8 +199,7 @@ class Account extends Model
      */
     public function getOpeningBalanceAmount(): string
     {
-        $journal = TransactionJournal
-            ::sortCorrectly()
+        $journal = TransactionJournal::sortCorrectly()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $this->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
@@ -230,8 +229,7 @@ class Account extends Model
     public function getOpeningBalanceDate(): Carbon
     {
         $date    = new Carbon('1900-01-01');
-        $journal = TransactionJournal
-            ::sortCorrectly()
+        $journal = TransactionJournal::sortCorrectly()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $this->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])

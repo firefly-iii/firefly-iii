@@ -621,8 +621,7 @@ class JournalCollector implements JournalCollectorInterface
     private function startQuery(): EloquentBuilder
     {
 
-        $query = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
             ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')

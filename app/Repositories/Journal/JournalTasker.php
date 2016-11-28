@@ -171,9 +171,7 @@ class JournalTasker implements JournalTaskerInterface
         $identifier  = intval($transaction->identifier);
 
         // go!
-        $sum
-            = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $sum = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('account_id', $transaction->account_id)
             ->whereNull('transactions.deleted_at')
             ->whereNull('transaction_journals.deleted_at')

@@ -64,8 +64,7 @@ class TransactionJournal extends TransactionJournalSupport
     public static function routeBinder($value)
     {
         if (auth()->check()) {
-            $object = TransactionJournal
-                ::where('transaction_journals.id', $value)
+            $object = TransactionJournal::where('transaction_journals.id', $value)
                 ->with('transactionType')
                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                 ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);

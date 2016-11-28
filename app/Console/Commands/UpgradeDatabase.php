@@ -72,8 +72,7 @@ class UpgradeDatabase extends Command
         }
 
 
-        $subQuery = TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $subQuery = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNull('transaction_journals.deleted_at')
             ->whereNull('transactions.deleted_at')
             ->groupBy(['transaction_journals.id'])
@@ -98,8 +97,7 @@ class UpgradeDatabase extends Command
 
                 try {
                     /** @var Transaction $opposing */
-                    $opposing = Transaction
-                        ::where('transaction_journal_id', $journalId)
+                    $opposing = Transaction::where('transaction_journal_id', $journalId)
                         ->where('amount', $amount)->where('identifier', '=', 0)
                         ->whereNotIn('id', $processed)
                         ->first();

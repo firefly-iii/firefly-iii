@@ -367,8 +367,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function openingBalanceTransaction(Account $account): TransactionJournal
     {
-        $journal = TransactionJournal
-            ::sortCorrectly()
+        $journal = TransactionJournal::sortCorrectly()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])

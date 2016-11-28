@@ -249,8 +249,7 @@ class AccountTasker implements AccountTaskerInterface
         $joinModifier = $incoming ? '<' : '>';
         $selection    = $incoming ? '>' : '<';
 
-        $query = Transaction
-            ::distinct()
+        $query = Transaction::distinct()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin(
                 'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
@@ -302,8 +301,7 @@ class AccountTasker implements AccountTaskerInterface
         $collection   = new Collection;
         $joinModifier = $incoming ? '<' : '>';
         $selection    = $incoming ? '>' : '<';
-        $query        = Transaction
-            ::distinct()
+        $query        = Transaction::distinct()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
             ->leftJoin(

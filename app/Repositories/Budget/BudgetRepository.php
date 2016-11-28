@@ -332,8 +332,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         Log::debug('spentInPeriod: and these accounts: ', $accountIds);
         Log::debug(sprintf('spentInPeriod: Start date is "%s", end date is "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        $fromJournalsQuery = TransactionJournal
-            ::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+        $fromJournalsQuery = TransactionJournal::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin(
                 'transactions', function (JoinClause $join) {
@@ -368,8 +367,7 @@ class BudgetRepository implements BudgetRepositoryInterface
          * and budget_transaction.budget_id in (1,61)
          * and transactions.account_id in (2)
          */
-        $fromTransactionsQuery = Transaction
-            ::leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id')
+        $fromTransactionsQuery = Transaction::leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id')
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereNull('transactions.deleted_at')
