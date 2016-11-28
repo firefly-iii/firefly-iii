@@ -31,6 +31,7 @@ return [
     'journal_asset_source_account'   => '資產帳戶 （源頭）',
     'journal_source_account_name'    => '收入帳戶 （源頭）',
     'journal_source_account_id'      => '資產帳戶 （源頭）',
+    'BIC'                            => 'BIC',
     'account_from_id'                => '從帳戶',
     'account_to_id'                  => '到帳戶',
     'source_account'                 => '來源帳戶',
