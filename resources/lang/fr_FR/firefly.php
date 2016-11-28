@@ -524,6 +524,7 @@ return [
     'no_transactions_account'                    => 'There are no transactions (in this period) for asset account ":name".',
     'no_data_for_chart'                          => 'There is not enough information (yet) to generate this chart.',
     'select_more_than_one_account'               => 'Please select more than one account',
+    'select_more_than_one_category'              => 'Please select more than one category',
 
     // categories:
     'new_category'                               => 'Nouvelle catégorie',
