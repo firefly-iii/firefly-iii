@@ -21,6 +21,7 @@ return [
     'file_too_large'                 => 'Arquivo ":name" é muito grande.',
     'belongs_to_user'                => 'O valor de :attribute é desconhecido',
     'accepted'                       => 'O campo :attribute deve ser aceito.',
+    'bic'                            => 'This is not a valid BIC.',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
     'alpha'                          => 'O campo :attribute deverá conter apenas letras.',
