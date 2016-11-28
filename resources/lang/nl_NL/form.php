@@ -31,6 +31,7 @@ return [
     'journal_asset_source_account'   => 'Betaalrekening (bron)',
     'journal_source_account_name'    => 'Debiteur (bron)',
     'journal_source_account_id'      => 'Betaalrekening (bron)',
+    'BIC'                            => 'BIC',
     'account_from_id'                => 'Van account',
     'account_to_id'                  => 'Naar account',
     'source_account'                 => 'Bronrekening',

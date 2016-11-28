@@ -21,6 +21,7 @@ return [
     'file_too_large'                 => 'Die Datei ":name" ist zu groß.',
     'belongs_to_user'                => 'Der Wert von :attribute ist nicht bekannt',
     'accepted'                       => ':attribute muss akzeptiert werden.',
+    'bic'                            => 'This is not a valid BIC.',
     'active_url'                     => ':attribute ist keine gültige URL.',
     'after'                          => ':attribute muss ein Datum nach :date sein.',
     'alpha'                          => ':attribute darf nur Buchstaben enthalten.',
