@@ -25,8 +25,8 @@ return [
     'match'                          => 'Corresponde em',
     'repeat_freq'                    => 'Repetições',
     'journal_currency_id'            => 'Moeda',
-    'currency_id'                    => 'Currency',
-    'attachments'                    => 'Attachments',
+    'currency_id'                    => 'Moeda',
+    'attachments'                    => 'Anexos',
     'journal_amount'                 => 'Quantia',
     'journal_asset_source_account'   => 'Conta de ativo (fonte)',
     'journal_source_account_name'    => 'Conta de receita (fonte)',
@@ -34,13 +34,13 @@ return [
     'BIC'                            => 'BIC',
     'account_from_id'                => 'da conta',
     'account_to_id'                  => 'para conta',
-    'source_account'                 => 'Source account',
-    'destination_account'            => 'Destination account',
+    'source_account'                 => 'Conta de origem',
+    'destination_account'            => 'Conta de destino',
     'journal_destination_account_id' => 'Conta de ativo (destino)',
     'asset_destination_account'      => 'Conta de ativo (destino)',
     'asset_source_account'           => 'Conta de ativo (fonte)',
     'journal_description'            => 'Descrição',
-    'note'                           => 'Notes',
+    'note'                           => 'Notas',
     'split_journal'                  => 'Dividir essa transação',
     'split_journal_explanation'      => 'Dividir essa transação em várias partes',
     'currency'                       => 'Moeda',
@@ -64,15 +64,15 @@ return [
     'expense_account'                => 'Conta de Despesa',
     'revenue_account'                => 'Conta de Receita',
 
-    'revenue_account_source'      => 'Revenue account (source)',
-    'source_account_asset'        => 'Source account (asset account)',
-    'destination_account_expense' => 'Destination account (expense account)',
-    'destination_account_asset'   => 'Destination account (asset account)',
-    'source_account_revenue'      => 'Source account (revenue account)',
-    'type'                        => 'Type',
-    'convert_Withdrawal'          => 'Convert withdrawal',
-    'convert_Deposit'             => 'Convert deposit',
-    'convert_Transfer'            => 'Convert transfer',
+    'revenue_account_source'      => 'Conta de receita (fonte)',
+    'source_account_asset'        => 'Conta de origem (conta de ativo)',
+    'destination_account_expense' => 'Conta de destino (conta de despesa)',
+    'destination_account_asset'   => 'Conta de destino (conta de ativo)',
+    'source_account_revenue'      => 'Conta de origem (conta de receita)',
+    'type'                        => 'Tipo',
+    'convert_Withdrawal'          => 'Converter a retirada',
+    'convert_Deposit'             => 'Converter o depósito',
+    'convert_Transfer'            => 'Converter a transferência',
 
 
     'amount'                     => 'Valor',
@@ -152,9 +152,9 @@ return [
 
     // admin
     'domain'                     => 'Domínio',
-    'single_user_mode'           => 'Single user mode',
-    'must_confirm_account'       => 'New users must activate account',
-    'is_demo_site'               => 'Is demo site',
+    'single_user_mode'           => 'Modo de usuário único',
+    'must_confirm_account'       => 'Novos usuários devem ativar a conta',
+    'is_demo_site'               => 'É o site de demonstração',
 
     // import
     'import_file'                => 'Importar arquivo',
@@ -168,8 +168,8 @@ return [
     'csv_config'                 => 'Importar CSV de configuração',
 
 
-    'due_date'           => 'Due date',
-    'payment_date'       => 'Payment date',
-    'invoice_date'       => 'Invoice date',
-    'internal_reference' => 'Internal reference',
+    'due_date'           => 'Data de vencimento',
+    'payment_date'       => 'Data de pagamento',
+    'invoice_date'       => 'Data da Fatura',
+    'internal_reference' => 'Referência interna',
 ];
