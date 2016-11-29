@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => 'Configure sua importação',
     'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
-    'import_configure_form'  => 'Basic CSV import options',
+    'import_configure_form'  => 'Opções básicas de importação CSV',
     'header_help'            => 'Verifique se a primeira linha do seu arquivo CSV está com os títulos de coluna',
     'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
