@@ -81,8 +81,8 @@ return [
     'bills_count'           => 'Número de contas',
     'categories_count'      => 'Número de categorias',
     'export_jobs_count'     => 'Número de jobs de exportação',
-    'import_jobs_count'     => 'Number of import jobs',
-    'budget_count'          => 'Number of budgets',
-    'rule_and_groups_count' => 'Number of rules and rule groups',
-    'tags_count'            => 'Number of tags',
+    'import_jobs_count'     => 'Número de jobs de importação',
+    'budget_count'          => 'Número de orçamentos',
+    'rule_and_groups_count' => 'Número de regras e grupos de regras',
+    'tags_count'            => 'Número de tags',
 ];
