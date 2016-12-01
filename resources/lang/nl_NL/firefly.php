@@ -521,7 +521,7 @@ return [
     'stored_new_account'                         => 'Nieuwe rekening ":name" opgeslagen!',
     'updated_account'                            => 'Rekening ":name" geüpdatet',
     'credit_card_options'                        => 'Opties voor credit cards',
-    'no_transactions_account'                    => 'Betaalrekening ":name" heeft geen geen transacties (in deze periode).',
+    'no_transactions_account'                    => 'Betaalrekening ":name" heeft geen transacties (in deze periode).',
     'no_data_for_chart'                          => 'Er is (nog) niet genoeg informatie om deze grafiek te tekenen.',
     'select_more_than_one_account'               => 'Selecteer meer dan één rekening',
     'select_more_than_one_category'              => 'Selecteer meer dan één categorie',
