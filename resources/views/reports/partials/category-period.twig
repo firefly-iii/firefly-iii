@@ -51,7 +51,7 @@
                 {# if sum of income, display: #}
                 {% if report.income[category.id].sum %}
                     <td data-value="{{ report.income[category.id].sum }}">
-                        {{ report.income[category.id].sum }}
+                        {{ report.income[category.id].sum|formatAmount }}
                     </td>
                 {% else %}
                     <td data-value="0">
@@ -61,7 +61,7 @@
                 {# if sum of expense, display: #}
                 {% if report.expense[category.id].sum %}
                     <td data-value="{{ report.expense[category.id].sum }}">
-                        {{ report.expense[category.id].sum }}
+                        {{ report.expense[category.id].sum|formatAmount }}
                     </td>
                 {% else %}
                     <td data-value="0">
