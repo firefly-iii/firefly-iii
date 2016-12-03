@@ -21,6 +21,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 
 /**
@@ -40,7 +41,16 @@ class CategoryController extends Controller
      */
     public function categoryPeriodReport(Carbon $start, Carbon $end, Collection $accounts)
     {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-period-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            Log::debug('Return report from cache');
 
+            return $cache->get();
+        }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $categories = $repository->getCategories();
@@ -49,6 +59,8 @@ class CategoryController extends Controller
         $periods    = Navigation::listOfPeriods($start, $end);
 
         $result = view('reports.partials.category-period', compact('categories', 'periods', 'report'))->render();
+
+        $cache->store($result);
 
         return $result;
     }
@@ -90,22 +102,23 @@ class CategoryController extends Controller
      */
     private function filterCategoryPeriodReport(array $data): array
     {
-        foreach ($data as $key => $set) {
-            /**
-             * @var int   $categoryId
-             * @var array $set
-             */
-            foreach ($set as $categoryId => $info) {
+        /**
+         * @var string $type
+         * @var array  $report
+         */
+        foreach ($data as $type => $report) {
+            foreach ($report as $categoryId => $set) {
                 $sum = '0';
-                foreach ($info['entries'] as $amount) {
+                foreach ($set['entries'] as $amount) {
                     $sum = bcadd($amount, $sum);
                 }
-                $data[$key][$categoryId]['sum'] = $sum;
+                $data[$type][$categoryId]['sum'] = $sum;
                 if (bccomp('0', $sum) === 0) {
-                    unset($data[$key][$categoryId]);
+                    unset($data[$type][$categoryId]);
                 }
             }
         }
+
 
         return $data;
     }

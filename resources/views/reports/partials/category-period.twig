@@ -19,42 +19,57 @@
     <tbody>
     {% for category in categories %}
         {% if report.income[category.id] or report.expense[category.id] %}
-        <tr>
-            <td data-value="{{ category.name }}">
-                <a title="{{ category.name }}" href="#" data-category="{{ category.id }}" class="category-chart-activate">{{ category.name }}</a>
-            </td>
+            <tr>
+                <td data-value="{{ category.name }}">
+                    <a title="{{ category.name }}" href="#" data-category="{{ category.id }}" class="category-chart-activate">{{ category.name }}</a>
+                </td>
 
-            {% for key, period in periods %}
-                {# income first #}
-                {% if(report.income[category.id].entries[key]) %}
-                    <td data-value="{{ report.income[category.id].entries[key] }}">
-                        {{ report.income[category.id].entries[key]|formatAmount }}
+                {% for key, period in periods %}
+                    {# income first #}
+                    {% if(report.income[category.id].entries[key]) %}
+                        <td data-value="{{ report.income[category.id].entries[key] }}">
+                            {{ report.income[category.id].entries[key]|formatAmount }}
+                        </td>
+                    {% else %}
+                        <td data-value="0">
+                            {{ 0|formatAmount }}
+                        </td>
+                    {% endif %}
+
+                    {# expenses #}
+                    {% if(report.expense[category.id].entries[key]) %}
+                        <td data-value="{{ report.expense[category.id].entries[key] }}">
+                            {{ report.expense[category.id].entries[key]|formatAmount }}
+                        </td>
+                    {% else %}
+                        <td data-value="0">
+                            {{ 0|formatAmount }}
+                        </td>
+                    {% endif %}
+                {% endfor %}
+
+                {# if sum of income, display: #}
+                {% if report.income[category.id].sum %}
+                    <td data-value="{{ report.income[category.id].sum }}">
+                        {{ report.income[category.id].sum }}
                     </td>
                 {% else %}
                     <td data-value="0">
                         {{ 0|formatAmount }}
                     </td>
                 {% endif %}
-
-                {# expenses #}
-                {% if(report.expense[category.id].entries[key]) %}
-                    <td data-value="{{ report.expense[category.id].entries[key] }}">
-                        {{ report.expense[category.id].entries[key]|formatAmount }}
+                {# if sum of expense, display: #}
+                {% if report.expense[category.id].sum %}
+                    <td data-value="{{ report.expense[category.id].sum }}">
+                        {{ report.expense[category.id].sum }}
                     </td>
                 {% else %}
                     <td data-value="0">
                         {{ 0|formatAmount }}
                     </td>
                 {% endif %}
-            {% endfor %}
-            <td data-value="{{ report.income[category.id].sum }}">
-                {{ report.income[category.id].sum|formatAmount }}
-            </td>
-            <td data-value="{{ report.expense[category.id].sum }}">
-                {{ report.expense[category.id].sum|formatAmount }}
-            </td>
-        </tr>
-    {% endif %}
+            </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>
