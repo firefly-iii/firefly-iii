@@ -1,4 +1,4 @@
-<table class="table table-hover sortable">
+<table class="table table-hover sortable table-condensed">
     <thead>
     <tr>
         <th rowspan="2" data-defaultsort="disabled">{{ 'category'|_ }}</th>
@@ -32,6 +32,7 @@
                     </td>
                 {% else %}
                     <td data-value="0">
+                        {{ 0|formatAmount }}
                     </td>
                 {% endif %}
 
@@ -42,14 +43,15 @@
                     </td>
                 {% else %}
                     <td data-value="0">
+                        {{ 0|formatAmount }}
                     </td>
                 {% endif %}
             {% endfor %}
             <td data-value="{{ report.income[category.id].sum }}">
-                {{ report.income[category.id].sum }}
+                {{ report.income[category.id].sum|formatAmount }}
             </td>
             <td data-value="{{ report.expense[category.id].sum }}">
-                {{ report.expense[category.id].sum }}
+                {{ report.expense[category.id].sum|formatAmount }}
             </td>
         </tr>
     {% endif %}
