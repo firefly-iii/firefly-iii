@@ -153,6 +153,43 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param CRI        $repository
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     */
+    public function reportPeriod(CRI $repository, Category $category, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-period-chart');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        $cache->addProperty($category);
+        if ($cache->has()) {
+
+            return $cache->get();
+        }
+        $report  = $repository->getCategoryPeriodReport(new Collection([$category]), $accounts, $start, $end, true);
+        $periods = Navigation::listOfPeriods($start, $end);
+
+
+        // join them:
+        $result = [];
+        foreach (array_keys($periods) as $period) {
+            $nice          = $periods[$period];
+            $result[$nice] = [
+                'earned' => $report['income'][$category->id]['entries'][$period] ?? '0',
+                'spent'  => $report['expense'][$category->id]['entries'][$period] ?? '0',
+            ];
+        }
+        $data = $this->generator->reportPeriod($result);
+
+        return Response::json($data);
+    }
+
+    /**
      * @param CRI                         $repository
      * @param Category                    $category
      *

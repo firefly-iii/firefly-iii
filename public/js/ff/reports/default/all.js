@@ -89,8 +89,11 @@ function displayAjaxPartial(data, holder) {
     // trigger list thing
     listLengthInitial();
 
-    // budget thing
+    // budget thing in year and multi year report:
     $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
+
+    // category thing in year and multi year report:
+    $('.category-chart-activate').unbind('click').on('click', clickCategoryChart);
 }
 
 function failAjaxPartial(uri, holder) {
@@ -98,6 +101,18 @@ function failAjaxPartial(uri, holder) {
     console.log('Failed to load' + uri);
     $('#' + holder).removeClass('loading').addClass('general-chart-error');
 
+}
+
+function clickCategoryChart(e) {
+    "use strict";
+    var link = $(e.target);
+    var categoryId = link.data('category');
+
+    // this url is different from the one below. this is something that must be fixed
+    var URL = 'chart/category/' + categoryId + '/report-period/' + startDate + '/' + endDate + '/' + accountIds;
+    var container = 'category_chart';
+    columnChart(URL, container);
+    return false;
 }
 
 function clickBudgetChart(e) {

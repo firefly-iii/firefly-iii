@@ -221,6 +221,7 @@ Route::group(
     Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
     Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
     Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
+    Route::get('/chart/category/{category}/report-period/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@reportPeriod']);
 
     // these charts are used in reports (category reports):
     Route::get(

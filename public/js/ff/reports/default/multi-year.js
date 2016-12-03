@@ -6,6 +6,7 @@ $(function () {
     drawChart();
 
     loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
+    loadAjaxPartial('categoryPeriodReport', categoryPeriodReportUri);
 });
 
 function drawChart() {

@@ -147,6 +147,41 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
+    public function reportPeriod(array $entries): array
+    {
+
+        $data = [
+            'labels'   => array_keys($entries),
+            'datasets' => [
+                0 => [
+                    'label' => trans('firefly.earned'),
+                    'data'  => [],
+                ],
+                1 => [
+                    'label' => trans('firefly.spent'),
+                    'data'  => [],
+                ],
+            ],
+            'count'    => 2,
+        ];
+
+        foreach ($entries as $label => $entry) {
+            // data set 0 is budgeted
+            // data set 1 is spent:
+            $data['datasets'][0]['data'][] = round($entry['earned'], 2);
+            $data['datasets'][1]['data'][] = round(bcmul($entry['spent'], '-1'), 2);
+
+        }
+
+        return $data;
+
+    }
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
     public function pieChart(array $entries): array
     {
         $data  = [
