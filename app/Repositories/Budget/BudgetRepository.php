@@ -212,19 +212,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * This method is being used to generate the budget overview in the year/multi-year report. More specifically, this
-     * method runs the query and returns the result that is used for this report.
-     *
-     * The query is used in both the year/multi-year budget overview AND in the accompanying chart.
+     * This method is being used to generate the budget overview in the year/multi-year report. Its used
+     * in both the year/multi-year budget overview AND in the accompanying chart.
      *
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
+     * @param bool       $noBudget
      *
      * @return array
      */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end, bool $noBudget): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
         $data         = [];
@@ -252,8 +251,11 @@ class BudgetRepository implements BudgetRepositoryInterface
             $date                              = $transaction->date->format($carbonFormat);
             $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $transaction->transaction_amount);
         }
-        // and now the same for stuff without a budget:
-        $data[0] = $this->getNoBudgetPeriodReport($start, $end);
+
+        if ($noBudget) {
+            // and now the same for stuff without a budget:
+            $data[0] = $this->getNoBudgetPeriodReport($start, $end);
+        }
 
         return $data;
 

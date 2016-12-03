@@ -209,7 +209,7 @@ class BudgetController extends Controller
 
         // the expenses:
         $periods  = Navigation::listOfPeriods($start, $end);
-        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
+        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end, false);
         $budgeted = [];
         $key      = Navigation::preferredCarbonFormat($start, $end);
         $range    = Navigation::preferredRangeFormat($start, $end);

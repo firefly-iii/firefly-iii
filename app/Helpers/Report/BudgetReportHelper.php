@@ -52,7 +52,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         $budgets = $this->repository->getBudgets();
-        $report  = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
+        $report  = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end, true);
         $data    = $this->filterBudgetPeriodReport($report);
 
         return $data;

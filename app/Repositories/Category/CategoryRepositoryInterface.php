@@ -49,7 +49,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) :string;
+    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * Find a category
@@ -58,7 +58,7 @@ interface CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function find(int $categoryId) : Category;
+    public function find(int $categoryId): Category;
 
     /**
      * Find a category
@@ -67,7 +67,7 @@ interface CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function findByName(string $name) : Category;
+    public function findByName(string $name): Category;
 
     /**
      * @param Category $category
@@ -82,6 +82,20 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function getCategories(): Collection;
+
+    /**
+     * This method is being used to generate the category overview in the year/multi-year report. Its used
+     * in both the year/multi-year budget overview AND in the accompanying chart.
+     *
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param bool       $noCategory
+     *
+     * @return array
+     */
+    public function getCategoryPeriodReport(Collection $categories, Collection $accounts, Carbon $start, Carbon $end, bool $noCategory): array;
 
     /**
      * Return most recent transaction(journal) date.
@@ -110,7 +124,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string;
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param array $data

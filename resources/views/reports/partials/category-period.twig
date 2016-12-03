@@ -18,7 +18,7 @@
     </thead>
     <tbody>
     {% for category in categories %}
-        {% if income[category.id] %}
+        {% if report.income[category.id] or report.expense[category.id] %}
         <tr>
             <td data-value="{{ category.name }}">
                 <a title="{{ category.name }}" href="#" data-category="{{ category.id }}" class="category-chart-activate">{{ category.name }}</a>
@@ -26,26 +26,30 @@
 
             {% for key, period in periods %}
                 {# income first #}
-                {% if(income[category.id].entries[key]) %}
-                    <td data-value="{{ income[category.id].entries[key] }}">
-                        {{ income[category.id].entries[key]|formatAmount }}
+                {% if(report.income[category.id].entries[key]) %}
+                    <td data-value="{{ report.income[category.id].entries[key] }}">
+                        {{ report.income[category.id].entries[key]|formatAmount }}
                     </td>
                 {% else %}
                     <td data-value="0">
-                        {{ 0|formatAmount }}
                     </td>
                 {% endif %}
 
                 {# expenses #}
-                <td data-value="0">
-                    <!-- expense -->
-                </td>
+                {% if(report.expense[category.id].entries[key]) %}
+                    <td data-value="{{ report.expense[category.id].entries[key] }}">
+                        {{ report.expense[category.id].entries[key]|formatAmount }}
+                    </td>
+                {% else %}
+                    <td data-value="0">
+                    </td>
+                {% endif %}
             {% endfor %}
-            <td data-value="{{ info.sum }}">
-                0
+            <td data-value="{{ report.income[category.id].sum }}">
+                {{ report.income[category.id].sum }}
             </td>
-            <td data-value="{{ info.sum }}">
-                1
+            <td data-value="{{ report.expense[category.id].sum }}">
+                {{ report.expense[category.id].sum }}
             </td>
         </tr>
     {% endif %}

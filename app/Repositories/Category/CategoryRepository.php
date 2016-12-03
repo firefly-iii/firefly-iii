@@ -15,12 +15,15 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Navigation;
 
 /**
  * Class CategoryRepository
@@ -173,6 +176,32 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * This method is being used to generate the category overview in the year/multi-year report. Its used
+     * in both the year/multi-year budget overview AND in the accompanying chart.
+     *
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param @bool $noCategory
+     *
+     * @return array
+     */
+    public function getCategoryPeriodReport(Collection $categories, Collection $accounts, Carbon $start, Carbon $end, bool $noCategory): array
+    {
+        $data = [
+            'income'  => $this->getCategoryReportData($categories, $accounts, $start, $end, $noCategory, [TransactionType::DEPOSIT, TransactionType::TRANSFER]),
+            'expense' => $this->getCategoryReportData(
+                $categories, $accounts, $start, $end, $noCategory, [TransactionType::WITHDRAWAL, TransactionType::TRANSFER]
+            ),
+        ];
+
+        return $data;
+
+
+    }
+
+    /**
      * @param Category   $category
      * @param Collection $accounts
      *
@@ -233,6 +262,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $sum = $this->sumInPeriod($categories, $accounts, TransactionType::WITHDRAWAL, $start, $end);
         $sum = bcmul($sum, '-1');
+
         return $sum;
     }
 
@@ -282,6 +312,55 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category->save();
 
         return $category;
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param bool       $noCategory
+     * @param array      $types
+     *
+     * @return array
+     */
+    private function getCategoryReportData(Collection $categories, Collection $accounts, Carbon $start, Carbon $end, bool $noCategory, array $types): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        $data         = [];
+        // prep data array:
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $data[$category->id] = [
+                'name'    => $category->name,
+                'sum'     => '0',
+                'entries' => [],
+            ];
+        }
+
+        // get all transactions:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setCategories($categories)->setTypes($types)
+                  ->withOpposingAccount()
+                  ->enableInternalFilter();
+        $transactions = $collector->getJournals();
+
+        // loop transactions:
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
+            $date                                = $transaction->date->format($carbonFormat);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
+        }
+
+        if ($noCategory) {
+            // and now the same for stuff without a budget:
+            //$data[0] = $this->getNoBudgetPeriodReport($start, $end);
+        }
+
+        return $data;
     }
 
     /**
@@ -404,5 +483,4 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $sum;
 
     }
-
 }
