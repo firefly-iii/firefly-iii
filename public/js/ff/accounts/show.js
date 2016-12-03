@@ -15,7 +15,7 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-        lineChart('chart/account/' + accountID, 'overview-chart');
+    lineChart('chart/account/' + accountID, 'overview-chart');
     pieChart(incomeByCategoryUri, 'account-cat-in');
     pieChart(expenseByCategoryUri, 'account-cat-out');
     pieChart(expenseByBudgetUri, 'account-budget-out');

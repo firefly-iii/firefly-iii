@@ -402,10 +402,17 @@ Route::group(
         '/reports/data/budget-report/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\BudgetController@budgetReport', 'as' => 'reports.data.budgetReport']
     );
+
     // budget period overview
     Route::get(
         '/reports/data/budget-period/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\BudgetController@budgetPeriodReport', 'as' => 'reports.data.budgetPeriodReport']
+    );
+
+    // category period overview
+    Route::get(
+        '/reports/data/category-period/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\CategoryController@categoryPeriodReport', 'as' => 'reports.data.categoryPeriodReport']
     );
 
     /**

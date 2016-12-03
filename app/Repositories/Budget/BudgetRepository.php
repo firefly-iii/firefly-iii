@@ -226,55 +226,34 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        $data         = [];
+        // prep data array:
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $data[$budget->id] = [
+                'name'    => $budget->name,
+                'sum'     => '0',
+                'entries' => [],
+            ];
+        }
+
+        // get all transactions:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end);
+        $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
         $transactions = $collector->getJournals();
 
-        // this is the date format we need:
-        // define period to group on:
-        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-
-        // this is the set of transactions for this period
-        // in these budgets. Now they must be grouped (manually)
-        // id, period => amount
-        $data = [];
+        // loop transactions:
+        /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $budgetId = max(intval($transaction->transaction_journal_budget_id), intval($transaction->transaction_budget_id));
-            $date     = $transaction->date->format($carbonFormat);
-
-            if (!isset($data[$budgetId])) {
-                $data[$budgetId]['name']    = $this->getBudgetName($budgetId, $budgets);
-                $data[$budgetId]['sum']     = '0';
-                $data[$budgetId]['entries'] = [];
-            }
-
-            if (!isset($data[$budgetId]['entries'][$date])) {
-                $data[$budgetId]['entries'][$date] = '0';
-            }
-            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date], $transaction->transaction_amount);
+            $budgetId                          = max(intval($transaction->transaction_journal_budget_id), intval($transaction->transaction_budget_id));
+            $date                              = $transaction->date->format($carbonFormat);
+            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $transaction->transaction_amount);
         }
         // and now the same for stuff without a budget:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end);
-        $collector->setTypes([TransactionType::WITHDRAWAL]);
-        $collector->withoutBudget();
-        $transactions = $collector->getJournals();
-
-        $data[0]['entries'] = [];
-        $data[0]['name']    = strval(trans('firefly.no_budget'));
-        $data[0]['sum']     = '0';
-
-        foreach ($transactions as $transaction) {
-            $date = $transaction->date->format($carbonFormat);
-
-            if (!isset($data[0]['entries'][$date])) {
-                $data[0]['entries'][$date] = '0';
-            }
-            $data[0]['entries'][$date] = bcadd($data[0]['entries'][$date], $transaction->transaction_amount);
-        }
+        $data[0] = $this->getNoBudgetPeriodReport($start, $end);
 
         return $data;
 
@@ -332,19 +311,23 @@ class BudgetRepository implements BudgetRepositoryInterface
         Log::debug('spentInPeriod: and these accounts: ', $accountIds);
         Log::debug(sprintf('spentInPeriod: Start date is "%s", end date is "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        $fromJournalsQuery = TransactionJournal::leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin(
-                'transactions', function (JoinClause $join) {
-                $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-            }
-            )
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereNull('transactions.deleted_at')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('transaction_types.type', 'Withdrawal');
+        $fromJournalsQuery = TransactionJournal::leftJoin(
+            'budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+        )
+                                               ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                               ->leftJoin(
+                                                   'transactions', function (JoinClause $join) {
+                                                   $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where(
+                                                       'transactions.amount', '<', 0
+                                                   );
+                                               }
+                                               )
+                                               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                               ->whereNull('transaction_journals.deleted_at')
+                                               ->whereNull('transactions.deleted_at')
+                                               ->where('transaction_journals.user_id', $this->user->id)
+                                               ->where('transaction_types.type', 'Withdrawal');
 
         // add budgets:
         if ($budgets->count() > 0) {
@@ -368,15 +351,15 @@ class BudgetRepository implements BudgetRepositoryInterface
          * and transactions.account_id in (2)
          */
         $fromTransactionsQuery = Transaction::leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id')
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transactions.amount', '<', 0)
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->where('transaction_types.type', 'Withdrawal');
+                                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                            ->whereNull('transactions.deleted_at')
+                                            ->whereNull('transaction_journals.deleted_at')
+                                            ->where('transactions.amount', '<', 0)
+                                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                            ->where('transaction_journals.user_id', $this->user->id)
+                                            ->where('transaction_types.type', 'Withdrawal');
 
         // add budgets:
         if ($budgets->count() > 0) {
@@ -568,5 +551,38 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return '(unknown)';
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function getNoBudgetPeriodReport(Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->withoutBudget();
+        $transactions = $collector->getJournals();
+        $result       = [
+            'entries' => [],
+            'name'    => strval(trans('firefly.no_budget')),
+            'sum'     => '0',
+        ];
+
+        foreach ($transactions as $transaction) {
+            $date = $transaction->date->format($carbonFormat);
+
+            if (!isset($result['entries'][$date])) {
+                $result['entries'][$date] = '0';
+            }
+            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+        }
+
+        return $result;
     }
 }

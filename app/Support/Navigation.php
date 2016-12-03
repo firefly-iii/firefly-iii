@@ -246,8 +246,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
      * method returns "Y-m". If the date difference is larger, method returns "Y".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
      *
      * @return string
      */
@@ -270,8 +270,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "1D". If the difference is less than a year,
      * method returns "1M". If the date difference is larger, method returns "1Y".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
      *
      * @return string
      */

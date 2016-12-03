@@ -60,6 +60,8 @@ class JournalCollector implements JournalCollectorInterface
             'account_types.type as account_type',
         ];
     /** @var  bool */
+    private $filterInternalTransfers;
+    /** @var  bool */
     private $filterTransfers = false;
     /** @var  bool */
     private $joinedBudget = false;
@@ -128,6 +130,26 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @return JournalCollectorInterface
+     */
+    public function disableInternalFilter(): JournalCollectorInterface
+    {
+        $this->filterInternalTransfers = false;
+
+        return $this;
+    }
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function enableInternalFilter(): JournalCollectorInterface
+    {
+        $this->filterInternalTransfers = true;
+
+        return $this;
+    }
+
+    /**
      * @return Collection
      */
     public function getJournals(): Collection
@@ -137,6 +159,11 @@ class JournalCollector implements JournalCollectorInterface
         Log::debug(sprintf('Count of set is %d', $set->count()));
         $set = $this->filterTransfers($set);
         Log::debug(sprintf('Count of set after filterTransfers() is %d', $set->count()));
+
+        // possibly filter "internal" transfers:
+        $set = $this->filterInternalTransfers($set);
+        Log::debug(sprintf('Count of set after filterInternalTransfers() is %d', $set->count()));
+
 
         // loop for decryption.
         $set->each(
@@ -502,6 +529,47 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $set
+     *
+     * @return Collection
+     */
+    private function filterInternalTransfers(Collection $set): Collection
+    {
+        if ($this->filterInternalTransfers === false) {
+            Log::debug('Did NO filtering for internal transfers on given set.');
+
+            return $set;
+        }
+        if ($this->joinedOpposing === false) {
+            Log::error('Cannot filter internal transfers because no opposing information is present.');
+
+            return $set;
+        }
+
+        $accountIds = $this->accountIds;
+        $set        = $set->filter(
+            function (Transaction $transaction) use ($accountIds) {
+                // both id's in $accountids?
+                if (in_array($transaction->account_id, $accountIds) && in_array($transaction->opposing_account_id, $accountIds)) {
+                    Log::debug(
+                        sprintf(
+                            'Transaction #%d has #%d and #%d in set, so removed',
+                            $transaction->id, $transaction->account_id, $transaction->opposing_account_id
+                        ), $accountIds
+                    );
+
+                    return false;
+                }
+
+                return $transaction;
+
+            }
+        );
+
+        return $set;
+    }
+
+    /**
      * If the set of accounts used by the collector includes more than one asset
      * account, chances are the set include double entries: transfers get selected
      * on both the source, and then again on the destination account.
@@ -583,6 +651,7 @@ class JournalCollector implements JournalCollectorInterface
     private function joinOpposingTables()
     {
         if (!$this->joinedOpposing) {
+            Log::debug('joinedOpposing is false');
             // join opposing transaction (hard):
             $this->query->leftJoin(
                 'transactions as opposing', function (JoinClause $join) {
@@ -595,11 +664,12 @@ class JournalCollector implements JournalCollectorInterface
             $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');
             $this->query->whereNull('opposing.deleted_at');
 
-            $this->fields[] = 'opposing.account_id as opposing_account_id';
-            $this->fields[] = 'opposing_accounts.name as opposing_account_name';
-            $this->fields[] = 'opposing_accounts.encrypted as opposing_account_encrypted';
-            $this->fields[] = 'opposing_account_types.type as opposing_account_type';
-
+            $this->fields[]       = 'opposing.account_id as opposing_account_id';
+            $this->fields[]       = 'opposing_accounts.name as opposing_account_name';
+            $this->fields[]       = 'opposing_accounts.encrypted as opposing_account_encrypted';
+            $this->fields[]       = 'opposing_account_types.type as opposing_account_type';
+            $this->joinedOpposing = true;
+            Log::debug('joinedOpposing is now true!');
         }
     }
 
@@ -622,17 +692,17 @@ class JournalCollector implements JournalCollectorInterface
     {
 
         $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC');
+                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
+                            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
+                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                            ->whereNull('transactions.deleted_at')
+                            ->whereNull('transaction_journals.deleted_at')
+                            ->where('transaction_journals.user_id', $this->user->id)
+                            ->orderBy('transaction_journals.date', 'DESC')
+                            ->orderBy('transaction_journals.order', 'ASC')
+                            ->orderBy('transaction_journals.id', 'DESC');
 
         return $query;
 

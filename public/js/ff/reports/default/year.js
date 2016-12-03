@@ -1,10 +1,11 @@
-/* globals google, accountIds, budgetPeriodReportUri */
+/* globals google, accountIds, budgetPeriodReportUri, categoryPeriodReportUri */
 
 $(function () {
     "use strict";
     drawChart();
 
     loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
+    loadAjaxPartial('categoryPeriodReport', categoryPeriodReportUri);
 });
 
 function drawChart() {

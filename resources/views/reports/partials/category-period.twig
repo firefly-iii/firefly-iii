@@ -1,0 +1,54 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th rowspan="2" data-defaultsort="disabled">{{ 'category'|_ }}</th>
+        {% for period in periods %}
+            <th colspan="2" data-defaultsort="disabled">{{ period }}</th>
+        {% endfor %}
+        <th colspan="2" data-defaultsort="disabled">{{ 'sum'|_ }}</th>
+    </tr>
+    <tr>
+        {% for period in periods %}
+            <th data-defaultsign="_19">In</th>
+            <th data-defaultsign="_19">Out</th>
+        {% endfor %}
+        <th data-defaultsign="_19">In</th>
+        <th data-defaultsign="_19">Out</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for category in categories %}
+        {% if income[category.id] %}
+        <tr>
+            <td data-value="{{ category.name }}">
+                <a title="{{ category.name }}" href="#" data-category="{{ category.id }}" class="category-chart-activate">{{ category.name }}</a>
+            </td>
+
+            {% for key, period in periods %}
+                {# income first #}
+                {% if(income[category.id].entries[key]) %}
+                    <td data-value="{{ income[category.id].entries[key] }}">
+                        {{ income[category.id].entries[key]|formatAmount }}
+                    </td>
+                {% else %}
+                    <td data-value="0">
+                        {{ 0|formatAmount }}
+                    </td>
+                {% endif %}
+
+                {# expenses #}
+                <td data-value="0">
+                    <!-- expense -->
+                </td>
+            {% endfor %}
+            <td data-value="{{ info.sum }}">
+                0
+            </td>
+            <td data-value="{{ info.sum }}">
+                1
+            </td>
+        </tr>
+    {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
