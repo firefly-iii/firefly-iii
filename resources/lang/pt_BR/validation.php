@@ -85,4 +85,5 @@ return [
     'file'                           => 'O :attribute deve ser um arquivo.',
     'in_array'                       => 'O campo :attribute não existe em :other.',
     'present'                        => 'O campo :attribute deve estar presente.',
+    'amount_zero'                    => 'The total amount cannot be zero',
 ];
