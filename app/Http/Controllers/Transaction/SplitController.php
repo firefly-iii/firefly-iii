@@ -135,7 +135,21 @@ class SplitController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $data    = $this->arrayFromInput($request);
+        $data = $this->arrayFromInput($request);
+
+        // need to do some validation!
+        // sum of amount must be > 0
+        // TODO move to proper validator
+        $sum = '0';
+        foreach ($data['transactions'] as $transaction) {
+            Session::flash('error',strval(trans('validation.amount_zero')));
+            $sum = bcadd($sum, strval($transaction['amount']));
+        }
+        if (bccomp($sum, '0') === 0) {
+            return redirect(route('transactions.edit-split', [$journal->id]))->withInput();
+        }
+
+
         $journal = $repository->updateSplitJournal($journal, $data);
 
         // save attachments:
@@ -249,8 +263,8 @@ class SplitController extends Controller
         $transactions = $this->tasker->getTransactionsOverview($journal);
         $return       = [];
         /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = [
+        foreach ($transactions as $index => $transaction) {
+            $set = [
                 'description'              => $transaction['description'],
                 'source_account_id'        => $transaction['source_account_id'],
                 'source_account_name'      => $transaction['source_account_name'],
@@ -260,6 +274,15 @@ class SplitController extends Controller
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'],
             ];
+
+            // set initial category and/or budget:
+            if (count($transactions) === 1 && $index === 0) {
+                $set['budget_id'] = TransactionJournal::budgetId($journal);
+                $set['category']  = TransactionJournal::categoryAsString($journal);
+            }
+
+            $return[] = $set;
+
         }
 
         return $return;
