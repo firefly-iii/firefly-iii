@@ -139,7 +139,6 @@ class SplitController extends Controller
 
         // need to do some validation!
         // sum of amount must be > 0
-        // TODO move to proper validator
         $sum = '0';
         foreach ($data['transactions'] as $transaction) {
             Session::flash('error',strval(trans('validation.amount_zero')));
