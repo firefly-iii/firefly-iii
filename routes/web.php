@@ -84,65 +84,90 @@ Route::group(
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'allRoutes']);
-    /**
-     * Account Controller
-     */
-    Route::get('/accounts/{what}', ['uses' => 'AccountController@index', 'as' => 'accounts.index'])->where('what', 'revenue|asset|expense');
-    Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])->where('what', 'revenue|asset|expense');
-    Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
-    Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
-    Route::get('/accounts/show/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
-    Route::get('/accounts/show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'accounts.show.all']);
-    Route::get('/accounts/show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'accounts.show.date']);
+}
+);
+
+/**
+ * Account Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
+
+    Route::get('{what}', ['uses' => 'AccountController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
+    Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
+    Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
+    Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+    Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']); // consistent
+    Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
+    Route::get('show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'show.date']);
+
+    Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
+    Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
+    Route::post('destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'destroy']);
+
+}
+);
+
+/**
+ * Attachment Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'attachments', 'as' => 'attachments.'], function () {
+    Route::get('edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'edit']);
+    Route::get('delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
+    Route::get('preview/{attachment}', ['uses' => 'AttachmentController@preview', 'as' => 'preview']);
+    Route::get('download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'download']);
+
+    Route::post('update/{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'update']);
+    Route::post('destroy/{attachment}', ['uses' => 'AttachmentController@destroy', 'as' => 'destroy']);
+
+}
+);
+
+/**
+ * Bills Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'bills','as' => 'bills.'], function () {
+
+    Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
+    Route::get('rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'rescan']);
+    Route::get('create', ['uses' => 'BillController@create', 'as' => 'create']);
+    Route::get('edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'edit']);
+    Route::get('delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
+    Route::get('show/{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
+    Route::post('store', ['uses' => 'BillController@store', 'as' => 'store']);
+
+    Route::post('update/{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
+    Route::post('destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'destroy']);
+});
 
 
-    Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
-    Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
-    Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+/**
+ * Budget Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'budgets','as' => 'budgets.'], function () {
 
+    Route::get('', ['uses' => 'BudgetController@index', 'as' => 'index']);
+    Route::get('income', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+    Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
+    Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
+    Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
 
-    /**
-     * Attachment Controller
-     */
+    Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']); // consistent
+    Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showWithRepetition', 'as' => 'showWithRepetition']);
+    Route::get('list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'noBudget']);
 
-    Route::post('/attachment/update/{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'attachments.update']);
-    Route::post('/attachment/destroy/{attachment}', ['uses' => 'AttachmentController@destroy', 'as' => 'attachments.destroy']);
+    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'postIncome']);
+    Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
+    Route::post('update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
+    Route::post('destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'destroy']);
+    Route::post('amount/{budget}', ['uses' => 'BudgetController@amount']);
+});
 
-    Route::get('/attachment/edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'attachments.edit']);
-    Route::get('/attachment/delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'attachments.delete']);
-    Route::get('/attachment/preview/{attachment}', ['uses' => 'AttachmentController@preview', 'as' => 'attachments.preview']);
-    Route::get('/attachment/download/{attachment}', ['uses' => 'AttachmentController@download', 'as' => 'attachments.download']);
-
-
-    /**
-     * Bills Controller
-     */
-    Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);
-    Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']);
-    Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
-    Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
-    Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
-    Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
-    Route::post('/bills/store', ['uses' => 'BillController@store', 'as' => 'bills.store']);
-    Route::post('/bills/update/{bill}', ['uses' => 'BillController@update', 'as' => 'bills.update']);
-    Route::post('/bills/destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'bills.destroy']);
-
-    /**
-     * Budget Controller
-     */
-    Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.index']);
-    Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']);
-    Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
-    Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
-    Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
-    Route::get('/budgets/show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
-    Route::get('/budgets/show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showWithRepetition', 'as' => 'budgets.showWithRepetition']);
-    Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'budgets.noBudget']);
-    Route::post('/budgets/income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'budgets.postIncome']);
-    Route::post('/budgets/store', ['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
-    Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
-    Route::post('/budgets/destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
-    Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
+Route::group(
+    ['middleware' => ['user-full-auth']], function () {
 
     /**
      * Category Controller
@@ -543,24 +568,24 @@ Route::group(
  * For the admin routes, the user must be logged in and have the role of 'owner'
  */
 Route::group(
-    ['middleware' => 'admin'], function () {
+    ['middleware' => 'admin', 'namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
 
     // admin home
-    Route::get('/admin', ['uses' => 'Admin\HomeController@index', 'as' => 'admin.index']);
+    Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
 
     // user manager
-    Route::get('/admin/users', ['uses' => 'Admin\UserController@index', 'as' => 'admin.users']);
-    Route::get('/admin/users/edit/{user}', ['uses' => 'Admin\UserController@edit', 'as' => 'admin.users.edit']);
-    Route::get('/admin/users/show/{user}', ['uses' => 'Admin\UserController@show', 'as' => 'admin.users.show']);
+    Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);
+    Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);
+    Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
 
-    // user domains:
-    Route::get('/admin/domains', ['uses' => 'Admin\DomainController@domains', 'as' => 'admin.users.domains']);
-    Route::get('/admin/domains/toggle/{domain}', ['uses' => 'Admin\DomainController@toggleDomain', 'as' => 'admin.users.domains.block-toggle']);
-    Route::post('/admin/domains/manual', ['uses' => 'Admin\DomainController@manual', 'as' => 'admin.users.domains.manual']);
+    // user domain manager
+    Route::get('domains', ['uses' => 'DomainController@domains', 'as' => 'users.domains']);
+    Route::get('domains/toggle/{domain}', ['uses' => 'DomainController@toggleDomain', 'as' => 'users.domains.block-toggle']);
+    Route::post('domains/manual', ['uses' => 'DomainController@manual', 'as' => 'users.domains.manual']);
 
     // FF configuration:
-    Route::get('/admin/configuration', ['uses' => 'Admin\ConfigurationController@index', 'as' => 'admin.configuration.index']);
-    Route::post('/admin/configuration', ['uses' => 'Admin\ConfigurationController@store', 'as' => 'admin.configuration.store']);
+    Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);
+    Route::post('configuration', ['uses' => 'ConfigurationController@store', 'as' => 'configuration.store']);
 
 }
 );
