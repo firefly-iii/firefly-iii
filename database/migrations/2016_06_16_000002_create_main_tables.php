@@ -87,7 +87,7 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->integer('account_type_id', false, true);
                 $table->string('name', 1024);
-                $table->decimal('virtual_balance', 10, 4)->nullable();
+                $table->decimal('virtual_balance', 14, 4)->nullable();
                 $table->string('iban', 255)->nullable();
 
                 $table->boolean('active')->default(1);
@@ -165,8 +165,8 @@ class CreateMainTables extends Migration
                 $table->integer('user_id', false, true);
                 $table->string('name', 1024);
                 $table->string('match', 1024);
-                $table->decimal('amount_min', 10, 4);
-                $table->decimal('amount_max', 10, 4);
+                $table->decimal('amount_min', 14, 4);
+                $table->decimal('amount_max', 14, 4);
                 $table->date('date');
                 $table->string('repeat_freq', 30);
                 $table->smallInteger('skip', false, true)->default(0);
@@ -215,7 +215,7 @@ class CreateMainTables extends Migration
                 $table->timestamps();
                 $table->integer('budget_id', false, true);
                 $table->date('startdate');
-                $table->decimal('amount', 10, 4);
+                $table->decimal('amount', 14, 4);
                 $table->string('repeat_freq', 30);
                 $table->boolean('repeats')->default(0);
 
@@ -233,7 +233,7 @@ class CreateMainTables extends Migration
                 $table->integer('budget_limit_id', false, true);
                 $table->date('startdate');
                 $table->date('enddate');
-                $table->decimal('amount', 10, 4);
+                $table->decimal('amount', 14, 4);
 
                 // link budget limit id to budget_limitss table
                 $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
@@ -313,7 +313,7 @@ class CreateMainTables extends Migration
                 $table->softDeletes();
                 $table->integer('account_id', false, true);
                 $table->string('name', 1024);
-                $table->decimal('targetamount', 10, 4);
+                $table->decimal('targetamount', 14, 4);
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
                 $table->integer('order', false, true)->default(0);
@@ -334,7 +334,7 @@ class CreateMainTables extends Migration
                 $table->integer('piggy_bank_id', false, true);
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
-                $table->decimal('currentamount', 10, 4);
+                $table->decimal('currentamount', 14, 4);
 
                 $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
 
@@ -606,7 +606,7 @@ class CreateMainTables extends Migration
                 $table->integer('piggy_bank_id', false, true);
                 $table->integer('transaction_journal_id', false, true)->nullable();
                 $table->date('date');
-                $table->decimal('amount', 10, 4);
+                $table->decimal('amount', 14, 4);
 
                 $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
@@ -623,7 +623,7 @@ class CreateMainTables extends Migration
                 $table->integer('account_id', false, true);
                 $table->integer('transaction_journal_id', false, true);
                 $table->string('description', 1024)->nullable();
-                $table->decimal('amount', 10, 4);
+                $table->decimal('amount', 14, 4);
 
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
