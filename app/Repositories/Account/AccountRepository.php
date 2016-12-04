@@ -368,10 +368,10 @@ class AccountRepository implements AccountRepositoryInterface
     protected function openingBalanceTransaction(Account $account): TransactionJournal
     {
         $journal = TransactionJournal::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             Log::debug('Could not find a opening balance journal, return empty one.');
 

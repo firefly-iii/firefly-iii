@@ -250,19 +250,19 @@ class AccountTasker implements AccountTaskerInterface
         $selection    = $incoming ? '>' : '<';
 
         $query = Transaction::distinct()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin(
-                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
-                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
-            }
-            )
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereIn('transactions.account_id', $accounts['accounts'])
-            ->where('transactions.amount', $selection, 0);
+                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->leftJoin(
+                                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
+                                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
+                            }
+                            )
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                            ->where('transaction_journals.user_id', $this->user->id)
+                            ->whereNull('transactions.deleted_at')
+                            ->whereNull('transaction_journals.deleted_at')
+                            ->whereIn('transactions.account_id', $accounts['accounts'])
+                            ->where('transactions.amount', $selection, 0);
         if (count($accounts['exclude']) > 0) {
             $query->whereNotIn('other_side.account_id', $accounts['exclude']);
         }
@@ -302,25 +302,27 @@ class AccountTasker implements AccountTaskerInterface
         $joinModifier = $incoming ? '<' : '>';
         $selection    = $incoming ? '>' : '<';
         $query        = Transaction::distinct()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-            ->leftJoin(
-                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
-                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
-            }
-            )
-            ->leftJoin('accounts as other_account', 'other_account.id', '=', 'other_side.account_id')
-            ->where('transaction_types.type', '!=', TransactionType::OPENING_BALANCE)
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('other_side.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereIn('transactions.account_id', $accounts['accounts'])
-            ->where('other_side.amount', '=', DB::raw('transactions.amount * -1'))
-            ->where('transactions.amount', $selection, 0)
-            ->orderBy('transactions.amount');
+                                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                                   ->leftJoin(
+                                       'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
+                                       $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where(
+                                           'other_side.amount', $joinModifier, 0
+                                       );
+                                   }
+                                   )
+                                   ->leftJoin('accounts as other_account', 'other_account.id', '=', 'other_side.account_id')
+                                   ->where('transaction_types.type', '!=', TransactionType::OPENING_BALANCE)
+                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                                   ->where('transaction_journals.user_id', $this->user->id)
+                                   ->whereNull('transactions.deleted_at')
+                                   ->whereNull('other_side.deleted_at')
+                                   ->whereNull('transaction_journals.deleted_at')
+                                   ->whereIn('transactions.account_id', $accounts['accounts'])
+                                   ->where('other_side.amount', '=', DB::raw('transactions.amount * -1'))
+                                   ->where('transactions.amount', $selection, 0)
+                                   ->orderBy('transactions.amount');
 
         if (count($accounts['exclude']) > 0) {
             $query->whereNotIn('other_side.account_id', $accounts['exclude']);

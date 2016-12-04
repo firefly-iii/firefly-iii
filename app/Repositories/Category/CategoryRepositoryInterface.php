@@ -24,7 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
-
     /**
      * @param Category $category
      *
@@ -84,20 +83,6 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
-     * This method is being used to generate the category overview in the year/multi-year report. Its used
-     * in both the year/multi-year budget overview AND in the accompanying chart.
-     *
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param bool       $noCategory
-     *
-     * @return array
-     */
-    public function getCategoryPeriodReport(Collection $categories, Collection $accounts, Carbon $start, Carbon $end, bool $noCategory): array;
-
-    /**
      * Return most recent transaction(journal) date.
      *
      * @param Category   $category
@@ -106,6 +91,44 @@ interface CategoryRepositoryInterface
      * @return Carbon
      */
     public function lastUseDate(Category $category, Collection $accounts): Carbon;
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $categories

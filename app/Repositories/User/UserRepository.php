@@ -114,10 +114,10 @@ class UserRepository implements UserRepositoryInterface
         $return['categories']          = $user->categories()->count();
         $return['budgets']             = $user->budgets()->count();
         $return['budgets_with_limits'] = BudgetLimit::distinct()
-            ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-            ->where('amount', '>', 0)
-            ->whereNull('budgets.deleted_at')
-            ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
+                                                    ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                                    ->where('amount', '>', 0)
+                                                    ->whereNull('budgets.deleted_at')
+                                                    ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
         $return['export_jobs']         = $user->exportJobs()->count();
         $return['export_jobs_success'] = $user->exportJobs()->where('status', 'export_downloaded')->count();
         $return['import_jobs']         = $user->exportJobs()->count();

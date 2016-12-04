@@ -58,7 +58,7 @@ interface PiggyBankRepositoryInterface
      *
      * @return Collection
      */
-    public function getEvents(PiggyBank $piggyBank) : Collection;
+    public function getEvents(PiggyBank $piggyBank): Collection;
 
     /**
      * Highest order of all piggy banks.
@@ -72,14 +72,14 @@ interface PiggyBankRepositoryInterface
      *
      * @return Collection
      */
-    public function getPiggyBanks() : Collection;
+    public function getPiggyBanks(): Collection;
 
     /**
      * Also add amount in name.
      *
      * @return Collection
      */
-    public function getPiggyBanksWithAmount() : Collection;
+    public function getPiggyBanksWithAmount(): Collection;
 
     /**
      * Set all piggy banks to order 0.

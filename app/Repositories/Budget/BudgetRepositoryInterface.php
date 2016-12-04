@@ -96,11 +96,10 @@ interface BudgetRepositoryInterface
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param bool       $noBudget
      *
      * @return array
      */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end, bool $noBudget): array;
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @return Collection
@@ -111,6 +110,14 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getInactiveBudgets(): Collection;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $budgets

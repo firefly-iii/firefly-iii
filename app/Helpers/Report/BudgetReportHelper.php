@@ -47,22 +47,6 @@ class BudgetReportHelper implements BudgetReportHelperInterface
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return array
-     */
-    public function getBudgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts): array
-    {
-        $budgets = $this->repository->getBudgets();
-        $report  = $this->repository->getBudgetPeriodReport($budgets, $accounts, $start, $end, true);
-        $data    = $this->filterBudgetPeriodReport($report);
-
-        return $data;
-    }
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
      * @return BudgetCollection
      */
     public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection
@@ -161,32 +145,5 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         return $array;
 
-    }
-
-    /**
-     * Filters empty results from getBudgetPeriodReport
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function filterBudgetPeriodReport(array $data): array
-    {
-        /**
-         * @var int   $budgetId
-         * @var array $set
-         */
-        foreach ($data as $budgetId => $set) {
-            $sum = '0';
-            foreach ($set['entries'] as $amount) {
-                $sum = bcadd($amount, $sum);
-            }
-            $data[$budgetId]['sum'] = $sum;
-            if (bccomp('0', $sum) === 0) {
-                unset($data[$budgetId]);
-            }
-        }
-
-        return $data;
     }
 }

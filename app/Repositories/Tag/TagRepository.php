@@ -93,7 +93,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Tag
      */
-    public function find(int $tagId) : Tag
+    public function find(int $tagId): Tag
     {
         $tag = $this->user->tags()->find($tagId);
         if (is_null($tag)) {
@@ -108,7 +108,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Tag
      */
-    public function findByTag(string $tag) : Tag
+    public function findByTag(string $tag): Tag
     {
         $tags = $this->user->tags()->get();
         /** @var Tag $tag */

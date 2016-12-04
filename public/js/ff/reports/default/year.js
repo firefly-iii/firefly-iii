@@ -5,7 +5,9 @@ $(function () {
     drawChart();
 
     loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
-    loadAjaxPartial('categoryPeriodReport', categoryPeriodReportUri);
+
+    loadAjaxPartial('categoryExpense', categoryExpenseUri);
+    loadAjaxPartial('categoryIncome', categoryIncomeUri);
 });
 
 function drawChart() {

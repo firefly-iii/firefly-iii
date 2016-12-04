@@ -32,40 +32,6 @@ use Navigation;
 class CategoryController extends Controller
 {
     /**
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return string
-     */
-    public function categoryPeriodReport(Carbon $start, Carbon $end, Collection $accounts)
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('category-period-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            Log::debug('Return report from cache');
-
-            return $cache->get();
-        }
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-        $report     = $repository->getCategoryPeriodReport($categories, $accounts, $start, $end, true);
-        $report     = $this->filterCategoryPeriodReport($report);
-        $periods    = Navigation::listOfPeriods($start, $end);
-
-        $result = view('reports.partials.category-period', compact('categories', 'periods', 'report'))->render();
-
-        $cache->store($result);
-
-        return $result;
-    }
-
-    /**
      * @param ReportHelperInterface $helper
      * @param Carbon                $start
      * @param Carbon                $end
@@ -94,28 +60,89 @@ class CategoryController extends Controller
     }
 
     /**
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     */
+    public function expenseReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-period-expenses-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            Log::debug('Return report from cache');
+            return $cache->get();
+        }
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
+        $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
+        $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
+        $report     = $this->filterReport($data);
+        $periods    = Navigation::listOfPeriods($start, $end);
+        $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+
+        $cache->store($result);
+
+        return $result;
+    }
+
+    /**
+     *
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return string
+     */
+    public function incomeReport(Carbon $start, Carbon $end, Collection $accounts)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-period-income-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            Log::debug('Return report from cache');
+            return $cache->get();
+        }
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
+        $data       = $repository->periodIncome($categories, $accounts, $start, $end);
+        $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
+        $report     = $this->filterReport($data);
+        $periods    = Navigation::listOfPeriods($start, $end);
+        $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+
+        $cache->store($result);
+
+        return $result;
+    }
+
+
+    /**
      * Filters empty results from category period report
      *
      * @param array $data
      *
      * @return array
      */
-    private function filterCategoryPeriodReport(array $data): array
+    private function filterReport(array $data): array
     {
-        /**
-         * @var string $type
-         * @var array  $report
-         */
-        foreach ($data as $type => $report) {
-            foreach ($report as $categoryId => $set) {
-                $sum = '0';
-                foreach ($set['entries'] as $amount) {
-                    $sum = bcadd($amount, $sum);
-                }
-                $data[$type][$categoryId]['sum'] = $sum;
-                if (bccomp('0', $sum) === 0) {
-                    unset($data[$type][$categoryId]);
-                }
+        foreach ($data as $categoryId => $set) {
+            $sum = '0';
+            foreach ($set['entries'] as $amount) {
+                $sum = bcadd($amount, $sum);
+            }
+            $data[$categoryId]['sum'] = $sum;
+            if (bccomp('0', $sum) === 0) {
+                unset($data[$categoryId]);
             }
         }
 
@@ -123,25 +150,5 @@ class CategoryController extends Controller
         return $data;
     }
 
-    /**
-     * @param int        $categoryId
-     * @param Collection $categories
-     *
-     * @return string
-     */
-    private function getCategoryName(int $categoryId, Collection $categories): string
-    {
-
-        $first = $categories->filter(
-            function (Category $category) use ($categoryId) {
-                return $categoryId === $category->id;
-            }
-        );
-        if (!is_null($first->first())) {
-            return $first->first()->name;
-        }
-
-        return '(unknown)';
-    }
 
 }

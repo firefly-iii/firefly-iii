@@ -1,75 +1,44 @@
 <table class="table table-hover sortable table-condensed">
     <thead>
     <tr>
-        <th rowspan="2" data-defaultsort="disabled">{{ 'category'|_ }}</th>
+        <th data-defaultsort="disabled">{{ 'category'|_ }}</th>
         {% for period in periods %}
-            <th colspan="2" data-defaultsort="disabled">{{ period }}</th>
+            <th data-defaultsort="disabled">{{ period }}</th>
         {% endfor %}
-        <th colspan="2" data-defaultsort="disabled">{{ 'sum'|_ }}</th>
-    </tr>
-    <tr>
-        {% for period in periods %}
-            <th data-defaultsign="_19">In</th>
-            <th data-defaultsign="_19">Out</th>
-        {% endfor %}
-        <th data-defaultsign="_19">In</th>
-        <th data-defaultsign="_19">Out</th>
+        <th data-defaultsort="disabled">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for category in categories %}
-        {% if report.income[category.id] or report.expense[category.id] %}
-            <tr>
-                <td data-value="{{ category.name }}">
-                    <a title="{{ category.name }}" href="#" data-category="{{ category.id }}" class="category-chart-activate">{{ category.name }}</a>
+    {% for id, info in report %}
+        <tr>
+            <td data-value="{{ info.name }}">
+                <a title="{{ info.name }}" href="#" data-category="{{ id }}" class="category-chart-activate">{{ info.name }}</a>
+            </td>
+
+            {% for key, period in periods %}
+                {# income first #}
+                {% if(info.entries[key]) %}
+                    <td data-value="{{ info.entries[key] }}">
+                        {{ info.entries[key]|formatAmount }}
+                    </td>
+                {% else %}
+                    <td data-value="0">
+                        {{ 0|formatAmount }}
+                    </td>
+                {% endif %}
+            {% endfor %}
+
+            {# if sum of income, display: #}
+            {% if info.sum %}
+                <td data-value="{{ info.sum }}">
+                    {{ info.sum|formatAmount }}
                 </td>
-
-                {% for key, period in periods %}
-                    {# income first #}
-                    {% if(report.income[category.id].entries[key]) %}
-                        <td data-value="{{ report.income[category.id].entries[key] }}">
-                            {{ report.income[category.id].entries[key]|formatAmount }}
-                        </td>
-                    {% else %}
-                        <td data-value="0">
-                            {{ 0|formatAmount }}
-                        </td>
-                    {% endif %}
-
-                    {# expenses #}
-                    {% if(report.expense[category.id].entries[key]) %}
-                        <td data-value="{{ report.expense[category.id].entries[key] }}">
-                            {{ report.expense[category.id].entries[key]|formatAmount }}
-                        </td>
-                    {% else %}
-                        <td data-value="0">
-                            {{ 0|formatAmount }}
-                        </td>
-                    {% endif %}
-                {% endfor %}
-
-                {# if sum of income, display: #}
-                {% if report.income[category.id].sum %}
-                    <td data-value="{{ report.income[category.id].sum }}">
-                        {{ report.income[category.id].sum|formatAmount }}
-                    </td>
-                {% else %}
-                    <td data-value="0">
-                        {{ 0|formatAmount }}
-                    </td>
-                {% endif %}
-                {# if sum of expense, display: #}
-                {% if report.expense[category.id].sum %}
-                    <td data-value="{{ report.expense[category.id].sum }}">
-                        {{ report.expense[category.id].sum|formatAmount }}
-                    </td>
-                {% else %}
-                    <td data-value="0">
-                        {{ 0|formatAmount }}
-                    </td>
-                {% endif %}
-            </tr>
-        {% endif %}
+            {% else %}
+                <td data-value="0">
+                    {{ 0|formatAmount }}
+                </td>
+            {% endif %}
+        </tr>
     {% endfor %}
     </tbody>
 </table>

@@ -176,32 +176,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * This method is being used to generate the category overview in the year/multi-year report. Its used
-     * in both the year/multi-year budget overview AND in the accompanying chart.
-     *
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param @bool $noCategory
-     *
-     * @return array
-     */
-    public function getCategoryPeriodReport(Collection $categories, Collection $accounts, Carbon $start, Carbon $end, bool $noCategory): array
-    {
-        $data = [
-            'income'  => $this->getCategoryReportData($categories, $accounts, $start, $end, $noCategory, [TransactionType::DEPOSIT, TransactionType::TRANSFER]),
-            'expense' => $this->getCategoryReportData(
-                $categories, $accounts, $start, $end, $noCategory, [TransactionType::WITHDRAWAL, TransactionType::TRANSFER]
-            ),
-        ];
-
-        return $data;
-
-
-    }
-
-    /**
      * @param Category   $category
      * @param Collection $accounts
      *
@@ -248,6 +222,158 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $last;
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        $data         = [];
+        // prep data array:
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $data[$category->id] = [
+                'name'    => $category->name,
+                'sum'     => '0',
+                'entries' => [],
+            ];
+        }
+
+        // get all transactions:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setCategories($categories)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->withOpposingAccount()
+                  ->enableInternalFilter();
+        $transactions = $collector->getJournals();
+
+        // loop transactions:
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
+            $date                                = $transaction->date->format($carbonFormat);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])->enableInternalFilter();
+        $collector->withoutCategory();
+        $transactions = $collector->getJournals();
+        $result       = [
+            'entries' => [],
+            'name'    => strval(trans('firefly.no_category')),
+            'sum'     => '0',
+        ];
+
+        foreach ($transactions as $transaction) {
+            $date = $transaction->date->format($carbonFormat);
+
+            if (!isset($result['entries'][$date])) {
+                $result['entries'][$date] = '0';
+            }
+            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        $data         = [];
+        // prep data array:
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $data[$category->id] = [
+                'name'    => $category->name,
+                'sum'     => '0',
+                'entries' => [],
+            ];
+        }
+
+        // get all transactions:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setCategories($categories)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->withOpposingAccount()
+                  ->enableInternalFilter();
+        $transactions = $collector->getJournals();
+
+        // loop transactions:
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
+            $date                                = $transaction->date->format($carbonFormat);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])->enableInternalFilter();
+        $collector->withoutCategory();
+        $transactions = $collector->getJournals();
+        $result       = [
+            'entries' => [],
+            'name'    => strval(trans('firefly.no_category')),
+            'sum'     => '0',
+        ];
+
+        foreach ($transactions as $transaction) {
+            $date = $transaction->date->format($carbonFormat);
+
+            if (!isset($result['entries'][$date])) {
+                $result['entries'][$date] = '0';
+            }
+            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+        }
+
+        return $result;
     }
 
     /**
@@ -312,55 +438,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category->save();
 
         return $category;
-    }
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param bool       $noCategory
-     * @param array      $types
-     *
-     * @return array
-     */
-    private function getCategoryReportData(Collection $categories, Collection $accounts, Carbon $start, Carbon $end, bool $noCategory, array $types): array
-    {
-        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        $data         = [];
-        // prep data array:
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $data[$category->id] = [
-                'name'    => $category->name,
-                'sum'     => '0',
-                'entries' => [],
-            ];
-        }
-
-        // get all transactions:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end);
-        $collector->setCategories($categories)->setTypes($types)
-                  ->withOpposingAccount()
-                  ->enableInternalFilter();
-        $transactions = $collector->getJournals();
-
-        // loop transactions:
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
-            $date                                = $transaction->date->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
-        }
-
-        if ($noCategory) {
-            // and now the same for stuff without a budget:
-            //$data[0] = $this->getNoBudgetPeriodReport($start, $end);
-        }
-
-        return $data;
     }
 
     /**

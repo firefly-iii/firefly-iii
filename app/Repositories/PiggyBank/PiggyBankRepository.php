@@ -117,7 +117,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return Collection
      */
-    public function getPiggyBanksWithAmount() : Collection
+    public function getPiggyBanksWithAmount(): Collection
     {
         $set = $this->getPiggyBanks();
         foreach ($set as $piggy) {

@@ -78,6 +78,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
         }
 
+        $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
         $reportType  = 'audit';
         $accountIds  = join(',', $this->accounts->pluck('id')->toArray());
         $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
@@ -87,10 +88,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
                         'from', 'to', 'budget', 'category', 'bill',
                         // more new optional fields
                         'internal_reference', 'notes',
-
                         'create_date', 'update_date',
         ];
-        $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
+
 
         return view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
             ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)

@@ -105,7 +105,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function find(int $journalId) : TransactionJournal
+    public function find(int $journalId): TransactionJournal
     {
         $journal = $this->user->transactionJournals()->where('id', $journalId)->first();
         if (is_null($journal)) {

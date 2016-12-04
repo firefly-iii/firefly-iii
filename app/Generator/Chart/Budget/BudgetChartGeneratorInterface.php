@@ -44,4 +44,11 @@ interface BudgetChartGeneratorInterface
      * @return array
      */
     public function period(array $entries): array;
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function periodNoBudget(array $entries): array;
 }

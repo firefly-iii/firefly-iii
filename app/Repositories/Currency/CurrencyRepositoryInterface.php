@@ -39,7 +39,7 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function find(int $currencyId) : TransactionCurrency;
+    public function find(int $currencyId): TransactionCurrency;
 
     /**
      * Find by currency code
@@ -48,7 +48,7 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findByCode(string $currencyCode) : TransactionCurrency;
+    public function findByCode(string $currencyCode): TransactionCurrency;
 
     /**
      * Find by currency name
@@ -57,7 +57,7 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findByName(string $currencyName) : TransactionCurrency;
+    public function findByName(string $currencyName): TransactionCurrency;
 
     /**
      * Find by currency symbol
@@ -66,7 +66,7 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findBySymbol(string $currencySymbol) : TransactionCurrency;
+    public function findBySymbol(string $currencySymbol): TransactionCurrency;
 
     /**
      * @return Collection

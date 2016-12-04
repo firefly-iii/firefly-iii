@@ -219,11 +219,10 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param bool       $noBudget
      *
      * @return array
      */
-    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end, bool $noBudget): array
+    public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
         $data         = [];
@@ -250,11 +249,6 @@ class BudgetRepository implements BudgetRepositoryInterface
             $budgetId                          = max(intval($transaction->transaction_journal_budget_id), intval($transaction->transaction_budget_id));
             $date                              = $transaction->date->format($carbonFormat);
             $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $transaction->transaction_amount);
-        }
-
-        if ($noBudget) {
-            // and now the same for stuff without a budget:
-            $data[0] = $this->getNoBudgetPeriodReport($start, $end);
         }
 
         return $data;
@@ -293,6 +287,40 @@ class BudgetRepository implements BudgetRepositoryInterface
         );
 
         return $set;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $collector->withoutBudget();
+        $transactions = $collector->getJournals();
+        $result       = [
+            'entries' => [],
+            'name'    => strval(trans('firefly.no_budget')),
+            'sum'     => '0',
+        ];
+
+        foreach ($transactions as $transaction) {
+            $date = $transaction->date->format($carbonFormat);
+
+            if (!isset($result['entries'][$date])) {
+                $result['entries'][$date] = '0';
+            }
+            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+        }
+
+        return $result;
     }
 
     /**
@@ -532,59 +560,5 @@ class BudgetRepository implements BudgetRepositoryInterface
         // so handled automatically.
 
         return $limit;
-    }
-
-    /**
-     * @param int        $budgetId
-     * @param Collection $budgets
-     *
-     * @return string
-     */
-    private function getBudgetName(int $budgetId, Collection $budgets): string
-    {
-
-        $first = $budgets->filter(
-            function (Budget $budget) use ($budgetId) {
-                return $budgetId === $budget->id;
-            }
-        );
-        if (!is_null($first->first())) {
-            return $first->first()->name;
-        }
-
-        return '(unknown)';
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    private function getNoBudgetPeriodReport(Carbon $start, Carbon $end): array
-    {
-        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end);
-        $collector->setTypes([TransactionType::WITHDRAWAL]);
-        $collector->withoutBudget();
-        $transactions = $collector->getJournals();
-        $result       = [
-            'entries' => [],
-            'name'    => strval(trans('firefly.no_budget')),
-            'sum'     => '0',
-        ];
-
-        foreach ($transactions as $transaction) {
-            $date = $transaction->date->format($carbonFormat);
-
-            if (!isset($result['entries'][$date])) {
-                $result['entries'][$date] = '0';
-            }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
-        }
-
-        return $result;
     }
 }

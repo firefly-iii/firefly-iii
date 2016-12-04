@@ -113,14 +113,27 @@
         </div>
     </div>
 
-    {# same thing but for categories #}
+    {# same thing but for categories (expenses) #}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                    <h3 class="box-title">{{ 'categories'|_ }} ({{ 'expenses'|_ }})</h3>
                 </div>
-                <div class="box-body no-padding table-responsive loading" id="categoryPeriodReport">
+                <div class="box-body no-padding table-responsive loading" id="categoryExpense">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# same thing but for categories (income) #}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'categories'|_ }} ({{ 'income'|_ }})</h3>
+                </div>
+                <div class="box-body no-padding table-responsive loading" id="categoryIncome">
                 </div>
             </div>
         </div>
@@ -164,7 +177,9 @@
         var incExpReportUri = '{{ route('reports.data.incExpReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
 
         var budgetPeriodReportUri = '{{ route('reports.data.budgetPeriodReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var categoryPeriodReportUri = '{{ route('reports.data.categoryPeriodReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var categoryExpenseUri = '{{ route('reports.data.categoryExpense', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var categoryIncomeUri = '{{ route('reports.data.categoryIncome', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+
     </script>
 
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>

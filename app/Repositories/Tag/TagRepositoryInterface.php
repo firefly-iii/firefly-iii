@@ -49,14 +49,14 @@ interface TagRepositoryInterface
      *
      * @return Tag
      */
-    public function find(int $tagId) : Tag;
+    public function find(int $tagId): Tag;
 
     /**
      * @param string $tag
      *
      * @return Tag
      */
-    public function findByTag(string $tag) : Tag;
+    public function findByTag(string $tag): Tag;
 
     /**
      * This method returns all the user's tags.

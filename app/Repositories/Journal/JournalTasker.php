@@ -172,36 +172,36 @@ class JournalTasker implements JournalTaskerInterface
 
         // go!
         $sum = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('account_id', $transaction->account_id)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transactions.id', '!=', $transactionId)
-            ->where(
-                function (Builder $q1) use ($date, $order, $journalId, $identifier) {
-                    $q1->where('transaction_journals.date', '<', $date); // date
-                    $q1->orWhere(
-                        function (Builder $q2) use ($date, $order) { // function 1
-                            $q2->where('transaction_journals.date', $date);
-                            $q2->where('transaction_journals.order', '>', $order);
-                        }
-                    );
-                    $q1->orWhere(
-                        function (Builder $q3) use ($date, $order, $journalId) { // function 2
-                            $q3->where('transaction_journals.date', $date);
-                            $q3->where('transaction_journals.order', $order);
-                            $q3->where('transaction_journals.id', '<', $journalId);
-                        }
-                    );
-                    $q1->orWhere(
-                        function (Builder $q4) use ($date, $order, $journalId, $identifier) { // function 3
-                            $q4->where('transaction_journals.date', $date);
-                            $q4->where('transaction_journals.order', $order);
-                            $q4->where('transaction_journals.id', $journalId);
-                            $q4->where('transactions.identifier', '>', $identifier);
-                        }
-                    );
-                }
-            )->sum('transactions.amount');
+                          ->where('account_id', $transaction->account_id)
+                          ->whereNull('transactions.deleted_at')
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->where('transactions.id', '!=', $transactionId)
+                          ->where(
+                              function (Builder $q1) use ($date, $order, $journalId, $identifier) {
+                                  $q1->where('transaction_journals.date', '<', $date); // date
+                                  $q1->orWhere(
+                                      function (Builder $q2) use ($date, $order) { // function 1
+                                          $q2->where('transaction_journals.date', $date);
+                                          $q2->where('transaction_journals.order', '>', $order);
+                                      }
+                                  );
+                                  $q1->orWhere(
+                                      function (Builder $q3) use ($date, $order, $journalId) { // function 2
+                                          $q3->where('transaction_journals.date', $date);
+                                          $q3->where('transaction_journals.order', $order);
+                                          $q3->where('transaction_journals.id', '<', $journalId);
+                                      }
+                                  );
+                                  $q1->orWhere(
+                                      function (Builder $q4) use ($date, $order, $journalId, $identifier) { // function 3
+                                          $q4->where('transaction_journals.date', $date);
+                                          $q4->where('transaction_journals.order', $order);
+                                          $q4->where('transaction_journals.id', $journalId);
+                                          $q4->where('transactions.identifier', '>', $identifier);
+                                      }
+                                  );
+                              }
+                          )->sum('transactions.amount');
 
         return strval($sum);
     }

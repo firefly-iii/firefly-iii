@@ -253,6 +253,48 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     * @param Collection                $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function periodNoBudget(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty('no-budget');
+        $cache->addProperty('period');
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+
+        // the expenses:
+        $periods  = Navigation::listOfPeriods($start, $end);
+        $entries  = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
+
+        // join them:
+        $result = [];
+        foreach (array_keys($periods) as $period) {
+            $nice          = $periods[$period];
+            $result[$nice] = [
+                'spent'    => isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0',
+            ];
+        }
+
+        $data = $this->generator->periodNoBudget($result);
+
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+    /**
      * @param Collection $repetitions
      * @param Budget     $budget
      * @param Carbon     $start

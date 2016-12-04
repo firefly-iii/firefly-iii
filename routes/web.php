@@ -210,6 +210,7 @@ Route::group(
 
     // budgets:
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
+    Route::get('/chart/budget/period/0/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@periodNoBudget']);
     Route::get('/chart/budget/period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@period']);
 
     // this chart is used in reports:
@@ -410,11 +411,16 @@ Route::group(
         ['uses' => 'Report\BudgetController@budgetPeriodReport', 'as' => 'reports.data.budgetPeriodReport']
     );
 
-    // category period overview
+    // category period overview (expense and income)
     Route::get(
-        '/reports/data/category-period/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\CategoryController@categoryPeriodReport', 'as' => 'reports.data.categoryPeriodReport']
+        '/reports/data/category-expense/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\CategoryController@expenseReport', 'as' => 'reports.data.categoryExpense']
     );
+    Route::get(
+        '/reports/data/category-income/{start_date}/{end_date}/{accountList}',
+        ['uses' => 'Report\CategoryController@incomeReport', 'as' => 'reports.data.categoryIncome']
+    );
+
 
     /**
      * Rules Controller
