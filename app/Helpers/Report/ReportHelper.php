@@ -137,57 +137,6 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * Get a full report on the users expenses during the period for a list of accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Expense
-     */
-    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense
-    {
-        $object = new Expense;
-
-        /** @var AccountTaskerInterface $tasker */
-        $tasker     = app(AccountTaskerInterface::class);
-        $collection = $tasker->expenseReport($accounts, $accounts, $start, $end);
-
-        /** @var stdClass $entry */
-        foreach ($collection as $entry) {
-            $object->addToTotal($entry->amount);
-            $object->addOrCreateExpense($entry);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Get a full report on the users incomes during the period for the given accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Income
-     */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income
-    {
-        $object = new Income;
-        /** @var AccountTaskerInterface $tasker */
-        $tasker     = app(AccountTaskerInterface::class);
-        $collection = $tasker->incomeReport($accounts, $accounts, $start, $end);
-
-        /** @var stdClass $entry */
-        foreach ($collection as $entry) {
-            $object->addToTotal($entry->amount);
-            $object->addOrCreateIncome($entry);
-        }
-
-        return $object;
-    }
-
-    /**
      * @param Carbon $date
      *
      * @return array

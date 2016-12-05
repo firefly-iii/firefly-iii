@@ -52,28 +52,6 @@ interface ReportHelperInterface
     public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection;
 
     /**
-     * Get a full report on the users expenses during the period for a list of accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Expense
-     */
-    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense;
-
-    /**
-     * Get a full report on the users incomes during the period for the given accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Income
-     */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income;
-
-    /**
      * @param Carbon $date
      *
      * @return array
