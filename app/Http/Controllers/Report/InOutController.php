@@ -49,7 +49,96 @@ class InOutController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
+        $expenses = $this->getExpenseReport($start, $end, $accounts);
+        $result   = view('reports.partials.expenses', compact('expenses'))->render();
+        $cache->store($result);
 
+        return $result;
+
+    }
+
+    /**
+     * @param ReportHelperInterface $helper
+     * @param Carbon                $start
+     * @param Carbon                $end
+     * @param Collection            $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incExpReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('inc-exp-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $incomes  = $this->getIncomeReport($start, $end, $accounts);
+        $expenses = $this->getExpenseReport($start, $end, $accounts);
+        $incomeSum = array_sum(
+            array_map(
+                function ($item) {
+                    return $item['sum'];
+                }, $incomes
+            )
+        );
+
+        $expensesSum = array_sum(
+            array_map(
+                function ($item) {
+                    return $item['sum'];
+                }, $expenses
+            )
+        );
+
+        $result = view('reports.partials.income-vs-expenses', compact('incomeSum', 'expensesSum'))->render();
+        $cache->store($result);
+
+        return $result;
+
+    }
+
+    /**
+     * @param ReportHelperInterface $helper
+     * @param Carbon                $start
+     * @param Carbon                $end
+     * @param Collection            $accounts
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incomeReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('income-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            //return $cache->get();
+        }
+        $income = $this->getIncomeReport($start, $end, $accounts);
+
+        $result = view('reports.partials.income', compact('income'))->render();
+        $cache->store($result);
+
+        return $result;
+
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    private function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
         // get all expenses for the given accounts in the given period!
         // also transfers!
         // get all transactions:
@@ -83,63 +172,18 @@ class InOutController extends Controller
         // Add $data as the last parameter, to sort by the common key
         array_multisort($sum, SORT_ASC, $expenses);
 
-        $result = view('reports.partials.expenses', compact('expenses'))->render();
-        $cache->store($result);
-
-        return $result;
-
+        return $expenses;
     }
 
     /**
-     * @param ReportHelperInterface $helper
-     * @param Carbon                $start
-     * @param Carbon                $end
-     * @param Collection            $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
-    public function incExpReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    private function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('inc-exp-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $incomes  = $helper->getIncomeReport($start, $end, $accounts);
-        $expenses = $helper->getExpenseReport($start, $end, $accounts);
-
-        $result = view('reports.partials.income-vs-expenses', compact('expenses', 'incomes'))->render();
-        $cache->store($result);
-
-        return $result;
-
-    }
-
-    /**
-     * @param ReportHelperInterface $helper
-     * @param Carbon                $start
-     * @param Carbon                $end
-     * @param Collection            $accounts
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function incomeReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('income-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            //return $cache->get();
-        }
-
         // get all expenses for the given accounts in the given period!
         // also transfers!
         // get all transactions:
@@ -162,11 +206,18 @@ class InOutController extends Controller
         );
         $income       = $this->groupByOpposing($transactions);
 
-        $result = view('reports.partials.income', compact('income'))->render();
-        $cache->store($result);
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($income as $accountId => $row) {
+            $sum[$accountId] = floatval($row['sum']);
+        }
 
-        return $result;
+        // Sort the data with volume descending, edition ascending
+        // Add $data as the last parameter, to sort by the common key
+        array_multisort($sum, SORT_ASC, $income);
 
+        return $income;
     }
 
     /**
