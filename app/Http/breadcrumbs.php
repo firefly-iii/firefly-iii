@@ -404,9 +404,9 @@ Breadcrumbs::register(
  * PREFERENCES
  */
 Breadcrumbs::register(
-    'preferences', function (BreadCrumbGenerator $breadcrumbs) {
+    'preferences.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences'));
+    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences.index'));
 
 }
 );
@@ -414,7 +414,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'preferences.code', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences'));
+    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences.index'));
 
 }
 );
@@ -423,22 +423,22 @@ Breadcrumbs::register(
  * PROFILE
  */
 Breadcrumbs::register(
-    'profile', function (BreadCrumbGenerator $breadcrumbs) {
+    'profile.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile'));
+    $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile.index'));
 
 }
 );
 Breadcrumbs::register(
     'profile.change-password', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('profile');
+    $breadcrumbs->parent('profile.index');
     $breadcrumbs->push(trans('breadcrumbs.changePassword'), route('profile.change-password'));
 
 }
 );
 Breadcrumbs::register(
     'profile.delete-account', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('profile');
+    $breadcrumbs->parent('profile.index');
     $breadcrumbs->push(trans('firefly.delete_account'), route('profile.delete-account'));
 
 }

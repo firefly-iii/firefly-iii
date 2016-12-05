@@ -1,10 +1,12 @@
 <?php
 /**
- * routes.php
+ * web.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
@@ -62,7 +64,6 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-logged-in-2fa-no-activation'], function () {
-    //
     Route::get('/confirm-your-account', ['uses' => 'Auth\ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
     Route::get('/resend-confirmation', ['uses' => 'Auth\ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
     Route::get('/confirmation/{code}', ['uses' => 'Auth\ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
@@ -73,12 +74,12 @@ Route::group(
 /**
  * For all other routes, the user must be fully authenticated and have an activated account.
  */
+
+/**
+ * Home Controller
+ */
 Route::group(
     ['middleware' => ['user-full-auth']], function () {
-
-    /**
-     * Home Controller
-     */
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'testFlash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
@@ -92,12 +93,11 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
-
     Route::get('{what}', ['uses' => 'AccountController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
-    Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']); // consistent
+    Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
     Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
     Route::get('show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'show.date']);
 
@@ -128,8 +128,7 @@ Route::group(
  * Bills Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'bills','as' => 'bills.'], function () {
-
+    ['middleware' => 'user-full-auth', 'prefix' => 'bills', 'as' => 'bills.'], function () {
     Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
     Route::get('rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'rescan']);
     Route::get('create', ['uses' => 'BillController@create', 'as' => 'create']);
@@ -140,59 +139,58 @@ Route::group(
 
     Route::post('update/{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
     Route::post('destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'destroy']);
-});
+}
+);
 
 
 /**
  * Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'budgets','as' => 'budgets.'], function () {
-
+    ['middleware' => 'user-full-auth', 'prefix' => 'budgets', 'as' => 'budgets.'], function () {
     Route::get('', ['uses' => 'BudgetController@index', 'as' => 'index']);
     Route::get('income', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
     Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
-
-    Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']); // consistent
+    Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
     Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showWithRepetition', 'as' => 'showWithRepetition']);
     Route::get('list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'noBudget']);
 
-    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'postIncome']);  // consistent
+    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'postIncome']);
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
     Route::post('update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
     Route::post('destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'destroy']);
     Route::post('amount/{budget}', ['uses' => 'BudgetController@amount']);
-});
+}
+);
 
 /**
  * Category Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'categories','as' => 'categories.'], function () {
-
+    ['middleware' => 'user-full-auth', 'prefix' => 'categories', 'as' => 'categories.'], function () {
     Route::get('', ['uses' => 'CategoryController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'CategoryController@create', 'as' => 'create']);
     Route::get('edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'edit']);
     Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
 
-    Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);  // consistent
+    Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
     Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showWithDate', 'as' => 'show.date']);
     Route::get('list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'noCategory']);
 
     Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
     Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
     Route::post('destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'destroy']);
-});
+}
+);
 
 
 /**
  * Currency Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'currencies','as' => 'currencies.'], function () {
-
+    ['middleware' => 'user-full-auth', 'prefix' => 'currencies', 'as' => 'currencies.'], function () {
     Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'CurrencyController@create', 'as' => 'create']);
     Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
@@ -203,238 +201,285 @@ Route::group(
     Route::post('update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
     Route::post('destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'destroy']);
 
-});
+}
+);
 
 /**
  * Export Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'export','as' => 'export.'], function () {
-
+    ['middleware' => 'user-full-auth', 'prefix' => 'export', 'as' => 'export.'], function () {
     Route::get('', ['uses' => 'ExportController@index', 'as' => 'index']);
     Route::get('status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
     Route::get('download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'download']);
 
     Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'export']);
 
-});
+}
+);
+
+/**
+ * Chart\Account Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'], function () {
+    Route::get('frontpage', ['uses' => 'AccountController@frontpage', 'as' => 'frontpage']);
+    Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
+    Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
+    Route::get('report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'AccountController@report', 'as' => 'report']);
+    Route::get('{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
+    Route::get('{account}/{date}', ['uses' => 'AccountController@specificPeriod', 'as' => 'specific-period']);
+
+    Route::get('income-by-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeByCategory', 'as' => 'incomeByCategory']);
+    Route::get('expense-by-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseByCategory', 'as' => 'expenseByCategory']);
+    Route::get('expense-by-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseByBudget', 'as' => 'expenseByBudget']);
+
+}
+);
+
+/**
+ * Chart\Bill Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/bill'], function () {
+    Route::get('frontpage', ['uses' => 'BillController@frontpage']);
+    Route::get('{bill}', ['uses' => 'BillController@single']);
+
+}
+);
+
+/**
+ * Chart\Budget Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget'], function () {
+    Route::get('frontpage', ['uses' => 'BudgetController@frontpage']);
+    Route::get('period/0/default/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@periodNoBudget']);
+    Route::get('period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@period']);
+    Route::get('{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit']);
+    Route::get('{budget}', ['uses' => 'BudgetController@budget']);
+
+}
+);
+
+/**
+ * Chart\Category Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/category'], function () {
+    Route::get('frontpage', ['uses' => 'CategoryController@frontpage']);
+    Route::get('{category}/period', ['uses' => 'CategoryController@currentPeriod']);
+    Route::get('{category}/period/{date}', ['uses' => 'CategoryController@specificPeriod']);
+    Route::get('{category}/all', ['uses' => 'CategoryController@all']);
+    Route::get('{category}/report-period/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@reportPeriod']);
+
+    // these charts are used in reports (category reports):
+    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income', ['uses' => 'CategoryReportController@categoryIncome']);
+    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense', ['uses' => 'CategoryReportController@categoryExpense']);
+    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income', ['uses' => 'CategoryReportController@accountIncome']);
+    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense', ['uses' => 'CategoryReportController@accountExpense']);
+    Route::get('report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryReportController@mainChart']);
+
+}
+);
+
+/**
+ * Chart\PiggyBank Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/piggy-bank'], function () {
+    Route::get('{piggyBank}', ['uses' => 'PiggyBankController@history']);
+}
+);
+
+/**
+ * Chart\Report Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/report'], function () {
+    Route::get('in-out/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@yearInOut']);
+    Route::get('in-out-sum/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@yearInOutSummarized']);
+    Route::get('net-worth/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@netWorth']);
+
+}
+);
+
+/**
+ * Import Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'import', 'as' => 'import.'], function () {
+    Route::get('', ['uses' => 'ImportController@index', 'as' => 'index']);
+    Route::get('configure/{importJob}', ['uses' => 'ImportController@configure', 'as' => 'configure']);
+    Route::get('settings/{importJob}', ['uses' => 'ImportController@settings', 'as' => 'settings']);
+    Route::get('complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'complete']);
+    Route::get('download/{importJob}', ['uses' => 'ImportController@download', 'as' => 'download']);
+    Route::get('status/{importJob}', ['uses' => 'ImportController@status', 'as' => 'status']);
+    Route::get('json/{importJob}', ['uses' => 'ImportController@json', 'as' => 'json']);
+    Route::get('finished/{importJob}', ['uses' => 'ImportController@finished', 'as' => 'finished']);
+
+    Route::post('upload', ['uses' => 'ImportController@upload', 'as' => 'upload']);
+    Route::post('configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'process_configuration']);
+    Route::post('settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'postSettings']);
+    Route::post('start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'start']);
+
+
+}
+);
+
+/**
+ * Help Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'help', 'as' => 'help.'], function () {
+    Route::get('{route}', ['uses' => 'HelpController@show', 'as' => 'show']);
+
+}
+);
+
+/**
+ * JSON Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'admin.'], function () {
+    Route::get('expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'expense-accounts']);
+    Route::get('revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'revenue-accounts']);
+    Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
+    Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
+    Route::get('tour', ['uses' => 'JsonController@tour', 'as' => 'tour']);
+    Route::get('box/in', ['uses' => 'JsonController@boxIn', 'as' => 'box.in']);
+    Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
+    Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.paid']);
+    Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.unpaid']);
+    Route::get('transaction-journals/{what}', 'JsonController@transactionJournals');
+    Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
+    Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
+
+    Route::post('end-tour', ['uses' => 'JsonController@endTour']);
+
+}
+);
+
+
+/**
+ * NewUser Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'new-user', 'as' => 'new-user.'], function () {
+    Route::get('', ['uses' => 'NewUserController@index', 'as' => 'index']);
+    Route::post('submit', ['uses' => 'NewUserController@submit', 'as' => 'submit']);
+}
+);
+
+/**
+ * Piggy Bank Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'piggy-banks', 'as' => 'piggy-banks.'], function () {
+    Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
+    Route::get('add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'addMoney']);
+    Route::get('remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'removeMoney']);
+    Route::get('add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'add-money-mobile']);
+    Route::get('remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'remove-money-mobile']);
+    Route::get('create', ['uses' => 'PiggyBankController@create', 'as' => 'create']);
+    Route::get('edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'edit']);
+    Route::get('delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
+    Route::get('show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'show']);
+    Route::post('store', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
+    Route::post('update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
+    Route::post('destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'destroy']);
+    Route::post('add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'add']);
+    Route::post('remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'remove']);
+    Route::post('sort', ['uses' => 'PiggyBankController@order', 'as' => 'order']);
+
+
+}
+);
+
+
+/**
+ * Name Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'preferences', 'as' => 'preferences.'], function () {
+    Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
+    Route::get('/code', ['uses' => 'PreferencesController@code', 'as' => 'code']);
+    Route::get('/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'delete-code']);
+    Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
+    Route::post('/code', ['uses' => 'PreferencesController@postCode', 'as' => 'code.store']);
+
+}
+);
+
+/**
+ * Profile Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'profile', 'as' => 'profile.'], function () {
+
+    Route::get('', ['uses' => 'ProfileController@index', 'as' => 'index']);
+    Route::get('change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
+    Route::get('delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
+    Route::post('delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account.post']);
+    Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.store']);
+}
+);
+
+/**
+ * Name Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'reports', 'as' => 'reports.'], function () {
+
+    Route::get('', ['uses' => 'ReportController@index', 'as' => 'index']);
+
+
+    Route::get('options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'options']);
+    Route::get('default/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@default', 'as' => 'report.default']);
+    Route::get('audit/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@audit', 'as' => 'report.audit']);
+    Route::get('category/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'ReportController@category', 'as' => 'report.category']);
+
+    Route::post('', ['uses' => 'ReportController@postIndex', 'as' => 'index.post']);
+}
+);
+
+/**
+ * Report Data AccountController
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account'], function () {
+    Route::get('general/{start_date}/{end_date}/{accountList}', ['uses' => 'AccountController@general', 'as' => 'general']);
+}
+);
+
+/**
+ * Report Data Income/Expenses Controller (called financial operations)
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/operations', 'as' => 'report-data.operations'], function () {
+    Route::get('operations/{start_date}/{end_date}/{accountList}', ['uses' => 'OperationsController@operations', 'as' => 'operations']);
+    Route::get('income/{start_date}/{end_date}/{accountList}', ['uses' => 'OperationsController@income', 'as' => 'income']);
+    Route::get('expenses/{start_date}/{end_date}/{accountList}', ['uses' => 'OperationsController@expenses', 'as' => 'expenses']);
+
+}
+);
+
+/**
+ * Report Data Category Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/category', 'as' => 'report-data.category.'], function () {
+    Route::get('operations/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
+    Route::get('income/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@income', 'as' => 'income']);
+    Route::get('expenses/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@expenses', 'as' => 'expense']);
+
+}
+);
+
 
 Route::group(
     ['middleware' => ['user-full-auth']], function () {
 
-    /**
-     * ALL CHART Controllers
-     */
-    // accounts:
-    Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
-    Route::get('/chart/account/expense', ['uses' => 'Chart\AccountController@expenseAccounts']);
-    Route::get('/chart/account/revenue', ['uses' => 'Chart\AccountController@revenueAccounts']);
-    Route::get('/chart/account/report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\AccountController@report']);
-    Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
-    Route::get('/chart/account/{account}/{date}', ['uses' => 'Chart\AccountController@specificPeriod']);
-
-    Route::get(
-        '/chart/account/income-by-category/{account}/{start_date}/{end_date}',
-        ['uses' => 'Chart\AccountController@incomeByCategory', 'as' => 'chart.account.incomeByCategory']
-    );
-    Route::get(
-        '/chart/account/expense-by-category/{account}/{start_date}/{end_date}',
-        ['uses' => 'Chart\AccountController@expenseByCategory', 'as' => 'chart.account.expenseByCategory']
-    );
-    Route::get(
-        '/chart/account/expense-by-budget/{account}/{start_date}/{end_date}',
-        ['uses' => 'Chart\AccountController@expenseByBudget', 'as' => 'chart.account.expenseByBudget']
-    );
-
-
-    // bills:
-    Route::get('/chart/bill/frontpage', ['uses' => 'Chart\BillController@frontpage']);
-    Route::get('/chart/bill/{bill}', ['uses' => 'Chart\BillController@single']);
-
-    // budgets:
-    Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
-    Route::get('/chart/budget/period/0/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@periodNoBudget']);
-    Route::get('/chart/budget/period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\BudgetController@period']);
-
-    // this chart is used in reports:
-    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
-    Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
-
-    // categories:
-    Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
-    Route::get('/chart/category/{category}/period', ['uses' => 'Chart\CategoryController@currentPeriod']);
-    Route::get('/chart/category/{category}/period/{date}', ['uses' => 'Chart\CategoryController@specificPeriod']);
-    Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
-    Route::get('/chart/category/{category}/report-period/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\CategoryController@reportPeriod']);
-
-    // these charts are used in reports (category reports):
-    Route::get(
-        '/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income',
-        ['uses' => 'Chart\CategoryReportController@categoryIncome']
-    );
-    Route::get(
-        '/chart/category/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense',
-        ['uses' => 'Chart\CategoryReportController@categoryExpense']
-    );
-
-    Route::get(
-        '/chart/account/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income',
-        ['uses' => 'Chart\CategoryReportController@accountIncome']
-    );
-    Route::get(
-        '/chart/account/{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense',
-        ['uses' => 'Chart\CategoryReportController@accountExpense']
-    );
-    Route::get(
-        '/chart/category-report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}',
-        ['uses' => 'Chart\CategoryReportController@mainChart']
-    );
-
-    // piggy banks:
-    Route::get('/chart/piggy-bank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
-
-    // reports:
-    Route::get('/chart/report/in-out/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOut']);
-    Route::get('/chart/report/in-out-sum/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@yearInOutSummarized']);
-    Route::get('/chart/report/net-worth/{start_date}/{end_date}/{accountList}', ['uses' => 'Chart\ReportController@netWorth']);
-
-
-    /**
-     * IMPORT CONTROLLER
-     */
-    Route::get('/import', ['uses' => 'ImportController@index', 'as' => 'import.index']);
-    Route::post('/import/upload', ['uses' => 'ImportController@upload', 'as' => 'import.upload']);
-    Route::get('/import/configure/{importJob}', ['uses' => 'ImportController@configure', 'as' => 'import.configure']);
-    Route::post('/import/configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'import.process_configuration']);
-    Route::get('/import/settings/{importJob}', ['uses' => 'ImportController@settings', 'as' => 'import.settings']);
-    Route::post('/import/settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'import.postSettings']);
-    Route::get('/import/complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'import.complete']);
-    Route::get('/import/download/{importJob}', ['uses' => 'ImportController@download', 'as' => 'import.download']);
-
-    Route::get('/import/status/{importJob}', ['uses' => 'ImportController@status', 'as' => 'import.status']);
-    Route::get('/import/json/{importJob}', ['uses' => 'ImportController@json', 'as' => 'import.json']);
-
-    Route::post('/import/start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'import.start']);
-    Route::get('/import/finished/{importJob}', ['uses' => 'ImportController@finished', 'as' => 'import.finished']);
-
-    /**
-     * Help Controller
-     */
-    Route::get('/help/{route}', ['uses' => 'HelpController@show', 'as' => 'help.show']);
-
-    /**
-     * JSON Controller
-     */
-    Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
-    Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
-    Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
-    Route::get('/json/tags', ['uses' => 'JsonController@tags', 'as' => 'json.tags']);
-    Route::get('/json/tour', ['uses' => 'JsonController@tour', 'as' => 'json.tour']);
-    Route::post('/json/end-tour', ['uses' => 'JsonController@endTour']);
-
-    Route::get('/json/box/in', ['uses' => 'JsonController@boxIn', 'as' => 'json.box.in']);
-    Route::get('/json/box/out', ['uses' => 'JsonController@boxOut', 'as' => 'json.box.out']);
-    Route::get('/json/box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'json.box.paid']);
-    Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
-    Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
-
-    Route::get('/json/trigger', ['uses' => 'JsonController@trigger', 'as' => 'json.trigger']);
-    Route::get('/json/action', ['uses' => 'JsonController@action', 'as' => 'json.action']);
-
-    /**
-     * New user Controller
-     */
-    Route::get('/new-user', ['uses' => 'NewUserController@index', 'as' => 'new-user.index']);
-    Route::post('/new-user/submit', ['uses' => 'NewUserController@submit', 'as' => 'new-user.submit']);
-
-    /**
-     * Piggy Bank Controller
-     */
-    Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
-    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']);
-    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']);
-    Route::get('/piggy-banks/add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'piggy-banks.add-money-mobile']);
-    Route::get('/piggy-banks/remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'piggy-banks.remove-money-mobile']);
-    Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
-    Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
-    Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
-    Route::get('/piggy-banks/show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'piggy-banks.show']);
-    Route::post('/piggy-banks/store', ['uses' => 'PiggyBankController@store', 'as' => 'piggy-banks.store']);
-    Route::post('/piggy-banks/update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'piggy-banks.update']);
-    Route::post('/piggy-banks/destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'piggy-banks.destroy']);
-    Route::post('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy-banks.add']);
-    Route::post('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy-banks.remove']);
-    Route::post('/piggy-banks/sort', ['uses' => 'PiggyBankController@order', 'as' => 'piggy-banks.order']);
-
-    /**
-     * Preferences Controller
-     */
-    Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
-    Route::post('/preferences', ['uses' => 'PreferencesController@postIndex', 'as' => 'preferences.update']);
-    Route::get('/preferences/code', ['uses' => 'PreferencesController@code', 'as' => 'preferences.code']);
-    Route::get('/preferences/delete-code', ['uses' => 'PreferencesController@deleteCode', 'as' => 'preferences.delete-code']);
-    Route::post('/preferences/code', ['uses' => 'PreferencesController@postCode', 'as' => 'preferences.code.store']);
-
-    /**
-     * Profile Controller
-     */
-    Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
-    Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'profile.change-password']);
-    Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'profile.delete-account']);
-    Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'profile.delete-account.post']);
-    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'profile.change-password.store']);
-
-    /**
-     * Report Controller
-     */
-    Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    Route::post('/reports', ['uses' => 'ReportController@postIndex', 'as' => 'reports.index.post']);
-
-    // default report:
-    Route::get('/reports/default/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@defaultReport', 'as' => 'reports.report.default']);
-
-    // audit report:
-    Route::get('/reports/audit/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@auditReport', 'as' => 'reports.report.audit']);
-
-    // category report:
-    Route::get(
-        '/reports/category/{start_date}/{end_date}/{accountList}/{categoryList}',
-        ['uses' => 'ReportController@categoryReport', 'as' => 'reports.report.category']
-    );
-
-
-    Route::get('/reports/options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'reports.options']);
-
-    /**
-     * Report AJAX data Controller:
-     */
-    // account report
-    Route::get(
-        '/reports/data/account-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\AccountController@accountReport', 'as' => 'reports.data.accountReport']
-    );
-
-    // income and expenses report
-    Route::get(
-        '/reports/data/inc-exp-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\InOutController@incExpReport', 'as' => 'reports.data.incExpReport']
-    );
-    // income report:
-    Route::get(
-        '/reports/data/income-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\InOutController@incomeReport', 'as' => 'reports.data.incomeReport']
-    );
-    // expense report:
-    Route::get(
-        '/reports/data/expense-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\InOutController@expenseReport', 'as' => 'reports.data.expenseReport']
-    );
-
-    // category report:
-    Route::get(
-        '/reports/data/category-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\CategoryController@categoryReport', 'as' => 'reports.data.categoryReport']
-    );
 
     // balance report:
     Route::get(
@@ -452,16 +497,6 @@ Route::group(
     Route::get(
         '/reports/data/budget-period/{start_date}/{end_date}/{accountList}',
         ['uses' => 'Report\BudgetController@budgetPeriodReport', 'as' => 'reports.data.budgetPeriodReport']
-    );
-
-    // category period overview (expense and income)
-    Route::get(
-        '/reports/data/category-expense/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\CategoryController@expenseReport', 'as' => 'reports.data.categoryExpense']
-    );
-    Route::get(
-        '/reports/data/category-income/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\CategoryController@incomeReport', 'as' => 'reports.data.categoryIncome']
     );
 
 
