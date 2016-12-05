@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.model(currency, {'class' : 'form-horizontal','id' : 'update','url' : route('currency.update',currency.id)}) }}
+    {{ Form.model(currency, {'class' : 'form-horizontal','id' : 'update','url' : route('currencies.update',currency.id)}) }}
 
     <input type="hidden" name="id" value="{{ currency.id }}"/>
     <div class="row">

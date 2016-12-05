@@ -135,20 +135,7 @@ class SplitController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $data = $this->arrayFromInput($request);
-
-        // need to do some validation!
-        // sum of amount must be > 0
-        $sum = '0';
-        foreach ($data['transactions'] as $transaction) {
-            Session::flash('error',strval(trans('validation.amount_zero')));
-            $sum = bcadd($sum, strval($transaction['amount']));
-        }
-        if (bccomp($sum, '0') === 0) {
-            return redirect(route('transactions.edit-split', [$journal->id]))->withInput();
-        }
-
-
+        $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
 
         // save attachments:

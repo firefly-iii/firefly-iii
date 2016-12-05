@@ -327,29 +327,29 @@ Breadcrumbs::register(
  * CURRENCIES
  */
 Breadcrumbs::register(
-    'currency.index', function (BreadCrumbGenerator $breadcrumbs) {
+    'currencies.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('firefly.currencies'), route('currency.index'));
+    $breadcrumbs->push(trans('firefly.currencies'), route('currencies.index'));
 }
 );
 
 Breadcrumbs::register(
-    'currency.create', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('firefly.create_currency'), route('currency.create'));
+    'currencies.create', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('currencies.index');
+    $breadcrumbs->push(trans('firefly.create_currency'), route('currencies.create'));
 }
 );
 
 Breadcrumbs::register(
-    'currency.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
-    $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currency.edit', [$currency->id]));
+    'currencies.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currencies.index');
+    $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currencies.edit', [$currency->id]));
 }
 );
 Breadcrumbs::register(
-    'currency.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
-    $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('breadcrumbs.delete_currency', ['name' => e($currency->name)]), route('currency.delete', [$currency->id]));
+    'currencies.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currencies.index');
+    $breadcrumbs->push(trans('breadcrumbs.delete_currency', ['name' => e($currency->name)]), route('currencies.delete', [$currency->id]));
 }
 );
 

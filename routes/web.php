@@ -159,50 +159,68 @@ Route::group(
     Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showWithRepetition', 'as' => 'showWithRepetition']);
     Route::get('list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'noBudget']);
 
-    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'postIncome']);
+    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'postIncome']);  // consistent
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
     Route::post('update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
     Route::post('destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'destroy']);
     Route::post('amount/{budget}', ['uses' => 'BudgetController@amount']);
 });
 
+/**
+ * Category Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'categories','as' => 'categories.'], function () {
+
+    Route::get('', ['uses' => 'CategoryController@index', 'as' => 'index']);
+    Route::get('create', ['uses' => 'CategoryController@create', 'as' => 'create']);
+    Route::get('edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'edit']);
+    Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
+
+    Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);  // consistent
+    Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showWithDate', 'as' => 'show.date']);
+    Route::get('list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'noCategory']);
+
+    Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
+    Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
+    Route::post('destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'destroy']);
+});
+
+
+/**
+ * Currency Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'currencies','as' => 'currencies.'], function () {
+
+    Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
+    Route::get('create', ['uses' => 'CurrencyController@create', 'as' => 'create']);
+    Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
+    Route::get('delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
+    Route::get('default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
+
+    Route::post('store', ['uses' => 'CurrencyController@store', 'as' => 'store']);
+    Route::post('update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
+    Route::post('destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'destroy']);
+
+});
+
+/**
+ * Export Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'export','as' => 'export.'], function () {
+
+    Route::get('', ['uses' => 'ExportController@index', 'as' => 'index']);
+    Route::get('status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
+    Route::get('download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'download']);
+
+    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'export']);
+
+});
+
 Route::group(
     ['middleware' => ['user-full-auth']], function () {
-
-    /**
-     * Category Controller
-     */
-    Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
-    Route::get('/categories/create', ['uses' => 'CategoryController@create', 'as' => 'categories.create']);
-    Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
-    Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
-    Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
-    Route::get('/categories/show/{category}/{date}', ['uses' => 'CategoryController@showWithDate', 'as' => 'categories.show.date']);
-    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noCategory']);
-    Route::post('/categories/store', ['uses' => 'CategoryController@store', 'as' => 'categories.store']);
-    Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
-    Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
-
-    /**
-     * Currency Controller
-     */
-    Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
-    Route::get('/currency/create', ['uses' => 'CurrencyController@create', 'as' => 'currency.create']);
-    Route::get('/currency/edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'currency.edit']);
-    Route::get('/currency/delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'currency.delete']);
-    Route::get('/currency/default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'currency.default']);
-    Route::post('/currency/store', ['uses' => 'CurrencyController@store', 'as' => 'currency.store']);
-    Route::post('/currency/update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'currency.update']);
-    Route::post('/currency/destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'currency.destroy']);
-
-    /**
-     * Export Controller
-     */
-    Route::get('/export', ['uses' => 'ExportController@index', 'as' => 'export.index']);
-    Route::post('/export/submit', ['uses' => 'ExportController@postIndex', 'as' => 'export.export']);
-    Route::get('/export/status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'export.status']);
-    Route::get('/export/download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'export.download']);
-
 
     /**
      * ALL CHART Controllers
