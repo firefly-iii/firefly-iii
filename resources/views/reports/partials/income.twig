@@ -1,30 +1,32 @@
 <table class="table table-hover">
     <tbody>
-    {% for income in incomes.getIncomes %}
+    {% set sum = 0 %}
+    {% for row in income %}
+        {% set sum = sum + row.sum %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
             <tr>
         {% endif %}
         <td>
-            <a href="{{ route('accounts.show',income.id) }}" title="{{ income.name }}">{{ income.name }}</a>
-            {% if income.count > 1 %}
+            <a href="{{ route('accounts.show',row.id) }}" title="{{ row.name }}">{{ row.name }}</a>
+            {% if row.count > 1 %}
                 <br/>
                 <small>
-                    {{ income.count }} {{ 'transactions'|_|lower }}
+                    {{ row.count }} {{ 'transactions'|_|lower }}
                     <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="income-entry"
-                       data-account-id="{{ income.id }}"></i>
+                       data-account-id="{{ row.id }}"></i>
                 </small>
 
             {% endif %}
         </td>
 
-        <td>{{ income.amount|formatAmount }}</td>
+        <td>{{ row.sum|formatAmount }}</td>
         </tr>
     {% endfor %}
     </tbody>
     <tfoot>
-    {% if incomes.getIncomes|length > listLength %}
+    {% if income|length > listLength %}
         <tr>
             <td colspan="2" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{ number:listLength } ) }}</a>
@@ -33,7 +35,7 @@
     {% endif %}
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
-        <td>{{ incomes.getTotal|formatAmount }}</td>
+        <td>{{ sum|formatAmount }}</td>
     </tr>
     </tfoot>
 </table>
