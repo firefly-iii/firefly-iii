@@ -529,9 +529,9 @@ Breadcrumbs::register(
  * SEARCH
  */
 Breadcrumbs::register(
-    'search', function (BreadCrumbGenerator $breadcrumbs, $query) {
+    'search.index', function (BreadCrumbGenerator $breadcrumbs, $query) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.searchResult', ['query' => e($query)]), route('search'));
+    $breadcrumbs->push(trans('breadcrumbs.searchResult', ['query' => e($query)]), route('search.index'));
 }
 );
 

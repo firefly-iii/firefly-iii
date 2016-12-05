@@ -476,143 +476,167 @@ Route::group(
 }
 );
 
-
+/**
+ * Report Data Balance Controller
+ */
 Route::group(
-    ['middleware' => ['user-full-auth']], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/balance', 'as' => 'report-data.balance.'], function () {
 
-
-    // balance report:
     Route::get(
-        '/reports/data/balance-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\BalanceController@balanceReport', 'as' => 'reports.data.balanceReport']
+        'general/{start_date}/{end_date}/{accountList}', ['uses' => 'BalanceController@general', 'as' => 'general']
     );
+}
+);
 
-    // budget report:
-    Route::get(
-        '/reports/data/budget-report/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\BudgetController@budgetReport', 'as' => 'reports.data.budgetReport']
-    );
+/**
+ * Report Data Budget Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/budget', 'as' => 'report-data.budget.'], function () {
+    Route::get('general/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@general', 'as' => 'general']);
+    Route::get('period/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@period', 'as' => 'period']);
 
-    // budget period overview
-    Route::get(
-        '/reports/data/budget-period/{start_date}/{end_date}/{accountList}',
-        ['uses' => 'Report\BudgetController@budgetPeriodReport', 'as' => 'reports.data.budgetPeriodReport']
-    );
+}
+);
 
+/**
+ * Rules Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'rules', 'as' => 'rules.'], function () {
 
-    /**
-     * Rules Controller
-     */
-    // index
-    Route::get('/rules', ['uses' => 'RuleController@index', 'as' => 'rules.index']);
+    Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
+    Route::get('create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rule.create']);
+    Route::get('up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rule.up']);
+    Route::get('down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rule.down']);
+    Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rule.edit']);
+    Route::get('delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rule.delete']);
+    Route::get('test', ['uses' => 'RuleController@testTriggers', 'as' => 'rule.test-triggers']);
 
-    // rules GET:
-    Route::get('/rules/create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rules.rule.create']);
-    Route::get('/rules/up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rules.rule.up']);
-    Route::get('/rules/down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rules.rule.down']);
-    Route::get('/rules/edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rules.rule.edit']);
-    Route::get('/rules/delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rules.rule.delete']);
-    Route::get('/rules/test', ['uses' => 'RuleController@testTriggers', 'as' => 'rules.rule.test_triggers']);
+    Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
+    Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
+    Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rule.store']);
+    Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rule.update']);
+    Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rule.destroy']);
 
-    // rules POST:
-    Route::post('/rules/trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
-    Route::post('/rules/action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
-    Route::post('/rules/store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rules.rule.store']);
-    Route::post('/rules/update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rules.rule.update']);
-    Route::post('/rules/destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rules.rule.destroy']);
+}
+);
 
+/**
+ * Rule Groups Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'rule-groups', 'as' => 'rule-groups.'], function () {
+    Route::get('create', ['uses' => 'RuleGroupController@create', 'as' => 'create']);
+    Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'edit']);
+    Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'delete']);
+    Route::get('up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'up']);
+    Route::get('down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'down']);
+    Route::get('select/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'select-transactions']);
 
-    // rule groups GET
-    Route::get('/rule-groups/create', ['uses' => 'RuleGroupController@create', 'as' => 'rules.rule-group.create']);
-    Route::get('/rule-groups/edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'rules.rule-group.edit']);
-    Route::get('/rule-groups/delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'rules.rule-group.delete']);
-    Route::get('/rule-groups/up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'rules.rule-group.up']);
-    Route::get('/rule-groups/down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'rules.rule-group.down']);
-    Route::get('/rule-groups/select/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'rules.rule-group.select_transactions']);
+    Route::post('store', ['uses' => 'RuleGroupController@store', 'as' => 'store']);
+    Route::post('update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'update']);
+    Route::post('destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'destroy']);
+    Route::post('execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'execute']);
+}
+);
 
-    // rule groups POST
-    Route::post('/rule-groups/store', ['uses' => 'RuleGroupController@store', 'as' => 'rules.rule-group.store']);
-    Route::post('/rule-groups/update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'rules.rule-group.update']);
-    Route::post('/rule-groups/destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'rules.rule-group.destroy']);
-    Route::post('/rule-groups/execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'rules.rule-group.execute']);
+/**
+ * Search Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'search', 'as' => 'search.'], function () {
+    Route::get('', ['uses' => 'SearchController@index', 'as' => 'index']);
 
-    /**
-     * Search Controller
-     */
-    Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
-
-    /**
-     * Tag Controller
-     */
-    Route::get('/tags', ['uses' => 'TagController@index', 'as' => 'tags.index']);
-    Route::get('/tags/create', ['uses' => 'TagController@create', 'as' => 'tags.create']);
-    Route::get('/tags/show/{tag}', ['uses' => 'TagController@show', 'as' => 'tags.show']);
-    Route::get('/tags/edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'tags.edit']);
-    Route::get('/tags/delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'tags.delete']);
-
-    Route::post('/tags/store', ['uses' => 'TagController@store', 'as' => 'tags.store']);
-    Route::post('/tags/update/{tag}', ['uses' => 'TagController@update', 'as' => 'tags.update']);
-    Route::post('/tags/destroy/{tag}', ['uses' => 'TagController@destroy', 'as' => 'tags.destroy']);
-
-    Route::post('/tags/hideTagHelp/{state}', ['uses' => 'TagController@hideTagHelp', 'as' => 'tags.hideTagHelp']);
+}
+);
 
 
-    /**
-     * Transaction Controller
-     */
+/**
+ * Name Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'tags', 'as' => 'tags.'], function () {
 
-    // normal controller: index for session range
-    Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
+    Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
+    Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
+    Route::get('show/{tag}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
+    Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);
 
-    // normal controller: index showing ALL:
-    Route::get('/transactions/{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'transactions.index.all'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
+    Route::post('store', ['uses' => 'TagController@store', 'as' => 'store']);
+    Route::post('update/{tag}', ['uses' => 'TagController@update', 'as' => 'update']);
+    Route::post('destroy/{tag}', ['uses' => 'TagController@destroy', 'as' => 'destroy']);
+}
+);
 
-    // normal controller: index for specific date range:
-    Route::get('/transactions/{what}/{date}', ['uses' => 'TransactionController@indexDate', 'as' => 'transactions.index.date'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
+/**
+ * Transaction Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
+    Route::get('{what}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('{what}/{date}', ['uses' => 'TransactionController@indexDate', 'as' => 'index.date'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+    Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
+}
+);
 
+/**
+ * Transaction Single Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
+    Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
+    Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
+    Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
+    Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
+}
+);
 
-    Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
-    Route::post('/transaction/reorder', ['uses' => 'TransactionController@reorder', 'as' => 'transactions.reorder']);
+/**
+ * Transaction Mass Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/mass', 'as' => 'transactions.mass'], function () {
+    Route::get('edit/{journalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
+    Route::get('delete/{journalList}', ['uses' => 'MassController@delete', 'as' => 'delete']);
+    Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
+    Route::post('destroy', ['uses' => 'MassController@destroy', 'as' => 'destroy']);
+}
+);
 
-    // single controller
-    Route::get('/transactions/create/{what}', ['uses' => 'Transaction\SingleController@create', 'as' => 'transactions.create'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::get('/transaction/edit/{tj}', ['uses' => 'Transaction\SingleController@edit', 'as' => 'transactions.edit']);
-    Route::get('/transaction/delete/{tj}', ['uses' => 'Transaction\SingleController@delete', 'as' => 'transactions.delete']);
-    Route::post('/transactions/store/{what}', ['uses' => 'Transaction\SingleController@store', 'as' => 'transactions.store'])->where(
-        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
-    );
-    Route::post('/transaction/update/{tj}', ['uses' => 'Transaction\SingleController@update', 'as' => 'transactions.update']);
-    Route::post('/transaction/destroy/{tj}', ['uses' => 'Transaction\SingleController@destroy', 'as' => 'transactions.destroy']);
+/**
+ * Transaction Split Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/split', 'as' => 'transactions.split.'], function () {
+    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
+    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
 
-    // mass controller:
-    Route::get('/transactions/mass-edit/{journalList}', ['uses' => 'Transaction\MassController@massEdit', 'as' => 'transactions.mass-edit']);
-    Route::get('/transactions/mass-delete/{journalList}', ['uses' => 'Transaction\MassController@massDelete', 'as' => 'transactions.mass-delete']);
-    Route::post('/transactions/mass-update', ['uses' => 'Transaction\MassController@massUpdate', 'as' => 'transactions.mass-update']);
-    Route::post('/transactions/mass-destroy', ['uses' => 'Transaction\MassController@massDestroy', 'as' => 'transactions.mass-destroy']);
+}
+);
 
-    // split (will be here):
-    Route::get('/transaction/split/edit/{tj}', ['uses' => 'Transaction\SplitController@edit', 'as' => 'transactions.edit-split']);
-    Route::post('/transaction/split/update/{tj}', ['uses' => 'Transaction\SplitController@update', 'as' => 'split.journal.update']);
+/**
+ * Name Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
+    Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
+    Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@indexPost', 'as' => 'index.post']);
 
-    // convert controller:
-    Route::get('transactions/convert/{transaction_type}/{tj}', ['uses' => 'Transaction\ConvertController@convert', 'as' => 'transactions.convert']);
-    Route::post('transactions/convert/{transaction_type}/{tj}', ['uses' => 'Transaction\ConvertController@submit', 'as' => 'transactions.convert.post']);
+}
+);
 
-    /**
-     * POPUP Controllers
-     */
-    /**
-     * Report popup
-     */
-    Route::get('/popup/report', ['uses' => 'Popup\ReportController@info', 'as' => 'popup.report']);
+/**
+ * Name Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Popup', 'prefix' => 'popup', 'as' => 'popup.'], function () {
+    Route::get('general', ['uses' => 'ReportController@general', 'as' => 'general']);
 
 }
 );
