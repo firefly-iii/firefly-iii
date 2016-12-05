@@ -77,8 +77,8 @@ class InOutController extends Controller
             return $cache->get();
         }
 
-        $incomes  = $this->getIncomeReport($start, $end, $accounts);
-        $expenses = $this->getExpenseReport($start, $end, $accounts);
+        $incomes   = $this->getIncomeReport($start, $end, $accounts);
+        $expenses  = $this->getExpenseReport($start, $end, $accounts);
         $incomeSum = array_sum(
             array_map(
                 function ($item) {

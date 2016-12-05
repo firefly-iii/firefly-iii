@@ -16,6 +16,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -171,6 +172,14 @@ class JournalCollector implements JournalCollectorInterface
                 $transaction->date        = new Carbon($transaction->date);
                 $transaction->description = intval($transaction->encrypted) === 1 ? Crypt::decrypt($transaction->description) : $transaction->description;
                 $transaction->bill_name   = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
+
+                // optionally decrypted:
+                try {
+                    $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
+                } catch (DecryptException $e) {
+                    // if this fails its already decrypted.
+                }
+
             }
         );
 
