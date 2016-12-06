@@ -332,7 +332,7 @@ class BudgetController extends Controller
      * @return View
      * @throws FireflyException
      */
-    public function showWithRepetition(Budget $budget, LimitRepetition $repetition)
+    public function showByRepetition(Budget $budget, LimitRepetition $repetition)
     {
         if ($repetition->budgetLimit->budget->id != $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');

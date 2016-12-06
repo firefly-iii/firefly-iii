@@ -170,14 +170,15 @@
         var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
-        var accountReportUri = '{{ route('report-data.account.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incomeReportUri = '{{ route('report-data.operations.income', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var expenseReportUri = '{{ route('report-data.operations.expenses', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incExpReportUri = '{{ route('report-data.operations.operations', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incExpReportUri = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        var budgetPeriodReportUri = '{{ route('report-data.budget.period', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var categoryExpenseUri = '{{ route('report-data.category.expenses', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var categoryIncomeUri = '{{ route('report-data.category.income', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var budgetPeriodReportUri = '{{ route('report-data.budget.period', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryExpenseUri = '{{ route('report-data.category.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryIncomeUri = '{{ route('report-data.category.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
 
     </script>
 

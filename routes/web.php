@@ -253,13 +253,14 @@ Route::group(
  * Chart\Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget'], function () {
-        
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget','as' => 'chart.budget.'], function () {
+
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage']);
+
     Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget']);
     Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period']);
-    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit']);
-    Route::get('budget/{budget}', ['uses' => 'BudgetController@budget']);
+    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit', 'as'  => 'budget-limit']);
+    Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as'  => 'budget']);
 
 }
 );
@@ -269,6 +270,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/category'], function () {
+
     Route::get('frontpage', ['uses' => 'CategoryController@frontpage']);
     Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod']);
     Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod']);

@@ -193,7 +193,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function period(BudgetRepositoryInterface $repository, Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
+    public function period(BudgetRepositoryInterface $repository, Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -254,14 +254,13 @@ class BudgetController extends Controller
 
     /**
      * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param Collection                $accounts
      * @param Carbon                    $start
      * @param Carbon                    $end
-     * @param Collection                $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function periodNoBudget(BudgetRepositoryInterface $repository, Carbon $start, Carbon $end, Collection $accounts)
+    public function periodNoBudget(BudgetRepositoryInterface $repository, Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties();

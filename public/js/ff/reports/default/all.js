@@ -120,7 +120,7 @@ function clickBudgetChart(e) {
     var link = $(e.target);
     var budgetId = link.data('budget');
 
-    var URL = 'chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds;
+    var URL = 'chart/budget/period/' + budgetId + '/' + accountIds + '/' + startDate + '/' + endDate;
     var container = 'budget_chart';
     columnChart(URL, container);
     return false;

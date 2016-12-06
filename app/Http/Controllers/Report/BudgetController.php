@@ -30,15 +30,45 @@ use Navigation;
 class BudgetController extends Controller
 {
 
+
     /**
+     * @param BudgetReportHelperInterface $helper
+     * @param Collection                  $accounts
+     * @param Carbon                      $start
+     * @param Carbon                      $end
      *
+     * @return mixed|string
+     */
+    public function general(BudgetReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
+    {
+
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $budgets = $helper->getBudgetReport($start, $end, $accounts);
+
+        $result = view('reports.partials.budgets', compact('budgets'))->render();
+        $cache->store($result);
+
+        return $result;
+
+    }
+
+    /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
-     * @return string
+     * @return mixed|string
      */
-    public function budgetPeriodReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function period(Collection $accounts, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -62,36 +92,6 @@ class BudgetController extends Controller
         $cache->store($result);
 
         return $result;
-    }
-
-    /**
-     * @param BudgetReportHelperInterface $helper
-     * @param Carbon                      $start
-     * @param Carbon                      $end
-     * @param Collection                  $accounts
-     *
-     * @return string
-     */
-    public function budgetReport(BudgetReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
-    {
-
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('budget-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $budgets = $helper->getBudgetReport($start, $end, $accounts);
-
-        $result = view('reports.partials.budgets', compact('budgets'))->render();
-        $cache->store($result);
-
-        return $result;
-
     }
 
     /**
