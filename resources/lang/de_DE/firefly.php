@@ -88,7 +88,7 @@ return [
     'nothing_to_display'                         => 'There are no transactions to show you',
     'show_all_no_filter'                         => 'Show all transactions without grouping them by date.',
     'expenses_by_category'                       => 'Ausgaben nach Kategorie',
-    'expenses_by_budget'                         => 'Expenses by budget',
+    'expenses_by_budget'                         => 'Ausgaben nach Budget',
     'income_by_category'                         => 'Einkommen nach Kategorie',
     'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
     // repeat frequencies:
