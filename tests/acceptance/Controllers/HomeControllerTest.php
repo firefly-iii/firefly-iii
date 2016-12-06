@@ -41,7 +41,7 @@ class HomeControllerTest extends TestCase
     public function testDisplayError()
     {
         $this->be($this->user());
-        $this->call('GET', route('displayError'));
+        $this->call('GET', route('error'));
         $this->assertResponseStatus(500);
     }
 
