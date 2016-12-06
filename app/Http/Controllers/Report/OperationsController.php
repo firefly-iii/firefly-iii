@@ -166,8 +166,6 @@ class OperationsController extends Controller
             $sum[$accountId] = floatval($row['sum']);
         }
 
-        // Sort the data with volume descending, edition ascending
-        // Add $data as the last parameter, to sort by the common key
         array_multisort($sum, SORT_ASC, $expenses);
 
         return $expenses;
@@ -211,9 +209,7 @@ class OperationsController extends Controller
             $sum[$accountId] = floatval($row['sum']);
         }
 
-        // Sort the data with volume descending, edition ascending
-        // Add $data as the last parameter, to sort by the common key
-        array_multisort($sum, SORT_ASC, $income);
+        array_multisort($sum, SORT_DESC, $income);
 
         return $income;
     }
