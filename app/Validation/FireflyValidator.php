@@ -474,7 +474,6 @@ class FireflyValidator extends Validator
      * @param $value
      *
      * @return bool
-     * @internal param $parameters
      *
      */
     private function validateByAccountId($value): bool

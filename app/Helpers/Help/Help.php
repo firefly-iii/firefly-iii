@@ -120,7 +120,6 @@ class Help implements HelpInterface
      * @param string $language
      * @param string $content
      *
-     * @internal param $title
      */
     public function putInCache(string $route, string $language, string $content)
     {

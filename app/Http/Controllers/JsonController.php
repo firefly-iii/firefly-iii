@@ -102,7 +102,6 @@ class JsonController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      *
-     * @internal param ARI $accountRepository
      */
     public function boxIn(AccountTaskerInterface $accountTasker, AccountRepositoryInterface $repository)
     {

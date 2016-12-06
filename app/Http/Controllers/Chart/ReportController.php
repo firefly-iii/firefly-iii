@@ -49,13 +49,12 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
      * @param Collection $accounts
-     *
+     * @param Carbon $start
+     * @param Carbon     $end
      * @return \Illuminate\Http\JsonResponse
      */
-    public function netWorth(Carbon $start, Carbon $end, Collection $accounts)
+    public function netWorth(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -90,13 +89,16 @@ class ReportController extends Controller
 
 
     /**
+     * Shows income and expense, debet/credit: operations
+     *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
+     *
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearInOut(Carbon $start, Carbon $end, Collection $accounts)
+    public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -112,14 +114,14 @@ class ReportController extends Controller
 
         if ($start->diffInMonths($end) > 12) {
             // data = method X
-            $data = $this->multiYearInOut($chartSource['earned'], $chartSource['spent'], $start, $end);
+            $data = $this->multiYearOperations($chartSource['earned'], $chartSource['spent'], $start, $end);
             $cache->store($data);
 
             return Response::json($data);
         }
 
         // data = method Y
-        $data = $this->singleYearInOut($chartSource['earned'], $chartSource['spent'], $start, $end);
+        $data = $this->singleYearOperations($chartSource['earned'], $chartSource['spent'], $start, $end);
         $cache->store($data);
 
         return Response::json($data);
@@ -128,14 +130,14 @@ class ReportController extends Controller
     }
 
     /**
+     * Shows sum income and expense, debet/credit: operations
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
-     * @internal param AccountRepositoryInterface $repository
      */
-    public function yearInOutSummarized(Carbon $start, Carbon $end, Collection $accounts)
+    public function sum(Collection $accounts, Carbon $start, Carbon $end)
     {
 
         // chart properties for cache:
@@ -151,13 +153,13 @@ class ReportController extends Controller
 
         if ($start->diffInMonths($end) > 12) {
             // per year
-            $data = $this->multiYearInOutSummarized($chartSource['earned'], $chartSource['spent'], $start, $end);
+            $data = $this->multiYearSum($chartSource['earned'], $chartSource['spent'], $start, $end);
             $cache->store($data);
 
             return Response::json($data);
         }
         // per month!
-        $data = $this->singleYearInOutSummarized($chartSource['earned'], $chartSource['spent'], $start, $end);
+        $data = $this->singleYearSum($chartSource['earned'], $chartSource['spent'], $start, $end);
         $cache->store($data);
 
         return Response::json($data);
@@ -172,7 +174,7 @@ class ReportController extends Controller
      *
      * @return array
      */
-    protected function multiYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
+    protected function multiYearOperations(array $earned, array $spent, Carbon $start, Carbon $end)
     {
         $entries = new Collection;
         while ($start < $end) {
@@ -184,7 +186,7 @@ class ReportController extends Controller
             $start->addYear();
         }
 
-        $data = $this->generator->multiYearInOut($entries);
+        $data = $this->generator->multiYearOperations($entries);
 
         return $data;
     }
@@ -197,7 +199,7 @@ class ReportController extends Controller
      *
      * @return array
      */
-    protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
+    protected function multiYearSum(array $earned, array $spent, Carbon $start, Carbon $end)
     {
         $income  = '0';
         $expense = '0';
@@ -213,7 +215,7 @@ class ReportController extends Controller
             $start->addYear();
         }
 
-        $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
+        $data = $this->generator->multiYearSum($income, $expense, $count);
 
         return $data;
     }
@@ -245,7 +247,7 @@ class ReportController extends Controller
      *
      * @return array
      */
-    protected function singleYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
+    protected function singleYearOperations(array $earned, array $spent, Carbon $start, Carbon $end)
     {
         // per month? simply use each month.
 
@@ -260,7 +262,7 @@ class ReportController extends Controller
             $start->addMonth();
         }
 
-        $data = $this->generator->yearInOut($entries);
+        $data = $this->generator->yearOperations($entries);
 
         return $data;
     }
@@ -273,7 +275,7 @@ class ReportController extends Controller
      *
      * @return array
      */
-    protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
+    protected function singleYearSum(array $earned, array $spent, Carbon $start, Carbon $end)
     {
         $income  = '0';
         $expense = '0';
@@ -289,7 +291,7 @@ class ReportController extends Controller
             $start->addMonth();
         }
 
-        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
+        $data = $this->generator->yearSum($income, $expense, $count);
 
         return $data;
     }

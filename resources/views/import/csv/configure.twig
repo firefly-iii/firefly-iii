@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <form class="form-horizontal" action="{{ route('import.process_configuration', job.key) }}" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal" action="{{ route('import.process-configuration', job.key) }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
         <div class="row">

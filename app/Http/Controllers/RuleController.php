@@ -104,7 +104,6 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return View
-     * @internal param RuleRepositoryInterface $repository
      */
     public function delete(Rule $rule)
     {

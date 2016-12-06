@@ -170,6 +170,12 @@
         var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
+        // report uri's
+        var opChartUri ='{{ route('chart.report.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sumChartUri='{{ route('chart.report.sum', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var netWorthUri ='{{ route('chart.report.net-worth', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
+        // data uri's
         var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';

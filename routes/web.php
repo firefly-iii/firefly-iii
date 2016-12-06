@@ -317,10 +317,10 @@ Route::group(
  * Chart\Report Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/report'], function () {
-    Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations']);
-    Route::get('operations-sum/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@operationsSum']);
-    Route::get('net-worth/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@netWorth']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/report', 'as' => 'chart.report.'], function () {
+    Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations' ,'as' => 'operations']);
+    Route::get('operations-sum/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@sum', 'as' => 'sum']);
+    Route::get('net-worth/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@netWorth', 'as' => 'net-worth']);
 
 }
 );
@@ -340,8 +340,8 @@ Route::group(
     Route::get('finished/{importJob}', ['uses' => 'ImportController@finished', 'as' => 'finished']);
 
     Route::post('upload', ['uses' => 'ImportController@upload', 'as' => 'upload']);
-    Route::post('configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'process_configuration']);
-    Route::post('settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'postSettings']);
+    Route::post('configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'process-configuration']);
+    Route::post('settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'post-settings']);
     Route::post('start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'start']);
 
 
