@@ -31,14 +31,14 @@ class UpdatedJournalEventHandler
     /**
      * This method will check all the rules when a journal is updated.
      *
-     * @param UpdatedTransactionJournal $event
+     * @param UpdatedTransactionJournal $updatedJournalEvent
      *
      * @return bool
      */
-    public function processRules(UpdatedTransactionJournal $event):bool
+    public function processRules(UpdatedTransactionJournal $updatedJournalEvent):bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
-        $journal = $event->journal;
+        $journal = $updatedJournalEvent->journal;
         $groups  = $journal->user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get();
         //
         /** @var RuleGroup $group */
@@ -67,13 +67,13 @@ class UpdatedJournalEventHandler
     /**
      * This method calls a special bill scanner that will check if the updated journal is part of a bill.
      *
-     * @param UpdatedTransactionJournal $event
+     * @param UpdatedTransactionJournal $updatedJournalEvent
      *
      * @return bool
      */
-    public function scanBills(UpdatedTransactionJournal $event): bool
+    public function scanBills(UpdatedTransactionJournal $updatedJournalEvent): bool
     {
-        $journal = $event->journal;
+        $journal = $updatedJournalEvent->journal;
         BillScanner::scan($journal);
 
         return true;
