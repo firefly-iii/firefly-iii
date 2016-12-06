@@ -148,8 +148,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             // is not set?
             if (!isset($result[$opposingId])) {
                 $name                = $transaction->opposing_account_name;
-                $encrypted           = intval($transaction->opposing_account_encrypted);
-                $name                = $encrypted === 1 ? Crypt::decrypt($name) : $name;
                 $result[$opposingId] = [
                     'name'    => $name,
                     'count'   => 1,
