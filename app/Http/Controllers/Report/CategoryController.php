@@ -137,7 +137,7 @@ class CategoryController extends Controller
             $sum[$categoryId] = floatval($row['spent']);
         }
 
-        array_multisort($sum, SORT_DESC, $report);
+        array_multisort($sum, SORT_ASC, $report);
 
         $result = view('reports.partials.categories', compact('report'))->render();
         $cache->store($result);
