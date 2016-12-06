@@ -245,7 +245,7 @@ class CategoryController extends Controller
      *
      * @return View
      */
-    public function showWithDate(Category $category, string $date)
+    public function showByDate(Category $category, string $date)
     {
         $carbon       = new Carbon($date);
         $range        = Preferences::get('viewRange', '1M')->data;
@@ -263,7 +263,7 @@ class CategoryController extends Controller
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
 
-        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
+        return view('categories.show-by-date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
     }
 
     /**

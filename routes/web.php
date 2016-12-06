@@ -242,9 +242,9 @@ Route::group(
  * Chart\Bill Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/bill','as' => 'chart.bill.'], function () {
-    Route::get('frontpage', ['uses' => 'BillController@frontpage' ,'as' => 'frontpage']);
-    Route::get('single/{bill}', ['uses' => 'BillController@single','as' => 'single']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/bill', 'as' => 'chart.bill.'], function () {
+    Route::get('frontpage', ['uses' => 'BillController@frontpage', 'as' => 'frontpage']);
+    Route::get('single/{bill}', ['uses' => 'BillController@single', 'as' => 'single']);
 
 }
 );
@@ -253,14 +253,14 @@ Route::group(
  * Chart\Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget','as' => 'chart.budget.'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget', 'as' => 'chart.budget.'], function () {
 
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage']);
 
     Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget']);
     Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period']);
-    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit', 'as'  => 'budget-limit']);
-    Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as'  => 'budget']);
+    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
+    Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
 }
 );
@@ -269,20 +269,36 @@ Route::group(
  * Chart\Category Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/category'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/category', 'as' => 'chart.category.'], function () {
 
     Route::get('frontpage', ['uses' => 'CategoryController@frontpage']);
-    Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod']);
-    Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod']);
-    Route::get('all/{category}', ['uses' => 'CategoryController@all']);
+
+    Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod', 'as' => 'current']);
+    Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod', 'as' => 'specific']);
+    Route::get('all/{category}', ['uses' => 'CategoryController@all', 'as' => 'all']);
+    Route::get('report-period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriodNoCategory']);
     Route::get('report-period/{category}/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriod']);
 
     // these charts are used in reports (category reports):
-    Route::get('category/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@categoryIncome']);
-    Route::get('category/expense/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@categoryExpense']);
-    Route::get('account/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@accountIncome']);
-    Route::get('account/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@accountExpense']);
-    Route::get('report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryReportController@mainChart']);
+    Route::get(
+        'category/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'CategoryReportController@categoryIncome', 'as' => 'category-income']
+    );
+    Route::get(
+        'category/expense/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'CategoryReportController@categoryExpense', 'as' => 'category-expense']
+    );
+    Route::get(
+        'account/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'CategoryReportController@accountIncome', 'as' => 'account-income']
+    );
+    Route::get(
+        'account/expense/{accountList}/{categoryList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'CategoryReportController@accountExpense', 'as' => 'account-expense']
+    );
+
+    Route::get('report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}',
+               ['uses' => 'CategoryReportController@mainChart', 'as' => 'main']);
 
 }
 );
@@ -292,6 +308,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/piggy-bank'], function () {
+        // continue here.
     Route::get('{piggyBank}', ['uses' => 'PiggyBankController@history']);
 }
 );
@@ -473,6 +490,8 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/category', 'as' => 'report-data.category.'], function () {
+
+
     Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
     Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income']);
     Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expenses']);

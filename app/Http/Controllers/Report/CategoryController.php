@@ -60,14 +60,13 @@ class CategoryController extends Controller
     }
 
     /**
-     *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
-     * @return string
+     * @return mixed|string
      */
-    public function expenseReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -100,7 +99,7 @@ class CategoryController extends Controller
      *
      * @return string
      */
-    public function incomeReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function income(Collection $accounts, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);

@@ -23,6 +23,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 
 /**
@@ -258,6 +259,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         // loop transactions:
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
+            // if positive, skip:
+            if (bccomp($transaction->transaction_amount, '0') === 1) {
+                continue;
+            }
             $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
             $date                                = $transaction->date->format($carbonFormat);
             $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
@@ -278,7 +283,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setAccounts($accounts)->setRange($start, $end)->withOpposingAccount();
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])->enableInternalFilter();
         $collector->withoutCategory();
         $transactions = $collector->getJournals();
@@ -289,6 +294,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         ];
 
         foreach ($transactions as $transaction) {
+            // if positive, skip:
+            if (bccomp($transaction->transaction_amount, '0') === 1) {
+                continue;
+            }
             $date = $transaction->date->format($carbonFormat);
 
             if (!isset($result['entries'][$date])) {
@@ -334,6 +343,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         // loop transactions:
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
+            // if negative, skip:
+            if (bccomp($transaction->transaction_amount, '0') === -1) {
+                continue;
+            }
             $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
             $date                                = $transaction->date->format($carbonFormat);
             $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
@@ -351,10 +364,11 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array
     {
+        Log::debug('Now in periodIncomeNoCategory()');
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setAccounts($accounts)->setRange($start, $end)->withOpposingAccount();
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])->enableInternalFilter();
         $collector->withoutCategory();
         $transactions = $collector->getJournals();
@@ -363,8 +377,13 @@ class CategoryRepository implements CategoryRepositoryInterface
             'name'    => strval(trans('firefly.no_category')),
             'sum'     => '0',
         ];
-
+        Log::debug('Looping transactions..');
         foreach ($transactions as $transaction) {
+
+            // if negative, skip:
+            if (bccomp($transaction->transaction_amount, '0') === -1) {
+                continue;
+            }
             $date = $transaction->date->format($carbonFormat);
 
             if (!isset($result['entries'][$date])) {
@@ -372,6 +391,8 @@ class CategoryRepository implements CategoryRepositoryInterface
             }
             $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
         }
+        Log::debug('Done looping transactions..');
+        Log::debug('Finished periodIncomeNoCategory()');
 
         return $result;
     }

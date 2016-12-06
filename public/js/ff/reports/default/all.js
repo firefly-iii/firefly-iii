@@ -108,8 +108,7 @@ function clickCategoryChart(e) {
     var link = $(e.target);
     var categoryId = link.data('category');
 
-    // this url is different from the one below. this is something that must be fixed
-    var URL = 'chart/category/' + categoryId + '/report-period/' + startDate + '/' + endDate + '/' + accountIds;
+    var URL = 'chart/category/report-period/' + categoryId + '/' + accountIds + '/' + startDate + '/' + endDate;
     var container = 'category_chart';
     columnChart(URL, container);
     return false;

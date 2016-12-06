@@ -369,6 +369,13 @@
         var endDate = '{{ end.format('Ymd') }}';
         var accountIds = '{{ accountIds }}';
         var categoryIds = '{{ categoryIds }}';
+
+        // chart uri's
+        var categoryIncomeUri = '{{ route('chart.category.category-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var categoryExpenseUri = '{{ route('chart.category.category-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var accountIncomeUri = '{{ route('chart.category.account-income', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var accountExpenseUri = '{{ route('chart.category.account-expense', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var mainUri = '{{ route('chart.category.main', [accountIds, categoryIds, start.format('Ymd'), end.format('Ymd')]) }}';
     </script>
 
 
