@@ -282,7 +282,7 @@ class AccountController extends Controller
      *
      * @return View
      */
-    public function showWithDate(Account $account, string $date)
+    public function showByDate(Account $account, string $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;
@@ -298,7 +298,7 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        return view('accounts.show_with_date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end'));
+        return view('accounts.show-by-date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end'));
     }
 
     /**

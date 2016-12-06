@@ -15,10 +15,10 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    lineChart('chart/account/' + accountID, 'overview-chart');
-    pieChart(incomeByCategoryUri, 'account-cat-in');
-    pieChart(expenseByCategoryUri, 'account-cat-out');
-    pieChart(expenseByBudgetUri, 'account-budget-out');
+    lineChart(singleUri, 'overview-chart');
+    pieChart(incomeCategoryUri, 'account-cat-in');
+    pieChart(expenseCategoryUri, 'account-cat-out');
+    pieChart(expenseBudgetUri, 'account-budget-out');
 
 
     // sortable!

@@ -143,6 +143,11 @@
         showTour = false;
         {% endif %}
         var billCount = {{ billCount }};
+
+        // uri's of charts:
+        var accountFrontpageUri = '{{ route('chart.account.frontpage') }}';
+        var accountRevenueUri = '{{ route('chart.account.revenue') }}';
+        var accountExpenseUri = '{{ route('chart.account.expense') }}';
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>

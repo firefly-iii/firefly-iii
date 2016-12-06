@@ -65,7 +65,7 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        <a href="{{ route('budgets.noBudget') }}">
+                        <a href="{{ route('budgets.no-budget') }}">
                             {{ trans('firefly.transactions_no_budget', {start: periodStart, end: periodEnd }) }}
                         </a>
                     </p>
@@ -91,7 +91,7 @@
                     <h3 class="box-title">
                         <!-- link in header -->
                         {% if budget.currentRep.id %}
-                            <a href="{{ route('budgets.showWithRepetition', [budget.id, budget.currentRep.id]) }}" class="budget-link"
+                            <a href="{{ route('budgets.show.repetition', [budget.id, budget.currentRep.id]) }}" class="budget-link"
                                data-id="{{ budget.id }}">{{ budget.name }}</a>
                         {% else %}
                             <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>

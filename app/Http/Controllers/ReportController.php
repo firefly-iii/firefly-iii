@@ -61,14 +61,13 @@ class ReportController extends Controller
     }
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return string
-     * @throws FireflyException
      */
-    public function auditReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
@@ -97,15 +96,14 @@ class ReportController extends Controller
     }
 
     /**
+     * @param Collection $accounts
+     * @param Collection $categories
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @param Collection $categories
      *
      * @return string
      */
-    public function categoryReport(Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
@@ -134,14 +132,13 @@ class ReportController extends Controller
     }
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return string
-     * @throws FireflyException
      */
-    public function defaultReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function defaultReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
@@ -246,13 +243,13 @@ class ReportController extends Controller
             default:
                 throw new FireflyException(sprintf('Firefly does not support the "%s"-report yet.', $reportType));
             case 'category':
-                $uri = route('reports.report.category', [$start, $end, $accounts, $categories]);
+                $uri = route('reports.report.category', [$accounts, $categories, $start, $end]);
                 break;
             case 'default':
-                $uri = route('reports.report.default', [$start, $end, $accounts]);
+                $uri = route('reports.report.default', [$accounts, $start, $end]);
                 break;
             case 'audit':
-                $uri = route('reports.report.audit', [$start, $end, $accounts]);
+                $uri = route('reports.report.audit', [$accounts, $start, $end]);
                 break;
         }
 

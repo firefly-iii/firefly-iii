@@ -156,7 +156,7 @@ Route::group(
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
     Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showByRepetition', 'as' => 'show.repetition']);
-    Route::get('list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
+    Route::get('list/no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
 
     Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'income.post']);
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
@@ -178,7 +178,7 @@ Route::group(
 
     Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
     Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showByDate', 'as' => 'show.date']);
-    Route::get('list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+    Route::get('list/no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
     Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
     Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
@@ -227,7 +227,7 @@ Route::group(
     Route::get('frontpage', ['uses' => 'AccountController@frontpage', 'as' => 'frontpage']);
     Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
     Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
-    Route::get('report/default/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
+    Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
     Route::get('single/{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
     Route::get('period/{account}/{date}', ['uses' => 'AccountController@period', 'as' => 'period']);
 
@@ -242,9 +242,9 @@ Route::group(
  * Chart\Bill Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/bill'], function () {
-    Route::get('frontpage', ['uses' => 'BillController@frontpage']);
-    Route::get('single/{bill}', ['uses' => 'BillController@single']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/bill','as' => 'chart.bill.'], function () {
+    Route::get('frontpage', ['uses' => 'BillController@frontpage' ,'as' => 'frontpage']);
+    Route::get('single/{bill}', ['uses' => 'BillController@single','as' => 'single']);
 
 }
 );
@@ -254,6 +254,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget'], function () {
+        
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage']);
     Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget']);
     Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period']);
@@ -399,7 +400,7 @@ Route::group(
 
 
 /**
- * Name Controller
+ * Preferences Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'preferences', 'as' => 'preferences.'], function () {
@@ -427,7 +428,7 @@ Route::group(
 );
 
 /**
- * Name Controller
+ * Report Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'reports', 'as' => 'reports.'], function () {
@@ -436,9 +437,9 @@ Route::group(
 
 
     Route::get('options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'options']);
-    Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@default', 'as' => 'report.default']);
-    Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@audit', 'as' => 'report.audit']);
-    Route::get('category/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'ReportController@category', 'as' => 'report.category']);
+    Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@defaultReport', 'as' => 'report.default']);
+    Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@auditReport', 'as' => 'report.audit']);
+    Route::get('category/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'ReportController@categoryReport', 'as' => 'report.category']);
 
     Route::post('', ['uses' => 'ReportController@postIndex', 'as' => 'index.post']);
 }
@@ -448,7 +449,7 @@ Route::group(
  * Report Data AccountController
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account.'], function () {
     Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general']);
 }
 );
@@ -457,7 +458,7 @@ Route::group(
  * Report Data Income/Expenses Controller (called financial operations)
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/operations', 'as' => 'report-data.operations'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/operations', 'as' => 'report-data.operations.'], function () {
     Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@operations', 'as' => 'operations']);
     Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@income', 'as' => 'income']);
     Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@expenses', 'as' => 'expenses']);
@@ -472,7 +473,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/category', 'as' => 'report-data.category.'], function () {
     Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
     Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income']);
-    Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expense']);
+    Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expenses']);
 
 }
 );
@@ -627,7 +628,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
     Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
-    Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@indexPost', 'as' => 'index.post']);
+    Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
 
 }
 );

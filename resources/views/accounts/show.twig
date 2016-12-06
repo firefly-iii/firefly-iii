@@ -123,9 +123,10 @@
     <script type="text/javascript">
         var accountID = {{ account.id }};
         // uri's for charts:
-        var incomeByCategoryUri = '{{ route('chart.account.incomeByCategory', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseByCategoryUri = '{{ route('chart.account.expenseByCategory', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseByBudgetUri = '{{ route('chart.account.expenseByBudget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var singleUri = '{{ route('chart.account.single', [account.id]) }}';
+        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
 

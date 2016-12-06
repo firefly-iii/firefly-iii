@@ -32,14 +32,14 @@ function endTheTour() {
 
 function drawChart() {
     "use strict";
-    lineChart('chart/account/frontpage', 'accounts-chart');
+    lineChart(accountFrontpageUri, 'accounts-chart');
     if (billCount > 0) {
         pieChart('chart/bill/frontpage', 'bills-chart');
     }
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
-    columnChart('chart/account/expense', 'expense-accounts-chart');
-    columnChart('chart/account/revenue', 'revenue-accounts-chart');
+    columnChart(accountExpenseUri, 'expense-accounts-chart');
+    columnChart(accountRevenueUri, 'revenue-accounts-chart');
 
 
     getBoxAmounts();

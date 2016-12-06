@@ -98,7 +98,7 @@ function displayAjaxPartial(data, holder) {
 
 function failAjaxPartial(uri, holder) {
     "use strict";
-    console.log('Failed to load' + uri);
+    console.log('Failed to load: ' + uri);
     $('#' + holder).removeClass('loading').addClass('general-chart-error');
 
 }

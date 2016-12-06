@@ -132,14 +132,17 @@
         var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
-        <!-- some URL's -->
-        var accountReportUri = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incomeReportUri = '{{ route('reports.data.incomeReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var expenseReportUri = '{{ route('reports.data.expenseReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incExpReportUri = '{{ route('reports.data.incExpReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var categoryReportUri = '{{ route('reports.data.categoryReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var budgetReportUri = '{{ route('reports.data.budgetReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var balanceReportUri = '{{ route('reports.data.balanceReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        // uri's for data
+        var categoryReportUri = '{{ route('report-data.category.operations', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var budgetReportUri = '{{ route('report-data.budget.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var balanceReportUri = '{{ route('report-data.balance.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var accountReportUri = '{{ route('report-data.account.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var incomeReportUri = '{{ route('report-data.operations.income', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var expenseReportUri = '{{ route('report-data.operations.expenses', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var incExpReportUri = '{{ route('report-data.operations.operations', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+
+        // uri's for charts:
+        var accountChartUri = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>

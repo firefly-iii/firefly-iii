@@ -2,8 +2,6 @@
 
 $(function () {
       "use strict";
-      if (typeof(columnChart) === 'function' && typeof(billID) !== 'undefined') {
-          columnChart('chart/bill/' + billID, 'bill-overview');
-      }
+      columnChart(billUri, 'bill-overview');
   }
 );
