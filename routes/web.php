@@ -23,13 +23,13 @@ Route::group(
     Route::post('login', 'Auth\LoginController@login');
 
     // Registration Routes...
-    Route::get('/register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
-    Route::post('/register', 'Auth\RegisterController@register');
+    Route::get('register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
+    Route::post('register', 'Auth\RegisterController@register');
 
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
-    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-    Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
+    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
 
@@ -41,9 +41,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-simple-auth'], function () {
-    Route::get('/error', ['uses' => 'HomeController@displayError', 'as' => 'displayError']);
+    Route::get('error', ['uses' => 'HomeController@displayError', 'as' => 'error']);
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
-    Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+    Route::get('flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 }
 );
 
@@ -51,10 +51,10 @@ Route::group(
  * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
  */
 Route::group(
-    ['middleware' => 'user-logged-in-no-2fa'], function () {
-    Route::get('/two-factor', ['uses' => 'Auth\TwoFactorController@index', 'as' => 'two-factor']);
-    Route::get('/lost-two-factor', ['uses' => 'Auth\TwoFactorController@lostTwoFactor', 'as' => 'lost-two-factor']);
-    Route::post('/two-factor', ['uses' => 'Auth\TwoFactorController@postIndex', 'as' => 'two-factor-post']);
+    ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'Auth'], function () {
+    Route::get('', ['uses' => 'TwoFactorController@index', 'as' => 'index']);
+    Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
+    Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
 
 }
 );
@@ -63,10 +63,10 @@ Route::group(
  * For the confirmation routes, the user must be logged in, also 2FA, but his account must not be confirmed.
  */
 Route::group(
-    ['middleware' => 'user-logged-in-2fa-no-activation'], function () {
-    Route::get('/confirm-your-account', ['uses' => 'Auth\ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
-    Route::get('/resend-confirmation', ['uses' => 'Auth\ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
-    Route::get('/confirmation/{code}', ['uses' => 'Auth\ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
+    ['middleware' => 'user-logged-in-2fa-no-activation', 'namespace' => 'Auth'], function () {
+    Route::get('/confirm-your-account', ['uses' => 'ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
+    Route::get('/resend-confirmation', ['uses' => 'ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
+    Route::get('/confirmation/{code}', ['uses' => 'ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
 
 }
 );
@@ -97,9 +97,10 @@ Route::group(
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+
     Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
     Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
-    Route::get('show/{account}/{date}', ['uses' => 'AccountController@showWithDate', 'as' => 'show.date']);
+    Route::get('show/{account}/{date}', ['uses' => 'AccountController@showByDate', 'as' => 'show.date']);
 
     Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
     Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
@@ -154,10 +155,10 @@ Route::group(
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
-    Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showWithRepetition', 'as' => 'showWithRepetition']);
-    Route::get('list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'noBudget']);
+    Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showByRepetition', 'as' => 'show.repetition']);
+    Route::get('list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
 
-    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'postIncome']);
+    Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'income.post']);
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
     Route::post('update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
     Route::post('destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'destroy']);
@@ -176,8 +177,8 @@ Route::group(
     Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
 
     Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
-    Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showWithDate', 'as' => 'show.date']);
-    Route::get('list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'noCategory']);
+    Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showByDate', 'as' => 'show.date']);
+    Route::get('list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
     Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
     Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
@@ -226,13 +227,13 @@ Route::group(
     Route::get('frontpage', ['uses' => 'AccountController@frontpage', 'as' => 'frontpage']);
     Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
     Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
-    Route::get('report/default/{start_date}/{end_date}/{accountList}', ['uses' => 'AccountController@report', 'as' => 'report']);
-    Route::get('{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
-    Route::get('{account}/{date}', ['uses' => 'AccountController@specificPeriod', 'as' => 'specific-period']);
+    Route::get('report/default/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
+    Route::get('single/{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
+    Route::get('period/{account}/{date}', ['uses' => 'AccountController@period', 'as' => 'period']);
 
-    Route::get('income-by-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeByCategory', 'as' => 'incomeByCategory']);
-    Route::get('expense-by-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseByCategory', 'as' => 'expenseByCategory']);
-    Route::get('expense-by-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseByBudget', 'as' => 'expenseByBudget']);
+    Route::get('income-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeCategory', 'as' => 'income-category']);
+    Route::get('expense-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseCategory', 'as' => 'expense-category']);
+    Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget']);
 
 }
 );
@@ -243,7 +244,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/bill'], function () {
     Route::get('frontpage', ['uses' => 'BillController@frontpage']);
-    Route::get('{bill}', ['uses' => 'BillController@single']);
+    Route::get('single/{bill}', ['uses' => 'BillController@single']);
 
 }
 );
@@ -254,10 +255,10 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/budget'], function () {
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage']);
-    Route::get('period/0/default/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@periodNoBudget']);
-    Route::get('period/{budget}/default/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@period']);
-    Route::get('{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit']);
-    Route::get('{budget}', ['uses' => 'BudgetController@budget']);
+    Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget']);
+    Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period']);
+    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit']);
+    Route::get('budget/{budget}', ['uses' => 'BudgetController@budget']);
 
 }
 );
@@ -268,16 +269,16 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/category'], function () {
     Route::get('frontpage', ['uses' => 'CategoryController@frontpage']);
-    Route::get('{category}/period', ['uses' => 'CategoryController@currentPeriod']);
-    Route::get('{category}/period/{date}', ['uses' => 'CategoryController@specificPeriod']);
-    Route::get('{category}/all', ['uses' => 'CategoryController@all']);
-    Route::get('{category}/report-period/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@reportPeriod']);
+    Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod']);
+    Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod']);
+    Route::get('all/{category}', ['uses' => 'CategoryController@all']);
+    Route::get('report-period/{category}/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriod']);
 
     // these charts are used in reports (category reports):
-    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income', ['uses' => 'CategoryReportController@categoryIncome']);
-    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense', ['uses' => 'CategoryReportController@categoryExpense']);
-    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/income', ['uses' => 'CategoryReportController@accountIncome']);
-    Route::get('{accountList}/{categoryList}/{start_date}/{end_date}/{others}/expense', ['uses' => 'CategoryReportController@accountExpense']);
+    Route::get('category/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@categoryIncome']);
+    Route::get('category/expense/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@categoryExpense']);
+    Route::get('account/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@accountIncome']);
+    Route::get('account/income/{accountList}/{categoryList}/{start_date}/{end_date}/{others}', ['uses' => 'CategoryReportController@accountExpense']);
     Route::get('report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryReportController@mainChart']);
 
 }
@@ -297,9 +298,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/report'], function () {
-    Route::get('in-out/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@yearInOut']);
-    Route::get('in-out-sum/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@yearInOutSummarized']);
-    Route::get('net-worth/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@netWorth']);
+    Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations']);
+    Route::get('operations-sum/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@operationsSum']);
+    Route::get('net-worth/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@netWorth']);
 
 }
 );
@@ -435,9 +436,9 @@ Route::group(
 
 
     Route::get('options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'options']);
-    Route::get('default/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@default', 'as' => 'report.default']);
-    Route::get('audit/{start_date}/{end_date}/{accountList}', ['uses' => 'ReportController@audit', 'as' => 'report.audit']);
-    Route::get('category/{start_date}/{end_date}/{accountList}/{categoryList}', ['uses' => 'ReportController@category', 'as' => 'report.category']);
+    Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@default', 'as' => 'report.default']);
+    Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@audit', 'as' => 'report.audit']);
+    Route::get('category/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'ReportController@category', 'as' => 'report.category']);
 
     Route::post('', ['uses' => 'ReportController@postIndex', 'as' => 'index.post']);
 }
@@ -448,7 +449,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account'], function () {
-    Route::get('general/{start_date}/{end_date}/{accountList}', ['uses' => 'AccountController@general', 'as' => 'general']);
+    Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general']);
 }
 );
 
@@ -457,9 +458,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/operations', 'as' => 'report-data.operations'], function () {
-    Route::get('operations/{start_date}/{end_date}/{accountList}', ['uses' => 'OperationsController@operations', 'as' => 'operations']);
-    Route::get('income/{start_date}/{end_date}/{accountList}', ['uses' => 'OperationsController@income', 'as' => 'income']);
-    Route::get('expenses/{start_date}/{end_date}/{accountList}', ['uses' => 'OperationsController@expenses', 'as' => 'expenses']);
+    Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@operations', 'as' => 'operations']);
+    Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@income', 'as' => 'income']);
+    Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@expenses', 'as' => 'expenses']);
 
 }
 );
@@ -469,9 +470,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/category', 'as' => 'report-data.category.'], function () {
-    Route::get('operations/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
-    Route::get('income/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@income', 'as' => 'income']);
-    Route::get('expenses/{start_date}/{end_date}/{accountList}', ['uses' => 'CategoryController@expenses', 'as' => 'expense']);
+    Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
+    Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income']);
+    Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expense']);
 
 }
 );
@@ -483,7 +484,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/balance', 'as' => 'report-data.balance.'], function () {
 
     Route::get(
-        'general/{start_date}/{end_date}/{accountList}', ['uses' => 'BalanceController@general', 'as' => 'general']
+        'general/{accountList}/{start_date}/{end_date}', ['uses' => 'BalanceController@general', 'as' => 'general']
     );
 }
 );
@@ -493,8 +494,8 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/budget', 'as' => 'report-data.budget.'], function () {
-    Route::get('general/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@general', 'as' => 'general']);
-    Route::get('period/{start_date}/{end_date}/{accountList}', ['uses' => 'BudgetController@period', 'as' => 'period']);
+    Route::get('general/{accountList}/{start_date}/{end_date}/', ['uses' => 'BudgetController@general', 'as' => 'general']);
+    Route::get('period/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
 
 }
 );
