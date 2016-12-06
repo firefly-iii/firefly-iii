@@ -124,9 +124,20 @@ class CategoryController extends Controller
         $report     = [];
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent                 = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
-            $report[$category->id] = ['name' => $category->name, 'spent' => $spent];
+            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
+            if (bccomp($spent, '0') !== 0) {
+                $report[$category->id] = ['name' => $category->name, 'spent' => $spent];
+            }
         }
+
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($report as $categoryId => $row) {
+            $sum[$categoryId] = floatval($row['spent']);
+        }
+
+        array_multisort($sum, SORT_DESC, $report);
 
         $result = view('reports.partials.categories', compact('report'))->render();
         $cache->store($result);
