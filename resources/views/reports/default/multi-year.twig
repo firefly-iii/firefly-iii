@@ -114,14 +114,27 @@
         </div>
     </div>
 
-    {# same thing but for categories #}
+    {# same thing but for categories (expenses) #}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                    <h3 class="box-title">{{ 'categories'|_ }} ({{ 'expenses'|_ }})</h3>
                 </div>
-                <div class="box-body no-padding table-responsive loading" id="categoryPeriodReport">
+                <div class="box-body no-padding table-responsive loading" id="categoryExpense">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# same thing but for categories (income) #}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'categories'|_ }} ({{ 'income'|_ }})</h3>
+                </div>
+                <div class="box-body no-padding table-responsive loading" id="categoryIncome">
                 </div>
             </div>
         </div>
@@ -159,17 +172,22 @@
         // to report another URL:
         var startDate = '{{ start.format('Ymd') }}';
         var endDate = '{{ end.format('Ymd') }}';
-        var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
-        <!-- some URL's -->
-        var accountReportUri = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incomeReportUri = '{{ route('reports.data.incomeReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var expenseReportUri = '{{ route('reports.data.expenseReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incExpReportUri = '{{ route('reports.data.incExpReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        // report uri's
+        var opChartUri ='{{ route('chart.report.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sumChartUri='{{ route('chart.report.sum', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var netWorthUri ='{{ route('chart.report.net-worth', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        var budgetPeriodReportUri = '{{ route('reports.data.budgetPeriodReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var categoryPeriodReportUri = '{{ route('reports.data.categoryPeriodReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        // data uri's
+        var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incExpReportUri = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
+        var budgetPeriodReportUri = '{{ route('report-data.budget.period', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryExpenseUri = '{{ route('report-data.category.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryIncomeUri = '{{ route('report-data.category.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>

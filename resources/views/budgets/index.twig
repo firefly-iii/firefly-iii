@@ -156,7 +156,7 @@
                                         {% for other in budget.otherRepetitions %}
                                             {% if other.id != budget.currentRep.id %}
                                                 <li>Budgeted
-                                                    <a href="{{ route('budgets.showWithRepetition', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
+                                                    <a href="{{ route('budgets.show.repetition', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
                                                     between
                                                     {{ other.startdate.formatLocalized(monthAndDayFormat) }}
                                                     and {{ other.enddate.formatLocalized(monthAndDayFormat) }}.

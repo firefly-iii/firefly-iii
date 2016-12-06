@@ -6,26 +6,28 @@
     </tr>
     </thead>
     <tbody>
-    {% for cat in categories.getCategories %}
+    {% set sum = 0 %}
+    {% for id, category in report %}
+        {% set sum = sum + category.spent %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
             <tr>
         {% endif %}
         <td>
-            <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
+            <a href="{{ route('categories.show',id) }}">{{ category.name }}</a>
         </td>
-        <td>{{ cat.spent|formatAmount }}</td>
+        <td>{{ category.spent|formatAmount }}</td>
         <td style="width:20px;">
             <i class="fa fa-fw fa-info-circle text-muted firefly-info-button"
-               data-location="category-entry" data-category-id="{{ cat.id }}"
+               data-location="category-entry" data-category-id="{{ id }}"
             ></i>
         </td>
         </tr>
     {% endfor %}
     </tbody>
     <tfoot>
-    {% if categories.getCategories.count > listLength %}
+    {% if report|length > listLength %}
         <tr>
             <td colspan="2" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
@@ -35,7 +37,7 @@
 
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
-        <td>{{ categories.getTotal|formatAmount }}</td>
+        <td>{{ sum|formatAmount }}</td>
     </tr>
     </tfoot>
 </table>

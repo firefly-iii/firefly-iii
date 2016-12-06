@@ -46,7 +46,7 @@ class ReportController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException
      */
-    public function info(Request $request)
+    public function general(Request $request)
     {
         $attributes = $request->get('attributes') ?? [];
         $attributes = $this->parseAttributes($attributes);

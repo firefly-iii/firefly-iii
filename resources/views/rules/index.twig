@@ -38,18 +38,18 @@
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
                                             class="fa fa-ellipsis-v"></i></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('rules.rule-group.edit',ruleGroup.id) }}"><i
+                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                    <li><a href="{{ route('rules.rule-group.delete',ruleGroup.id) }}"><i
+                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                                    <li><a href="{{ route('rules.rule-group.select_transactions',ruleGroup.id) }}"><i
+                                    <li><a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}"><i
                                                     class="fa fa-fw fa-anchor"></i> {{ 'execute_on_existing_transactions_short'|_ }}</a></li>
                                     {% if ruleGroup.order > 1 %}
-                                        <li><a href="{{ route('rules.rule-group.up',ruleGroup.id) }}"><i
+                                        <li><a href="{{ route('rule-groups.up',ruleGroup.id) }}"><i
                                                         class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a></li>
                                     {% endif %}
                                     {% if ruleGroup.order < ruleGroups|length %}
-                                        <li><a href="{{ route('rules.rule-group.down',ruleGroup.id) }}"><i
+                                        <li><a href="{{ route('rule-groups.down',ruleGroup.id) }}"><i
                                                         class="fa fa-fw fa-arrow-down"></i> {{ 'move_rule_group_down'|_ }}
                                             </a></li>
                                     {% endif %}
@@ -79,7 +79,7 @@
                                             <div class="btn-group btn-group-xs">
                                                 {% if rule.order > 1 %}
                                                     <a title="{{ 'rule_priority_up'|_ }}"
-                                                       href="{{ route('rules.rule.up', rule.id) }}"
+                                                       href="{{ route('rules.up', rule.id) }}"
                                                        class="btn btn-default"><span
                                                                 class="fa fa-fw fa-arrow-up"></span></a>
                                                 {% else %}
@@ -88,7 +88,7 @@
                                                 {% endif %}
                                                 {% if rule.order < ruleGroup.rules.count %}
                                                     <a title="{{ 'rule_priority_down'|_ }}"
-                                                       href="{{ route('rules.rule.down', rule.id) }}"
+                                                       href="{{ route('rules.down', rule.id) }}"
                                                        class="btn btn-default"><span
                                                                 class="fa fa-fw fa-arrow-down"></span>
                                                     </a>
@@ -96,17 +96,17 @@
                                                     <a href="#" class="btn btn-default"><span
                                                                 class="fa fa-fw"></span></a>
                                                 {% endif %}
-                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.rule.edit', rule.id) }}"
+                                                <a title="{{ 'edit'|_ }}" href="{{ route('rules.edit', rule.id) }}"
                                                    class="btn btn-default"><span
                                                             class="fa fa-fw fa-pencil"></span></a>
                                                 <a title="{{ 'delete'|_ }}"
-                                                   href="{{ route('rules.rule.delete', rule.id) }}"
+                                                   href="{{ route('rules.delete', rule.id) }}"
                                                    class="btn btn-danger"><span
                                                             class="fa fa-fw fa-trash"></span></a>
                                             </div>
                                             <br/>
                                             <div class="btn-group btn-group-xs">
-                                                <a href="{{ route('rules.rule-group.select_transactions',ruleGroup.id) }}" class="btn btn-default"
+                                                <a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}" class="btn btn-default"
                                                    title=" {{ 'execute_on_existing_transactions_short'|_ }}">
                                                     <i class="fa fa-fw fa-check-circle"></i></a>
                                             </div>
@@ -179,7 +179,7 @@
                         {% endif %}
                         <p>
                             <br/>
-                            <a href="{{ route('rules.rule.create', ruleGroup.id) }}"
+                            <a href="{{ route('rules.create', ruleGroup.id) }}"
                                class="btn btn-success">{{ 'new_rule'|_ }}</a>
                         </p>
                     </div>
@@ -190,7 +190,7 @@
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <a href="{{ route('rules.rule-group.create') }}" class="btn btn-success">{{ 'new_rule_group'|_ }}</a>
+            <a href="{{ route('rule-groups.create') }}" class="btn btn-success">{{ 'new_rule_group'|_ }}</a>
         </div>
     </div>
 

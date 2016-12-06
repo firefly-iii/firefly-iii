@@ -1,4 +1,4 @@
-/* globals startDate, showOnlyTop, showFullList, endDate, reportType, expenseReportUri, accountIds, incExpReportUri,accountReportUri, incomeReportUri */
+/* globals startDate, showOnlyTop, showFullList, endDate, expenseReportUri, accountIds, incExpReportUri,accountReportUri, incomeReportUri */
 /*
  * all.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -39,10 +39,9 @@ function clickInfoButton(e) {
     // add some more elements:
     attributes.startDate = startDate;
     attributes.endDate = endDate;
-    attributes.reportType = reportType;
     attributes.accounts = accountIds;
 
-    $.getJSON('popup/report', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
+    $.getJSON('popup/general', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
 }
 
 function errorInfoButton(data) {

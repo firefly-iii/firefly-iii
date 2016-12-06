@@ -133,13 +133,13 @@
         var accountIds = '{{ accountIds }}';
 
         // uri's for data
-        var categoryReportUri = '{{ route('report-data.category.operations', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var budgetReportUri = '{{ route('report-data.budget.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var balanceReportUri = '{{ route('report-data.balance.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var accountReportUri = '{{ route('report-data.account.general', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incomeReportUri = '{{ route('report-data.operations.income', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var expenseReportUri = '{{ route('report-data.operations.expenses', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var incExpReportUri = '{{ route('report-data.operations.operations', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryReportUri = '{{ route('report-data.category.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetReportUri = '{{ route('report-data.budget.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var balanceReportUri = '{{ route('report-data.balance.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incExpReportUri = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
         // uri's for charts:
         var accountChartUri = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
