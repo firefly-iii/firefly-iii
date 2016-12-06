@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.model(ruleGroup, {'class' : 'form-horizontal','id' : 'update','url' : route('rules.rule-group.update',ruleGroup.id) } ) }}
+    {{ Form.model(ruleGroup, {'class' : 'form-horizontal','id' : 'update','url' : route('rule-groups.update',ruleGroup.id) } ) }}
     <input type="hidden" name="id" value="{{ ruleGroup.id }}"/>
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-6">

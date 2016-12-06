@@ -32,34 +32,6 @@ use Navigation;
 class CategoryController extends Controller
 {
     /**
-     * @param ReportHelperInterface $helper
-     * @param Carbon                $start
-     * @param Carbon                $end
-     * @param Collection            $accounts
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function categoryReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('category-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $categories = $helper->getCategoryReport($start, $end, $accounts);
-
-        $result = view('reports.partials.categories', compact('categories'))->render();
-        $cache->store($result);
-
-        return $result;
-    }
-
-    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -75,6 +47,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
             Log::debug('Return report from cache');
+
             return $cache->get();
         }
         /** @var CategoryRepositoryInterface $repository */
@@ -84,7 +57,7 @@ class CategoryController extends Controller
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
         $periods    = Navigation::listOfPeriods($start, $end);
-        $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+        $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
 
         $cache->store($result);
 
@@ -108,6 +81,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
             Log::debug('Return report from cache');
+
             return $cache->get();
         }
         /** @var CategoryRepositoryInterface $repository */
@@ -117,13 +91,48 @@ class CategoryController extends Controller
         $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
         $periods    = Navigation::listOfPeriods($start, $end);
-        $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+        $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
 
         $cache->store($result);
 
         return $result;
     }
 
+    /**
+     * @param ReportHelperInterface $helper
+     * @param Collection            $accounts
+     * @param Carbon                $start
+     * @param Carbon                $end
+     *
+     * @return mixed|string
+     */
+    public function operations(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
+        $report     = [];
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $spent                 = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
+            $report[$category->id] = ['name' => $category->name, 'spent' => $spent];
+        }
+
+        $result = view('reports.partials.categories', compact('report'))->render();
+        $cache->store($result);
+
+        return $result;
+    }
 
     /**
      * Filters empty results from category period report

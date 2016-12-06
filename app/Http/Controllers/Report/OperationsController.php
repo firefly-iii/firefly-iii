@@ -1,6 +1,6 @@
 <?php
 /**
- * InOutController.php
+ * OperationsController.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
  * This software may be modified and distributed under the terms of the
@@ -24,21 +24,21 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
- * Class InOutController
+ * Class OperationsController
  *
  * @package FireflyIII\Http\Controllers\Report
  */
-class InOutController extends Controller
+class OperationsController extends Controller
 {
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed|string
      */
-    public function expenseReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -58,14 +58,13 @@ class InOutController extends Controller
     }
 
     /**
-     * @param ReportHelperInterface $helper
-     * @param Carbon                $start
-     * @param Carbon                $end
-     * @param Collection            $accounts
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed|string
      */
-    public function incExpReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -95,7 +94,7 @@ class InOutController extends Controller
             )
         );
 
-        $result = view('reports.partials.income-vs-expenses', compact('incomeSum', 'expensesSum'))->render();
+        $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
         $cache->store($result);
 
         return $result;
@@ -103,14 +102,13 @@ class InOutController extends Controller
     }
 
     /**
-     * @param ReportHelperInterface $helper
-     * @param Carbon                $start
-     * @param Carbon                $end
-     * @param Collection            $accounts
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return string
      */
-    public function incomeReport(ReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    public function income(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;

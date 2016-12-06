@@ -118,7 +118,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection
+    public function getCategoryReport(Collection $accounts, Carbon $start, Carbon $end): CategoryCollection
     {
         $object = new CategoryCollection;
         /** @var CategoryRepositoryInterface $repository */

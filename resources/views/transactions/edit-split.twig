@@ -4,7 +4,7 @@
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
 {% endblock %}
 {% block content %}
-    <form method="POST" action="{{ route('split.journal.update',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
+    <form method="POST" action="{{ route('transactions.split.update',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
           enctype="multipart/form-data">
 
         <input name="_token" type="hidden" value="{{ csrf_token() }}">

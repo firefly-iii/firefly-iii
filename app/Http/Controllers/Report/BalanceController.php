@@ -30,13 +30,13 @@ class BalanceController extends Controller
 
     /**
      * @param BalanceReportHelperInterface $helper
+     * @param Collection                   $accounts
      * @param Carbon                       $start
      * @param Carbon                       $end
-     * @param Collection                   $accounts
      *
-     * @return string
+     * @return mixed|string
      */
-    public function balanceReport(BalanceReportHelperInterface $helper, Carbon $start, Carbon $end, Collection $accounts)
+    public function general(BalanceReportHelperInterface $helper,Collection $accounts, Carbon $start, Carbon $end)
     {
 
 
@@ -50,7 +50,7 @@ class BalanceController extends Controller
             return $cache->get();
         }
 
-        $balance = $helper->getBalanceReport($start, $end, $accounts);
+        $balance = $helper->getBalanceReport($accounts, $start, $end);
 
         $result = view('reports.partials.balance', compact('balance'))->render();
         $cache->store($result);

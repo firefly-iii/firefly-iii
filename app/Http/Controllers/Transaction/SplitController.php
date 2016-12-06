@@ -157,7 +157,7 @@ class SplitController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
-            return redirect(route('transactions.edit-split', [$journal->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('transactions.split.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

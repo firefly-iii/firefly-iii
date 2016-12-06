@@ -179,7 +179,7 @@ class SingleController extends Controller
         $count = $journal->transactions()->count();
 
         if ($count > 2) {
-            return redirect(route('transactions.edit-split', [$journal->id]));
+            return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
         $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
@@ -286,7 +286,7 @@ class SingleController extends Controller
 
         if ($doSplit === true) {
             // redirect to edit screen:
-            return redirect(route('transactions.edit-split', [$journal->id]));
+            return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
 

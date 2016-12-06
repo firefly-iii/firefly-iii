@@ -106,13 +106,13 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return AccountCollection
      */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection
+    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): AccountCollection
     {
         $startAmount = '0';
         $endAmount   = '0';

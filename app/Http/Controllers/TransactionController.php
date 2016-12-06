@@ -146,7 +146,7 @@ class TransactionController extends Controller
      *
      * @return View
      */
-    public function indexDate(Request $request, string $what, string $date)
+    public function indexByDate(Request $request, string $what, string $date)
     {
         $carbon       = new Carbon($date);
         $range        = Preferences::get('viewRange', '1M')->data;

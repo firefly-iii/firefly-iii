@@ -308,7 +308,6 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/piggy-bank'], function () {
-        // continue here.
     Route::get('{piggyBank}', ['uses' => 'PiggyBankController@history']);
 }
 );
@@ -398,8 +397,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'piggy-banks', 'as' => 'piggy-banks.'], function () {
     Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
-    Route::get('add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'addMoney']);
-    Route::get('remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'removeMoney']);
+    Route::get('add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'add-money']);
+    Route::get('remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'remove-money']);
     Route::get('add-money/{piggyBank}', ['uses' => 'PiggyBankController@addMobile', 'as' => 'add-money-mobile']);
     Route::get('remove-money/{piggyBank}', ['uses' => 'PiggyBankController@removeMobile', 'as' => 'remove-money-mobile']);
     Route::get('create', ['uses' => 'PiggyBankController@create', 'as' => 'create']);
@@ -442,7 +441,7 @@ Route::group(
     Route::get('change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
     Route::get('delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
     Route::post('delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account.post']);
-    Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.store']);
+    Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
 }
 );
 
@@ -453,8 +452,6 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'reports', 'as' => 'reports.'], function () {
 
     Route::get('', ['uses' => 'ReportController@index', 'as' => 'index']);
-
-
     Route::get('options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'options']);
     Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@defaultReport', 'as' => 'report.default']);
     Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@auditReport', 'as' => 'report.audit']);
@@ -490,8 +487,6 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/category', 'as' => 'report-data.category.'], function () {
-
-
     Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
     Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income']);
     Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expenses']);
@@ -505,9 +500,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/balance', 'as' => 'report-data.balance.'], function () {
 
-    Route::get(
-        'general/{accountList}/{start_date}/{end_date}', ['uses' => 'BalanceController@general', 'as' => 'general']
-    );
+    Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'BalanceController@general', 'as' => 'general']);
 }
 );
 
@@ -516,6 +509,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/budget', 'as' => 'report-data.budget.'], function () {
+
     Route::get('general/{accountList}/{start_date}/{end_date}/', ['uses' => 'BudgetController@general', 'as' => 'general']);
     Route::get('period/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
 
@@ -529,18 +523,18 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'rules', 'as' => 'rules.'], function () {
 
     Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
-    Route::get('create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'rule.create']);
-    Route::get('up/{rule}', ['uses' => 'RuleController@up', 'as' => 'rule.up']);
-    Route::get('down/{rule}', ['uses' => 'RuleController@down', 'as' => 'rule.down']);
-    Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'rule.edit']);
-    Route::get('delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'rule.delete']);
-    Route::get('test', ['uses' => 'RuleController@testTriggers', 'as' => 'rule.test-triggers']);
+    Route::get('create/{ruleGroup}', ['uses' => 'RuleController@create', 'as' => 'create']);
+    Route::get('up/{rule}', ['uses' => 'RuleController@up', 'as' => 'up']);
+    Route::get('down/{rule}', ['uses' => 'RuleController@down', 'as' => 'down']);
+    Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'edit']);
+    Route::get('delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
+    Route::get('test', ['uses' => 'RuleController@testTriggers', 'as' => 'test-triggers']);
 
-    Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers']);
-    Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions']);
-    Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'rule.store']);
-    Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'rule.update']);
-    Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'rule.destroy']);
+    Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers','as' => 'reorder-triggers']);
+    Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions', 'as' => 'reorder-actions']);
+    Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'store']);
+    Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
+    Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'destroy']);
 
 }
 );
@@ -576,7 +570,7 @@ Route::group(
 
 
 /**
- * Name Controller
+ * Tag Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'tags', 'as' => 'tags.'], function () {
@@ -600,7 +594,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
     Route::get('{what}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers']);
     Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers']);
-    Route::get('{what}/{date}', ['uses' => 'TransactionController@indexDate', 'as' => 'index.date'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('{what}/{date}', ['uses' => 'TransactionController@indexByDate', 'as' => 'index.date'])->where(['what' => 'withdrawal|deposit|transfers']);
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
 }
@@ -644,7 +638,7 @@ Route::group(
 );
 
 /**
- * Name Controller
+ * Convert Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
@@ -655,7 +649,7 @@ Route::group(
 );
 
 /**
- * Name Controller
+ * Report Popup Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Popup', 'prefix' => 'popup', 'as' => 'popup.'], function () {

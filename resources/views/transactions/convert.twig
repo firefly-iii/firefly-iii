@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.convert.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8" class="form-horizontal" id="store"
+    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8" class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">

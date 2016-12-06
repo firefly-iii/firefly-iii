@@ -50,12 +50,12 @@ interface AccountTaskerInterface
     public function amountOutInPeriod(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): string;
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return AccountCollection
      */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection;
+    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): AccountCollection;
 
 }

@@ -49,7 +49,7 @@ interface ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection;
+    public function getCategoryReport(Collection $accounts, Carbon $start, Carbon $end): CategoryCollection;
 
     /**
      * @param Carbon $date
