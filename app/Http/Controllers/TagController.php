@@ -15,14 +15,12 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\TagFormRequest;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
 use Preferences;
-use Response;
 use Session;
 use URL;
 use View;
@@ -171,32 +169,13 @@ class TagController extends Controller
     }
 
     /**
-     * @param $state
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function hideTagHelp(string $state)
-    {
-
-        $newState = $state == 'true' ? true : false;
-        Preferences::set('hideTagHelp', $newState);
-
-        return Response::json([true]);
-    }
-
-    /**
      *
      */
     public function index()
     {
-        /** @var Preference $helpHiddenPref */
-        $helpHiddenPref = Preferences::get('hideTagHelp', false);
-        $title          = 'Tags';
-        $mainTitleIcon  = 'fa-tags';
-        $helpHidden     = $helpHiddenPref->data;
-
-        // group years.
-        $types = ['nothing', 'balancingAct', 'advancePayment'];
+        $title         = 'Tags';
+        $mainTitleIcon = 'fa-tags';
+        $types         = ['nothing', 'balancingAct', 'advancePayment'];
 
         // loop each types and get the tags, group them by year.
         $collection = [];
@@ -223,7 +202,7 @@ class TagController extends Controller
             }
         }
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'helpHidden', 'collection'));
+        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection'));
     }
 
     /**
