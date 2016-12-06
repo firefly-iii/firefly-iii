@@ -34,25 +34,25 @@ class BudgetEventHandler
     /**
      * This method creates a new budget limit repetition when a new budget limit has been created.
      *
-     * @param StoredBudgetLimit $event
+     * @param StoredBudgetLimit $budgetLimitEvent
      *
      * @return bool
      */
-    public function storeRepetition(StoredBudgetLimit $event):bool
+    public function storeRepetition(StoredBudgetLimit $budgetLimitEvent):bool
     {
-        return $this->processRepetitionChange($event->budgetLimit, $event->end);
+        return $this->processRepetitionChange($budgetLimitEvent->budgetLimit, $budgetLimitEvent->end);
     }
 
     /**
      * Updates, if present the budget limit repetition part of a budget limit.
      *
-     * @param UpdatedBudgetLimit $event
+     * @param UpdatedBudgetLimit $budgetLimitEvent
      *
      * @return bool
      */
-    public function updateRepetition(UpdatedBudgetLimit $event): bool
+    public function updateRepetition(UpdatedBudgetLimit $budgetLimitEvent): bool
     {
-        return $this->processRepetitionChange($event->budgetLimit, $event->end);
+        return $this->processRepetitionChange($budgetLimitEvent->budgetLimit, $budgetLimitEvent->end);
     }
 
     /**

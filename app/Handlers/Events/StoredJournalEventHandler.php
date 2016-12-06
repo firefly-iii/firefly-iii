@@ -33,15 +33,15 @@ class StoredJournalEventHandler
     /**
      * This method connects a new transfer to a piggy bank.
      *
-     * @param StoredTransactionJournal $event
+     * @param StoredTransactionJournal $storedJournalEvent
      *
      * @return bool
      */
-    public function connectToPiggyBank(StoredTransactionJournal $event): bool
+    public function connectToPiggyBank(StoredTransactionJournal $storedJournalEvent): bool
     {
         /** @var TransactionJournal $journal */
-        $journal     = $event->journal;
-        $piggyBankId = $event->piggyBankId;
+        $journal     = $storedJournalEvent->journal;
+        $piggyBankId = $storedJournalEvent->piggyBankId;
 
         Log::debug(sprintf('Trying to connect journal %d to piggy bank %d.', $journal->id, $piggyBankId));
 
@@ -101,11 +101,11 @@ class StoredJournalEventHandler
         $repetition->currentamount = bcadd($repetition->currentamount, $amount);
         $repetition->save();
 
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(
+        /** @var PiggyBankEvent $storedJournalEvent */
+        $storedJournalEvent = PiggyBankEvent::create(
             ['piggy_bank_id' => $piggyBank->id, 'transaction_journal_id' => $journal->id, 'date' => $journal->date, 'amount' => $amount]
         );
-        Log::debug(sprintf('Created piggy bank event #%d', $event->id));
+        Log::debug(sprintf('Created piggy bank event #%d', $storedJournalEvent->id));
 
         return true;
     }
@@ -113,14 +113,14 @@ class StoredJournalEventHandler
     /**
      * This method grabs all the users rules and processes them.
      *
-     * @param StoredTransactionJournal $event
+     * @param StoredTransactionJournal $storedJournalEvent
      *
      * @return bool
      */
-    public function processRules(StoredTransactionJournal $event): bool
+    public function processRules(StoredTransactionJournal $storedJournalEvent): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
-        $journal = $event->journal;
+        $journal = $storedJournalEvent->journal;
         $groups  = $journal->user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get();
         //
         /** @var RuleGroup $group */
@@ -150,13 +150,13 @@ class StoredJournalEventHandler
     /**
      * This method calls a special bill scanner that will check if the stored journal is part of a bill.
      *
-     * @param StoredTransactionJournal $event
+     * @param StoredTransactionJournal $storedJournalEvent
      *
      * @return bool
      */
-    public function scanBills(StoredTransactionJournal $event): bool
+    public function scanBills(StoredTransactionJournal $storedJournalEvent): bool
     {
-        $journal = $event->journal;
+        $journal = $storedJournalEvent->journal;
         BillScanner::scan($journal);
 
         return true;
