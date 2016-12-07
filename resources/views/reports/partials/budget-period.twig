@@ -1,7 +1,7 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th data-defaultsign="az">{{ 'budget'|_ }}</th>
+        <th data-defaultsign="az" colspan="2">{{ 'budget'|_ }}</th>
         {% for period in periods %}
             <th data-defaultsign="_19">{{ period }}</th>
         {% endfor %}
@@ -11,6 +11,9 @@
     <tbody>
     {% for id, info in report %}
         <tr>
+            <td>
+                <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </td>
             <td data-value="{{ info.name }}">
                 <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>
             </td>
