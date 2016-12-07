@@ -35,10 +35,9 @@ class HomeControllerTest extends TestCase
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('admin.index'));
+        $this->assertResponseStatus(200);
     }
 
     /**

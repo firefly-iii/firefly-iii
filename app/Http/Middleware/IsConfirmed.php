@@ -46,7 +46,12 @@ class IsConfirmed
             return redirect()->guest('login');
         }
         // must the user be confirmed in the first place?
-        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
+        $confirmPreference  = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'));
+        $mustConfirmAccount = false;
+        if (!is_null($confirmPreference)) {
+            $mustConfirmAccount = $confirmPreference->data;
+        }
+
         // user must be logged in, then continue:
         $isConfirmed = Preferences::get('user_confirmed', false)->data;
 

@@ -11,6 +11,8 @@
 
 namespace Admin;
 
+use FireflyIII\Models\Configuration;
+use FireflyIII\Support\Facades\FireflyConfig;
 use TestCase;
 
 /**
@@ -27,6 +29,8 @@ class ConfigurationControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once();
     }
 
     /**
@@ -36,6 +40,17 @@ class ConfigurationControllerTest extends TestCase
     public function testIndex()
     {
         $this->be($this->user());
+
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+
+        $trueConfig       = new Configuration;
+        $trueConfig->data = true;
+
+        FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', true])->once()->andReturn($trueConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+
         $this->call('GET', route('admin.configuration.index'));
         $this->assertResponseStatus(200);
     }
@@ -46,14 +61,13 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testPostIndex()
     {
+
+        FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
+        FireflyConfig::shouldReceive('set')->withArgs(['must_confirm_account', false])->once();
+        FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();
+
         $this->be($this->user());
         $this->call('POST', route('admin.configuration.index.post'));
-
-        // mock FireflyConfig
-        \FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', false])->once();
-        \FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once();
-        \FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once();
-
         $this->assertSessionHas('success');
         $this->assertResponseStatus(302);
     }

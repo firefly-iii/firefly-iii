@@ -35,10 +35,9 @@ class UserControllerTest extends TestCase
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('admin.users.edit', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -47,10 +46,9 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('admin.users'));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -59,10 +57,9 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('admin.users.edit', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
