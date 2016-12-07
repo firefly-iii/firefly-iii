@@ -605,10 +605,10 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
-    Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfer']);
     Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
     Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
-    Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
     Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
     Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
 }
