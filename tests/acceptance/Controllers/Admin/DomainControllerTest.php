@@ -35,10 +35,11 @@ class DomainControllerTest extends TestCase
      */
     public function testDomains()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->be($this->user());
+        $this->call('GET', route('admin.users.domains'));
+        $this->assertResponseStatus(200);
+
     }
 
     /**
@@ -47,10 +48,10 @@ class DomainControllerTest extends TestCase
      */
     public function testManual()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('POST', route('admin.users.domains.manual'), ['domain' => 'example2.com']);
+        $this->assertSessionHas('success');
+        $this->assertResponseStatus(302);
     }
 
     /**
@@ -59,10 +60,10 @@ class DomainControllerTest extends TestCase
      */
     public function testToggleDomain()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('admin.users.domains.block-toggle', ['example.com']));
+        $this->assertSessionHas('message');
+        $this->assertResponseStatus(302);
     }
 
     /**

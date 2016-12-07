@@ -679,7 +679,7 @@ Route::group(
 
     // FF configuration:
     Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);
-    Route::post('configuration', ['uses' => 'ConfigurationController@store', 'as' => 'configuration.store']);
+    Route::post('configuration', ['uses' => 'ConfigurationController@postIndex', 'as' => 'configuration.index.post']);
 
 }
 );

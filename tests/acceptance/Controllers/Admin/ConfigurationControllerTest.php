@@ -35,22 +35,27 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('admin.configuration.index'));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::store
      * Implement testStore().
      */
-    public function testStore()
+    public function testPostIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('POST', route('admin.configuration.index.post'));
+
+        // mock FireflyConfig
+        \FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', false])->once();
+        \FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once();
+        \FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once();
+
+        $this->assertSessionHas('success');
+        $this->assertResponseStatus(302);
     }
 
     /**

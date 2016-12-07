@@ -71,7 +71,7 @@ class ConfigurationController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ConfigurationRequest $request)
+    public function postIndex(ConfigurationRequest $request)
     {
         // get config values:
         $data = $request->getConfigurationData();
