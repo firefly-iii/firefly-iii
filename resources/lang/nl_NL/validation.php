@@ -85,5 +85,5 @@ return [
     'file'                           => ':attribute moet een bestand zijn.',
     'in_array'                       => 'Het :attribute veld bestaat niet in :other.',
     'present'                        => 'Het :attribute veld moet aanwezig zijn.',
-    'amount_zero'                    => 'The total amount cannot be zero',
+    'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn',
 ];
