@@ -24,7 +24,7 @@ return [
         'must_confirm_account' => false,
     ],
     'chart'               => 'chartjs',
-    'version'             => '4.2.0',
+    'version'             => '4.2.1',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
