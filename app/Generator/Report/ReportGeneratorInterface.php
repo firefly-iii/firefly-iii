@@ -37,6 +37,13 @@ interface ReportGeneratorInterface
     public function setAccounts(Collection $accounts): ReportGeneratorInterface;
 
     /**
+     * @param Collection $budgets
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface;
+
+    /**
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface

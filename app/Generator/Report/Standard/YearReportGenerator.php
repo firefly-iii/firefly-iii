@@ -61,6 +61,16 @@ class YearReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $budgets
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface

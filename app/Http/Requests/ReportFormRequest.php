@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 
@@ -80,6 +81,27 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * @return Collection
+     */
+    public function getBudgetList(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $set        = $this->get('budget');
+        $collection = new Collection;
+        if (is_array($set)) {
+            foreach ($set as $budgetId) {
+                $budget = $repository->find(intval($budgetId));
+                if (!is_null($budget->id)) {
+                    $collection->push($budget);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
      * @return Carbon
      * @throws FireflyException
      */
@@ -125,7 +147,7 @@ class ReportFormRequest extends Request
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category',
+            'report_type' => 'in:audit,default,category,budget',
         ];
     }
 

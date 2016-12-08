@@ -15,7 +15,6 @@ namespace FireflyIII\Generator\Report\Category;
 
 
 use Carbon\Carbon;
-use Crypt;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Transaction;
@@ -92,6 +91,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     {
         $this->accounts = $accounts;
 
+        return $this;
+    }
+
+    /**
+     * @param Collection $budgets
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
         return $this;
     }
 
