@@ -104,7 +104,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
      *
      * @return array
      */
-    public function period(array $entries) : array
+    public function period(array $entries): array
     {
 
         $data = [
@@ -132,5 +132,33 @@ class ChartJsBudgetChartGenerator implements BudgetChartGeneratorInterface
 
         return $data;
 
+    }
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function periodNoBudget(array $entries): array
+    {
+        $data = [
+            'labels'   => array_keys($entries),
+            'datasets' => [
+                0 => [
+                    'label' => trans('firefly.spent'),
+                    'data'  => [],
+                ],
+            ],
+            'count'    => 1,
+        ];
+
+        foreach ($entries as $label => $entry) {
+            // data set 0 is budgeted
+            // data set 1 is spent:
+            $data['datasets'][0]['data'][] = round(($entry['spent'] * -1), 2);
+
+        }
+
+        return $data;
     }
 }

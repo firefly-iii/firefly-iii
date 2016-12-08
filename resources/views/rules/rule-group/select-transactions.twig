@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('rules.rule-group.execute', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="execute-rule-group">
+    <form method="POST" action="{{ route('rule-groups.execute', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="execute-rule-group">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">

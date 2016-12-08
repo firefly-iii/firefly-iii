@@ -41,7 +41,7 @@ class AccountRepository implements AccountRepositoryInterface
     /** @var User */
     private $user;
     /** @var array */
-    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber','currency_id'];
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
 
     /**
      * AttachmentRepository constructor.
@@ -60,7 +60,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return int
      */
-    public function count(array $types):int
+    public function count(array $types): int
     {
         $count = $this->user->accounts()->accountTypeIn($types)->count();
 
@@ -367,12 +367,11 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function openingBalanceTransaction(Account $account): TransactionJournal
     {
-        $journal = TransactionJournal
-            ::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
+        $journal = TransactionJournal::sortCorrectly()
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             Log::debug('Could not find a opening balance journal, return empty one.');
 
@@ -482,7 +481,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    protected function storeOpposingAccount(float $amount, string $name):Account
+    protected function storeOpposingAccount(float $amount, string $name): Account
     {
         $type         = $amount < 0 ? 'expense' : 'revenue';
         $opposingData = [

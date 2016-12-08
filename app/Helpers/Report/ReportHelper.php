@@ -17,19 +17,15 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
-use FireflyIII\Helpers\Collection\Expense;
-use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
-use stdClass;
 
 /**
  * Class ReportHelper
@@ -118,7 +114,7 @@ class ReportHelper implements ReportHelperInterface
      *
      * @return CategoryCollection
      */
-    public function getCategoryReport(Carbon $start, Carbon $end, Collection $accounts): CategoryCollection
+    public function getCategoryReport(Collection $accounts, Carbon $start, Carbon $end): CategoryCollection
     {
         $object = new CategoryCollection;
         /** @var CategoryRepositoryInterface $repository */
@@ -131,57 +127,6 @@ class ReportHelper implements ReportHelperInterface
             // CategoryCollection expects the amount in $spent:
             $category->spent = $spent;
             $object->addCategory($category);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Get a full report on the users expenses during the period for a list of accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Expense
-     */
-    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): Expense
-    {
-        $object = new Expense;
-
-        /** @var AccountTaskerInterface $tasker */
-        $tasker     = app(AccountTaskerInterface::class);
-        $collection = $tasker->expenseReport($accounts, $accounts, $start, $end);
-
-        /** @var stdClass $entry */
-        foreach ($collection as $entry) {
-            $object->addToTotal($entry->amount);
-            $object->addOrCreateExpense($entry);
-        }
-
-        return $object;
-    }
-
-    /**
-     * Get a full report on the users incomes during the period for the given accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Income
-     */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): Income
-    {
-        $object = new Income;
-        /** @var AccountTaskerInterface $tasker */
-        $tasker     = app(AccountTaskerInterface::class);
-        $collection = $tasker->incomeReport($accounts, $accounts, $start, $end);
-
-        /** @var stdClass $entry */
-        foreach ($collection as $entry) {
-            $object->addToTotal($entry->amount);
-            $object->addOrCreateIncome($entry);
         }
 
         return $object;

@@ -12,8 +12,8 @@
 
 return [
     'home'              => 'Início',
-    'edit_currency'     => 'Edit currency ":name"',
-    'delete_currency'   => 'Delete currency ":name"',
+    'edit_currency'     => 'Editar moeda ":name"',
+    'delete_currency'   => 'Excluir moeda ":moeda"',
     'newPiggyBank'      => 'Criar um novo cofrinho',
     'edit_piggyBank'    => 'Editar cofrinho ":name"',
     'preferences'       => 'Preferências',

@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.1] - 2015-05-25
+### Added
+- BIC support (see #430)
+- New category report section and chart (see the general financial report)
+
+
+### Changed
+- Date range picker now also available on mobile devices (see #435)
+- Extended range of amounts for issue #439
+- Rewrote all routes. Old bookmarks may break.
+
 ## [4.2.0] - 2016-11-27
 ### Added
 - Lots of (empty) tests

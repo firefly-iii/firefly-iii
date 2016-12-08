@@ -39,6 +39,16 @@ interface JournalCollectorInterface
     public function disableFilter(): JournalCollectorInterface;
 
     /**
+     * @return JournalCollectorInterface
+     */
+    public function disableInternalFilter(): JournalCollectorInterface;
+
+    /**
+     * @return JournalCollectorInterface
+     */
+    public function enableInternalFilter(): JournalCollectorInterface;
+
+    /**
      * @return Collection
      */
     public function getJournals(): Collection;
@@ -46,7 +56,7 @@ interface JournalCollectorInterface
     /**
      * @return LengthAwarePaginator
      */
-    public function getPaginatedJournals():LengthAwarePaginator;
+    public function getPaginatedJournals(): LengthAwarePaginator;
 
     /**
      * @param Collection $accounts

@@ -18,7 +18,7 @@
         <p class="login-box-msg">{{ trans('firefly.two_factor_welcome', {user: user.email}) }}</p>
         <p class="login-box-msg">{{ 'two_factor_enter_code'|_ }}</p>
 
-        <form action="{{ route('two-factor-post') }}" method="post">
+        <form action="{{ route('two-factor.post') }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
@@ -33,7 +33,7 @@
                 <!-- /.col -->
             </div>
         </form>
-        <a href="{{ route('lost-two-factor') }}">{{ 'two_factor_forgot'|_ }}</a>
+        <a href="{{ route('two-factor.lost') }}">{{ 'two_factor_forgot'|_ }}</a>
     </div>
     <!-- /.login-box-body -->
 {% endblock %}

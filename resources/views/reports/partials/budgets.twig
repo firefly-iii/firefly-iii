@@ -26,7 +26,7 @@
 
             {% if budgetLine.getRepetition.id %}
                 <td class="hidden-xs" data-value="{{ budgetLine.getRepetition.startdate.format('Y-m-d') }}">
-                    <a href="{{ route('budgets.showWithRepetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
+                    <a href="{{ route('budgets.show.repetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
                         {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
                         &mdash;
                         {{ budgetLine.getRepetition.enddate.formatLocalized(monthAndDayFormat) }}

@@ -327,29 +327,29 @@ Breadcrumbs::register(
  * CURRENCIES
  */
 Breadcrumbs::register(
-    'currency.index', function (BreadCrumbGenerator $breadcrumbs) {
+    'currencies.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('firefly.currencies'), route('currency.index'));
+    $breadcrumbs->push(trans('firefly.currencies'), route('currencies.index'));
 }
 );
 
 Breadcrumbs::register(
-    'currency.create', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('firefly.create_currency'), route('currency.create'));
+    'currencies.create', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('currencies.index');
+    $breadcrumbs->push(trans('firefly.create_currency'), route('currencies.create'));
 }
 );
 
 Breadcrumbs::register(
-    'currency.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
-    $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currency.edit', [$currency->id]));
+    'currencies.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currencies.index');
+    $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currencies.edit', [$currency->id]));
 }
 );
 Breadcrumbs::register(
-    'currency.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
-    $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('breadcrumbs.delete_currency', ['name' => e($currency->name)]), route('currency.delete', [$currency->id]));
+    'currencies.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currencies.index');
+    $breadcrumbs->push(trans('breadcrumbs.delete_currency', ['name' => e($currency->name)]), route('currencies.delete', [$currency->id]));
 }
 );
 
@@ -404,9 +404,9 @@ Breadcrumbs::register(
  * PREFERENCES
  */
 Breadcrumbs::register(
-    'preferences', function (BreadCrumbGenerator $breadcrumbs) {
+    'preferences.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences'));
+    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences.index'));
 
 }
 );
@@ -414,7 +414,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'preferences.code', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences'));
+    $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences.index'));
 
 }
 );
@@ -423,22 +423,22 @@ Breadcrumbs::register(
  * PROFILE
  */
 Breadcrumbs::register(
-    'profile', function (BreadCrumbGenerator $breadcrumbs) {
+    'profile.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile'));
+    $breadcrumbs->push(trans('breadcrumbs.profile'), route('profile.index'));
 
 }
 );
 Breadcrumbs::register(
     'profile.change-password', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('profile');
+    $breadcrumbs->parent('profile.index');
     $breadcrumbs->push(trans('breadcrumbs.changePassword'), route('profile.change-password'));
 
 }
 );
 Breadcrumbs::register(
     'profile.delete-account', function (BreadCrumbGenerator $breadcrumbs) {
-    $breadcrumbs->parent('profile');
+    $breadcrumbs->parent('profile.index');
     $breadcrumbs->push(trans('firefly.delete_account'), route('profile.delete-account'));
 
 }
@@ -529,9 +529,9 @@ Breadcrumbs::register(
  * SEARCH
  */
 Breadcrumbs::register(
-    'search', function (BreadCrumbGenerator $breadcrumbs, $query) {
+    'search.index', function (BreadCrumbGenerator $breadcrumbs, $query) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.searchResult', ['query' => e($query)]), route('search'));
+    $breadcrumbs->push(trans('breadcrumbs.searchResult', ['query' => e($query)]), route('search.index'));
 }
 );
 

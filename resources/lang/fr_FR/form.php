@@ -31,6 +31,7 @@ return [
     'journal_asset_source_account'   => 'Compte d’actif (source)',
     'journal_source_account_name'    => 'Compte de recettes (source)',
     'journal_source_account_id'      => 'Compte d’actif (source)',
+    'BIC'                            => 'BIC',
     'account_from_id'                => 'Compte d\'origine',
     'account_to_id'                  => 'Compte de destination',
     'source_account'                 => 'Source account',

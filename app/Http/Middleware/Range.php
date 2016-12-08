@@ -61,7 +61,6 @@ class Range
      * @param  string|null              $guard
      *
      * @return mixed
-     * @internal param Closure $next
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {

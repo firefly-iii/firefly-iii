@@ -38,10 +38,16 @@ class TwoFactorController extends Controller
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
-        $secret = Preferences::get('twoFactorAuthSecret', '')->data;
+        $secret = Preferences::get('twoFactorAuthSecret', null)->data;
         $title  = strval(trans('firefly.two_factor_title'));
 
-        if (strlen($secret) === 0) {
+        // make sure the user has two factor configured:
+        $has2FA = Preferences::get('twoFactorAuthEnabled', null)->data;
+        if (is_null($has2FA) || $has2FA === false) {
+            return redirect(route('index'));
+        }
+
+        if (strlen(strval($secret)) === 0) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         Session::flash('two-factor-secret', $secret);

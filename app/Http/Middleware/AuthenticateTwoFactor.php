@@ -57,7 +57,7 @@ class AuthenticateTwoFactor
         $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
         $is2faAuthed  = Session::get('twofactor-authenticated');
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
-            return redirect(route('two-factor'));
+            return redirect(route('two-factor.index'));
         }
 
         return $next($request);

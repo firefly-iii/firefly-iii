@@ -24,7 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
-
     /**
      * @param Category $category
      *
@@ -49,7 +48,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) :string;
+    public function earnedInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * Find a category
@@ -58,7 +57,7 @@ interface CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function find(int $categoryId) : Category;
+    public function find(int $categoryId): Category;
 
     /**
      * Find a category
@@ -67,7 +66,7 @@ interface CategoryRepositoryInterface
      *
      * @return Category
      */
-    public function findByName(string $name) : Category;
+    public function findByName(string $name): Category;
 
     /**
      * @param Category $category
@@ -99,6 +98,44 @@ interface CategoryRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @return array
+     */
+    public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
      * @return string
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
@@ -110,7 +147,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end) : string;
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param array $data

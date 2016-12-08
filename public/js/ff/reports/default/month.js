@@ -15,5 +15,5 @@ function drawChart() {
 
     // month view:
     // draw account chart
-    lineChart('chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
+    lineChart(accountChartUri, 'account-balances-chart');
 }

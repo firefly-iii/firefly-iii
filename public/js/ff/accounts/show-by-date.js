@@ -6,9 +6,6 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 
-/* global $, lineChart, dateString, accountID, token, incomeByCategoryUri, expenseByCategoryUri, expenseByBudgetUri  */
-
-
 // Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
     "use strict";
@@ -24,11 +21,11 @@ var fixHelper = function (e, tr) {
 $(function () {
     "use strict";
 
-    lineChart('chart/account/' + accountID + '/' + dateString, 'period-specific-account');
+    lineChart(periodUri, 'period-specific-account');
 
-    pieChart(incomeByCategoryUri, 'account-cat-in');
-    pieChart(expenseByCategoryUri, 'account-cat-out');
-    pieChart(expenseByBudgetUri, 'account-budget-out');
+    pieChart(incomeCategoryUri, 'account-cat-in');
+    pieChart(expenseCategoryUri, 'account-cat-out');
+    pieChart(expenseBudgetUri, 'account-budget-out');
 
 
     // sortable!

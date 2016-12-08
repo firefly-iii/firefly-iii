@@ -22,7 +22,7 @@
 
         </div>
     </div>
-    <form action="{{ route('import.postSettings', job.key) }}" method="post">
+    <form action="{{ route('import.post-settings', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="settings" value="map"/>
 

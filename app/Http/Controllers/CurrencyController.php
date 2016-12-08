@@ -60,14 +60,14 @@ class CurrencyController extends Controller
         $subTitle     = trans('firefly.create_currency');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('currency.create.fromStore') !== true) {
-            Session::put('currency.create.url', URL::previous());
+        if (session('currencies.create.fromStore') !== true) {
+            Session::put('currencies.create.url', URL::previous());
         }
-        Session::forget('currency.create.fromStore');
+        Session::forget('currencies.create.fromStore');
         Session::flash('gaEventCategory', 'currency');
         Session::flash('gaEventAction', 'create');
 
-        return view('currency.create', compact('subTitleIcon', 'subTitle'));
+        return view('currencies.create', compact('subTitleIcon', 'subTitle'));
     }
 
     /**
@@ -85,7 +85,7 @@ class CurrencyController extends Controller
         Cache::forget('FFCURRENCYSYMBOL');
         Cache::forget('FFCURRENCYCODE');
 
-        return redirect(route('currency.index'));
+        return redirect(route('currencies.index'));
 
     }
 
@@ -99,18 +99,18 @@ class CurrencyController extends Controller
         if (!$this->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
-            return redirect(route('currency.index'));
+            return redirect(route('currencies.index'));
         }
 
 
         // put previous url in session
-        Session::put('currency.delete.url', URL::previous());
+        Session::put('currencies.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'currency');
         Session::flash('gaEventAction', 'delete');
         $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
 
-        return view('currency.delete', compact('currency', 'subTitle'));
+        return view('currencies.delete', compact('currency', 'subTitle'));
     }
 
     /**
@@ -124,7 +124,7 @@ class CurrencyController extends Controller
         if (!$this->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
-            return redirect(route('currency.index'));
+            return redirect(route('currencies.index'));
         }
 
         Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
@@ -132,7 +132,7 @@ class CurrencyController extends Controller
             $currency->forceDelete();
         }
 
-        return redirect(session('currency.delete.url'));
+        return redirect(session('currencies.delete.url'));
     }
 
     /**
@@ -147,14 +147,14 @@ class CurrencyController extends Controller
         $currency->symbol = htmlentities($currency->symbol);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('currency.edit.fromUpdate') !== true) {
-            Session::put('currency.edit.url', URL::previous());
+        if (session('currencies.edit.fromUpdate') !== true) {
+            Session::put('currencies.edit.url', URL::previous());
         }
-        Session::forget('currency.edit.fromUpdate');
+        Session::forget('currencies.edit.fromUpdate');
         Session::flash('gaEventCategory', 'currency');
         Session::flash('gaEventAction', 'edit');
 
-        return view('currency.edit', compact('currency', 'subTitle', 'subTitleIcon'));
+        return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
 
     }
 
@@ -174,7 +174,7 @@ class CurrencyController extends Controller
         }
 
 
-        return view('currency.index', compact('currencies', 'defaultCurrency'));
+        return view('currencies.index', compact('currencies', 'defaultCurrency'));
     }
 
     /**
@@ -189,7 +189,7 @@ class CurrencyController extends Controller
         if (!auth()->user()->hasRole('owner')) {
             Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
 
-            return redirect(session('currency.create.url'));
+            return redirect(session('currencies.create.url'));
         }
 
         $data     = $request->getCurrencyData();
@@ -197,13 +197,13 @@ class CurrencyController extends Controller
         Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
 
         if (intval(Input::get('create_another')) === 1) {
-            Session::put('currency.create.fromStore', true);
+            Session::put('currencies.create.fromStore', true);
 
-            return redirect(route('currency.create'))->withInput();
+            return redirect(route('currencies.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect(session('currency.create.url'));
+        return redirect(session('currencies.create.url'));
 
 
     }
@@ -226,13 +226,13 @@ class CurrencyController extends Controller
 
 
         if (intval(Input::get('return_to_edit')) === 1) {
-            Session::put('currency.edit.fromUpdate', true);
+            Session::put('currencies.edit.fromUpdate', true);
 
-            return redirect(route('currency.edit', [$currency->id]));
+            return redirect(route('currencies.edit', [$currency->id]));
         }
 
         // redirect to previous URL.
-        return redirect(session('currency.edit.url'));
+        return redirect(session('currencies.edit.url'));
 
     }
 

@@ -84,7 +84,7 @@ return [
     'destination_accounts'                       => 'Destination account(s)',
     'user_id_is'                                 => 'Your user id is <strong>:user</strong>',
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
-    'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticker on Github</a>.',
+    'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/JC5/firefly-iii/issues">open a ticket on Github</a>.',
     'nothing_to_display'                         => 'There are no transactions to show you',
     'show_all_no_filter'                         => 'Show all transactions without grouping them by date.',
     'expenses_by_category'                       => 'Expenses by category',
@@ -524,6 +524,7 @@ return [
     'no_transactions_account'                    => 'There are no transactions (in this period) for asset account ":name".',
     'no_data_for_chart'                          => 'There is not enough information (yet) to generate this chart.',
     'select_more_than_one_account'               => 'Please select more than one account',
+    'select_more_than_one_category'              => 'Please select more than one category',
 
     // categories:
     'new_category'                               => 'New category',

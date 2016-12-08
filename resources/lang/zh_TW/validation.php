@@ -21,6 +21,7 @@ return [
     'file_too_large'                 => '檔案 ":name" 過大。',
     'belongs_to_user'                => ':attribute 的值是未知的。',
     'accepted'                       => ':attribute 必須被接受。',
+    'bic'                            => 'This is not a valid BIC.',
     'active_url'                     => ':attribute 不是有效的URL。',
     'after'                          => ':attribute 必須是一個在 :date 之後的日期。',
     'alpha'                          => ':attribute 只允許包含字母。',
@@ -84,4 +85,5 @@ return [
     'file'                           => 'The :attribute must be a file.',
     'in_array'                       => 'The :attribute field does not exist in :other.',
     'present'                        => 'The :attribute field must be present.',
+    'amount_zero'                    => 'The total amount cannot be zero',
 ];

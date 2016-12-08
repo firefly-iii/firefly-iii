@@ -74,7 +74,7 @@ class PreferencesController extends Controller
         Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
         Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
 
-        return redirect(route('preferences'));
+        return redirect(route('preferences.index'));
     }
 
     /**
@@ -122,7 +122,7 @@ class PreferencesController extends Controller
         Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
-        return redirect(route('preferences'));
+        return redirect(route('preferences.index'));
     }
 
     /**
@@ -206,7 +206,7 @@ class PreferencesController extends Controller
             return redirect(route('preferences.code'));
         }
 
-        return redirect(route('preferences'));
+        return redirect(route('preferences.index'));
     }
 
     /**

@@ -43,7 +43,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function find(int $currencyId) : TransactionCurrency
+    public function find(int $currencyId): TransactionCurrency
     {
         $currency = TransactionCurrency::find($currencyId);
         if (is_null($currency)) {
@@ -61,7 +61,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findByCode(string $currencyCode) : TransactionCurrency
+    public function findByCode(string $currencyCode): TransactionCurrency
     {
         $currency = TransactionCurrency::whereCode($currencyCode)->first();
         if (is_null($currency)) {
@@ -78,7 +78,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findByName(string $currencyName) : TransactionCurrency
+    public function findByName(string $currencyName): TransactionCurrency
     {
         $preferred = TransactionCurrency::whereName($currencyName)->first();
         if (is_null($preferred)) {
@@ -95,7 +95,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findBySymbol(string $currencySymbol) : TransactionCurrency
+    public function findBySymbol(string $currencySymbol): TransactionCurrency
     {
         $currency = TransactionCurrency::whereSymbol($currencySymbol)->first();
         if (is_null($currency)) {

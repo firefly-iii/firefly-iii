@@ -193,7 +193,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function period(BudgetRepositoryInterface $repository, Budget $budget, Carbon $start, Carbon $end, Collection $accounts)
+    public function period(BudgetRepositoryInterface $repository, Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -209,7 +209,7 @@ class BudgetController extends Controller
 
         // the expenses:
         $periods  = Navigation::listOfPeriods($start, $end);
-        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
+        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end, false);
         $budgeted = [];
         $key      = Navigation::preferredCarbonFormat($start, $end);
         $range    = Navigation::preferredRangeFormat($start, $end);
@@ -246,6 +246,47 @@ class BudgetController extends Controller
         }
 
         $data = $this->generator->period($result);
+
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+    /**
+     * @param BudgetRepositoryInterface $repository
+     * @param Collection                $accounts
+     * @param Carbon                    $start
+     * @param Carbon                    $end
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function periodNoBudget(BudgetRepositoryInterface $repository, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($accounts);
+        $cache->addProperty('no-budget');
+        $cache->addProperty('period');
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+
+        // the expenses:
+        $periods  = Navigation::listOfPeriods($start, $end);
+        $entries  = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
+
+        // join them:
+        $result = [];
+        foreach (array_keys($periods) as $period) {
+            $nice          = $periods[$period];
+            $result[$nice] = [
+                'spent'    => isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0',
+            ];
+        }
+
+        $data = $this->generator->periodNoBudget($result);
 
         $cache->store($data);
 

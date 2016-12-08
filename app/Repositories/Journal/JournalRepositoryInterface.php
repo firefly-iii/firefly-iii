@@ -52,7 +52,7 @@ interface JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function find(int $journalId) : TransactionJournal;
+    public function find(int $journalId): TransactionJournal;
 
     /**
      * Get users very first transaction journal

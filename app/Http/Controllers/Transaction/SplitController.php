@@ -157,7 +157,7 @@ class SplitController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
-            return redirect(route('transactions.edit-split', [$journal->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('transactions.split.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
@@ -249,8 +249,8 @@ class SplitController extends Controller
         $transactions = $this->tasker->getTransactionsOverview($journal);
         $return       = [];
         /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = [
+        foreach ($transactions as $index => $transaction) {
+            $set = [
                 'description'              => $transaction['description'],
                 'source_account_id'        => $transaction['source_account_id'],
                 'source_account_name'      => $transaction['source_account_name'],
@@ -260,6 +260,15 @@ class SplitController extends Controller
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'],
             ];
+
+            // set initial category and/or budget:
+            if (count($transactions) === 1 && $index === 0) {
+                $set['budget_id'] = TransactionJournal::budgetId($journal);
+                $set['category']  = TransactionJournal::categoryAsString($journal);
+            }
+
+            $return[] = $set;
+
         }
 
         return $return;

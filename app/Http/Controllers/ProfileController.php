@@ -108,7 +108,7 @@ class ProfileController extends Controller
 
         Session::flash('success', strval(trans('firefly.password_changed')));
 
-        return redirect(route('profile'));
+        return redirect(route('profile.index'));
     }
 
     /**

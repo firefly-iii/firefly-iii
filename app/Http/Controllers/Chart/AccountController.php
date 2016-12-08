@@ -112,7 +112,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseByBudget(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function expenseBudget(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -153,7 +153,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseByCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function expenseCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -199,7 +199,7 @@ class AccountController extends Controller
         $frontPage = Preferences::get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
         $accounts  = $repository->getAccountsById($frontPage->data);
 
-        return Response::json($this->accountBalanceChart($start, $end, $accounts));
+        return Response::json($this->accountBalanceChart($accounts, $start, $end));
     }
 
     /**
@@ -210,7 +210,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function incomeByCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function incomeCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -251,9 +251,9 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function report(Carbon $start, Carbon $end, Collection $accounts)
+    public function report(Collection $accounts, Carbon $start, Carbon $end)
     {
-        return Response::json($this->accountBalanceChart($start, $end, $accounts));
+        return Response::json($this->accountBalanceChart($accounts, $start, $end));
     }
 
     /**
@@ -406,13 +406,13 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return array
      */
-    private function accountBalanceChart(Carbon $start, Carbon $end, Collection $accounts): array
+    private function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array
     {
         // chart properties for cache:
         $cache = new CacheProperties();

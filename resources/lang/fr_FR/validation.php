@@ -21,6 +21,7 @@ return [
     'file_too_large'                 => 'Le fichier ":name" est trop grand.',
     'belongs_to_user'                => 'La valeur de :attribute est inconnue',
     'accepted'                       => 'Le champ :attribute doit être accepté.',
+    'bic'                            => 'This is not a valid BIC.',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
     'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',
     'alpha'                          => 'Le champ :attribute doit seulement contenir des lettres.',
@@ -84,4 +85,5 @@ return [
     'file'                           => 'The :attribute must be a file.',
     'in_array'                       => 'The :attribute field does not exist in :other.',
     'present'                        => 'The :attribute field must be present.',
+    'amount_zero'                    => 'The total amount cannot be zero',
 ];

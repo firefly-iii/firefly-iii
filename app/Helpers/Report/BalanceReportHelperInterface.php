@@ -26,11 +26,11 @@ use Illuminate\Support\Collection;
 interface BalanceReportHelperInterface
 {
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return Balance
      */
-    public function getBalanceReport(Carbon $start, Carbon $end, Collection $accounts): Balance;
+    public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): Balance;
 }

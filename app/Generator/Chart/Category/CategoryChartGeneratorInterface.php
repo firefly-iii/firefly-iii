@@ -22,7 +22,6 @@ use Illuminate\Support\Collection;
  */
 interface CategoryChartGeneratorInterface
 {
-
     /**
      * @param Collection $entries
      *
@@ -57,5 +56,12 @@ interface CategoryChartGeneratorInterface
      * @return array
      */
     public function pieChart(array $data): array;
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function reportPeriod(array $entries): array;
 
 }

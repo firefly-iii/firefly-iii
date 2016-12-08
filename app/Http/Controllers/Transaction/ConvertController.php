@@ -62,7 +62,7 @@ class ConvertController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function convert(TransactionType $destinationType, TransactionJournal $journal)
+    public function index(TransactionType $destinationType, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
@@ -115,7 +115,7 @@ class ConvertController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function submit(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
+    public function postIndex(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);

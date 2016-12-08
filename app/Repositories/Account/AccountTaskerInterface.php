@@ -51,37 +51,11 @@ interface AccountTaskerInterface
 
     /**
      * @param Collection $accounts
-     * @param Collection $excluded
      * @param Carbon     $start
      * @param Carbon     $end
-     *
-     * @see AccountTasker::financialReport()
-     *
-     * @return Collection
-     *
-     */
-    public function expenseReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection;
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return AccountCollection
      */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection;
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $excluded
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountTasker::financialReport()
-     *
-     * @return Collection
-     *
-     */
-    public function incomeReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection;
+    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): AccountCollection;
 
 }

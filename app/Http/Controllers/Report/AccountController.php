@@ -29,13 +29,13 @@ class AccountController extends Controller
 {
 
     /**
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return mixed|string
      */
-    public function accountReport(Carbon $start, Carbon $end, Collection $accounts)
+    public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -47,9 +47,9 @@ class AccountController extends Controller
             return $cache->get();
         }
 
-
+        /** @var AccountTaskerInterface $accountTasker */
         $accountTasker = app(AccountTaskerInterface::class);
-        $accountReport = $accountTasker->getAccountReport($start, $end, $accounts);
+        $accountReport = $accountTasker->getAccountReport($accounts, $start, $end);
 
         $result = view('reports.partials.accounts', compact('accountReport'))->render();
         $cache->store($result);

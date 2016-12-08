@@ -1,4 +1,13 @@
 <?php
+/**
+ * AccountControllerTest.php
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
 
 /**
@@ -97,7 +106,7 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowWithDate(string $range)
+    public function testShowByDate(string $range)
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

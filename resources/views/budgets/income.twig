@@ -8,7 +8,7 @@
             </h4>
         </div>
 
-        <form style="display: inline;" id="income" action="{{ route('budgets.postIncome') }}" method="POST">
+        <form style="display: inline;" id="income" action="{{ route('budgets.income.post') }}" method="POST">
             <div class="modal-body">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 

@@ -112,6 +112,14 @@ interface BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection;
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
@@ -119,7 +127,7 @@ interface BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end) : string;
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param Collection $accounts
@@ -143,7 +151,7 @@ interface BudgetRepositoryInterface
      *
      * @return Budget
      */
-    public function update(Budget $budget, array $data) : Budget;
+    public function update(Budget $budget, array $data): Budget;
 
     /**
      * @param Budget $budget
@@ -154,6 +162,6 @@ interface BudgetRepositoryInterface
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount) : BudgetLimit;
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount): BudgetLimit;
 
 }

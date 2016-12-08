@@ -49,7 +49,7 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title"><a
-                                    href="{{ route('budgets.showWithRepetition',[budget.id,limit.id]) }}">{{ limit.startdate.formatLocalized(monthFormat) }}</a>
+                                    href="{{ route('budgets.show.repetition',[budget.id,limit.id]) }}">{{ limit.startdate.formatLocalized(monthFormat) }}</a>
                         </h3>
                     </div>
                     <div class="box-body">
@@ -98,10 +98,12 @@
     <script type="text/javascript">
         var budgetID = {{ budget.id }};
         {% if repetition.id %}
-        var repetitionID = {{ repetition.id }};
-        var year = {{ repetition.startdate.format('Y') }};
+            var repetitionID = {{ repetition.id }};
+            var year = {{ repetition.startdate.format('Y') }};
+            var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, repetition.id] ) }}';
         {% else %}
-        var year = {{ Session.get('start').format('Y') }};
+            var year = {{ Session.get('start').format('Y') }};
+            var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
         {% endif %}
 
     </script>

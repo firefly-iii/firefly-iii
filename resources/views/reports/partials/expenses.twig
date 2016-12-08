@@ -1,6 +1,8 @@
 <table class="table table-hover">
     <tbody>
-    {% for expense in expenses.getExpenses %}
+    {% set sum = 0 %}
+    {% for expense in expenses %}
+        {% set sum = sum + expense.sum %}
         {% if loop.index > listLength %}
             <tr class="overListLength">
         {% else %}
@@ -18,13 +20,13 @@
             {% endif %}
         </td>
         <td>
-            {{ (expense.amount)|formatAmount }}
+            {{ (expense.sum)|formatAmount }}
         </td>
         </tr>
     {% endfor %}
     </tbody>
     <tfoot>
-    {% if expenses.getExpenses|length > listLength %}
+    {% if expenses|length > listLength %}
         <tr>
             <td colspan="2" class="active">
                 <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
@@ -33,7 +35,7 @@
     {% endif %}
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
-        <td>{{ (expenses.getTotal)|formatAmount }}</td>
+        <td>{{ (sum)|formatAmount }}</td>
     </tr>
     </tfoot>
 </table>

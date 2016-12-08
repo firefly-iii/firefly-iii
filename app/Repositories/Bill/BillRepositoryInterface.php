@@ -40,7 +40,7 @@ interface BillRepositoryInterface
      *
      * @return Bill
      */
-    public function find(int $billId) : Bill;
+    public function find(int $billId): Bill;
 
     /**
      * Find a bill by name.
@@ -49,7 +49,7 @@ interface BillRepositoryInterface
      *
      * @return Bill
      */
-    public function findByName(string $name) : Bill;
+    public function findByName(string $name): Bill;
 
     /**
      * @return Collection

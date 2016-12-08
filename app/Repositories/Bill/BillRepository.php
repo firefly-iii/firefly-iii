@@ -66,7 +66,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      */
-    public function find(int $billId) : Bill
+    public function find(int $billId): Bill
     {
         $bill = $this->user->bills()->find($billId);
         if (is_null($bill)) {
@@ -83,7 +83,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      */
-    public function findByName(string $name) : Bill
+    public function findByName(string $name): Bill
     {
         $bills = $this->user->bills()->get(['bills.*']);
 

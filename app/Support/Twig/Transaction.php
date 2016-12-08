@@ -109,8 +109,7 @@ class Transaction extends Twig_Extension
             'optionalJournalAmount', function (int $journalId, string $transactionAmount, string $code, string $type): string {
 
             $amount = strval(
-                TransactionModel
-                    ::where('transaction_journal_id', $journalId)
+                TransactionModel::where('transaction_journal_id', $journalId)
                     ->whereNull('deleted_at')
                     ->where('amount', '<', 0)
                     ->sum('amount')
@@ -193,8 +192,7 @@ class Transaction extends Twig_Extension
             // name is present in object, use that one:
             if (bccomp($transaction->transaction_amount, '0') === -1 && !is_null($transaction->opposing_account_id)) {
 
-                $name = intval($transaction->opposing_account_encrypted) === 1 ? Crypt::decrypt($transaction->opposing_account_name)
-                    : $transaction->opposing_account_name;
+                $name = $transaction->opposing_account_name;
                 $id   = intval($transaction->opposing_account_id);
                 $type = intval($transaction->opposing_account_type);
             }
@@ -204,8 +202,7 @@ class Transaction extends Twig_Extension
                 // if the amount is negative, find the opposing account and use that one:
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
-                $other = TransactionModel
-                    ::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
+                $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
                     ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
@@ -278,8 +275,7 @@ class Transaction extends Twig_Extension
             if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
-                $other = TransactionModel
-                    ::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
+                $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
                     ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')

@@ -119,6 +119,6 @@ interface AccountRepositoryInterface
      *
      * @return Account
      */
-    public function store(array $data) : Account;
+    public function store(array $data): Account;
 
 }

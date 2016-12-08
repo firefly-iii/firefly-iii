@@ -8,31 +8,25 @@
  * See the LICENSE file for details.
  */
 
-// it's hard coded, but what you're gonna do?
-var catInUri = 'chart/category/' + accountIds + '/' + categoryIds + '/' + startDate + '/' + endDate + '/OTHERS/income';
-var catOutUri = 'chart/category/' + accountIds + '/' + categoryIds + '/' + startDate + '/' + endDate + '/OTHERS/expense';
-var accInUri = 'chart/account/' + accountIds + '/' + categoryIds + '/' + startDate + '/' + endDate + '/OTHERS/income';
-var accOutUri = 'chart/account/' + accountIds + '/' + categoryIds + '/' + startDate + '/' + endDate + '/OTHERS/expense';
-
 
 $(function () {
     "use strict";
     drawChart();
 
     $('#categories-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('categories-in-pie-chart', catInUri);
+        redrawPieChart('categories-in-pie-chart', categoryIncomeUri);
     });
 
     $('#categories-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('categories-out-pie-chart', catOutUri);
+        redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
     });
 
     $('#accounts-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-in-pie-chart', accInUri);
+        redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
     });
 
     $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-out-pie-chart', accOutUri);
+        redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
     });
 
 });
@@ -42,13 +36,13 @@ function drawChart() {
     "use strict";
 
     // month view:
-    stackedColumnChart('chart/category-report-in-out/' + accountIds + '/' + categoryIds + '/' + startDate + '/' + endDate, 'in-out-chart');
+    stackedColumnChart(mainUri, 'in-out-chart');
 
     // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart('categories-in-pie-chart', catInUri);
-    redrawPieChart('categories-out-pie-chart', catOutUri);
-    redrawPieChart('accounts-in-pie-chart', accInUri);
-    redrawPieChart('accounts-out-pie-chart', accOutUri);
+    redrawPieChart('categories-in-pie-chart', categoryIncomeUri);
+    redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
+    redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
+    redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
 
 
 }

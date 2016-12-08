@@ -153,6 +153,84 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param CRI        $repository
+     * @param Category   $category
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    public function reportPeriod(CRI $repository, Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category-period-chart');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        $cache->addProperty($category);
+        if ($cache->has()) {
+
+            return $cache->get();
+        }
+        $expenses = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
+        $income   = $repository->periodIncome(new Collection([$category]), $accounts, $start, $end);
+        $periods  = Navigation::listOfPeriods($start, $end);
+
+
+        // join them:
+        $result = [];
+        foreach (array_keys($periods) as $period) {
+            $nice          = $periods[$period];
+            $result[$nice] = [
+                'earned' => $income[$category->id]['entries'][$period] ?? '0',
+                'spent'  => $expenses[$category->id]['entries'][$period] ?? '0',
+            ];
+        }
+        $data = $this->generator->reportPeriod($result);
+
+        return Response::json($data);
+    }
+
+    /**
+     * @param CRI        $repository
+     * @param Category   $category
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    public function reportPeriodNoCategory(CRI $repository, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('no-category-period-chart');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+
+            return $cache->get();
+        }
+        $expenses = $repository->periodExpensesNoCategory($accounts, $start, $end);
+        $income   = $repository->periodIncomeNoCategory($accounts, $start, $end);
+        $periods  = Navigation::listOfPeriods($start, $end);
+
+        // join them:
+        $result = [];
+        foreach (array_keys($periods) as $period) {
+            $nice          = $periods[$period];
+            $result[$nice] = [
+                'earned' => $income['entries'][$period] ?? '0',
+                'spent'  => $expenses['entries'][$period] ?? '0',
+            ];
+        }
+        $data = $this->generator->reportPeriod($result);
+
+        return Response::json($data);
+    }
+
+    /**
      * @param CRI                         $repository
      * @param Category                    $category
      *

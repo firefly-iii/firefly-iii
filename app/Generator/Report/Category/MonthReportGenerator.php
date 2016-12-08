@@ -148,8 +148,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             // is not set?
             if (!isset($result[$opposingId])) {
                 $name                = $transaction->opposing_account_name;
-                $encrypted           = intval($transaction->opposing_account_encrypted);
-                $name                = $encrypted === 1 ? Crypt::decrypt($name) : $name;
                 $result[$opposingId] = [
                     'name'    => $name,
                     'count'   => 1,
@@ -267,14 +265,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     {
         $transactions = $this->getExpenses()->sortBy('transaction_amount');
 
-        $transactions = $transactions->each(
-            function (Transaction $transaction) {
-                if (intval($transaction->opposing_account_encrypted) === 1) {
-                    $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
-                }
-            }
-        );
-
         return $transactions;
     }
 
@@ -284,14 +274,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     private function getTopIncome(): Collection
     {
         $transactions = $this->getIncome()->sortByDesc('transaction_amount');
-
-        $transactions = $transactions->each(
-            function (Transaction $transaction) {
-                if (intval($transaction->opposing_account_encrypted) === 1) {
-                    $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
-                }
-            }
-        );
 
         return $transactions;
     }

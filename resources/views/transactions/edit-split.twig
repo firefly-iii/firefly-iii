@@ -4,7 +4,7 @@
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
 {% endblock %}
 {% block content %}
-    <form method="POST" action="{{ route('split.journal.update',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
+    <form method="POST" action="{{ route('transactions.split.update',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
           enctype="multipart/form-data">
 
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -95,7 +95,7 @@
                 not optionalFields.notes or
                 not optionalFields.attachments %}
                     <p class="text-center text-success"><i class="fa fa-info-circle" aria-hidden="true"></i>
-                        <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences')})|raw }}</em></p>
+                        <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences.index')})|raw }}</em></p>
                 {% endif %}
 
                 {# BOX FOR DATES #}

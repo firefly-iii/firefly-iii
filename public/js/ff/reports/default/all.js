@@ -1,4 +1,4 @@
-/* globals startDate, showOnlyTop, showFullList, endDate, reportType, expenseReportUri, accountIds, incExpReportUri,accountReportUri, incomeReportUri */
+/* globals startDate, showOnlyTop, showFullList, endDate, expenseReportUri, accountIds, incExpReportUri,accountReportUri, incomeReportUri */
 /*
  * all.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -39,10 +39,9 @@ function clickInfoButton(e) {
     // add some more elements:
     attributes.startDate = startDate;
     attributes.endDate = endDate;
-    attributes.reportType = reportType;
     attributes.accounts = accountIds;
 
-    $.getJSON('popup/report', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
+    $.getJSON('popup/general', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
 }
 
 function errorInfoButton(data) {
@@ -89,15 +88,29 @@ function displayAjaxPartial(data, holder) {
     // trigger list thing
     listLengthInitial();
 
-    // budget thing
+    // budget thing in year and multi year report:
     $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
+
+    // category thing in year and multi year report:
+    $('.category-chart-activate').unbind('click').on('click', clickCategoryChart);
 }
 
 function failAjaxPartial(uri, holder) {
     "use strict";
-    console.log('Failed to load' + uri);
+    console.log('Failed to load: ' + uri);
     $('#' + holder).removeClass('loading').addClass('general-chart-error');
 
+}
+
+function clickCategoryChart(e) {
+    "use strict";
+    var link = $(e.target);
+    var categoryId = link.data('category');
+
+    var URL = 'chart/category/report-period/' + categoryId + '/' + accountIds + '/' + startDate + '/' + endDate;
+    var container = 'category_chart';
+    columnChart(URL, container);
+    return false;
 }
 
 function clickBudgetChart(e) {
@@ -105,7 +118,7 @@ function clickBudgetChart(e) {
     var link = $(e.target);
     var budgetId = link.data('budget');
 
-    var URL = 'chart/budget/period/' + budgetId + '/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds;
+    var URL = 'chart/budget/period/' + budgetId + '/' + accountIds + '/' + startDate + '/' + endDate;
     var container = 'budget_chart';
     columnChart(URL, container);
     return false;

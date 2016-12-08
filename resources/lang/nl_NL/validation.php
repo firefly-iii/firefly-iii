@@ -21,6 +21,7 @@ return [
     'file_too_large'                 => 'Bestand ":name" is te groot.',
     'belongs_to_user'                => 'De waarde van :attribute is onbekend',
     'accepted'                       => ':attribute moet geaccepteerd zijn.',
+    'bic'                            => 'Dit is geen geldige BIC.',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',
     'alpha'                          => ':attribute mag alleen letters bevatten.',
@@ -84,4 +85,5 @@ return [
     'file'                           => ':attribute moet een bestand zijn.',
     'in_array'                       => 'Het :attribute veld bestaat niet in :other.',
     'present'                        => 'Het :attribute veld moet aanwezig zijn.',
+    'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn',
 ];

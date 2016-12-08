@@ -40,12 +40,11 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var categoryID = {{ category.id }};
-        var categoryDate = "{{ carbon.format('Y-m-d') }}";
+        var specific = '{{ route('chart.category.specific', [category.id, carbon.format('Ymd')]) }}';
     </script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
     <script type="text/javascript" src="js/ff/charts.js"></script>
-    <script type="text/javascript" src="js/ff/categories/show_with_date.js"></script>
+    <script type="text/javascript" src="js/ff/categories/show-by-date.js"></script>
     <script type="text/javascript" src="js/ff/transactions/list.js"></script>
 {% endblock %}

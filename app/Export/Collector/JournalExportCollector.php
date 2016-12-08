@@ -292,8 +292,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
     private function getWorkSet()
     {
         $accountIds    = $this->accounts->pluck('id')->toArray();
-        $this->workSet = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $this->workSet = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin(
                 'transactions AS opposing', function (JoinClause $join) {
                 $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
