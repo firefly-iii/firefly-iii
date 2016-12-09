@@ -166,9 +166,51 @@ class HomeController extends Controller
     public function routes()
     {
         // these routes are not relevant for the help pages:
-        $ignore = ['login', 'registe', 'logout', 'two-fac', 'lost-two', 'confirm', 'resend', 'do_confirm', 'testFla', 'json.', 'piggy-banks.add',
-                   'piggy-banks.remove', 'preferences.', 'rules.rule.up', 'rules.rule.down', 'rules.rule-group.up', 'rules.rule-group.down', 'popup.report',
-                   'admin.users.domains.block-', 'import.json', 'help.',
+        $ignore = [
+            // login and two-factor routes:
+            'login',
+            'registe',
+            'password.rese',
+            'logout',
+            'two-fac',
+            'lost-two',
+            'confirm',
+            'resend',
+            'do_confirm',
+            // test troutes
+            'test-flash',
+            'all-routes',
+            // json routes
+            'json.',
+            // routes that point to modals or that redirect immediately.
+            'piggy-banks.add',
+            'piggy-banks.remove',
+            'rules.rule.up',
+            'attachments.download',
+            'bills.rescan',
+            'rules.rule.down',
+            'rules.rule-group.up',
+            'rules.rule-group.down',
+            'popup.',
+            'error',
+            'flush',
+            //'preferences.',
+            'admin.users.domains.block-',
+            'help.',
+            // ajax routes:
+            'import.json',
+            // charts:
+            'chart.',
+            // report data:
+            'report-data.',
+
+            // others:
+            'debugbar',
+            'attachments.preview',
+            'budgets.income',
+            'currencies.default'
+
+
         ];
         $routes = Route::getRoutes();
         $return = '<pre>';
