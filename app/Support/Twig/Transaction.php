@@ -266,8 +266,7 @@ class Transaction extends Twig_Extension
             // name is present in object, use that one:
             if (bccomp($transaction->transaction_amount, '0') === 1 && !is_null($transaction->opposing_account_id)) {
 
-                $name = intval($transaction->opposing_account_encrypted) === 1 ? Crypt::decrypt($transaction->opposing_account_name)
-                    : $transaction->opposing_account_name;
+                $name = $transaction->opposing_account_name;
                 $id   = intval($transaction->opposing_account_id);
                 $type = intval($transaction->opposing_account_type);
             }
