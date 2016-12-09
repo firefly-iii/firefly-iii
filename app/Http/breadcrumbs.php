@@ -134,6 +134,12 @@ Breadcrumbs::register(
     $breadcrumbs->push(trans('firefly.single_user_administration', ['email' => $user->email]), route('admin.users.show', [$user->id]));
 }
 );
+Breadcrumbs::register(
+    'admin.users.edit', function (BreadCrumbGenerator $breadcrumbs, User $user) {
+    $breadcrumbs->parent('admin.users');
+    $breadcrumbs->push(trans('firefly.edit_user', ['email' => $user->email]), route('admin.users.edit', [$user->id]));
+}
+);
 
 Breadcrumbs::register(
     'admin.users.domains', function (BreadCrumbGenerator $breadcrumbs) {
