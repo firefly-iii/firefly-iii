@@ -35,10 +35,12 @@ class LoginControllerTest extends TestCase
      */
     public function testLogin()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->visit('/login')
+             ->type('thegrumpydictator@gmail.com', 'email')
+             ->type('james', 'password')
+             ->press('Sign In')
+             ->seePageIs('/')
+             ->see('thegrumpydictator@gmail.com');
     }
 
     /**
@@ -47,22 +49,9 @@ class LoginControllerTest extends TestCase
      */
     public function testLogout()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\LoginController::redirectPath
-     * Implement testRedirectPath().
-     */
-    public function testRedirectPath()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->visit('/logout')
+             ->seePageIs('/login')
+             ->see('Sign in to start your session');
     }
 
     /**
@@ -71,22 +60,9 @@ class LoginControllerTest extends TestCase
      */
     public function testShowLoginForm()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\LoginController::username
-     * Implement testUsername().
-     */
-    public function testUsername()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->visit('/')
+             ->seePageIs('/login')
+             ->see('Sign in to start your session');
     }
 
     /**

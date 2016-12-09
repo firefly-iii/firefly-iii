@@ -11,10 +11,6 @@
  */
 class HomeControllerTest extends TestCase
 {
-    public function displayError()
-    {
-        $this->assertTrue(true);
-    }
 
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::dateRange
@@ -80,7 +76,7 @@ class HomeControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $this->call('GET', route('allRoutes'));
+        $this->call('GET', route('all-routes'));
         $this->assertResponseStatus(200);
     }
 
@@ -90,7 +86,7 @@ class HomeControllerTest extends TestCase
     public function testTestFlash()
     {
         $this->be($this->user());
-        $this->call('GET', route('testFlash'));
+        $this->call('GET', route('test-flash'));
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
         $this->assertSessionHas('info');

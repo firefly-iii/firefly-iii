@@ -49,7 +49,7 @@ class ConfirmationControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
 
-        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($trueConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->andReturn($trueConfig);
         $this->be($this->user());
         $this->call('GET', route('confirmation_error'));
         $this->assertResponseStatus(200);
@@ -100,11 +100,11 @@ class ConfirmationControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['user_confirmed_last_mail', 0])->andReturn($timePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
-        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($trueConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->andReturn($trueConfig);
         Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
 
         // from event handler:
-        Preferences::shouldReceive('setForUser')->withAnyArgs()->once();
+        Preferences::shouldReceive('setForUser')->withAnyArgs();
 
         $this->be($this->user());
         $this->call('GET', route('resend_confirmation'));
