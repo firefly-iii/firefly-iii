@@ -11,6 +11,10 @@
 
 namespace Auth;
 
+use FireflyIII\Models\Configuration;
+use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use TestCase;
 
 /**
@@ -35,10 +39,22 @@ class ConfirmationControllerTest extends TestCase
      */
     public function testConfirmationError()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        // need a user that is not activated. And site must require activated users.
+        $user             = $this->user();
+        $trueConfig       = new Configuration;
+        $trueConfig->data = true;
+
+        $falsePreference = new Preference;
+        $falsePreference->data = true;
+
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed',false])->andReturn($falsePreference);
+
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($trueConfig);
+
+        $this->call('GET', route('confirmation_error'));
+        $this->assertResponseStatus(200);
+        $this->see('has been sent to the address you used during your registration');
+
     }
 
     /**
