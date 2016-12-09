@@ -34,6 +34,8 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('accounts.create', ['asset']));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -44,6 +46,8 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('accounts.delete', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -65,6 +69,8 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('accounts.edit', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -79,6 +85,8 @@ class AccountControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.index', ['asset']));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -98,6 +106,8 @@ class AccountControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.show', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -112,6 +122,8 @@ class AccountControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.show.date', [1, '2016-01-01']));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**

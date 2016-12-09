@@ -53,6 +53,9 @@ class ConfigurationControllerTest extends TestCase
 
         $this->call('GET', route('admin.configuration.index'));
         $this->assertResponseStatus(200);
+
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**

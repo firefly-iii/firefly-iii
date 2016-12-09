@@ -40,6 +40,8 @@ class DomainControllerTest extends TestCase
         $this->call('GET', route('admin.users.domains'));
         $this->assertResponseStatus(200);
 
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**

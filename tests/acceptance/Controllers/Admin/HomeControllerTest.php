@@ -38,6 +38,8 @@ class HomeControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('admin.index'));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**

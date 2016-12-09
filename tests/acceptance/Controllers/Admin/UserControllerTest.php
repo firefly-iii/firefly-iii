@@ -38,6 +38,8 @@ class UserControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('admin.users.edit', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -49,6 +51,8 @@ class UserControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('admin.users'));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -60,6 +64,8 @@ class UserControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('admin.users.edit', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
