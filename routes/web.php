@@ -81,10 +81,10 @@ Route::group(
 Route::group(
     ['middleware' => ['user-full-auth']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
-    Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'testFlash']);
+    Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'test-flash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-    Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'allRoutes']);
+    Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'all-routes']);
 }
 );
 
@@ -361,7 +361,7 @@ Route::group(
  * JSON Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'admin.'], function () {
+    ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'json.'], function () {
     Route::get('expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'expense-accounts']);
     Route::get('revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'revenue-accounts']);
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
@@ -371,7 +371,7 @@ Route::group(
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.paid']);
     Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.unpaid']);
-    Route::get('transaction-journals/{what}', 'JsonController@transactionJournals');
+    Route::get('transaction-journals/{what}', ['uses' => 'JsonController@transactionJournals','as' => 'transaction-journals']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 

@@ -40,17 +40,17 @@ class ConfirmationControllerTest extends TestCase
     public function testConfirmationError()
     {
         // need a user that is not activated. And site must require activated users.
-        $user             = $this->user();
-        $trueConfig       = new Configuration;
-        $trueConfig->data = true;
+        $trueConfig            = new Configuration;
+        $trueConfig->data      = true;
+        $falsePreference       = new Preference;
+        $falsePreference->data = false;
 
-        $falsePreference = new Preference;
-        $falsePreference->data = true;
-
-        Preferences::shouldReceive('get')->withArgs(['user_confirmed',false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
 
         FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($trueConfig);
-
+        $this->be($this->user());
         $this->call('GET', route('confirmation_error'));
         $this->assertResponseStatus(200);
         $this->see('has been sent to the address you used during your registration');
@@ -63,10 +63,23 @@ class ConfirmationControllerTest extends TestCase
      */
     public function testDoConfirmation()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $codePreference        = new Preference;
+        $codePreference->data  = 'abcde';
+        $timePreference        = new Preference;
+        $timePreference->data  = 0;
+        $falsePreference       = new Preference;
+        $falsePreference->data = false;
+
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed_code'])->andReturn($codePreference);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed_last_mail', 0])->andReturn($timePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
+
+        $this->be($this->user());
+        $this->call('GET', route('do_confirm_account', ['abcde']));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('home');
     }
 
     /**
@@ -75,10 +88,27 @@ class ConfirmationControllerTest extends TestCase
      */
     public function testResendConfirmation()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $trueConfig            = new Configuration;
+        $trueConfig->data      = true;
+        $codePreference        = new Preference;
+        $codePreference->data  = 'abcde';
+        $timePreference        = new Preference;
+        $timePreference->data  = 0;
+        $falsePreference       = new Preference;
+        $falsePreference->data = false;
+
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed_last_mail', 0])->andReturn($timePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($trueConfig);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
+
+        // from event handler:
+        Preferences::shouldReceive('setForUser')->withAnyArgs()->once();
+
+        $this->be($this->user());
+        $this->call('GET', route('resend_confirmation'));
+        $this->assertResponseStatus(200);
     }
 
     /**
