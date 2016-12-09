@@ -289,8 +289,8 @@ class TagRepository implements TagRepositoryInterface
      */
     private function matchAll(TransactionJournal $journal, Tag $tag): bool
     {
-        $journalSources      = join(',', TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray());
-        $journalDestinations = join(',', TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray());
+        $journalSources      = join(',', array_unique(TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray()));
+        $journalDestinations = join(',', array_unique(TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray()));
         $match               = true;
         $journals            = $tag->transactionJournals()->get(['transaction_journals.*']);
 
@@ -298,10 +298,11 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var TransactionJournal $original */
         foreach ($journals as $original) {
+            Log::debug(sprintf('Now comparing new journal #%d to existing journal #%d', $journal->id, $original->id));
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            $originalSources      = join(',', TransactionJournal::sourceAccountList($original)->pluck('id')->toArray());
-            $originalDestinations = join(',', TransactionJournal::destinationAccountList($original)->pluck('id')->toArray());
+            $originalSources      = join(',', array_unique(TransactionJournal::sourceAccountList($original)->pluck('id')->toArray()));
+            $originalDestinations = join(',', array_unique(TransactionJournal::destinationAccountList($original)->pluck('id')->toArray()));
 
             if ($original->isWithdrawal() && $originalSources !== $journalDestinations) {
                 Log::debug(sprintf('Original journal #%d is a withdrawal.', $original->id));
