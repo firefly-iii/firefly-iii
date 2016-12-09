@@ -360,7 +360,7 @@ class AccountController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException
      */
-    public function specificPeriod(Account $account, string $date)
+    public function period(Account $account, string $date)
     {
         try {
             $start = new Carbon($date);

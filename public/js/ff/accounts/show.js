@@ -1,7 +1,13 @@
-/* global $, lineChart, accountID, token, incomeByCategoryUri, expenseByCategoryUri, expenseByBudgetUri */
+/*
+ * show.js
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
-
-// Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -15,7 +21,7 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    lineChart(singleUri, 'overview-chart');
+    lineChart(chartUri, 'overview-chart');
     pieChart(incomeCategoryUri, 'account-cat-in');
     pieChart(expenseCategoryUri, 'account-cat-out');
     pieChart(expenseBudgetUri, 'account-budget-out');
