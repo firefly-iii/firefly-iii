@@ -35,10 +35,9 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.expense'));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -47,10 +46,9 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudget()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.expense-budget', [1, '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -59,10 +57,9 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseCategory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.expense-category', [1, '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -71,10 +68,9 @@ class AccountControllerTest extends TestCase
      */
     public function testFrontpage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.frontpage'));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -83,10 +79,20 @@ class AccountControllerTest extends TestCase
      */
     public function testIncomeCategory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.income-category', [1, '20120101', '20120131']));
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::period
+     * Implement testSpecificPeriod().
+     */
+    public function testPeriod()
+    {
+        $this->be($this->user());
+        $this->call('get', route('chart.account.period', [1, '2012-01-01']));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -95,10 +101,9 @@ class AccountControllerTest extends TestCase
      */
     public function testReport()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.report', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -107,10 +112,9 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.revenue'));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -119,22 +123,9 @@ class AccountControllerTest extends TestCase
      */
     public function testSingle()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::specificPeriod
-     * Implement testSpecificPeriod().
-     */
-    public function testSpecificPeriod()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.account.single', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**

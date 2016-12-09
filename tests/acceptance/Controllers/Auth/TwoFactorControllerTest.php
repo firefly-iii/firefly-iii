@@ -11,6 +11,9 @@
 
 namespace Auth;
 
+use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\Preferences;
+use Google2FA;
 use TestCase;
 
 /**
@@ -35,10 +38,18 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+
+        $falsePreference        = new Preference;
+        $falsePreference->data  = true;
+        $secretPreference       = new Preference;
+        $secretPreference->data = 'BlablaSeecret';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
+        //$has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+        $this->call('get', route('two-factor.index'));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -47,22 +58,18 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testLostTwoFactor()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
+        $this->be($this->user());
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::postIndex
-     * Implement testPostIndex().
-     */
-    public function testPostIndex()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $truePreference         = new Preference;
+        $truePreference->data   = true;
+        $secretPreference       = new Preference;
+        $secretPreference->data = 'BlablaSeecret';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
+        //$has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+        $this->call('get', route('two-factor.lost'));
+        $this->assertResponseStatus(200);
     }
 
     /**
