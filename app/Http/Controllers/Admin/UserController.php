@@ -19,6 +19,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Preferences;
+use View;
 
 /**
  * Class UserController
@@ -27,28 +28,45 @@ use Preferences;
  */
 class UserController extends Controller
 {
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', strval(trans('firefly.administration')));
+                View::share('mainTitleIcon', 'fa-hand-spock-o');
+
+                return $next($request);
+            }
+        );
+    }
 
     /**
      * @param User $user
      *
-     * @return int
+     * @return View
      */
     public function edit(User $user)
     {
-        return $user->id;
+        $subTitle     = strval(trans('firefly.edit_user', ['email' => $user->email]));
+        $subTitleIcon = 'fa-user-o';
+
+        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon'));
 
     }
 
     /**
      * @param UserRepositoryInterface $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
     public function index(UserRepositoryInterface $repository)
     {
-        $title              = strval(trans('firefly.administration'));
-        $mainTitleIcon      = 'fa-hand-spock-o';
         $subTitle           = strval(trans('firefly.user_administration'));
         $subTitleIcon       = 'fa-users';
         $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
@@ -77,7 +95,7 @@ class UserController extends Controller
         );
 
 
-        return view('admin.users.index', compact('title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'users'));
+        return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users'));
 
     }
 
