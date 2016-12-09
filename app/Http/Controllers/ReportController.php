@@ -98,7 +98,7 @@ class ReportController extends Controller
 
     /**
      * @param Collection $accounts
-     * @param Collection $categories
+     * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
      *

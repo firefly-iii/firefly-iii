@@ -25,7 +25,7 @@ use Steam;
 /**
  * Class MonthReportGenerator
  *
- * @package FireflyIII\Generator\Report\Standard
+ * @package FireflyIII\Generator\Report\Audit
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
