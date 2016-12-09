@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.2.1] - 2015-05-25
+## [4.2.1] - 2016-12-09
 ### Added
 - BIC support (see #430)
 - New category report section and chart (see the general financial report)
