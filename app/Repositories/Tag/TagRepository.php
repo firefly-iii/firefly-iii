@@ -296,26 +296,47 @@ class TagRepository implements TagRepositoryInterface
 
         Log::debug(sprintf('Tag #%d has %d journals to verify:', $tag->id, $journals->count()));
 
-        /** @var TransactionJournal $original */
-        foreach ($journals as $original) {
-            Log::debug(sprintf('Now comparing new journal #%d to existing journal #%d', $journal->id, $original->id));
+        /** @var TransactionJournal $existing */
+        foreach ($journals as $existing) {
+            Log::debug(sprintf('Now existingcomparing new journal #%d to existing journal #%d', $journal->id, $existing->id));
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            $originalSources      = join(',', array_unique(TransactionJournal::sourceAccountList($original)->pluck('id')->toArray()));
-            $originalDestinations = join(',', array_unique(TransactionJournal::destinationAccountList($original)->pluck('id')->toArray()));
+            $existingSources      = join(',', array_unique(TransactionJournal::sourceAccountList($existing)->pluck('id')->toArray()));
+            $existingDestinations = join(',', array_unique(TransactionJournal::destinationAccountList($existing)->pluck('id')->toArray()));
 
-            if ($original->isWithdrawal() && $originalSources !== $journalDestinations) {
-                Log::debug(sprintf('Original journal #%d is a withdrawal.', $original->id));
-                Log::debug(sprintf('Journal #%d must have these destination accounts: %s', $journal->id, $originalSources));
+            if ($existing->isWithdrawal() && $existingSources !== $journalDestinations) {
+                /*
+                 * There can only be one withdrawal. And the source account(s) of the withdrawal
+                 * must be the same as the destination of the deposit. Because any transaction that arrives
+                 * here ($journal) must be a deposit.
+                 */
+                Log::debug(sprintf('Existing journal #%d is a withdrawal.', $existing->id));
+                Log::debug(sprintf('New journal #%d must have these destination accounts: %s', $journal->id, $existingSources));
+                Log::debug(sprintf('New journal #%d actually these destination accounts: %s', $journal->id, $journalDestinations));
+                Log::debug('So match is FALSE');
+
+                $match = false;
+            }
+            if ($existing->isDeposit() && $journal->isDeposit() && $existingDestinations !== $journalDestinations) {
+                /*
+                 * There can be multiple deposits.
+                 * They must have the destination the same as the other deposits.
+                 */
+                Log::debug(sprintf('Existing journal #%d is a deposit.', $existing->id));
+                Log::debug(sprintf('Journal #%d must have these destination accounts: %s', $journal->id, $existingDestinations));
                 Log::debug(sprintf('Journal #%d actually these destination accounts: %s', $journal->id, $journalDestinations));
                 Log::debug('So match is FALSE');
 
                 $match = false;
             }
-            if ($original->isDeposit() && $originalDestinations !== $journalSources) {
-                Log::debug(sprintf('Original journal #%d is a deposit.', $original->id));
-                Log::debug(sprintf('Journal #%d must have these destination accounts: %s', $journal->id, $originalSources));
-                Log::debug(sprintf('Journal #%d actually these destination accounts: %s', $journal->id, $journalDestinations));
+
+            if ($existing->isDeposit() && $journal->isWithdrawal() && $existingDestinations !== $journalSources) {
+                /*
+                 * There can be one new withdrawal only. It must have the same source as the existing has destination.
+                 */
+                Log::debug(sprintf('Existing journal #%d is a deposit.', $existing->id));
+                Log::debug(sprintf('Journal #%d must have these source accounts: %s', $journal->id, $existingDestinations));
+                Log::debug(sprintf('Journal #%d actually these source accounts: %s', $journal->id, $journalSources));
                 Log::debug('So match is FALSE');
 
                 $match = false;
