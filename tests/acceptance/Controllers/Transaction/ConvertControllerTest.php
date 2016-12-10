@@ -100,9 +100,12 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndex()
     {
-        //
+        // convert a withdrawal to a transfer. Requires the ID of another asset account.
+        $data = [
+            'destination_account_asset' => 2,
+        ];
         $this->be($this->user());
-        $this->call('post', route('transactions.convert.index', ['transfer', 672]));
+        $this->call('post', route('transactions.convert.index', ['transfer', 672]), $data);
         $this->assertResponseStatus(302);
         $this->assertRedirectedToRoute('transactions.show', [672]);
     }
