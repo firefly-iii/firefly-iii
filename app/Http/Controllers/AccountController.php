@@ -273,7 +273,7 @@ class AccountController extends Controller
         $start = $repository->oldestJournalDate($account);
         $end   = $repository->newestJournalDate($account);
 
-        return view('accounts.show_with_date', compact('account', 'journals', 'subTitle', 'start', 'end'));
+        return view('accounts.show-by-date', compact('account', 'journals', 'subTitle', 'start', 'end'));
     }
 
     /**
