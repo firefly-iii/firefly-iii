@@ -43,6 +43,7 @@ class Navigation
             '1M'      => 'addMonths', 'month' => 'addMonths', 'monthly' => 'addMonths', '3M' => 'addMonths',
             'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
             'year'    => 'addYears', 'yearly' => 'addYears', '1Y' => 'addYears',
+            'custom'  => 'addMonths', // custom? just add one month.
         ];
         $modifierMap = [
             'quarter'   => 3,

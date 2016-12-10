@@ -58,7 +58,7 @@ class HomeControllerTest extends TestCase
      *
      * @param $range
      */
-    public function testIndex($range)
+    public function testIndex(string $range)
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

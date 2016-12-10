@@ -30,82 +30,70 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::all
-     * Implement testAll().
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::all
+     * @dataProvider dateRangeProvider
      */
-    public function testAll()
+    public function testAll(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.category.all', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::currentPeriod
-     * Implement testCurrentPeriod().
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::currentPeriod
+     * @dataProvider dateRangeProvider
      */
-    public function testCurrentPeriod()
+    public function testCurrentPeriod(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.category.current', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
-     * Implement testFrontpage().
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
+     * @dataProvider dateRangeProvider
      */
-    public function testFrontpage()
+    public function testFrontpage(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.category.current', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::reportPeriod
-     * Implement testReportPeriod().
      */
     public function testReportPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.category.period', [1, '1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::reportPeriodNoCategory
-     * Implement testReportPeriodNoCategory().
      */
     public function testReportPeriodNoCategory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.category.period.no-category', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::specificPeriod
-     * Implement testSpecificPeriod().
+     * @dataProvider dateRangeProvider
      */
-    public function testSpecificPeriod()
+    public function testSpecificPeriod(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.category.specific', ['1', '2012-01-01']));
+        $this->assertResponseStatus(200);
     }
 }

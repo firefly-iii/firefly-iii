@@ -31,69 +31,57 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::budget
-     * Implement testBudget().
+     * @dataProvider dateRangeProvider
      */
-    public function testBudget()
+    public function testBudget(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.budget.budget', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
-     * Implement testBudgetLimit().
+     * @dataProvider dateRangeProvider
      */
-    public function testBudgetLimit()
+    public function testBudgetLimit(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.budget.budget', [1,1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
-     * Implement testFrontpage().
+     * @dataProvider dateRangeProvider
      */
-    public function testFrontpage()
+    public function testFrontpage(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.budget.frontpage'));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::period
-     * Implement testPeriod().
      */
     public function testPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.budget.period', [1,'1','20120101','20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::periodNoBudget
-     * Implement testPeriodNoBudget().
      */
     public function testPeriodNoBudget()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->be($this->user());
+        $this->call('get', route('chart.budget.period.no-budget', ['1','20120101','20120131']));
+        $this->assertResponseStatus(200);
     }
 }

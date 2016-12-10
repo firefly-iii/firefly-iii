@@ -30,74 +30,79 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
-     * Implement testExpenseAccounts().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
+     * @dataProvider dateRangeProvider
      */
-    public function testExpenseAccounts()
+    public function testExpenseAccounts(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.expense'));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::expenseBudget
-     * Implement testExpenseBudget().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseBudget
+     * @dataProvider dateRangeProvider
      */
-    public function testExpenseBudget()
+    public function testExpenseBudget(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.expense-budget', [1, '20120101', '20120131']));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategory
-     * Implement testExpenseCategory().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategory
+     * @dataProvider dateRangeProvider
      */
-    public function testExpenseCategory()
+    public function testExpenseCategory(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.expense-category', [1, '20120101', '20120131']));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::frontpage
-     * Implement testFrontpage().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::frontpage
+     * @dataProvider dateRangeProvider
      */
-    public function testFrontpage()
+    public function testFrontpage(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.frontpage'));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::incomeCategory
-     * Implement testIncomeCategory().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::incomeCategory
+     * @dataProvider dateRangeProvider
      */
-    public function testIncomeCategory()
+    public function testIncomeCategory(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.income-category', [1, '20120101', '20120131']));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::period
-     * Implement testSpecificPeriod().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::period
+     * @dataProvider dateRangeProvider
      */
-    public function testPeriod()
+    public function testPeriod(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.period', [1, '2012-01-01']));
         $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::report
-     * Implement testReport().
      */
     public function testReport()
     {
@@ -107,32 +112,27 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::revenueAccounts
-     * Implement testRevenueAccounts().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::revenueAccounts
+     * @dataProvider dateRangeProvider
      */
-    public function testRevenueAccounts()
+    public function testRevenueAccounts(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.revenue'));
         $this->assertResponseStatus(200);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\AccountController::single
-     * Implement testSingle().
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::single
+     * @dataProvider dateRangeProvider
      */
-    public function testSingle()
+    public function testSingle(string $range)
     {
         $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.account.single', [1]));
         $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

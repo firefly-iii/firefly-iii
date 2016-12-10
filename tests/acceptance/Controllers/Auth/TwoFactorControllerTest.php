@@ -34,7 +34,6 @@ class TwoFactorControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
@@ -54,7 +53,6 @@ class TwoFactorControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::lostTwoFactor
-     * Implement testLostTwoFactor().
      */
     public function testLostTwoFactor()
     {
@@ -72,11 +70,4 @@ class TwoFactorControllerTest extends TestCase
         $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

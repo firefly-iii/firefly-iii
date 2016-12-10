@@ -31,45 +31,31 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::netWorth
-     * Implement testNetWorth().
      */
     public function testNetWorth()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.report.net-worth', [1, '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::operations
-     * Implement testOperations().
      */
     public function testOperations()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.report.operations', [1, '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::sum
-     * Implement testSum().
      */
     public function testSum()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->be($this->user());
+        $this->call('get', route('chart.report.sum', [1, '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 }

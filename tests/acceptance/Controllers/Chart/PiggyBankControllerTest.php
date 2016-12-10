@@ -31,21 +31,11 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\PiggyBankController::history
-     * Implement testHistory().
      */
     public function testHistory()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->be($this->user());
+        $this->call('get', route('chart.piggy-bank.history', [1]));
+        $this->assertResponseStatus(200);
     }
 }

@@ -31,7 +31,6 @@ class HomeControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
@@ -42,11 +41,4 @@ class HomeControllerTest extends TestCase
         $this->see('<ol class="breadcrumb">');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

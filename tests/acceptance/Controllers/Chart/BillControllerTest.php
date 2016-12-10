@@ -31,33 +31,24 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BillController::frontpage
-     * Implement testFrontpage().
+     * @dataProvider dateRangeProvider
      */
-    public function testFrontpage()
+    public function testFrontpage(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('get', route('chart.bill.frontpage'));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\BillController::single
-     * Implement testSingle().
      */
     public function testSingle()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('chart.bill.single', [1]));
+        $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

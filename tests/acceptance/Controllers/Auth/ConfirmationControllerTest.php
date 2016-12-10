@@ -35,7 +35,6 @@ class ConfirmationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ConfirmationController::confirmationError
-     * Implement testConfirmationError().
      */
     public function testConfirmationError()
     {
@@ -59,7 +58,6 @@ class ConfirmationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ConfirmationController::doConfirmation
-     * Implement testDoConfirmation().
      */
     public function testDoConfirmation()
     {
@@ -84,7 +82,6 @@ class ConfirmationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ConfirmationController::resendConfirmation
-     * Implement testResendConfirmation().
      */
     public function testResendConfirmation()
     {
@@ -111,11 +108,4 @@ class ConfirmationControllerTest extends TestCase
         $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

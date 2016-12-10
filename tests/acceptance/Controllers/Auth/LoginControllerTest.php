@@ -31,7 +31,6 @@ class LoginControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\LoginController::login
-     * Implement testLogin().
      */
     public function testLogin()
     {
@@ -45,7 +44,6 @@ class LoginControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\LoginController::logout
-     * Implement testLogout().
      */
     public function testLogout()
     {
@@ -56,20 +54,11 @@ class LoginControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\LoginController::showLoginForm
-     * Implement testShowLoginForm().
      */
     public function testShowLoginForm()
     {
         $this->visit('/')
              ->seePageIs('/login')
              ->see('Sign in to start your session');
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 }

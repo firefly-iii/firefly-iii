@@ -35,7 +35,6 @@ class ConfigurationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
@@ -60,7 +59,6 @@ class ConfigurationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::store
-     * Implement testStore().
      */
     public function testPostIndex()
     {
@@ -73,13 +71,5 @@ class ConfigurationControllerTest extends TestCase
         $this->call('POST', route('admin.configuration.index.post'));
         $this->assertSessionHas('success');
         $this->assertResponseStatus(302);
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 }

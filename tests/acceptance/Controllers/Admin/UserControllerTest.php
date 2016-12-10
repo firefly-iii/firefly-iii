@@ -31,7 +31,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::edit
-     * Implement testEdit().
      */
     public function testEdit()
     {
@@ -44,7 +43,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
@@ -57,7 +55,6 @@ class UserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::show
-     * Implement testShow().
      */
     public function testShow()
     {
@@ -68,11 +65,4 @@ class UserControllerTest extends TestCase
         $this->see('<ol class="breadcrumb">');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }
