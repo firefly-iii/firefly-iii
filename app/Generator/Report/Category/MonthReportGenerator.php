@@ -16,6 +16,7 @@ namespace FireflyIII\Generator\Report\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
+use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;

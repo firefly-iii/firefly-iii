@@ -16,6 +16,7 @@ namespace FireflyIII\Generator\Report\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
+use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -27,7 +28,7 @@ use Log;
  *
  * @package FireflyIII\Generator\Report\Budget
  */
-class MonthReportGenerator implements ReportGeneratorInterface
+class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
     /** @var  Collection */
     private $accounts;
@@ -56,26 +57,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $accountIds  = join(',', $this->accounts->pluck('id')->toArray());
-        $categoryIds = join(',', $this->budgets->pluck('id')->toArray());
-        $reportType  = 'budget';
-        //        $expenses        = $this->getExpenses();
-        //        $income          = $this->getIncome();
-        //        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
-        //        $categorySummary = $this->getObjectSummary($this->summarizeByCategory($expenses), $this->summarizeByCategory($income));
-        //        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
-        //        $averageIncome   = $this->getAverages($income, SORT_DESC);
-        //        $topExpenses     = $this->getTopExpenses();
-        //        $topIncome       = $this->getTopIncome();
-
+        $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
+        $categoryIds     = join(',', $this->budgets->pluck('id')->toArray());
+        $expenses        = $this->getExpenses();
+        $accountSummary  = $this->summarizeByAccount($expenses);
+        $budgetSummary   = $this->summarizeByBudget($expenses);
+        $averageExpenses = $this->getAverages($expenses, SORT_ASC);
+        $topExpenses     = $this->getTopExpenses();
 
         // render!
-        return view(
-            'reports.budget.month',
-            compact(
-                'accountIds', 'categoryIds', 'topIncome', 'reportType', 'accountSummary', 'categorySummary', 'averageExpenses', 'averageIncome', 'topExpenses'
-            )
-        )
+        return view('reports.budget.month', compact('accountIds', 'categoryIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
             ->with('start', $this->start)->with('end', $this->end)
             ->with('budgets', $this->budgets)
             ->with('accounts', $this->accounts)
@@ -113,8 +104,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
-        $this->categories = $categories;
-
         return $this;
     }
 
@@ -197,8 +186,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         $collector = new JournalCollector(auth()->user());
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withOpposingAccount()->disableFilter();
+                  ->setTypes([TransactionType::WITHDRAWAL])
+                  ->setBudgets($this->budgets)->withOpposingAccount()->disableFilter();
 
         $accountIds     = $this->accounts->pluck('id')->toArray();
         $transactions   = $collector->getJournals();
@@ -211,80 +200,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * @return Collection
      */
-    private function getIncome(): Collection
-    {
-        if ($this->income->count() > 0) {
-            return $this->income;
-        }
-
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withOpposingAccount();
-        $accountIds   = $this->accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $transactions = self::filterIncome($transactions, $accountIds);
-        $this->income = $transactions;
-
-        return $transactions;
-    }
-
-    /**
-     * @param array $spent
-     * @param array $earned
-     *
-     * @return array
-     */
-    private function getObjectSummary(array $spent, array $earned): array
-    {
-        $return = [];
-
-        /**
-         * @var int    $accountId
-         * @var string $entry
-         */
-        foreach ($spent as $objectId => $entry) {
-            if (!isset($return[$objectId])) {
-                $return[$objectId] = ['spent' => 0, 'earned' => 0];
-            }
-
-            $return[$objectId]['spent'] = $entry;
-        }
-        unset($entry);
-
-        /**
-         * @var int    $accountId
-         * @var string $entry
-         */
-        foreach ($earned as $objectId => $entry) {
-            if (!isset($return[$objectId])) {
-                $return[$objectId] = ['spent' => 0, 'earned' => 0];
-            }
-
-            $return[$objectId]['earned'] = $entry;
-        }
-
-
-        return $return;
-    }
-
-
-    /**
-     * @return Collection
-     */
     private function getTopExpenses(): Collection
     {
         $transactions = $this->getExpenses()->sortBy('transaction_amount');
-
-        return $transactions;
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getTopIncome(): Collection
-    {
-        $transactions = $this->getIncome()->sortByDesc('transaction_amount');
 
         return $transactions;
     }
@@ -312,16 +230,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @return array
      */
-    private function summarizeByCategory(Collection $collection): array
+    private function summarizeByBudget(Collection $collection): array
     {
         $result = [];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
-            $jrnlCatId           = intval($transaction->transaction_journal_category_id);
-            $transCatId          = intval($transaction->transaction_category_id);
-            $categoryId          = max($jrnlCatId, $transCatId);
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
+            $jrnlBudId         = intval($transaction->transaction_journal_budget_id);
+            $transBudId        = intval($transaction->transaction_budget_id);
+            $budgetId          = max($jrnlBudId, $transBudId);
+            $result[$budgetId] = $result[$budgetId] ?? '0';
+            $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
         }
 
         return $result;
