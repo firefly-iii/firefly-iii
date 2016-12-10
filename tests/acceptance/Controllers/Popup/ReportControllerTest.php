@@ -11,6 +11,7 @@
 
 namespace Popup;
 
+use Carbon\Carbon;
 use TestCase;
 
 /**
@@ -31,21 +32,118 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * Implement testGeneral().
      */
-    public function testGeneral()
+    public function testBalanceAmount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'balance-amount',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+                'role'       => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $this->call('get', $uri);
+        $this->assertResponseStatus(200);
     }
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
      */
-    protected function tearDown()
+    public function testBudgetSpentAmount()
     {
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'budget-spent-amount',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $this->call('get', $uri);
+        $this->assertResponseStatus(200);
     }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
+     */
+    public function testCategoryEntry()
+    {
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'category-entry',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $this->call('get', $uri);
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
+     */
+    public function testExpenseEntry()
+    {
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'expense-entry',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $this->call('get', $uri);
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
+     */
+    public function testIncomeEntry()
+    {
+
+        $this->be($this->user());
+        $arguments = [
+            'attributes' => [
+                'location'   => 'income-entry',
+                'startDate'  => Carbon::now()->startOfMonth()->format('Ymd'),
+                'endDate'    => Carbon::now()->endOfMonth()->format('Ymd'),
+                'accounts'   => 1,
+                'accountId'  => 1,
+                'categoryId' => 1,
+                'budgetId'   => 1,
+            ],
+        ];
+        $uri       = route('popup.general') . '?' . http_build_query($arguments);
+        $this->call('get', $uri);
+        $this->assertResponseStatus(200);
+    }
+
 }

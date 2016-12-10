@@ -31,45 +31,32 @@ class OperationsControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::expenses
-     * Implement testExpenses().
      */
     public function testExpenses()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('report-data.operations.expenses', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::income
-     * Implement testIncome().
      */
     public function testIncome()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('report-data.operations.income', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::operations
-     * Implement testOperations().
      */
     public function testOperations()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('report-data.operations.operations', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

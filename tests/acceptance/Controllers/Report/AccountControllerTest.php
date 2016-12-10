@@ -31,21 +31,12 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\AccountController::general
-     * Implement testGeneral().
      */
     public function testGeneral()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('report-data.account.general', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

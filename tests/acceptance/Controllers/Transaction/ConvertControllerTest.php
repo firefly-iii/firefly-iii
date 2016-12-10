@@ -31,33 +31,79 @@ class ConvertControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
-     * Implement testIndex().
      */
-    public function testIndex()
+    public function testIndexDepositTransfer()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.convert.index', ['transfer', 683]));
+        $this->assertResponseStatus(200);
+        $this->see('Convert a deposit into a transfer');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     */
+    public function testIndexDepositWithdrawal()
+    {
+        $this->be($this->user());
+        $this->call('get', route('transactions.convert.index', ['withdrawal', 683]));
+        $this->assertResponseStatus(200);
+        $this->see('Convert a deposit into a withdrawal');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     */
+    public function testIndexTransferDeposit()
+    {
+        $this->be($this->user());
+        $this->call('get', route('transactions.convert.index', ['deposit', 684]));
+        $this->assertResponseStatus(200);
+        $this->see('Convert a transfer into a deposit');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     */
+    public function testIndexTransferWithdrawal()
+    {
+        $this->be($this->user());
+        $this->call('get', route('transactions.convert.index', ['withdrawal', 684]));
+        $this->assertResponseStatus(200);
+        $this->see('Convert a transfer into a withdrawal');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     */
+    public function testIndexWithdrawalDeposit()
+    {
+        $this->be($this->user());
+        $this->call('get', route('transactions.convert.index', ['deposit', 672]));
+        $this->assertResponseStatus(200);
+        $this->see('Convert a withdrawal into a deposit');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     */
+    public function testIndexWithdrawalTransfer()
+    {
+        $this->be($this->user());
+        $this->call('get', route('transactions.convert.index', ['transfer', 672]));
+        $this->assertResponseStatus(200);
+        $this->see('Convert a withdrawal into a transfer');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * Implement testPostIndex().
      */
     public function testPostIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        //
+        $this->be($this->user());
+        $this->call('post', route('transactions.convert.index', ['transfer', 672]));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('transactions.show', [672]);
     }
 }

@@ -31,33 +31,21 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\BudgetController::general
-     * Implement testGeneral().
      */
     public function testGeneral()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('report-data.budget.general', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\BudgetController::period
-     * Implement testPeriod().
      */
     public function testPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->be($this->user());
+        $this->call('get', route('report-data.budget.period', ['1', '20120101', '20120131']));
+        $this->assertResponseStatus(200);
     }
 }
