@@ -16,7 +16,9 @@ namespace FireflyIII\Repositories\Currency;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Preferences;
 
 /**
  * Class CurrencyRepository
@@ -25,6 +27,50 @@ use Illuminate\Support\Collection;
  */
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * CategoryRepository constructor.
+     *
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function canDeleteCurrency(TransactionCurrency $currency): bool
+    {
+        if ($this->countJournals($currency) > 0) {
+            return false;
+        }
+
+        // is the only currency left
+        if ($this->get()->count() === 1) {
+            return false;
+        }
+
+        // is the default currency for the user or the system
+        $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+        if ($currency->code === $defaultCode) {
+            return false;
+        }
+
+        // is the default currency for the system
+        $defaultSystemCode = config('firefly.default_currency', 'EUR');
+        if ($currency->code === $defaultSystemCode) {
+            return false;
+        }
+
+        // can be deleted
+        return true;
+    }
 
     /**
      * @param TransactionCurrency $currency
@@ -34,6 +80,20 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function countJournals(TransactionCurrency $currency): int
     {
         return $currency->transactionJournals()->count();
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function destroy(TransactionCurrency $currency): bool
+    {
+        if ($this->user->hasRole('owner')) {
+            $currency->forceDelete();
+        }
+
+        return true;
     }
 
     /**

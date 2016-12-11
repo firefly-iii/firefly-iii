@@ -8,6 +8,7 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 
 
 /**
@@ -43,10 +44,10 @@ class CurrencyControllerTest extends TestCase
      */
     public function testDefaultCurrency()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('currencies.default', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
@@ -66,10 +67,15 @@ class CurrencyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['currencies.delete.url' => 'http://localhost']);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
+        $repository->shouldReceive('destroy')->andReturn(true);
+
+        $this->be($this->user());
+        $this->call('post', route('currencies.destroy', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
@@ -101,10 +107,16 @@ class CurrencyControllerTest extends TestCase
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['currencies.create.url' => 'http://localhost']);
+        $data = [
+            'name'   => 'XX',
+            'code'   => 'XXX',
+            'symbol' => 'x',
+        ];
+        $this->be($this->user());
+        $this->call('post', route('currencies.store'), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
@@ -112,9 +124,15 @@ class CurrencyControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['currencies.edit.url' => 'http://localhost']);
+        $data = [
+            'name'   => 'XA',
+            'code'   => 'XAX',
+            'symbol' => 'a',
+        ];
+        $this->be($this->user());
+        $this->call('post', route('currencies.update', [2]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }
