@@ -94,7 +94,7 @@
         var dateString = "{{ date|escape }}";
 
         // uri's for charts:
-        var chartUri = '{{ route('chart.account.period', [account.id, date]) }}';
+        var chartUri = '{{ chartUri }}';
         var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';

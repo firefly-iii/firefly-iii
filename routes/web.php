@@ -228,7 +228,7 @@ Route::group(
     Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
     Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
     Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
-    Route::get('all/{account}', ['uses' => 'AccountController@period', 'as' => 'all']); // TODO
+    Route::get('all/{account}', ['uses' => 'AccountController@all', 'as' => 'all']);
     Route::get('single/{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
     Route::get('period/{account}/{date}', ['uses' => 'AccountController@period', 'as' => 'period']);
 

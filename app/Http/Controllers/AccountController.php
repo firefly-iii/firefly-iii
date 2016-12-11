@@ -239,7 +239,7 @@ class AccountController extends Controller
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-
+        $chartUri     = route('chart.account.single', [$account->id]);
         // grab those journals:
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
@@ -248,7 +248,7 @@ class AccountController extends Controller
         // generate entries for each period (and cache those)
         $entries = $this->periodEntries($account);
 
-        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end'));
+        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
 
     /**
@@ -262,6 +262,7 @@ class AccountController extends Controller
         $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
         $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri = route('chart.account.all', [$account->id]);
 
         // replace with journal collector:
         $collector = new JournalCollector(auth()->user());
@@ -273,7 +274,7 @@ class AccountController extends Controller
         $start = $repository->oldestJournalDate($account);
         $end   = $repository->newestJournalDate($account);
 
-        return view('accounts.show-by-date', compact('account', 'journals', 'subTitle', 'start', 'end'));
+        return view('accounts.show-by-date', compact('account', 'journals', 'subTitle', 'start', 'end','chartUri'));
     }
 
     /**
@@ -291,6 +292,7 @@ class AccountController extends Controller
         $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
         $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
 
         // replace with journal collector:
         $collector = new JournalCollector(auth()->user());
@@ -298,7 +300,7 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        return view('accounts.show-by-date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end'));
+        return view('accounts.show-by-date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end','chartUri'));
     }
 
     /**
