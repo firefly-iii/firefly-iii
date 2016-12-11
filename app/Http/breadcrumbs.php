@@ -681,15 +681,8 @@ Breadcrumbs::register(
  * SPLIT
  */
 Breadcrumbs::register(
-    'transactions.edit-split', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+    'transactions.split.edit', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit-split', [$journal->id]));
-}
-);
-
-Breadcrumbs::register(
-    'split.journal.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
-    $breadcrumbs->parent('transactions.index', $what);
-    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('split.journal.create', [$what]));
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.split.edit', [$journal->id]));
 }
 );

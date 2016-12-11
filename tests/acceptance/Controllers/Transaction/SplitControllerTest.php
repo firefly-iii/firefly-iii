@@ -35,10 +35,11 @@ class SplitControllerTest extends TestCase
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.split.edit', [18]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -47,17 +48,37 @@ class SplitControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.edit-split.url' => 'http://localhost']);
+
+        $data = [
+            'id'                             => 18,
+            'what'                           => 'deposit',
+            'journal_description'            => 'Updated salary',
+            'currency_id'                    => 1,
+            'journal_destination_account_id' => 1,
+            'journal_amount'                 => 1591,
+            'date'                           => '2014-01-24',
+            'tags'                           => '',
+            'transactions'                   => [
+                [
+                    'description'         => 'Split #1',
+                    'source_account_name' => 'Job',
+                    'amount'              => 1591,
+                    'category'            => '',
+                ],
+            ],
+        ];
+        $this->be($this->user());
+        $this->call('post', route('transactions.split.update', [18]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        // journal is updated?
+        $this->call('get', route('transactions.show', [18]));
+        $this->assertResponseStatus(200);
+        $this->see('Updated salary');
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }
