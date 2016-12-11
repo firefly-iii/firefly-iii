@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface;
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -469,21 +470,33 @@ class AccountController extends Controller
             return $cache->get();
         }
 
+        $chartData = [
+
+        ];
+
         foreach ($accounts as $account) {
-            $balances = [];
-            $current  = clone $start;
-            $range    = Steam::balanceInRange($account, $start, clone $end);
-            $previous = round(array_values($range)[0], 2);
-            while ($current <= $end) {
-                $format     = $current->format('Y-m-d');
+            $currentSet   = [
+                'label'   => $account->name,
+                'entries' => [],
+            ];
+            $balances     = [];
+            $currentStart = clone $start;
+            $range        = Steam::balanceInRange($account, $start, clone $end);
+            $previous     = round(array_values($range)[0], 2);
+            while ($currentStart <= $end) {
+                $format     = $currentStart->format('Y-m-d');
+                $label      = $currentStart->formatLocalized(strval(trans('config.month_and_day')));
                 $balance    = isset($range[$format]) ? round($range[$format], 2) : $previous;
                 $previous   = $balance;
                 $balances[] = $balance;
-                $current->addDay();
+                $currentStart->addDay();
+                $currentSet['entries'][$label] = $balance;
             }
             $account->balances = $balances;
+            $chartData[]       = $currentSet;
         }
-        $data = $this->generator->frontpage($accounts, $start, $end);
+        $generator = app(GeneratorInterface::class);
+        $data      = $generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;
