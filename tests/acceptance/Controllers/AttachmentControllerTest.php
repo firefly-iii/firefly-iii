@@ -8,6 +8,7 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
 
 /**
@@ -28,81 +29,88 @@ class AttachmentControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::delete
-     * Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('attachments.delete', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::destroy
-     * Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['attachments.delete.url' => 'http://localhost']);
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('destroy')->andReturn(true);
+        $this->be($this->user());
+        $this->call('post', route('attachments.destroy', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::download
-     * Implement testDownload().
      */
     public function testDownload()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('attachments.download', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('This is attachment number one.');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::edit
-     * Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('attachments.edit', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::preview
-     * Implement testPreview().
      */
     public function testPreview()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('attachments.preview', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::update
-     * Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['attachments.edit.url' => 'http://localhost']);
+        $data = [
+            'title'       => 'Some updated title ' . rand(1000, 9999),
+            'notes'       => '',
+            'description' => '',
+        ];
+
+        $this->be($this->user());
+        $this->call('post', route('attachments.update', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        // view should be updated
+        $this->be($this->user());
+        $this->call('GET', route('attachments.edit', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
+        $this->see($data['title']);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

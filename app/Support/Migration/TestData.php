@@ -115,7 +115,7 @@ class TestData
                     'title'           => Crypt::encrypt($attachment['title']),
                     'description'     => Crypt::encrypt($attachment['description']),
                     'notes'           => Crypt::encrypt($attachment['notes']),
-                    'mime'            => $attachment['mime'],
+                    'mime'            => Crypt::encrypt($attachment['mime']),
                     'size'            => strlen($attachment['content']),
                     'uploaded'        => 1,
                 ]
