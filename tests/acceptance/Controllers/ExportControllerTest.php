@@ -8,6 +8,7 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Export\Processor;
 
 
 /**
@@ -28,57 +29,61 @@ class ExportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::download
-     * Implement testDownload().
      */
     public function testDownload()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('export.download', ['testExport']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::getStatus
-     * Implement testGetStatus().
      */
     public function testGetStatus()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('export.status', ['testExport']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('export.index'));
+        $this->assertResponseStatus(200);
+
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::postIndex
-     * Implement testPostIndex().
      */
     public function testPostIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data      = [
+
+            'export_start_range' => '2015-01-01',
+            'export_end_range'   => '2015-01-21',
+            'exportFormat'       => 'csv',
+            'accounts'           => [1],
+            'job'                => 'testExport',
+        ];
+        $processor = $this->mock(Processor::class);
+        $processor->shouldReceive('collectJournals')->once();
+        $processor->shouldReceive('convertJournals')->once();
+        $processor->shouldReceive('exportJournals')->once();
+        $processor->shouldReceive('createZipFile')->once();
+
+
+        $this->be($this->user());
+        $this->call('post', route('export.export'), $data);
+        $this->assertResponseStatus(200);
+        $this->see('ok');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

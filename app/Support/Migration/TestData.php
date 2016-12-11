@@ -267,6 +267,29 @@ class TestData
     /**
      *
      */
+    private function createExportJobs()
+    {
+        $insert = [];
+        $disk   = Storage::disk('export');
+        foreach ($this->data['export-jobs'] as $job) {
+            $insert[] = [
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
+                'user_id'    => $job['user_id'],
+                'key'        => $job['key'],
+                'status'     => $job['status'],
+            ];
+            $disk->put($job['key'] . '.zip', 'Nonsense data for "ziP" file.');
+        }
+        DB::table('export_jobs')->insert($insert);
+
+        // store fake export file:
+
+    }
+
+    /**
+     *
+     */
     private function createImportJobs()
     {
         $insert = [];
@@ -863,6 +886,7 @@ class TestData
         $this->createMultiTransfers();
         $this->createImportJobs();
         $this->createCurrencies();
+        $this->createExportJobs();
     }
 
 }

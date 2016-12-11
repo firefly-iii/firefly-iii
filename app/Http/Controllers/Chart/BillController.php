@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
@@ -33,7 +32,7 @@ use Response;
 class BillController extends Controller
 {
 
-    /** @var  \FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface */
+    /** @var GeneratorInterface */
     protected $generator;
 
     /**
@@ -42,8 +41,7 @@ class BillController extends Controller
     public function __construct()
     {
         parent::__construct();
-        // create chart generator:
-        $this->generator = app(BillChartGeneratorInterface::class);
+        $this->generator = app(GeneratorInterface::class);
     }
 
     /**
@@ -72,9 +70,7 @@ class BillController extends Controller
             strval(trans('firefly.paid'))   => $paid,
         ];
 
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->pieChart($chartData);
+        $data      = $this->generator->pieChart($chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -131,9 +127,7 @@ class BillController extends Controller
             $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1');
         }
 
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->multiSet($chartData);
+        $data      = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);

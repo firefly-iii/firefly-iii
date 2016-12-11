@@ -30,7 +30,7 @@ use ZipArchive;
  *
  * @package FireflyIII\Export
  */
-class Processor
+class Processor implements ProcessorInterface
 {
 
     /** @var Collection */
