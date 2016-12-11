@@ -162,7 +162,7 @@ Route::group(
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
     Route::post('update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
     Route::post('destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'destroy']);
-    Route::post('amount/{budget}', ['uses' => 'BudgetController@amount']);
+    Route::post('amount/{budget}', ['uses' => 'BudgetController@amount', 'as' => 'amount']);
 }
 );
 

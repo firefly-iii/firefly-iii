@@ -8,6 +8,7 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 
 
 /**
@@ -28,129 +29,152 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::create
-     * Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('categories.create'));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::delete
-     * Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('categories.delete', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::destroy
-     * Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['categories.delete.url' => 'http://localhost']);
+        $repository = $this->mock(CategoryRepositoryInterface::class);
+        $repository->shouldReceive('destroy')->andReturn(true);
+
+        $this->be($this->user());
+        $this->call('post', route('categories.destroy', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::edit
-     * Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('categories.edit', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('categories.index'));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CategoryController::noCategory
-     * Implement testNoCategory().
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @dataProvider dateRangeProvider
      */
-    public function testNoCategory()
+    public function testNoCategory(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('categories.no-category'));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CategoryController::show
-     * Implement testShow().
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::show
+     * @dataProvider dateRangeProvider
      */
-    public function testShow()
+    public function testShow(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('categories.show', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CategoryController::showByDate
-     * Implement testShowByDate().
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::showByDate
+     * @dataProvider dateRangeProvider
      */
-    public function testShowByDate()
+    public function testShowByDate(string $range)
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('categories.show', [1, '2015-01-01']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::store
-     * Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['categories.create.url' => 'http://localhost']);
+
+        $data = [
+            'name' => 'New Category ' . rand(1000, 9999),
+        ];
+        $this->be($this->user());
+        $this->call('post', route('categories.store'), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        // must be in list
+        $this->be($this->user());
+        $this->call('GET', route('categories.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
+        $this->see($data['name']);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::update
-     * Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['categories.edit.url' => 'http://localhost']);
+
+        $data = [
+            'name'   => 'Updated Category ' . rand(1000, 9999),
+            'active' => 1,
+        ];
+        $this->be($this->user());
+        $this->call('post', route('categories.update', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        // must be in list
+        $this->be($this->user());
+        $this->call('GET', route('categories.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
+        $this->see($data['name']);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

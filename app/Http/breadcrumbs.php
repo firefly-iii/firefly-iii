@@ -255,21 +255,26 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'budgets.noBudget', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
+    'budgets.no-budget', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
     $breadcrumbs->parent('budgets.index');
-    $breadcrumbs->push($subTitle, route('budgets.noBudget'));
+    $breadcrumbs->push($subTitle, route('budgets.no-budget'));
 }
 );
 
 Breadcrumbs::register(
-    'budgets.show', function (BreadCrumbGenerator $breadcrumbs, Budget $budget, LimitRepetition $repetition = null) {
+    'budgets.show', function (BreadCrumbGenerator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.index');
     $breadcrumbs->push(e($budget->name), route('budgets.show', [$budget->id]));
-    if (!is_null($repetition) && !is_null($repetition->id)) {
-        $breadcrumbs->push(
-            Navigation::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq), route('budgets.show', [$budget->id, $repetition->id])
-        );
-    }
+}
+);
+
+Breadcrumbs::register(
+    'budgets.show.repetition', function (BreadCrumbGenerator $breadcrumbs, Budget $budget, LimitRepetition $repetition) {
+    $breadcrumbs->parent('budgets.index');
+    $breadcrumbs->push(e($budget->name), route('budgets.show.repetition', [$budget->id, $repetition->id]));
+    $breadcrumbs->push(
+        Navigation::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq), route('budgets.show', [$budget->id, $repetition->id])
+    );
 }
 );
 
@@ -324,9 +329,9 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'categories.noCategory', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
+    'categories.no-category', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
     $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push($subTitle, route('categories.noCategory'));
+    $breadcrumbs->push($subTitle, route('categories.no-category'));
 }
 );
 
@@ -660,7 +665,7 @@ Breadcrumbs::register(
     'transactions.mass.edit', function (BreadCrumbGenerator $breadcrumbs, Collection $journals) {
 
     $journalIds = $journals->pluck('id')->toArray();
-    $what = strtolower($journals->first()->transactionType->type);
+    $what       = strtolower($journals->first()->transactionType->type);
     $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
 }
@@ -670,7 +675,7 @@ Breadcrumbs::register(
     'transactions.mass.delete', function (BreadCrumbGenerator $breadcrumbs, Collection $journals) {
 
     $journalIds = $journals->pluck('id')->toArray();
-    $what = strtolower($journals->first()->transactionType->type);
+    $what       = strtolower($journals->first()->transactionType->type);
     $breadcrumbs->parent('transactions.index', $what);
     $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', $journalIds));
 }
