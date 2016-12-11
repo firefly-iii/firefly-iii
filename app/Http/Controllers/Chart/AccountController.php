@@ -234,10 +234,18 @@ class AccountController extends Controller
      */
     public function frontpage(AccountRepositoryInterface $repository)
     {
-        $start     = clone session('start', Carbon::now()->startOfMonth());
-        $end       = clone session('end', Carbon::now()->endOfMonth());
-        $frontPage = Preferences::get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
-        $accounts  = $repository->getAccountsById($frontPage->data);
+        $start      = clone session('start', Carbon::now()->startOfMonth());
+        $end        = clone session('end', Carbon::now()->endOfMonth());
+        $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
+        Log::debug('Default set is ', $defaultSet);
+        $frontPage  = Preferences::get('frontPageAccounts', $defaultSet);
+        Log::debug('Frontpage preference set is ', $frontPage->data);
+        if (count($frontPage->data) === 0) {
+            $frontPage->data = $defaultSet;
+            Log::debug('frontpage set is empty!');
+            $frontPage->save();
+        }
+        $accounts = $repository->getAccountsById($frontPage->data);
 
         return Response::json($this->accountBalanceChart($accounts, $start, $end));
     }

@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
@@ -54,11 +55,26 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository)
     {
-        $start  = session('start', Carbon::now()->startOfMonth());
-        $end    = session('end', Carbon::now()->endOfMonth());
-        $paid   = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $unpaid = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $data   = $this->generator->frontpage($paid, $unpaid);
+        $start = session('start', Carbon::now()->startOfMonth());
+        $end   = session('end', Carbon::now()->endOfMonth());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('chart.bill.frontpage');
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+
+        $paid      = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $unpaid    = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $chartData = [
+            strval(trans('firefly.unpaid')) => $unpaid,
+            strval(trans('firefly.paid'))   => $paid,
+        ];
+
+        /** @var GeneratorInterface $generator */
+        $generator = app(GeneratorInterface::class);
+        $data      = $generator->pieChart($chartData);
 
         return Response::json($data);
     }
