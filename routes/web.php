@@ -228,8 +228,10 @@ Route::group(
     Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
     Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
     Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report']);
+    Route::get('all/{account}', ['uses' => 'AccountController@period', 'as' => 'all']); // TODO
     Route::get('single/{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
     Route::get('period/{account}/{date}', ['uses' => 'AccountController@period', 'as' => 'period']);
+
 
     Route::get('income-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeCategory', 'as' => 'income-category']);
     Route::get('expense-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseCategory', 'as' => 'expense-category']);
@@ -307,8 +309,8 @@ Route::group(
  * Chart\PiggyBank Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/piggy-bank','as'=> 'chart.piggy-bank.'], function () {
-    Route::get('{piggyBank}', ['uses' => 'PiggyBankController@history','as' => 'history']);
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/piggy-bank', 'as' => 'chart.piggy-bank.'], function () {
+    Route::get('{piggyBank}', ['uses' => 'PiggyBankController@history', 'as' => 'history']);
 }
 );
 
@@ -593,9 +595,11 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
-    Route::get('{what}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers']);
-    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers']);
-    Route::get('{what}/{date}', ['uses' => 'TransactionController@indexByDate', 'as' => 'index.date'])->where(['what' => 'withdrawal|deposit|transfers']);
+    Route::get('{what}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+    Route::get('{what}/{date}', ['uses' => 'TransactionController@indexByDate', 'as' => 'index.date'])->where(
+        ['what' => 'withdrawal|deposit|transfers|transfer']
+    );
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
 }

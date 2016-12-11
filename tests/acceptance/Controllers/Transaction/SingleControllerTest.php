@@ -11,6 +11,8 @@
 
 namespace Transaction;
 
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use TestCase;
 
 /**
@@ -31,81 +33,110 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
-     * Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.create', ['withdrawal']));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::delete
-     * Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.delete', [12]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::destroy
-     * Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.delete.url' => 'http://localhost']);
+        $this->be($this->user());
+
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('delete')->once();
+
+        $this->call('post', route('transactions.destroy', [13]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.edit', [13]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.create.url' => 'http://localhost']);
+        $this->be($this->user());
+
+        $data = [
+            'what'                      => 'withdrawal',
+            'amount'                    => 10,
+            'amount_currency_id_amount' => 1,
+            'source_account_id'         => 1,
+            'destination_account_name'  => 'Some destination',
+            'date'                      => '2016-01-01',
+            'description'               => 'Some description',
+        ];
+        $this->call('post', route('transactions.store', ['withdrawal']), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
-     * Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.edit.url' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'id'                        => 123,
+            'what'                      => 'withdrawal',
+            'description'               => 'Updated groceries',
+            'source_account_id'         => 1,
+            'destination_account_name'  => 'PLUS',
+            'amount'                    => 123,
+            'amount_currency_id_amount' => 1,
+            'budget_id'                 => 1,
+            'category'                  => 'Daily groceries',
+            'tags'                      => '',
+            'date'                      => '2016-01-01',
+        ];
+
+        $this->call('post', route('transactions.update', [123]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        $this->call('get', route('transactions.show', [123]));
+        $this->assertResponseStatus(200);
+        $this->see('Updated groceries');
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
+
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

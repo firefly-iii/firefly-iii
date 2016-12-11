@@ -58,7 +58,7 @@ class MassController extends Controller
      *
      * @return View
      */
-    public function massDelete(Collection $journals)
+    public function delete(Collection $journals)
     {
         $subTitle = trans('firefly.mass_delete_journals');
 
@@ -77,7 +77,7 @@ class MassController extends Controller
      *
      * @return mixed
      */
-    public function massDestroy(MassDeleteJournalRequest $request, JournalRepositoryInterface $repository)
+    public function destroy(MassDeleteJournalRequest $request, JournalRepositoryInterface $repository)
     {
         $ids = $request->get('confirm_mass_delete');
         $set = new Collection;
@@ -114,7 +114,7 @@ class MassController extends Controller
      *
      * @return View
      */
-    public function massEdit(Collection $journals)
+    public function edit(Collection $journals)
     {
         $subTitle = trans('firefly.mass_edit_journals');
 
@@ -187,7 +187,7 @@ class MassController extends Controller
      *
      * @return mixed
      */
-    public function massUpdate(MassEditJournalRequest $request, JournalRepositoryInterface $repository)
+    public function update(MassEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
         $journalIds = $request->get('journals');
         $count      = 0;

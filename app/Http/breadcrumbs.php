@@ -27,6 +27,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 
 /**
  * HOME
@@ -649,6 +650,29 @@ Breadcrumbs::register(
         trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]),
         route('transactions.convert', [strtolower($destinationType->type), $journal->id])
     );
+}
+);
+
+/**
+ * MASS TRANSACTION EDIT / DELETE
+ */
+Breadcrumbs::register(
+    'transactions.mass.edit', function (BreadCrumbGenerator $breadcrumbs, Collection $journals) {
+
+    $journalIds = $journals->pluck('id')->toArray();
+    $what = strtolower($journals->first()->transactionType->type);
+    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
+}
+);
+
+Breadcrumbs::register(
+    'transactions.mass.delete', function (BreadCrumbGenerator $breadcrumbs, Collection $journals) {
+
+    $journalIds = $journals->pluck('id')->toArray();
+    $what = strtolower($journals->first()->transactionType->type);
+    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', $journalIds));
 }
 );
 

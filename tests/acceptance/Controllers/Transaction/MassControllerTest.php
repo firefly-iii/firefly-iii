@@ -30,58 +30,81 @@ class MassControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::massDelete
-     * Implement testMassDelete().
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
      */
-    public function testMassDelete()
+    public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.mass.delete', [561, 562]));
+        $this->assertResponseStatus(200);
+        $this->see('Delete a number of transactions');
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::massDestroy
-     * Implement testMassDestroy().
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::destroy
      */
-    public function testMassDestroy()
+    public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['transactions.mass-delete.url' => 'http://localhost']);
+
+        $data = [
+            'confirm_mass_delete' => [56, 37],
+        ];
+        $this->be($this->user());
+        $this->call('post', route('transactions.mass.destroy'), $data);
+        $this->assertSessionHas('success');
+        $this->assertResponseStatus(302);
+
+        // visit them should give 404.
+        $this->call('get', route('transactions.show', [56]));
+        $this->assertResponseStatus(404);
+
+
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::massEdit
-     * Implement testMassEdit().
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
      */
-    public function testMassEdit()
+    public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.mass.delete', [132, 113]));
+        $this->assertResponseStatus(200);
+        $this->see('Edit a number of transactions');
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::massUpdate
-     * Implement testMassUpdate().
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::update
      */
-    public function testMassUpdate()
+    public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->session(['transactions.mass-edit.url' => 'http://localhost']);
+
+        $data = [
+            'journals'                      => [132],
+            'description'                   => [132 => 'Updated salary thing'],
+            'amount'                        => [132 => 1600],
+            'amount_currency_id_amount_132' => 1,
+            'date'                          => [132 => '2014-07-24'],
+            'source_account_name'           => [132 => 'Job'],
+            'destination_account_id'        => [132 => 1],
+            'category'                      => [132 => 'Salary'],
+        ];
+
+        $this->be($this->user());
+        $this->call('post', route('transactions.mass.update', [132]), $data);
+        $this->assertSessionHas('success');
+        $this->assertResponseStatus(302);
+
+        // visit them should show updated content
+        $this->call('get', route('transactions.show', [132]));
+        $this->assertResponseStatus(200);
+        $this->see('Updated salary thing');
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }
