@@ -99,9 +99,6 @@ class FireflyServiceProvider extends ServiceProvider
         // other generators
         $this->app->bind('FireflyIII\Repositories\User\UserRepositoryInterface', 'FireflyIII\Repositories\User\UserRepository');
         $this->app->bind('FireflyIII\Helpers\Attachments\AttachmentHelperInterface', 'FireflyIII\Helpers\Attachments\AttachmentHelper');
-        $this->app->bind(
-            'FireflyIII\Generator\Chart\Account\AccountChartGeneratorInterface', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator'
-        );
         $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
         $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');
         $this->app->bind(
