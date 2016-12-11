@@ -126,7 +126,7 @@ class BillController extends Controller
             // minimum amount of bill:
             $chartData[0]['entries'][$date] = $bill->amount_min;
             // maximum amount of bill:
-            $chartData[1]['entries'][$date] = $bill->amount_min;
+            $chartData[1]['entries'][$date] = $bill->amount_max;
             // amount of journal:
             $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1');
         }
