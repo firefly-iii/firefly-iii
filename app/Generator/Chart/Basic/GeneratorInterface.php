@@ -20,6 +20,18 @@ namespace FireflyIII\Generator\Chart\Basic;
  */
 interface GeneratorInterface
 {
+
+    /**
+     * Expects data as:
+     *
+     * key => value
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function pieChart(array $data): array;
+
     /**
      * Will generate a (ChartJS) compatible array from the given input. Expects this format:
      *

@@ -13,6 +13,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Generator\Chart\Basic;
 
+use FireflyIII\Support\ChartColour;
+
 /**
  * Class ChartJsGenerator
  *
@@ -85,6 +87,40 @@ class ChartJsGenerator implements GeneratorInterface
                 ],
             ],
         ];
+
+        return $chartData;
+    }
+
+    /**
+     * Expects data as:
+     *
+     * key => value
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function pieChart(array $data): array
+    {
+        $chartData  = [
+            'datasets' => [
+                0 => [],
+            ],
+            'labels'   => [],
+        ];
+        $index = 0;
+        foreach ($data as $key => $value) {
+
+            // make larger than 0
+            if (bccomp($value, '0') === -1) {
+                $value = bcmul($value, '-1');
+            }
+
+            $chartData['datasets'][0]['data'][]            = round($value, 2);
+            $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $chartData['labels'][]                         = $key;
+            $index++;
+        }
 
         return $chartData;
     }
