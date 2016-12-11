@@ -58,10 +58,8 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
-     * @param string  $date
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws FireflyException
      */
     public function all(Account $account)
     {
@@ -69,7 +67,7 @@ class AccountController extends Controller
         $cache->addProperty('account-all-chart');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+             return Response::json($cache->get());
         }
 
         /** @var AccountRepositoryInterface $repository */
@@ -81,21 +79,20 @@ class AccountController extends Controller
         $range     = Steam::balanceInRange($account, $start, $end);
         $current   = clone $start;
         $previous  = array_values($range)[0];
-        $labels    = [];
         $chartData = [];
 
         while ($end >= $current) {
-            $theDate = $current->format('Y-m-d');
-            $balance = $range[$theDate] ?? $previous;
-
-            $labels[]    = $current->formatLocalized($format);
-            $chartData[] = $balance;
-            $previous    = $balance;
+            $theDate           = $current->format('Y-m-d');
+            $balance           = $range[$theDate] ?? $previous;
+            $label             = $current->formatLocalized($format);
+            $chartData[$label] = $balance;
+            $previous          = $balance;
             $current->addDay();
         }
 
-
-        $data = $this->generator->single($account, $labels, $chartData);
+        /** @var GeneratorInterface $generator */
+        $generator = app(GeneratorInterface::class);
+        $data      = $generator->singleSet($account->name, $chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -470,31 +467,27 @@ class AccountController extends Controller
             return $cache->get();
         }
 
-        $chartData = [
-
-        ];
+        $chartData = [];
 
         foreach ($accounts as $account) {
             $currentSet   = [
                 'label'   => $account->name,
                 'entries' => [],
             ];
-            $balances     = [];
             $currentStart = clone $start;
             $range        = Steam::balanceInRange($account, $start, clone $end);
             $previous     = round(array_values($range)[0], 2);
             while ($currentStart <= $end) {
-                $format     = $currentStart->format('Y-m-d');
-                $label      = $currentStart->formatLocalized(strval(trans('config.month_and_day')));
-                $balance    = isset($range[$format]) ? round($range[$format], 2) : $previous;
-                $previous   = $balance;
-                $balances[] = $balance;
+                $format   = $currentStart->format('Y-m-d');
+                $label    = $currentStart->formatLocalized(strval(trans('config.month_and_day')));
+                $balance  = isset($range[$format]) ? round($range[$format], 2) : $previous;
+                $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
             }
-            $account->balances = $balances;
-            $chartData[]       = $currentSet;
+            $chartData[] = $currentSet;
         }
+        /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);
         $data      = $generator->multiSet($chartData);
         $cache->store($data);

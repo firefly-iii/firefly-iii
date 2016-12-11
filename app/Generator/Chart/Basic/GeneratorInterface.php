@@ -21,7 +21,7 @@ namespace FireflyIII\Generator\Chart\Basic;
 interface GeneratorInterface
 {
     /**
-     * Will generate a Chart JS compatible array from the given input. Expects this format:
+     * Will generate a (ChartJS) compatible array from the given input. Expects this format:
      *
      * 0: [
      *    'label' => 'label of set',
@@ -44,5 +44,18 @@ interface GeneratorInterface
      * @return array
      */
     public function multiSet(array $data): array;
+
+    /**
+     * Will generate a (ChartJS) compatible array from the given input. Expects this format:
+     *
+     * 'label-of-entry' => value
+     * 'label-of-entry' => value
+     *
+     * @param string $setLabel
+     * @param array  $data
+     *
+     * @return array
+     */
+    public function singleSet(string $setLabel, array $data): array;
 
 }

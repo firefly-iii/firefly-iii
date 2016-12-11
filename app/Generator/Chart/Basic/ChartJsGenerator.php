@@ -61,4 +61,31 @@ class ChartJsGenerator implements GeneratorInterface
 
         return $chartData;
     }
+
+    /**
+     * Will generate a (ChartJS) compatible array from the given input. Expects this format:
+     *
+     * 'label-of-entry' => value
+     * 'label-of-entry' => value
+     *
+     * @param string $setLabel
+     * @param array  $data
+     *
+     * @return array
+     */
+    public function singleSet(string $setLabel, array $data): array
+    {
+        $chartData = [
+            'count'    => 1,
+            'labels'   => array_keys($data), // take ALL labels from the first set.
+            'datasets' => [
+                [
+                    'label' => $setLabel,
+                    'data'  => array_values($data),
+                ],
+            ],
+        ];
+
+        return $chartData;
+    }
 }
