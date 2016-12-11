@@ -392,7 +392,7 @@ class AccountController extends Controller
             }
         }
 
-        asort($chartData);
+        arsort($chartData);
         $data = $this->generator->singleSet(trans('firefly.spent'), $chartData);
         $cache->store($data);
 
