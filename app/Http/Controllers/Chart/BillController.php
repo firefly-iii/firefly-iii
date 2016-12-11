@@ -16,7 +16,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Chart\Bill\BillChartGeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
@@ -75,40 +75,65 @@ class BillController extends Controller
         /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);
         $data      = $generator->pieChart($chartData);
+        $cache->store($data);
 
         return Response::json($data);
     }
 
     /**
-     * Shows the overview for a bill. The min/max amount and matched journals.
+     * @param JournalCollectorInterface $collector
+     * @param Bill                      $bill
      *
-     * @param Bill $bill
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function single(Bill $bill)
+    public function single(JournalCollectorInterface $collector, Bill $bill)
     {
         $cache = new CacheProperties;
-        $cache->addProperty('single');
-        $cache->addProperty('bill');
+        $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
 
-        // get first transaction or today for start:
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]));
-        $results = $collector->getJournals();
-
-        // resort:
+        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
         $results = $results->sortBy(
             function (Transaction $transaction) {
                 return $transaction->date->format('U');
             }
         );
 
-        $data = $this->generator->single($bill, $results);
+        $chartData = [
+            [
+                'type'    => 'bar',
+                'label'   => trans('firefly.min-amount'),
+                'entries' => [],
+            ],
+            [
+                'type'    => 'bar',
+                'label'   => trans('firefly.max-amount'),
+                'entries' => [],
+            ],
+            [
+                'type'    => 'line',
+                'label'   => trans('firefly.journal-amount'),
+                'entries' => [],
+            ],
+        ];
+
+        /** @var Transaction $entry */
+        foreach ($results as $entry) {
+            $date = $entry->date->formatLocalized(strval(trans('config.month_and_day')));
+            // minimum amount of bill:
+            $chartData[0]['entries'][$date] = $bill->amount_min;
+            // maximum amount of bill:
+            $chartData[1]['entries'][$date] = $bill->amount_min;
+            // amount of journal:
+            $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1');
+        }
+
+        /** @var GeneratorInterface $generator */
+        $generator = app(GeneratorInterface::class);
+        $data      = $generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);

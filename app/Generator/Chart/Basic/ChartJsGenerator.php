@@ -28,6 +28,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * 0: [
      *    'label' => 'label of set',
+     *    'type' => bar or line, optional
      *    'entries' =>
      *        [
      *         'label-of-entry' => 'value'
@@ -35,6 +36,7 @@ class ChartJsGenerator implements GeneratorInterface
      *    ]
      * 1: [
      *    'label' => 'label of another set',
+     *    'type' => bar or line, optional
      *    'entries' =>
      *        [
      *         'label-of-entry' => 'value'
@@ -57,8 +59,43 @@ class ChartJsGenerator implements GeneratorInterface
         foreach ($data as $set) {
             $chartData['datasets'][] = [
                 'label' => $set['label'],
+                'type'  => $set['type'] ?? 'line',
                 'data'  => array_values($set['entries']),
             ];
+        }
+
+        return $chartData;
+    }
+
+    /**
+     * Expects data as:
+     *
+     * key => value
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function pieChart(array $data): array
+    {
+        $chartData = [
+            'datasets' => [
+                0 => [],
+            ],
+            'labels'   => [],
+        ];
+        $index     = 0;
+        foreach ($data as $key => $value) {
+
+            // make larger than 0
+            if (bccomp($value, '0') === -1) {
+                $value = bcmul($value, '-1');
+            }
+
+            $chartData['datasets'][0]['data'][]            = round($value, 2);
+            $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $chartData['labels'][]                         = $key;
+            $index++;
         }
 
         return $chartData;
@@ -87,40 +124,6 @@ class ChartJsGenerator implements GeneratorInterface
                 ],
             ],
         ];
-
-        return $chartData;
-    }
-
-    /**
-     * Expects data as:
-     *
-     * key => value
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function pieChart(array $data): array
-    {
-        $chartData  = [
-            'datasets' => [
-                0 => [],
-            ],
-            'labels'   => [],
-        ];
-        $index = 0;
-        foreach ($data as $key => $value) {
-
-            // make larger than 0
-            if (bccomp($value, '0') === -1) {
-                $value = bcmul($value, '-1');
-            }
-
-            $chartData['datasets'][0]['data'][]            = round($value, 2);
-            $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
-            $chartData['labels'][]                         = $key;
-            $index++;
-        }
 
         return $chartData;
     }
