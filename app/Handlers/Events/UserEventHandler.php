@@ -84,6 +84,7 @@ class UserEventHandler
      */
     public function saveEmailAddress(DeletedUser $event): bool
     {
+        Preferences::mark();
         $email = hash('sha256', $event->email);
         Log::debug(sprintf('Hash of email is %s', $email));
         /** @var Configuration $configuration */
@@ -94,7 +95,10 @@ class UserEventHandler
         }
         $content[]           = $email;
         $configuration->data = $content;
-        $configuration->save();
+        Log::debug('New content of deleted_users is ', $content);
+        FireflyConfig::set('deleted_users', $content);
+
+        Preferences::mark();
 
         return true;
     }

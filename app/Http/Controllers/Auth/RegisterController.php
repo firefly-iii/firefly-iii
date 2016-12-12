@@ -100,12 +100,15 @@ class RegisterController extends Controller
         $hash          = hash('sha256', $data['email']);
         $configuration = FireflyConfig::get('deleted_users', []);
         $set           = $configuration->data;
+        Log::debug(sprintf('Hash of email is %s', $hash));
+        Log::debug('Hashes of deleted users: ', $set);
         if (in_array($hash, $set)) {
             // user already deleted, cannot re-register :(
             $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
             $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
+
 
 
         $user = $this->create($request->all());
