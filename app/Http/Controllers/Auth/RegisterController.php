@@ -92,9 +92,18 @@ class RegisterController extends Controller
         // is user email domain blocked?
         if ($this->isBlockedDomain($data['email'])) {
             $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
-
             $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
+            $this->throwValidationException($request, $validator);
+        }
 
+        // is user a deleted user?
+        $hash          = hash('sha256', $data['email']);
+        $configuration = FireflyConfig::get('deleted_users', []);
+        $set           = $configuration->data;
+        if (in_array($hash, $set)) {
+            // user already deleted, cannot re-register :(
+            $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
+            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
 
