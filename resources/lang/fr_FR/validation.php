@@ -12,6 +12,7 @@
 return [
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
     'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
+    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
     'rule_action_value'              => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
     'invalid_domain'                 => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous enregistrer depuis ce domaine.',
