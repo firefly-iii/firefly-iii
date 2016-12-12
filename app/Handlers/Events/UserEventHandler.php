@@ -16,9 +16,11 @@ namespace FireflyIII\Handlers\Events;
 use Exception;
 use FireflyConfig;
 use FireflyIII\Events\ConfirmedUser;
+use FireflyIII\Events\DeletedUser;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
+use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Mail\Message;
@@ -71,6 +73,28 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
+
+        return true;
+    }
+
+    /**
+     * @param DeletedUser $event
+     *
+     * @return bool
+     */
+    public function saveEmailAddress(DeletedUser $event): bool
+    {
+        $email = hash('sha256', $event->email);
+        Log::debug(sprintf('Hash of email is %s', $email));
+        /** @var Configuration $configuration */
+        $configuration = FireflyConfig::get('deleted_users', []);
+        $content       = $configuration->data;
+        if (!is_array($content)) {
+            $content = [];
+        }
+        $content[]           = $email;
+        $configuration->data = $content;
+        $configuration->save();
 
         return true;
     }
@@ -193,7 +217,6 @@ class UserEventHandler
         return true;
 
     }
-
 
     /**
      * @param User   $user

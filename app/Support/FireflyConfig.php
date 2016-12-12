@@ -45,7 +45,7 @@ class FireflyConfig
      * @param      $name
      * @param null $default
      *
-     * @return Configuration|null
+     * @return \FireflyIII\Models\Configuration|null
      */
     public function get($name, $default = null)
     {
