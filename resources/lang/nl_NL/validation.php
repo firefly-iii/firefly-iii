@@ -12,7 +12,7 @@
 return [
     'iban'                           => 'Dit is niet een geldige IBAN.',
     'unique_account_number_for_user' => 'Het lijkt erop dat dit rekeningnummer al in gebruik is.',
-    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
+    'deleted_user'                   => 'Je kan je niet registreren met dit e-mailadres.',
     'rule_trigger_value'             => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
     'rule_action_value'              => 'Deze waarde is niet geldig voor de geselecteerde actie.',
     'invalid_domain'                 => 'Kan niet registereren vanaf dit domein.',
