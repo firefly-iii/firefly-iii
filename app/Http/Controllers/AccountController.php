@@ -248,7 +248,7 @@ class AccountController extends Controller
         // generate entries for each period (and cache those)
         $entries = $this->periodEntries($account);
 
-        return view('accounts.show', compact('account', 'what', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+        return view('accounts.show', compact('account', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
 
     /**
@@ -274,7 +274,8 @@ class AccountController extends Controller
         $start = $repository->oldestJournalDate($account);
         $end   = $repository->newestJournalDate($account);
 
-        return view('accounts.show-by-date', compact('account', 'journals', 'subTitle', 'start', 'end','chartUri'));
+        // same call, except "entries".
+        return view('accounts.show', compact('account', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
 
     /**
@@ -300,7 +301,8 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        return view('accounts.show-by-date', compact('category', 'date', 'account', 'journals', 'subTitle', 'carbon', 'start', 'end','chartUri'));
+        // same call, except "entries".
+        return view('accounts.show', compact('account', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
 
     /**

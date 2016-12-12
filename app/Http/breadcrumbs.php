@@ -67,30 +67,34 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-    $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+    $what  = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+
     $breadcrumbs->parent('accounts.index', $what);
-    $breadcrumbs->push(e($account->name), route('accounts.show', [$account->id]));
+    $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
 }
 );
 
 Breadcrumbs::register(
-    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $date) {
+    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $start, Carbon $end) {
+
+    $startString = $start->formatLocalized(strval(trans('config.month_and_day')));
+    $endString   = $end->formatLocalized(strval(trans('config.month_and_day')));
+    $title       = sprintf('%s (%s)', $account->name, trans('firefly.from_to', ['start' => $startString, 'end' => $endString]));
+
     $breadcrumbs->parent('accounts.show', $account);
-
-    $range = Preferences::get('viewRange', '1M')->data;
-    $title = $account->name . ' (' . Navigation::periodShow($date, $range) . ')';
-
-    $breadcrumbs->push($title, route('accounts.show.date', [$account->id, $date->format('Y-m-d')]));
+    $breadcrumbs->push($title, route('accounts.show.date', [$account->id, $start->format('Y-m-d')]));
 }
 );
 
 Breadcrumbs::register(
-    'accounts.show.all', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
+    'accounts.show.all', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $start, Carbon $end) {
+
+    $startString = $start->formatLocalized(strval(trans('config.month_and_day')));
+    $endString   = $end->formatLocalized(strval(trans('config.month_and_day')));
+    $title       = sprintf('%s (%s)', $account->name, trans('firefly.from_to', ['start' => $startString, 'end' => $endString]));
+
     $breadcrumbs->parent('accounts.show', $account);
-
-    $title = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
-
-    $breadcrumbs->push($title, route('accounts.show.all', [$account->id]));
+    $breadcrumbs->push($title, route('accounts.show.all', [$account->id, $start->format('Y-m-d')]));
 }
 );
 
