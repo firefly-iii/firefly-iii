@@ -526,6 +526,7 @@ return [
     'select_more_than_one_account'               => 'Selecteer meer dan één rekening',
     'select_more_than_one_category'              => 'Selecteer meer dan één categorie',
     'select_more_than_one_budget'                => 'Please select more than one budget',
+    'from_to'                                    => 'From :start to :end',
 
     // categories:
     'new_category'                               => 'Nieuwe categorie',
