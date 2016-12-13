@@ -155,6 +155,12 @@ return [
     'single_user_mode'           => 'Single user mode',
     'must_confirm_account'       => 'New users must activate account',
     'is_demo_site'               => 'Is demo site',
+    'mail_for_lockout'           => 'Locked out',
+    'mail_for_blocked_domain'    => 'Blocked domain',
+    'mail_for_blocked_email'     => 'Blocked email address',
+    'mail_for_bad_login'         => 'Login failure',
+    'mail_for_blocked_login'     => 'Blocked user',
+
 
     // import
     'import_file'                => '匯入檔案',
