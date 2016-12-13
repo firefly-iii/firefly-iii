@@ -14,9 +14,11 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
 use Config;
+use FireflyIII\Events\BlockedUseOfDomain;
+use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -92,7 +94,9 @@ class RegisterController extends Controller
         // is user email domain blocked?
         if ($this->isBlockedDomain($data['email'])) {
             $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
-            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
+
+            event(new BlockedUseOfDomain($data['email'], $request->ip()));
+            // $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
 
@@ -103,9 +107,9 @@ class RegisterController extends Controller
         Log::debug(sprintf('Hash of email is %s', $hash));
         Log::debug('Hashes of deleted users: ', $set);
         if (in_array($hash, $set)) {
-            // user already deleted, cannot re-register :(
             $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
-            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
+            event(new BlockedUseOfEmail($data['email'], $request->ip()));
+            //$this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
 

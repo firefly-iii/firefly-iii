@@ -37,26 +37,37 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // new event handlers:
-            'FireflyIII\Events\ConfirmedUser'        => // is a User related event.
+            'FireflyIII\Events\ConfirmedUser' => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@storeConfirmationIpAddress',
                 ],
 
-            'FireflyIII\Events\DeletedUser'          => // is a User related event.
+            'FireflyIII\Events\DeletedUser'      => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@saveEmailAddress',
                 ],
-            'FireflyIII\Events\LockedOutUser'          => // is a User related event.
+            'FireflyIII\Events\LockedOutUser'    => // is a User related event.
                 [
-                    'FireflyIII\Handlers\Events\UserEventHandler@respondToLockout',
+                    'FireflyIII\Handlers\Events\UserEventHandler@reportLockout',
                 ],
-            'FireflyIII\Events\BlockedUserLogin'          => // is a User related event.
+            'FireflyIII\Events\BlockedUserLogin' => // is a User related event.
                 [
-                    'FireflyIII\Handlers\Events\UserEventHandler@respondToBlockedUserLogin',
+                    'FireflyIII\Handlers\Events\UserEventHandler@reportBlockedUser',
                 ],
-            'FireflyIII\Events\BlockedBadLogin'          => // is a User related event.
+
+            'FireflyIII\Events\BlockedUseOfEmail' => // is a User related event.
                 [
-                    'FireflyIII\Handlers\Events\UserEventHandler@respondToBlockedBadLogin',
+                    'FireflyIII\Handlers\Events\UserEventHandler@reportUseOfBlockedEmail',
+                ],
+
+            'FireflyIII\Events\BlockedUseOfDomain' => // is a User related event.
+                [
+                    'FireflyIII\Handlers\Events\UserEventHandler@reportUseBlockedDomain',
+                ],
+
+            'FireflyIII\Events\BlockedBadLogin'      => // is a User related event.
+                [
+                    'FireflyIII\Handlers\Events\UserEventHandler@reportBadLogin',
                 ],
             'FireflyIII\Events\RegisteredUser'       => // is a User related event.
                 [

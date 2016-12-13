@@ -16,6 +16,8 @@ namespace FireflyIII\Handlers\Events;
 use Exception;
 use FireflyConfig;
 use FireflyIII\Events\BlockedBadLogin;
+use FireflyIII\Events\BlockedUseOfDomain;
+use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\BlockedUserLogin;
 use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\DeletedUser;
@@ -85,25 +87,25 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function respondToBlockedBadLogin(BlockedBadLogin $event)
+    public function reportBadLogin(BlockedBadLogin $event)
     {
         $email     = $event->email;
         $ipAddress = $event->ipAddress;
         /** @var Configuration $sendmail */
         $sendmail = FireflyConfig::get('mail_for_bad_login', config('firefly.configuration.mail_for_bad_login'));
-        Log::debug(sprintf('Now in respondToBlockedBadLogin for email address %s', $email));
+        Log::debug(sprintf('Now in reportBadLogin for email address %s', $email));
+        Log::error(sprintf('User %s tried to login with bad credentials.', $email));
         if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            Log::error(sprintf('User %s tried to login with bad credentials.', $email));
 
             return true;
         }
 
-        // send email message:
         try {
             Mail::send(
-                ['emails.blocked-bad-creds-html', 'emails.blocked-bad-creds-text'], ['email' => $email, 'ip' => $ipAddress], function (Message $message) use ($email) {
-                $message->to($email, $email)->subject('Blocked login attempt with bad credentials');
-            }
+                ['emails.blocked-bad-creds-html', 'emails.blocked-bad-creds-text'], ['email' => $email, 'ip' => $ipAddress],
+                function (Message $message) use ($email) {
+                    $message->to($email, $email)->subject('Blocked login attempt with bad credentials');
+                }
             );
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
@@ -117,17 +119,16 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function respondToBlockedUserLogin(BlockedUserLogin $event): bool
+    public function reportBlockedUser(BlockedUserLogin $event): bool
     {
         $user      = $event->user;
         $email     = $user->email;
         $ipAddress = $event->ipAddress;
         /** @var Configuration $sendmail */
         $sendmail = FireflyConfig::get('mail_for_blocked_login', config('firefly.configuration.mail_for_blocked_login'));
-        Log::debug(sprintf('Now in respondToBlockedUserLogin for email address %s', $email));
+        Log::debug(sprintf('Now in reportBlockedUser for email address %s', $email));
+        Log::error(sprintf('User #%d (%s) has their accout blocked (blocked_code is "%s") but tried to login.', $user->id, $email, $user->blocked_code));
         if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            Log::error(sprintf('User #%d (%s) has their accout blocked (blocked_code is "%s") but tried to login.', $user->id, $email, $user->blocked_code));
-
             return true;
         }
 
@@ -156,16 +157,15 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function respondToLockout(LockedOutUser $event): bool
+    public function reportLockout(LockedOutUser $event): bool
     {
         $email     = $event->email;
         $ipAddress = $event->ipAddress;
         /** @var Configuration $sendmail */
         $sendmail = FireflyConfig::get('mail_for_lockout', config('firefly.configuration.mail_for_lockout'));
         Log::debug(sprintf('Now in respondToLockout for email address %s', $email));
+        Log::error(sprintf('User %s was locked out after too many invalid login attempts.', $email));
         if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            Log::error(sprintf('User %s was locked out after too many invalid login attempts.', $email));
-
             return true;
         }
 
@@ -174,6 +174,77 @@ class UserEventHandler
             Mail::send(
                 ['emails.locked-out-html', 'emails.locked-out-text'], ['email' => $email, 'ip' => $ipAddress], function (Message $message) use ($email) {
                 $message->to($email, $email)->subject('User was locked out');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
+     * @param BlockedUseOfDomain $event
+     *
+     * @return bool
+     */
+    public function reportUseBlockedDomain(BlockedUseOfDomain $event): bool
+    {
+        $email     = $event->email;
+        $ipAddress = $event->ipAddress;
+        $parts     = explode('@', $email);
+        /** @var Configuration $sendmail */
+        $sendmail = FireflyConfig::get('mail_for_blocked_domain', config('firefly.configuration.mail_for_blocked_domain'));
+        Log::debug(sprintf('Now in reportUseBlockedDomain for email address %s', $email));
+        Log::error(sprintf('Somebody tried to register using an email address (%s) connected to a banned domain (%s).', $email, $parts[1]));
+        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
+            return true;
+        }
+
+        // send email message:
+        try {
+            Mail::send(
+                ['emails.blocked-domain-html', 'emails.blocked-domain-text'],
+                [
+                    'user_address' => $email,
+                    'ip'           => $ipAddress,
+                ], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Blocked registration attempt with blocked email address');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
+     * @param BlockedUseOfEmail $event
+     *
+     * @return bool
+     */
+    public function reportUseOfBlockedEmail(BlockedUseOfEmail $event): bool
+    {
+        $email     = $event->email;
+        $ipAddress = $event->ipAddress;
+        /** @var Configuration $sendmail */
+        $sendmail = FireflyConfig::get('mail_for_blocked_email', config('firefly.configuration.mail_for_blocked_email'));
+        Log::debug(sprintf('Now in reportUseOfBlockedEmail for email address %s', $email));
+        Log::error(sprintf('Somebody tried to register using email address %s which is blocked (SHA2 hash).', $email));
+        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
+            return true;
+        }
+
+        // send email message:
+        try {
+            Mail::send(
+                ['emails.blocked-email-html', 'emails.blocked-email-text'],
+                [
+                    'user_address' => $email,
+                    'ip'           => $ipAddress,
+                ], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Blocked registration attempt with blocked email address');
             }
             );
         } catch (Swift_TransportException $e) {

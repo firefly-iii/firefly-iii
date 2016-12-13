@@ -96,6 +96,8 @@ class LoginController extends Controller
             $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
             event(new BlockedUserLogin($foundUser, $request->ip()));
         }
+
+        // simply a bad login.
         if (is_null($foundUser)) {
             event(new BlockedBadLogin($credentials['email'], $request->ip()));
         }
