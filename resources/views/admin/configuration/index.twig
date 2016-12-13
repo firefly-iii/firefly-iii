@@ -53,6 +53,7 @@
                     </div>
                 </div>
             </div>
+            {# send email messages #}
 
             <!-- configuration setting block -->
             <!--
@@ -69,6 +70,26 @@
                 </div>
             </div>
             -->
+        </div>
+        <div class="row">
+            {# send email messages about stuff: #}
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'setting_send_email_notifications'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'setting_send_email_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('mail_for_lockout','1', sendErrorMessage.mail_for_lockout) }}
+                        {{ ExpandedForm.checkbox('mail_for_blocked_domain','1', sendErrorMessage.mail_for_blocked_domain) }}
+                        {{ ExpandedForm.checkbox('mail_for_blocked_email','1', sendErrorMessage.mail_for_blocked_email) }}
+                        {{ ExpandedForm.checkbox('mail_for_bad_login','1', sendErrorMessage.mail_for_bad_login) }}
+                        {{ ExpandedForm.checkbox('mail_for_blocked_login','1', sendErrorMessage.mail_for_blocked_login) }}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">

@@ -14,15 +14,14 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Config;
 use FireflyConfig;
+use FireflyIII\Events\BlockedBadLogin;
+use FireflyIII\Events\BlockedUserLogin;
+use FireflyIII\Events\LockedOutUser;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
 use Lang;
-use Log;
-use Mail;
-use Swift_TransportException;
 
 /**
  * Class LoginController
@@ -75,6 +74,8 @@ class LoginController extends Controller
         if ($lockedOut) {
             $this->fireLockoutEvent($request);
 
+            event(new LockedOutUser($request->get('email'), $request->ip()));
+
             return $this->sendLockoutResponse($request);
         }
 
@@ -90,10 +91,13 @@ class LoginController extends Controller
         /** @var User $foundUser */
         $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
         if (!is_null($foundUser)) {
-            // if it exists, show message:
+            // user exists, but is blocked:
             $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
             $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
-            $this->reportBlockedUserLoginAttempt($foundUser, $code, $request->ip());
+            event(new BlockedUserLogin($foundUser, $request->ip()));
+        }
+        if (is_null($foundUser)) {
+            event(new BlockedBadLogin($credentials['email'], $request->ip()));
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -162,35 +166,5 @@ class LoginController extends Controller
                                  $this->username() => $this->getFailedLoginMessage($message),
                              ]
                          );
-    }
-
-    /**
-     * Send a message home about the  blocked attempt to login.
-     * Perhaps in a later stage, simply log these messages.
-     *
-     * @param User   $user
-     * @param string $code
-     * @param string $ipAddress
-     */
-    private function reportBlockedUserLoginAttempt(User $user, string $code, string $ipAddress)
-    {
-
-        try {
-            $email  = env('SITE_OWNER', false);
-            $fields = [
-                'user_id'      => $user->id,
-                'user_address' => $user->email,
-                'code'         => $code,
-                'ip'           => $ipAddress,
-            ];
-
-            Mail::send(
-                ['emails.blocked-login-html', 'emails.blocked-login-text'], $fields, function (Message $message) use ($email, $user) {
-                $message->to($email, $email)->subject('Blocked a login attempt from ' . trim($user->email) . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
     }
 }

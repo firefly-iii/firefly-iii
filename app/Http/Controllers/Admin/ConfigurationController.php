@@ -62,7 +62,16 @@ class ConfigurationController extends Controller
         $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
         $isDemoSite         = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
 
-        return view('admin.configuration.index', compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite'));
+        // email settings:
+        $sendErrorMessage = [
+            'mail_for_lockout'        => FireflyConfig::get('mail_for_lockout', config('firefly.configuration.mail_for_lockout'))->data,
+            'mail_for_blocked_domain' => FireflyConfig::get('mail_for_blocked_domain', config('firefly.configuration.mail_for_blocked_domain'))->data,
+            'mail_for_blocked_email'  => FireflyConfig::get('mail_for_blocked_email', config('firefly.configuration.mail_for_blocked_email'))->data,
+            'mail_for_bad_login'      => FireflyConfig::get('mail_for_bad_login', config('firefly.configuration.mail_for_bad_login'))->data,
+            'mail_for_blocked_login'  => FireflyConfig::get('mail_for_blocked_login', config('firefly.configuration.mail_for_blocked_login'))->data,
+        ];
+
+        return view('admin.configuration.index', compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite', 'sendErrorMessage'));
 
     }
 
@@ -80,6 +89,13 @@ class ConfigurationController extends Controller
         FireflyConfig::set('single_user_mode', $data['single_user_mode']);
         FireflyConfig::set('must_confirm_account', $data['must_confirm_account']);
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);
+
+        // email settings
+        FireflyConfig::set('mail_for_lockout', $data['mail_for_lockout']);
+        FireflyConfig::set('mail_for_blocked_domain', $data['mail_for_blocked_domain']);
+        FireflyConfig::set('mail_for_blocked_email', $data['mail_for_blocked_email']);
+        FireflyConfig::set('mail_for_bad_login', $data['mail_for_bad_login']);
+        FireflyConfig::set('mail_for_blocked_login', $data['mail_for_blocked_login']);
 
         // flash message
         Session::flash('success', strval(trans('firefly.configuration_updated')));

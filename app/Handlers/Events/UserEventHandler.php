@@ -15,8 +15,11 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyConfig;
+use FireflyIII\Events\BlockedBadLogin;
+use FireflyIII\Events\BlockedUserLogin;
 use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\DeletedUser;
+use FireflyIII\Events\LockedOutUser;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
@@ -73,6 +76,109 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
+
+        return true;
+    }
+
+    /**
+     * @param BlockedBadLogin $event
+     *
+     * @return bool
+     */
+    public function respondToBlockedBadLogin(BlockedBadLogin $event)
+    {
+        $email     = $event->email;
+        $ipAddress = $event->ipAddress;
+        /** @var Configuration $sendmail */
+        $sendmail = FireflyConfig::get('mail_for_bad_login', config('firefly.configuration.mail_for_bad_login'));
+        Log::debug(sprintf('Now in respondToBlockedBadLogin for email address %s', $email));
+        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
+            Log::error(sprintf('User %s tried to login with bad credentials.', $email));
+
+            return true;
+        }
+
+        // send email message:
+        try {
+            Mail::send(
+                ['emails.blocked-bad-creds-html', 'emails.blocked-bad-creds-text'], ['email' => $email, 'ip' => $ipAddress], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Blocked login attempt with bad credentials');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
+     * @param BlockedUserLogin $event
+     *
+     * @return bool
+     */
+    public function respondToBlockedUserLogin(BlockedUserLogin $event): bool
+    {
+        $user      = $event->user;
+        $email     = $user->email;
+        $ipAddress = $event->ipAddress;
+        /** @var Configuration $sendmail */
+        $sendmail = FireflyConfig::get('mail_for_blocked_login', config('firefly.configuration.mail_for_blocked_login'));
+        Log::debug(sprintf('Now in respondToBlockedUserLogin for email address %s', $email));
+        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
+            Log::error(sprintf('User #%d (%s) has their accout blocked (blocked_code is "%s") but tried to login.', $user->id, $email, $user->blocked_code));
+
+            return true;
+        }
+
+        // send email message:
+        try {
+            Mail::send(
+                ['emails.blocked-login-html', 'emails.blocked-login-text'],
+                [
+                    'user_id'      => $user->id,
+                    'user_address' => $email,
+                    'ip'           => $ipAddress,
+                    'code'         => $user->blocked_code,
+                ], function (Message $message) use ($email, $user) {
+                $message->to($email, $email)->subject('Blocked login attempt of blocked user');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
+     * @param LockedOutUser $event
+     *
+     * @return bool
+     */
+    public function respondToLockout(LockedOutUser $event): bool
+    {
+        $email     = $event->email;
+        $ipAddress = $event->ipAddress;
+        /** @var Configuration $sendmail */
+        $sendmail = FireflyConfig::get('mail_for_lockout', config('firefly.configuration.mail_for_lockout'));
+        Log::debug(sprintf('Now in respondToLockout for email address %s', $email));
+        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
+            Log::error(sprintf('User %s was locked out after too many invalid login attempts.', $email));
+
+            return true;
+        }
+
+        // send email message:
+        try {
+            Mail::send(
+                ['emails.locked-out-html', 'emails.locked-out-text'], ['email' => $email, 'ip' => $ipAddress], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('User was locked out');
+            }
+            );
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
 
         return true;
     }

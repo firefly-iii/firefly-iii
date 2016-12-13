@@ -19,9 +19,14 @@ declare(strict_types = 1);
 
 return [
     'configuration'       => [
-        'single_user_mode'     => true,
-        'is_demo_site'         => false,
-        'must_confirm_account' => false,
+        'single_user_mode'        => true,
+        'is_demo_site'            => false,
+        'must_confirm_account'    => false,
+        'mail_for_lockout'        => false,
+        'mail_for_blocked_domain' => false,
+        'mail_for_blocked_email'  => false,
+        'mail_for_bad_login'      => false,
+        'mail_for_blocked_login'  => false,
     ],
     'chart'               => 'chartjs',
     'version'             => '4.2.1',
