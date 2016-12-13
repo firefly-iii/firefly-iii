@@ -82,11 +82,11 @@
                         <p class="text-info">
                             {{ 'setting_send_email_explain'|_ }}
                         </p>
-                        {{ ExpandedForm.checkbox('mail_for_lockout','1', sendErrorMessage.mail_for_lockout) }}
-                        {{ ExpandedForm.checkbox('mail_for_blocked_domain','1', sendErrorMessage.mail_for_blocked_domain) }}
-                        {{ ExpandedForm.checkbox('mail_for_blocked_email','1', sendErrorMessage.mail_for_blocked_email) }}
-                        {{ ExpandedForm.checkbox('mail_for_bad_login','1', sendErrorMessage.mail_for_bad_login) }}
-                        {{ ExpandedForm.checkbox('mail_for_blocked_login','1', sendErrorMessage.mail_for_blocked_login) }}
+                        {{ ExpandedForm.checkbox('mail_for_lockout','1', sendErrorMessage.mail_for_lockout, {helpText: trans('firefly.mail_for_lockout_help')}) }}
+                        {{ ExpandedForm.checkbox('mail_for_blocked_domain','1', sendErrorMessage.mail_for_blocked_domain, {helpText: trans('firefly.mail_for_blocked_domain_help')}) }}
+                        {{ ExpandedForm.checkbox('mail_for_blocked_email','1', sendErrorMessage.mail_for_blocked_email, {helpText: trans('firefly.mail_for_blocked_email_help')}) }}
+                        {{ ExpandedForm.checkbox('mail_for_bad_login','1', sendErrorMessage.mail_for_bad_login, {helpText: trans('firefly.mail_for_bad_login_help')}) }}
+                        {{ ExpandedForm.checkbox('mail_for_blocked_login','1', sendErrorMessage.mail_for_blocked_login, {helpText: trans('firefly.mail_for_blocked_help')}) }}
                     </div>
                 </div>
             </div>
