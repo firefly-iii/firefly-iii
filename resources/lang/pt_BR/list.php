@@ -76,7 +76,7 @@ return [
     'destination_account'   => 'Conta de destino',
 
     'accounts_count'        => 'Número de Contas',
-    'journals_count'        => 'Número de período',
+    'journals_count'        => 'Number of transactions',
     'attachments_count'     => 'Número de anexos',
     'bills_count'           => 'Número de contas',
     'categories_count'      => 'Número de categorias',
