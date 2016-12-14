@@ -155,6 +155,12 @@ return [
     'single_user_mode'           => 'Modo de usuário único',
     'must_confirm_account'       => 'Novos usuários devem ativar a conta',
     'is_demo_site'               => 'É o site de demonstração',
+    'mail_for_lockout'           => 'Locked out',
+    'mail_for_blocked_domain'    => 'Blocked domain',
+    'mail_for_blocked_email'     => 'Blocked email address',
+    'mail_for_bad_login'         => 'Login failure',
+    'mail_for_blocked_login'     => 'Blocked user',
+
 
     // import
     'import_file'                => 'Importar arquivo',

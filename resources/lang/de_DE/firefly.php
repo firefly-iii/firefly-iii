@@ -846,6 +846,14 @@ return [
     'configuration_updated'                => 'Die Konfiguration wurde aktualisiert',
     'setting_is_demo_site'                 => 'Demonstrationsseite',
     'setting_is_demo_site_explain'         => 'Wenn sie diese Option auswählen, wird sich diese Installation wie eine Demonstrationsseite verhalten, was ungwollte Auswirkungen haben kann.',
+    'setting_send_email_notifications'     => 'Send email notifications',
+    'setting_send_email_explain'           => 'Firefly III can send you email notifications about certain events. They will be sent to <code>:email</code>. This email address can be set in the <code>.env</code> file.',
+    'mail_for_lockout_help'                => 'When a user is locked out',
+    'mail_for_blocked_domain_help'         => 'When a user tries to register using a blocked domain',
+    'mail_for_blocked_email_help'          => 'When a user tries to register using a blocked email address',
+    'mail_for_bad_login_help'              => 'When a user fails to login',
+    'mail_for_blocked_login_help'          => 'When a blocked user tries to login',
+
 
     // split a transaction:
     'transaction_meta_data'                => 'Transaktions Metadaten',
