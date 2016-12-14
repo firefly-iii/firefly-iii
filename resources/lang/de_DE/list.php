@@ -76,7 +76,7 @@ return [
     'destination_account'   => 'Zielkonto',
 
     'accounts_count'        => 'Anzahl Konten',
-    'journals_count'        => 'Anzahl Transaktionen',
+    'journals_count'        => 'Number of transactions',
     'attachments_count'     => 'Anzahl Anhänge',
     'bills_count'           => 'Anzahl Rechnungen',
     'categories_count'      => 'Anzahl Kategorien',
