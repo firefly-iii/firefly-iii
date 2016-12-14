@@ -847,7 +847,7 @@ return [
     'setting_is_demo_site'                 => 'Site demo',
     'setting_is_demo_site_explain'         => 'If you check this box, this installation will behave as if it is the demo site, which can have weird side effects.',
     'setting_send_email_notifications'     => 'Send email notifications',
-    'setting_send_email_explain'           => 'Firefly III can send you email notifications about certain events. They will be sent to <code>:email</code>. This email address can be set in the <code>.env</code> file.',
+    'setting_send_email_explain'           => 'Firefly III can send you email notifications about certain events. They will be sent to <code>:site_owner</code>. This email address can be set in the <code>.env</code> file.',
     'mail_for_lockout_help'                => 'When a user is locked out',
     'mail_for_blocked_domain_help'         => 'When a user tries to register using a blocked domain',
     'mail_for_blocked_email_help'          => 'When a user tries to register using a blocked email address',
