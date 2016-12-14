@@ -88,7 +88,7 @@ class Help implements HelpInterface
      *
      * @return bool
      */
-    public function hasRoute(string $route):bool
+    public function hasRoute(string $route): bool
     {
         return Route::has($route);
     }
@@ -99,7 +99,7 @@ class Help implements HelpInterface
      *
      * @return bool
      */
-    public function inCache(string $route, string $language):bool
+    public function inCache(string $route, string $language): bool
     {
         $line   = sprintf('help.%s.%s', $route, $language);
         $result = Cache::has($line);

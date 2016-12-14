@@ -161,6 +161,7 @@ class JournalFormRequest extends Request
     private function getFieldOrEmptyString(string $field): string
     {
         $string = $this->get($field) ?? '';
+
         return trim($string);
     }
 }

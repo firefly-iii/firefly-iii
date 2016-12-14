@@ -50,8 +50,9 @@ class ReportController extends Controller
      * which means that giving it a 2 week "period" should be enough granularity.
      *
      * @param Collection $accounts
-     * @param Carbon $start
+     * @param Carbon     $start
      * @param Carbon     $end
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end)
@@ -131,6 +132,7 @@ class ReportController extends Controller
 
     /**
      * Shows sum income and expense, debet/credit: operations
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -301,7 +303,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function arraySum($array) : string
+    private function arraySum($array): string
     {
         $sum = '0';
         foreach ($array as $entry) {

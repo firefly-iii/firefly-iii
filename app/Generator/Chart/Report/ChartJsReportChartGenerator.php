@@ -91,7 +91,7 @@ class ChartJsReportChartGenerator implements ReportChartGeneratorInterface
      *
      * @return array
      */
-    public function netWorth(Collection $entries) : array
+    public function netWorth(Collection $entries): array
     {
         $format = (string)trans('config.month_and_day');
         $data   = [

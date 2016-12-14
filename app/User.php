@@ -189,6 +189,20 @@ class User extends Authenticatable
     }
 
     /**
+     * Send the password reset notification.
+     *
+     * @param  string $token
+     *
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $ip = Request::ip();
+
+        event(new RequestedNewPassword($this, $token, $ip));
+    }
+
+    /**
      * @return HasMany
      */
     public function tags(): HasMany
@@ -210,19 +224,6 @@ class User extends Authenticatable
     public function transactions(): HasManyThrough
     {
         return $this->hasManyThrough('FireflyIII\Models\Transaction', 'FireflyIII\Models\TransactionJournal');
-    }
-
-    /**
-     * Send the password reset notification.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    public function sendPasswordResetNotification($token)
-    {
-        $ip = Request::ip();
-
-        event(new RequestedNewPassword($this, $token, $ip));
     }
 
 

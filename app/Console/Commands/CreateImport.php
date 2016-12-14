@@ -50,7 +50,7 @@ class CreateImport extends Command
     }
 
     /**
-     * 
+     *
      */
     public function handle()
     {

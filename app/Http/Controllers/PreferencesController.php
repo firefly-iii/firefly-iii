@@ -212,7 +212,7 @@ class PreferencesController extends Controller
     /**
      * @return string
      */
-    private function getDomain() : string
+    private function getDomain(): string
     {
         $url   = url()->to('/');
         $parts = parse_url($url);

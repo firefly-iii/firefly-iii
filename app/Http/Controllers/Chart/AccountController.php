@@ -238,7 +238,7 @@ class AccountController extends Controller
         $end        = clone session('end', Carbon::now()->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
-        $frontPage  = Preferences::get('frontPageAccounts', $defaultSet);
+        $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
         Log::debug('Frontpage preference set is ', $frontPage->data);
         if (count($frontPage->data) === 0) {
             $frontPage->data = $defaultSet;

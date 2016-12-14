@@ -35,7 +35,7 @@ class UpdatedJournalEventHandler
      *
      * @return bool
      */
-    public function processRules(UpdatedTransactionJournal $updatedJournalEvent):bool
+    public function processRules(UpdatedTransactionJournal $updatedJournalEvent): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         $journal = $updatedJournalEvent->journal;

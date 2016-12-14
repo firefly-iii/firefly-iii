@@ -61,6 +61,7 @@ class ConfigurationController extends Controller
         $singleUserMode     = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
         $isDemoSite         = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $siteOwner          = env('SITE_OWNER');
 
         // email settings:
         $sendErrorMessage = [
@@ -71,7 +72,10 @@ class ConfigurationController extends Controller
             'mail_for_blocked_login'  => FireflyConfig::get('mail_for_blocked_login', config('firefly.configuration.mail_for_blocked_login'))->data,
         ];
 
-        return view('admin.configuration.index', compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite', 'sendErrorMessage'));
+        return view(
+            'admin.configuration.index',
+            compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite', 'sendErrorMessage', 'siteOwner')
+        );
 
     }
 

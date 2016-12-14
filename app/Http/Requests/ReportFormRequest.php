@@ -41,7 +41,7 @@ class ReportFormRequest extends Request
     /**
      * @return Collection
      */
-    public function getAccountList():Collection
+    public function getAccountList(): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -52,27 +52,6 @@ class ReportFormRequest extends Request
                 $account = $repository->find(intval($accountId));
                 if (!is_null($account->id)) {
                     $collection->push($account);
-                }
-            }
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getCategoryList(): Collection
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $set        = $this->get('category');
-        $collection = new Collection;
-        if (is_array($set)) {
-            foreach ($set as $categoryId) {
-                $category = $repository->find(intval($categoryId));
-                if (!is_null($category->id)) {
-                    $collection->push($category);
                 }
             }
         }
@@ -94,6 +73,27 @@ class ReportFormRequest extends Request
                 $budget = $repository->find(intval($budgetId));
                 if (!is_null($budget->id)) {
                     $collection->push($budget);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getCategoryList(): Collection
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $set        = $this->get('category');
+        $collection = new Collection;
+        if (is_array($set)) {
+            foreach ($set as $categoryId) {
+                $category = $repository->find(intval($categoryId));
+                if (!is_null($category->id)) {
+                    $collection->push($category);
                 }
             }
         }

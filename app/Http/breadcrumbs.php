@@ -67,7 +67,7 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-    $what  = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+    $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));

@@ -94,7 +94,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
      *
      * @return bool
      */
-    private function collectVintageUploads():bool
+    private function collectVintageUploads(): bool
     {
         // grab upload directory.
         $files = $this->uploadDisk->files();

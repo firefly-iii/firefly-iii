@@ -16,7 +16,6 @@ namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -62,6 +61,33 @@ class OperationsController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
+     * @return string
+     */
+    public function income(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('income-report');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            //return $cache->get();
+        }
+        $income = $this->getIncomeReport($start, $end, $accounts);
+
+        $result = view('reports.partials.income', compact('income'))->render();
+        $cache->store($result);
+
+        return $result;
+
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
      * @return mixed|string
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
@@ -95,33 +121,6 @@ class OperationsController extends Controller
         );
 
         $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
-        $cache->store($result);
-
-        return $result;
-
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function income(Collection $accounts, Carbon $start, Carbon $end)
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('income-report');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            //return $cache->get();
-        }
-        $income = $this->getIncomeReport($start, $end, $accounts);
-
-        $result = view('reports.partials.income', compact('income'))->render();
         $cache->store($result);
 
         return $result;

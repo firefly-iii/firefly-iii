@@ -36,7 +36,7 @@ class BalanceController extends Controller
      *
      * @return mixed|string
      */
-    public function general(BalanceReportHelperInterface $helper,Collection $accounts, Carbon $start, Carbon $end)
+    public function general(BalanceReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
     {
 
 

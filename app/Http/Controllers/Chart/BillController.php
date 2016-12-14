@@ -70,7 +70,7 @@ class BillController extends Controller
             strval(trans('firefly.paid'))   => $paid,
         ];
 
-        $data      = $this->generator->pieChart($chartData);
+        $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -127,7 +127,7 @@ class BillController extends Controller
             $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1');
         }
 
-        $data      = $this->generator->multiSet($chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);

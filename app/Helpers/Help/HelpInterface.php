@@ -34,7 +34,7 @@ interface HelpInterface
      *
      * @return string
      */
-    public function getFromGithub(string $language, string $route):string;
+    public function getFromGithub(string $language, string $route): string;
 
     /**
      * @param string $route

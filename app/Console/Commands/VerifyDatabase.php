@@ -17,8 +17,6 @@ use Crypt;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -103,12 +101,12 @@ class VerifyDatabase extends Command
     private function reportAccounts()
     {
         $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-            ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
-            ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
-            ->whereNull('transactions.account_id')
-            ->get(
-                ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
-            );
+                      ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
+                      ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
+                      ->whereNull('transactions.account_id')
+                      ->get(
+                          ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
+                      );
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -125,10 +123,10 @@ class VerifyDatabase extends Command
     private function reportBudgetLimits()
     {
         $set = Budget::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
-            ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
-            ->groupBy(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
-            ->whereNull('budget_limits.id')
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
+                     ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
+                     ->groupBy(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
+                     ->whereNull('budget_limits.id')
+                     ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -147,20 +145,20 @@ class VerifyDatabase extends Command
     private function reportDeletedAccounts()
     {
         $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->whereNotNull('accounts.deleted_at')
-            ->whereNotNull('transactions.id')
-            ->where(
-                function (Builder $q) {
-                    $q->whereNull('transactions.deleted_at');
-                    $q->orWhereNull('transaction_journals.deleted_at');
-                }
-            )
-            ->get(
-                ['accounts.id as account_id', 'accounts.deleted_at as account_deleted_at', 'transactions.id as transaction_id',
-                 'transactions.deleted_at as transaction_deleted_at', 'transaction_journals.id as journal_id',
-                 'transaction_journals.deleted_at as journal_deleted_at']
-            );
+                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                      ->whereNotNull('accounts.deleted_at')
+                      ->whereNotNull('transactions.id')
+                      ->where(
+                          function (Builder $q) {
+                              $q->whereNull('transactions.deleted_at');
+                              $q->orWhereNull('transaction_journals.deleted_at');
+                          }
+                      )
+                      ->get(
+                          ['accounts.id as account_id', 'accounts.deleted_at as account_deleted_at', 'transactions.id as transaction_id',
+                           'transactions.deleted_at as transaction_deleted_at', 'transaction_journals.id as journal_id',
+                           'transaction_journals.deleted_at as journal_deleted_at']
+                      );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $date = is_null($entry->transaction_deleted_at) ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
@@ -185,14 +183,17 @@ class VerifyDatabase extends Command
         ];
         foreach ($configuration as $transactionType => $accountTypes) {
             $set = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
-                ->leftJoin('users', 'users.id', '=', 'transaction_journals.user_id')
-                ->where('transaction_types.type', $transactionType)
-                ->whereIn('account_types.type', $accountTypes)
-                ->whereNull('transaction_journals.deleted_at')
-                ->get(['transaction_journals.id', 'transaction_journals.user_id', 'users.email', 'account_types.type as a_type', 'transaction_types.type']);
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                     ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+                                     ->leftJoin('users', 'users.id', '=', 'transaction_journals.user_id')
+                                     ->where('transaction_types.type', $transactionType)
+                                     ->whereIn('account_types.type', $accountTypes)
+                                     ->whereNull('transaction_journals.deleted_at')
+                                     ->get(
+                                         ['transaction_journals.id', 'transaction_journals.user_id', 'users.email', 'account_types.type as a_type',
+                                          'transaction_types.type']
+                                     );
             foreach ($set as $entry) {
                 $this->error(
                     sprintf(
@@ -215,17 +216,17 @@ class VerifyDatabase extends Command
     private function reportJournals()
     {
         $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNotNull('transaction_journals.deleted_at')// USE THIS
-            ->whereNull('transactions.deleted_at')
-            ->whereNotNull('transactions.id')
-            ->get(
-                [
-                    'transaction_journals.id as journal_id',
-                    'transaction_journals.description',
-                    'transaction_journals.deleted_at as journal_deleted',
-                    'transactions.id as transaction_id',
-                    'transactions.deleted_at as transaction_deleted_at']
-            );
+                                 ->whereNotNull('transaction_journals.deleted_at')// USE THIS
+                                 ->whereNull('transactions.deleted_at')
+                                 ->whereNotNull('transactions.id')
+                                 ->get(
+                                     [
+                                         'transaction_journals.id as journal_id',
+                                         'transaction_journals.description',
+                                         'transaction_journals.deleted_at as journal_deleted',
+                                         'transactions.id as transaction_id',
+                                         'transactions.deleted_at as transaction_deleted_at']
+                                 );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->error(
@@ -241,9 +242,9 @@ class VerifyDatabase extends Command
     private function reportNoTransactions()
     {
         $set = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->groupBy('transaction_journals.id')
-            ->whereNull('transactions.transaction_journal_id')
-            ->get(['transaction_journals.id']);
+                                 ->groupBy('transaction_journals.id')
+                                 ->whereNull('transactions.transaction_journal_id')
+                                 ->get(['transaction_journals.id']);
 
         foreach ($set as $entry) {
             $this->error(
@@ -262,11 +263,11 @@ class VerifyDatabase extends Command
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
         $field  = $name == 'tag' ? 'tag' : 'name';
         $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
-            ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull($name . '_transaction_journal.' . $name . '_id')
-            ->whereNull($plural . '.deleted_at')
-            ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
+                        ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
+                        ->distinct()
+                        ->whereNull($name . '_transaction_journal.' . $name . '_id')
+                        ->whereNull($plural . '.deleted_at')
+                        ->get([$plural . '.id', $plural . '.' . $field . ' as name', $plural . '.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -309,12 +310,12 @@ class VerifyDatabase extends Command
     private function reportTransactions()
     {
         $set = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNotNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->get(
-                ['transactions.id as transaction_id', 'transactions.deleted_at as transaction_deleted', 'transaction_journals.id as journal_id',
-                 'transaction_journals.deleted_at']
-            );
+                          ->whereNotNull('transactions.deleted_at')
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->get(
+                              ['transactions.id as transaction_id', 'transactions.deleted_at as transaction_deleted', 'transaction_journals.id as journal_id',
+                               'transaction_journals.deleted_at']
+                          );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $this->error(
@@ -330,10 +331,10 @@ class VerifyDatabase extends Command
     private function reportTransfersBudgets()
     {
         $set = TransactionJournal::distinct()
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-            ->where('transaction_types.type', TransactionType::TRANSFER)
-            ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.id']);
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
+                                 ->where('transaction_types.type', TransactionType::TRANSFER)
+                                 ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.id']);
 
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {

@@ -433,7 +433,7 @@ class CsvSetup implements SetupInterface
      *
      * @return array
      */
-    private function getDataForColumnRoles():array
+    private function getDataForColumnRoles(): array
     {
         Log::debug('Now in getDataForColumnRoles()');
         $config = $this->job->configuration;

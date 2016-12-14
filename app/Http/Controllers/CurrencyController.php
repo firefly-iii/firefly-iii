@@ -121,7 +121,7 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(CurrencyRepositoryInterface $repository,  TransactionCurrency $currency)
+    public function destroy(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         if (!$repository->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
@@ -170,7 +170,7 @@ class CurrencyController extends Controller
 
 
         if (!auth()->user()->hasRole('owner')) {
-            Session::flash('warning', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            Session::flash('warning', trans('firefly.ask_site_owner', ['site_owner' => env('SITE_OWNER')]));
         }
 
 

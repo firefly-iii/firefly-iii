@@ -22,17 +22,6 @@ interface GeneratorInterface
 {
 
     /**
-     * Expects data as:
-     *
-     * key => value
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    public function pieChart(array $data): array;
-
-    /**
      * Will generate a (ChartJS) compatible array from the given input. Expects this format:
      *
      * 0: [
@@ -56,6 +45,17 @@ interface GeneratorInterface
      * @return array
      */
     public function multiSet(array $data): array;
+
+    /**
+     * Expects data as:
+     *
+     * key => value
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function pieChart(array $data): array;
 
     /**
      * Will generate a (ChartJS) compatible array from the given input. Expects this format:

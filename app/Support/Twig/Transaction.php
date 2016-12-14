@@ -110,9 +110,9 @@ class Transaction extends Twig_Extension
 
             $amount = strval(
                 TransactionModel::where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->where('amount', '<', 0)
-                    ->sum('amount')
+                                ->whereNull('deleted_at')
+                                ->where('amount', '<', 0)
+                                ->sum('amount')
             );
 
             if ($type === TransactionType::DEPOSIT || $type === TransactionType::TRANSFER) {
@@ -203,10 +203,10 @@ class Transaction extends Twig_Extension
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
                 $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                    ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+                                         ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
+                                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                         ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
                 $name  = intval($other->encrypted) === 1 ? Crypt::decrypt($other->name) : $other->name;
                 $id    = $other->account_id;
                 $type  = $other->type;
@@ -275,10 +275,10 @@ class Transaction extends Twig_Extension
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
                 $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                    ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+                                         ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
+                                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                         ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
                 $name  = intval($other->encrypted) === 1 ? Crypt::decrypt($other->name) : $other->name;
                 $id    = $other->account_id;
                 $type  = $other->type;

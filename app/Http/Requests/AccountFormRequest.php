@@ -80,7 +80,7 @@ class AccountFormRequest extends Request
             'name'                              => $nameRule,
             'openingBalance'                    => 'numeric',
             'iban'                              => 'iban',
-            'BIC'                              => 'bic',
+            'BIC'                               => 'bic',
             'virtualBalance'                    => 'numeric',
             'openingBalanceDate'                => 'date',
             'currency_id'                       => 'exists:transaction_currencies,id',

@@ -73,10 +73,10 @@ class UpgradeDatabase extends Command
 
 
         $subQuery = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereNull('transactions.deleted_at')
-            ->groupBy(['transaction_journals.id'])
-            ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
+                                      ->whereNull('transaction_journals.deleted_at')
+                                      ->whereNull('transactions.deleted_at')
+                                      ->groupBy(['transaction_journals.id'])
+                                      ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
 
         $result     = DB::table(DB::raw('(' . $subQuery->toSql() . ') AS derived'))
                         ->mergeBindings($subQuery->getQuery())
@@ -98,9 +98,9 @@ class UpgradeDatabase extends Command
                 try {
                     /** @var Transaction $opposing */
                     $opposing = Transaction::where('transaction_journal_id', $journalId)
-                        ->where('amount', $amount)->where('identifier', '=', 0)
-                        ->whereNotIn('id', $processed)
-                        ->first();
+                                           ->where('amount', $amount)->where('identifier', '=', 0)
+                                           ->whereNotIn('id', $processed)
+                                           ->first();
                 } catch (QueryException $e) {
                     Log::error($e->getMessage());
                     $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');

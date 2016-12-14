@@ -147,6 +147,35 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
      *
      * @return array
      */
+    public function pieChart(array $entries): array
+    {
+        $data  = [
+            'datasets' => [
+                0 => [],
+            ],
+            'labels'   => [],
+        ];
+        $index = 0;
+        foreach ($entries as $entry) {
+
+            if (bccomp($entry['amount'], '0') === -1) {
+                $entry['amount'] = bcmul($entry['amount'], '-1');
+            }
+
+            $data['datasets'][0]['data'][]            = round($entry['amount'], 2);
+            $data['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $data['labels'][]                         = $entry['name'];
+            $index++;
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
     public function reportPeriod(array $entries): array
     {
 
@@ -175,35 +204,6 @@ class ChartJsCategoryChartGenerator implements CategoryChartGeneratorInterface
 
         return $data;
 
-    }
-
-    /**
-     * @param array $entries
-     *
-     * @return array
-     */
-    public function pieChart(array $entries): array
-    {
-        $data  = [
-            'datasets' => [
-                0 => [],
-            ],
-            'labels'   => [],
-        ];
-        $index = 0;
-        foreach ($entries as $entry) {
-
-            if (bccomp($entry['amount'], '0') === -1) {
-                $entry['amount'] = bcmul($entry['amount'], '-1');
-            }
-
-            $data['datasets'][0]['data'][]            = round($entry['amount'], 2);
-            $data['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
-            $data['labels'][]                         = $entry['name'];
-            $index++;
-        }
-
-        return $data;
     }
 
 }

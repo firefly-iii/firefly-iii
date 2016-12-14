@@ -208,7 +208,7 @@ class HomeController extends Controller
             'debugbar',
             'attachments.preview',
             'budgets.income',
-            'currencies.default'
+            'currencies.default',
 
 
         ];

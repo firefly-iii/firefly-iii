@@ -46,7 +46,7 @@ class Transaction extends Model
      *
      * @return bool
      */
-    public static function isJoined(Builder $query, string $table):bool
+    public static function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
         if (is_null($joins)) {

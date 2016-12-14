@@ -204,7 +204,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('period');
         if ($cache->has()) {
-             return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         // the expenses:
@@ -274,15 +274,15 @@ class BudgetController extends Controller
         }
 
         // the expenses:
-        $periods  = Navigation::listOfPeriods($start, $end);
-        $entries  = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
+        $periods = Navigation::listOfPeriods($start, $end);
+        $entries = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
 
         // join them:
         $result = [];
         foreach (array_keys($periods) as $period) {
             $nice          = $periods[$period];
             $result[$nice] = [
-                'spent'    => isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0',
+                'spent' => isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0',
             ];
         }
 

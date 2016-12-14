@@ -14,11 +14,11 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
 use Config;
+use FireflyConfig;
 use FireflyIII\Events\BlockedUseOfDomain;
 use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -112,7 +112,6 @@ class RegisterController extends Controller
             //$this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
-
 
 
         $user = $this->create($request->all());
