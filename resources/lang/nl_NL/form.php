@@ -155,11 +155,11 @@ return [
     'single_user_mode'           => 'Enkele gebruiker-modus',
     'must_confirm_account'       => 'Nieuwe gebruikers moeten hun account activeren',
     'is_demo_site'               => 'Is demo website',
-    'mail_for_lockout'           => 'Locked out',
-    'mail_for_blocked_domain'    => 'Blocked domain',
-    'mail_for_blocked_email'     => 'Blocked email address',
-    'mail_for_bad_login'         => 'Login failure',
-    'mail_for_blocked_login'     => 'Blocked user',
+    'mail_for_lockout'           => 'Tijdelijk niet inloggen',
+    'mail_for_blocked_domain'    => 'Geblokkeerd domein',
+    'mail_for_blocked_email'     => 'Geblokkeerd e-mailadres',
+    'mail_for_bad_login'         => 'Mislukte login',
+    'mail_for_blocked_login'     => 'Geblokkeerde gebruiker',
 
 
     // import
