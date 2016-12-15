@@ -719,6 +719,8 @@ return [
     'average_income_per_account'                 => 'Gemiddeld verdiend per rekening',
     'total'                                      => 'Totaal',
     'description'                                => 'Omschrijving',
+    'sum_of_period'                              => 'Sum of period',
+    'average_in_period'                          => 'Average in period',
 
 
     // charts:
