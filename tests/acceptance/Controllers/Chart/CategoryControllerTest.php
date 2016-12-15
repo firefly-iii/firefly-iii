@@ -32,6 +32,8 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::all
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testAll(string $range)
     {
@@ -44,6 +46,8 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::currentPeriod
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testCurrentPeriod(string $range)
     {
@@ -56,6 +60,8 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testFrontpage(string $range)
     {
@@ -86,8 +92,10 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\CategoryController::specificPeriod
+     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::specificPeriod
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testSpecificPeriod(string $range)
     {

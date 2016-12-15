@@ -235,6 +235,7 @@ class AccountController extends Controller
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
+
         $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));

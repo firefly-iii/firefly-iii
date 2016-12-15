@@ -30,8 +30,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::budget
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budget
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testBudget(string $range)
     {
@@ -42,8 +44,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testBudgetLimit(string $range)
     {
@@ -54,8 +58,10 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testFrontpage(string $range)
     {

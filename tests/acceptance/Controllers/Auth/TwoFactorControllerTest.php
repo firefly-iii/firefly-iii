@@ -13,7 +13,6 @@ namespace Auth;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\Support\Facades\Preferences;
-use Google2FA;
 use TestCase;
 
 /**
@@ -46,7 +45,6 @@ class TwoFactorControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
-        //$has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
         $this->call('get', route('two-factor.index'));
         $this->assertResponseStatus(200);
     }
@@ -65,7 +63,6 @@ class TwoFactorControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
-        //$has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
         $this->call('get', route('two-factor.lost'));
         $this->assertResponseStatus(200);
     }

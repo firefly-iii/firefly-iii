@@ -93,6 +93,8 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testNoCategory(string $range)
     {
@@ -107,6 +109,8 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testShow(string $range)
     {
@@ -120,6 +124,8 @@ class CategoryControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::showByDate
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testShowByDate(string $range)
     {

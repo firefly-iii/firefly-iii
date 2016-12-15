@@ -36,7 +36,7 @@ class BudgetControllerTest extends TestCase
             'amount' => 200,
         ];
         $this->be($this->user());
-        $this->call('post', route('budgets.amount', [1], $data));
+        $this->call('post', route('budgets.amount', [1]), $data);
         $this->assertResponseStatus(200);
     }
 
@@ -94,6 +94,8 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::index
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testIndex(string $range)
     {
@@ -108,6 +110,8 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::noBudget
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testNoBudget(string $range)
     {
@@ -135,6 +139,8 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::show
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testShow(string $range)
     {
@@ -148,6 +154,8 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::showByRepetition
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testShowByRepetition(string $range)
     {

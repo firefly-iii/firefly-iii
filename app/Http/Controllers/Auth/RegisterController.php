@@ -96,7 +96,6 @@ class RegisterController extends Controller
             $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
 
             event(new BlockedUseOfDomain($data['email'], $request->ip()));
-            // $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
 
@@ -109,7 +108,6 @@ class RegisterController extends Controller
         if (in_array($hash, $set)) {
             $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
             event(new BlockedUseOfEmail($data['email'], $request->ip()));
-            //$this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
             $this->throwValidationException($request, $validator);
         }
 
@@ -217,31 +215,4 @@ class RegisterController extends Controller
         return false;
     }
 
-    /**
-     * Send a message home about a blocked domain and the address attempted to register.
-     *
-     * @param string $registrationMail
-     * @param string $ipAddress
-     */
-    private function reportBlockedDomainRegistrationAttempt(string $registrationMail, string $ipAddress)
-    {
-        try {
-            $email  = env('SITE_OWNER', false);
-            $parts  = explode('@', $registrationMail);
-            $domain = $parts[1];
-            $fields = [
-                'email_address'  => $registrationMail,
-                'blocked_domain' => $domain,
-                'ip'             => $ipAddress,
-            ];
-
-            Mail::send(
-                ['emails.blocked-registration-html', 'emails.blocked-registration-text'], $fields, function (Message $message) use ($email, $domain) {
-                $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
-    }
 }

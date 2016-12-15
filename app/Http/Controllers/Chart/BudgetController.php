@@ -154,7 +154,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
         $budgets     = $repository->getActiveBudgets();
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
@@ -394,7 +394,6 @@ class BudgetController extends Controller
                 'repetition_overspent' => $overspent,
                 'spent'                => $spent,
             ];
-            //$array     = [$name, $left, $spent, $overspent, $amount, $spent];
         }
 
         return $return;

@@ -99,12 +99,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param ReportHelperInterface $helper
-     * @param Collection            $accounts
-     * @param Carbon                $start
-     * @param Carbon                $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
+     * @internal param ReportHelperInterface $helper
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {

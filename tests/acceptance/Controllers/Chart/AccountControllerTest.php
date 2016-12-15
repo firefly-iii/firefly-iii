@@ -32,6 +32,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testExpenseAccounts(string $range)
     {
@@ -44,6 +46,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseBudget
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testExpenseBudget(string $range)
     {
@@ -56,6 +60,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategory
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testExpenseCategory(string $range)
     {
@@ -68,6 +74,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::frontpage
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testFrontpage(string $range)
     {
@@ -80,6 +88,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::incomeCategory
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testIncomeCategory(string $range)
     {
@@ -92,6 +102,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::period
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testPeriod(string $range)
     {
@@ -114,6 +126,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::revenueAccounts
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testRevenueAccounts(string $range)
     {
@@ -126,6 +140,8 @@ class AccountControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::single
      * @dataProvider dateRangeProvider
+     *
+     * @param string $range
      */
     public function testSingle(string $range)
     {

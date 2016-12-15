@@ -72,7 +72,7 @@ class OperationsController extends Controller
         $cache->addProperty('income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get();
+            return $cache->get();
         }
         $income = $this->getIncomeReport($start, $end, $accounts);
 
