@@ -727,6 +727,8 @@ return [
     'month'                                      => 'Mês',
     'budget'                                     => 'Orçamento',
     'spent'                                      => 'Gasto',
+    'spent_in_budget'                            => 'Spent in budget',
+    'left_to_spend'                              => 'Left to spend',
     'earned'                                     => 'Ganho',
     'overspent'                                  => 'Gasto excedido',
     'left'                                       => 'Esquerda',
