@@ -24,7 +24,9 @@ class ChartJsGenerator implements GeneratorInterface
 {
 
     /**
-     * Will generate a Chart JS compatible array from the given input. Expects this format:
+     * Will generate a Chart JS compatible array from the given input. Expects this format
+     *
+     * Will take labels for all from first set.
      *
      * 0: [
      *    'label' => 'label of set',
