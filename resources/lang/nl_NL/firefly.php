@@ -847,7 +847,7 @@ return [
     'setting_is_demo_site'                 => 'Demo website',
     'setting_is_demo_site_explain'         => 'Als je dit aanzet doet jouw installatie alsof het een demo-site is, en dat kan problemen opleveren.',
     'setting_send_email_notifications'     => 'Stuur e-mail notificaties',
-    'setting_send_email_explain'           => 'Firefly III kan je email notificaties sturen over allerhande zaken. Deze worden gestuurd naar <code>: site_owner</code>. Dat e-mailadres kan je instellen in het <code>.env</code>-bestand.',
+    'setting_send_email_explain'           => 'Firefly III kan je email notificaties sturen over allerhande zaken. Deze worden gestuurd naar <code>:site_owner</code>. Dat e-mailadres kan je instellen in het <code>.env</code>-bestand.',
     'mail_for_lockout_help'                => 'Als een user tijdelijk niet mag inloggen',
     'mail_for_blocked_domain_help'         => 'Als een gebruiker wil registreren met een geblokkeerd domein',
     'mail_for_blocked_email_help'          => 'Als een gebruiker wil registreren met een geblokkeerd e-mailadres',
