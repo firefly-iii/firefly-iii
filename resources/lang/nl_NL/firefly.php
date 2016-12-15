@@ -719,6 +719,8 @@ return [
     'average_income_per_account'                 => 'Gemiddeld verdiend per rekening',
     'total'                                      => 'Totaal',
     'description'                                => 'Omschrijving',
+    'sum_of_period'                              => 'Som van periode',
+    'average_in_period'                          => 'Gemiddelde in periode',
 
 
     // charts:
@@ -727,8 +729,8 @@ return [
     'month'                                      => 'Maand',
     'budget'                                     => 'Budget',
     'spent'                                      => 'Uitgegeven',
-    'spent_in_budget'                            => 'Spent in budget',
-    'left_to_spend'                              => 'Left to spend',
+    'spent_in_budget'                            => 'Uitgegeven in budget',
+    'left_to_spend'                              => 'Over om uit te geven',
     'earned'                                     => 'Verdiend',
     'overspent'                                  => 'Teveel uitgegeven',
     'left'                                       => 'Over',
