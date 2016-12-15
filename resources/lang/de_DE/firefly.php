@@ -858,6 +858,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'mail_for_blocked_email_help'          => 'When a user tries to register using a blocked email address',
     'mail_for_bad_login_help'              => 'When a user fails to login',
     'mail_for_blocked_login_help'          => 'When a blocked user tries to login',
+    'block_code_bounced'                   => 'Email message(s) bounced',
+    'block_code_expired'                   => 'Demo account expired',
+    'no_block_code'                        => 'No reason for block or user not blocked',
 
 
     // split a transaction:
