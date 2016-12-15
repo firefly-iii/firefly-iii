@@ -76,7 +76,7 @@ return [
     'destination_account'   => 'Doelrekening',
 
     'accounts_count'        => 'Aantal rekeningen',
-    'journals_count'        => 'Number of transactions',
+    'journals_count'        => 'Aantal transacties',
     'attachments_count'     => 'Aantal bijlagen',
     'bills_count'           => 'Aantal contracten',
     'categories_count'      => 'Aantal categorieën',
