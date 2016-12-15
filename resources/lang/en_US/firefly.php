@@ -719,6 +719,8 @@ return [
     'average_income_per_account'                 => 'Average income per account',
     'total'                                      => 'Total',
     'description'                                => 'Description',
+    'sum_of_period'                              => 'Sum of period',
+    'average_in_period'                          => 'Average in period',
 
 
     // charts:
