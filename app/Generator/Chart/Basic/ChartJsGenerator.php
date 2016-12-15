@@ -52,11 +52,16 @@ class ChartJsGenerator implements GeneratorInterface
      */
     public function multiSet(array $data): array
     {
+        reset($data);
+        $first  = current($data);
+        $labels = array_keys($first['entries']);
+
         $chartData = [
             'count'    => count($data),
-            'labels'   => array_keys($data[0]['entries']), // take ALL labels from the first set.
+            'labels'   => $labels, // take ALL labels from the first set.
             'datasets' => [],
         ];
+        unset($first, $labels);
 
         foreach ($data as $set) {
             $chartData['datasets'][] = [

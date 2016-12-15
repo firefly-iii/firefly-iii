@@ -95,6 +95,7 @@ class CacheProperties
      */
     private function md5()
     {
+        $this->md5 = '';
         foreach ($this->properties as $property) {
 
             if ($property instanceof Collection || $property instanceof EloquentCollection) {
@@ -107,6 +108,12 @@ class CacheProperties
             }
             if (is_object($property)) {
                 $this->md5 .= $property->__toString();
+            }
+            if (is_bool($property) && $property === false) {
+                $this->md5 .= 'false';
+            }
+            if (is_bool($property) && $property === true) {
+                $this->md5 .= 'true';
             }
 
             $this->md5 .= json_encode($property);

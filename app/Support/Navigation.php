@@ -244,6 +244,28 @@ class Navigation
     }
 
     /**
+     * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
+     * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
+    {
+        $format = 'endOfDay';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'endOfMonth';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'endOfYear';
+        }
+        return $format;
+    }
+
+    /**
      * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
      * method returns "Y-m". If the date difference is larger, method returns "Y".
      *
@@ -261,6 +283,28 @@ class Navigation
 
         if ($start->diffInMonths($end) > 12) {
             $format = 'Y';
+        }
+        return $format;
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
+     * method returns "config.month". If the date difference is larger, method returns "config.year".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
+    {
+        $format = strval(trans('config.month_and_day'));
+        if ($start->diffInMonths($end) > 1) {
+            $format = strval(trans('config.month'));
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = strval(trans('config.year'));
         }
 
         return $format;
