@@ -727,6 +727,8 @@ return [
     'month'                                      => 'Month',
     'budget'                                     => 'Budget',
     'spent'                                      => 'Spent',
+    'spent_in_budget'                            => 'Spent in budget',
+    'left_to_spend'                              => 'Left to spend',
     'earned'                                     => 'Earned',
     'overspent'                                  => 'Overspent',
     'left'                                       => 'Left',
