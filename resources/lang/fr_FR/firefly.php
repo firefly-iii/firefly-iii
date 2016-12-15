@@ -727,6 +727,8 @@ return [
     'month'                                      => 'Mois',
     'budget'                                     => 'Budget',
     'spent'                                      => 'Dépensé',
+    'spent_in_budget'                            => 'Spent in budget',
+    'left_to_spend'                              => 'Left to spend',
     'earned'                                     => 'Gagné',
     'overspent'                                  => 'Overspent',
     'left'                                       => 'Gauche',
