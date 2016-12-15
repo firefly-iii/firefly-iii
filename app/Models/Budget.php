@@ -43,7 +43,7 @@ class Budget extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query  = Budget::orderBy('id');
+        $query  = self::orderBy('id');
         $search = $fields;
         unset($search['name']);
         foreach ($search as $name => $value) {
@@ -57,7 +57,7 @@ class Budget extends Model
             }
         }
         // create it!
-        $budget = Budget::create($fields);
+        $budget = self::create($fields);
 
         return $budget;
 

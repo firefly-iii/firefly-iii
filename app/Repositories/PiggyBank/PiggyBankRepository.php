@@ -136,8 +136,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function reset(): bool
     {
         // split query to make it work in sqlite:
-        $set = PiggyBank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
+        $set = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
                         ->where('accounts.user_id', $this->user->id)->get(['piggy_banks.*']);
         foreach ($set as $e) {
             $e->order = 0;

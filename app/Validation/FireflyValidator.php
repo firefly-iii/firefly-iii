@@ -296,8 +296,7 @@ class FireflyValidator extends Validator
     {
         $accountId = $this->data['id'] ?? 0;
 
-        $query = AccountMeta::
-        leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+        $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
                             ->where('accounts.user_id', auth()->user()->id)
                             ->where('account_meta.name', 'accountNumber');
 

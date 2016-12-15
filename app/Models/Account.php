@@ -61,7 +61,7 @@ class Account extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query  = Account::orderBy('id');
+        $query  = self::orderBy('id');
         $search = $fields;
         unset($search['name'], $search['iban']);
 
@@ -81,7 +81,7 @@ class Account extends Model
         }
 
         // create it!
-        $account = Account::create($fields);
+        $account = self::create($fields);
 
         return $account;
 

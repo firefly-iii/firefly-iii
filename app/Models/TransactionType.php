@@ -57,7 +57,7 @@ class TransactionType extends Model
      */
     public function isDeposit()
     {
-        return $this->type === TransactionType::DEPOSIT;
+        return $this->type === self::DEPOSIT;
     }
 
     /**
@@ -65,7 +65,7 @@ class TransactionType extends Model
      */
     public function isOpeningBalance()
     {
-        return $this->type === TransactionType::OPENING_BALANCE;
+        return $this->type === self::OPENING_BALANCE;
     }
 
     /**
@@ -73,7 +73,7 @@ class TransactionType extends Model
      */
     public function isTransfer()
     {
-        return $this->type === TransactionType::TRANSFER;
+        return $this->type === self::TRANSFER;
     }
 
     /**
@@ -81,7 +81,7 @@ class TransactionType extends Model
      */
     public function isWithdrawal()
     {
-        return $this->type === TransactionType::WITHDRAWAL;
+        return $this->type === self::WITHDRAWAL;
     }
 
     /**
