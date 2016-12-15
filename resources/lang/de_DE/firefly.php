@@ -720,6 +720,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'average_income_per_account'                 => 'Durchschnittseinkommen pro Konto',
     'total'                                      => 'Gesamt',
     'description'                                => 'Beschreibung',
+    'sum_of_period'                              => 'Sum of period',
+    'average_in_period'                          => 'Average in period',
 
 
     // charts:
