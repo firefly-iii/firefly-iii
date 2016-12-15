@@ -242,20 +242,19 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($accounts);
         $cache->addProperty($budget->id);
-        $cache->addProperty('budget');
-        $cache->addProperty('period');
+        $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            //return Response::json($cache->get());
         }
 
-        // the expenses:
-        $periods  = Navigation::listOfPeriods($start, $end);
-        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end, false);
+        // get the expenses
         $budgeted = [];
+        $periods  = Navigation::listOfPeriods($start, $end);
+        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
         $key      = Navigation::preferredCarbonFormat($start, $end);
         $range    = Navigation::preferredRangeFormat($start, $end);
 
-        // get budgeted:
+        // get the budget limits (if any)
         $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
         $current     = clone $start;
         while ($current < $end) {
@@ -276,18 +275,31 @@ class BudgetController extends Controller
             $current = clone $currentEnd;
         }
 
-        // join them:
-        $result = [];
+        // join them into one set of data:
+        $chartData = [
+            [
+                'label'   => strval(trans('firefly.spent')),
+                'type'    => 'bar',
+                'entries' => [],
+            ],
+            [
+                'label'   => strval(trans('firefly.budgeted')),
+                'type'    => 'bar',
+                'entries' => [],
+            ],
+        ];
+
         foreach (array_keys($periods) as $period) {
-            $nice          = $periods[$period];
-            $result[$nice] = [
-                'spent'    => isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0',
-                'budgeted' => isset($entries[$period]) ? $budgeted[$period] : 0,
-            ];
+            $label                           = $periods[$period];
+            $spent                           = isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0';
+            $limit                           = isset($entries[$period]) ? $budgeted[$period] : 0;
+            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $chartData[1]['entries'][$label] = $limit;
+
         }
-
-        $data = $this->generator->period($result);
-
+        /** @var GeneratorInterface $generator */
+        $generator = app(GeneratorInterface::class);
+        $data      = $generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -308,27 +320,25 @@ class BudgetController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($accounts);
-        $cache->addProperty('no-budget');
-        $cache->addProperty('period');
+        $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            // return Response::json($cache->get());
         }
 
         // the expenses:
-        $periods = Navigation::listOfPeriods($start, $end);
-        $entries = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
+        $periods   = Navigation::listOfPeriods($start, $end);
+        $entries   = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
+        $chartData = [];
 
         // join them:
-        $result = [];
         foreach (array_keys($periods) as $period) {
-            $nice          = $periods[$period];
-            $result[$nice] = [
-                'spent' => isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0',
-            ];
+            $label             = $periods[$period];
+            $spent             = isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0';
+            $chartData[$label] = $spent;
         }
-
-        $data = $this->generator->periodNoBudget($result);
-
+        /** @var GeneratorInterface $generator */
+        $generator = app(GeneratorInterface::class);
+        $data      = $generator->singleSet(strval(trans('firefly.spent')), $chartData);
         $cache->store($data);
 
         return Response::json($data);
