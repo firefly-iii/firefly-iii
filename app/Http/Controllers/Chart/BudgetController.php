@@ -193,7 +193,7 @@ class BudgetController extends Controller
                 if (bccomp($row['spent'], '0') !== 0) {
                     $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
                     $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
-                    $chartData[2]['entries'][$row['name']] = $row['repetition_overspent'];
+                    $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
                 }
                 continue;
             }
@@ -202,7 +202,7 @@ class BudgetController extends Controller
                 if (bccomp($row['spent'], '0') !== 0) {
                     $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
                     $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
-                    $chartData[2]['entries'][$row['name']] = $row['repetition_overspent'];
+                    $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
                 }
             }
             unset($rows, $row);
@@ -213,7 +213,7 @@ class BudgetController extends Controller
         if (bccomp($row['spent'], '0') !== 0) {
             $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
             $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
-            $chartData[2]['entries'][$row['name']] = $row['repetition_overspent'];
+            $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
         }
 
         /** @var GeneratorInterface $generator */
