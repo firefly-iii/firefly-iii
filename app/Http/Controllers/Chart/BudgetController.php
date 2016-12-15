@@ -334,7 +334,7 @@ class BudgetController extends Controller
         foreach (array_keys($periods) as $period) {
             $label             = $periods[$period];
             $spent             = isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0';
-            $chartData[$label] = $spent;
+            $chartData[$label] = bcmul($spent, '-1');
         }
         /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);
