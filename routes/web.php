@@ -676,6 +676,7 @@ Route::group(
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);
     Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
+    Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
 
     // user domain manager
     Route::get('domains', ['uses' => 'DomainController@domains', 'as' => 'users.domains']);

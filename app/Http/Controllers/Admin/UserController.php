@@ -16,9 +16,12 @@ namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Preferences;
+use Session;
+use URL;
 use View;
 
 /**
@@ -53,10 +56,21 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (session('users.edit.fromUpdate') !== true) {
+            Session::put('users.edit.url', URL::previous());
+        }
+        Session::forget('users.edit.fromUpdate');
+
         $subTitle     = strval(trans('firefly.edit_user', ['email' => $user->email]));
         $subTitleIcon = 'fa-user-o';
+        $codes        = [
+            ''        => strval(trans('firefly.no_block_code')),
+            'bounced' => strval(trans('firefly.block_code_bounced')),
+            'expired' => strval(trans('firefly.block_code_expired')),
+        ];
 
-        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon'));
+        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes'));
 
     }
 
@@ -144,6 +158,42 @@ class UserController extends Controller
                 'user', 'registration', 'confirmation', 'registrationHost', 'confirmationHost'
             )
         );
+    }
+
+    /**
+     * @param UserFormRequest $request
+     * @param User            $user
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(UserFormRequest $request, User $user)
+    {
+        $data = $request->getUserData();
+
+        // update password
+        if (strlen($data['password']) > 0) {
+            $user->password = bcrypt($data['password']);
+            $user->save();
+        }
+
+        // change blocked status and code:
+        $user->blocked      = $data['blocked'];
+        $user->blocked_code = $data['blocked_code'];
+        $user->save();
+
+        Session::flash('success', strval(trans('firefly.updated_user', ['email' => $user->email])));
+        Preferences::mark();
+
+        if (intval($request->get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('users.edit.fromUpdate', true);
+
+            return redirect(route('admin.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return redirect(session('users.edit.url'));
+
     }
 
 

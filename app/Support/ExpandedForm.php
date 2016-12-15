@@ -348,6 +348,24 @@ class ExpandedForm
      *
      * @return string
      */
+    public function password(string $name, array $options = []): string
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $html    = view('form.password', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
     public function text(string $name, $value = null, array $options = []): string
     {
         $label   = $this->label($name, $options);

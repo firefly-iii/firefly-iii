@@ -12,6 +12,7 @@
 return [
     'buttons'               => 'Buttons',
     'icon'                  => 'Icon',
+    'id'                    => 'ID',
     'create_date'           => 'Created at',
     'update_date'           => 'Updated at',
     'balance_before'        => 'Balance before',
