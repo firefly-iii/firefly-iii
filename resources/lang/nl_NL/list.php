@@ -12,6 +12,7 @@
 return [
     'buttons'               => 'Knoppen',
     'icon'                  => 'Icoon',
+    'id'                    => 'ID',
     'create_date'           => 'Aangemaakt op',
     'update_date'           => 'Bijgewerkt op',
     'balance_before'        => 'Saldo voor',
