@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Chart\Budget\BudgetChartGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
@@ -37,7 +36,7 @@ use Response;
 class BudgetController extends Controller
 {
 
-    /** @var BudgetChartGeneratorInterface */
+    /** @var GeneratorInterface */
     protected $generator;
 
     /**
@@ -46,8 +45,7 @@ class BudgetController extends Controller
     public function __construct()
     {
         parent::__construct();
-        // create chart generator:
-        $this->generator = app(BudgetChartGeneratorInterface::class);
+        $this->generator = app(GeneratorInterface::class);
     }
 
     /**
@@ -92,9 +90,7 @@ class BudgetController extends Controller
             $first            = Navigation::addPeriod($first, $range, 0);
         }
 
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->singleSet(strval(trans('firefly.spent')), $entries);
+        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $entries);
 
         $cache->store($data);
 
@@ -135,9 +131,7 @@ class BudgetController extends Controller
 
             $start->addDay();
         }
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->singleSet(strval(trans('firefly.left')), $entries);
+        $data = $this->generator->singleSet(strval(trans('firefly.left')), $entries);
         $cache->store($data);
 
         return Response::json($data);
@@ -216,9 +210,7 @@ class BudgetController extends Controller
             $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
         }
 
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->multiSet($chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -244,7 +236,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            //return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         // get the expenses
@@ -297,9 +289,7 @@ class BudgetController extends Controller
             $chartData[1]['entries'][$label] = $limit;
 
         }
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->multiSet($chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -322,7 +312,7 @@ class BudgetController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            // return Response::json($cache->get());
+            return Response::json($cache->get());
         }
 
         // the expenses:
@@ -336,9 +326,7 @@ class BudgetController extends Controller
             $spent             = isset($entries['entries'][$period]) ? $entries['entries'][$period] : '0';
             $chartData[$label] = bcmul($spent, '-1');
         }
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-        $data      = $generator->singleSet(strval(trans('firefly.spent')), $chartData);
+        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
         $cache->store($data);
 
         return Response::json($data);
