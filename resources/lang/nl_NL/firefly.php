@@ -857,6 +857,9 @@ return [
     'mail_for_blocked_email_help'          => 'Als een gebruiker wil registreren met een geblokkeerd e-mailadres',
     'mail_for_bad_login_help'              => 'Als een user met de verkeerde gegevens probeert in te loggen',
     'mail_for_blocked_login_help'          => 'Als een geblokkeerde gebruiker probeert in te loggen',
+    'block_code_bounced'                   => 'Email kwam niet aan',
+    'block_code_expired'                   => 'Demo-account verlopen',
+    'no_block_code'                        => 'Geen reden of gebruiker niet geblokkeerd',
 
 
     // split a transaction:

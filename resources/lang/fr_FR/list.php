@@ -12,6 +12,7 @@
 return [
     'buttons'               => 'Boutons',
     'icon'                  => 'Icône',
+    'id'                    => 'ID',
     'create_date'           => 'Créé le',
     'update_date'           => 'Mis à jour le',
     'balance_before'        => 'Solde avant',
