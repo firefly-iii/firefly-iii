@@ -150,11 +150,11 @@ return [
     'category_keep_transactions' => 'De transactie verbonden aan deze categorie blijft bewaard.|De :count transacties verbonden aan deze categorie blijven bewaard.',
     'tag_keep_transactions'      => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
 
-    'email'                   => 'Email address',
-    'password'                => 'Password',
-    'password_confirmation'   => 'Password (again)',
-    'blocked'                 => 'Is blocked?',
-    'blocked_code'            => 'Reason for block',
+    'email'                   => 'E-mailadres',
+    'password'                => 'Wachtwoord',
+    'password_confirmation'   => 'Wachtwoord (nogmaals)',
+    'blocked'                 => 'Is geblokkeerd?',
+    'blocked_code'            => 'Reden voor blokkade',
 
 
     // admin
