@@ -13,16 +13,8 @@ $(function () {
     "use strict";
     drawChart();
 
-    $('#budgets-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('budgets-in-pie-chart', categoryIncomeUri);
-    });
-
     $('#budgets-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('budgets-out-pie-chart', categoryExpenseUri);
-    });
-
-    $('#accounts-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
+        redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
     });
 
     $('#accounts-out-pie-chart-checked').on('change', function () {
@@ -39,9 +31,7 @@ function drawChart() {
     stackedColumnChart(mainUri, 'in-out-chart');
 
     // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart('budgets-in-pie-chart', categoryIncomeUri);
-    redrawPieChart('budgets-out-pie-chart', categoryExpenseUri);
-    redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
+    redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
     redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
 
 

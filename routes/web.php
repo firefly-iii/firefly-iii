@@ -263,6 +263,21 @@ Route::group(
     Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
     Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
+
+    // these charts are used in reports (category reports):
+    Route::get(
+        'budget/expense/{accountList}/{budgetList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'BudgetReportController@budgetExpense', 'as' => 'budget-expense']
+    );
+    Route::get(
+        'account/expense/{accountList}/{budgetList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'BudgetReportController@accountExpense', 'as' => 'account-expense']
+    );
+
+    Route::get(
+        'operations/{accountList}/{budgetList}/{start_date}/{end_date}',
+        ['uses' => 'BudgetReportController@mainChart', 'as' => 'main']
+    );
 }
 );
 
@@ -298,7 +313,7 @@ Route::group(
     );
 
     Route::get(
-        'report-in-out/{accountList}/{categoryList}/{start_date}/{end_date}',
+        'operations/{accountList}/{categoryList}/{start_date}/{end_date}',
         ['uses' => 'CategoryReportController@mainChart', 'as' => 'main']
     );
 

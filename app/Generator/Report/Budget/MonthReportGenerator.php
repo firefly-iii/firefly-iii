@@ -58,7 +58,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     public function generate(): string
     {
         $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
-        $categoryIds     = join(',', $this->budgets->pluck('id')->toArray());
+        $budgetIds       = join(',', $this->budgets->pluck('id')->toArray());
         $expenses        = $this->getExpenses();
         $accountSummary  = $this->summarizeByAccount($expenses);
         $budgetSummary   = $this->summarizeByBudget($expenses);
@@ -66,7 +66,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $topExpenses     = $this->getTopExpenses();
 
         // render!
-        return view('reports.budget.month', compact('accountIds', 'categoryIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
+        return view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
             ->with('start', $this->start)->with('end', $this->end)
             ->with('budgets', $this->budgets)
             ->with('accounts', $this->accounts)
