@@ -9,6 +9,7 @@
  * See the LICENSE file for details.
  */
 use FireflyIII\Import\Setup\CsvSetup;
+use Illuminate\Http\UploadedFile;
 
 
 /**
@@ -124,7 +125,6 @@ class ImportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::settings
-     * Implement testSettings().
      */
     public function testSettings()
     {
@@ -139,14 +139,12 @@ class ImportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::start
-     * Implement testStart().
      */
     public function testStart()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('post', route('import.start', ['complete']));
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -155,21 +153,20 @@ class ImportControllerTest extends TestCase
      */
     public function testStatus()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        // complete
+        $this->be($this->user());
+        $this->call('get', route('import.status', ['complete']));
+        $this->assertResponseStatus(302);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::upload
-     * Implement testUpload().
      */
     public function testUpload()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $path = resource_path('stubs/csv.csv');
+        $file = new UploadedFile($path, 'upload.csv', filesize($path), 'text/csv', null, true);
+        $this->call('POST', route('import.upload'), [], [], ['import_file' => $file], ['Accept' => 'application/json']);
+        $this->assertResponseStatus(302);
     }
 }

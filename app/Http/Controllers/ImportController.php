@@ -318,7 +318,8 @@ class ImportController extends Controller
     {
         set_time_limit(0);
         if ($job->status == 'settings_complete') {
-            ImportProcedure::runImport($job);
+            $importProcedure = new ImportProcedure;
+            $importProcedure->runImport($job);
         }
     }
 

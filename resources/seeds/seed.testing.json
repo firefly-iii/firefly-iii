@@ -1085,6 +1085,10 @@
         "importTag": 0
       },
       "configuration": {
+        "has-headers": false,
+        "date-format": "Ymd",
+        "delimiter": ",",
+        "import-account": 1
       }
     },
     {

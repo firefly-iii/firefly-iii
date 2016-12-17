@@ -292,9 +292,12 @@ class TestData
      */
     private function createImportJobs()
     {
+
+        $disk   = Storage::disk('upload');
         $insert = [];
         foreach ($this->data['import-jobs'] as $job) {
-            $insert[] = [
+            $insert[]
+                = [
                 'created_at'      => $this->time,
                 'updated_at'      => $this->time,
                 'user_id'         => $job['user_id'],
@@ -304,6 +307,8 @@ class TestData
                 'extended_status' => json_encode($job['extended_status']),
                 'configuration'   => json_encode($job['configuration']),
             ];
+
+            $disk->put($job['key'] . '.upload', Crypt::encrypt(''));
         }
         DB::table('import_jobs')->insert($insert);
     }

@@ -31,7 +31,7 @@ class ImportProcedure
      *
      * @return Collection
      */
-    public static function runImport(ImportJob $job): Collection
+    public function runImport(ImportJob $job): Collection
     {
         // update job to say we started.
         $job->status = 'import_running';
