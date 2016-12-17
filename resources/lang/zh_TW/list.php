@@ -12,6 +12,7 @@
 return [
     'buttons'               => '按鈕',
     'icon'                  => '圖標',
+    'id'                    => 'ID',
     'create_date'           => '建立於',
     'update_date'           => '更新於',
     'balance_before'        => '交易前餘額',
