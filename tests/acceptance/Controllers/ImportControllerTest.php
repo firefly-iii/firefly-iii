@@ -8,6 +8,7 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Import\Setup\CsvSetup;
 
 
 /**
@@ -28,98 +29,97 @@ class ImportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::complete
-     * Implement testComplete().
      */
     public function testComplete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('import.complete', ['complete']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::configure
-     * Implement testConfigure().
      */
     public function testConfigure()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('import.configure', ['configure']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::download
-     * Implement testDownload().
      */
     public function testDownload()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('import.download', ['configure']));
+        $this->assertResponseStatus(200);
+        $this->see('[]');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::finished
-     * Implement testFinished().
      */
     public function testFinished()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('import.finished', ['finished']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('import.index'));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::json
-     * Implement testJson().
      */
     public function testJson()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('GET', route('import.json', ['configure']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::postConfigure
-     * Implement testPostConfigure().
      */
     public function testPostConfigure()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $importer = $this->mock(CsvSetup::class);
+        $importer->shouldReceive('setJob')->once();
+        $importer->shouldReceive('saveImportConfiguration')->once();
+
+        $data = [];
+        $this->be($this->user());
+        $this->call('post', route('import.process-configuration', ['p-configure']), $data);
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('import.settings', ['p-configure']);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::postSettings
-     * Implement testPostSettings().
      */
     public function testPostSettings()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $importer = $this->mock(CsvSetup::class);
+        $importer->shouldReceive('setJob')->once();
+        $importer->shouldReceive('storeSettings')->once();
+        $data = [];
+        $this->be($this->user());
+        $this->call('post', route('import.post-settings', ['p-settings']), $data);
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('import.settings', ['p-settings']);
     }
 
     /**
@@ -128,10 +128,13 @@ class ImportControllerTest extends TestCase
      */
     public function testSettings()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $importer = $this->mock(CsvSetup::class);
+        $importer->shouldReceive('setJob')->once();
+        $importer->shouldReceive('requireUserSettings')->once()->andReturn(false);
+        $this->be($this->user());
+        $this->call('get', route('import.settings', ['settings']));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('import.complete', ['settings']);
     }
 
     /**
@@ -168,13 +171,5 @@ class ImportControllerTest extends TestCase
         $this->markTestIncomplete(
             'This test has not been implemented yet.'
         );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
     }
 }

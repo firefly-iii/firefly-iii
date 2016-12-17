@@ -18,6 +18,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Rule;
@@ -417,13 +418,41 @@ Breadcrumbs::register(
 );
 
 /**
+ * IMPORT
+ */
+Breadcrumbs::register(
+    'import.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.import'), route('import.index'));
+}
+);
+Breadcrumbs::register(
+    'import.complete', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
+    $breadcrumbs->parent('import.index');
+    $breadcrumbs->push(trans('firefly.bread_crumb_import_complete', ['key' => $job->key]), route('import.complete', [$job->key]));
+}
+);
+Breadcrumbs::register(
+    'import.configure', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
+    $breadcrumbs->parent('import.index');
+    $breadcrumbs->push(trans('firefly.bread_crumb_configure_import', ['key' => $job->key]), route('import.configure', [$job->key]));
+}
+);
+Breadcrumbs::register(
+    'import.finished', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
+    $breadcrumbs->parent('import.index');
+    $breadcrumbs->push(trans('firefly.bread_crumb_import_finished', ['key' => $job->key]), route('import.finished', [$job->key]));
+}
+);
+
+
+/**
  * PREFERENCES
  */
 Breadcrumbs::register(
     'preferences.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push(trans('breadcrumbs.preferences'), route('preferences.index'));
-
 }
 );
 

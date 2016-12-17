@@ -1070,6 +1070,97 @@
         },
         "column-mapping-complete": false
       }
+    },
+
+    {
+      "user_id": 1,
+      "key": "complete",
+      "file_type": "csv",
+      "status": "settings_complete",
+      "extended_status": {
+        "steps_done": 0,
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0,
+        "importTag": 0
+      },
+      "configuration": {
+      }
+    },
+    {
+      "user_id": 1,
+      "key": "configure",
+      "file_type": "csv",
+      "status": "import_status_never_started",
+      "extended_status": {
+        "steps_done": 0,
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0,
+        "importTag": 0
+      },
+      "configuration": {
+      }
+    },
+    {
+      "user_id": 1,
+      "key": "settings",
+      "file_type": "csv",
+      "status": "import_configuration_saved",
+      "extended_status": {
+        "steps_done": 0,
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0,
+        "importTag": 0
+      },
+      "configuration": {
+      }
+    },
+    {
+      "user_id": 1,
+      "key": "p-settings",
+      "file_type": "csv",
+      "status": "import_configuration_saved",
+      "extended_status": {
+        "steps_done": 0,
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0,
+        "importTag": 0
+      },
+      "configuration": {
+      }
+    },
+    {
+      "user_id": 1,
+      "key": "p-configure",
+      "file_type": "csv",
+      "status": "import_status_never_started",
+      "extended_status": {
+        "steps_done": 0,
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0,
+        "importTag": 0
+      },
+      "configuration": {
+      }
+    },
+    {
+      "user_id": 1,
+      "key": "finished",
+      "file_type": "csv",
+      "status": "import_complete",
+      "extended_status": {
+        "steps_done": 0,
+        "total_steps": 0,
+        "errors": [],
+        "import_count": 0,
+        "importTag": 0
+      },
+      "configuration": {
+      }
     }
   ],
   "export-jobs": [
