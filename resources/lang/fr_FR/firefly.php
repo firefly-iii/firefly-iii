@@ -632,10 +632,10 @@ return [
     'errors'                                     => 'Erreurs',
 
     // reports:
-    'report_default'                             => 'Rapport financier par défaut du :start au :end',
-    'report_audit'                               => 'Historique des transactions du :start au :end',
-    'report_category'                            => 'Category report for :start until :end',
-    'report_budget'                              => 'Budget report for :start until :end',
+    'report_default'                             => 'Default financial report between :start and :end',
+    'report_audit'                               => 'Transaction history overview between :start and :end',
+    'report_category'                            => 'Category report between :start and :end',
+    'report_budget'                              => 'Budget report between :start and :end',
     'quick_link_reports'                         => 'Liens rapides',
     'quick_link_default_report'                  => 'Rapport financier par défaut',
     'quick_link_audit_report'                    => 'Historique des transactions',
