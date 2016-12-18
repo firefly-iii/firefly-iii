@@ -49,6 +49,13 @@ interface UserRepositoryInterface
     public function count(): int;
 
     /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function destroy(User $user): bool;
+
+    /**
      * @param int $userId
      *
      * @return User

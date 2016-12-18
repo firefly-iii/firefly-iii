@@ -211,7 +211,6 @@ class BillRepository implements BillRepositoryInterface
                 $sum        = bcadd($sum, $amount);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $amount, $sum));
             }
-            Log::debug('---');
         }
 
         return $sum;
@@ -245,7 +244,6 @@ class BillRepository implements BillRepositoryInterface
                 $sum     = bcadd($sum, $multi);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $multi, $sum));
             }
-            Log::debug('---');
         }
 
         return $sum;

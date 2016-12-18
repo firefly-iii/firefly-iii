@@ -11,6 +11,10 @@
 
 namespace Auth;
 
+use FireflyIII\Models\Configuration;
+use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use TestCase;
 
 /**
@@ -31,45 +35,77 @@ class ConfirmationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ConfirmationController::confirmationError
-     * Implement testConfirmationError().
      */
     public function testConfirmationError()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        // need a user that is not activated. And site must require activated users.
+        $trueConfig            = new Configuration;
+        $trueConfig->data      = true;
+        $falsePreference       = new Preference;
+        $falsePreference->data = false;
+
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
+
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->andReturn($trueConfig);
+        $this->be($this->user());
+        $this->call('GET', route('confirmation_error'));
+        $this->assertResponseStatus(200);
+        $this->see('has been sent to the address you used during your registration');
+
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ConfirmationController::doConfirmation
-     * Implement testDoConfirmation().
      */
     public function testDoConfirmation()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $codePreference        = new Preference;
+        $codePreference->data  = 'abcde';
+        $timePreference        = new Preference;
+        $timePreference->data  = 0;
+        $falsePreference       = new Preference;
+        $falsePreference->data = false;
+
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed_code'])->andReturn($codePreference);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed_last_mail', 0])->andReturn($timePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
+
+        $this->be($this->user());
+        $this->call('GET', route('do_confirm_account', ['abcde']));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('home');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\ConfirmationController::resendConfirmation
-     * Implement testResendConfirmation().
      */
     public function testResendConfirmation()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $trueConfig            = new Configuration;
+        $trueConfig->data      = true;
+        $codePreference        = new Preference;
+        $codePreference->data  = 'abcde';
+        $timePreference        = new Preference;
+        $timePreference->data  = 0;
+        $falsePreference       = new Preference;
+        $falsePreference->data = false;
+
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed_last_mail', 0])->andReturn($timePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
+        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->andReturn($trueConfig);
+        Preferences::shouldReceive('get')->withArgs(['user_confirmed', false])->andReturn($falsePreference);
+
+        // from event handler:
+        Preferences::shouldReceive('setForUser')->withAnyArgs();
+
+        $this->be($this->user());
+        $this->call('GET', route('resend_confirmation'));
+        $this->assertResponseStatus(200);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

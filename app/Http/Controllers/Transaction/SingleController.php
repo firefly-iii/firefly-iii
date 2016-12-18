@@ -184,7 +184,7 @@ class SingleController extends Controller
 
         $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
         $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
-        $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);

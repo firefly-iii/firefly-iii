@@ -159,8 +159,7 @@ class Steam
             return $cache->get();
         }
 
-        $balances = Transaction::
-        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $balances = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)

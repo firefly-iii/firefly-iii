@@ -1,11 +1,11 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journals) }}
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.mass-update') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('transactions.mass.update') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">

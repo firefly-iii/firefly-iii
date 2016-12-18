@@ -12,6 +12,7 @@
 return [
     'buttons'               => '按鈕',
     'icon'                  => '圖標',
+    'id'                    => 'ID',
     'create_date'           => '建立於',
     'update_date'           => '更新於',
     'balance_before'        => '交易前餘額',
@@ -76,7 +77,7 @@ return [
     'destination_account'   => 'Destination account',
 
     'accounts_count'        => 'Number of accounts',
-    'journals_count'        => 'Number of journals',
+    'journals_count'        => 'Number of transactions',
     'attachments_count'     => 'Number of attachments',
     'bills_count'           => 'Number of bills',
     'categories_count'      => 'Number of categories',

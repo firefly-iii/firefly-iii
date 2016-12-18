@@ -31,7 +31,7 @@ function goToMassEdit() {
     var checkedArray = getCheckboxes();
 
     // go to specially crafted URL:
-    window.location.href = 'transactions/mass-edit/' + checkedArray;
+    window.location.href = 'transactions/mass/edit/' + checkedArray;
     return false;
 }
 
@@ -40,7 +40,7 @@ function goToMassDelete() {
     var checkedArray = getCheckboxes();
 
     // go to specially crafted URL:
-    window.location.href = 'transactions/mass-delete/' + checkedArray;
+    window.location.href = 'transactions/mass/delete/' + checkedArray;
     return false;
 }
 

@@ -37,7 +37,7 @@ class BasicConverter
     /**
      * @return int
      */
-    public function getCertainty():int
+    public function getCertainty(): int
     {
         return $this->certainty;
     }

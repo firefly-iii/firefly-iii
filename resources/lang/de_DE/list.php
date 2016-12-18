@@ -12,6 +12,7 @@
 return [
     'buttons'               => 'Schaltfläche',
     'icon'                  => 'Icon',
+    'id'                    => 'ID',
     'create_date'           => 'Erstellt am',
     'update_date'           => 'Aktualisiert am',
     'balance_before'        => 'Bilanz vor',
@@ -76,7 +77,7 @@ return [
     'destination_account'   => 'Zielkonto',
 
     'accounts_count'        => 'Anzahl Konten',
-    'journals_count'        => 'Anzahl Transaktionen',
+    'journals_count'        => 'Anzahl der Zahlungsvorgänge',
     'attachments_count'     => 'Anzahl Anhänge',
     'bills_count'           => 'Anzahl Rechnungen',
     'categories_count'      => 'Anzahl Kategorien',

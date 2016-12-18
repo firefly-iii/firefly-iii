@@ -20,6 +20,7 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Requests\ReportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
@@ -89,6 +90,42 @@ class ReportController extends Controller
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
+        $result = $generator->generate();
+
+        return $result;
+
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
+        }
+
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_budget',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+        $generator = ReportGeneratorFactory::reportGenerator('Budget', $start, $end);
+        $generator->setAccounts($accounts);
+        $generator->setBudgets($budgets);
         $result = $generator->generate();
 
         return $result;
@@ -198,6 +235,9 @@ class ReportController extends Controller
             case 'category':
                 $result = $this->categoryReportOptions();
                 break;
+            case 'budget':
+                $result = $this->budgetReportOptions();
+                break;
         }
 
         return Response::json(['html' => $result]);
@@ -217,6 +257,7 @@ class ReportController extends Controller
         $end        = $request->getEndDate()->format('Ymd');
         $accounts   = join(',', $request->getAccountList()->pluck('id')->toArray());
         $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
+        $budgets    = join(',', $request->getBudgetList()->pluck('id')->toArray());
 
         if ($request->getAccountList()->count() === 0) {
             Session::flash('error', trans('firefly.select_more_than_one_account'));
@@ -226,6 +267,12 @@ class ReportController extends Controller
 
         if ($request->getCategoryList()->count() === 0 && $reportType === 'category') {
             Session::flash('error', trans('firefly.select_more_than_one_category'));
+
+            return redirect(route('reports.index'));
+        }
+
+        if ($request->getBudgetList()->count() === 0 && $reportType === 'budget') {
+            Session::flash('error', trans('firefly.select_more_than_one_budget'));
 
             return redirect(route('reports.index'));
         }
@@ -251,9 +298,26 @@ class ReportController extends Controller
             case 'audit':
                 $uri = route('reports.report.audit', [$accounts, $start, $end]);
                 break;
+            case 'budget':
+                $uri = route('reports.report.budget', [$accounts, $budgets, $start, $end]);
+                break;
         }
 
         return redirect($uri);
+    }
+
+    /**
+     * @return string
+     */
+    private function budgetReportOptions(): string
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $budgets    = $repository->getBudgets();
+        $result     = view('reports.options.budget', compact('budgets'))->render();
+
+        return $result;
+
     }
 
     /**

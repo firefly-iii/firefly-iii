@@ -89,14 +89,16 @@ class CurrencyController extends Controller
 
     }
 
+
     /**
-     * @param TransactionCurrency $currency
+     * @param CurrencyRepositoryInterface $repository
+     * @param TransactionCurrency         $currency
      *
-     * @return \Illuminate\Http\RedirectResponse|View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function delete(TransactionCurrency $currency)
+    public function delete(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
-        if (!$this->canDeleteCurrency($currency)) {
+        if (!$repository->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currencies.index'));
@@ -114,23 +116,21 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param CurrencyRepositoryInterface $repository
+     * @param TransactionCurrency         $currency
      *
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(TransactionCurrency $currency)
+    public function destroy(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
-        if (!$this->canDeleteCurrency($currency)) {
+        if (!$repository->canDeleteCurrency($currency)) {
             Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currencies.index'));
         }
 
+        $repository->destroy($currency);
         Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
-        if (auth()->user()->hasRole('owner')) {
-            $currency->forceDelete();
-        }
 
         return redirect(session('currencies.delete.url'));
     }
@@ -170,7 +170,7 @@ class CurrencyController extends Controller
 
 
         if (!auth()->user()->hasRole('owner')) {
-            Session::flash('warning', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            Session::flash('warning', trans('firefly.ask_site_owner', ['site_owner' => env('SITE_OWNER')]));
         }
 
 
@@ -235,40 +235,4 @@ class CurrencyController extends Controller
         return redirect(session('currencies.edit.url'));
 
     }
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
-    private function canDeleteCurrency(TransactionCurrency $currency): bool
-    {
-        $repository = app(CurrencyRepositoryInterface::class);
-
-        // has transactions still
-        if ($repository->countJournals($currency) > 0) {
-            return false;
-        }
-
-        // is the only currency left
-        if ($repository->get()->count() === 1) {
-            return false;
-        }
-
-        // is the default currency for the user or the system
-        $defaultCode = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'))->data;
-        if ($currency->code === $defaultCode) {
-            return false;
-        }
-
-        // is the default currency for the system
-        $defaultSystemCode = config('firefly.default_currency', 'EUR');
-        if ($currency->code === $defaultSystemCode) {
-            return false;
-        }
-
-        // can be deleted
-        return true;
-    }
-
 }

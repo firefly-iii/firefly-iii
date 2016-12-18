@@ -2,7 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.2.1] - 2015-05-25
+## [4.2.2] - 2016-12-18
+### Added
+- New budget report (still a bit of a beta)
+- Can now edit user
+
+### Changed
+- New config for specific events. Still need to build Notifications.
+
+### Fixed
+- Various bugs
+- Issue #472 thanks to @zjean
+
+## [4.2.1] - 2016-12-09
 ### Added
 - BIC support (see #430)
 - New category report section and chart (see the general financial report)

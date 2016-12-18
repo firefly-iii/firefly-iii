@@ -14,17 +14,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use Crypt;
-use DB;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
-use stdClass;
 use Steam;
 
 /**

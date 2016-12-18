@@ -1,0 +1,8 @@
+<p>
+    {{ 'select_budget'|_ }}
+</p>
+{% for budget in budgets %}
+<label class="checkbox-inline">
+    <input type="checkbox" class="budget-checkbox" name="budget[]" value="{{ budget.id }}"> {{ budget.name }}
+</label>
+{% endfor %}

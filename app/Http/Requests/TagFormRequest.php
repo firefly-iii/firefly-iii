@@ -35,7 +35,7 @@ class TagFormRequest extends Request
     /**
      * @return array
      */
-    public function collectTagData() :array
+    public function collectTagData(): array
     {
         if ($this->get('setTag') == 'true') {
             $latitude  = $this->get('latitude');

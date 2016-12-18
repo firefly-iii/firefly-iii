@@ -8,6 +8,8 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 
 /**
@@ -34,6 +36,8 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('accounts.create', ['asset']));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -44,6 +48,8 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('accounts.delete', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -51,10 +57,15 @@ class AccountControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->withArgs([0])->once()->andReturn(new Account);
+        $repository->shouldReceive('destroy')->andReturn(true);
+        $this->session(['accounts.delete.url' => 'http://localhost']);
+        $this->be($this->user());
+        $this->call('post', route('accounts.destroy', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
     }
 
     /**
@@ -65,6 +76,8 @@ class AccountControllerTest extends TestCase
         $this->be($this->user());
         $this->call('GET', route('accounts.edit', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -79,6 +92,8 @@ class AccountControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.index', ['asset']));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -98,6 +113,8 @@ class AccountControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.show', [1]));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -112,6 +129,8 @@ class AccountControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('accounts.show.date', [1, '2016-01-01']));
         $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -119,10 +138,23 @@ class AccountControllerTest extends TestCase
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['accounts.create.url' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name' => 'new account ' . rand(1000, 9999),
+            'what' => 'asset',
+        ];
+
+        $this->call('post', route('accounts.store', ['asset']), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        // list should have this new account.
+        $this->call('GET', route('accounts.index', ['asset']));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
+        $this->see($data['name']);
     }
 
     /**
@@ -130,17 +162,23 @@ class AccountControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
+        $this->session(['accounts.edit.url' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name'   => 'updated account ' . rand(1000, 9999),
+            'active' => 1,
+            'what'   => 'asset',
+        ];
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->call('post', route('accounts.update', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+        // list should have this new account.
+        $this->call('GET', route('accounts.index', ['asset']));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
+        $this->see($data['name']);
     }
 }

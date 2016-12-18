@@ -199,8 +199,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection
     {
-        $query = LimitRepetition::
-        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+        $query = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                                 ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
                                 ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))

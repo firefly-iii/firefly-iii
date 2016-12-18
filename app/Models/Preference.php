@@ -48,7 +48,7 @@ class Preference extends Model
         }
 
 
-        return json_decode($data);
+        return json_decode($data, true);
     }
 
     /**

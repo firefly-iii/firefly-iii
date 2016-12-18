@@ -12,6 +12,7 @@
 return [
     'buttons'               => 'Boutons',
     'icon'                  => 'Icône',
+    'id'                    => 'ID',
     'create_date'           => 'Créé le',
     'update_date'           => 'Mis à jour le',
     'balance_before'        => 'Solde avant',
@@ -76,7 +77,7 @@ return [
     'destination_account'   => 'Destination account',
 
     'accounts_count'        => 'Number of accounts',
-    'journals_count'        => 'Number of journals',
+    'journals_count'        => 'Number of transactions',
     'attachments_count'     => 'Number of attachments',
     'bills_count'           => 'Number of bills',
     'categories_count'      => 'Number of categories',

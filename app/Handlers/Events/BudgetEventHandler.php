@@ -38,7 +38,7 @@ class BudgetEventHandler
      *
      * @return bool
      */
-    public function storeRepetition(StoredBudgetLimit $budgetLimitEvent):bool
+    public function storeRepetition(StoredBudgetLimit $budgetLimitEvent): bool
     {
         return $this->processRepetitionChange($budgetLimitEvent->budgetLimit, $budgetLimitEvent->end);
     }
@@ -61,7 +61,7 @@ class BudgetEventHandler
      *
      * @return bool
      */
-    private function processRepetitionChange(BudgetLimit $budgetLimit, Carbon $date):bool
+    private function processRepetitionChange(BudgetLimit $budgetLimit, Carbon $date): bool
     {
         $set = $budgetLimit->limitrepetitions()
                            ->where('startdate', $budgetLimit->startdate->format('Y-m-d 00:00:00'))

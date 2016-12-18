@@ -31,69 +31,34 @@ class LoginControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\LoginController::login
-     * Implement testLogin().
      */
     public function testLogin()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->visit('/login')
+             ->type('thegrumpydictator@gmail.com', 'email')
+             ->type('james', 'password')
+             ->press('Sign In')
+             ->seePageIs('/')
+             ->see('thegrumpydictator@gmail.com');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\LoginController::logout
-     * Implement testLogout().
      */
     public function testLogout()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\LoginController::redirectPath
-     * Implement testRedirectPath().
-     */
-    public function testRedirectPath()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->visit('/logout')
+             ->seePageIs('/login')
+             ->see('Sign in to start your session');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\LoginController::showLoginForm
-     * Implement testShowLoginForm().
      */
     public function testShowLoginForm()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\LoginController::username
-     * Implement testUsername().
-     */
-    public function testUsername()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
+        $this->visit('/')
+             ->seePageIs('/login')
+             ->see('Sign in to start your session');
     }
 }

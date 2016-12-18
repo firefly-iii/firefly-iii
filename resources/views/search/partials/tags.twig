@@ -16,8 +16,8 @@
                 </div>
             </td>
             <td data-value="{{ tag.tag }}">
-                <a href="{{ route('tags.show',tag.id) }}">{{ tag.tag }}</a><
-                /td>
+                <a href="{{ route('tags.show',tag.id) }}">{{ tag.tag }}</a>
+            </td>
             <td>{{ ('tag'~tag.tagMode)|_ }}</td>
         </tr>
     {% endfor %}

@@ -113,8 +113,8 @@ class JournalTasker implements JournalTaskerInterface
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            $sourceBalance      = $this->getBalance($entry->id);
-            $destinationBalance = $this->getBalance($entry->destination_id);
+            $sourceBalance      = $this->getBalance(intval($entry->id));
+            $destinationBalance = $this->getBalance(intval($entry->destination_id));
             $budget             = $entry->budgets->first();
             $category           = $entry->categories->first();
             $transaction        = [

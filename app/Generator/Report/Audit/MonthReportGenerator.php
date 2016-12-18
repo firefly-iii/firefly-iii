@@ -25,7 +25,7 @@ use Steam;
 /**
  * Class MonthReportGenerator
  *
- * @package FireflyIII\Generator\Report\Standard
+ * @package FireflyIII\Generator\Report\Audit
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
@@ -107,6 +107,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
     {
         $this->accounts = $accounts;
 
+        return $this;
+    }
+
+    /**
+     * @param Collection $budgets
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
         return $this;
     }
 

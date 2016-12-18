@@ -80,6 +80,22 @@ class BillLine
     }
 
     /**
+     * @return Carbon
+     */
+    public function getLastHitDate(): Carbon
+    {
+        return $this->lastHitDate;
+    }
+
+    /**
+     * @param Carbon $lastHitDate
+     */
+    public function setLastHitDate(Carbon $lastHitDate)
+    {
+        $this->lastHitDate = $lastHitDate;
+    }
+
+    /**
      * @return string
      */
     public function getMax(): string
@@ -149,22 +165,6 @@ class BillLine
     public function setHit(bool $hit)
     {
         $this->hit = $hit;
-    }
-
-    /**
-     * @param Carbon $lastHitDate
-     */
-    public function setLastHitDate(Carbon $lastHitDate)
-    {
-        $this->lastHitDate = $lastHitDate;
-    }
-
-    /**
-     * @return Carbon
-     */
-    public function getLastHitDate(): Carbon
-    {
-        return $this->lastHitDate;
     }
 
 

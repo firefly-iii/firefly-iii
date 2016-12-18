@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
@@ -60,7 +61,6 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        // put previous url in session if not redirect from store (not "create another").
         if (session('categories.create.fromStore') !== true) {
             Session::put('categories.create.url', URL::previous());
         }
@@ -190,7 +190,7 @@ class CategoryController extends Controller
         $subTitleIcon = 'fa-bar-chart';
 
         // use journal collector
-        $collector = new JournalCollector(auth()->user());
+        $collector = app(JournalCollectorInterface::class);
         $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
@@ -257,7 +257,7 @@ class CategoryController extends Controller
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // new collector:
-        $collector = new JournalCollector(auth()->user());
+        $collector = app(JournalCollectorInterface::class);
         $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);

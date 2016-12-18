@@ -31,7 +31,6 @@ class DomainControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\DomainController::domains
-     * Implement testDomains().
      */
     public function testDomains()
     {
@@ -40,11 +39,12 @@ class DomainControllerTest extends TestCase
         $this->call('GET', route('admin.users.domains'));
         $this->assertResponseStatus(200);
 
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\DomainController::manual
-     * Implement testManual().
      */
     public function testManual()
     {
@@ -56,7 +56,6 @@ class DomainControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\DomainController::toggleDomain
-     * Implement testToggleDomain().
      */
     public function testToggleDomain()
     {
@@ -66,11 +65,4 @@ class DomainControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

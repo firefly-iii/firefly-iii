@@ -113,7 +113,11 @@ class ImportStorage
     private function alreadyImported(string $hash): TransactionJournal
     {
 
-        $meta = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->first(['journal_meta.*']);
+        $meta = TransactionJournalMeta
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->where('journal_meta.name', 'originalImportHash')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('journal_meta.data', json_encode($hash))->first(['journal_meta.*']);
         if (!is_null($meta)) {
             /** @var TransactionJournal $journal */
             $journal = $meta->transactionjournal;

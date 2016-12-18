@@ -47,6 +47,12 @@ class AccountList implements BinderInterface
                              ->where('user_id', auth()->user()->id)
                              ->get(['accounts.*']);
             if ($object->count() > 0) {
+                $object = $object->sortBy(
+                    function (Account $account) {
+                        return $account->name;
+                    }
+                );
+
                 return $object;
             }
         }

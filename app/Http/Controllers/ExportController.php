@@ -17,7 +17,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Export\Processor;
+use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
@@ -70,7 +70,6 @@ class ExportController extends Controller
         if (!$disk->exists($file)) {
             throw new FireflyException('Against all expectations, zip file "' . $file . '" does not exist.');
         }
-
 
         $job->change('export_downloaded');
 
@@ -133,7 +132,6 @@ class ExportController extends Controller
      */
     public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, EJRI $jobs)
     {
-        set_time_limit(0);
         $job      = $jobs->findByKey($request->get('job'));
         $settings = [
             'accounts'           => $repository->getAccountsById($request->get('accounts')),
@@ -146,7 +144,9 @@ class ExportController extends Controller
         ];
 
         $job->change('export_status_make_exporter');
-        $processor = new Processor($settings);
+
+        /** @var ProcessorInterface $processor */
+        $processor = app(ProcessorInterface::class, [$settings]);
 
         /*
          * Collect journals:

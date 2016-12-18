@@ -45,7 +45,7 @@ class FireflyConfig
      * @param      $name
      * @param null $default
      *
-     * @return Configuration|null
+     * @return \FireflyIII\Models\Configuration|null
      */
     public function get($name, $default = null)
     {
@@ -91,12 +91,12 @@ class FireflyConfig
     }
 
     /**
-     * @param        $name
-     * @param string $value
+     * @param string $name
+     * @param        $value
      *
      * @return Configuration
      */
-    public function set($name, $value): Configuration
+    public function set(string $name, $value): Configuration
     {
         Log::debug('Set new value for ', ['name' => $name]);
         $config = Configuration::whereName($name)->first();

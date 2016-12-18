@@ -39,15 +39,15 @@ class AccountFormRequest extends Request
     public function getAccountData(): array
     {
         return [
-            'name'                   => trim($this->input('name')),
+            'name'                   => trim(strval($this->input('name'))),
             'active'                 => intval($this->input('active')) === 1,
             'accountType'            => $this->input('what'),
             'currency_id'            => intval($this->input('currency_id')),
             'virtualBalance'         => round($this->input('virtualBalance'), 2),
             'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'iban'                   => trim($this->input('iban')),
-            'BIC'                    => trim($this->input('BIC')),
-            'accountNumber'          => trim($this->input('accountNumber')),
+            'iban'                   => trim(strval($this->input('iban'))),
+            'BIC'                    => trim(strval($this->input('BIC'))),
+            'accountNumber'          => trim(strval($this->input('accountNumber'))),
             'accountRole'            => $this->input('accountRole'),
             'openingBalance'         => round($this->input('openingBalance'), 2),
             'openingBalanceDate'     => new Carbon((string)$this->input('openingBalanceDate')),
@@ -80,7 +80,7 @@ class AccountFormRequest extends Request
             'name'                              => $nameRule,
             'openingBalance'                    => 'numeric',
             'iban'                              => 'iban',
-            'BIC'                              => 'bic',
+            'BIC'                               => 'bic',
             'virtualBalance'                    => 'numeric',
             'openingBalanceDate'                => 'date',
             'currency_id'                       => 'exists:transaction_currencies,id',

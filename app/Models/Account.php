@@ -61,7 +61,7 @@ class Account extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query  = Account::orderBy('id');
+        $query  = self::orderBy('id');
         $search = $fields;
         unset($search['name'], $search['iban']);
 
@@ -81,7 +81,7 @@ class Account extends Model
         }
 
         // create it!
-        $account = Account::create($fields);
+        $account = self::create($fields);
 
         return $account;
 
@@ -200,10 +200,10 @@ class Account extends Model
     public function getOpeningBalanceAmount(): string
     {
         $journal = TransactionJournal::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $this->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $this->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             return '0';
         }
@@ -230,10 +230,10 @@ class Account extends Model
     {
         $date    = new Carbon('1900-01-01');
         $journal = TransactionJournal::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $this->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $this->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             return $date;
         }

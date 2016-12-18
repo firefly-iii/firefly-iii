@@ -11,7 +11,7 @@
 
 declare(strict_types = 1);
 
-namespace FireflyIII\Generator\Report\Category;
+namespace FireflyIII\Generator\Report;
 
 use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;

@@ -28,9 +28,23 @@ interface CurrencyRepositoryInterface
     /**
      * @param TransactionCurrency $currency
      *
+     * @return bool
+     */
+    public function canDeleteCurrency(TransactionCurrency $currency): bool;
+
+    /**
+     * @param TransactionCurrency $currency
+     *
      * @return int
      */
     public function countJournals(TransactionCurrency $currency): int;
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function destroy(TransactionCurrency $currency): bool;
 
     /**
      * Find by ID

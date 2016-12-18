@@ -33,7 +33,7 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-        $disk = Storage::disk('database');
+        $disk = Storage::disk('seeds');
         $env  = App::environment();
         Log::debug('Environment is ' . $env);
         $fileName = 'seed.' . $env . '.json';

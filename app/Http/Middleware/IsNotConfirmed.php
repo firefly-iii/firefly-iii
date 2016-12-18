@@ -17,6 +17,7 @@ use Closure;
 use FireflyConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Log;
 use Preferences;
 
 /**
@@ -47,9 +48,13 @@ class IsNotConfirmed
         }
         // must the user be confirmed in the first place?
         $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
+        Log::debug(sprintf('mustConfirmAccount is %s', $mustConfirmAccount));
         // user must be logged in, then continue:
         $isConfirmed = Preferences::get('user_confirmed', false)->data;
+        Log::debug(sprintf('isConfirmed is %s', $isConfirmed));
         if ($isConfirmed || $mustConfirmAccount === false) {
+            Log::debug('User is confirmed or user does not have to confirm account. Redirect home.');
+
             // user account is confirmed, simply send them home.
             return redirect(route('home'));
         }

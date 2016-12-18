@@ -150,22 +150,35 @@ return [
     'category_keep_transactions' => 'De transactie verbonden aan deze categorie blijft bewaard.|De :count transacties verbonden aan deze categorie blijven bewaard.',
     'tag_keep_transactions'      => 'De transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
 
+    'email'                   => 'E-mailadres',
+    'password'                => 'Wachtwoord',
+    'password_confirmation'   => 'Wachtwoord (nogmaals)',
+    'blocked'                 => 'Is geblokkeerd?',
+    'blocked_code'            => 'Reden voor blokkade',
+
+
     // admin
-    'domain'                     => 'Domein',
-    'single_user_mode'           => 'Enkele gebruiker-modus',
-    'must_confirm_account'       => 'Nieuwe gebruikers moeten hun account activeren',
-    'is_demo_site'               => 'Is demo website',
+    'domain'                  => 'Domein',
+    'single_user_mode'        => 'Enkele gebruiker-modus',
+    'must_confirm_account'    => 'Nieuwe gebruikers moeten hun account activeren',
+    'is_demo_site'            => 'Is demo website',
+    'mail_for_lockout'        => 'Tijdelijk niet inloggen',
+    'mail_for_blocked_domain' => 'Geblokkeerd domein',
+    'mail_for_blocked_email'  => 'Geblokkeerd e-mailadres',
+    'mail_for_bad_login'      => 'Mislukte login',
+    'mail_for_blocked_login'  => 'Geblokkeerde gebruiker',
+
 
     // import
-    'import_file'                => 'Importbestand',
-    'configuration_file'         => 'Configuratiebestand',
-    'import_file_type'           => 'Importbestandstype',
-    'csv_comma'                  => 'Een komma (,)',
-    'csv_semicolon'              => 'Een puntkomma (;)',
-    'csv_tab'                    => 'Een tab (onzichtbaar)',
-    'csv_delimiter'              => 'CSV scheidingsteken',
-    'csv_import_account'         => 'Standaard rekening voor importeren',
-    'csv_config'                 => 'Configuratiebestand',
+    'import_file'             => 'Importbestand',
+    'configuration_file'      => 'Configuratiebestand',
+    'import_file_type'        => 'Importbestandstype',
+    'csv_comma'               => 'Een komma (,)',
+    'csv_semicolon'           => 'Een puntkomma (;)',
+    'csv_tab'                 => 'Een tab (onzichtbaar)',
+    'csv_delimiter'           => 'CSV scheidingsteken',
+    'csv_import_account'      => 'Standaard rekening voor importeren',
+    'csv_config'              => 'Configuratiebestand',
 
 
     'due_date'           => 'Vervaldatum',

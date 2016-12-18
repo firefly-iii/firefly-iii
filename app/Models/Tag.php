@@ -43,7 +43,7 @@ class Tag extends TagSupport
         $search = $fields;
         unset($search['tag']);
 
-        $query = Tag::orderBy('id');
+        $query = self::orderBy('id');
         foreach ($search as $name => $value) {
             $query->where($name, $value);
         }
@@ -57,7 +57,7 @@ class Tag extends TagSupport
         // create it!
         $fields['tagMode']     = 'nothing';
         $fields['description'] = $fields['description'] ?? '';
-        $tag                   = Tag::create($fields);
+        $tag                   = self::create($fields);
 
         return $tag;
 

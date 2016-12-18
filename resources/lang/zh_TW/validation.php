@@ -12,6 +12,7 @@
 return [
     'iban'                           => '這不是有效的 IBAN。',
     'unique_account_number_for_user' => '此帳號號碼已經存在。',
+    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => '此值不能用於所選擇的事件。',
     'rule_action_value'              => '此值不能用於所選擇的動作。',
     'invalid_domain'                 => '基於安全理由，你無法使用此域名註冊。',

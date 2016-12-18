@@ -131,6 +131,7 @@ class SplitController extends Controller
      */
     public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }

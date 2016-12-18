@@ -64,10 +64,10 @@ class TransactionJournal extends TransactionJournalSupport
     public static function routeBinder($value)
     {
         if (auth()->check()) {
-            $object = TransactionJournal::where('transaction_journals.id', $value)
-                ->with('transactionType')
-                ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
+            $object = self::where('transaction_journals.id', $value)
+                                        ->with('transactionType')
+                                        ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                        ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
             if (!is_null($object)) {
                 return $object;
             }
@@ -113,7 +113,7 @@ class TransactionJournal extends TransactionJournalSupport
      *
      * @return bool
      */
-    public function deleteMeta(string $name):bool
+    public function deleteMeta(string $name): bool
     {
         $this->transactionJournalMeta()->where('name', $name)->delete();
 

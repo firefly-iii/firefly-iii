@@ -11,6 +11,8 @@
 
 namespace Auth;
 
+use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\Preferences;
 use TestCase;
 
 /**
@@ -31,45 +33,38 @@ class TwoFactorControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+
+        $falsePreference        = new Preference;
+        $falsePreference->data  = true;
+        $secretPreference       = new Preference;
+        $secretPreference->data = 'BlablaSeecret';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
+        $this->call('get', route('two-factor.index'));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::lostTwoFactor
-     * Implement testLostTwoFactor().
      */
     public function testLostTwoFactor()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+
+        $truePreference         = new Preference;
+        $truePreference->data   = true;
+        $secretPreference       = new Preference;
+        $secretPreference->data = 'BlablaSeecret';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
+        $this->call('get', route('two-factor.lost'));
+        $this->assertResponseStatus(200);
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Auth\TwoFactorController::postIndex
-     * Implement testPostIndex().
-     */
-    public function testPostIndex()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

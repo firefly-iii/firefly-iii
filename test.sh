@@ -11,8 +11,9 @@ resetestflag=''
 testflag=''
 coverageflag=''
 acceptancetestclass=''
+verbalflag=''
 
-while getopts 'crta:' flag; do
+while getopts 'vcrta:' flag; do
   case "${flag}" in
     r)
         resetestflag='true'
@@ -22,6 +23,9 @@ while getopts 'crta:' flag; do
     ;;
     c)
         coverageflag='true'
+    ;;
+    v)
+        verbalflag=' -v'
     ;;
     a)
         acceptancetestclass=./tests/acceptance/$OPTARG
@@ -82,10 +86,10 @@ else
     if [[ $coverageflag == "" ]]
     then
         echo "Must run PHPUnit without coverage"
-        phpunit $acceptancetestclass
+        phpunit --stop-on-error $verbalflag $acceptancetestclass
     else
         echo "Must run PHPUnit with coverage"
-        phpunit --configuration phpunit.coverage.xml $acceptancetestclass
+        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass
     fi
 fi
 

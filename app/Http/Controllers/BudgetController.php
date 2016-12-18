@@ -299,12 +299,12 @@ class BudgetController extends Controller
     public function show(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
     {
         /** @var Carbon $start */
-        $start    = session('first', Carbon::create()->startOfYear());
-        $end      = new Carbon;
-        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
-        $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-
+        $start      = session('first', Carbon::create()->startOfYear());
+        $end        = new Carbon;
+        $page       = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
+        $accounts   = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $repetition = null;
         // collector:
         $collector = new JournalCollector(auth()->user());
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page);

@@ -110,36 +110,34 @@
                 </div>
             </div>
         {% endif %}
-        {% if accounts.count > 1 %}
-            <div class="col-lg-2 col-md-3">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
-                        <label style="font-weight:normal;">
-                            <input type="checkbox" id="accounts-in-pie-chart-checked">
-                            <small>{{ 'include_not_in_category'|_ }}</small>
-                        </label>
-                    </div>
+        <div class="col-lg-2 col-md-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'income_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                    <label style="font-weight:normal;">
+                        <input type="checkbox" id="accounts-in-pie-chart-checked">
+                        <small>{{ 'include_not_in_category'|_ }}</small>
+                    </label>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-3">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
-                        <label style="font-weight:normal;">
-                            <input type="checkbox" id="accounts-out-pie-chart-checked">
-                            <small>{{ 'include_not_in_category'|_ }}</small>
-                        </label>
-                    </div>
+        </div>
+        <div class="col-lg-2 col-md-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
+                    <label style="font-weight:normal;">
+                        <input type="checkbox" id="accounts-out-pie-chart-checked">
+                        <small>{{ 'include_not_in_category'|_ }}</small>
+                    </label>
                 </div>
             </div>
-        {% endif %}
+        </div>
     </div>
 
     <div class="row">
@@ -155,24 +153,29 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'average_spending_per_account'|_ }}</h3>
-                </div>
-                <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover sortable">
-                        <thead>
-                        <tr>
-                            <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'spent_average'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'total'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for row in averageExpenses %}
+        {% if averageExpenses|length > 0 %}
+            <div class="col-lg-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'average_spending_per_account'|_ }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover sortable">
+                            <thead>
                             <tr>
+                                <th data-defaultsign="az">{{ 'account'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'spent_average'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'total'|_ }}</th>
+                                <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in averageExpenses %}
+                                {% if loop.index > listLength %}
+                                    <tr class="overListLength">
+                                {% else %}
+                                    <tr>
+                                {% endif %}
                                 <td data-value="{{ row.name }}">
                                     <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
                                 </td>
@@ -185,15 +188,26 @@
                                 <td data-value="{{ row.count }}">
                                     {{ row.count }}
                                 </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            {% if averageExpenses|length > listLength %}
+                                <tr>
+                                    <td colspan="4" class="active">
+                                        <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            </tfoot>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-6">
-            {% if topExpenses.count > 0 %}
+        {% endif %}
+        {% if topExpenses.count > 0 %}
+            <div class="col-lg-6">
+
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'expenses'|_ }} ({{ trans('firefly.topX', {number: listLength}) }})</h3>
@@ -239,7 +253,7 @@
                             {% endfor %}
                             </tbody>
                             <tfoot>
-                            {% if topExpenses.count > listLength %}
+                            {% if topExpenses|length > listLength %}
                                 <tr>
                                     <td colspan="3" class="active">
                                         <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
@@ -250,8 +264,8 @@
                         </table>
                     </div>
                 </div>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </div>
     <div class="row">
         {% if averageIncome|length > 0 %}

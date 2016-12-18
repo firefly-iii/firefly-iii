@@ -14,9 +14,11 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
 use Config;
+use FireflyConfig;
+use FireflyIII\Events\BlockedUseOfDomain;
+use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -34,16 +36,6 @@ use Validator;
  */
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
 
     use RegistersUsers;
 
@@ -93,8 +85,19 @@ class RegisterController extends Controller
         if ($this->isBlockedDomain($data['email'])) {
             $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
 
-            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
+            event(new BlockedUseOfDomain($data['email'], $request->ip()));
+            $this->throwValidationException($request, $validator);
+        }
 
+        // is user a deleted user?
+        $hash          = hash('sha256', $data['email']);
+        $configuration = FireflyConfig::get('deleted_users', []);
+        $set           = $configuration->data;
+        Log::debug(sprintf('Hash of email is %s', $hash));
+        Log::debug('Hashes of deleted users: ', $set);
+        if (in_array($hash, $set)) {
+            $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
+            event(new BlockedUseOfEmail($data['email'], $request->ip()));
             $this->throwValidationException($request, $validator);
         }
 
@@ -202,31 +205,4 @@ class RegisterController extends Controller
         return false;
     }
 
-    /**
-     * Send a message home about a blocked domain and the address attempted to register.
-     *
-     * @param string $registrationMail
-     * @param string $ipAddress
-     */
-    private function reportBlockedDomainRegistrationAttempt(string $registrationMail, string $ipAddress)
-    {
-        try {
-            $email  = env('SITE_OWNER', false);
-            $parts  = explode('@', $registrationMail);
-            $domain = $parts[1];
-            $fields = [
-                'email_address'  => $registrationMail,
-                'blocked_domain' => $domain,
-                'ip'             => $ipAddress,
-            ];
-
-            Mail::send(
-                ['emails.blocked-registration-html', 'emails.blocked-registration-text'], $fields, function (Message $message) use ($email, $domain) {
-                $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
-    }
 }

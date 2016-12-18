@@ -65,10 +65,20 @@ function getReportOptions() {
 }
 
 function setOptionalFromCookies() {
+    var arr;
+    // categories
     if ((readCookie('report-categories') !== null)) {
-        var arr = readCookie('report-categories').split(',');
+        arr = readCookie('report-categories').split(',');
         arr.forEach(function (val) {
             $('input[class="category-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
+        });
+    }
+
+    // and budgets!
+    if ((readCookie('report-budgets') !== null)) {
+        arr = readCookie('report-budgets').split(',');
+        arr.forEach(function (val) {
+            $('input[class="budget-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
         });
     }
 }
@@ -90,12 +100,20 @@ function catchSubmit() {
     });
 
     // all category ids:
-    //category-checkbox
     var categories = [];
     $.each($('.category-checkbox'), function (i, v) {
         var c = $(v);
         if (c.prop('checked')) {
             categories.push(c.val());
+        }
+    });
+
+    // all budget ids:
+    var budgets = [];
+    $.each($('.budget-checkbox'), function (i, v) {
+        var c = $(v);
+        if (c.prop('checked')) {
+            budgets.push(c.val());
         }
     });
 
@@ -106,6 +124,7 @@ function catchSubmit() {
         createCookie('report-type', $('select[name="report_type"]').val(), 365);
         createCookie('report-accounts', accounts, 365);
         createCookie('report-categories', categories, 365);
+        createCookie('report-budgets', budgets, 365);
         createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
         createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
     }

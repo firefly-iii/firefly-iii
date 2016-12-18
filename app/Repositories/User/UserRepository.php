@@ -15,10 +15,12 @@ namespace FireflyIII\Repositories\User;
 
 
 use FireflyConfig;
+use FireflyIII\Events\DeletedUser;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 
 /**
@@ -58,6 +60,24 @@ class UserRepository implements UserRepositoryInterface
     public function count(): int
     {
         return $this->all()->count();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function destroy(User $user): bool
+    {
+        $email = $user->email;
+        Log::debug(sprintf('Calling delete() on user %d', $user->id));
+        $user->delete();
+
+
+        // trigger event:
+        event(new DeletedUser($email));
+
+        return true;
     }
 
     /**

@@ -42,7 +42,7 @@ class Category extends Model
     public static function firstOrCreateEncrypted(array $fields)
     {
         // everything but the name:
-        $query  = Category::orderBy('id');
+        $query  = self::orderBy('id');
         $search = $fields;
         unset($search['name']);
         foreach ($search as $name => $value) {
@@ -56,7 +56,7 @@ class Category extends Model
             }
         }
         // create it!
-        $category = Category::create($fields);
+        $category = self::create($fields);
 
         return $category;
 

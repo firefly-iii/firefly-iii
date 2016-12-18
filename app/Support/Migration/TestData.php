@@ -115,7 +115,7 @@ class TestData
                     'title'           => Crypt::encrypt($attachment['title']),
                     'description'     => Crypt::encrypt($attachment['description']),
                     'notes'           => Crypt::encrypt($attachment['notes']),
-                    'mime'            => $attachment['mime'],
+                    'mime'            => Crypt::encrypt($attachment['mime']),
                     'size'            => strlen($attachment['content']),
                     'uploaded'        => 1,
                 ]
@@ -267,11 +267,37 @@ class TestData
     /**
      *
      */
-    private function createImportJobs()
+    private function createExportJobs()
     {
         $insert = [];
-        foreach ($this->data['import-jobs'] as $job) {
+        $disk   = Storage::disk('export');
+        foreach ($this->data['export-jobs'] as $job) {
             $insert[] = [
+                'created_at' => $this->time,
+                'updated_at' => $this->time,
+                'user_id'    => $job['user_id'],
+                'key'        => $job['key'],
+                'status'     => $job['status'],
+            ];
+            $disk->put($job['key'] . '.zip', 'Nonsense data for "ziP" file.');
+        }
+        DB::table('export_jobs')->insert($insert);
+
+        // store fake export file:
+
+    }
+
+    /**
+     *
+     */
+    private function createImportJobs()
+    {
+
+        $disk   = Storage::disk('upload');
+        $insert = [];
+        foreach ($this->data['import-jobs'] as $job) {
+            $insert[]
+                = [
                 'created_at'      => $this->time,
                 'updated_at'      => $this->time,
                 'user_id'         => $job['user_id'],
@@ -281,6 +307,8 @@ class TestData
                 'extended_status' => json_encode($job['extended_status']),
                 'configuration'   => json_encode($job['configuration']),
             ];
+
+            $disk->put($job['key'] . '.upload', Crypt::encrypt(''));
         }
         DB::table('import_jobs')->insert($insert);
     }
@@ -863,6 +891,7 @@ class TestData
         $this->createMultiTransfers();
         $this->createImportJobs();
         $this->createCurrencies();
+        $this->createExportJobs();
     }
 
 }
