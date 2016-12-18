@@ -82,10 +82,15 @@ class JournalRepository implements JournalRepositoryInterface
         $destinationTransaction->save();
         $journal->transaction_type_id = $type->id;
         $journal->save();
-        Preferences::mark();
-        $messages = new MessageBag;
 
-        return $messages;
+        // if journal is a transfer now, remove budget:
+        if ($type->type === TransactionType::TRANSFER) {
+            $journal->budgets()->detach();
+        }
+
+        Preferences::mark();
+
+        return new MessageBag;
     }
 
     /**

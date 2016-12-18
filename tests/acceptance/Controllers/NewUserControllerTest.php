@@ -28,7 +28,6 @@ class NewUserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
@@ -40,7 +39,6 @@ class NewUserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::submit
-     * Implement testSubmit().
      */
     public function testSubmit()
     {
@@ -50,11 +48,4 @@ class NewUserControllerTest extends TestCase
         );
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
 }

@@ -392,7 +392,7 @@ Route::group(
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
-    Route::post('end-tour', ['uses' => 'JsonController@endTour']);
+    Route::post('end-tour', ['uses' => 'JsonController@endTour','as' => 'end-tour']);
 
 }
 );

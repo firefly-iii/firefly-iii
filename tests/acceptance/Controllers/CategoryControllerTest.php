@@ -8,7 +8,12 @@
  *
  * See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -114,6 +119,27 @@ class CategoryControllerTest extends TestCase
      */
     public function testShow(string $range)
     {
+
+        $collector     = $this->mock(JournalCollectorInterface::class);
+        $accRepository = $this->mock(AccountRepositoryInterface::class);
+        $catRepository = $this->mock(CategoryRepositoryInterface::class);
+
+        $accRepository->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
+        $catRepository->shouldReceive('firstUseDate')->once()->andReturn(new Carbon);
+
+        // collector stuff:
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+
+        // more repos stuff:
+        $catRepository->shouldReceive('spentInPeriod')->andReturn('0');
+        $catRepository->shouldReceive('earnedInPeriod')->andReturn('0');
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('categories.show', [1]));
@@ -129,6 +155,17 @@ class CategoryControllerTest extends TestCase
      */
     public function testShowByDate(string $range)
     {
+        $collector     = $this->mock(JournalCollectorInterface::class);
+
+        // collector stuff:
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('categories.show', [1, '2015-01-01']));
