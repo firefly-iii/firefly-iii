@@ -67,8 +67,17 @@ class PreferencesControllerTest extends TestCase
     public function testPostIndex()
     {
         $data = [
-            'fiscalYearStart' => '2016-01-01'
+            'fiscalYearStart'       => '2016-01-01',
+            'frontPageAccounts'     => [],
+            'viewRange'             => '1M',
+            'customFiscalYear'      => 0,
+            'showDepositsFrontpage' => 0,
+            'transactionPageSize'   => 100,
+            'twoFactorAuthEnabled'  => 0,
+            'language'              => 'en_US',
+            'tj'                    => [],
         ];
+
         $this->be($this->user());
         $this->call('post', route('preferences.update'), $data);
         $this->assertResponseStatus(302);

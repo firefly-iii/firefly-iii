@@ -262,7 +262,6 @@ class CategoryController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
-
         return view('categories.show-by-date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
     }
 

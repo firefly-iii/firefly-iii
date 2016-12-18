@@ -168,7 +168,7 @@ class CategoryControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $this->call('GET', route('categories.show', [1, '2015-01-01']));
+        $this->call('GET', route('categories.show.date', [1, '2015-01-01']));
         $this->assertResponseStatus(200);
         $this->see('<ol class="breadcrumb">');
     }

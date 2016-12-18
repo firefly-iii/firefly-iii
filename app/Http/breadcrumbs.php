@@ -586,21 +586,21 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'rules.rule.create', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rules.create', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.rule.create', [$ruleGroup]));
+    $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.create', [$ruleGroup]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule.edit', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
+    'rules.edit', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.rule.edit', [$rule]));
+    $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.edit', [$rule]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule.delete', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
+    'rules.delete', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.delete_rule', ['title' => $rule->title]), route('rules.rule.delete', [$rule]));
+    $breadcrumbs->push(trans('firefly.delete_rule', ['title' => $rule->title]), route('rules.delete', [$rule]));
 }
 );
 Breadcrumbs::register(

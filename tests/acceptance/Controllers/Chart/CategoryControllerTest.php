@@ -11,6 +11,8 @@
 
 namespace Chart;
 
+use Carbon\Carbon;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use TestCase;
 
 /**
@@ -37,6 +39,13 @@ class CategoryControllerTest extends TestCase
      */
     public function testAll(string $range)
     {
+        $catRepository = $this->mock(CategoryRepositoryInterface::class);
+
+        $catRepository->shouldReceive('spentInPeriod')->andReturn('0');
+        $catRepository->shouldReceive('earnedInPeriod')->andReturn('0');
+        $catRepository->shouldReceive('firstUseDate')->andReturn(new Carbon);
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.category.all', [1]));
