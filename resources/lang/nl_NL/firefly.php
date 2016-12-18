@@ -632,10 +632,10 @@ return [
     'errors'                                     => 'Fouten',
 
     // reports:
-    'report_default'                             => 'Standaard financieel rapport (:start tot :end)',
-    'report_audit'                               => 'Transactiehistorie-overzicht van :start tot :end',
-    'report_category'                            => 'Categorierapport van :start tot :end',
-    'report_budget'                              => 'Budgetrapport van :start tot en met :end',
+    'report_default'                             => 'Default financial report between :start and :end',
+    'report_audit'                               => 'Transaction history overview between :start and :end',
+    'report_category'                            => 'Category report between :start and :end',
+    'report_budget'                              => 'Budget report between :start and :end',
     'quick_link_reports'                         => 'Snelle links',
     'quick_link_default_report'                  => 'Standaard financieel rapport',
     'quick_link_audit_report'                    => 'Transactiehistorie-overzicht',
