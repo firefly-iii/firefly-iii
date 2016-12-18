@@ -194,6 +194,7 @@ return [
     'warning_no_matching_transactions'           => 'Aucunes opérations correspondantes trouvées. Veuillez noter que pour des raisons de performances, seule les dernières :num_transactions opérations ont été vérifiées.',
     'warning_no_valid_triggers'                  => 'Aucun déclencheurs valide fourni.',
     'execute_on_existing_transactions'           => 'Exécuter des opérations existantes',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'Lorsqu’une règle ou un groupe a été modifié ou ajouté, vous pouvez l’exécuter pour des opérations existantes',
     'execute_on_existing_transactions_short'     => 'Opérations existantes',
     'executed_group_on_existing_transactions'    => 'Exécution groupe « : titre » pour les transactions existantes',
