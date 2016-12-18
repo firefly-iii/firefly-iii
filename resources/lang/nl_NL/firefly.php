@@ -194,6 +194,7 @@ return [
     'warning_no_matching_transactions'           => 'Niks gevonden in je laatste :num_transactions transacties.',
     'warning_no_valid_triggers'                  => 'Geen geldige triggers gevonden.',
     'execute_on_existing_transactions'           => 'Toepassen op bestaande transacties',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'Wanneer een regel of groep is veranderd of toegevoegd, kun je hem hier uitvoeren voor bestaande transacties',
     'execute_on_existing_transactions_short'     => 'Bestaande transacties',
     'executed_group_on_existing_transactions'    => 'Regelgroep ":title" is uitgevoerd op bestaande transacties',
