@@ -145,10 +145,13 @@ class ImportController extends Controller
             return $this->redirectToCorrectStep($job);
         }
 
+        // if there is a tag (there might not be), we can link to it:
+        $tagId = $job->extended_status['importTag'] ?? 0;
+
         $subTitle     = trans('firefly.import_finished');
         $subTitleIcon = 'fa-star';
 
-        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon'));
+        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon', 'tagId'));
     }
 
     /**
