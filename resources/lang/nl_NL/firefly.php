@@ -934,7 +934,10 @@ return [
     'import_finished_link'                 => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'need_at_least_one_account'            => 'Je moet minstens één betaalrekening hebben voor je spaarpotjes kan maken',
     'see_help_top_right'                   => 'Meer informatie vind je in de help pagina\'s. Gebruik daarvoor het icoontje rechtsboven in de hoek.',
-    'bread_crumb_import_complete'          => 'Import ":key" complete',
-    'bread_crumb_configure_import'         => 'Configure import ":key"',
-    'bread_crumb_import_finished'          => 'Import ":key" finished',
+    'bread_crumb_import_complete'          => 'Import ":key" compleet',
+    'bread_crumb_configure_import'         => 'Import ":key" instellen',
+    'bread_crumb_import_finished'          => 'Import ":key" klaar',
+    'import_finished_intro'                => 'De import is klaar! Je kan de transacties nu terugvinden in Firefly.',
+    'import_finished_text_without_link'    => 'Er is geen tag die al je transacties bevat. Kijk links in het menu onder "Transacties" en zoek daar je nieuwe transacties op.',
+    'import_finished_text_with_link'       => 'Je kan je geïmporteerde transacties <a href="tags/show/:tag">op deze pagina</a> terug vinden.',
 ];
