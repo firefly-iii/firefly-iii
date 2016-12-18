@@ -29,7 +29,7 @@ return [
         'mail_for_blocked_login'  => false,
     ],
     'chart'               => 'chartjs',
-    'version'             => '4.2.1',
+    'version'             => '4.2.2',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
