@@ -148,4 +148,16 @@ class UserRepository implements UserRepositoryInterface
 
         return $return;
     }
+
+    /**
+     * @param User   $user
+     * @param string $password
+     *
+     * @return mixed
+     */
+    public function changePassword(User $user, string $password)
+    {
+        $user->password = bcrypt($password);
+        $user->save();
+    }
 }

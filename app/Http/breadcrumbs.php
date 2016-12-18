@@ -413,7 +413,22 @@ Breadcrumbs::register(
     'piggy-banks.show', function (BreadCrumbGenerator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggy-banks.index');
     $breadcrumbs->push(e($piggyBank->name), route('piggy-banks.show', [$piggyBank->id]));
+}
+);
 
+Breadcrumbs::register(
+    'piggy-banks.add-money-mobile', function (BreadCrumbGenerator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.show', $piggyBank);
+    $breadcrumbs->push(trans('firefly.add_money_to_piggy', ['name' => $piggyBank->name]), route('piggy-banks.add-money-mobile', [$piggyBank->id]));
+}
+);
+
+Breadcrumbs::register(
+    'piggy-banks.remove-money-mobile', function (BreadCrumbGenerator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.show', $piggyBank);
+    $breadcrumbs->push(
+        trans('firefly.remove_money_from_piggy_title', ['name' => $piggyBank->name]), route('piggy-banks.remove-money-mobile', [$piggyBank->id])
+    );
 }
 );
 
@@ -510,6 +525,16 @@ Breadcrumbs::register(
     );
 
     $breadcrumbs->push($title, route('reports.report', [$reportType, $start->format('Ymd'), $end->format('Ymd'), $accountIds]));
+}
+);
+
+/**
+ * New user Controller
+ */
+Breadcrumbs::register(
+    'new-user.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.getting_started'), route('new-user.index'));
 }
 );
 

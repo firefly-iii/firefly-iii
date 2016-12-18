@@ -42,6 +42,14 @@ interface UserRepositoryInterface
     public function attachRole(User $user, string $role): bool;
 
     /**
+     * @param User   $user
+     * @param string $password
+     *
+     * @return mixed
+     */
+    public function changePassword(User $user, string $password);
+
+    /**
      * Returns a count of all users.
      *
      * @return int

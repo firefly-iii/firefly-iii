@@ -24,6 +24,7 @@ use Illuminate\Support\Collection;
 use Input;
 use Log;
 use Preferences;
+use Response;
 use Session;
 use Steam;
 use URL;
@@ -243,6 +244,8 @@ class PiggyBankController extends Controller
 
     /**
      * @param PiggyBankRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function order(PiggyBankRepositoryInterface $repository)
     {
@@ -257,6 +260,7 @@ class PiggyBankController extends Controller
                 $repository->setOrder(intval($id), ($order + 1));
             }
         }
+        return Response::json(['result' => 'ok']);
     }
 
     /**

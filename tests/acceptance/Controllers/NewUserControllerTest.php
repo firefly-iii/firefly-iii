@@ -31,10 +31,10 @@ class NewUserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->emptyUser());
+        $this->call('get', route('new-user.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
@@ -42,10 +42,14 @@ class NewUserControllerTest extends TestCase
      */
     public function testSubmit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'bank_name'    => 'New bank',
+            'bank_balance' => 100,
+        ];
+        $this->be($this->emptyUser());
+        $this->call('post', route('new-user.submit'), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
 }

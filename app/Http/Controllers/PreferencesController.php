@@ -150,7 +150,7 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear = intval($request->get('customFiscalYear')) === 1;
-        $fiscalYearStart  = date('m-d', strtotime($request->get('fiscalYearStart')));
+        $fiscalYearStart  = date('m-d', strtotime(strval($request->get('fiscalYearStart'))));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 

@@ -94,6 +94,15 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     }
 
+    /**
+     * @return User
+     */
+    public function emptyUser()
+    {
+        $user = User::find(2);
+
+        return $user;
+    }
 
     /**
      * @return User
