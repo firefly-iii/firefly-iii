@@ -8,6 +8,8 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Generator\Report\Audit\MonthReportGenerator as AuditGenerator;
+use FireflyIII\Generator\Report\ReportGeneratorInterface;
 
 
 /**
@@ -28,85 +30,76 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::auditReport
-     * Implement testAuditReport().
      */
     public function testAuditReport()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('reports.report.audit', [1, '20160101', '20160131']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::budgetReport
-     * Implement testBudgetReport().
      */
     public function testBudgetReport()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('reports.report.budget', [1, 1, '20160101', '20160131']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::categoryReport
-     * Implement testCategoryReport().
      */
     public function testCategoryReport()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('reports.report.category', [1, 1, '20160101', '20160131']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::defaultReport
-     * Implement testDefaultReport().
      */
     public function testDefaultReport()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('reports.report.default', [1, '20160101', '20160131']));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('reports.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::options
-     * Implement testOptions().
      */
     public function testOptions()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('reports.options', ['default']));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
-     * Implement testPostIndex().
      */
     public function testPostIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('post', route('reports.index.post'));
+        $this->assertResponseStatus(302);
     }
 }

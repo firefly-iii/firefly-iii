@@ -515,16 +515,53 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'reports.report', function (BreadCrumbGenerator $breadcrumbs, Carbon $start, Carbon $end, $reportType, $accountIds) {
+    'reports.report.audit', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('reports.index');
 
     $monthFormat = (string)trans('config.month_and_day');
-    $title       = (string)trans(
-        'firefly.report_' . $reportType,
-        ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]
-    );
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_audit', ['start' => $startString, 'end' => $endString]);
 
-    $breadcrumbs->push($title, route('reports.report', [$reportType, $start->format('Ymd'), $end->format('Ymd'), $accountIds]));
+    $breadcrumbs->push($title, route('reports.report.audit', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+Breadcrumbs::register(
+    'reports.report.budget', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $budgetIds, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_budget', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.budget', [$accountIds, $budgetIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+
+Breadcrumbs::register(
+    'reports.report.category', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $categoryIds, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.category', [$accountIds, $categoryIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+
+Breadcrumbs::register(
+    'reports.report.default', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_default', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.default', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
 }
 );
 

@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, accountIds, start, end) }}
 {% endblock %}
 
 {% block content %}
