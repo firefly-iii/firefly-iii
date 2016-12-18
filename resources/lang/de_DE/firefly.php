@@ -194,6 +194,7 @@ return [
     'warning_no_matching_transactions'           => 'Keine übereinstimmenden Überweisungen gefunden. Aus Kapazitätgründen werden nur die letzten :num_transactions Überweisungen überprüft.',
     'warning_no_valid_triggers'                  => 'Keine gültigen Trigger gefunden.',
     'execute_on_existing_transactions'           => 'Führe für bestehende Überweisungen aus',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'Wenn eine Regel oder eine Gruppe geändert oder hinzugefügt wurde, können Sie für bestehende Überweisungen ausgeführt werden',
     'execute_on_existing_transactions_short'     => 'Bestehende Überweisungen',
     'executed_group_on_existing_transactions'    => 'Regelgruppe ":title" wurde für bestehende Überweisungen ausgeführt',
