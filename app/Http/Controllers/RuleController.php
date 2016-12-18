@@ -87,10 +87,10 @@ class RuleController extends Controller
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rules.rule.create.fromStore') !== true) {
+        if (session('rules.create.fromStore') !== true) {
             Session::put('rules.create.url', URL::previous());
         }
-        Session::forget('rules.rule.create.fromStore');
+        Session::forget('rules.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule');
 
@@ -179,10 +179,10 @@ class RuleController extends Controller
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rules.rule.edit.fromUpdate') !== true) {
+        if (session('rules.edit.fromUpdate') !== true) {
             Session::put('rules.edit.url', URL::previous());
         }
-        Session::forget('rules.rule.edit.fromUpdate');
+        Session::forget('rules.edit.fromUpdate');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
@@ -257,9 +257,9 @@ class RuleController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('rules.rule.create.fromStore', true);
+            Session::put('rules.create.fromStore', true);
 
-            return redirect(route('rules.rule.create', [$ruleGroup]))->withInput();
+            return redirect(route('rules.create', [$ruleGroup]))->withInput();
         }
 
         // redirect to previous URL.
@@ -344,9 +344,9 @@ class RuleController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('rules.rule.edit.fromUpdate', true);
+            Session::put('rules.edit.fromUpdate', true);
 
-            return redirect(route('rules.rule.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

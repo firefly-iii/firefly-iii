@@ -604,29 +604,36 @@ Breadcrumbs::register(
 }
 );
 Breadcrumbs::register(
-    'rules.rule-group.create', function (BreadCrumbGenerator $breadcrumbs) {
+    'rule-groups.create', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.make_new_rule_group'), route('rules.rule-group.create'));
+    $breadcrumbs->push(trans('firefly.make_new_rule_group'), route('rule-groups.create'));
 }
 );
 Breadcrumbs::register(
-    'rules.rule-group.edit', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rule-groups.edit', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]), route('rules.rule-group.edit', [$ruleGroup]));
+    $breadcrumbs->push(trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]), route('rule-groups.edit', [$ruleGroup]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule-group.delete', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rule-groups.delete', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]), route('rules.rule-group.delete', [$ruleGroup]));
+    $breadcrumbs->push(trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]), route('rule-groups.delete', [$ruleGroup]));
 }
 );
 
 Breadcrumbs::register(
-    'rules.rule-group.select_transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rule-groups.select-transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup]));
+}
+);
+
+Breadcrumbs::register(
+    'rule-groups.select_transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
     $breadcrumbs->push(
-        trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]), route('rules.rule-group.select_transactions', [$ruleGroup])
+        trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select_transactions', [$ruleGroup])
     );
 }
 );
