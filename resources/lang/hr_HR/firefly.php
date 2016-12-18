@@ -194,6 +194,7 @@ return [
     'warning_no_matching_transactions'           => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'                  => 'No valid triggers provided.',
     'execute_on_existing_transactions'           => 'Execute for existing transactions',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'When a rule or group has been changed or added, you can execute it for existing transactions',
     'execute_on_existing_transactions_short'     => 'Existing transactions',
     'executed_group_on_existing_transactions'    => 'Executed group ":title" for existing transactions',
