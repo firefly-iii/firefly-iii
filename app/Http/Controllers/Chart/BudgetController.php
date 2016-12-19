@@ -386,7 +386,7 @@ class BudgetController extends Controller
             }
             $amount    = $repetition->amount;
             $left      = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcmul($amount, '-1') : $expenses;
+            $spent     = $expenses;
             $overspent = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
             $return[]  = [
                 'name'                 => $name,
@@ -454,8 +454,8 @@ class BudgetController extends Controller
         $array = [
             'name'                 => strval(trans('firefly.no_budget')),
             'repetition_left'      => '0',
-            'repetition_overspent' => '0',
-            'spent'                => $sum,
+            'repetition_overspent' => $sum,
+            'spent'                => '0',
         ];
 
         return $array;
