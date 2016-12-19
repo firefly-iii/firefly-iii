@@ -14,7 +14,7 @@ declare(strict_types = 1);
 return [
 
     'import_configure_title' => 'Configurer l\'import',
-    'import_configure_intro' => 'Il y a des options pour l\'import CSV. Veuillez indiquer si votre fichier CSV contient les en-têtes dans la première colonne, et quel est le format de la date de votre champs date. Cela peut nécessiter quelques essais. Le délimiteur de champ est généralement un «, », mais pourrait également être un « ; ». Cochez cette case avec soin.',
+    'import_configure_intro' => 'Il y a des options pour l\'import CSV. Veuillez indiquer si votre fichier CSV contient les en-têtes dans la première colonne, et quel est le format des dates de vos champs date. Cela peut nécessiter quelques essais. Le délimiteur de champ est généralement un « , », mais pourrait également être un « ; ». Cochez cette case avec soin.',
     'import_configure_form'  => 'Basic CSV import options',
     'header_help'            => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes',
     'date_help'              => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser les formats comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> cette page</a>. La valeur par défaut va extraire les dates qui ressemblent à ceci: :dateExample.',
@@ -34,7 +34,7 @@ return [
     'store_column_roles'     => 'Continuer l\'import',
     'do_not_map'             => '(Ne pas mapper)',
     'map_title'              => 'Lier les données importées aux données Firefly III',
-    'map_text'               => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'map_text'               => 'Dans les tableaux suivants, la valeur gauche vous montre des informations trouvées dans votre fichier CSV téléchargé. C’est votre rôle de mapper cette valeur, si possible, une valeur déjà présente dans votre base de données. Firefly s’en tiendra à ce mappage. Si il n’y a pas de valeur correspondante, ou vous ne souhaitez pas la valeur spécifique de la carte, ne sélectionnez rien.',
 
     'field_value'          => 'Valeur du champ',
     'field_mapped_to'      => 'Mappé à',
@@ -68,11 +68,11 @@ return [
     'column_opposing-id'            => 'Compte destination(ID correspondant Firefly)',
     'column_external-id'            => 'Identifiant externe',
     'column_opposing-name'          => 'Compte destination (nom)',
-    'column_rabo-debet-credit'      => 'Rabobank specific debet/credit indicator',
-    'column_ing-debet-credit'       => 'ING specific debet/credit indicator',
+    'column_rabo-debet-credit'      => 'Indicateur spécifique débit/crédit à Rabobank',
+    'column_ing-debet-credit'       => 'Indicateur spécifique débit/crédit à ING',
     'column_sepa-ct-id'             => 'SEPA Credit Transfer end-to-end ID',
     'column_sepa-ct-op'             => 'SEPA Credit Transfer opposing account',
-    'column_sepa-db'                => 'SEPA Direct Debet',
+    'column_sepa-db'                => 'SEPA débit immédiat',
     'column_tags-comma'             => 'Tags (séparé par des virgules)',
     'column_tags-space'             => 'Tags(séparé par des espaces)',
     'column_account-number'         => 'Compte d’actif (numéro de compte)',
