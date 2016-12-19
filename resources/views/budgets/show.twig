@@ -11,15 +11,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'overview'|_ }}</h3>
 
-
                     <!-- ACTIONS MENU -->
-                    <div class="pull-right">
+                    <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                {{ 'actions'|_ }}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
@@ -98,12 +94,12 @@
     <script type="text/javascript">
         var budgetID = {{ budget.id }};
         {% if repetition.id %}
-            var repetitionID = {{ repetition.id }};
-            var year = {{ repetition.startdate.format('Y') }};
-            var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, repetition.id] ) }}';
+        var repetitionID = {{ repetition.id }};
+        var year = {{ repetition.startdate.format('Y') }};
+        var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, repetition.id] ) }}';
         {% else %}
-            var year = {{ Session.get('start').format('Y') }};
-            var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
+        var year = {{ Session.get('start').format('Y') }};
+        var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
         {% endif %}
 
     </script>
