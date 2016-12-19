@@ -204,7 +204,7 @@ class BudgetController extends Controller
         }
         // for no budget:
         $row = $this->spentInPeriodWithout($start, $end);
-        if (bccomp($row['spent'], '0') !== 0 || bccomp($row['repetition_left'], '0') !== 0) {
+        if (bccomp($row['repetition_overspent'], '0') !== 0) {
             $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
             $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
             $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
