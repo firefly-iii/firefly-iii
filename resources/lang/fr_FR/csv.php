@@ -20,19 +20,19 @@ return [
     'date_help'              => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser les formats comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">cette page</a>. La valeur par défaut va analyser les dates ressemblant à ceci: :dateExample.',
     'delimiter_help'         => 'Choisissez le délimiteur de champ qui est utilisé dans votre fichier d’entrée. Si vous n’êtes pas certain, la virgule est l’option la plus sûre.',
     'import_account_help'    => 'Si votre fichier CSV ne contient AUCUNE information concernant vos compte(s) actif, utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le CSV font référence.',
-    'upload_not_writeable'   => 'La case grise contient un chemin d’accès. Il devrait être accessible en écriture. Veuillez vous en assurer.',
+    'upload_not_writeable'   => 'Le champ grisé contient un chemin d’accès. Il devrait être accessible en écriture. Veuillez vous en assurer.',
 
     // roles
     'column_roles_title'     => 'Définir le rôle des colonnes',
     'column_roles_table'     => 'Tableau',
     'column_name'            => 'Nom de colonne',
-    'column_example'         => 'Exemple',
+    'column_example'         => 'Données d’exemple de colonne',
     'column_role'            => 'Sens de la donnée',
     'do_map_value'           => 'Mapper ces valeurs',
     'column'                 => 'Colonne',
     'no_example_data'        => 'Pas de données disponibles',
     'store_column_roles'     => 'Continuer l\'import',
-    'do_not_map'             => '(Ne pas mapper)',
+    'do_not_map'             => '(ne pas mapper)',
     'map_title'              => 'Lier les données importées aux données Firefly III',
     'map_text'               => 'Dans les tableaux suivants, la valeur gauche vous montre des informations trouvées dans votre fichier CSV téléchargé. C’est votre rôle de mapper cette valeur, si possible, une valeur déjà présente dans votre base de données. Firefly s’en tiendra à ce mappage. Si il n’y a pas de valeur correspondante, ou vous ne souhaitez pas la valeur spécifique de la carte, ne sélectionnez rien.',
 
