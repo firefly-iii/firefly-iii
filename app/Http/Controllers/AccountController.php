@@ -124,17 +124,24 @@ class AccountController extends Controller
      */
     public function destroy(ARI $repository, Account $account)
     {
-        $type     = $account->accountType->type;
-        $typeName = config('firefly.shortNamesByFullName.' . $type);
-        $name     = $account->name;
-        $moveTo   = $repository->find(intval(Input::get('move_account_before_delete')));
+        $type      = $account->accountType->type;
+        $typeName  = config('firefly.shortNamesByFullName.' . $type);
+        $name      = $account->name;
+        $accountId = $account->id;
+        $moveTo    = $repository->find(intval(Input::get('move_account_before_delete')));
 
         $repository->destroy($account, $moveTo);
 
         Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
 
-        return redirect(session('accounts.delete.url'));
+        $uri = session('accounts.delete.url');
+        if (!(strpos($uri, sprintf('accounts/show/%s', $accountId)) === false)) {
+            // uri would point back to account
+            $uri = route('accounts.index', [$typeName]);
+        }
+
+        return redirect($uri);
     }
 
     /**
@@ -236,11 +243,11 @@ class AccountController extends Controller
         $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
 
-        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri     = route('chart.account.single', [$account->id]);
+        $start    = session('start', Navigation::startOfPeriod(new Carbon, $range));
+        $end      = session('end', Navigation::endOfPeriod(new Carbon, $range));
+        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri = route('chart.account.single', [$account->id]);
         // grab those journals:
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();

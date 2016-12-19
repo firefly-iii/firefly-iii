@@ -150,13 +150,18 @@ class PiggyBankController extends Controller
      */
     public function destroy(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-
-
         Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
+        $piggyBankId = $piggyBank->id;
         $repository->destroy($piggyBank);
 
-        return redirect(session('piggy-banks.delete.url'));
+        $uri = session('piggy-banks.delete.url');
+        if (!(strpos($uri, sprintf('piggy-banks/show/%s', $piggyBankId)) === false)) {
+            // uri would point back to piggy bank
+            $uri = route('piggy-banks.index');
+        }
+
+        return redirect($uri);
     }
 
     /**
@@ -260,6 +265,7 @@ class PiggyBankController extends Controller
                 $repository->setOrder(intval($id), ($order + 1));
             }
         }
+
         return Response::json(['result' => 'ok']);
     }
 

@@ -98,13 +98,20 @@ class CategoryController extends Controller
     public function destroy(CRI $repository, Category $category)
     {
 
-        $name = $category->name;
+        $name       = $category->name;
+        $categoryId = $category->id;
         $repository->destroy($category);
 
         Session::flash('success', strval(trans('firefly.deleted_category', ['name' => e($name)])));
         Preferences::mark();
 
-        return redirect(session('categories.delete.url'));
+        $uri = session('categories.delete.url');
+        if (!(strpos($uri, sprintf('categories/show/%s', $categoryId)) === false)) {
+            // uri would point back to category
+            $uri = route('categories.index');
+        }
+
+        return redirect($uri);
     }
 
     /**

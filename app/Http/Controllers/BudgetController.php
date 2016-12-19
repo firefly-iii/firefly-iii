@@ -134,15 +134,21 @@ class BudgetController extends Controller
     public function destroy(Budget $budget, BudgetRepositoryInterface $repository)
     {
 
-        $name = $budget->name;
+        $name     = $budget->name;
+        $budgetId = $budget->id;
         $repository->destroy($budget);
 
 
         Session::flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
         Preferences::mark();
 
+        $uri = session('budgets.delete.url');
+        if (!(strpos($uri, sprintf('budgets/show/%s', $budgetId)) === false)) {
+            // uri would point back to budget
+            $uri = route('budgets.index');
+        }
 
-        return redirect(session('budgets.delete.url'));
+        return redirect($uri);
     }
 
     /**

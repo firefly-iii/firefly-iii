@@ -153,16 +153,21 @@ class SingleController extends Controller
         if ($this->isOpeningBalance($transactionJournal)) {
             return $this->redirectToAccount($transactionJournal);
         }
-
-        $type = TransactionJournal::transactionTypeStr($transactionJournal);
+        $journalId = $transactionJournal->id;
+        $type      = TransactionJournal::transactionTypeStr($transactionJournal);
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
 
         Preferences::mark();
 
-        // redirect to previous URL:
-        return redirect(session('transactions.delete.url'));
+        $uri = session('transactions.delete.url');
+        if (!(strpos($uri, sprintf('transactions/show/%s', $journalId)) === false)) {
+            // uri would point back to transaction
+            $uri = route('transactions.index', [strtolower($type)]);
+        }
+
+        return redirect($uri);
     }
 
     /**
