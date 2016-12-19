@@ -1,8 +1,8 @@
-# Firefly III [![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php#v7.0.4) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
+# Firefly III: A personal finances manager 
 
-[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)
+[![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php#v7.0.4) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 
-## A personal finances manager
+[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 
 [![The index of Firefly III](https://i.nder.be/hurdhgyg/400)](https://i.nder.be/h2b37243) [![The account overview of Firefly III](https://i.nder.be/hnkfkdpr/400)](https://i.nder.be/hv70pbwc)
 
@@ -31,6 +31,6 @@ Firefly works on the principle that if you know where you're money is going, you
 
 Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
 
-If you like Firefly and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2ZMV952UUSCLU&lc=NL&item_name=Development%20of%20Firefly&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted) (this is a joke, although the Paypal form works just fine, try it!)
+If you like Firefly and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) (this is a joke, although the Paypal form works just fine, try it!)
 
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
