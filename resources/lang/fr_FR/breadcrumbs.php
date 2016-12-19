@@ -34,7 +34,7 @@ return [
     'create_transfer'   => 'Creer un nouveau virement',
     'edit_journal'      => 'Éditer la transaction ":description"',
     'delete_journal'    => 'Supprimer la transaction ":description"',
-    'tags'              => 'Tags',
+    'tags'              => 'Mots-clés',
     'createTag'         => 'Créer un nouveau tag',
     'edit_tag'          => 'Éditer le tag ":tag"',
     'delete_tag'        => 'Supprimer le tag ":tag"',

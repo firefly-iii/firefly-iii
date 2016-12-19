@@ -194,6 +194,7 @@ return [
     'warning_no_matching_transactions'           => 'Nenhuma transação correspondente encontrada. Por favor note que por motivos de desempenho, apenas as últimas :num_transactions transações tenham sido verificadas.',
     'warning_no_valid_triggers'                  => 'Sem gatilhos válidos fornecidos.',
     'execute_on_existing_transactions'           => 'Executar transações existentes',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'Quando uma regra ou um grupo for alterado ou adicionado, você pode executá-lo para transações existentes',
     'execute_on_existing_transactions_short'     => 'Transações existentes',
     'executed_group_on_existing_transactions'    => 'Executado o grupo ":title" para transações existentes',
@@ -632,10 +633,10 @@ return [
     'errors'                                     => 'Erros',
 
     // reports:
-    'report_default'                             => 'Relatório financeiro padrão de :start até :end',
-    'report_audit'                               => 'Visão geral do histórico de transação de :start até :end',
-    'report_category'                            => 'Category report for :start until :end',
-    'report_budget'                              => 'Budget report for :start until :end',
+    'report_default'                             => 'Default financial report between :start and :end',
+    'report_audit'                               => 'Transaction history overview between :start and :end',
+    'report_category'                            => 'Category report between :start and :end',
+    'report_budget'                              => 'Budget report between :start and :end',
     'quick_link_reports'                         => 'Ligações rápidas',
     'quick_link_default_report'                  => 'Relatório financeiro padrão',
     'quick_link_audit_report'                    => 'Visão geral do histórico de transação',
