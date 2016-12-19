@@ -31,4 +31,6 @@ Firefly works on the principle that if you know where you're money is going, you
 
 Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
 
+If you like Firefly and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2ZMV952UUSCLU&lc=NL&item_name=Development%20of%20Firefly&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted) (this is a joke, although the Paypal form works just fine, try it!)
+
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
