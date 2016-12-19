@@ -17,9 +17,9 @@ return [
     'import_configure_intro' => 'Il y a des options pour l\'import CSV. Veuillez indiquer si votre fichier CSV contient les en-têtes dans la première colonne, et quel est le format des dates de vos champs date. Cela peut nécessiter quelques essais. Le délimiteur de champ est généralement un « , », mais pourrait également être un « ; ». Cochez cette case avec soin.',
     'import_configure_form'  => 'Basic CSV import options',
     'header_help'            => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes',
-    'date_help'              => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser les formats comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> cette page</a>. La valeur par défaut va extraire les dates qui ressemblent à ceci: :dateExample.',
+    'date_help'              => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser les formats comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">cette page</a>. La valeur par défaut va analyser les dates ressemblant à ceci: :dateExample.',
     'delimiter_help'         => 'Choisissez le délimiteur de champ qui est utilisé dans votre fichier d’entrée. Si vous n’êtes pas certain, la virgule est l’option la plus sûre.',
-    'import_account_help'    => 'Si votre fichier CSV ne contient AUCUNE informations concernant vos compte(s) actif, utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le CSV font référence.',
+    'import_account_help'    => 'Si votre fichier CSV ne contient AUCUNE information concernant vos compte(s) actif, utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le CSV font référence.',
     'upload_not_writeable'   => 'La case grise contient un chemin d’accès. Il devrait être accessible en écriture. Veuillez vous en assurer.',
 
     // roles
