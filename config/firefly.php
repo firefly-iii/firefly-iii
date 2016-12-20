@@ -114,6 +114,7 @@ return [
     'languages'                => [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => false],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish', 'complete' => false],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
         'hr_HR' => ['name_locale' => 'hrvatski', 'name_english' => 'Croatian', 'complete' => false],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
