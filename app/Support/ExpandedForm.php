@@ -285,6 +285,24 @@ class ExpandedForm
 
     /**
      * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function password(string $name, array $options = []): string
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $html    = view('form.password', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
      * @param array $list
      * @param null  $selected
      * @param array $options
@@ -339,24 +357,6 @@ class ExpandedForm
         $html                 = view('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
-    public function password(string $name, array $options = []): string
-    {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $html    = view('form.password', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-
     }
 
     /**
@@ -496,7 +496,9 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $options['min']  = '0.01';
+        if ($view !== 'balance') {
+            $options['min'] = '0.01';
+        }
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);
