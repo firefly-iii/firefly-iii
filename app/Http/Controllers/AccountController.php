@@ -221,6 +221,7 @@ class AccountController extends Controller
                 $account->lastActivityDate = $this->isInArray($activities, $account->id);
                 $account->startBalance     = $this->isInArray($startBalances, $account->id);
                 $account->endBalance       = $this->isInArray($endBalances, $account->id);
+                $account->difference       = bcsub($account->endBalance, $account->startBalance);
             }
         );
 
@@ -386,7 +387,7 @@ class AccountController extends Controller
             return $array[$entryId];
         }
 
-        return '';
+        return '0';
     }
 
     /**
