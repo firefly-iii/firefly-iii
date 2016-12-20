@@ -59,7 +59,7 @@ class Search implements SearchInterface
     {
         $accounts = $this->user->accounts()
                                ->accountTypeIn([AccountType::DEFAULT, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::BENEFICIARY])
-                               ->get();
+                               ->get(['accounts.*']);
         /** @var Collection $result */
         $result = $accounts->filter(
             function (Account $account) use ($words) {
