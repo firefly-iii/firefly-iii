@@ -376,14 +376,14 @@ class ImportStorage
         $sourceData = [
             'account_id'             => $accounts['source']->id,
             'transaction_journal_id' => $journal->id,
-            'description'            => $journal->description,
+            'description'            => null,
             'amount'                 => bcmul($amount, '-1'),
         ];
 
         $destinationData = [
             'account_id'             => $accounts['destination']->id,
             'transaction_journal_id' => $journal->id,
-            'description'            => $journal->description,
+            'description'            => null,
             'amount'                 => $amount,
         ];
 
