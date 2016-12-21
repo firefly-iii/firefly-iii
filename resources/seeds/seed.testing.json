@@ -636,6 +636,15 @@
       "destination_id": 3,
       "min_amount": 150,
       "max_amount": 150
+    },
+    {
+      "user_id": 1,
+      "day-of-month": 28,
+      "description": "Make up for test 1",
+      "source_id": 4,
+      "destination_id": 3,
+      "min_amount": 20,
+      "max_amount": 20
     }
   ],
   "monthly-withdrawals": [
@@ -825,6 +834,26 @@
       "max_amount": 36,
       "category_id": 6,
       "budget_id": 6
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "02",
+      "description": "Test 1 without budget but balancing act.",
+      "source_id": 3,
+      "destination_id": 29,
+      "min_amount": 20,
+      "max_amount": 20,
+      "category_id": 5
+    },
+    {
+      "user_id": 1,
+      "day-of-month": "02",
+      "description": "Test 2 without budget but balancing act.",
+      "source_id": 3,
+      "destination_id": 29,
+      "min_amount": 30,
+      "max_amount": 30,
+      "category_id": 5
     }
   ],
   "attachments": [
