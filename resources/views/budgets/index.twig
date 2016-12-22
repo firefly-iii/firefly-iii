@@ -129,7 +129,7 @@
                                             {% set repAmount = '0' %}
                                         {% endif %}
                                         <input class="form-control budgetAmount" data-original="{{ repAmount }}"
-                                               data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
+                                               data-id="{{ budget.id }}" value="{{ repAmount|round }}" autocomplete="off"
                                                step="1" min="0" name="amount" type="number">
                                     </div>
                                 </div>

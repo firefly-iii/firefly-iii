@@ -83,7 +83,7 @@ class BudgetController extends Controller
         }
         Preferences::mark();
 
-        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
+        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0, 'amount' => $amount]);
 
     }
 
