@@ -12,8 +12,9 @@ testflag=''
 coverageflag=''
 acceptancetestclass=''
 verbalflag=''
+testsuite=''
 
-while getopts 'vcrta:' flag; do
+while getopts 'vcrta:s:' flag; do
   case "${flag}" in
     r)
         resetestflag='true'
@@ -25,11 +26,16 @@ while getopts 'vcrta:' flag; do
         coverageflag='true'
     ;;
     v)
-        verbalflag=' -v'
+        verbalflag=' -v --debug'
+        echo "Will be verbal about it"
     ;;
     a)
         acceptancetestclass=./tests/acceptance/$OPTARG
         echo "Will only run acceptance test $OPTARG"
+    ;;
+    s)
+        testsuite="--testsuite $OPTARG"
+        echo "Will only run test suite '$OPTARG'"
     ;;
     *) error "Unexpected option ${flag}" ;;
   esac
@@ -85,11 +91,13 @@ else
 
     if [[ $coverageflag == "" ]]
     then
-        echo "Must run PHPUnit without coverage"
-        phpunit --stop-on-error $verbalflag $acceptancetestclass
+        echo "Must run PHPUnit without coverage:"
+        echo "phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite"
+        phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite
     else
         echo "Must run PHPUnit with coverage"
-        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass
+        echo "phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite"
+        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite
     fi
 fi
 

@@ -18,9 +18,9 @@
         </testsuite>
     </testsuites>
 
-    <listeners>
-        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener"/>
-    </listeners>
+
+
+
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
@@ -30,6 +30,9 @@
             <directory>vendor/</directory>
         </blacklist>
     </filter>
+    <logging>
+        <log type="coverage-clover" target="./storage/build/clover.xml" charset="UTF-8"/>
+    </logging>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
