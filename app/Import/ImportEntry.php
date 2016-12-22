@@ -96,10 +96,8 @@ class ImportEntry
             case 'account-id':
             case 'account-iban':
             case 'account-name':
-                $this->setObject('asset-account', $convertedValue, $certainty);
-                break;
             case 'account-number':
-                
+                $this->setObject('asset-account', $convertedValue, $certainty);
                 break;
             case 'opposing-number':
             case 'opposing-iban':
