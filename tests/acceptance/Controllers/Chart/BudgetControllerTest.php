@@ -11,6 +11,8 @@
 
 namespace Chart;
 
+use Carbon\Carbon;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use TestCase;
 
 /**
@@ -37,6 +39,11 @@ class BudgetControllerTest extends TestCase
      */
     public function testBudget(string $range)
     {
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepository->shouldReceive('firstUseDate')->andReturn(new Carbon('2015-01-01'));
+        $budgetRepository->shouldReceive('spentInPeriod')->andReturn('-100');
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('get', route('chart.budget.budget', [1]));
@@ -51,9 +58,12 @@ class BudgetControllerTest extends TestCase
      */
     public function testBudgetLimit(string $range)
     {
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepository->shouldReceive('spentInPeriod')->andReturn('-100');
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $this->call('get', route('chart.budget.budget', [1,1]));
+        $this->call('get', route('chart.budget.budget-limit', [1,1]));
         $this->assertResponseStatus(200);
     }
 

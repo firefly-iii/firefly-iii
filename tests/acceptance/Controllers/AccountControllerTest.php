@@ -8,8 +8,11 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 /**
@@ -105,9 +108,17 @@ class AccountControllerTest extends TestCase
     public function testShow(string $range)
     {
 
-        $tasker = $this->mock(\FireflyIII\Repositories\Account\AccountTaskerInterface::class);
+        $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
