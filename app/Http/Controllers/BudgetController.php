@@ -15,10 +15,10 @@ namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Http\Requests\BudgetFormRequest;
+use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -26,8 +26,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
-use Log;
-use Navigation;
 use Preferences;
 use Response;
 use Session;
@@ -42,6 +40,9 @@ use View;
 class BudgetController extends Controller
 {
 
+    /** @var  BudgetRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -55,6 +56,7 @@ class BudgetController extends Controller
             function ($request, $next) {
                 View::share('title', trans('firefly.budgets'));
                 View::share('mainTitleIcon', 'fa-tasks');
+                $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -73,14 +75,8 @@ class BudgetController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end       = session('end', Carbon::now()->endOfMonth());
-        $viewRange = Preferences::get('viewRange', '1M')->data;
-
-        // is custom view range?
-        if (session('is_custom_range') === true) {
-            $viewRange = 'custom';
-        }
-
+        $end             = session('end', Carbon::now()->endOfMonth());
+        $viewRange       = Preferences::get('viewRange', '1M')->data;
         $limitRepetition = $repository->updateLimitAmount($budget, $start, $end, $viewRange, $amount);
         if ($amount == 0) {
             $limitRepetition = null;
@@ -173,82 +169,27 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface  $repository
-     * @param AccountRepositoryInterface $accountRepository
-     *
      * @return View
-     *
      */
-    public function index(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    public function index()
     {
-        $repository->cleanupBudgets();
+        $this->repository->cleanupBudgets();
 
-        $budgets    = $repository->getActiveBudgets();
-        $inactive   = $repository->getInactiveBudgets();
-        $spent      = '0';
-        $budgeted   = '0';
-        $range      = Preferences::get('viewRange', '1M')->data;
-        $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . $range);
-
-        if (session('is_custom_range') === true) {
-            $repeatFreq = 'custom';
-        }
-
-        /** @var Carbon $start */
-        $start = session('start', new Carbon);
-        /** @var Carbon $end */
+        $budgets           = $this->repository->getActiveBudgets();
+        $inactive          = $this->repository->getInactiveBudgets();
+        $start             = session('start', new Carbon);
         $end               = session('end', new Carbon);
-        $key               = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
-        $budgetIncomeTotal = Preferences::get($key, 1000)->data;
-        $period            = Navigation::periodShow($start, $range);
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-        $startAsString     = $start->format('Y-m-d');
-        $endAsString       = $end->format('Y-m-d');
-        Log::debug('Now at /budgets');
-
-        // loop the budgets:
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            Log::debug(sprintf('Now at budget #%d ("%s")', $budget->id, $budget->name));
-            $budget->spent    = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
-            $allRepetitions   = $repository->getAllBudgetLimitRepetitions($start, $end);
-            $otherRepetitions = new Collection;
-
-            /** @var LimitRepetition $repetition */
-            foreach ($allRepetitions as $repetition) {
-                if ($repetition->budget_id == $budget->id) {
-                    if ($repetition->budgetLimit->repeat_freq == $repeatFreq
-                        && $repetition->startdate->format('Y-m-d') == $startAsString
-                        && $repetition->enddate->format('Y-m-d') == $endAsString
-                    ) {
-                        // do something
-                        $budget->currentRep = $repetition;
-                        continue;
-                    }
-                    $otherRepetitions->push($repetition);
-                }
-            }
-            $budget->otherRepetitions = $otherRepetitions;
-
-            if (!is_null($budget->currentRep) && !is_null($budget->currentRep->id)) {
-                $budgeted = bcadd($budgeted, $budget->currentRep->amount);
-            }
-            $spent = bcadd($spent, $budget->spent);
-
-        }
-
-
-        $defaultCurrency = Amount::getDefaultCurrency();
+        $budgetInformation = $this->collectBudgetInformation($budgets, $start, $end);
+        $defaultCurrency   = Amount::getDefaultCurrency();
+        $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
+        $spent             = array_sum(array_column($budgetInformation, 'spent'));
+        $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
 
         return view(
-            'budgets.index', compact(
-                               'periodStart', 'periodEnd',
-                               'period', 'range', 'budgetIncomeTotal',
-                               'defaultCurrency', 'inactive', 'budgets',
-                               'spent', 'budgeted'
-                           )
+            'budgets.index',
+            compact('available', 'periodStart', 'periodEnd', 'budgetInformation', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
         );
     }
 
@@ -280,16 +221,14 @@ class BudgetController extends Controller
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postUpdateIncome()
+    public function postUpdateIncome(BudgetIncomeRequest $request)
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $date */
-        $date  = session('start', new Carbon);
-        $start = Navigation::startOfPeriod($date, $range);
-        $end   = Navigation::endOfPeriod($start, $range);
-        $key   = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
+        $start           = session('start', new Carbon);
+        $end             = session('end', new Carbon);
+        $defaultCurrency = Amount::getDefaultCurrency();
+        $amount          = $request->get('amount');
 
-        Preferences::set($key, intval(Input::get('amount')));
+        $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         Preferences::mark();
 
         return redirect(route('budgets.index'));
@@ -430,19 +369,57 @@ class BudgetController extends Controller
      */
     public function updateIncome()
     {
-        $range  = Preferences::get('viewRange', '1M')->data;
-        $format = strval(trans('config.month_and_day'));
+        $start           = session('start', new Carbon);
+        $end             = session('end', new Carbon);
+        $defaultCurrency = Amount::getDefaultCurrency();
+        $available       = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
 
-        /** @var Carbon $date */
-        $date         = session('start', new Carbon);
-        $start        = Navigation::startOfPeriod($date, $range);
-        $end          = Navigation::endOfPeriod($start, $range);
-        $key          = 'budgetIncomeTotal' . $start->format('Ymd') . $end->format('Ymd');
-        $amount       = Preferences::get($key, 1000);
-        $displayStart = $start->formatLocalized($format);
-        $displayEnd   = $end->formatLocalized($format);
 
-        return view('budgets.income', compact('amount', 'displayStart', 'displayEnd'));
+        return view('budgets.income', compact('available', 'start', 'end'));
+    }
+
+    /**
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    private function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
+    {
+        // get account information
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $return            = [];
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId          = $budget->id;
+            $return[$budgetId] = [
+                'spent'      => $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
+                'budgeted'   => '0',
+                'currentRep' => false,
+            ];
+            $allRepetitions    = $this->repository->getAllBudgetLimitRepetitions($start, $end);
+            $otherRepetitions  = new Collection;
+
+            // get all the limit repetitions relevant between start and end and examine them:
+            /** @var LimitRepetition $repetition */
+            foreach ($allRepetitions as $repetition) {
+                if ($repetition->budget_id == $budget->id) {
+                    if ($repetition->startdate->isSameDay($start) && $repetition->enddate->isSameDay($end)
+                    ) {
+                        $return[$budgetId]['currentRep'] = $repetition;
+                        $return[$budgetId]['budgeted']   = $repetition->amount;
+                        continue;
+                    }
+                    // otherwise it's just one of the many relevant repetitions:
+                    $otherRepetitions->push($repetition);
+                }
+            }
+            $return[$budgetId]['otherRepetitions'] = $otherRepetitions;
+        }
+
+        return $return;
     }
 
 }

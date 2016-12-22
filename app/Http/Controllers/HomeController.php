@@ -63,6 +63,7 @@ class HomeController extends Controller
         // a possible problem with the budgets.
         if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
             $isCustomRange = true;
+            Preferences::set('viewRange', 'custom');
             Log::debug('Range is now marked as "custom".');
         }
 

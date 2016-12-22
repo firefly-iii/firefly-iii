@@ -18,8 +18,8 @@
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
                             <small>{{ trans('firefly.available_between',{start : periodStart, end: periodEnd }) }}:
-                                <a href="#" class="updateIncome"><span id="budgetIncomeTotal"
-                                                                       data-value="{{ budgetIncomeTotal }}">{{ budgetIncomeTotal|formatAmount }}</span></a>
+                                <a href="#" class="updateIncome"><span id="available"
+                                                                       data-value="{{ available }}">{{ available|formatAmountPlain }}</span></a>
                             </small>
                         </div>
                     </div>
@@ -90,8 +90,8 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <!-- link in header -->
-                        {% if budget.currentRep.id %}
-                            <a href="{{ route('budgets.show.repetition', [budget.id, budget.currentRep.id]) }}" class="budget-link"
+                        {% if budgetInformation[budget.id]['currentRep'] %}
+                            <a href="{{ route('budgets.show.repetition', [budget.id, budgetInformation[budget.id]['currentRep'].id]) }}" class="budget-link"
                                data-id="{{ budget.id }}">{{ budget.name }}</a>
                         {% else %}
                             <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
@@ -122,20 +122,16 @@
                                 <div class="form-group" style="margin-bottom:0;">
                                     <div class="input-group">
                                         <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
-                                        <input type="hidden" name="balance_currency_id" value="1"/>
-                                        <input class="form-control budgetAmount" data-original="{{ budget.currentRep.amount|number_format(0,'','') }}"
-                                               data-id="{{ budget.id }}" value="{{ budget.currentRep.amount|number_format(0,'','') }}" autocomplete="off"
+                                        <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                        {% if budgetInformation[budget.id]['currentRep'] %}
+                                            {% set repAmount = budgetInformation[budget.id]['currentRep'].amount %}
+                                        {% else %}
+                                            {% set repAmount = '0' %}
+                                        {% endif %}
+                                        <input class="form-control budgetAmount" data-original="{{ repAmount }}"
+                                               data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
                                                step="1" min="0" name="amount" type="number">
                                     </div>
-                                    <!--
-                                        <div class="small">
-                                                <ul class="list-inline">
-                                                    <li>Previously budgeted:</li>
-                                                    <li><a href="#">{{ 123|formatAmountPlain }}</a></li>
-                                                    <li><a href="#">{{ 456|formatAmountPlain }}</a></li>
-                                                </ul>
-                                        </div>
-                                        -->
                                 </div>
                             </td>
                         </tr>
@@ -147,21 +143,23 @@
                                     {{ session('end').formatLocalized(monthAndDayFormat) }}
                                     </span>
                             </td>
-                            <td>{{ budget.spent|formatAmount }}</a></td>
+                            <td>
+                                {{ budgetInformation[budget.id]['spent']|formatAmount }}
+                            </td>
                         </tr>
-                        {% if budget.otherRepetitions.count > 0 %}
+                        {% if budgetInformation[budget.id]['otherRepetitions'].count > 0 %}
                             <tr>
                                 <td colspan="2">
                                     <ul class="list-unstyled">
-                                        {% for other in budget.otherRepetitions %}
-                                            {% if other.id != budget.currentRep.id %}
-                                                <li>Budgeted
-                                                    <a href="{{ route('budgets.show.repetition', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
-                                                    between
-                                                    {{ other.startdate.formatLocalized(monthAndDayFormat) }}
-                                                    and {{ other.enddate.formatLocalized(monthAndDayFormat) }}.
-                                                </li>
-                                            {% endif %}
+                                        {% for other in budgetInformation[budget.id]['otherRepetitions'] %}
+                                            <li>
+                                                <!-- translate -->
+                                                Budgeted
+                                                <a href="{{ route('budgets.show.repetition', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
+                                                between
+                                                {{ other.startdate.formatLocalized(monthAndDayFormat) }}
+                                                and {{ other.enddate.formatLocalized(monthAndDayFormat) }}.
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 </td>
@@ -206,7 +204,7 @@
 
         // budgeted data:
         var budgeted = {{ budgeted }};
-        var budgetIncomeTotal = {{ budgetIncomeTotal }};
+        var available = {{ available }};
     </script>
 
     <script type="text/javascript" src="js/ff/budgets/index.js"></script>

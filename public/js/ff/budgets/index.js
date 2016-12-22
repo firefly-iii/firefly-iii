@@ -1,5 +1,3 @@
-/* globals $, budgeted:true, currencySymbol, budgetIncomeTotal, columnChart,  budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, lineChart */
-
 function drawSpentBar() {
     "use strict";
     if ($('.spentBar').length > 0) {
@@ -23,19 +21,19 @@ function drawBudgetedBar() {
     "use strict";
 
     if ($('.budgetedBar').length > 0) {
-        var budgetedMuch = budgeted > budgetIncomeTotal;
+        var budgetedMuch = budgeted > available;
 
         // recalculate percentage:
 
         var pct;
         if (budgetedMuch) {
             // budgeted too much.
-            pct = (budgetIncomeTotal / budgeted) * 100;
+            pct = (available / budgeted) * 100;
             $('.budgetedBar .progress-bar-warning').css('width', pct + '%');
             $('.budgetedBar .progress-bar-danger').css('width', (100 - pct) + '%');
             $('.budgetedBar .progress-bar-info').css('width', 0);
         } else {
-            pct = (budgeted / budgetIncomeTotal) * 100;
+            pct = (budgeted / available) * 100;
             $('.budgetedBar .progress-bar-warning').css('width', 0);
             $('.budgetedBar .progress-bar-danger').css('width', 0);
             $('.budgetedBar .progress-bar-info').css('width', pct + '%');

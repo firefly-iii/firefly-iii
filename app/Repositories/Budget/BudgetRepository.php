@@ -17,10 +17,12 @@ use Carbon\Carbon;
 use FireflyIII\Events\StoredBudgetLimit;
 use FireflyIII\Events\UpdatedBudgetLimit;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -211,6 +213,27 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return string
+     */
+    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
+    {
+        $amount          = '0';
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d'))
+                                      ->where('end_date', $end->format('Y-m-d'))->first();
+        if (!is_null($availableBudget)) {
+            $amount = strval($availableBudget->amount);
+        }
+
+        return $amount;
+    }
+
+    /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
      *
@@ -320,6 +343,33 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
+     *
+     * @return bool
+     */
+    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): bool
+    {
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d'))
+                                      ->where('end_date', $end->format('Y-m-d'))->first();
+        if (is_null($availableBudget)) {
+            $availableBudget = new AvailableBudget;
+            $availableBudget->user()->associate($this->user);
+            $availableBudget->transactionCurrency()->associate($currency);
+            $availableBudget->start_date = $start;
+            $availableBudget->end_date   = $end;
+        }
+        $availableBudget->amount = $amount;
+        $availableBudget->save();
+
+        return true;
     }
 
     /**
