@@ -503,6 +503,13 @@ class ExpandedForm
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);
         unset($options['placeholder']);
+
+        // make sure value is formatted nicely:
+        if (!is_null($value) && $value !== '') {
+            $value = round($value, 2);
+        }
+
+
         $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
