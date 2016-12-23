@@ -84,6 +84,7 @@ class BudgetReportController extends Controller
         $cache->addProperty($budgets);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
@@ -140,6 +141,7 @@ class BudgetReportController extends Controller
         $cache->addProperty($budgets);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }

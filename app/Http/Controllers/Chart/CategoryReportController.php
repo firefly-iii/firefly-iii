@@ -83,6 +83,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($categories);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
@@ -138,6 +139,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($categories);
         $cache->addProperty($start);
+        $cache->addProperty($others);
         $cache->addProperty($end);
         if ($cache->has()) {
             return Response::json($cache->get());
@@ -194,6 +196,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($categories);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
@@ -250,6 +253,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($categories);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
