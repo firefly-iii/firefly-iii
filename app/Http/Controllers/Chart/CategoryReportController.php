@@ -375,13 +375,16 @@ class CategoryReportController extends Controller
             $currentStart->addDay();
         }
         // remove all empty entries to prevent cluttering:
+        $newSet = [];
         foreach ($chartData as $key => $entry) {
-            if (array_sum($entry['entries']) == 0) {
-                unset($chartData[$key]);
+            if (!array_sum($entry['entries']) == 0) {
+                $newSet[$key] = $chartData[$key];
             }
         }
-
-        $data = $this->generator->multiSet($chartData);
+        if (count($newSet) === 0) {
+            $newSet = $chartData;
+        }
+        $data = $this->generator->multiSet($newSet);
         $cache->store($data);
 
         return Response::json($data);
