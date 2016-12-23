@@ -125,9 +125,9 @@ function doubleYChart(URI, container) {
     ];
     options.stacked = true;
     options.scales.xAxes[0].stacked = true;
-    console.log(options);
+    // console.log(options);
 
-    var chartType = 'line';
+    var chartType = 'bar';
 
     drawAChart(URI, container, chartType, options, colorData);
 }

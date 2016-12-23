@@ -31,6 +31,8 @@ class ChartJsGenerator implements GeneratorInterface
      * 0: [
      *    'label' => 'label of set',
      *    'type' => bar or line, optional
+     *    'yAxisID' => ID of yAxis, optional, will not be included when unused.
+     *    'fill' => if to fill a line? optional, will not be included when unused.
      *    'entries' =>
      *        [
      *         'label-of-entry' => 'value'
@@ -39,6 +41,8 @@ class ChartJsGenerator implements GeneratorInterface
      * 1: [
      *    'label' => 'label of another set',
      *    'type' => bar or line, optional
+     *    'yAxisID' => ID of yAxis, optional, will not be included when unused.
+     *    'fill' => if to fill a line? optional, will not be included when unused.
      *    'entries' =>
      *        [
      *         'label-of-entry' => 'value'
@@ -64,11 +68,19 @@ class ChartJsGenerator implements GeneratorInterface
         unset($first, $labels);
 
         foreach ($data as $set) {
-            $chartData['datasets'][] = [
+            $currentSet = [
                 'label' => $set['label'],
                 'type'  => $set['type'] ?? 'line',
                 'data'  => array_values($set['entries']),
             ];
+            if (isset($set['yAxisID'])) {
+                $currentSet['yAxisID'] = $set['yAxisID'];
+            }
+            if (isset($set['fill'])) {
+                $currentSet['fill'] = $set['fill'];
+            }
+
+            $chartData['datasets'][] = $currentSet;
         }
 
         return $chartData;
