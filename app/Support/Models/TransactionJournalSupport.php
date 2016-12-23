@@ -163,7 +163,9 @@ class TransactionJournalSupport extends Model
         if ($cache->has()) {
             return $cache->get();
         }
-        $transactions = $journal->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $transactions = $journal->transactions()
+                                ->whereNull('transactions.deleted_at')
+                                ->where('transactions.amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
         $list         = new Collection;
         /** @var Transaction $t */
         foreach ($transactions as $t) {
@@ -255,7 +257,10 @@ class TransactionJournalSupport extends Model
         if ($cache->has()) {
             return $cache->get();
         }
-        $transactions = $journal->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
+        $transactions = $journal->transactions()
+                                ->whereNull('transactions.deleted_at')
+                                ->where('transactions.amount', '<', 0)
+                                ->orderBy('transactions.account_id')->with('account')->get();
         $list         = new Collection;
         /** @var Transaction $t */
         foreach ($transactions as $t) {
