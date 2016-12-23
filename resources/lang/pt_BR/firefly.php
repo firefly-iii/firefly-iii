@@ -91,6 +91,9 @@ return [
     'expenses_by_budget'                         => 'Despesas pelo orçamento',
     'income_by_category'                         => 'Receitas por categoria',
     'cannot_redirect_to_account'                 => 'Firefly III não pode redirecioná-lo para a página correta. Minhas desculpas.',
+    'sum_of_expenses'                            => 'Sum of expenses',
+    'sum_of_income'                              => 'Sum of income',
+    
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'anual',
     'repeat_freq_monthly'                        => 'mensal',
