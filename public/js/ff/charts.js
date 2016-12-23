@@ -2,11 +2,11 @@
  * charts.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
-
-/* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits, noDataForChart */
 
 var allCharts = {};
 
@@ -82,6 +82,58 @@ function lineChart(URI, container) {
 }
 
 /**
+ * Function to draw a chart with double Y Axes and stacked columns.
+ *
+ * @param URI
+ * @param container
+ */
+function doubleYChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+    options.scales.yAxes = [
+        // y axis 0:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "left",
+            "id": "y-axis-0"
+        },
+        // and y axis 1:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "right",
+            "id": "y-axis-1"
+        }
+
+    ];
+    options.stacked = true;
+    options.scales.xAxes[0].stacked = true;
+    console.log(options);
+
+    var chartType = 'line';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+
+/**
  *
  * @param URI
  * @param container
@@ -107,7 +159,6 @@ function stackedColumnChart(URI, container) {
 
     var colorData = true;
     var options = defaultChartOptions;
-
     options.stacked = true;
     options.scales.xAxes[0].stacked = true;
 

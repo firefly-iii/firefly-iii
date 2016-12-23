@@ -44,12 +44,14 @@ class TestDataSeeder extends Seeder
             if (is_array($file)) {
                 // run the file:
                 TestData::run($file);
+
                 return;
             }
-            Log::error('No valid data found (' . $fileName . ') for environment ' . $env);
+            Log::error(sprintf('No valid data found (%s) for environment %s', $fileName, $env));
+
             return;
 
         }
-        Log::info('No seed file (' . $fileName . ') for environment ' . $env);
+        Log::error(sprintf('No seed file (%s) for environment %s', $fileName, $env));
     }
 }
