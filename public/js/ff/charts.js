@@ -132,6 +132,54 @@ function doubleYChart(URI, container) {
     drawAChart(URI, container, chartType, options, colorData);
 }
 
+/**
+ * Function to draw a chart with double Y Axes and non stacked columns.
+ *
+ * @param URI
+ * @param container
+ */
+function doubleYNonStackedChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+    options.scales.yAxes = [
+        // y axis 0:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "left",
+            "id": "y-axis-0"
+        },
+        // and y axis 1:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue, index, ticks) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "right",
+            "id": "y-axis-1"
+        }
+
+    ];
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+
 
 /**
  *

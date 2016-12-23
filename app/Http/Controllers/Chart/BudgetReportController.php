@@ -209,18 +209,21 @@ class BudgetReportController extends Controller
             $chartData[$budget->id]           = [
                 'label'   => strval(trans('firefly.spent_in_specific_budget', ['budget' => $budget->name])),
                 'type'    => 'bar',
+                'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$budget->id . '-sum']  = [
                 'label'   => strval(trans('firefly.sum_of_expenses_in_budget', ['budget' => $budget->name])),
                 'type'    => 'line',
                 'fill'    => false,
+                'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
             $chartData[$budget->id . '-left'] = [
                 'label'   => strval(trans('firefly.left_in_budget_limit', ['budget' => $budget->name])),
-                'type'    => 'line',
+                'type'    => 'bar',
                 'fill'    => false,
+                'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
         }
