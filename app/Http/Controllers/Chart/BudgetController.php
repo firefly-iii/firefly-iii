@@ -284,8 +284,8 @@ class BudgetController extends Controller
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];
             $spent                           = isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0';
-            $limit                           = isset($entries[$period]) ? $budgeted[$period] : 0;
-            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $limit                           = isset($budgeted[$period]) ? $budgeted[$period] : 0;
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 2);
             $chartData[1]['entries'][$label] = $limit;
 
         }

@@ -218,7 +218,7 @@ class BudgetReportController extends Controller
 
             /** @var Budget $budget */
             foreach ($budgets as $budget) {
-                $chartData[$budget->id]['entries'][$label] = $expenses[$budget->id] ?? '0';
+                $chartData[$budget->id]['entries'][$label] = round(($expenses[$budget->id] ?? '0'), 2);
             }
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
