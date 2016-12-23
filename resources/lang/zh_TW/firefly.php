@@ -93,7 +93,10 @@ return [
     'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
     'sum_of_expenses'                            => 'Sum of expenses',
     'sum_of_income'                              => 'Sum of income',
-    
+    'spent_in_specific_budget'                   => 'Spent in budget ":budget"',
+    'sum_of_expenses_in_budget'                  => 'Spent total in budget ":budget"',
+    'left_in_budget_limit'                       => 'Left to spend according to budgeting',
+
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => '每月',
