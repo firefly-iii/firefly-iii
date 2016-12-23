@@ -91,6 +91,9 @@ return [
     'expenses_by_budget'                         => 'Expenses by budget',
     'income_by_category'                         => 'Income by category',
     'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
+    'sum_of_expenses'                            => 'Sum of expenses',
+    'sum_of_income'                              => 'Sum of income',
+    
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => 'monthly',
