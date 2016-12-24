@@ -18,6 +18,7 @@ use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -69,34 +70,15 @@ class Import extends Command
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
-
         $importProcedure = new ImportProcedure;
+        $result          = $importProcedure->runImport($job);
 
-        $result = $importProcedure->runImport($job);
-
-
-        /**
-         * @var int                $index
-         * @var TransactionJournal $journal
-         */
-        foreach ($result as $index => $journal) {
-            if (!is_null($journal->id)) {
-                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $journal->id));
-                continue;
-            }
-            $this->error(sprintf('Could not store line #%d', $index));
-        }
-
+        // display result to user:
+        $this->presentResults($result);
         $this->line('The import has completed.');
 
         // get any errors from the importer:
-        $extendedStatus = $job->extended_status;
-        if (isset($extendedStatus['errors']) && count($extendedStatus['errors']) > 0) {
-            $this->line(sprintf('The following %d error(s) occured during the import:', count($extendedStatus['errors'])));
-            foreach ($extendedStatus['errors'] as $error) {
-                $this->error($error);
-            }
-        }
+        $this->presentErrors($job);
 
         return;
     }
@@ -121,5 +103,37 @@ class Import extends Command
         }
 
         return true;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    private function presentErrors(ImportJob $job)
+    {
+        $extendedStatus = $job->extended_status;
+        if (isset($extendedStatus['errors']) && count($extendedStatus['errors']) > 0) {
+            $this->line(sprintf('The following %d error(s) occured during the import:', count($extendedStatus['errors'])));
+            foreach ($extendedStatus['errors'] as $error) {
+                $this->error($error);
+            }
+        }
+    }
+
+    /**
+     * @param Collection $result
+     */
+    private function presentResults(Collection $result)
+    {
+        /**
+         * @var int                $index
+         * @var TransactionJournal $journal
+         */
+        foreach ($result as $index => $journal) {
+            if (!is_null($journal->id)) {
+                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $journal->id));
+                continue;
+            }
+            $this->error(sprintf('Could not store line #%d', $index));
+        }
     }
 }

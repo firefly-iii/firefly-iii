@@ -20,8 +20,6 @@ class ChangesForV410 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -31,7 +29,7 @@ class ChangesForV410 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up()
     {

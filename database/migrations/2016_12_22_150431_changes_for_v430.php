@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV430
@@ -9,13 +9,22 @@ use Illuminate\Database\Migrations\Migration;
 class ChangesForV430 extends Migration
 {
     /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::dropIfExists('available_budgets');
+    }
+
+    /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up()
     {
-        Schema::create('available_budgets', function (Blueprint $table) {
+        Schema::create(
+            'available_budgets', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
@@ -28,16 +37,7 @@ class ChangesForV430 extends Migration
 
             $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('available_budgets');
+        }
+        );
     }
 }

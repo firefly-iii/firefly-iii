@@ -55,6 +55,8 @@ class CreateMainTables extends Migration
 
     /**
      * Run the migrations.
+     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up()
     {
@@ -89,14 +91,9 @@ class CreateMainTables extends Migration
                 $table->string('name', 1024);
                 $table->decimal('virtual_balance', 14, 4)->nullable();
                 $table->string('iban', 255)->nullable();
-
                 $table->boolean('active')->default(1);
                 $table->boolean('encrypted')->default(0);
-
-                // link user id to users table
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-                // link account type id to account types table
                 $table->foreign('account_type_id')->references('id')->on('account_types')->onDelete('cascade');
             }
             );
@@ -110,8 +107,6 @@ class CreateMainTables extends Migration
                 $table->integer('account_id', false, true);
                 $table->string('name');
                 $table->text('data');
-
-                // link account id to accounts:
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             }
             );
@@ -183,12 +178,10 @@ class CreateMainTables extends Migration
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped.
      */
     private function createBudgetTables()
     {
-
-
         if (!Schema::hasTable('budgets')) {
             Schema::create(
                 'budgets', function (Blueprint $table) {
@@ -199,8 +192,6 @@ class CreateMainTables extends Migration
                 $table->string('name', 1024);
                 $table->boolean('active')->default(1);
                 $table->boolean('encrypted')->default(0);
-
-                // link user id to users table
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
 
@@ -210,7 +201,6 @@ class CreateMainTables extends Migration
         if (!Schema::hasTable('budget_limits')) {
             Schema::create(
                 'budget_limits', function (Blueprint $table) {
-
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('budget_id', false, true);
@@ -218,8 +208,6 @@ class CreateMainTables extends Migration
                 $table->decimal('amount', 14, 4);
                 $table->string('repeat_freq', 30);
                 $table->boolean('repeats')->default(0);
-
-                // link budget id to budgets table
                 $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
 
             }
@@ -234,8 +222,6 @@ class CreateMainTables extends Migration
                 $table->date('startdate');
                 $table->date('enddate');
                 $table->decimal('amount', 14, 4);
-
-                // link budget limit id to budget_limitss table
                 $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
             }
             );
@@ -319,8 +305,6 @@ class CreateMainTables extends Migration
                 $table->integer('order', false, true)->default(0);
                 $table->boolean('active')->default(0);
                 $table->boolean('encrypted')->default(1);
-
-                // link to account_id to accounts
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             }
             );
@@ -335,13 +319,10 @@ class CreateMainTables extends Migration
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
                 $table->decimal('currentamount', 14, 4);
-
                 $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
-
             }
             );
         }
-
     }
 
     /**
@@ -388,7 +369,8 @@ class CreateMainTables extends Migration
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly five
      */
     private function createRuleTables()
     {
@@ -503,7 +485,9 @@ class CreateMainTables extends Migration
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped.
+     * @SuppressWarnings(PHPMD.NPathComplexity) // cannot be helped
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly five
      */
     private function createTransactionTables()
     {
@@ -513,26 +497,19 @@ class CreateMainTables extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->softDeletes();
-
                 $table->integer('user_id', false, true);
                 $table->integer('transaction_type_id', false, true);
                 $table->integer('bill_id', false, true)->nullable();
                 $table->integer('transaction_currency_id', false, true);
-
                 $table->string('description', 1024);
-
                 $table->date('date');
                 $table->date('interest_date')->nullable();
                 $table->date('book_date')->nullable();
                 $table->date('process_date')->nullable();
-
                 $table->integer('order', false, true)->default(0);
                 $table->integer('tag_count', false, true);
-
                 $table->boolean('encrypted')->default(1);
                 $table->boolean('completed')->default(1);
-
-                // links to other tables:
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                 $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
                 $table->foreign('bill_id')->references('id')->on('bills')->onDelete('set null');
@@ -550,7 +527,6 @@ class CreateMainTables extends Migration
                 $table->string('name', 255);
                 $table->text('data');
                 $table->string('hash', 64);
-
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
             }
             );
@@ -562,7 +538,6 @@ class CreateMainTables extends Migration
                 $table->increments('id');
                 $table->integer('tag_id', false, true);
                 $table->integer('transaction_journal_id', false, true);
-
                 $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
@@ -577,7 +552,6 @@ class CreateMainTables extends Migration
                 $table->increments('id');
                 $table->integer('budget_id', false, true);
                 $table->integer('transaction_journal_id', false, true);
-
                 $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
             }
@@ -590,7 +564,6 @@ class CreateMainTables extends Migration
                 $table->increments('id');
                 $table->integer('category_id', false, true);
                 $table->integer('transaction_journal_id', false, true);
-
                 $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
             }

@@ -19,8 +19,6 @@ class ExpandTransactionsTable extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -30,7 +28,7 @@ class ExpandTransactionsTable extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up()
     {

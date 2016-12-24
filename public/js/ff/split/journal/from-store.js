@@ -54,7 +54,6 @@ function removeRow(e) {
     $('table.split-table tbody tr[data-split="' + index + '"]').remove();
 
 
-
     resetSplits();
 
     return false;
@@ -171,8 +170,9 @@ function calculateSum() {
     for (var i = 0; i < set.length; i++) {
         var current = $(set[i]);
         sum += (current.val() == "" ? 0 : parseFloat(current.val()));
-
     }
+    sum = Math.round(sum * 100) / 100;
+
     console.log("Sum is now " + sum);
     $('.amount-warning').remove();
     if (sum != originalSum) {
