@@ -34,6 +34,25 @@ class TransactionJournal extends TransactionJournalSupport
 {
     use SoftDeletes, ValidatingTrait;
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at'    => 'date',
+            'updated_at'    => 'date',
+            'deleted_at'    => 'date',
+            'date'          => 'date',
+            'interest_date' => 'date',
+            'book_date'     => 'date',
+            'process_date'  => 'date',
+            'order'         => 'int',
+            'tag_count'     => 'int',
+            'encrypted'     => 'boolean',
+            'completed'     => 'boolean',
+        ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date', 'process_date'];
     /** @var array */
@@ -65,9 +84,9 @@ class TransactionJournal extends TransactionJournalSupport
     {
         if (auth()->check()) {
             $object = self::where('transaction_journals.id', $value)
-                                        ->with('transactionType')
-                                        ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                        ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
+                          ->with('transactionType')
+                          ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                          ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
             if (!is_null($object)) {
                 return $object;
             }
@@ -352,8 +371,8 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public function setDescriptionAttribute($value)
     {
-        $this->attributes['description'] = Crypt::encrypt($value);
-        $this->attributes['encrypted']   = true;
+        $this->attributes['description'] = $value;
+        $this->attributes['encrypted']   = false;
     }
 
     /**

@@ -23,6 +23,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Role extends Model
 {
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                     = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
+    protected $dates = ['created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

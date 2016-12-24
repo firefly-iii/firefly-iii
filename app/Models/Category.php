@@ -29,10 +29,26 @@ class Category extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'encrypted'  => 'boolean',
+        ];
+    /** @var array  */
     protected $fillable = ['user_id', 'name'];
+    /** @var array  */
     protected $hidden   = ['encrypted'];
+    /** @var array  */
     protected $rules    = ['name' => 'required|between:1,200',];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param array $fields
@@ -86,7 +102,7 @@ class Category extends Model
     public function getNameAttribute($value)
     {
 
-        if (intval($this->encrypted) == 1) {
+        if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -99,8 +115,8 @@ class Category extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $this->attributes['name']      = $value;
+        $this->attributes['encrypted'] = false;
     }
 
     /**

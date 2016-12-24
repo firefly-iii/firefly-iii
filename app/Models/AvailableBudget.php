@@ -27,9 +27,23 @@ class AvailableBudget extends Model
 {
     use SoftDeletes;
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at', 'start_date', 'end_date'];
-    /** @var array */
     protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
+
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

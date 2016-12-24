@@ -15,6 +15,7 @@ namespace FireflyIII\Models;
 
 use Crypt;
 use FireflyIII\Support\Models\TagSupport;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
@@ -25,11 +26,25 @@ use Watson\Validating\ValidatingTrait;
  */
 class Tag extends TagSupport
 {
-    protected $dates    = ['created_at', 'updated_at', 'date'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'date'       => 'date',
+            'zoomLevel'  => 'int',
+
+        ];
+    protected $dates    = ['created_at', 'updated_at', 'date', 'deleted_at'];
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
     protected $rules    = ['tag' => 'required|between:1,200',];
 
-    use ValidatingTrait;
+    use ValidatingTrait, SoftDeletes;
 
     /**
      * @param array $fields

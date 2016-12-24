@@ -27,6 +27,23 @@ class Rule extends Model
     use SoftDeletes;
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at'      => 'date',
+            'updated_at'      => 'date',
+            'deleted_at'      => 'date',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
      * @param Rule $value
      *
      * @return Rule

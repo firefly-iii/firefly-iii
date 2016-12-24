@@ -343,7 +343,9 @@ class AccountRepository implements AccountRepositoryInterface
         $account->save();
 
         $this->updateMetadata($account, $data);
-        $this->updateInitialBalance($account, $data);
+        if ($this->validOpeningBalanceData($data)) {
+            $this->updateInitialBalance($account, $data);
+        }
 
         return $account;
     }
@@ -448,7 +450,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
-                'encrypted'               => true,
             ]
         );
         Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));

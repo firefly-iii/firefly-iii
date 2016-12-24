@@ -25,9 +25,21 @@ use Illuminate\Database\Eloquent\Model;
 class PiggyBankRepetition extends Model
 {
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'startdate'  => 'date',
+            'targetdate' => 'date',
+        ];
     protected $dates    = ['created_at', 'updated_at', 'startdate', 'targetdate'];
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
-    protected $hidden   = ['currentamount_encrypted'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

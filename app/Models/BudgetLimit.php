@@ -23,7 +23,20 @@ use Illuminate\Database\Eloquent\Model;
 class BudgetLimit extends Model
 {
 
-    protected $dates  = ['created_at', 'updated_at', 'startdate'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                      = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'startdate'  => 'date',
+            'repeats'    => 'boolean',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at'];
     protected $hidden = ['amount_encrypted'];
 
     /**

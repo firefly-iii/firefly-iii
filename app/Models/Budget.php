@@ -30,7 +30,23 @@ class Budget extends Model
 
     use SoftDeletes, ValidatingTrait;
 
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'enddate'];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'active'     => 'boolean',
+            'encrypted'  => 'boolean',
+        ];
+
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
     protected $rules    = ['name' => 'required|between:1,200',];
@@ -95,7 +111,7 @@ class Budget extends Model
     public function getNameAttribute($value)
     {
 
-        if (intval($this->encrypted) == 1) {
+        if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -115,8 +131,8 @@ class Budget extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $this->attributes['name']      = $value;
+        $this->attributes['encrypted'] = false;
     }
 
     /**
