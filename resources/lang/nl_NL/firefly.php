@@ -96,6 +96,8 @@ return [
     'spent_in_specific_budget'                   => 'Uitgegeven in budget ":budget"',
     'sum_of_expenses_in_budget'                  => 'Totaal uitgegeven in budget ":budget"',
     'left_in_budget_limit'                       => 'Nog uit te geven volgens budgettering',
+    'cannot_change_demo'                         => 'You cannot change the password of the demonstration account.',
+    'cannot_delete_demo'                         => 'You cannot remove the demonstration account.',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
