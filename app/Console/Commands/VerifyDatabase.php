@@ -124,16 +124,16 @@ class VerifyDatabase extends Command
     {
         $set = Budget::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
                      ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
-                     ->groupBy(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
+                     ->groupBy(['budgets.id', 'budgets.name', 'budgets.encrypted', 'budgets.user_id', 'users.email'])
                      ->whereNull('budget_limits.id')
-                     ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
+                     ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'budgets.encrypted', 'users.email']);
 
-        /** @var stdClass $entry */
+        /** @var Budget $entry */
         foreach ($set as $entry) {
-
+            $name = $entry->encrypted ? Crypt::decrypt($entry->name) : $entry->name;
             $line = sprintf(
                 'Notice: User #%d (%s) has budget #%d ("%s") which has no budget limits.',
-                $entry->user_id, $entry->email, $entry->id, Crypt::decrypt($entry->name)
+                $entry->user_id, $entry->email, $entry->id, $name
             );
             $this->line($line);
         }

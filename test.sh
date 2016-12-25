@@ -7,7 +7,7 @@ BACKUPENV=./.env.current
 TESTINGENV=./.env.testing
 
 # do something with flags:
-resetestflag=''
+resetTestFlag=''
 testflag=''
 coverageflag=''
 acceptancetestclass=''
@@ -17,7 +17,7 @@ testsuite=''
 while getopts 'vcrta:s:' flag; do
   case "${flag}" in
     r)
-        resetestflag='true'
+        resetTestFlag='true'
     ;;
     t)
         testflag='true'
@@ -55,7 +55,7 @@ cp $TESTINGENV $ORIGINALENV
 php artisan cache:clear
 
 # reset database (optional)
-if [[ $resetestflag == "true" ]]
+if [[ $resetTestFlag == "true" ]]
 then
     echo "Must reset database"
 
@@ -69,12 +69,14 @@ then
     # run migration
     php artisan migrate:refresh --seed
 
+    # call test data generation script
+    $(which php) /sites/FF3/test-data/artisan generate:data testing sqlite
     # copy new database over backup (resets backup)
     cp $DATABASE $DATABASECOPY
 fi
 
 # do not reset database (optional)
-if [[ $resetestflag == "" ]]
+if [[ $resetTestFlag == "" ]]
 then
     echo "Will not reset database"
 fi

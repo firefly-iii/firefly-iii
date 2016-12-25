@@ -33,11 +33,13 @@ class Transaction extends Model
      * @var array
      */
     protected $casts
-        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
-            'identifier' => 'int',
+                        = [
+            'created_at'          => 'date',
+            'updated_at'          => 'date',
+            'deleted_at'          => 'date',
+            'identifier'          => 'int',
+            'encrypted'           => 'boolean', // model does not have these fields though
+            'bill_name_encrypted' => 'boolean',
         ];
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier'];

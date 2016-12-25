@@ -11,8 +11,6 @@ install:
   - php artisan clear-compiled
   - php artisan optimize
   - php artisan env
-  - ./test.sh -r
-  - php artisan env
 
 script:
   - phpunit
