@@ -33,10 +33,24 @@ interface ExportJobRepositoryInterface
     public function create(): ExportJob;
 
     /**
+     * @param ExportJob $job
+     *
+     * @return bool
+     */
+    public function exists(ExportJob $job): bool;
+
+    /**
      * @param string $key
      *
      * @return ExportJob|null
      */
     public function findByKey(string $key): ExportJob;
+
+    /**
+     * @param ExportJob $job
+     *
+     * @return string
+     */
+    public function getContent(ExportJob $job): string;
 
 }
