@@ -95,16 +95,12 @@ class AttachmentController extends Controller
      * @throws FireflyException
      *
      */
-    public function download(Attachment $attachment)
+    public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
-        // create a disk.
-        $disk = Storage::disk('upload');
-        $file = $attachment->fileName();
-
-        if ($disk->exists($file)) {
-
+        if ($repository->exists($attachment)) {
+            $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
-            $content = Crypt::decrypt($disk->get($file));
+
 
             Log::debug('Send file to user', ['file' => $quoted, 'size' => strlen($content)]);
 
@@ -118,8 +114,8 @@ class AttachmentController extends Controller
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
                 ->header('Content-Length', strlen($content));
-
         }
+
         throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
 

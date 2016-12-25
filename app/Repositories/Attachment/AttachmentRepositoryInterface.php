@@ -38,6 +38,20 @@ interface AttachmentRepositoryInterface
     public function get(): Collection;
 
     /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function exists(Attachment $attachment): bool;
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getContent(Attachment $attachment): string;
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
