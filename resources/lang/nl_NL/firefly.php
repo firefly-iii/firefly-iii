@@ -93,9 +93,9 @@ return [
     'cannot_redirect_to_account'                 => 'Firefly III kan je niet naar de goede pagina doorsturen. Sorry!',
     'sum_of_expenses'                            => 'Som van uitgaven',
     'sum_of_income'                              => 'Som van inkomsten',
-    'spent_in_specific_budget'                   => 'Spent in budget ":budget"',
-    'sum_of_expenses_in_budget'                  => 'Spent total in budget ":budget"',
-    'left_in_budget_limit'                       => 'Left to spend according to budgeting',
+    'spent_in_specific_budget'                   => 'Uitgegeven in budget ":budget"',
+    'sum_of_expenses_in_budget'                  => 'Totaal uitgegeven in budget ":budget"',
+    'left_in_budget_limit'                       => 'Nog uit te geven volgens budgettering',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
