@@ -51,6 +51,12 @@ class ProfileController extends Controller
      */
     public function changePassword()
     {
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_change_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
         $title        = auth()->user()->email;
         $subTitle     = strval(trans('firefly.change_your_password'));
         $subTitleIcon = 'fa-key';
@@ -63,6 +69,12 @@ class ProfileController extends Controller
      */
     public function deleteAccount()
     {
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
         $title        = auth()->user()->email;
         $subTitle     = strval(trans('firefly.delete_account'));
         $subTitleIcon = 'fa-trash';
@@ -90,6 +102,12 @@ class ProfileController extends Controller
      */
     public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository)
     {
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_change_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
         // old, new1, new2
         if (!Hash::check($request->get('current_password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_current_password')));
@@ -118,6 +136,12 @@ class ProfileController extends Controller
      */
     public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request)
     {
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
         // old, new1, new2
         if (!Hash::check($request->get('password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_password')));
