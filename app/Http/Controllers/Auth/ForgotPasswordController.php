@@ -13,7 +13,9 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
 
 /**
  * Class ForgotPasswordController
@@ -32,5 +34,40 @@ class ForgotPasswordController extends Controller
     {
         parent::__construct();
         $this->middleware('guest');
+    }
+
+    /**
+     * Send a reset link to the given user.
+     *
+     * @param  Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sendResetLinkEmail(Request $request)
+    {
+        $this->validate($request, ['email' => 'required|email']);
+
+        // verify if the user is not a demo user. If so, we give him back an error.
+        $user = User::where('email', $request->get('email'))->first();
+        if (!is_null($user) && $user->hasRole('demo')) {
+            return back()->withErrors(
+                ['email' => trans('firefly.cannot_reset_demo_user')]
+            );
+        }
+
+        $response = $this->broker()->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($response === Password::RESET_LINK_SENT) {
+            return back()->with('status', trans($response));
+        }
+
+        // If an error was returned by the password broker, we will get this message
+        // translated so we can notify a user of the problem. We'll redirect back
+        // to where the users came from so they can attempt this process again.
+        return back()->withErrors(
+            ['email' => trans($response)]
+        );
     }
 }
