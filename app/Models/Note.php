@@ -23,9 +23,19 @@ use League\CommonMark\CommonMarkConverter;
  */
 class Note extends Model
 {
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+        ];
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['title', 'text'];
-
 
     /**
      * @return string

@@ -91,6 +91,15 @@ return [
     'expenses_by_budget'                         => 'Expenses by budget',
     'income_by_category'                         => 'Income by category',
     'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
+    'sum_of_expenses'                            => 'Sum of expenses',
+    'sum_of_income'                              => 'Sum of income',
+    'spent_in_specific_budget'                   => 'Spent in budget ":budget"',
+    'sum_of_expenses_in_budget'                  => 'Spent total in budget ":budget"',
+    'left_in_budget_limit'                       => 'Left to spend according to budgeting',
+    'cannot_change_demo'                         => 'You cannot change the password of the demonstration account.',
+    'cannot_delete_demo'                         => 'You cannot remove the demonstration account.',
+    'cannot_reset_demo_user'                     => 'You cannot reset the password of the demonstration account',
+
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => 'mensuel',
@@ -194,6 +203,7 @@ return [
     'warning_no_matching_transactions'           => 'Aucunes opérations correspondantes trouvées. Veuillez noter que pour des raisons de performances, seule les dernières :num_transactions opérations ont été vérifiées.',
     'warning_no_valid_triggers'                  => 'Aucun déclencheurs valide fourni.',
     'execute_on_existing_transactions'           => 'Exécuter des opérations existantes',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'Lorsqu’une règle ou un groupe a été modifié ou ajouté, vous pouvez l’exécuter pour des opérations existantes',
     'execute_on_existing_transactions_short'     => 'Opérations existantes',
     'executed_group_on_existing_transactions'    => 'Exécution groupe « : titre » pour les transactions existantes',
@@ -632,10 +642,10 @@ return [
     'errors'                                     => 'Erreurs',
 
     // reports:
-    'report_default'                             => 'Rapport financier par défaut du :start au :end',
-    'report_audit'                               => 'Historique des transactions du :start au :end',
-    'report_category'                            => 'Category report for :start until :end',
-    'report_budget'                              => 'Budget report for :start until :end',
+    'report_default'                             => 'Default financial report between :start and :end',
+    'report_audit'                               => 'Transaction history overview between :start and :end',
+    'report_category'                            => 'Category report between :start and :end',
+    'report_budget'                              => 'Budget report between :start and :end',
     'quick_link_reports'                         => 'Liens rapides',
     'quick_link_default_report'                  => 'Rapport financier par défaut',
     'quick_link_audit_report'                    => 'Historique des transactions',

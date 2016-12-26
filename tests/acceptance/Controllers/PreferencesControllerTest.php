@@ -28,61 +28,60 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::code
-     * Implement testCode().
      */
     public function testCode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('preferences.code'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::deleteCode
-     * Implement testDeleteCode().
      */
     public function testDeleteCode()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('preferences.delete-code'));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+        $this->assertSessionHas('info');
+        $this->assertRedirectedToRoute('preferences.index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\PreferencesController::postCode
-     * Implement testPostCode().
-     */
-    public function testPostCode()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('preferences.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::postIndex
-     * Implement testPostIndex().
      */
     public function testPostIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'fiscalYearStart'       => '2016-01-01',
+            'frontPageAccounts'     => [],
+            'viewRange'             => '1M',
+            'customFiscalYear'      => 0,
+            'showDepositsFrontpage' => 0,
+            'transactionPageSize'   => 100,
+            'twoFactorAuthEnabled'  => 0,
+            'language'              => 'en_US',
+            'tj'                    => [],
+        ];
+
+        $this->be($this->user());
+        $this->call('post', route('preferences.update'), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+        $this->assertRedirectedToRoute('preferences.index');
     }
 }

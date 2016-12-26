@@ -343,7 +343,9 @@ class AccountRepository implements AccountRepositoryInterface
         $account->save();
 
         $this->updateMetadata($account, $data);
-        $this->updateInitialBalance($account, $data);
+        if ($this->validOpeningBalanceData($data)) {
+            $this->updateInitialBalance($account, $data);
+        }
 
         return $account;
     }
@@ -438,7 +440,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $amount          = $data['openingBalance'];
         $name            = $data['name'];
-        $opposing        = $this->storeOpposingAccount($amount, $name);
+        $opposing        = $this->storeOpposingAccount($name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
@@ -448,7 +450,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
-                'encrypted'               => true,
             ]
         );
         Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));
@@ -481,17 +482,16 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    protected function storeOpposingAccount(float $amount, string $name): Account
+    protected function storeOpposingAccount(string $name): Account
     {
-        $type         = $amount < 0 ? 'expense' : 'revenue';
         $opposingData = [
-            'accountType'    => $type,
+            'accountType'    => 'initial',
             'name'           => $name . ' initial balance',
             'active'         => false,
             'iban'           => '',
             'virtualBalance' => 0,
         ];
-        Log::debug('Going to create an opening balance opposing account');
+        Log::debug('Going to create an opening balance opposing account.');
 
         return $this->storeAccount($opposingData);
     }

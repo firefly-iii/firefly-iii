@@ -204,7 +204,7 @@ class BudgetController extends Controller
         }
         // for no budget:
         $row = $this->spentInPeriodWithout($start, $end);
-        if (bccomp($row['spent'], '0') !== 0 || bccomp($row['repetition_left'], '0') !== 0) {
+        if (bccomp($row['repetition_overspent'], '0') !== 0) {
             $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
             $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
             $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
@@ -284,8 +284,8 @@ class BudgetController extends Controller
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];
             $spent                           = isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0';
-            $limit                           = isset($entries[$period]) ? $budgeted[$period] : 0;
-            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $limit                           = isset($budgeted[$period]) ? $budgeted[$period] : 0;
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 2);
             $chartData[1]['entries'][$label] = $limit;
 
         }
@@ -386,7 +386,7 @@ class BudgetController extends Controller
             }
             $amount    = $repetition->amount;
             $left      = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcmul($amount, '-1') : $expenses;
+            $spent     = $expenses;
             $overspent = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
             $return[]  = [
                 'name'                 => $name,
@@ -454,8 +454,8 @@ class BudgetController extends Controller
         $array = [
             'name'                 => strval(trans('firefly.no_budget')),
             'repetition_left'      => '0',
-            'repetition_overspent' => '0',
-            'spent'                => $sum,
+            'repetition_overspent' => $sum,
+            'spent'                => '0',
         ];
 
         return $array;

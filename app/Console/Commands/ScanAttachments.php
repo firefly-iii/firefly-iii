@@ -60,42 +60,26 @@ class ScanAttachments extends Command
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
             $fileName = $attachment->fileName();
-
-            // try to grab file content:
             try {
                 $content = $disk->get($fileName);
             } catch (FileNotFoundException $e) {
                 $this->error(sprintf('Could not find data for attachment #%d', $attachment->id));
                 continue;
             }
-            // try to decrypt content.
             try {
                 $decrypted = Crypt::decrypt($content);
             } catch (DecryptException $e) {
                 $this->error(sprintf('Could not decrypt data of attachment #%d', $attachment->id));
                 continue;
             }
-
-            // make temp file:
             $tmpfname = tempnam(sys_get_temp_dir(), 'FireflyIII');
-
-            // store content in temp file:
             file_put_contents($tmpfname, $decrypted);
-
-            // get md5 and mime
-            $md5  = md5_file($tmpfname);
-            $mime = mime_content_type($tmpfname);
-
-            // update attachment:
+            $md5              = md5_file($tmpfname);
+            $mime             = mime_content_type($tmpfname);
             $attachment->md5  = $md5;
             $attachment->mime = $mime;
             $attachment->save();
-
-
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
-
-            // find file:
-
         }
     }
 }

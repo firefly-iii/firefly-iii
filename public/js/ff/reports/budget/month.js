@@ -28,7 +28,7 @@ function drawChart() {
     "use strict";
 
     // month view:
-    stackedColumnChart(mainUri, 'in-out-chart');
+    doubleYNonStackedChart(mainUri, 'in-out-chart');
 
     // draw pie chart of income, depending on "show other transactions too":
     redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);

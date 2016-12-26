@@ -129,10 +129,10 @@ class BudgetControllerTest extends TestCase
     public function testPostUpdateIncome()
     {
         $data = [
-            'amount'   => 200,
+            'amount'   => '200',
         ];
         $this->be($this->user());
-        $this->call('post', route('budgets.income.post', [1]), $data);
+        $this->call('post', route('budgets.income.post'), $data);
         $this->assertResponseStatus(302);
     }
 

@@ -18,6 +18,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Storage;
 
 /**
  * Class AttachmentRepository
@@ -57,6 +58,19 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function exists(Attachment $attachment): bool
+    {
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $disk->exists($attachment->fileName());
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection
@@ -80,6 +94,26 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             ->get(['attachments.*']);
 
         return $query;
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getContent(Attachment $attachment): string
+    {
+        // create a disk.
+        $disk = Storage::disk('upload');
+        $file = $attachment->fileName();
+
+        if ($disk->exists($file)) {
+            $content = Crypt::decrypt($disk->get($file));
+
+            return $content;
+        }
+
+        return '';
     }
 
     /**

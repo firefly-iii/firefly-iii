@@ -63,6 +63,7 @@ class HomeController extends Controller
         // a possible problem with the budgets.
         if ($label === strval(trans('firefly.everything')) || $label === strval(trans('firefly.customRange'))) {
             $isCustomRange = true;
+            //Preferences::set('viewRange', 'custom');
             Log::debug('Range is now marked as "custom".');
         }
 
@@ -107,7 +108,7 @@ class HomeController extends Controller
                 $journal->save();
             }
         }
-
+        Session::forget(['start', 'end', 'viewRange', 'range', 'is_custom_range']);
 
         Session::clear();
         Artisan::call('cache:clear');

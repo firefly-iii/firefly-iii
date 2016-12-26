@@ -91,6 +91,15 @@ return [
     'expenses_by_budget'                         => 'Expenses by budget',
     'income_by_category'                         => 'Income by category',
     'cannot_redirect_to_account'                 => 'Firefly III cannot redirect you to the correct page. Apologies.',
+    'sum_of_expenses'                            => 'Sum of expenses',
+    'sum_of_income'                              => 'Sum of income',
+    'spent_in_specific_budget'                   => 'Spent in budget ":budget"',
+    'sum_of_expenses_in_budget'                  => 'Spent total in budget ":budget"',
+    'left_in_budget_limit'                       => 'Left to spend according to budgeting',
+    'cannot_change_demo'                         => 'You cannot change the password of the demonstration account.',
+    'cannot_delete_demo'                         => 'You cannot remove the demonstration account.',
+    'cannot_reset_demo_user'                     => 'You cannot reset the password of the demonstration account',
+
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => 'monthly',
@@ -194,6 +203,7 @@ return [
     'warning_no_matching_transactions'           => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'                  => 'No valid triggers provided.',
     'execute_on_existing_transactions'           => 'Execute for existing transactions',
+    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
     'execute_on_existing_transactions_intro'     => 'When a rule or group has been changed or added, you can execute it for existing transactions',
     'execute_on_existing_transactions_short'     => 'Existing transactions',
     'executed_group_on_existing_transactions'    => 'Executed group ":title" for existing transactions',
@@ -632,10 +642,10 @@ return [
     'errors'                                     => 'Errors',
 
     // reports:
-    'report_default'                             => 'Default financial report for :start until :end',
-    'report_audit'                               => 'Transaction history overview for :start until :end',
-    'report_category'                            => 'Category report for :start until :end',
-    'report_budget'                              => 'Budget report for :start until :end',
+    'report_default'                             => 'Default financial report between :start and :end',
+    'report_audit'                               => 'Transaction history overview between :start and :end',
+    'report_category'                            => 'Category report between :start and :end',
+    'report_budget'                              => 'Budget report between :start and :end',
     'quick_link_reports'                         => 'Quick links',
     'quick_link_default_report'                  => 'Default financial report',
     'quick_link_audit_report'                    => 'Transaction history overview',

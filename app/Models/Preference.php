@@ -27,6 +27,16 @@ use Log;
 class Preference extends Model
 {
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
     protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['user_id', 'data', 'name', 'data'];
 

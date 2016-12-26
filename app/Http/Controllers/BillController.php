@@ -99,13 +99,20 @@ class BillController extends Controller
      */
     public function destroy(BillRepositoryInterface $repository, Bill $bill)
     {
-        $name = $bill->name;
+        $name   = $bill->name;
+        $billId = $bill->id;
         $repository->destroy($bill);
 
         Session::flash('success', strval(trans('firefly.deleted_bill', ['name' => $name])));
         Preferences::mark();
 
-        return redirect(session('bills.delete.url'));
+        $uri = session('bills.delete.url');
+        if (!(strpos($uri, sprintf('bills/show/%s', $billId)) === false)) {
+            // uri would point back to bill
+            $uri = route('bills.index');
+        }
+
+        return redirect($uri);
     }
 
     /**

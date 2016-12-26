@@ -24,7 +24,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AccountMeta extends Model
 {
 
-    protected $dates    = ['created_at', 'updated_at'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at'];
     protected $fillable = ['account_id', 'name', 'data'];
     protected $table    = 'account_meta';
 

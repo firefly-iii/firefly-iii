@@ -58,6 +58,10 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDownload()
     {
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('exists')->once()->andReturn(true);
+        $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
+
         $this->be($this->user());
         $this->call('GET', route('attachments.download', [1]));
         $this->assertResponseStatus(200);

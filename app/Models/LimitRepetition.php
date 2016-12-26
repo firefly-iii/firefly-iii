@@ -26,6 +26,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class LimitRepetition extends Model
 {
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'startdate'  => 'date',
+            'enddate'    => 'date',
+        ];
     protected $dates  = ['created_at', 'updated_at', 'startdate', 'enddate'];
     protected $hidden = ['amount_encrypted'];
 
@@ -38,10 +50,10 @@ class LimitRepetition extends Model
     {
         if (auth()->check()) {
             $object = self::where('limit_repetitions.id', $value)
-                                     ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
-                                     ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                     ->where('budgets.user_id', auth()->user()->id)
-                                     ->first(['limit_repetitions.*']);
+                          ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                          ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                          ->where('budgets.user_id', auth()->user()->id)
+                          ->first(['limit_repetitions.*']);
             if ($object) {
                 return $object;
             }

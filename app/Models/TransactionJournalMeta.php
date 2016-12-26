@@ -26,7 +26,18 @@ class TransactionJournalMeta extends Model
 {
 
     use SoftDeletes;
-    protected $dates    = ['created_at', 'updated_at'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+        ];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
     protected $table    = 'journal_meta';
 

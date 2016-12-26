@@ -28,61 +28,62 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+
+        $this->be($this->user());
+        $this->call('get', route('transactions.index', ['transfer']));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::indexAll
-     * Implement testIndexAll().
      */
     public function testIndexAll()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.index.all', ['transfer']));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::indexByDate
-     * Implement testIndexByDate().
      */
     public function testIndexByDate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.index.date', ['transfer', '2016-01-01']));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::reorder
-     * Implement testReorder().
      */
     public function testReorder()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'items' => [],
+        ];
+        $this->be($this->user());
+        $this->call('post', route('transactions.reorder'), $data);
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::show
-     * Implement testShow().
      */
     public function testShow()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('transactions.show', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 }

@@ -36,12 +36,25 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'active'     => 'boolean',
+            'encrypted'  => 'boolean',
+        ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /** @var array */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array */
-    protected $hidden = ['virtual_balance_encrypted', 'encrypted'];
+    protected $hidden = ['encrypted'];
     protected $rules
                       = [
             'user_id'         => 'required|exists:users,id',
@@ -184,7 +197,7 @@ class Account extends Model
     public function getNameAttribute($value): string
     {
 
-        if (intval($this->encrypted) == 1) {
+        if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
 

@@ -413,7 +413,22 @@ Breadcrumbs::register(
     'piggy-banks.show', function (BreadCrumbGenerator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggy-banks.index');
     $breadcrumbs->push(e($piggyBank->name), route('piggy-banks.show', [$piggyBank->id]));
+}
+);
 
+Breadcrumbs::register(
+    'piggy-banks.add-money-mobile', function (BreadCrumbGenerator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.show', $piggyBank);
+    $breadcrumbs->push(trans('firefly.add_money_to_piggy', ['name' => $piggyBank->name]), route('piggy-banks.add-money-mobile', [$piggyBank->id]));
+}
+);
+
+Breadcrumbs::register(
+    'piggy-banks.remove-money-mobile', function (BreadCrumbGenerator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.show', $piggyBank);
+    $breadcrumbs->push(
+        trans('firefly.remove_money_from_piggy_title', ['name' => $piggyBank->name]), route('piggy-banks.remove-money-mobile', [$piggyBank->id])
+    );
 }
 );
 
@@ -500,16 +515,63 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'reports.report', function (BreadCrumbGenerator $breadcrumbs, Carbon $start, Carbon $end, $reportType, $accountIds) {
+    'reports.report.audit', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('reports.index');
 
     $monthFormat = (string)trans('config.month_and_day');
-    $title       = (string)trans(
-        'firefly.report_' . $reportType,
-        ['start' => $start->formatLocalized($monthFormat), 'end' => $end->formatLocalized($monthFormat)]
-    );
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_audit', ['start' => $startString, 'end' => $endString]);
 
-    $breadcrumbs->push($title, route('reports.report', [$reportType, $start->format('Ymd'), $end->format('Ymd'), $accountIds]));
+    $breadcrumbs->push($title, route('reports.report.audit', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+Breadcrumbs::register(
+    'reports.report.budget', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $budgetIds, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_budget', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.budget', [$accountIds, $budgetIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+
+Breadcrumbs::register(
+    'reports.report.category', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $categoryIds, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.category', [$accountIds, $categoryIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+
+Breadcrumbs::register(
+    'reports.report.default', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_default', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.default', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+
+/**
+ * New user Controller
+ */
+Breadcrumbs::register(
+    'new-user.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('firefly.getting_started'), route('new-user.index'));
 }
 );
 
@@ -524,47 +586,54 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'rules.rule.create', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rules.create', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.rule.create', [$ruleGroup]));
+    $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.create', [$ruleGroup]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule.edit', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
+    'rules.edit', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.rule.edit', [$rule]));
+    $breadcrumbs->push(trans('firefly.edit_rule', ['title' => $rule->title]), route('rules.edit', [$rule]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule.delete', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
+    'rules.delete', function (BreadCrumbGenerator $breadcrumbs, Rule $rule) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.delete_rule', ['title' => $rule->title]), route('rules.rule.delete', [$rule]));
+    $breadcrumbs->push(trans('firefly.delete_rule', ['title' => $rule->title]), route('rules.delete', [$rule]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule-group.create', function (BreadCrumbGenerator $breadcrumbs) {
+    'rule-groups.create', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.make_new_rule_group'), route('rules.rule-group.create'));
+    $breadcrumbs->push(trans('firefly.make_new_rule_group'), route('rule-groups.create'));
 }
 );
 Breadcrumbs::register(
-    'rules.rule-group.edit', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rule-groups.edit', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]), route('rules.rule-group.edit', [$ruleGroup]));
+    $breadcrumbs->push(trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]), route('rule-groups.edit', [$ruleGroup]));
 }
 );
 Breadcrumbs::register(
-    'rules.rule-group.delete', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rule-groups.delete', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
-    $breadcrumbs->push(trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]), route('rules.rule-group.delete', [$ruleGroup]));
+    $breadcrumbs->push(trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]), route('rule-groups.delete', [$ruleGroup]));
 }
 );
 
 Breadcrumbs::register(
-    'rules.rule-group.select_transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    'rule-groups.select-transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+    $breadcrumbs->parent('rules.index');
+    $breadcrumbs->push(trans('firefly.rule_group_select_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select-transactions', [$ruleGroup]));
+}
+);
+
+Breadcrumbs::register(
+    'rule-groups.select_transactions', function (BreadCrumbGenerator $breadcrumbs, RuleGroup $ruleGroup) {
     $breadcrumbs->parent('rules.index');
     $breadcrumbs->push(
-        trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]), route('rules.rule-group.select_transactions', [$ruleGroup])
+        trans('firefly.execute_group_on_existing_transactions', ['title' => $ruleGroup->title]), route('rule-groups.select_transactions', [$ruleGroup])
     );
 }
 );

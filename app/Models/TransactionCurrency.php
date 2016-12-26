@@ -27,11 +27,20 @@ class TransactionCurrency extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at','date'];
     protected $fillable = ['name', 'code', 'symbol'];
     protected $rules    = ['name' => 'required|between:1,200', 'code' => 'required|between:3,3', 'symbol' => 'required|between:1,12'];
-
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+        ];
     /**
      * @param TransactionCurrency $currency
      *

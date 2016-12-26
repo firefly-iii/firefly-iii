@@ -26,6 +26,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BalanceReportHelper
@@ -59,19 +60,23 @@ class BalanceReportHelper implements BalanceReportHelperInterface
      */
     public function getBalanceReport(Collection $accounts, Carbon $start, Carbon $end): Balance
     {
+        Log::debug('Start of balance report');
         $balance          = new Balance;
         $header           = new BalanceHeader;
         $limitRepetitions = $this->budgetRepository->getAllBudgetLimitRepetitions($start, $end);
         foreach ($accounts as $account) {
+            Log::debug(sprintf('Add account %s to headers.', $account->name));
             $header->addAccount($account);
         }
 
         /** @var LimitRepetition $repetition */
         foreach ($limitRepetitions as $repetition) {
             $budget = $this->budgetRepository->find($repetition->budget_id);
-            $line   = $this->createBalanceLine($budget, $repetition, $accounts);
+            Log::debug(sprintf('Create balance line for budget #%d ("%s") and repetition #%d', $budget->id, $budget->name, $repetition->id));
+            $line = $this->createBalanceLine($budget, $repetition, $accounts);
             $balance->addBalanceLine($line);
         }
+        Log::debug('Create rest of the things.');
         $noBudgetLine       = $this->createNoBudgetLine($accounts, $start, $end);
         $coveredByTagLine   = $this->createTagsBalanceLine($accounts, $start, $end);
         $leftUnbalancedLine = $this->createLeftUnbalancedLine($noBudgetLine, $coveredByTagLine);
@@ -81,8 +86,11 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $balance->addBalanceLine($leftUnbalancedLine);
         $balance->setBalanceHeader($header);
 
+        Log::debug('Clear unused budgets.');
         // remove budgets without expenses from balance lines:
         $balance = $this->removeUnusedBudgets($balance);
+
+        Log::debug('Return report.');
 
         return $balance;
     }

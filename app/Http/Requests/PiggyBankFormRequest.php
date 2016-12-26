@@ -42,8 +42,8 @@ class PiggyBankFormRequest extends Request
             'startdate'    => new Carbon,
             'account_id'   => intval($this->get('account_id')),
             'targetamount' => round($this->get('targetamount'), 2),
-            'targetdate'   => strlen($this->get('targetdate')) > 0 ? new Carbon($this->get('targetdate')) : null,
-            'note'         => trim($this->get('note')),
+            'targetdate'   => strlen(strval($this->get('targetdate'))) > 0 ? new Carbon($this->get('targetdate')) : null,
+            'note'         => trim(strval($this->get('note'))),
         ];
     }
 
@@ -64,7 +64,7 @@ class PiggyBankFormRequest extends Request
             'name'                            => $nameRule,
             'account_id'                      => 'required|belongsToUser:accounts',
             'targetamount'                    => 'required|min:0.01',
-            'amount_currency_id_targetamount' => 'exists:transaction_currencies,id',
+            'amount_currency_id_targetamount' => 'required|exists:transaction_currencies,id',
             'startdate'                       => 'date',
             'targetdate'                      => $targetDateRule,
             'order'                           => 'integer|min:1',

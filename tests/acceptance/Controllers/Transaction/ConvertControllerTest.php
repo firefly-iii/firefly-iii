@@ -11,6 +11,7 @@
 
 namespace Transaction;
 
+use FireflyIII\Models\TransactionJournal;
 use TestCase;
 
 /**
@@ -34,8 +35,10 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexDepositTransfer()
     {
+        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+
         $this->be($this->user());
-        $this->call('get', route('transactions.convert.index', ['transfer', 683]));
+        $this->call('get', route('transactions.convert.index', ['transfer', $deposit->id]));
         $this->assertResponseStatus(200);
         $this->see('Convert a deposit into a transfer');
     }
@@ -45,8 +48,9 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexDepositWithdrawal()
     {
+        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
-        $this->call('get', route('transactions.convert.index', ['withdrawal', 683]));
+        $this->call('get', route('transactions.convert.index', ['withdrawal', $deposit->id]));
         $this->assertResponseStatus(200);
         $this->see('Convert a deposit into a withdrawal');
     }
@@ -56,8 +60,9 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexTransferDeposit()
     {
+        $transfer = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
-        $this->call('get', route('transactions.convert.index', ['deposit', 684]));
+        $this->call('get', route('transactions.convert.index', ['deposit', $transfer->id]));
         $this->assertResponseStatus(200);
         $this->see('Convert a transfer into a deposit');
     }
@@ -67,8 +72,9 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexTransferWithdrawal()
     {
+        $transfer = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
-        $this->call('get', route('transactions.convert.index', ['withdrawal', 684]));
+        $this->call('get', route('transactions.convert.index', ['withdrawal', $transfer->id]));
         $this->assertResponseStatus(200);
         $this->see('Convert a transfer into a withdrawal');
     }
@@ -78,8 +84,9 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexWithdrawalDeposit()
     {
+        $withdrawal= TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
-        $this->call('get', route('transactions.convert.index', ['deposit', 672]));
+        $this->call('get', route('transactions.convert.index', ['deposit', $withdrawal->id]));
         $this->assertResponseStatus(200);
         $this->see('Convert a withdrawal into a deposit');
     }
@@ -89,8 +96,9 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexWithdrawalTransfer()
     {
+        $withdrawal= TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
-        $this->call('get', route('transactions.convert.index', ['transfer', 672]));
+        $this->call('get', route('transactions.convert.index', ['transfer', $withdrawal->id]));
         $this->assertResponseStatus(200);
         $this->see('Convert a withdrawal into a transfer');
     }
@@ -100,13 +108,14 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndex()
     {
+        $withdrawal= TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         // convert a withdrawal to a transfer. Requires the ID of another asset account.
         $data = [
             'destination_account_asset' => 2,
         ];
         $this->be($this->user());
-        $this->call('post', route('transactions.convert.index', ['transfer', 672]), $data);
+        $this->call('post', route('transactions.convert.index', ['transfer', $withdrawal->id]), $data);
         $this->assertResponseStatus(302);
-        $this->assertRedirectedToRoute('transactions.show', [672]);
+        $this->assertRedirectedToRoute('transactions.show', [$withdrawal->id]);
     }
 }

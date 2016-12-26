@@ -76,8 +76,6 @@ class CacheProperties
     public function has(): bool
     {
         if (getenv('APP_ENV') == 'testing') {
-            Log::debug('APP_ENV is testing, cache disabled.');
-
             return false;
         }
         $this->md5();

@@ -22,6 +22,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Rules\TransactionMatcher;
+use Illuminate\Http\Request;
 use Input;
 use Preferences;
 use Response;
@@ -86,10 +87,10 @@ class RuleController extends Controller
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rules.rule.create.fromStore') !== true) {
-            Session::put('rules.rule.create.url', URL::previous());
+        if (session('rules.create.fromStore') !== true) {
+            Session::put('rules.create.url', URL::previous());
         }
-        Session::forget('rules.rule.create.fromStore');
+        Session::forget('rules.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule');
 
@@ -110,7 +111,7 @@ class RuleController extends Controller
         $subTitle = trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
-        Session::put('rules.rule.delete.url', URL::previous());
+        Session::put('rules.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'delete-rule');
 
@@ -135,7 +136,7 @@ class RuleController extends Controller
         Preferences::mark();
 
 
-        return redirect(session('rules.rule.delete.url'));
+        return redirect(session('rules.delete.url'));
     }
 
     /**
@@ -178,10 +179,10 @@ class RuleController extends Controller
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rules.rule.edit.fromUpdate') !== true) {
-            Session::put('rules.rule.edit.url', URL::previous());
+        if (session('rules.edit.fromUpdate') !== true) {
+            Session::put('rules.edit.url', URL::previous());
         }
-        Session::forget('rules.rule.edit.fromUpdate');
+        Session::forget('rules.edit.fromUpdate');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
@@ -203,14 +204,15 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorderRuleActions(RuleRepositoryInterface $repository, Rule $rule)
+    public function reorderRuleActions(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
-        $ids = Input::get('actions');
+        $ids = $request->get('actions');
         if (is_array($ids)) {
             $repository->reorderRuleActions($rule, $ids);
         }
@@ -220,14 +222,15 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorderRuleTriggers(RuleRepositoryInterface $repository, Rule $rule)
+    public function reorderRuleTriggers(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
-        $ids = Input::get('triggers');
+        $ids = $request->get('triggers');
         if (is_array($ids)) {
             $repository->reorderRuleTriggers($rule, $ids);
         }
@@ -254,13 +257,13 @@ class RuleController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('rules.rule.create.fromStore', true);
+            Session::put('rules.create.fromStore', true);
 
-            return redirect(route('rules.rule.create', [$ruleGroup]))->withInput();
+            return redirect(route('rules.create', [$ruleGroup]))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect(session('rules.rule.create.url'));
+        return redirect(session('rules.create.url'));
 
     }
 
@@ -341,13 +344,13 @@ class RuleController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('rules.rule.edit.fromUpdate', true);
+            Session::put('rules.edit.fromUpdate', true);
 
-            return redirect(route('rules.rule.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect(session('rules.rule.edit.url'));
+        return redirect(session('rules.edit.url'));
     }
 
     private function createDefaultRule()

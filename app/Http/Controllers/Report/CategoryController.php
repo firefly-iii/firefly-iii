@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers\Report;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;

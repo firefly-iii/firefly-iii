@@ -50,8 +50,8 @@
                     <em>{{ 'never'|_ }}</em>
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs" data-value="{{ account.endBalance - account.startBalance }}">
-                {{ (account.endBalance - account.startBalance)|formatAmount }}
+            <td class="hidden-sm hidden-xs" data-value="{{ account.difference }}">
+                {{ (account.difference)|formatAmount }}
             </td>
 
         </tr>

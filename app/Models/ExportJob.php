@@ -23,6 +23,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ExportJob extends Model
 {
+    /** @var array */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at'];
+
     /**
      * @param $value
      *

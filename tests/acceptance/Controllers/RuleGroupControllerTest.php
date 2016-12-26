@@ -8,6 +8,9 @@
  *
  * See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 
 
 /**
@@ -28,121 +31,143 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::create
-     * Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rule-groups.create'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::delete
-     * Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rule-groups.delete', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::destroy
-     * Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $repository = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository->shouldReceive('destroy');
+
+        $this->session(['rule-groups.delete.url' => 'http://localhost']);
+        $this->be($this->user());
+        $this->call('post', route('rule-groups.destroy', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+        $this->assertRedirectedToRoute('index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::down
-     * Implement testDown().
      */
     public function testDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rule-groups.down', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('rules.index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::edit
-     * Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rule-groups.edit', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::execute
-     * Implement testExecute().
      */
     public function testExecute()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['first' => new Carbon('2010-01-01')]);
+        $data = [
+            'accounts'   => [1],
+            'start_date' => '2010-01-02',
+            'end_date'   => '2010-01-02',
+        ];
+        $this->be($this->user());
+        $this->call('post', route('rule-groups.execute', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+        $this->assertRedirectedToRoute('rules.index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::selectTransactions
-     * Implement testSelectTransactions().
      */
     public function testSelectTransactions()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rule-groups.select-transactions', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::store
-     * Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rule-groups.create.url' => 'http://localhost']);
+        $data = [
+            'title'       => 'A',
+            'description' => '',
+        ];
+
+        $repository = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository->shouldReceive('store')->andReturn(new RuleGroup);
+        $repository->shouldReceive('find')->andReturn(new RuleGroup);
+
+        $this->be($this->user());
+        $this->call('post', route('rule-groups.store', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::up
-     * Implement testUp().
      */
     public function testUp()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rule-groups.up', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('rules.index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::update
-     * Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'title'              => 'C',
+            'description'            => 'XX',
+        ];
+        $this->session(['rule-groups.edit.url' => 'http://localhost']);
+
+        $repository = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository->shouldReceive('update');
+        $repository->shouldReceive('find')->andReturn(new RuleGroup);
+
+        $this->be($this->user());
+        $this->call('post', route('rule-groups.update', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

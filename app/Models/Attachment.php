@@ -29,6 +29,21 @@ class Attachment extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'uploaded'   => 'boolean',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array  */
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
 
     /**

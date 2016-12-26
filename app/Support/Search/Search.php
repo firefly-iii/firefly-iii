@@ -16,6 +16,7 @@ namespace FireflyIII\Support\Search;
 
 use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
@@ -56,7 +57,9 @@ class Search implements SearchInterface
      */
     public function searchAccounts(array $words): Collection
     {
-        $accounts = $this->user->accounts()->get();
+        $accounts = $this->user->accounts()
+                               ->accountTypeIn([AccountType::DEFAULT, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::BENEFICIARY])
+                               ->get(['accounts.*']);
         /** @var Collection $result */
         $result = $accounts->filter(
             function (Account $account) use ($words) {

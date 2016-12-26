@@ -22,6 +22,7 @@ use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
 use Preferences;
 use Response;
@@ -59,21 +60,22 @@ class ExportController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
      * @throws FireflyException
      */
-    public function download(ExportJob $job)
+    public function download(ExportJobRepositoryInterface $repository, ExportJob $job)
     {
-        $disk   = Storage::disk('export');
         $file   = $job->key . '.zip';
         $date   = date('Y-m-d \a\t H-i-s');
         $name   = 'Export job on ' . $date . '.zip';
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
 
-        if (!$disk->exists($file)) {
+        if (!$repository->exists($job)) {
             throw new FireflyException('Against all expectations, zip file "' . $file . '" does not exist.');
         }
+        $content = $repository->getContent($job);
+
 
         $job->change('export_downloaded');
 
-        return response($disk->get($file), 200)
+        return response($content, 200)
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
             ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -82,7 +84,7 @@ class ExportController extends Controller
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', $disk->size($file));
+            ->header('Content-Length', strlen($content));
 
     }
 

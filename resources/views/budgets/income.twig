@@ -4,7 +4,8 @@
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
             </button>
             <h4 class="modal-title" id="myModalLabel">
-                {{ trans('firefly.update_budget_amount_range', {start: displayStart, end: displayEnd}) }}
+                {{ trans('firefly.update_budget_amount_range',
+                {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
             </h4>
         </div>
 
@@ -14,7 +15,7 @@
 
                 <div class="input-group">
                     <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
-                    <input step="any" class="form-control" id="amount" value="{{ amount.data }}" autocomplete="off" name="amount" type="number"/>
+                    <input step="any" class="form-control" id="amount" value="{{ available }}" autocomplete="off" name="amount" type="number"/>
                 </div>
             </div>
             <div class="modal-footer">

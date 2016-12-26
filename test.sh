@@ -7,16 +7,17 @@ BACKUPENV=./.env.current
 TESTINGENV=./.env.testing
 
 # do something with flags:
-resetestflag=''
+resetTestFlag=''
 testflag=''
 coverageflag=''
 acceptancetestclass=''
 verbalflag=''
+testsuite=''
 
-while getopts 'vcrta:' flag; do
+while getopts 'vcrta:s:' flag; do
   case "${flag}" in
     r)
-        resetestflag='true'
+        resetTestFlag='true'
     ;;
     t)
         testflag='true'
@@ -25,11 +26,16 @@ while getopts 'vcrta:' flag; do
         coverageflag='true'
     ;;
     v)
-        verbalflag=' -v'
+        verbalflag=' -v --debug'
+        echo "Will be verbal about it"
     ;;
     a)
         acceptancetestclass=./tests/acceptance/$OPTARG
         echo "Will only run acceptance test $OPTARG"
+    ;;
+    s)
+        testsuite="--testsuite $OPTARG"
+        echo "Will only run test suite '$OPTARG'"
     ;;
     *) error "Unexpected option ${flag}" ;;
   esac
@@ -49,7 +55,7 @@ cp $TESTINGENV $ORIGINALENV
 php artisan cache:clear
 
 # reset database (optional)
-if [[ $resetestflag == "true" ]]
+if [[ $resetTestFlag == "true" ]]
 then
     echo "Must reset database"
 
@@ -63,12 +69,14 @@ then
     # run migration
     php artisan migrate:refresh --seed
 
+    # call test data generation script
+    $(which php) /sites/FF3/test-data/artisan generate:data testing sqlite
     # copy new database over backup (resets backup)
     cp $DATABASE $DATABASECOPY
 fi
 
 # do not reset database (optional)
-if [[ $resetestflag == "" ]]
+if [[ $resetTestFlag == "" ]]
 then
     echo "Will not reset database"
 fi
@@ -85,11 +93,13 @@ else
 
     if [[ $coverageflag == "" ]]
     then
-        echo "Must run PHPUnit without coverage"
-        phpunit --stop-on-error $verbalflag $acceptancetestclass
+        echo "Must run PHPUnit without coverage:"
+        echo "phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite"
+        phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite
     else
         echo "Must run PHPUnit with coverage"
-        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass
+        echo "phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite"
+        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite
     fi
 fi
 

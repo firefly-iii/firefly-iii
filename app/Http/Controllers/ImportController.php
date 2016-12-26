@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\ImportUploadRequest;
-use FireflyIII\Import\ImportProcedure;
+use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -315,13 +315,13 @@ class ImportController extends Controller
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportProcedureInterface $importProcedure
+     * @param ImportJob                $job
      */
-    public function start(ImportJob $job)
+    public function start(ImportProcedureInterface $importProcedure, ImportJob $job)
     {
         set_time_limit(0);
         if ($job->status == 'settings_complete') {
-            $importProcedure = new ImportProcedure;
             $importProcedure->runImport($job);
         }
     }
@@ -334,7 +334,7 @@ class ImportController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function status(ImportJob $job)
-    {
+    { //
         Log::debug('Now in status()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'status')) {
             return $this->redirectToCorrectStep($job);

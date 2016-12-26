@@ -26,8 +26,8 @@ use Illuminate\Support\Facades\Password;
  *
  * @package FireflyIII\Http\Controllers\Auth
  * @method getEmailSubject()
- * @method getSendResetLinkEmailSuccessResponse()
- * @method getSendResetLinkEmailFailureResponse()
+ * @method getSendResetLinkEmailSuccessResponse(string $response)
+ * @method getSendResetLinkEmailFailureResponse(string $response)
  */
 class PasswordController extends Controller
 {

@@ -60,6 +60,7 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
             'bills.name as bill_name',
+            'bills.name_encrypted as bill_name_encrypted',
             'transactions.id as id',
             'transactions.amount as transaction_amount',
             'transactions.description as transaction_description',
@@ -180,10 +181,12 @@ class JournalCollector implements JournalCollectorInterface
         $set->each(
             function (Transaction $transaction) {
                 $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = intval($transaction->encrypted) === 1 ? Crypt::decrypt($transaction->description) : $transaction->description;
-                $transaction->bill_name   = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
+                $transaction->description = $transaction->encrypted ? Crypt::decrypt($transaction->description) : $transaction->description;
 
-                // optionally decrypted:
+                if (!is_null($transaction->bill_name)) {
+                    $transaction->bill_name = $transaction->bill_name_encrypted ? Crypt::decrypt($transaction->bill_name) : $transaction->bill_name;
+                }
+
                 try {
                     $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
                 } catch (DecryptException $e) {

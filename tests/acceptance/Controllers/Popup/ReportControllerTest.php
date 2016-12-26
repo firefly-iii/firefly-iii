@@ -46,7 +46,7 @@ class ReportControllerTest extends TestCase
                 'accountId'  => 1,
                 'categoryId' => 1,
                 'budgetId'   => 1,
-                'role'       => 1,
+                'role'       => 3, // diff role, is complicated.
             ],
         ];
         $uri       = route('popup.general') . '?' . http_build_query($arguments);

@@ -29,10 +29,25 @@ class PiggyBank extends Model
 {
     use SoftDeletes;
 
-    protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
-    protected $fillable
-                      = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
-    protected $hidden = ['targetamount_encrypted', 'encrypted'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'startdate'  => 'date',
+            'targetdate' => 'date',
+            'order'      => 'int',
+            'active'     => 'boolean',
+            'encrypted'  => 'boolean',
+        ];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
+    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
 
     /**
      * @param PiggyBank $value
@@ -86,7 +101,7 @@ class PiggyBank extends Model
     public function getNameAttribute($value)
     {
 
-        if (intval($this->encrypted) == 1) {
+        if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -144,8 +159,8 @@ class PiggyBank extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $this->attributes['name']      = $value;
+        $this->attributes['encrypted'] = false;
     }
 
     /**

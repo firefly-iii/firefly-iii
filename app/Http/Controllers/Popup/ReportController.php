@@ -133,8 +133,8 @@ class ReportController extends Controller
 
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
                 $journals     = $journals->filter(
-                    function (TransactionJournal $journal) {
-                        $tags = $journal->tags()->where('tagMode', 'balancingAct')->count();
+                    function (Transaction $transaction) {
+                        $tags    = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
                         if ($tags === 0) {
                             return true;
                         }

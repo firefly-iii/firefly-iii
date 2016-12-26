@@ -48,7 +48,7 @@ class ConfigurationControllerTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', true])->once()->andReturn($trueConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->times(2)->andReturn($falseConfig);
 
         // new settings:
         FireflyConfig::shouldReceive('get')->withArgs(['mail_for_lockout', false])->once()->andReturn($falseConfig);
@@ -69,7 +69,10 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testPostIndex()
     {
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
 
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
         FireflyConfig::shouldReceive('set')->withArgs(['must_confirm_account', false])->once();
         FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();

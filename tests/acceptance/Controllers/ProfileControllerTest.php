@@ -8,6 +8,7 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 
 
 /**
@@ -28,61 +29,69 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::changePassword
-     * Implement testChangePassword().
      */
     public function testChangePassword()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('profile.change-password'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::deleteAccount
-     * Implement testDeleteAccount().
      */
     public function testDeleteAccount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('profile.delete-account'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('profile.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
-     * Implement testPostChangePassword().
      */
     public function testPostChangePassword()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('changePassword');
+
+        $data = [
+            'current_password'          => 'james',
+            'new_password'              => 'james2',
+            'new_password_confirmation' => 'james2',
+        ];
+        $this->be($this->user());
+        $this->call('post', route('profile.change-password.post'), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
-     * Implement testPostDeleteAccount().
      */
     public function testPostDeleteAccount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('destroy');
+        $data = [
+            'password' => 'james',
+        ];
+        $this->be($this->user());
+        $this->call('post', route('profile.delete-account.post'), $data);
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('index');
     }
 }

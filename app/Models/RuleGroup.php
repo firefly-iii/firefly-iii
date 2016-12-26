@@ -25,6 +25,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class RuleGroup extends Model
 {
     use SoftDeletes;
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at'      => 'date',
+            'updated_at'      => 'date',
+            'deleted_at'      => 'date',
+            'active'          => 'boolean',
+            'order'           => 'int',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
 
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 

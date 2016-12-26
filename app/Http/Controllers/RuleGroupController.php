@@ -62,10 +62,10 @@ class RuleGroupController extends Controller
         $subTitle     = trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rules.rule-group.create.fromStore') !== true) {
-            Session::put('rules.rule-group.create.url', URL::previous());
+        if (session('rule-groups.create.fromStore') !== true) {
+            Session::put('rule-groups.create.url', URL::previous());
         }
-        Session::forget('rules.rule-group.create.fromStore');
+        Session::forget('rule-groups.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
@@ -86,7 +86,7 @@ class RuleGroupController extends Controller
         unset($ruleGroupList[$ruleGroup->id]);
 
         // put previous url in session
-        Session::put('rules.rule-group.delete.url', URL::previous());
+        Session::put('rule-groups.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'delete-rule-group');
 
@@ -113,7 +113,7 @@ class RuleGroupController extends Controller
         Preferences::mark();
 
 
-        return redirect(session('rules.rule-group.delete.url'));
+        return redirect(session('rule-groups.delete.url'));
     }
 
     /**
@@ -140,10 +140,10 @@ class RuleGroupController extends Controller
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rules.rule-group.edit.fromUpdate') !== true) {
-            Session::put('rules.rule-group.edit.url', URL::previous());
+        if (session('rule-groups.edit.fromUpdate') !== true) {
+            Session::put('rule-groups.edit.url', URL::previous());
         }
-        Session::forget('rules.rule-group.edit.fromUpdate');
+        Session::forget('rule-groups.edit.fromUpdate');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule-group');
 
@@ -220,13 +220,13 @@ class RuleGroupController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('rules.rule-group.create.fromStore', true);
+            Session::put('rule-groups.create.fromStore', true);
 
-            return redirect(route('rules.rule-group.create'))->withInput();
+            return redirect(route('rule-groups.create'))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect(session('rules.rule-group.create.url'));
+        return redirect(session('rule-groups.create.url'));
     }
 
     /**
@@ -265,13 +265,13 @@ class RuleGroupController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('rules.rule-group.edit.fromUpdate', true);
+            Session::put('rule-groups.edit.fromUpdate', true);
 
-            return redirect(route('rules.rule-group.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect(session('rules.rule-group.edit.url'));
+        return redirect(session('rule-groups.edit.url'));
 
     }
 }

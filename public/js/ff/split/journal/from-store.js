@@ -2,11 +2,11 @@
  * from-store.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
-
-/* globals globalSum */
 
 var destAccounts = {};
 var srcAccounts = {};
@@ -52,7 +52,6 @@ function removeRow(e) {
     var index = row.data('split');
     console.log('Trying to remove row with split ' + index);
     $('table.split-table tbody tr[data-split="' + index + '"]').remove();
-
 
 
     resetSplits();
@@ -171,8 +170,9 @@ function calculateSum() {
     for (var i = 0; i < set.length; i++) {
         var current = $(set[i]);
         sum += (current.val() == "" ? 0 : parseFloat(current.val()));
-
     }
+    sum = Math.round(sum * 100) / 100;
+
     console.log("Sum is now " + sum);
     $('.amount-warning').remove();
     if (sum != originalSum) {

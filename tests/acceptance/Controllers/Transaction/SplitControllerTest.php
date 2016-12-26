@@ -11,6 +11,7 @@
 
 namespace Transaction;
 
+use FireflyIII\Models\TransactionJournal;
 use TestCase;
 
 /**
@@ -35,8 +36,9 @@ class SplitControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
-        $this->call('get', route('transactions.split.edit', [18]));
+        $this->call('get', route('transactions.split.edit', [$deposit->id]));
         $this->assertResponseStatus(200);
         // has bread crumb
         $this->see('<ol class="breadcrumb">');
@@ -49,9 +51,9 @@ class SplitControllerTest extends TestCase
     public function testUpdate()
     {
         $this->session(['transactions.edit-split.url' => 'http://localhost']);
-
-        $data = [
-            'id'                             => 18,
+        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $data    = [
+            'id'                             => $deposit->id,
             'what'                           => 'deposit',
             'journal_description'            => 'Updated salary',
             'currency_id'                    => 1,
@@ -69,12 +71,12 @@ class SplitControllerTest extends TestCase
             ],
         ];
         $this->be($this->user());
-        $this->call('post', route('transactions.split.update', [18]), $data);
+        $this->call('post', route('transactions.split.update', [$deposit->id]), $data);
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
 
         // journal is updated?
-        $this->call('get', route('transactions.show', [18]));
+        $this->call('get', route('transactions.show', [$deposit->id]));
         $this->assertResponseStatus(200);
         $this->see('Updated salary');
         // has bread crumb

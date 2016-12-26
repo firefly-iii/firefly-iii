@@ -29,6 +29,12 @@ class PermissionSeeder extends Seeder
         $owner->description  = 'User runs this instance of FF3'; // optional
         $owner->save();
 
+        $demo = new Role;
+        $demo->name ='demo';
+        $demo->display_name = 'Demo User';
+        $demo->description = 'User is a demo user';
+        $demo->save();
+
     }
 
 }

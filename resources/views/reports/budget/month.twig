@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, accountIds, budgetIds, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -107,10 +107,11 @@
                     <h3 class="box-title">{{ 'income_and_expenses'|_ }}</h3>
                 </div>
                 <div class="box-body">
+                    {#
                     Here be a chart with the budget limits as well if relevant.<br>
                     amount spent vs budget limit reps<br>
                     over the entire period the amount spent would rise and the budget limit rep would be like a heart beat jumping up and down<br>
-                    needs to be two axes to work<br>
+                    needs to be two axes to work<br>#}
                     <canvas id="in-out-chart" style="margin:0 auto;" height="300"></canvas>
                 </div>
             </div>

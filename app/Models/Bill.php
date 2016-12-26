@@ -29,8 +29,26 @@ class Bill extends Model
 {
 
     use ValidatingTrait;
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    protected $dates  = ['created_at', 'updated_at', 'date'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                      = [
+            'created_at'      => 'date',
+            'updated_at'      => 'date',
+            'deleted_at'      => 'date',
+            'date'            => 'date',
+            'skip'            => 'int',
+            'automatch'       => 'boolean',
+            'active'          => 'boolean',
+            'name_encrypted'  => 'boolean',
+            'match_encrypted' => 'boolean',
+        ];
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];

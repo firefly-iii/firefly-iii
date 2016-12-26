@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 
 /**
@@ -91,6 +92,15 @@ interface BudgetRepositoryInterface
     public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection;
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return string
+     */
+    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
+
+    /**
      *
      * @param Collection $budgets
      * @param Collection $accounts
@@ -119,6 +129,16 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
+     *
+     * @return bool
+     */
+    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): bool;
 
     /**
      * @param Collection $budgets

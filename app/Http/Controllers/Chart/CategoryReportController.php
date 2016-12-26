@@ -83,6 +83,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($categories);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
@@ -138,6 +139,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($categories);
         $cache->addProperty($start);
+        $cache->addProperty($others);
         $cache->addProperty($end);
         if ($cache->has()) {
             return Response::json($cache->get());
@@ -194,6 +196,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($categories);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
@@ -250,6 +253,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($categories);
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($others);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
@@ -314,14 +318,33 @@ class CategoryReportController extends Controller
             $chartData[$category->id . '-in']  = [
                 'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.income'))) . ')',
                 'type'    => 'bar',
+                'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$category->id . '-out'] = [
                 'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.expenses'))) . ')',
                 'type'    => 'bar',
+                'yAxisID' => 'y-axis-0',
+                'entries' => [],
+            ];
+            // total in, total out:
+            $chartData[$category->id . '-total-in']  = [
+                'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.sum_of_income'))) . ')',
+                'type'    => 'line',
+                'fill'    => false,
+                'yAxisID' => 'y-axis-1',
+                'entries' => [],
+            ];
+            $chartData[$category->id . '-total-out'] = [
+                'label'   => $category->name . ' (' . strtolower(strval(trans('firefly.sum_of_expenses'))) . ')',
+                'type'    => 'line',
+                'fill'    => false,
+                'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
         }
+        $sumOfIncome  = [];
+        $sumOfExpense = [];
 
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
@@ -332,17 +355,40 @@ class CategoryReportController extends Controller
 
             /** @var Category $category */
             foreach ($categories as $category) {
-                $labelIn  = $category->id . '-in';
-                $labelOut = $category->id . '-out';
-                // get sum, and get label:
-                $chartData[$labelIn]['entries'][$label]  = $income[$category->id] ?? '0';
-                $chartData[$labelOut]['entries'][$label] = $expenses[$category->id] ?? '0';
+                $labelIn        = $category->id . '-in';
+                $labelOut       = $category->id . '-out';
+                $labelSumIn     = $category->id . '-total-in';
+                $labelSumOut    = $category->id . '-total-out';
+                $currentIncome  = $income[$category->id] ?? '0';
+                $currentExpense = $expenses[$category->id] ?? '0';
+
+
+                // add to sum:
+                $sumOfIncome[$category->id]  = $sumOfIncome[$category->id] ?? '0';
+                $sumOfExpense[$category->id] = $sumOfExpense[$category->id] ?? '0';
+                $sumOfIncome[$category->id]  = bcadd($sumOfIncome[$category->id], $currentIncome);
+                $sumOfExpense[$category->id] = bcadd($sumOfExpense[$category->id], $currentExpense);
+
+                // add to chart:
+                $chartData[$labelIn]['entries'][$label]     = $currentIncome;
+                $chartData[$labelOut]['entries'][$label]    = $currentExpense;
+                $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$category->id];
+                $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$category->id];
             }
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
         }
-
-        $data = $this->generator->multiSet($chartData);
+        // remove all empty entries to prevent cluttering:
+        $newSet = [];
+        foreach ($chartData as $key => $entry) {
+            if (!array_sum($entry['entries']) == 0) {
+                $newSet[$key] = $chartData[$key];
+            }
+        }
+        if (count($newSet) === 0) {
+            $newSet = $chartData;
+        }
+        $data = $this->generator->multiSet($newSet);
         $cache->store($data);
 
         return Response::json($data);

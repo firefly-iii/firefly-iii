@@ -17,10 +17,12 @@ use Carbon\Carbon;
 use FireflyIII\Events\StoredBudgetLimit;
 use FireflyIII\Events\UpdatedBudgetLimit;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -201,13 +203,49 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $query = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
-                                ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-                                ->where('budgets.user_id', $this->user->id);
+                                ->where(
+                                    function (Builder $q1) use ($start, $end) {
+                                        $q1->where(
+                                            function (Builder $q2) use ($start, $end) {
+                                                $q2->where('limit_repetitions.enddate', '>=', $start->format('Y-m-d 00:00:00'));
+                                                $q2->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d 00:00:00'));
+                                            }
+                                        )
+                                           ->orWhere(
+                                               function (Builder $q3) use ($start, $end) {
+                                                   $q3->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'));
+                                                   $q3->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'));
+                                               }
+                                           );
+                                    }
+                                )
+                                ->where('budgets.user_id', $this->user->id)
+                                ->whereNull('budgets.deleted_at');
 
         $set = $query->get(['limit_repetitions.*', 'budget_limits.budget_id']);
 
         return $set;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return string
+     */
+    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
+    {
+        $amount          = '0';
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d'))
+                                      ->where('end_date', $end->format('Y-m-d'))->first();
+        if (!is_null($availableBudget)) {
+            $amount = strval($availableBudget->amount);
+        }
+
+        return $amount;
     }
 
     /**
@@ -323,6 +361,33 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
+     *
+     * @return bool
+     */
+    public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): bool
+    {
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d'))
+                                      ->where('end_date', $end->format('Y-m-d'))->first();
+        if (is_null($availableBudget)) {
+            $availableBudget = new AvailableBudget;
+            $availableBudget->user()->associate($this->user);
+            $availableBudget->transactionCurrency()->associate($currency);
+            $availableBudget->start_date = $start;
+            $availableBudget->end_date   = $end;
+        }
+        $availableBudget->amount = $amount;
+        $availableBudget->save();
+
+        return true;
+    }
+
+    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
@@ -333,10 +398,11 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
         // collect amount of transaction journals, which is easy:
-        $budgetIds  = $budgets->pluck('id')->toArray();
+        $budgetIds = $budgets->pluck('id')->toArray();
+
         $accountIds = $accounts->pluck('id')->toArray();
 
-        Log::debug('spentInPeriod: Now in spentInPeriod for these budgets: ', $budgetIds);
+        Log::debug(sprintf('spentInPeriod: Now in spentInPeriod for these budgets (%d): ', count($budgetIds)), $budgetIds);
         Log::debug('spentInPeriod: and these accounts: ', $accountIds);
         Log::debug(sprintf('spentInPeriod: Start date is "%s", end date is "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
 

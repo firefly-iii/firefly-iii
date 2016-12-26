@@ -51,6 +51,15 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
+
+    /**
+     * @return HasMany
+     */
+    public function availableBudgets(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\AvailableBudget');
+    }
+
     /**
      * @return HasMany
      */

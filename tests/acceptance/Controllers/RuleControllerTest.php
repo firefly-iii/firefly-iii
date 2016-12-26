@@ -8,6 +8,8 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Models\Rule;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 
 
 /**
@@ -28,145 +30,199 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::create
-     * Implement testCreate().
      */
     public function testCreate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.create', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::delete
-     * Implement testDelete().
      */
     public function testDelete()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.delete', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::destroy
-     * Implement testDestroy().
      */
     public function testDestroy()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $repository->shouldReceive('destroy');
+
+        $this->session(['rules.delete.url' => 'http://localhost']);
+        $this->be($this->user());
+        $this->call('post', route('rules.destroy', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+        $this->assertRedirectedToRoute('index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::down
-     * Implement testDown().
      */
     public function testDown()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.down', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('rules.index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::edit
-     * Implement testEdit().
      */
     public function testEdit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.edit', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::index
-     * Implement testIndex().
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.index'));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::reorderRuleActions
-     * Implement testReorderRuleActions().
      */
     public function testReorderRuleActions()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'triggers' => [1, 2, 3],
+        ];
+
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $repository->shouldReceive('reorderRuleActions');
+
+        $this->be($this->user());
+        $this->call('post', route('rules.reorder-actions', [1]), $data);
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::reorderRuleTriggers
-     * Implement testReorderRuleTriggers().
      */
     public function testReorderRuleTriggers()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'triggers' => [1, 2, 3],
+        ];
+
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $repository->shouldReceive('reorderRuleTriggers');
+
+        $this->be($this->user());
+        $this->call('post', route('rules.reorder-triggers', [1]), $data);
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::store
-     * Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->session(['rules.create.url' => 'http://localhost']);
+        $data = [
+            'rule_group_id'      => 1,
+            'active'             => 1,
+            'title'              => 'A',
+            'trigger'            => 'store-journal',
+            'description'        => 'D',
+            'rule-trigger'       => [
+                1 => 'from_account_starts',
+            ],
+            'rule-trigger-value' => [
+                1 => 'B',
+            ],
+            'rule-action'        => [
+                1 => 'set_category',
+            ],
+            'rule-action-value'  => [
+                1 => 'C',
+            ],
+        ];
+
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $repository->shouldReceive('store')->andReturn(new Rule);
+
+        $this->be($this->user());
+        $this->call('post', route('rules.store', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**
+     * This actually hits an error and not the actually code but OK.
+     *
      * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * Implement testTestTriggers().
      */
     public function testTestTriggers()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.test-triggers', [1]));
+        $this->assertResponseStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::up
-     * Implement testUp().
      */
     public function testUp()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->be($this->user());
+        $this->call('get', route('rules.up', [1]));
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('rules.index');
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::update
-     * Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $data = [
+            'rule_group_id'      => 1,
+            'title'              => 'Your first default rule',
+            'trigger'            => 'store-journal',
+            'active'             => 1,
+            'description'        => 'This rule is an example. You can safely delete it.',
+            'rule-trigger'       => [
+                1 => 'description_is',
+            ],
+            'rule-trigger-value' => [
+                1 => 'something',
+            ],
+            'rule-action'        => [
+                1 => 'prepend_description',
+            ],
+            'rule-action-value'  => [
+                1 => 'Bla bla',
+            ],
+        ];
+        $this->session(['rules.edit.url' => 'http://localhost']);
+
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $repository->shouldReceive('update');
+
+        $this->be($this->user());
+        $this->call('post', route('rules.update', [1]), $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 }

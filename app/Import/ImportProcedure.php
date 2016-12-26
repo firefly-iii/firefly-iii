@@ -23,7 +23,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Import
  */
-class ImportProcedure
+class ImportProcedure implements ImportProcedureInterface
 {
 
     /**

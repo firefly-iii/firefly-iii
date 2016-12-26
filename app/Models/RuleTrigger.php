@@ -23,6 +23,22 @@ use Illuminate\Database\Eloquent\Model;
 class RuleTrigger extends Model
 {
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at'      => 'date',
+            'updated_at'      => 'date',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at'];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function rule()

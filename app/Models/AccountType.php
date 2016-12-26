@@ -33,6 +33,18 @@ class AccountType extends Model
     const IMPORT          = 'Import account';
 
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
+
+    /** @var array */
     protected $dates = ['created_at', 'updated_at'];
 
     //

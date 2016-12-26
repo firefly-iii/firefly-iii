@@ -8,6 +8,8 @@
  *
  * See the LICENSE file for details.
  */
+use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -32,9 +34,16 @@ class SearchControllerTest extends TestCase
      */
     public function testIndex()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $search = $this->mock(SearchInterface::class);
+        $search->shouldReceive('setLimit')->once();
+        $search->shouldReceive('searchTransactions')->andReturn(new Collection)->withArgs([['test']])->once();
+        $search->shouldReceive('searchBudgets')->andReturn(new Collection)->withArgs([['test']])->once();
+        $search->shouldReceive('searchTags')->andReturn(new Collection)->withArgs([['test']])->once();
+        $search->shouldReceive('searchCategories')->andReturn(new Collection)->withArgs([['test']])->once();
+        $search->shouldReceive('searchAccounts')->andReturn(new Collection)->withArgs([['test']])->once();
+        $this->be($this->user());
+        $this->call('get', route('search.index') . '?q=test');
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
     }
 }

@@ -22,11 +22,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
 use Log;
-use Mail;
 use Session;
-use Swift_TransportException;
 use Validator;
 
 /**
