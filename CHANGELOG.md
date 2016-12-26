@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.3.0] - 2015-12-26
+### Added
+- New method of keeping track of available budget, see issue #489
+- Support for Spanish
+- Firefly III now has an extended demo mode. Will expand further in the future.
+ 
+
+### Changed
+- New favicon
+- Import routine no longer gives transactions a description #483
+
+
+### Removed
+- All test data generation code.
+
+### Fixed
+- Removed import accounts from search results #478
+- Redirect after delete will no longer go back to deleted item #477
+- Cannot math #482
+- Fixed bug in virtual balance field #479
+
 ## [4.2.2] - 2016-12-18
 ### Added
 - New budget report (still a bit of a beta)
