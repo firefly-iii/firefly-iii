@@ -166,13 +166,17 @@ class PreferencesController extends Controller
             Preferences::set('transactionPageSize', 50);
         }
 
-        // two factor auth
-        $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
-        $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+        $twoFactorAuthEnabled   = false;
+        $hasTwoFactorAuthSecret = false;
+        if (!auth()->user()->hasRole('demo')) {
+            // two factor auth
+            $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
+            $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
 
-        // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
-        if ($hasTwoFactorAuthSecret) {
-            Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
+            // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
+            if ($hasTwoFactorAuthSecret) {
+                Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
+            }
         }
 
         // language:

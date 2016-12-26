@@ -108,7 +108,7 @@ class HomeController extends Controller
                 $journal->save();
             }
         }
-        Session::forget(['start','end','viewRange','range','is_custom_range']);
+        Session::forget(['start', 'end', 'viewRange', 'range', 'is_custom_range']);
 
         Session::clear();
         Artisan::call('cache:clear');
