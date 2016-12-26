@@ -98,6 +98,7 @@ return [
     'left_in_budget_limit'                       => 'Left to spend according to budgeting',
     'cannot_change_demo'                         => 'You cannot change the password of the demonstration account.',
     'cannot_delete_demo'                         => 'You cannot remove the demonstration account.',
+    'cannot_reset_demo_user'                     => 'You cannot reset the password of the demonstration account',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',
