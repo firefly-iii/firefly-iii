@@ -101,6 +101,7 @@ return [
     'cannot_reset_demo_user'                     => 'You cannot reset the password of the demonstration account',
     'per_period'                                 => 'Per period',
     'all_periods'                                => 'All periods',
+    'show_the_current_period_and_overview'       => 'Show the current period and overview',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'anual',
