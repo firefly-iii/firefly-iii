@@ -125,6 +125,7 @@ class StoredJournalEventHandler
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 6 but I can live with it.
      * @param TransactionJournal  $journal
      * @param PiggyBank           $piggyBank
      * @param PiggyBankRepetition $repetition
@@ -153,7 +154,8 @@ class StoredJournalEventHandler
             Log::debug(sprintf('Room in piggy bank for extra money is %f', $room));
             Log::debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             Log::debug(sprintf('New amount is %f', $room));
-            $amount = $room;
+
+            return $room;
         }
 
         // amount is negative and $currentamount is smaller than $amount
@@ -161,7 +163,8 @@ class StoredJournalEventHandler
             Log::debug(sprintf('Max amount to remove is %f', $repetition->currentamount));
             Log::debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             Log::debug(sprintf('New amount is %f', $compare));
-            $amount = $compare;
+
+            return $compare;
         }
 
         return $amount;

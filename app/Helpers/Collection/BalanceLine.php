@@ -139,6 +139,7 @@ class BalanceLine
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @return string
      */
     public function getTitle(): string
@@ -147,13 +148,13 @@ class BalanceLine
             return $this->getBudget()->name;
         }
         if ($this->getRole() == self::ROLE_DEFAULTROLE) {
-            return trans('firefly.no_budget');
+            return strval(trans('firefly.no_budget'));
         }
         if ($this->getRole() == self::ROLE_TAGROLE) {
-            return trans('firefly.coveredWithTags');
+            return strval(trans('firefly.coveredWithTags'));
         }
         if ($this->getRole() == self::ROLE_DIFFROLE) {
-            return trans('firefly.leftUnbalanced');
+            return strval(trans('firefly.leftUnbalanced'));
         }
 
         return '';

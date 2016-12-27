@@ -74,12 +74,8 @@ class Help implements HelpInterface
             $converter = new CommonMarkConverter();
             $content   = $converter->convertToHtml($content);
         }
-        if (strlen($content) === 0) {
-            Log::warning('Raw content length is zero.');
-        }
 
         return $content;
-
     }
 
     /**

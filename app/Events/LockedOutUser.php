@@ -18,6 +18,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class LockedOutUser
  *
+ * @deprecated
  * @package FireflyIII\Events
  */
 class LockedOutUser extends Event

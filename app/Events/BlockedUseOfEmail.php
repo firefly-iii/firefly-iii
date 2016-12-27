@@ -19,6 +19,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class BlockedUseOfEmail
  *
+ * @deprecated
  * @package FireflyIII\Events
  */
 class BlockedUseOfEmail extends Event

@@ -18,6 +18,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class BlockedBadLogin
  *
+ * @deprecated
  * @package FireflyIII\Events
  */
 class BlockedBadLogin extends Event

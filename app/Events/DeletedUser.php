@@ -18,6 +18,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class DeletedUser
  *
+ * @deprecated
  * @package FireflyIII\Events
  */
 class DeletedUser extends Event

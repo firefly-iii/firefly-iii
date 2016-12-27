@@ -85,6 +85,7 @@ class UserEventHandler
     /**
      * @param BlockedBadLogin $event
      *
+     * @deprecated
      * @return bool
      */
     public function reportBadLogin(BlockedBadLogin $event)
@@ -118,6 +119,7 @@ class UserEventHandler
     /**
      * @param BlockedUserLogin $event
      *
+     * @deprecated
      * @return bool
      */
     public function reportBlockedUser(BlockedUserLogin $event): bool
@@ -157,6 +159,7 @@ class UserEventHandler
     /**
      * @param LockedOutUser $event
      *
+     * @deprecated
      * @return bool
      */
     public function reportLockout(LockedOutUser $event): bool
@@ -189,6 +192,7 @@ class UserEventHandler
     /**
      * @param BlockedUseOfDomain $event
      *
+     * @deprecated
      * @return bool
      */
     public function reportUseBlockedDomain(BlockedUseOfDomain $event): bool
@@ -227,6 +231,7 @@ class UserEventHandler
     /**
      * @param BlockedUseOfEmail $event
      *
+     * @deprecated
      * @return bool
      */
     public function reportUseOfBlockedEmail(BlockedUseOfEmail $event): bool
@@ -263,6 +268,7 @@ class UserEventHandler
     /**
      * @param DeletedUser $event
      *
+     * @deprecated
      * @return bool
      */
     public function saveEmailAddress(DeletedUser $event): bool
@@ -379,6 +385,7 @@ class UserEventHandler
      * from the user yet stored conveniently.
      *
      * @param ConfirmedUser $event
+     * @deprecated
      *
      * @return bool
      */
@@ -394,6 +401,7 @@ class UserEventHandler
      * fashion as the previous method.
      *
      * @param RegisteredUser $event
+     * @deprecated
      *
      * @return bool
      */
