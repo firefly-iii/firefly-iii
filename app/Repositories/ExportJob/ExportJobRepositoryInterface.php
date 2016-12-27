@@ -34,6 +34,14 @@ interface ExportJobRepositoryInterface
 
     /**
      * @param ExportJob $job
+     * @param string    $status
+     *
+     * @return bool
+     */
+    public function changeStatus(ExportJob $job, string $status): bool;
+
+    /**
+     * @param ExportJob $job
      *
      * @return bool
      */

@@ -49,11 +49,8 @@ class FireflyConfig
      */
     public function get($name, $default = null)
     {
-        Log::debug('Now in FFConfig::get()', ['name' => $name]);
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
-            Log::debug('Return cache.');
-
             return Cache::get($fullName);
         }
 

@@ -40,6 +40,19 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
+     * @param ExportJob $job
+     * @param string    $status
+     *
+     * @return bool
+     */
+    public function changeStatus(ExportJob $job, string $status): bool
+    {
+        $job->change($status);
+
+        return true;
+    }
+
+    /**
      * @return bool
      */
     public function cleanup(): bool

@@ -26,7 +26,6 @@ use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
 use Preferences;
 use Response;
-use Storage;
 use View;
 
 /**
@@ -145,7 +144,7 @@ class ExportController extends Controller
             'job'                => $job,
         ];
 
-        $job->change('export_status_make_exporter');
+        $jobs->changeStatus($job, 'export_status_make_exporter');
 
         /** @var ProcessorInterface $processor */
         $processor = app(ProcessorInterface::class, [$settings]);
@@ -153,47 +152,46 @@ class ExportController extends Controller
         /*
          * Collect journals:
          */
-        $job->change('export_status_collecting_journals');
+        $jobs->changeStatus($job, 'export_status_collecting_journals');
         $processor->collectJournals();
-        $job->change('export_status_collected_journals');
+        $jobs->changeStatus($job, 'export_status_collected_journals');
         /*
          * Transform to exportable entries:
          */
-        $job->change('export_status_converting_to_export_format');
+        $jobs->changeStatus($job, 'export_status_converting_to_export_format');
         $processor->convertJournals();
-        $job->change('export_status_converted_to_export_format');
+        $jobs->changeStatus($job, 'export_status_converted_to_export_format');
         /*
          * Transform to (temporary) file:
          */
-        $job->change('export_status_creating_journal_file');
+        $jobs->changeStatus($job, 'export_status_creating_journal_file');
         $processor->exportJournals();
-        $job->change('export_status_created_journal_file');
+        $jobs->changeStatus($job, 'export_status_created_journal_file');
         /*
          *  Collect attachments, if applicable.
          */
         if ($settings['includeAttachments']) {
-            $job->change('export_status_collecting_attachments');
+            $jobs->changeStatus($job, 'export_status_collecting_attachments');
             $processor->collectAttachments();
-            $job->change('export_status_collected_attachments');
+            $jobs->changeStatus($job, 'export_status_collected_attachments');
         }
 
         /*
          * Collect old uploads
          */
         if ($settings['includeOldUploads']) {
-            $job->change('export_status_collecting_old_uploads');
+            $jobs->changeStatus($job, 'export_status_collecting_old_uploads');
             $processor->collectOldUploads();
-            $job->change('export_status_collected_old_uploads');
+            $jobs->changeStatus($job, 'export_status_collected_old_uploads');
         }
 
         /*
          * Create ZIP file:
          */
-        $job->change('export_status_creating_zip_file');
+        $jobs->changeStatus($job, 'export_status_creating_zip_file');
         $processor->createZipFile();
-        $job->change('export_status_created_zip_file');
-
-        $job->change('export_status_finished');
+        $jobs->changeStatus($job, 'export_status_created_zip_file');
+        $jobs->changeStatus($job, 'export_status_finished');
 
         return Response::json('ok');
     }

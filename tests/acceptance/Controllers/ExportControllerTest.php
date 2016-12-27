@@ -9,6 +9,7 @@
  * See the LICENSE file for details.
  */
 use FireflyIII\Export\Processor;
+use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 
 /**
@@ -82,6 +83,10 @@ class ExportControllerTest extends TestCase
         $processor->shouldReceive('convertJournals')->once();
         $processor->shouldReceive('exportJournals')->once();
         $processor->shouldReceive('createZipFile')->once();
+
+        $repository = $this->mock(ExportJobRepositoryInterface::class);
+        $repository->shouldReceive('changeStatus')->andReturn(true);
+        $repository->shouldReceive('findByKey')->andReturn(new ExportJob);
 
 
         $this->be($this->user());
