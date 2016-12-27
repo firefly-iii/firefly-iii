@@ -180,7 +180,6 @@ function doubleYNonStackedChart(URI, container) {
 }
 
 
-
 /**
  *
  * @param URI
@@ -253,11 +252,17 @@ function drawAChart(URI, container, chartType, options, colorData) {
             console.log(chartType + " chart in " + container + " has no data.");
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();
-            if (holder.hasClass('box')) {
+            if (holder.hasClass('box') || holder.hasClass('box-body')) {
                 // find box-body:
-                var boxBody = holder.find('.box-body');
+                var boxBody;
+                if (!holder.hasClass('box-body')) {
+                    boxBody = holder.find('.box-body');
+                } else {
+                    boxBody = holder;
+                }
                 boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
-                //holder.remove();
+            } else {
+                console.log("Want to add text but holder has classes: " + holder.attr("class"));
             }
             return;
         }
