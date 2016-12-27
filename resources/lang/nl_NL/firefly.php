@@ -99,9 +99,9 @@ return [
     'cannot_change_demo'                         => 'Je kan het wachtwoord van de demonstratie-account niet wijzigen.',
     'cannot_delete_demo'                         => 'Je kan de demonstratie-account niet verwijderen.',
     'cannot_reset_demo_user'                     => 'Je kan het wachtwoord van de demonstratie-account niet resetten',
-    'per_period'                                 => 'Per period',
-    'all_periods'                                => 'All periods',
-    'show_the_current_period_and_overview'       => 'Show the current period and overview',
+    'per_period'                                 => 'Per periode',
+    'all_periods'                                => 'Alle perioden',
+    'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
