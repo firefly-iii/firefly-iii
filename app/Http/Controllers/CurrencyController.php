@@ -170,7 +170,7 @@ class CurrencyController extends Controller
 
 
         if (!auth()->user()->hasRole('owner')) {
-            Session::flash('warning', trans('firefly.ask_site_owner', ['site_owner' => env('SITE_OWNER')]));
+            Session::flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
         }
 
 
