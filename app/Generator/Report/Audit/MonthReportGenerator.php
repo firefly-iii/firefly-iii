@@ -49,33 +49,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             // balance the day before:
-            $id               = $account->id;
-            $dayBeforeBalance = Steam::balance($account, $dayBefore);
-            $collector        = new JournalCollector(auth()->user());
-            $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
-            $journals     = $collector->getJournals();
-            $journals     = $journals->reverse();
-            $startBalance = $dayBeforeBalance;
-
-
-            /** @var Transaction $journal */
-            foreach ($journals as $transaction) {
-                $transaction->before = $startBalance;
-                $transactionAmount   = $transaction->transaction_amount;
-                $newBalance          = bcadd($startBalance, $transactionAmount);
-                $transaction->after  = $newBalance;
-                $startBalance        = $newBalance;
-            }
-
-            /*
-             * Reverse set again.
-             */
-            $auditData[$id]['journals']         = $journals->reverse();
-            $auditData[$id]['exists']           = $journals->count() > 0;
-            $auditData[$id]['end']              = $this->end->formatLocalized(strval(trans('config.month_and_day')));
-            $auditData[$id]['endBalance']       = Steam::balance($account, $this->end);
-            $auditData[$id]['dayBefore']        = $dayBefore->formatLocalized(strval(trans('config.month_and_day')));
-            $auditData[$id]['dayBeforeBalance'] = $dayBeforeBalance;
+            $id             = $account->id;
+            $auditData[$id] = $this->getAuditReport($account, $dayBefore);
         }
 
         $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
@@ -152,5 +127,45 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->start = $date;
 
         return $this;
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $date
+     *
+     * @return array
+     */
+    private function getAuditReport(Account $account, Carbon $date): array
+    {
+        $dayBeforeBalance = Steam::balance($account, $date);
+        $collector        = new JournalCollector(auth()->user());
+        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
+        $journals     = $collector->getJournals();
+        $journals     = $journals->reverse();
+        $startBalance = $dayBeforeBalance;
+
+
+        /** @var Transaction $journal */
+        foreach ($journals as $transaction) {
+            $transaction->before = $startBalance;
+            $transactionAmount   = $transaction->transaction_amount;
+            $newBalance          = bcadd($startBalance, $transactionAmount);
+            $transaction->after  = $newBalance;
+            $startBalance        = $newBalance;
+        }
+
+        /*
+         * Reverse set again.
+         */
+        $return = [
+            'journals'         => $journals->reverse(),
+            'exists'           => $journals->count() > 0,
+            'end'              => $this->end->formatLocalized(strval(trans('config.month_and_day'))),
+            'endBalance'       => Steam::balance($account, $this->end),
+            'dayBefore'        => $date->formatLocalized(strval(trans('config.month_and_day'))),
+            'dayBeforeBalance' => $dayBeforeBalance,
+        ];
+
+        return $return;
     }
 }

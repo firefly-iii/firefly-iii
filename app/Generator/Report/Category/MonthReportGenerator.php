@@ -229,6 +229,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      * @param array $spent
      * @param array $earned
      *
