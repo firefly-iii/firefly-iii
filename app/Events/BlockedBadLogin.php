@@ -16,7 +16,7 @@ namespace FireflyIII\Events;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class LockedOutUser
+ * Class BlockedBadLogin
  *
  * @package FireflyIII\Events
  */
@@ -28,7 +28,7 @@ class BlockedBadLogin extends Event
     public $ipAddress;
 
     /**
-     * Create a new event instance. This event is triggered when a user gets themselves locked out.
+     * Create a new event instance. This event is triggered when a bad login is blocked.
      *
      * @param string $email
      * @param string $ipAddress

@@ -174,10 +174,8 @@ class VerifyDatabase extends Command
         $configuration = [
             // a withdrawal can not have revenue account:
             TransactionType::WITHDRAWAL => [AccountType::REVENUE],
-
             // deposit cannot have an expense account:
             TransactionType::DEPOSIT    => [AccountType::EXPENSE],
-
             // transfer cannot have either:
             TransactionType::TRANSFER   => [AccountType::EXPENSE, AccountType::REVENUE],
         ];

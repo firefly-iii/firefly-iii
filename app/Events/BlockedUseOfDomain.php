@@ -19,6 +19,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class BlockedUseOfDomain
  *
+ * @deprecated 
  * @package FireflyIII\Events
  */
 class BlockedUseOfDomain extends Event
@@ -31,6 +32,7 @@ class BlockedUseOfDomain extends Event
     /**
      * Create a new event instance. This event is triggered when a user tries to register with a banned domain (on blocked domain list).
      *
+     * @deprecated
      * @param string $email
      * @param string $ipAddress
      */
