@@ -99,6 +99,8 @@ return [
     'cannot_change_demo'                         => 'Je kan het wachtwoord van de demonstratie-account niet wijzigen.',
     'cannot_delete_demo'                         => 'Je kan de demonstratie-account niet verwijderen.',
     'cannot_reset_demo_user'                     => 'Je kan het wachtwoord van de demonstratie-account niet resetten',
+    'per_period'                                 => 'Per period',
+    'all_periods'                                => 'All periods',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
