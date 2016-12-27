@@ -49,7 +49,7 @@ class StoredJournalEventHandler
          * Verify existence of piggy bank:
          */
         if (!$this->verifyExistence($event)) {
-            Log::error('No such piggy bank or no repetition on %s', $journal->date->format('Y-m-d'));
+            Log::error(sprintf('No such piggy bank or no repetition on %s', $journal->date->format('Y-m-d')));
 
             return true;
         }
