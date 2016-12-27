@@ -9,7 +9,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }} ({{ 'month'|_ }})</h3>
+                    <h3 class="box-title">{{ 'overview'|_ }} ({{ 'per_period'|_|lower }})</h3>
                 </div>
                 <div class="box-body">
                     <canvas id="period" style="width:100%" height="350"></canvas>
@@ -19,7 +19,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }} ({{ 'all'|_ }})</h3>
+                    <h3 class="box-title">{{ 'overview'|_ }} ({{ 'all_periods'|_|lower }})</h3>
                 </div>
                 <div class="box-body">
                     <canvas id="all" style="width:100%;" height="350"></canvas>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12">
 
             <div class="box">
                 <div class="box-header with-border">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
             {% for entry in entries %}
                 {% if entry[2] != 0 or entry[3] != 0 %}
                     <div class="box">
