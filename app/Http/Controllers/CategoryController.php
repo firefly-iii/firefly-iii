@@ -222,6 +222,7 @@ class CategoryController extends Controller
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $showAll      = true;
 
         // new collector:
         $collector = app(JournalCollectorInterface::class);
@@ -229,7 +230,7 @@ class CategoryController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/all');
 
-        return view('categories.show', compact('category', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end', 'showAll'));
     }
 
     /**
