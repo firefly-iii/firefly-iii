@@ -29,6 +29,7 @@ use Crypt;
  *
  *
  * Class Entry
+ * @SuppressWarnings(PHPMD.LongVariable)
  *
  * @package FireflyIII\Export\Entry
  */
@@ -71,33 +72,21 @@ final class Entry
      */
     public static function fromObject($object): Entry
     {
-        $entry = new self;
-
-        // journal information:
-        $entry->journal_id       = $object->transaction_journal_id;
-        $entry->description      = $object->journal_encrypted === 1 ? Crypt::decrypt($object->journal_description) : $object->journal_description;
-        $entry->amount           = round($object->amount, 2); // always positive
-        $entry->date             = $object->date;
-        $entry->transaction_type = $object->transaction_type;
-        $entry->currency_code    = $object->transaction_currency_code;
-
-        // source information:
-        $entry->source_account_id   = $object->account_id;
-        $entry->source_account_name = $object->account_name_encrypted === 1 ? Crypt::decrypt($object->account_name) : $object->account_name;
-
-
-        // destination information
+        $entry                           = new self;
+        $entry->journal_id               = $object->transaction_journal_id;
+        $entry->description              = self::decrypt($object->journal_encrypted, $object->journal_description);
+        $entry->amount                   = round($object->amount, 2); // always positive
+        $entry->date                     = $object->date;
+        $entry->transaction_type         = $object->transaction_type;
+        $entry->currency_code            = $object->transaction_currency_code;
+        $entry->source_account_id        = $object->account_id;
+        $entry->source_account_name      = self::decrypt($object->account_name_encrypted, $object->account_name);
         $entry->destination_account_id   = $object->opposing_account_id;
-        $entry->destination_account_name = $object->opposing_account_encrypted === 1 ? Crypt::decrypt($object->opposing_account_name)
-            : $object->opposing_account_name;
-
-
-        // category and budget
-        $entry->category_id   = $object->category_id ?? '';
-        $entry->category_name = $object->category_name ?? '';
-        $entry->budget_id     = $object->budget_id ?? '';
-        $entry->budget_name   = $object->budget_name ?? '';
-
+        $entry->destination_account_name = self::decrypt($object->opposing_account_encrypted, $object->opposing_account_name);
+        $entry->category_id              = $object->category_id ?? '';
+        $entry->category_name            = $object->category_name ?? '';
+        $entry->budget_id                = $object->budget_id ?? '';
+        $entry->budget_name              = $object->budget_name ?? '';
 
         // update description when transaction description is different:
         if (!is_null($object->description) && $object->description != $entry->description) {
@@ -105,6 +94,21 @@ final class Entry
         }
 
         return $entry;
+    }
+
+    /**
+     * @param int $isEncrypted
+     * @param     $value
+     *
+     * @return string
+     */
+    protected static function decrypt(int $isEncrypted, $value)
+    {
+        if ($isEncrypted === 1) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
     }
 
 }

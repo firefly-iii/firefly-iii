@@ -72,6 +72,7 @@ class Handler extends ExceptionHandler
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
      * @param  Exception $exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * @return void
      */
@@ -98,8 +99,8 @@ class Handler extends ExceptionHandler
             ];
 
             // create job that will mail.
-            $ip  = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-            $job = new MailError($userData, env('SITE_OWNER', ''), $ip, $data);
+            $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+            $job       = new MailError($userData, env('SITE_OWNER', ''), $ipAddress, $data);
             dispatch($job);
         }
 

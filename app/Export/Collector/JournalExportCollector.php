@@ -287,7 +287,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getWorkSet()
     {
