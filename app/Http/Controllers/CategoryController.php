@@ -20,7 +20,7 @@ use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Input;
@@ -89,13 +89,14 @@ class CategoryController extends Controller
         return view('categories.delete', compact('category', 'subTitle'));
     }
 
+
     /**
-     * @param CRI      $repository
-     * @param Category $category
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(CRI $repository, Category $category)
+    public function destroy(CategoryRepositoryInterface $repository, Category $category)
     {
 
         $name       = $category->name;
@@ -136,11 +137,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI $repository
+     * @param CategoryRepositoryInterface $repository
      *
      * @return View
      */
-    public function index(CRI $repository)
+    public function index(CategoryRepositoryInterface $repository)
     {
         $categories = $repository->getCategories();
 
@@ -176,20 +177,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                        $repository
-     * @param AccountRepositoryInterface $accountRepository
-     * @param Category                   $category
+     * @param Category $category
      *
      * @return View
      */
-    public function show(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
+    public function show(Category $category)
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $start */
-        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        /** @var Carbon $end */
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $accounts     = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
@@ -202,48 +198,38 @@ class CategoryController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
-        // oldest transaction in category:
+        $entries = $this->getGroupedEntries($category);
+
+        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
+    }
+
+    /**
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     *
+     * @return View
+     */
+    public function showAll(CategoryRepositoryInterface $repository, Category $category)
+    {
+        $range = Preferences::get('viewRange', '1M')->data;
         $start = $repository->firstUseDate($category);
         if ($start->year == 1900) {
             $start = new Carbon;
         }
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = Navigation::startOfPeriod($start, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
-        $entries = new Collection;
+        $end          = Navigation::endOfPeriod(new Carbon, $range);
+        $subTitle     = $category->name;
+        $subTitleIcon = 'fa-bar-chart';
+        $hideCategory = true; // used in list.
+        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('category-show');
-        $cache->addProperty($category->id);
+        // new collector:
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('categories/show/' . $category->id . '/all');
 
-
-        if ($cache->has()) {
-            $entries = $cache->get();
-
-            return view('categories.show', compact('category', 'journals', 'entries', 'subTitleIcon', 'hideCategory', 'subTitle'));
-        }
-
-
-        $categoryCollection = new Collection([$category]);
-
-        while ($end >= $start) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $repository->spentInPeriod($categoryCollection, $accounts, $end, $currentEnd);
-            $earned     = $repository->earnedInPeriod($categoryCollection, $accounts, $end, $currentEnd);
-            $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned]);
-
-            $end = Navigation::subtractPeriod($end, $range, 1);
-
-        }
-        $cache->store($entries);
-
-        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle', 'subTitleIcon'));
+        return view('categories.show', compact('category', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -259,6 +245,7 @@ class CategoryController extends Controller
         $start        = Navigation::startOfPeriod($carbon, $range);
         $end          = Navigation::endOfPeriod($carbon, $range);
         $subTitle     = $category->name;
+        $subTitleIcon = 'fa-bar-chart';
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
@@ -269,16 +256,16 @@ class CategoryController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
-        return view('categories.show-by-date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
+        return view('categories.show', compact('category', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
-     * @param CategoryFormRequest $request
-     * @param CRI                 $repository
+     * @param CategoryFormRequest         $request
+     * @param CategoryRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(CategoryFormRequest $request, CRI $repository)
+    public function store(CategoryFormRequest $request, CategoryRepositoryInterface $repository)
     {
         $data     = $request->getCategoryData();
         $category = $repository->store($data);
@@ -297,13 +284,13 @@ class CategoryController extends Controller
 
 
     /**
-     * @param CategoryFormRequest $request
-     * @param CRI                 $repository
-     * @param Category            $category
+     * @param CategoryFormRequest         $request
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(CategoryFormRequest $request, CRI $repository, Category $category)
+    public function update(CategoryFormRequest $request, CategoryRepositoryInterface $repository, Category $category)
     {
         $data = $request->getCategoryData();
         $repository->update($category, $data);
@@ -320,6 +307,50 @@ class CategoryController extends Controller
         // redirect to previous URL.
         return redirect(session('categories.edit.url'));
 
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return Collection
+     */
+    private function getGroupedEntries(Category $category): Collection
+    {
+        $repository        = app(CategoryRepositoryInterface::class);
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $first             = $repository->firstUseDate($category);
+        if ($first->year == 1900) {
+            $first = new Carbon;
+        }
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $first   = Navigation::startOfPeriod($first, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
+
+        // properties for entries with their amounts.
+        $cache = new CacheProperties();
+        $cache->addProperty($first);
+        $cache->addProperty($end);
+        $cache->addProperty('categories.entries');
+        $cache->addProperty($category->id);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        while ($end >= $first) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
+            $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+        }
+        $cache->store($entries);
+
+        return $entries;
     }
 
 }

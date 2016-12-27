@@ -1,34 +1,49 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category, start, end) }}
 {% endblock %}
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }} ({{ 'per_period'|_|lower }})</h3>
-                </div>
-                <div class="box-body">
-                    <canvas id="period" style="width:100%" height="350"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }} ({{ 'all_periods'|_|lower }})</h3>
-                </div>
-                <div class="box-body">
-                    <canvas id="all" style="width:100%;" height="350"></canvas>
+        {% if entries %}
+            {# both charts #}
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'overview'|_ }} ({{ 'per_period'|_|lower }})</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="period" style="width:100%" height="350"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'overview'|_ }} ({{ 'all_periods'|_|lower }})</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="all" style="width:100%;" height="350"></canvas>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {# single chart #}
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'overview'|_ }} ({{ 'current_period'|_|lower }})</h3>
+                    </div>
+                    <div class="box-body">
+                        <canvas id="period-specific-period" style="width:100%;height:350px;" height="350"></canvas>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
     <div class="row">
-        <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12">
+        <div class="{% if entries %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
 
             <div class="box">
                 <div class="box-header with-border">
@@ -36,38 +51,55 @@
                 </div>
                 <div class="box-body">
                     {% include 'list.journals-tasker' %}
+                    {% if entries %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('categories.show.all', [category.id]) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        </p>
+                    {% else %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('categories.show', [category.id]) }}">
+                                {{ 'show_the_current_period_and_overview'|_ }}
+                            </a>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-            {% for entry in entries %}
-                {% if entry[2] != 0 or entry[3] != 0 %}
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><a href="{{ route('categories.show.date',[category.id,entry[0]]) }}">{{ entry[1] }}</a>
-                            </h3>
+        {% if entries %}
+            <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+                {% for entry in entries %}
+                    {% if entry[2] != 0 or entry[3] != 0 %}
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><a href="{{ route('categories.show.date',[category.id,entry[0]]) }}">{{ entry[1] }}</a>
+                                </h3>
+                            </div>
+                            <div class="box-body no-padding">
+                                <table class="table table-hover">
+                                    {% if entry[2] != 0 %}
+                                        <tr>
+                                            <td colspan="33%">{{ 'spent'|_ }}</td>
+                                            <td colspan="67%">{{ entry[2]|formatAmount }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if entry[3] != 0 %}
+                                        <tr>
+                                            <td colspan="33%">{{ 'earned'|_ }}</td>
+                                            <td colspan="67%">{{ entry[3]|formatAmount }}</td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
                         </div>
-                        <div class="box-body no-padding">
-                            <table class="table table-hover">
-                                {% if entry[2] != 0 %}
-                                    <tr>
-                                        <td colspan="33%">{{ 'spent'|_ }}</td>
-                                        <td colspan="67%">{{ entry[2]|formatAmount }}</td>
-                                    </tr>
-                                {% endif %}
-                                {% if entry[3] != 0 %}
-                                    <tr>
-                                        <td colspan="33%">{{ 'earned'|_ }}</td>
-                                        <td colspan="67%">{{ entry[3]|formatAmount }}</td>
-                                    </tr>
-                                {% endif %}
-                            </table>
-                        </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
 
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}
@@ -75,6 +107,7 @@
     <script type="text/javascript">
         var current = '{{ route('chart.category.current', [category.id]) }}';
         var all = '{{ route('chart.category.all', [category.id]) }}';
+        var specific = '{{ route('chart.category.specific', [category.id, start.format('Ymd')]) }}';
     </script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="js/ff/charts.defaults.js"></script>

@@ -76,12 +76,21 @@
                 </div>
                 <div class="box-body">
                     {% include 'list.journals-tasker' with {sorting:true, hideBills:true, hideBudgets: true} %}
-                    <p>
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                        <a href="{{ route('accounts.show.all', [account.id]) }}">
-                            {{ 'show_all_no_filter'|_ }}
-                        </a>
-                    </p>
+                    {% if entries %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('accounts.show.all', [account.id]) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        </p>
+                    {% else %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('accounts.show', [account.id]) }}">
+                                {{ 'show_the_current_period_and_overview'|_ }}
+                            </a>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
