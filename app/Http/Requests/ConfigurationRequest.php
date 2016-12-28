@@ -37,7 +37,6 @@ class ConfigurationRequest extends Request
     {
         return [
             'single_user_mode'     => intval($this->get('single_user_mode')) === 1,
-            'must_confirm_account' => intval($this->get('must_confirm_account')) === 1,
             'is_demo_site'         => intval($this->get('is_demo_site')) === 1,
         ];
     }
@@ -49,7 +48,6 @@ class ConfigurationRequest extends Request
     {
         $rules = [
             'single_user_mode'     => 'between:0,1|numeric',
-            'must_confirm_account' => 'between:0,1|numeric',
             'is_demo_site'         => 'between:0,1|numeric',
         ];
 

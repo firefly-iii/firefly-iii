@@ -59,13 +59,12 @@ class ConfigurationController extends Controller
         // all available configuration and their default value in case
         // they don't exist yet.
         $singleUserMode     = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
         $isDemoSite         = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $siteOwner          = env('SITE_OWNER');
 
         return view(
             'admin.configuration.index',
-            compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite', 'siteOwner')
+            compact('subTitle', 'subTitleIcon', 'singleUserMode', 'isDemoSite', 'siteOwner')
         );
 
     }
@@ -82,7 +81,6 @@ class ConfigurationController extends Controller
 
         // store config values
         FireflyConfig::set('single_user_mode', $data['single_user_mode']);
-        FireflyConfig::set('must_confirm_account', $data['must_confirm_account']);
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);
 
         // flash message

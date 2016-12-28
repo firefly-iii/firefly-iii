@@ -41,7 +41,6 @@ class EventServiceProvider extends ServiceProvider
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                     'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
-                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessage',
                 ],
             'FireflyIII\Events\RequestedNewPassword' => [ // is a User related event.
                                                           'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',

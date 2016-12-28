@@ -21,6 +21,7 @@ use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Log;
+use Preferences;
 use Session;
 use Validator;
 
@@ -97,6 +98,9 @@ class RegisterController extends Controller
         $user = $this->create($request->all());
 
         // trigger user registration event:
+        // automatically activate user:
+        Preferences::setForUser($user, 'user_confirmed', true);
+        Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
         event(new RegisteredUser($user, $request->ip()));
 
         Auth::login($user);
