@@ -214,7 +214,7 @@ class BillController extends Controller
 
         // use collector:
         $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setPage($page)->setLimit($pageSize);
+        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/bills/show/' . $bill->id);
 

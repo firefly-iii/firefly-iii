@@ -194,7 +194,7 @@ class CategoryController extends Controller
 
         // use journal collector
         $collector = app(JournalCollectorInterface::class);
-        $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
@@ -226,7 +226,7 @@ class CategoryController extends Controller
 
         // new collector:
         $collector = app(JournalCollectorInterface::class);
-        $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/all');
 
@@ -253,7 +253,7 @@ class CategoryController extends Controller
 
         // new collector:
         $collector = app(JournalCollectorInterface::class);
-        $collector->setPage($page)->setLimit($pageSize)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
