@@ -13,12 +13,12 @@ declare(strict_types = 1);
 
 return [
 
-    'import_configure_title' => 'Configure your import',
-    'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
-    'import_configure_form'  => 'Basic CSV import options',
-    'header_help'            => 'Check this if the first row of your CSV file are the column titles',
-    'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'import_configure_title' => 'Настройки импорта',
+    'import_configure_intro' => 'Есть несколько вариантов для импорта CSV. Пожалуйста, укажите, содержит ли CSV-файл заголовки в первом столбце, и каков формат даты в вашем поле даты. Возможно, придется немного поэкспериментировать. Разделитель полей обычно «,», но также может быть «;». Внимательно проверьте это.',
+    'import_configure_form'  => 'Основные параметры импорта CSV',
+    'header_help'            => 'Проверьте, если первая строка CSV файла - это заголовки столбцов',
+    'date_help'              => 'Формат даты и времени в CSV файле. Следуйте формату, как показывает <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> на этой </a> странице. По умолчанию будет анализироваться даты, которые выглядят следующим образом: :dateExample.',
+    'delimiter_help'         => 'Выберите разделитель полей, который используется в вашем файле. Если не уверены, запятая - самый безопасный вариант.',
     'import_account_help'    => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
     'upload_not_writeable'   => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
 
