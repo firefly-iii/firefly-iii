@@ -101,6 +101,7 @@ return [
     'cannot_reset_demo_user'                     => 'Je kan het wachtwoord van de demonstratie-account niet resetten',
     'per_period'                                 => 'Per periode',
     'all_periods'                                => 'Alle perioden',
+    'current_period'                             => 'Current period',
     'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
 
     // repeat frequencies:
