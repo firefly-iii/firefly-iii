@@ -157,7 +157,7 @@ class Transaction extends Model
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval(round($value, 2));
+        $this->attributes['amount'] = strval(round($value, 12));
     }
 
     /**
