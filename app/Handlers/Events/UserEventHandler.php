@@ -17,7 +17,6 @@ use Exception;
 use FireflyConfig;
 use FireflyIII\Events\BlockedUseOfDomain;
 use FireflyIII\Events\BlockedUseOfEmail;
-use FireflyIII\Events\BlockedUserLogin;
 use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\DeletedUser;
 use FireflyIII\Events\LockedOutUser;
@@ -78,46 +77,6 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
-
-        return true;
-    }
-
-    /**
-     * @param BlockedUserLogin $event
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function reportBlockedUser(BlockedUserLogin $event): bool
-    {
-        $user      = $event->user;
-        $owner     = env('SITE_OWNER');
-        $email     = $user->email;
-        $ipAddress = $event->ipAddress;
-        /** @var Configuration $sendmail */
-        $sendmail = FireflyConfig::get('mail_for_blocked_login', config('firefly.configuration.mail_for_blocked_login'));
-        Log::debug(sprintf('Now in reportBlockedUser for email address %s', $email));
-        Log::error(sprintf('User #%d (%s) has their accout blocked (blocked_code is "%s") but tried to login.', $user->id, $email, $user->blocked_code));
-        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            return true;
-        }
-
-        // send email message:
-        try {
-            Mail::send(
-                ['emails.blocked-login-html', 'emails.blocked-login-text'],
-                [
-                    'user_id'      => $user->id,
-                    'user_address' => $email,
-                    'ip'           => $ipAddress,
-                    'code'         => $user->blocked_code,
-                ], function (Message $message) use ($owner, $user) {
-                $message->to($owner, $owner)->subject('Blocked login attempt of blocked user');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
 
         return true;
     }

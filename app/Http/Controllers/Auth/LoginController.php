@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Config;
 use FireflyConfig;
-use FireflyIII\Events\BlockedUserLogin;
 use FireflyIII\Events\LockedOutUser;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
@@ -83,7 +82,6 @@ class LoginController extends Controller
             // user exists, but is blocked:
             $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
             $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
-            event(new BlockedUserLogin($foundUser, $request->ip()));
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
