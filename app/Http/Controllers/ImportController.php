@@ -23,6 +23,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
 use Response;
+use Session;
 use SplFileObject;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -382,6 +383,9 @@ class ImportController extends Controller
             $job->configuration = $configuration;
             $job->save();
             Log::debug('Set configuration for demo user', $configuration);
+
+            // also flash info
+            Session::flash('info', trans('demo.import-configure-security'));
         }
         if (!auth()->user()->hasRole('demo')) {
             // user is not demo, process original upload:
