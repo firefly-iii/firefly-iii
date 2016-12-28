@@ -132,6 +132,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
@@ -143,6 +144,32 @@ class CategoryControllerTest extends TestCase
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('categories.show', [1]));
+        $this->assertResponseStatus(200);
+        $this->see('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::showAll
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testShowAll(string $range)
+    {
+        $collector     = $this->mock(JournalCollectorInterface::class);
+
+        // collector stuff:
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('categories.show.all', [1]));
         $this->assertResponseStatus(200);
         $this->see('<ol class="breadcrumb">');
     }
@@ -162,6 +189,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 

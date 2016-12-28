@@ -145,8 +145,10 @@ class CategoryRepository implements CategoryRepositoryInterface
                                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                      ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
 
+
+
         // both exist, the one that is earliest "wins".
-        if (!is_null($firstTransaction) && !is_null($first) && $firstTransaction->date->lt($first)) {
+        if (!is_null($firstTransaction) && !is_null($first) && Carbon::parse($firstTransaction->date)->lt($first)) {
             $first = $firstTransaction->date;
         }
 

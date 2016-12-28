@@ -134,6 +134,22 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
+    public function testShowAll(string $range)
+    {
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->call('GET', route('accounts.show.all', [1]));
+        $this->assertResponseStatus(200);
+        // has bread crumb
+        $this->see('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       FireflyIII\Http\Controllers\AccountController::showWithDate
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
     public function testShowByDate(string $range)
     {
         $this->be($this->user());

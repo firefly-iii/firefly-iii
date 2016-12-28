@@ -321,6 +321,14 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'categories.show.all', function (BreadCrumbGenerator $breadcrumbs, Category $category) {
+    $breadcrumbs->parent('categories.index');
+    $breadcrumbs->push(e($category->name) . '(' . strtolower(trans('firefly.all_periods')) . ')', route('categories.show.all', [$category->id]));
+
+}
+);
+
+Breadcrumbs::register(
     'categories.show.date', function (BreadCrumbGenerator $breadcrumbs, Category $category, Carbon $date) {
 
     // get current period preference.
