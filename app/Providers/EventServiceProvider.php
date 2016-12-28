@@ -41,16 +41,6 @@ class EventServiceProvider extends ServiceProvider
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@storeConfirmationIpAddress',
                 ],
-
-            'FireflyIII\Events\DeletedUser'      => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@saveEmailAddress',
-                ],
-
-            'FireflyIII\Events\BlockedUseOfEmail' => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportUseOfBlockedEmail',
-                ],
             'FireflyIII\Events\RegisteredUser'       => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',

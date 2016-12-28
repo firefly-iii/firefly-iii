@@ -15,9 +15,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyConfig;
-use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\ConfirmedUser;
-use FireflyIII\Events\DeletedUser;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
@@ -75,70 +73,6 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
-
-        return true;
-    }
-
-    /**
-     * @param BlockedUseOfEmail $event
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function reportUseOfBlockedEmail(BlockedUseOfEmail $event): bool
-    {
-        $email     = $event->email;
-        $owner     = env('SITE_OWNER');
-        $ipAddress = $event->ipAddress;
-        /** @var Configuration $sendmail */
-        $sendmail = FireflyConfig::get('mail_for_blocked_email', config('firefly.configuration.mail_for_blocked_email'));
-        Log::debug(sprintf('Now in reportUseOfBlockedEmail for email address %s', $email));
-        Log::error(sprintf('Somebody tried to register using email address %s which is blocked (SHA2 hash).', $email));
-        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            return true;
-        }
-
-        // send email message:
-        try {
-            Mail::send(
-                ['emails.blocked-email-html', 'emails.blocked-email-text'],
-                [
-                    'user_address' => $email,
-                    'ip'           => $ipAddress,
-                ], function (Message $message) use ($owner) {
-                $message->to($owner, $owner)->subject('Blocked registration attempt with blocked email address');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
-
-        return true;
-    }
-
-    /**
-     * @param DeletedUser $event
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function saveEmailAddress(DeletedUser $event): bool
-    {
-        Preferences::mark();
-        $email = hash('sha256', $event->email);
-        Log::debug(sprintf('Hash of email is %s', $email));
-        /** @var Configuration $configuration */
-        $configuration = FireflyConfig::get('deleted_users', []);
-        $content       = $configuration->data;
-        if (!is_array($content)) {
-            $content = [];
-        }
-        $content[]           = $email;
-        $configuration->data = $content;
-        Log::debug('New content of deleted_users is ', $content);
-        FireflyConfig::set('deleted_users', $content);
-
-        Preferences::mark();
 
         return true;
     }

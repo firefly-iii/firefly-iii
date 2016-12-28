@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Auth;
 use Config;
 use FireflyConfig;
-use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
@@ -91,7 +90,6 @@ class RegisterController extends Controller
         Log::debug('Hashes of deleted users: ', $set);
         if (in_array($hash, $set)) {
             $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
-            event(new BlockedUseOfEmail($data['email'], $request->ip()));
             $this->throwValidationException($request, $validator);
         }
 
