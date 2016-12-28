@@ -63,6 +63,7 @@ return [
     'description'                    => 'Beschreibung',
     'expense_account'                => 'Debitor (Ausgabe)',
     'revenue_account'                => 'Kreditor (Einnahme)',
+    'decimal_places'                 => 'Decimal places',
 
     'revenue_account_source'      => 'Ertragskonto (Quelle)',
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
@@ -150,30 +151,30 @@ return [
     'category_keep_transactions' => 'Die eine Überweisungen, die mit dieser Kategorie verknüpft ist, wird nicht gelöscht. | Keine der :count Kategorien, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'tag_keep_transactions'      => 'Die einzige Überweisung, die mit diesem Tag verknüpft ist, wird nicht gelöscht. | Keiner der :count Tags, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
 
-    'email'                   => 'Email address',
-    'password'                => 'Password',
-    'password_confirmation'   => 'Password (again)',
-    'blocked'                 => 'Is blocked?',
-    'blocked_code'            => 'Reason for block',
+    'email'                 => 'Email address',
+    'password'              => 'Password',
+    'password_confirmation' => 'Password (again)',
+    'blocked'               => 'Is blocked?',
+    'blocked_code'          => 'Reason for block',
 
 
     // admin
-    'domain'                  => 'Domain',
-    'single_user_mode'        => 'Einzelnutzermodus',
-    'must_confirm_account'    => 'Erstanwender müssen ihr Konto aktivieren',
-    'is_demo_site'            => 'Ist eine Demonstrationsseite',
+    'domain'                => 'Domain',
+    'single_user_mode'      => 'Einzelnutzermodus',
+    'must_confirm_account'  => 'Erstanwender müssen ihr Konto aktivieren',
+    'is_demo_site'          => 'Ist eine Demonstrationsseite',
 
 
     // import
-    'import_file'             => 'Datei importieren',
-    'configuration_file'      => 'Konfigurationsdatei',
-    'import_file_type'        => 'Import-Dateityp',
-    'csv_comma'               => 'Ein Komma (,)',
-    'csv_semicolon'           => 'Ein Semikolon (;)',
-    'csv_tab'                 => 'Ein Tab (unsichtbar)',
-    'csv_delimiter'           => 'CSV-Trennzeichen',
-    'csv_import_account'      => 'Standard Import-Konto',
-    'csv_config'              => 'CSV-Import Einstellungen',
+    'import_file'           => 'Datei importieren',
+    'configuration_file'    => 'Konfigurationsdatei',
+    'import_file_type'      => 'Import-Dateityp',
+    'csv_comma'             => 'Ein Komma (,)',
+    'csv_semicolon'         => 'Ein Semikolon (;)',
+    'csv_tab'               => 'Ein Tab (unsichtbar)',
+    'csv_delimiter'         => 'CSV-Trennzeichen',
+    'csv_import_account'    => 'Standard Import-Konto',
+    'csv_config'            => 'CSV-Import Einstellungen',
 
 
     'due_date'           => 'Fälligkeitstermin',
