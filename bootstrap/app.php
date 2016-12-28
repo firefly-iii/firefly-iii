@@ -23,7 +23,7 @@ declare(strict_types = 1);
 |
 */
 
-bcscale(6);
+bcscale(12);
 
 
 $app = new Illuminate\Foundation\Application(
