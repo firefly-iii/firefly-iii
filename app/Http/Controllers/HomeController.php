@@ -175,9 +175,6 @@ class HomeController extends Controller
             'logout',
             'two-fac',
             'lost-two',
-            'confirm',
-            'resend',
-            'do_confirm',
             // test troutes
             'test-flash',
             'all-routes',

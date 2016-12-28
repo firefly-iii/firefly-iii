@@ -98,9 +98,6 @@ class RegisterController extends Controller
         $user = $this->create($request->all());
 
         // trigger user registration event:
-        // automatically activate user:
-        Preferences::setForUser($user, 'user_confirmed', true);
-        Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
         event(new RegisteredUser($user, $request->ip()));
 
         Auth::login($user);
@@ -125,9 +122,6 @@ class RegisterController extends Controller
         // is demo site?
         $isDemoSite = FireflyConfig::get('is_demo_site', Config::get('firefly.configuration.is_demo_site'))->data;
 
-        // activate account?
-        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', Config::get('firefly.configuration.must_confirm_account'))->data;
-
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
         $userCount      = User::count();
@@ -139,7 +133,7 @@ class RegisterController extends Controller
 
         $email = $request->old('email');
 
-        return view('auth.register', compact('isDemoSite', 'email', 'mustConfirmAccount'));
+        return view('auth.register', compact('isDemoSite', 'email'));
     }
 
     /**

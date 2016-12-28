@@ -108,14 +108,6 @@ class UserRepository implements UserRepositoryInterface
             $return['has_2fa'] = true;
         }
 
-        // is user activated?
-        $mustConfirmAccount     = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
-        $isConfirmed            = Preferences::getForUser($user, 'user_confirmed', false)->data;
-        $return['is_activated'] = true;
-        if ($isConfirmed === false && $mustConfirmAccount === true) {
-            $return['is_activated'] = false;
-        }
-
         $return['is_admin']            = $user->hasRole('owner');
         $return['blocked']             = intval($user->blocked) === 1;
         $return['blocked_code']        = $user->blocked_code;

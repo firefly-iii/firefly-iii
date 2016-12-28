@@ -29,14 +29,6 @@
                                 {{ user.created_at.format('H:i') }}</td>
                         </tr>
                         <tr>
-                            <td>{{ trans('list.registered_from') }}</td>
-                            <td>{{ registration }} ({{ registrationHost }})</td>
-                        </tr>
-                        <tr>
-                            <td>{{ trans('list.confirmed_from') }}</td>
-                            <td>{{ confirmation }} ({{ confirmationHost }})</td>
-                        </tr>
-                        <tr>
                             <td>{{ trans('list.is_admin') }}</td>
                             <td>
                                 {% if information.is_admin %}
@@ -50,16 +42,6 @@
                             <td>{{ trans('list.has_two_factor') }}</td>
                             <td>
                                 {% if information.has_2fa %}
-                                    <small class="text-success"><i class="fa fa-fw fa-check"></i></small> Yes
-                                {% else %}
-                                    <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> No
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>{{ trans('list.is_activated') }}</td>
-                            <td>
-                                {% if information.is_activated %}
                                     <small class="text-success"><i class="fa fa-fw fa-check"></i></small> Yes
                                 {% else %}
                                     <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> No

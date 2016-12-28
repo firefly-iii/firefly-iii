@@ -49,24 +49,13 @@ Route::group(
 
 /**
  * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+ * @deprecated
  */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'Auth'], function () {
     Route::get('', ['uses' => 'TwoFactorController@index', 'as' => 'index']);
     Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
     Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-
-}
-);
-
-/**
- * For the confirmation routes, the user must be logged in, also 2FA, but his account must not be confirmed.
- */
-Route::group(
-    ['middleware' => 'user-logged-in-2fa-no-activation', 'namespace' => 'Auth'], function () {
-    Route::get('/confirm-your-account', ['uses' => 'ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
-    Route::get('/resend-confirmation', ['uses' => 'ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
-    Route::get('/confirmation/{code}', ['uses' => 'ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
 
 }
 );

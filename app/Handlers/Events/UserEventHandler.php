@@ -15,9 +15,7 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
-use FireflyIII\Events\ResentConfirmation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Events\SendUserMail;
 use Illuminate\Mail\Message;
 use Log;
 use Mail;
@@ -68,37 +66,6 @@ class UserEventHandler
         Session::forget('twofactor-authenticated-date');
 
         return true;
-    }
-
-    /**
-     * This method will send a newly registered user a confirmation message, urging him or her to activate their account.
-     *
-     * @param RegisteredUser $event
-     *
-     * @return bool
-     */
-    public function sendConfirmationMessage(RegisteredUser $event): bool
-    {
-        $sender = new SendUserMail;
-
-        return $sender->sendConfirmation($event->user, $event->ipAddress);
-    }
-
-    /**
-     * If the user has somehow lost his or her confirmation message, this event will send it to the user again.
-     *
-     * At the moment, this method is exactly the same as the ::sendConfirmationMessage method, but that will change.
-     *
-     * @param ResentConfirmation $event
-     *
-     * @return bool
-     */
-    function sendConfirmationMessageAgain(ResentConfirmation $event): bool
-    {
-        $sender = new SendUserMail;
-
-        return $sender->sendConfirmation($event->user, $event->ipAddress);
-
     }
 
     /**
