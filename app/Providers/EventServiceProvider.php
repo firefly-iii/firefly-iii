@@ -64,11 +64,6 @@ class EventServiceProvider extends ServiceProvider
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@reportUseBlockedDomain',
                 ],
-
-            'FireflyIII\Events\BlockedBadLogin'      => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportBadLogin',
-                ],
             'FireflyIII\Events\RegisteredUser'       => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',

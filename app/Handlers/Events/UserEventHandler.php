@@ -15,7 +15,6 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyConfig;
-use FireflyIII\Events\BlockedBadLogin;
 use FireflyIII\Events\BlockedUseOfDomain;
 use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\BlockedUserLogin;
@@ -42,6 +41,7 @@ use Swift_TransportException;
  *
  * The method name reflects what is being done. This is in the present tense.
  *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods) // some of these methods will disappear soon.
  *
  * @package FireflyIII\Handlers\Events
  */
@@ -78,40 +78,6 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
-
-        return true;
-    }
-
-    /**
-     * @param BlockedBadLogin $event
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function reportBadLogin(BlockedBadLogin $event)
-    {
-        $email     = $event->email;
-        $owner     = env('SITE_OWNER');
-        $ipAddress = $event->ipAddress;
-        /** @var Configuration $sendmail */
-        $sendmail = FireflyConfig::get('mail_for_bad_login', config('firefly.configuration.mail_for_bad_login'));
-        Log::debug(sprintf('Now in reportBadLogin for email address %s', $email));
-        Log::error(sprintf('User %s tried to login with bad credentials.', $email));
-        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-
-            return true;
-        }
-
-        try {
-            Mail::send(
-                ['emails.blocked-bad-creds-html', 'emails.blocked-bad-creds-text'], ['email' => $email, 'ip' => $ipAddress],
-                function (Message $message) use ($owner) {
-                    $message->to($owner, $owner)->subject('Blocked login attempt with bad credentials');
-                }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
 
         return true;
     }
@@ -385,6 +351,7 @@ class UserEventHandler
      * from the user yet stored conveniently.
      *
      * @param ConfirmedUser $event
+     *
      * @deprecated
      *
      * @return bool
@@ -401,6 +368,7 @@ class UserEventHandler
      * fashion as the previous method.
      *
      * @param RegisteredUser $event
+     *
      * @deprecated
      *
      * @return bool

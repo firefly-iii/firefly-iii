@@ -19,6 +19,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException as ValException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -99,7 +100,7 @@ class Handler extends ExceptionHandler
             ];
 
             // create job that will mail.
-            $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+            $ipAddress = Request::ip() ?? '0.0.0.0';
             $job       = new MailError($userData, env('SITE_OWNER', ''), $ipAddress, $data);
             dispatch($job);
         }
