@@ -15,7 +15,6 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyConfig;
-use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
