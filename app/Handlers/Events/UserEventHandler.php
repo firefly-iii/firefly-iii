@@ -19,7 +19,6 @@ use FireflyIII\Events\BlockedUseOfDomain;
 use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\DeletedUser;
-use FireflyIII\Events\LockedOutUser;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
@@ -77,39 +76,6 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
-
-        return true;
-    }
-
-    /**
-     * @param LockedOutUser $event
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function reportLockout(LockedOutUser $event): bool
-    {
-        $email     = $event->email;
-        $owner     = env('SITE_OWNER');
-        $ipAddress = $event->ipAddress;
-        /** @var Configuration $sendmail */
-        $sendmail = FireflyConfig::get('mail_for_lockout', config('firefly.configuration.mail_for_lockout'));
-        Log::debug(sprintf('Now in respondToLockout for email address %s', $email));
-        Log::error(sprintf('User %s was locked out after too many invalid login attempts.', $email));
-        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            return true;
-        }
-
-        // send email message:
-        try {
-            Mail::send(
-                ['emails.locked-out-html', 'emails.locked-out-text'], ['email' => $email, 'ip' => $ipAddress], function (Message $message) use ($owner) {
-                $message->to($owner, $owner)->subject('User was locked out');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
 
         return true;
     }

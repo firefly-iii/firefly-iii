@@ -46,10 +46,6 @@ class EventServiceProvider extends ServiceProvider
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@saveEmailAddress',
                 ],
-            'FireflyIII\Events\LockedOutUser'    => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportLockout',
-                ],
 
             'FireflyIII\Events\BlockedUseOfEmail' => // is a User related event.
                 [

@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Config;
 use FireflyConfig;
-use FireflyIII\Events\LockedOutUser;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -61,8 +60,6 @@ class LoginController extends Controller
         $lockedOut = $this->hasTooManyLoginAttempts($request);
         if ($lockedOut) {
             $this->fireLockoutEvent($request);
-
-            event(new LockedOutUser($request->get('email'), $request->ip()));
 
             return $this->sendLockoutResponse($request);
         }
