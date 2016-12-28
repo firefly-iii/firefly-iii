@@ -97,34 +97,18 @@ class BillController extends Controller
                 return $transaction->date->format('U');
             }
         );
-
         $chartData = [
-            [
-                'type'    => 'bar',
-                'label'   => trans('firefly.min-amount'),
-                'entries' => [],
-            ],
-            [
-                'type'    => 'bar',
-                'label'   => trans('firefly.max-amount'),
-                'entries' => [],
-            ],
-            [
-                'type'    => 'line',
-                'label'   => trans('firefly.journal-amount'),
-                'entries' => [],
-            ],
+            ['type' => 'bar', 'label' => trans('firefly.min-amount'), 'entries' => [],],
+            ['type' => 'bar', 'label' => trans('firefly.max-amount'), 'entries' => [],],
+            ['type' => 'line', 'label' => trans('firefly.journal-amount'), 'entries' => [],],
         ];
 
         /** @var Transaction $entry */
         foreach ($results as $entry) {
-            $date = $entry->date->formatLocalized(strval(trans('config.month_and_day')));
-            // minimum amount of bill:
-            $chartData[0]['entries'][$date] = $bill->amount_min;
-            // maximum amount of bill:
-            $chartData[1]['entries'][$date] = $bill->amount_max;
-            // amount of journal:
-            $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1');
+            $date                           = $entry->date->formatLocalized(strval(trans('config.month_and_day')));
+            $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
+            $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
+            $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1'); // amount of journal
         }
 
         $data = $this->generator->multiSet($chartData);
