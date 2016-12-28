@@ -83,28 +83,18 @@ class UserController extends Controller
     {
         $subTitle           = strval(trans('firefly.user_administration'));
         $subTitleIcon       = 'fa-users';
-        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
         $users              = $repository->all();
 
         // add meta stuff.
         $users->each(
-            function (User $user) use ($mustConfirmAccount) {
-                $list        = ['user_confirmed', 'twoFactorAuthEnabled', 'twoFactorAuthSecret', 'registration_ip_address', 'confirmation_ip_address'];
-                $preferences = Preferences::getArrayForUser($user, $list);
-
-                $user->activated = true;
-                if (!($preferences['user_confirmed'] === true) && $mustConfirmAccount === true) {
-                    $user->activated = false;
-                }
-
+            function (User $user) {
+                $list            = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
+                $preferences     = Preferences::getArrayForUser($user, $list);
                 $user->isAdmin = $user->hasRole('owner');
                 $is2faEnabled  = $preferences['twoFactorAuthEnabled'] === true;
                 $has2faSecret  = !is_null($preferences['twoFactorAuthSecret']);
-                $user->has2FA  = false;
-                if ($is2faEnabled && $has2faSecret) {
-                    $user->has2FA = true;
-                }
-                $user->prefs = $preferences;
+                $user->has2FA  = ($is2faEnabled && $has2faSecret) ? true : false;
+                $user->prefs   = $preferences;
             }
         );
 
