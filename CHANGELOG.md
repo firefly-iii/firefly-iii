@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [4.3.1] - 2017-01-xx
+### Added
+- Support for Russian. 
+
+### Changed
+- **[New Github repository!](github.com/firefly-iii/firefly-iii)**
+
+### Deprecated
+- With the realization of a proper demo site many administrative functions have become deprecated, and will be removed over the coming releases. Included but not limited to the ability to block domains for registration, get email notifications for specific actions and many more.
+
+### Removed
+- Something
+
+### Fixed
+- Something
+
+### Security
+- Something
+
 ## [4.3.0] - 2015-12-26
 ### Added
 - New method of keeping track of available budget, see issue #489
