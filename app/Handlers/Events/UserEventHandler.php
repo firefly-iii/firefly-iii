@@ -15,7 +15,6 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyConfig;
-use FireflyIII\Events\BlockedUseOfDomain;
 use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\DeletedUser;
@@ -76,45 +75,6 @@ class UserEventHandler
         // dump stuff from the session:
         Session::forget('twofactor-authenticated');
         Session::forget('twofactor-authenticated-date');
-
-        return true;
-    }
-
-    /**
-     * @param BlockedUseOfDomain $event
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function reportUseBlockedDomain(BlockedUseOfDomain $event): bool
-    {
-        $email     = $event->email;
-        $owner     = env('SITE_OWNER');
-        $ipAddress = $event->ipAddress;
-        $parts     = explode('@', $email);
-        /** @var Configuration $sendmail */
-        $sendmail = FireflyConfig::get('mail_for_blocked_domain', config('firefly.configuration.mail_for_blocked_domain'));
-        Log::debug(sprintf('Now in reportUseBlockedDomain for email address %s', $email));
-        Log::error(sprintf('Somebody tried to register using an email address (%s) connected to a banned domain (%s).', $email, $parts[1]));
-        if (is_null($sendmail) || (!is_null($sendmail) && $sendmail->data === false)) {
-            return true;
-        }
-
-        // send email message:
-        try {
-            Mail::send(
-                ['emails.blocked-registration-html', 'emails.blocked-registration-text'],
-                [
-                    'email_address'  => $email,
-                    'blocked_domain' => $parts[1],
-                    'ip'             => $ipAddress,
-                ], function (Message $message) use ($owner) {
-                $message->to($owner, $owner)->subject('Blocked registration attempt with blocked domain');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
 
         return true;
     }

@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Auth;
 use Config;
 use FireflyConfig;
-use FireflyIII\Events\BlockedUseOfDomain;
 use FireflyIII\Events\BlockedUseOfEmail;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
@@ -81,8 +80,6 @@ class RegisterController extends Controller
         // is user email domain blocked?
         if ($this->isBlockedDomain($data['email'])) {
             $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
-
-            event(new BlockedUseOfDomain($data['email'], $request->ip()));
             $this->throwValidationException($request, $validator);
         }
 
