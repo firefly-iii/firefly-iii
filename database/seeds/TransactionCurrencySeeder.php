@@ -23,12 +23,13 @@ class TransactionCurrencySeeder extends Seeder
     {
         DB::table('transaction_currencies')->delete();
 
-        TransactionCurrency::create(['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€']);
-        TransactionCurrency::create(['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$']);
-        TransactionCurrency::create(['code' => 'HUF', 'name' => 'Hungarian forint', 'symbol' => 'Ft']);
-        TransactionCurrency::create(['code' => 'BRL', 'name' => 'Real', 'symbol' => 'R$']);
-        TransactionCurrency::create(['code' => 'GBP', 'name' => 'British Pound', 'symbol' => '£']);
-        TransactionCurrency::create(['code' => 'IDR', 'name' => 'Indonesian rupiah', 'symbol' => 'Rp']);
+        TransactionCurrency::create(['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'HUF', 'name' => 'Hungarian forint', 'symbol' => 'Ft', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'BRL', 'name' => 'Real', 'symbol' => 'R$', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'GBP', 'name' => 'British Pound', 'symbol' => '£', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'IDR', 'name' => 'Indonesian rupiah', 'symbol' => 'Rp', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'XBT', 'name' => 'Bitcoin', 'symbol' => 'B', 'decimal_places' => 8]);
     }
 
 } 

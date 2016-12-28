@@ -109,9 +109,10 @@ class CurrencyControllerTest extends TestCase
     {
         $this->session(['currencies.create.url' => 'http://localhost']);
         $data = [
-            'name'   => 'XX',
-            'code'   => 'XXX',
-            'symbol' => 'x',
+            'name'           => 'XX',
+            'code'           => 'XXX',
+            'symbol'         => 'x',
+            'decimal_places' => 2,
         ];
         $this->be($this->user());
         $this->call('post', route('currencies.store'), $data);
@@ -126,9 +127,10 @@ class CurrencyControllerTest extends TestCase
     {
         $this->session(['currencies.edit.url' => 'http://localhost']);
         $data = [
-            'name'   => 'XA',
-            'code'   => 'XAX',
-            'symbol' => 'a',
+            'name'           => 'XA',
+            'code'           => 'XAX',
+            'symbol'         => 'a',
+            'decimal_places' => 2,
         ];
         $this->be($this->user());
         $this->call('post', route('currencies.update', [2]), $data);
