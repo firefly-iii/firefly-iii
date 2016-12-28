@@ -328,12 +328,41 @@ class Transaction extends Twig_Extension
     }
 
     /**
+     * @param int    $isEncrypted
+     * @param string $value
+     *
+     * @return string
+     */
+    private function encrypted(int $isEncrypted, string $value): string
+    {
+        if ($isEncrypted === 1) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param TransactionModel $transaction
      *
      * @return string
      */
     private function getTransactionBudgets(TransactionModel $transaction): string
     {
+        // journal has a budget:
+        if (isset($transaction->transaction_journal_budget_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a> (a)', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
+        }
+
+        // transaction has a budget
+        if (isset($transaction->transaction_budget_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a> (b)', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
+        }
+
         // see if the transaction has a budget:
         $budgets = $transaction->budgets()->get();
         if ($budgets->count() === 0) {
@@ -342,7 +371,7 @@ class Transaction extends Twig_Extension
         if ($budgets->count() > 0) {
             $str = [];
             foreach ($budgets as $budget) {
-                $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
+                $str[] = sprintf('<a href="%s" title="%s">%s</a> (c)', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
             }
 
             return join(', ', $str);
@@ -359,6 +388,20 @@ class Transaction extends Twig_Extension
      */
     private function getTransactionCategories(TransactionModel $transaction): string
     {
+        // journal has a category:
+        if (isset($transaction->transaction_journal_category_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a> (a)', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
+        }
+
+        // transaction has a category:
+        if (isset($transaction->transaction_category_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a> (b)', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
+        }
+
         // see if the transaction has a category:
         $categories = $transaction->categories()->get();
         if ($categories->count() === 0) {
@@ -367,7 +410,7 @@ class Transaction extends Twig_Extension
         if ($categories->count() > 0) {
             $str = [];
             foreach ($categories as $category) {
-                $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
+                $str[] = sprintf('<a href="%s" title="%s">%s</a> (c)', route('categories.show', [$category->id]), $category->name, $category->name);
             }
 
             return join(', ', $str);

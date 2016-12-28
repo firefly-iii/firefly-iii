@@ -649,9 +649,17 @@ class JournalCollector implements JournalCollectorInterface
             // join some extra tables:
             $this->joinedBudget = true;
             $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('budgets as transaction_journal_budgets', 'transaction_journal_budgets.id', '=', 'budget_transaction_journal.budget_id');
             $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
+            $this->query->leftJoin('budgets as transaction_budgets', 'transaction_budgets.id', '=', 'budget_transaction.budget_id');
+
             $this->fields[] = 'budget_transaction_journal.budget_id as transaction_journal_budget_id';
+            $this->fields[] = 'transaction_journal_budgets.encrypted as transaction_journal_budget_encrypted';
+            $this->fields[] = 'transaction_journal_budgets.name as transaction_journal_budget_name';
+
             $this->fields[] = 'budget_transaction.budget_id as transaction_budget_id';
+            $this->fields[] = 'transaction_budgets.encrypted as transaction_budget_encrypted';
+            $this->fields[] = 'transaction_budgets.name as transaction_budget_name';
         }
     }
 
@@ -664,12 +672,24 @@ class JournalCollector implements JournalCollectorInterface
             // join some extra tables:
             $this->joinedCategory = true;
             $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('categories as transaction_journal_categories', 'transaction_journal_categories.id', '=', 'category_transaction_journal.category_id');
+
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
+            $this->query->leftJoin('categories as transaction_categories', 'transaction_categories.id', '=', 'category_transaction.category_id');
+
             $this->fields[] = 'category_transaction_journal.category_id as transaction_journal_category_id';
+            $this->fields[] = 'transaction_journal_categories.encrypted as transaction_journal_category_encrypted';
+            $this->fields[] = 'transaction_journal_categories.name as transaction_journal_category_name';
+
             $this->fields[] = 'category_transaction.category_id as transaction_category_id';
+            $this->fields[] = 'transaction_categories.encrypted as transaction_category_encrypted';
+            $this->fields[] = 'transaction_categories.name as transaction_category_name';
         }
     }
 
+    /**
+     *
+     */
     private function joinOpposingTables()
     {
         if (!$this->joinedOpposing) {
