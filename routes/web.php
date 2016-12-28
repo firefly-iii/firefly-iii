@@ -684,11 +684,6 @@ Route::group(
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
     Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
 
-    // user domain manager
-    Route::get('domains', ['uses' => 'DomainController@domains', 'as' => 'users.domains']);
-    Route::get('domains/toggle/{domain}', ['uses' => 'DomainController@toggleDomain', 'as' => 'users.domains.block-toggle']);
-    Route::post('domains/manual', ['uses' => 'DomainController@manual', 'as' => 'users.domains.manual']);
-
     // FF configuration:
     Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);
     Route::post('configuration', ['uses' => 'ConfigurationController@postIndex', 'as' => 'configuration.index.post']);

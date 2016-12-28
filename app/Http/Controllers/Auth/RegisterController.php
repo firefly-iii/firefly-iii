@@ -72,9 +72,7 @@ class RegisterController extends Controller
             $this->throwValidationException($request, $validator);
         }
 
-        $data             = $request->all();
-        $data['password'] = bcrypt($data['password']);
-        $user             = $this->create($request->all());
+        $user = $this->create($request->all());
 
         // trigger user registration event:
         event(new RegisteredUser($user, $request->ip()));
