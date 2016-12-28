@@ -253,12 +253,12 @@ class Journal extends Twig_Extension
             $budgets = [];
             // get all budgets:
             foreach ($journal->budgets as $budget) {
-                $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('accounts.show', $budget->id));
+                $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('budgets.show', $budget->id));
             }
             // and more!
             foreach ($journal->transactions as $transaction) {
                 foreach ($transaction->budgets as $budget) {
-                    $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('accounts.show', $budget->id));
+                    $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('budgets.show', $budget->id));
                 }
             }
             $string = join(', ', array_unique($budgets));
@@ -288,7 +288,7 @@ class Journal extends Twig_Extension
             $categories = [];
             // get all categories for the journal itself (easy):
             foreach ($journal->categories as $category) {
-                $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('accounts.show', $category->id));
+                $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
             }
             if (count($categories) === 0) {
                 $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
@@ -299,7 +299,7 @@ class Journal extends Twig_Extension
                                ->get(['categories.*']);
                 /** @var Category $category */
                 foreach ($set as $category) {
-                    $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('accounts.show', $category->id));
+                    $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
                 }
             }
 
