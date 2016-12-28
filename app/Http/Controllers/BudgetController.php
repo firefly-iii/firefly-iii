@@ -16,7 +16,7 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\AccountType;
@@ -210,7 +210,8 @@ class BudgetController extends Controller
         );
 
         // collector
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/list/noBudget');
@@ -251,7 +252,8 @@ class BudgetController extends Controller
         $accounts   = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $repetition = null;
         // collector:
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id);
@@ -298,7 +300,8 @@ class BudgetController extends Controller
 
 
         // collector:
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);

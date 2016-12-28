@@ -58,7 +58,7 @@ class ConfigurationControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::store
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::postIndex
      */
     public function testPostIndex()
     {

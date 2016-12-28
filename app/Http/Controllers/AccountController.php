@@ -17,7 +17,6 @@ use Amount;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
@@ -273,7 +272,8 @@ class AccountController extends Controller
         $chartUri = route('chart.account.all', [$account->id]);
 
         // replace with journal collector:
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/all');
@@ -304,7 +304,8 @@ class AccountController extends Controller
         $chartUri = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
 
         // replace with journal collector:
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);

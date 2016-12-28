@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -442,7 +442,8 @@ class BudgetController extends Controller
     private function spentInPeriodWithout(Carbon $start, Carbon $end): array
     {
         // collector
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $types     = [TransactionType::WITHDRAWAL];
         $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
         $journals = $collector->getJournals();

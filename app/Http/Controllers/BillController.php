@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
@@ -213,8 +213,10 @@ class BillController extends Controller
         $overallAverage = $repository->getOverallAverage($bill);
 
         // use collector:
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
+                  ->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/bills/show/' . $bill->id);
 

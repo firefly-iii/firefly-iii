@@ -17,7 +17,7 @@ namespace FireflyIII\Generator\Report\Category;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -194,7 +194,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             return $this->expenses;
         }
 
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setCategories($this->categories)->withOpposingAccount()->disableFilter();
@@ -216,7 +217,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             return $this->income;
         }
 
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($this->categories)->withOpposingAccount();

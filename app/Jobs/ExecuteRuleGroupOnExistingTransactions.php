@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\Processor;
 use FireflyIII\User;
@@ -155,7 +155,8 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
      */
     protected function collectJournals()
     {
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($this->accounts)->setRange($this->startDate, $this->endDate);
 
         return $collector->getJournals();

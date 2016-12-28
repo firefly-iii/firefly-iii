@@ -45,6 +45,7 @@ class AttachmentControllerTest extends TestCase
     public function testDestroy()
     {
         $this->session(['attachments.delete.url' => 'http://localhost']);
+
         $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
         $this->be($this->user());

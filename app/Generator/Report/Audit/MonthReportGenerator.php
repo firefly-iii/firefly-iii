@@ -16,7 +16,7 @@ namespace FireflyIII\Generator\Report\Audit;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
@@ -137,12 +137,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     private function getAuditReport(Account $account, Carbon $date): array
     {
-        $dayBeforeBalance = Steam::balance($account, $date);
-        $collector        = new JournalCollector(auth()->user());
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
-        $journals     = $collector->getJournals();
-        $journals     = $journals->reverse();
-        $startBalance = $dayBeforeBalance;
+        $journals         = $collector->getJournals();
+        $journals         = $journals->reverse();
+        $dayBeforeBalance = Steam::balance($account, $date);
+        $startBalance     = $dayBeforeBalance;
 
 
         /** @var Transaction $journal */

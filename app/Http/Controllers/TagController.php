@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
@@ -210,7 +210,7 @@ class TagController extends Controller
      *
      * @return View
      */
-    public function show(Tag $tag)
+    public function show(JournalCollectorInterface $collector, Tag $tag)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
@@ -218,9 +218,7 @@ class TagController extends Controller
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // use collector:
-        // replace with journal collector:
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag);
+        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)->withBudgetInformation()->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('tags/show/' . $tag->id);
 

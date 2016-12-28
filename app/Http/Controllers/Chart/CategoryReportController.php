@@ -17,7 +17,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
@@ -106,7 +106,8 @@ class CategoryReportController extends Controller
 
         // also collect all transactions NOT in these categories.
         if ($others) {
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -163,7 +164,8 @@ class CategoryReportController extends Controller
 
         // also collect others?
         if ($others) {
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -219,7 +221,8 @@ class CategoryReportController extends Controller
 
         // also collect all transactions NOT in these categories.
         if ($others) {
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -274,7 +277,8 @@ class CategoryReportController extends Controller
         }
 
         if ($others) {
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -405,7 +409,8 @@ class CategoryReportController extends Controller
      */
     private function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();
@@ -425,7 +430,8 @@ class CategoryReportController extends Controller
      */
     private function getIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount();
         $accountIds   = $accounts->pluck('id')->toArray();

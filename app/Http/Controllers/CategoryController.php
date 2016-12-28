@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
@@ -165,7 +164,8 @@ class CategoryController extends Controller
         $end = session('end', Carbon::now()->startOfMonth());
 
         // new collector:
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAllAssetAccounts()->setRange($start, $end)->withoutCategory();//->groupJournals();
         $journals = $collector->getJournals();
         $subTitle = trans(

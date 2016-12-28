@@ -60,15 +60,16 @@ class AccountControllerTest extends TestCase
      */
     public function testDestroy()
     {
+        $this->session(['accounts.delete.url' => 'http://localhost/accounts/show/1']);
+
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->withArgs([0])->once()->andReturn(new Account);
         $repository->shouldReceive('destroy')->andReturn(true);
-        $this->session(['accounts.delete.url' => 'http://localhost']);
+
         $this->be($this->user());
         $this->call('post', route('accounts.destroy', [1]));
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
-
     }
 
     /**
@@ -85,6 +86,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       FireflyIII\Http\Controllers\AccountController::index
+     * @covers       FireflyIII\Http\Controllers\AccountController::isInArray
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -101,6 +103,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       FireflyIII\Http\Controllers\AccountController::show
+     * @covers       FireflyIII\Http\Controllers\AccountController::periodEntries
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -129,7 +132,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       FireflyIII\Http\Controllers\AccountController::showWithDate
+     * @covers       FireflyIII\Http\Controllers\AccountController::showAll
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -145,7 +148,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       FireflyIII\Http\Controllers\AccountController::showWithDate
+     * @covers       FireflyIII\Http\Controllers\AccountController::showByDate
      * @dataProvider dateRangeProvider
      *
      * @param string $range

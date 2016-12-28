@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Search;
 
 
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -163,7 +163,8 @@ class Search implements SearchInterface
         $page      = 1;
         $result    = new Collection();
         do {
-            $collector = new JournalCollector($this->user);
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [$this->user]);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
             $set = $collector->getPaginatedJournals();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));

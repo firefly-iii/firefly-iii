@@ -17,7 +17,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -107,7 +107,8 @@ class BudgetReportController extends Controller
 
         // also collect all transactions NOT in these budgets.
         if ($others) {
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -164,7 +165,8 @@ class BudgetReportController extends Controller
 
         // also collect all transactions NOT in these budgets.
         if ($others) {
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -313,7 +315,8 @@ class BudgetReportController extends Controller
      */
     private function getExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection
     {
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();
