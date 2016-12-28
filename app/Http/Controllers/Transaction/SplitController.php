@@ -138,9 +138,9 @@ class SplitController extends Controller
 
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
-
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
-        $this->attachments->saveAttachmentsForModel($journal);
+        $this->attachments->saveAttachmentsForModel($journal, $files);
 
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC

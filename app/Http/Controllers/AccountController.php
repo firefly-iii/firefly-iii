@@ -27,8 +27,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Log;
 use Navigation;
 use Preferences;
@@ -116,18 +116,19 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param ARI     $repository
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(ARI $repository, Account $account)
+    public function destroy(Request $request, ARI $repository, Account $account)
     {
         $type      = $account->accountType->type;
         $typeName  = config('firefly.shortNamesByFullName.' . $type);
         $name      = $account->name;
         $accountId = $account->id;
-        $moveTo    = $repository->find(intval(Input::get('move_account_before_delete')));
+        $moveTo    = $repository->find(intval($request->get('move_account_before_delete')));
 
         $repository->destroy($account, $moveTo);
 
@@ -227,12 +228,13 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Request                   $request
      * @param JournalCollectorInterface $collector
      * @param Account                   $account
      *
-     * @return View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function show(JournalCollectorInterface $collector, Account $account)
+    public function show(Request $request, JournalCollectorInterface $collector, Account $account)
     {
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
@@ -243,7 +245,7 @@ class AccountController extends Controller
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $chartUri     = route('chart.account.single', [$account->id]);
 
@@ -259,15 +261,16 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param ARI     $repository
      * @param Account $account
      *
      * @return View
      */
-    public function showAll(AccountRepositoryInterface $repository, Account $account)
+    public function showAll(Request $request, AccountRepositoryInterface $repository, Account $account)
     {
         $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
-        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $chartUri = route('chart.account.all', [$account->id]);
 
@@ -287,19 +290,20 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param Account $account
      * @param string  $date
      *
      * @return View
      */
-    public function showByDate(Account $account, string $date)
+    public function showByDate(Request $request, Account $account, string $date)
     {
         $carbon   = new Carbon($date);
         $range    = Preferences::get('viewRange', '1M')->data;
         $start    = Navigation::startOfPeriod($carbon, $range);
         $end      = Navigation::endOfPeriod($carbon, $range);
         $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
-        $page     = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $chartUri = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
 
@@ -336,7 +340,7 @@ class AccountController extends Controller
             Preferences::set('frontPageAccounts', $frontPage);
         }
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('accounts.create.fromStore', true);
 
@@ -362,7 +366,7 @@ class AccountController extends Controller
         Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('accounts.edit.fromUpdate', true);
 

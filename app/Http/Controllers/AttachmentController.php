@@ -18,7 +18,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use Input;
 use Log;
 use Preferences;
 use Response;
@@ -172,7 +171,7 @@ class AttachmentController extends Controller
         Session::flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('attachments.edit.fromUpdate', true);
 

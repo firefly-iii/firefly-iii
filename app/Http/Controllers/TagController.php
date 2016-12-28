@@ -18,8 +18,8 @@ use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Preferences;
 use Session;
 use URL;
@@ -68,9 +68,11 @@ class TagController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
-    public function create()
+    public function create(Request $request)
     {
         $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
@@ -78,7 +80,7 @@ class TagController extends Controller
         $preFilled = [
             'tagMode' => 'nothing',
         ];
-        if (!Input::old('tagMode')) {
+        if (!$request->old('tagMode')) {
             Session::flash('preFilled', $preFilled);
         }
         // put previous url in session if not redirect from store (not "create another").
@@ -206,15 +208,17 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Request                   $request
+     * @param JournalCollectorInterface $collector
+     * @param Tag                       $tag
      *
      * @return View
      */
-    public function show(JournalCollectorInterface $collector, Tag $tag)
+    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // use collector:
@@ -246,7 +250,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.created_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('tags.create.fromStore', true);
 
@@ -273,7 +277,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('tags.edit.fromUpdate', true);
 

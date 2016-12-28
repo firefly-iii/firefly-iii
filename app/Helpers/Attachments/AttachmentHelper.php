@@ -16,7 +16,6 @@ use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
-use Input;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -81,20 +80,19 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * @param Model $model
+     * @param Model      $model
+     * @param array|null $files
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model): bool
+    public function saveAttachmentsForModel(Model $model, array $files = null): bool
     {
-        $files = $this->getFiles();
-
-        if (!is_null($files) && !is_array($files)) {
-            $this->processFile($files, $model);
-        }
-
         if (is_array($files)) {
-            $this->processFiles($files, $model);
+            foreach ($files as $entry) {
+                if (!is_null($entry)) {
+                    $this->processFile($entry, $model);
+                }
+            }
         }
 
         return true;
@@ -227,37 +225,4 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         return true;
     }
-
-    /**
-     * @return array|null|UploadedFile
-     */
-    private function getFiles()
-    {
-        $files = null;
-        if (Input::hasFile('attachments')) {
-            $files = Input::file('attachments');
-        }
-
-        return $files;
-    }
-
-    /**
-     * @param array $files
-     *
-     * @param Model $model
-     *
-     * @return bool
-     */
-    private function processFiles(array $files, Model $model): bool
-    {
-        foreach ($files as $entry) {
-            if (!is_null($entry)) {
-                $this->processFile($entry, $model);
-            }
-        }
-
-        return true;
-    }
-
-
 }

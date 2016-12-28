@@ -20,8 +20,8 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Log;
 use Preferences;
 use Response;
@@ -248,13 +248,14 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * @param Request                      $request
      * @param PiggyBankRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function order(PiggyBankRepositoryInterface $repository)
+    public function order(Request $request, PiggyBankRepositoryInterface $repository)
     {
-        $data = Input::get('order');
+        $data = $request->get('order');
 
         // set all users piggy banks to zero:
         $repository->reset();
@@ -270,14 +271,15 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * @param Request                      $request
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAdd(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function postAdd(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = strval(round(Input::get('amount'), 2));
+        $amount = strval(round($request->get('amount'), 2));
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $piggyBank->leftOnAccount($date);
@@ -309,14 +311,15 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * @param Request                      $request
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRemove(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function postRemove(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = strval(round(Input::get('amount'), 2));
+        $amount = strval(round($request->get('amount'), 2));
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
@@ -394,7 +397,7 @@ class PiggyBankController extends Controller
         Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             Session::put('piggy-banks.create.fromStore', true);
 
             return redirect(route('piggy-banks.create'))->withInput();
@@ -420,7 +423,7 @@ class PiggyBankController extends Controller
         Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             Session::put('piggy-banks.edit.fromUpdate', true);
 
             return redirect(route('piggy-banks.edit', [$piggyBank->id]));

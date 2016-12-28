@@ -21,8 +21,8 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Navigation;
 use Preferences;
 use Session;
@@ -177,18 +177,19 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request                   $request
      * @param JournalCollectorInterface $collector
      * @param Category                  $category
      *
      * @return View
      */
-    public function show(JournalCollectorInterface $collector, Category $category)
+    public function show(Request $request, JournalCollectorInterface $collector, Category $category)
     {
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
@@ -203,12 +204,13 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request                     $request
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
      *
      * @return View
      */
-    public function showAll(CategoryRepositoryInterface $repository, Category $category)
+    public function showAll(Request $request, CategoryRepositoryInterface $repository, Category $category)
     {
         $range = Preferences::get('viewRange', '1M')->data;
         $start = $repository->firstUseDate($category);
@@ -219,7 +221,7 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $showAll      = true;
 
@@ -233,12 +235,13 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request  $request
      * @param Category $category
-     * @param          $date
+     * @param string   $date
      *
      * @return View
      */
-    public function showByDate(Category $category, string $date)
+    public function showByDate(Request $request, Category $category, string $date)
     {
         $carbon       = new Carbon($date);
         $range        = Preferences::get('viewRange', '1M')->data;
@@ -247,7 +250,7 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
         /** @var JournalCollectorInterface $collector */
@@ -273,7 +276,7 @@ class CategoryController extends Controller
         Session::flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             Session::put('categories.create.fromStore', true);
 
             return redirect(route('categories.create'))->withInput();
@@ -298,7 +301,7 @@ class CategoryController extends Controller
         Session::flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             Session::put('categories.edit.fromUpdate', true);
 
             return redirect(route('categories.edit', [$category->id]));

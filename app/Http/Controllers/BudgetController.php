@@ -24,8 +24,8 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Preferences;
 use Response;
 use Session;
@@ -64,14 +64,15 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request                   $request
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function amount(BudgetRepositoryInterface $repository, Budget $budget)
+    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $amount = intval(Input::get('amount'));
+        $amount = intval($request->get('amount'));
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -194,15 +195,17 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
-    public function noBudget()
+    public function noBudget(Request $request)
     {
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->endOfMonth());
-        $page     = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans(
             'firefly.without_budget_between',
@@ -236,18 +239,19 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request                    $request
      * @param BudgetRepositoryInterface  $repository
      * @param AccountRepositoryInterface $accountRepository
      * @param Budget                     $budget
      *
      * @return View
      */
-    public function show(BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
+    public function show(Request $request, BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
     {
         /** @var Carbon $start */
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
-        $page       = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $page       = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
         $accounts   = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $repetition = null;
@@ -273,13 +277,14 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request         $request
      * @param Budget          $budget
      * @param LimitRepetition $repetition
      *
      * @return View
      * @throws FireflyException
      */
-    public function showByRepetition(Budget $budget, LimitRepetition $repetition)
+    public function showByRepetition(Request $request, Budget $budget, LimitRepetition $repetition)
     {
         if ($repetition->budgetLimit->budget->id != $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
@@ -291,7 +296,7 @@ class BudgetController extends Controller
         $accountRepository = app(AccountRepositoryInterface::class);
         $start             = $repetition->startdate;
         $end               = $repetition->enddate;
-        $page              = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $page              = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize          = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle          = trans(
             'firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]
@@ -328,7 +333,7 @@ class BudgetController extends Controller
         Session::flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('budgets.create.fromStore', true);
 
@@ -355,7 +360,7 @@ class BudgetController extends Controller
         Session::flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('budgets.edit.fromUpdate', true);
 

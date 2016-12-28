@@ -19,8 +19,8 @@ use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Preferences;
 use Session;
 use URL;
@@ -197,17 +197,18 @@ class BillController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param BillRepositoryInterface $repository
      * @param Bill                    $bill
      *
      * @return View
      */
-    public function show(BillRepositoryInterface $repository, Bill $bill)
+    public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
         /** @var Carbon $date */
         $date           = session('start');
         $year           = $date->year;
-        $page           = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $page           = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
@@ -240,7 +241,7 @@ class BillController extends Controller
         Session::flash('success', strval(trans('firefly.stored_new_bill', ['name' => e($bill->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('bills.create.fromStore', true);
 
@@ -267,7 +268,7 @@ class BillController extends Controller
         Session::flash('success', strval(trans('firefly.updated_bill', ['name' => e($bill->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('bills.edit.fromUpdate', true);
 

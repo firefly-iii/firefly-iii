@@ -46,6 +46,6 @@ interface AttachmentHelperInterface
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model): bool;
+    public function saveAttachmentsForModel(Model $model, array $files = null): bool;
 
 }

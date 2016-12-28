@@ -22,7 +22,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use Input;
+use Illuminate\Http\Request;
 use Preferences;
 use Session;
 use URL;
@@ -94,17 +94,17 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * @param Request                      $request
      * @param RuleGroupRepositoryInterface $repository
-     *
      * @param RuleGroup                    $ruleGroup
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
 
         $title  = $ruleGroup->title;
-        $moveTo = auth()->user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
+        $moveTo = auth()->user()->ruleGroups()->find(intval($request->get('move_rules_before_delete')));
 
         $repository->destroy($ruleGroup, $moveTo);
 
@@ -218,7 +218,7 @@ class RuleGroupController extends Controller
         Session::flash('success', strval(trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('rule-groups.create.fromStore', true);
 
@@ -263,7 +263,7 @@ class RuleGroupController extends Controller
         Session::flash('success', strval(trans('firefly.updated_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('rule-groups.edit.fromUpdate', true);
 
