@@ -19,7 +19,6 @@ use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
-use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Mail\Message;
@@ -35,8 +34,6 @@ use Swift_TransportException;
  * This class responds to any events that have anything to do with the User object.
  *
  * The method name reflects what is being done. This is in the present tense.
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods) // some of these methods will disappear soon.
  *
  * @package FireflyIII\Handlers\Events
  */
@@ -162,42 +159,6 @@ class UserEventHandler
         }
 
         return true;
-    }
-
-    /**
-     * When the user is confirmed, this method stores the IP address of the user
-     * as a preference. Since this preference cannot be edited, it is effectively hidden
-     * from the user yet stored conveniently.
-     *
-     * @param ConfirmedUser $event
-     *
-     * @deprecated
-     *
-     * @return bool
-     */
-    public function storeConfirmationIpAddress(ConfirmedUser $event): bool
-    {
-        Preferences::setForUser($event->user, 'confirmation_ip_address', $event->ipAddress);
-
-        return true;
-    }
-
-    /**
-     * This message stores the users IP address on registration, in much the same
-     * fashion as the previous method.
-     *
-     * @param RegisteredUser $event
-     *
-     * @deprecated
-     *
-     * @return bool
-     */
-    public function storeRegistrationIpAddress(RegisteredUser $event): bool
-    {
-        Preferences::setForUser($event->user, 'registration_ip_address', $event->ipAddress);
-
-        return true;
-
     }
 
     /**
