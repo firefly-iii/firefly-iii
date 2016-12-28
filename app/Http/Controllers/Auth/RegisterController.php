@@ -20,8 +20,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Log;
-use Preferences;
 use Session;
 use Validator;
 
@@ -76,26 +74,7 @@ class RegisterController extends Controller
 
         $data             = $request->all();
         $data['password'] = bcrypt($data['password']);
-
-        // is user email domain blocked?
-        if ($this->isBlockedDomain($data['email'])) {
-            $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
-            $this->throwValidationException($request, $validator);
-        }
-
-        // is user a deleted user?
-        $hash          = hash('sha256', $data['email']);
-        $configuration = FireflyConfig::get('deleted_users', []);
-        $set           = $configuration->data;
-        Log::debug(sprintf('Hash of email is %s', $hash));
-        Log::debug('Hashes of deleted users: ', $set);
-        if (in_array($hash, $set)) {
-            $validator->getMessageBag()->add('email', (string)trans('validation.deleted_user'));
-            $this->throwValidationException($request, $validator);
-        }
-
-
-        $user = $this->create($request->all());
+        $user             = $this->create($request->all());
 
         // trigger user registration event:
         event(new RegisteredUser($user, $request->ip()));
@@ -169,30 +148,4 @@ class RegisterController extends Controller
                  ]
         );
     }
-
-    /**
-     * @return array
-     */
-    private function getBlockedDomains()
-    {
-        return FireflyConfig::get('blocked-domains', [])->data;
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    private function isBlockedDomain(string $email)
-    {
-        $parts   = explode('@', $email);
-        $blocked = $this->getBlockedDomains();
-
-        if (isset($parts[1]) && in_array($parts[1], $blocked)) {
-            return true;
-        }
-
-        return false;
-    }
-
 }
