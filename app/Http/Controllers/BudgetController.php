@@ -252,7 +252,7 @@ class BudgetController extends Controller
         $repetition = null;
         // collector:
         $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id);
 
@@ -299,7 +299,7 @@ class BudgetController extends Controller
 
         // collector:
         $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
 
