@@ -19,6 +19,7 @@ class TransactionTypeTest extends TestCase
 {
     public function testIsDeposit()
     {
+
         $transactionType = TransactionType::whereType(TransactionType::DEPOSIT)->first();
         $this->assertTrue($transactionType->isDeposit());
     }

@@ -31,6 +31,7 @@ use Log;
 /**
  * Class BalanceReportHelper
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // I can't really help it.
  * @package FireflyIII\Helpers\Report
  */
 class BalanceReportHelper implements BalanceReportHelperInterface

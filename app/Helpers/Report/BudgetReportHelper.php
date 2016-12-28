@@ -43,6 +43,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -57,12 +58,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         /** @var Budget $budget */
         foreach ($set as $budget) {
             $repetitions = $budget->limitrepetitions()->before($end)->after($start)->get();
-
-            // no repetition(s) for this budget:
-            if ($repetitions->count() == 0) {
-                // spent for budget in time range:
-                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
-
+            if ($repetitions->count() == 0) { // no repetition(s) for this budget
+                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);// spent for budget in time range
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
                     $budgetLine->setBudget($budget)->setOverspent($spent);
@@ -70,11 +67,9 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 }
                 continue;
             }
-            // one or more repetitions for budget:
             /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) {
-                $data = $this->calculateExpenses($budget, $repetition, $accounts);
-
+            foreach ($repetitions as $repetition) { // one or more repetitions for budget
+                $data       = $this->calculateExpenses($budget, $repetition, $accounts);
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget)->setRepetition($repetition)
                            ->setLeft($data['left'])->setSpent($data['expenses'])->setOverspent($data['overspent'])
@@ -84,12 +79,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                        ->addLeft($data['left'])->addOverspent($data['overspent'])->addBudgetLine($budgetLine);
 
             }
-
         }
-
-        // stuff outside of budgets:
-
-        $noBudget   = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end);
+        $noBudget   = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end); // stuff outside of budgets
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget)->setSpent($noBudget);
         $object->addOverspent($noBudget)->addBudgetLine($budgetLine);

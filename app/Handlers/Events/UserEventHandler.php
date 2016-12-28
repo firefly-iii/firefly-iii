@@ -13,17 +13,14 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
-use FireflyConfig;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\ResentConfirmation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\User;
+use FireflyIII\Support\Events\SendUserMail;
 use Illuminate\Mail\Message;
 use Log;
 use Mail;
-use Preferences;
 use Session;
 use Swift_TransportException;
 
@@ -82,7 +79,9 @@ class UserEventHandler
      */
     public function sendConfirmationMessage(RegisteredUser $event): bool
     {
-        return $this->sendConfirmation($event->user, $event->ipAddress);
+        $sender = new SendUserMail;
+
+        return $sender->sendConfirmation($event->user, $event->ipAddress);
     }
 
     /**
@@ -96,7 +95,9 @@ class UserEventHandler
      */
     function sendConfirmationMessageAgain(ResentConfirmation $event): bool
     {
-        return $this->sendConfirmation($event->user, $event->ipAddress);
+        $sender = new SendUserMail;
+
+        return $sender->sendConfirmation($event->user, $event->ipAddress);
 
     }
 
@@ -159,43 +160,4 @@ class UserEventHandler
 
         return true;
     }
-
-    /**
-     * @param User   $user
-     * @param string $ipAddress
-     *
-     * @return bool
-     */
-    private function sendConfirmation(User $user, string $ipAddress): bool
-    {
-        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
-        if ($mustConfirmAccount === false) {
-            Preferences::setForUser($user, 'user_confirmed', true);
-            Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
-            Preferences::mark();
-
-            return true;
-        }
-        $email = $user->email;
-        $code  = str_random(16);
-        $route = route('do_confirm_account', [$code]);
-        Preferences::setForUser($user, 'user_confirmed', false);
-        Preferences::setForUser($user, 'user_confirmed_last_mail', time());
-        Preferences::setForUser($user, 'user_confirmed_code', $code);
-        try {
-            Mail::send(
-                ['emails.confirm-account-html', 'emails.confirm-account-text'], ['route' => $route, 'ip' => $ipAddress],
-                function (Message $message) use ($email) {
-                    $message->to($email, $email)->subject('Please confirm your Firefly III account');
-                }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-        return true;
-    }
-
 }

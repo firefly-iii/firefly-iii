@@ -65,7 +65,7 @@ class ConfigurationController extends Controller
 
         return view(
             'admin.configuration.index',
-            compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite', 'sendErrorMessage', 'siteOwner')
+            compact('subTitle', 'subTitleIcon', 'singleUserMode', 'mustConfirmAccount', 'isDemoSite', 'siteOwner')
         );
 
     }
