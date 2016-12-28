@@ -177,11 +177,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Category $category
+     * @param JournalCollectorInterface $collector
+     * @param Category                  $category
      *
      * @return View
      */
-    public function show(Category $category)
+    public function show(JournalCollectorInterface $collector, Category $category)
     {
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
@@ -192,9 +193,7 @@ class CategoryController extends Controller
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
 
-        // use journal collector
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
@@ -224,9 +223,9 @@ class CategoryController extends Controller
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $showAll      = true;
 
-        // new collector:
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setCategory($category);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setCategory($category)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/all');
 
@@ -251,9 +250,9 @@ class CategoryController extends Controller
         $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
-        // new collector:
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
