@@ -217,7 +217,7 @@ class BillController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-                  ->withBudgetInformation();
+                  ->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/bills/show/' . $bill->id);
 
