@@ -30,7 +30,6 @@ class ConfigurationControllerTest extends TestCase
     {
         parent::setUp();
 
-        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once();
     }
 
     /**
@@ -47,7 +46,6 @@ class ConfigurationControllerTest extends TestCase
         $trueConfig->data = true;
 
         FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', true])->once()->andReturn($trueConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->times(2)->andReturn($falseConfig);
 
         $this->call('GET', route('admin.configuration.index'));
@@ -67,7 +65,6 @@ class ConfigurationControllerTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['must_confirm_account', false])->once();
         FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();
 
         $this->be($this->user());
