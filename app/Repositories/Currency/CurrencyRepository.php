@@ -197,9 +197,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         $currency = TransactionCurrency::create(
             [
-                'name'   => $data['name'],
-                'code'   => $data['code'],
-                'symbol' => $data['symbol'],
+                'name'           => $data['name'],
+                'code'           => $data['code'],
+                'symbol'         => $data['symbol'],
+                'decimal_places' => $data['decimal_places'],
             ]
         );
 
@@ -214,9 +215,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
-        $currency->code   = $data['code'];
-        $currency->symbol = $data['symbol'];
-        $currency->name   = $data['name'];
+        $currency->code           = $data['code'];
+        $currency->symbol         = $data['symbol'];
+        $currency->name           = $data['name'];
+        $currency->decimal_places = $data['decimal_places'];
         $currency->save();
 
         return $currency;

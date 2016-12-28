@@ -20,7 +20,9 @@
                             <thead>
                             <tr>
                                 <th>&nbsp;</th>
-                                <th colspan="2">{{ 'currency'|_ }}</th>
+                                <th>{{ 'currency'|_ }}</th>
+                                <th>{{ 'number_of_decimals'|_ }}</th>
+                                <th>&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -33,6 +35,7 @@
                                         </div>
                                     </td>
                                     <td>{{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})</td>
+                                    <td>{{ currency.decimal_places }}</td>
                                     <td>
                                         {% if currency.id == defaultCurrency.id %}
                                             <span class="label label-success">{{ 'default_currency'|_ }}</span>
