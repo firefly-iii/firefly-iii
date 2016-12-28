@@ -4,6 +4,7 @@
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
         <th data-defaultsign="_19">{{ 'total'|_ }}</th>
         <th data-defaultsign="_19" class="hidden-xs">{{ 'average'|_ }}</th>
+        <th data-defaultsort="disabled"></th>
     </tr>
     </thead>
     <tbody>
@@ -21,8 +22,6 @@
                 <br/>
                 <small>
                     {{ entry.count }} {{ 'transactions'|_|lower }}
-                    <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="{{ type }}"
-                       data-account-id="{{ entry.id }}"></i>
                 </small>
             {% endif %}
         </td>
@@ -35,6 +34,10 @@
             {% else %}
                 &mdash;
             {% endif %}
+        </td>
+        <td>
+            <i class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="{{ type }}"
+               data-account-id="{{ entry.id }}"></i>
         </td>
         </tr>
     {% endfor %}
