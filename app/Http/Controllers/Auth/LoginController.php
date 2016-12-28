@@ -71,19 +71,8 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
 
-        // check if user is blocked:
-        $errorMessage = '';
-        /** @var User $foundUser */
-        $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
-        if (!is_null($foundUser)) {
-            // user exists, but is blocked:
-            $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
-            $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
-        }
+        $errorMessage = $this->getBlockedError($credentials['email']);
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
         if (!$lockedOut) {
             $this->incrementLoginAttempts($request);
         }
@@ -147,5 +136,24 @@ class LoginController extends Controller
                                  $this->username() => $this->getFailedLoginMessage($message),
                              ]
                          );
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return string
+     */
+    private function getBlockedError(string $email): string
+    {
+        // check if user is blocked:
+        $errorMessage = '';
+        /** @var User $foundUser */
+        $foundUser = User::where('email', $email)->where('blocked', 1)->first();
+        if (!is_null($foundUser)) {
+            // user exists, but is blocked:
+            $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
+            $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $email]));
+        }
+        return $errorMessage;
     }
 }

@@ -18,7 +18,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use Log;
 use Preferences;
 use Response;
 use Session;
@@ -27,6 +26,8 @@ use View;
 
 /**
  * Class AttachmentController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it's 13.
  *
  * @package FireflyIII\Http\Controllers
  */
@@ -54,7 +55,7 @@ class AttachmentController extends Controller
     /**
      * @param Attachment $attachment
      *
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     * @return View
      */
     public function delete(Attachment $attachment)
     {
@@ -98,9 +99,6 @@ class AttachmentController extends Controller
             $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
-
-            Log::debug('Send file to user', ['file' => $quoted, 'size' => strlen($content)]);
-
             return response($content, 200)
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
@@ -112,7 +110,6 @@ class AttachmentController extends Controller
                 ->header('Pragma', 'public')
                 ->header('Content-Length', strlen($content));
         }
-
         throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
 
@@ -143,7 +140,6 @@ class AttachmentController extends Controller
     public function preview(Attachment $attachment)
     {
         $image = 'images/page_green.png';
-
 
         if ($attachment->mime == 'application/pdf') {
             $image = 'images/page_white_acrobat.png';

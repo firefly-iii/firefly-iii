@@ -47,6 +47,7 @@ class PasswordController extends Controller
 
     /**
      * Send a reset link to the given user.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 7 but ok
      *
      * @param  \Illuminate\Http\Request $request
      *
