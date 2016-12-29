@@ -63,6 +63,7 @@ return [
     'description'                    => 'Description',
     'expense_account'                => 'Compte de dépenses',
     'revenue_account'                => 'Compte de recettes',
+    'decimal_places'                 => 'Decimal places',
 
     'revenue_account_source'      => 'Revenue account (source)',
     'source_account_asset'        => 'Source account (asset account)',
@@ -150,30 +151,30 @@ return [
     'category_keep_transactions' => 'La seule opération liée à cette catégorie ne sera pas supprimée.|Les :count opérations liées à cette catégorie ne seront pas supprimées.',
     'tag_keep_transactions'      => 'La seule opération liée à ce tag ne sera pas supprimée.|Les :count opérations liées à ce tag ne seront pas supprimées.',
 
-    'email'                   => 'Email address',
-    'password'                => 'Password',
-    'password_confirmation'   => 'Password (again)',
-    'blocked'                 => 'Is blocked?',
-    'blocked_code'            => 'Reason for block',
+    'email'                 => 'Email address',
+    'password'              => 'Password',
+    'password_confirmation' => 'Password (again)',
+    'blocked'               => 'Is blocked?',
+    'blocked_code'          => 'Reason for block',
 
 
     // admin
-    'domain'                  => 'Domaine',
-    'single_user_mode'        => 'Mode utilisateur unique',
-    'must_confirm_account'    => 'New users must activate account',
-    'is_demo_site'            => 'Is demo site',
+    'domain'                => 'Domaine',
+    'single_user_mode'      => 'Mode utilisateur unique',
+    'must_confirm_account'  => 'New users must activate account',
+    'is_demo_site'          => 'Is demo site',
 
 
     // import
-    'import_file'             => 'Fichier à importer',
-    'configuration_file'      => 'Fichier de configuration',
-    'import_file_type'        => 'Type de fichier de configuration',
-    'csv_comma'               => 'Une virgule (,)',
-    'csv_semicolon'           => 'Un point-virgule (;)',
-    'csv_tab'                 => 'Un onglet (invisible)',
-    'csv_delimiter'           => 'Délimiteur de champ CSV',
-    'csv_import_account'      => 'Compte d’importation par défaut',
-    'csv_config'              => 'Configuration d\'importation CSV',
+    'import_file'           => 'Fichier à importer',
+    'configuration_file'    => 'Fichier de configuration',
+    'import_file_type'      => 'Type de fichier de configuration',
+    'csv_comma'             => 'Une virgule (,)',
+    'csv_semicolon'         => 'Un point-virgule (;)',
+    'csv_tab'               => 'Un onglet (invisible)',
+    'csv_delimiter'         => 'Délimiteur de champ CSV',
+    'csv_import_account'    => 'Compte d’importation par défaut',
+    'csv_config'            => 'Configuration d\'importation CSV',
 
 
     'due_date'           => 'Due date',
