@@ -22,7 +22,11 @@ class ChangesForV431 extends Migration
      */
     public function down()
     {
-        //
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->renameColumn('start_date', 'startdate');
+        }
+        );
     }
 
     /**
@@ -39,14 +43,5 @@ class ChangesForV431 extends Migration
         }
         );
 
-        // add end date to budget limits, forget budget limit repetitions:
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->renameColumn('startdate', 'start_date');
-            $table->date('end_date');
-            $table->dropColumn('repeat_freq');
-            $table->dropColumn('repeats');
-        }
-        );
     }
 }
