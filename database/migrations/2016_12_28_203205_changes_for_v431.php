@@ -22,11 +22,6 @@ class ChangesForV431 extends Migration
      */
     public function down()
     {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->renameColumn('start_date', 'startdate');
-        }
-        );
     }
 
     /**
