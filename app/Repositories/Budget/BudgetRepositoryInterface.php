@@ -189,11 +189,10 @@ interface BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
-     * @param string $range
      * @param int    $amount
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount): BudgetLimit;
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit;
 
 }

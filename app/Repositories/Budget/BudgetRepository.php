@@ -606,19 +606,18 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
-     * @param string $range
      * @param int    $amount
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount): BudgetLimit
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit
     {
-        // there might be a budget limit for this startdate:
-        $repeatFreq = config('firefly.range_to_repeat_freq.' . $range);
+        // there might be a budget limit for these dates:
         /** @var BudgetLimit $limit */
         $limit = $budget->budgetlimits()
-                        ->where('budget_limits.startdate', $start)
-                        ->where('budget_limits.repeat_freq', $repeatFreq)->first(['budget_limits.*']);
+                        ->where('budget_limits.start_date', $start->format('Y-m-d'))
+                        ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                        ->first(['budget_limits.*']);
 
         // delete if amount is zero.
         if (!is_null($limit) && $amount <= 0.0) {
@@ -634,19 +633,13 @@ class BudgetRepository implements BudgetRepositoryInterface
             return $limit;
         }
 
-        // create one and return it.
+        // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->startdate   = $start;
-        $limit->amount      = $amount;
-        $limit->repeat_freq = $repeatFreq;
-        $limit->repeats     = 0;
+        $limit->start_date = $start;
+        $limit->end_date   = $end;
+        $limit->amount     = $amount;
         $limit->save();
-
-
-        // likewise, there should be a limit repetition to match the end date
-        // (which is always the end of the month) but that is caught by an event.
-        // so handled automatically.
 
         return $limit;
     }

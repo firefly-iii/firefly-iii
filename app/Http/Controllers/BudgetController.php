@@ -78,14 +78,13 @@ class BudgetController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end             = session('end', Carbon::now()->endOfMonth());
-        $viewRange       = Preferences::get('viewRange', '1M')->data;
-        $limitRepetition = $repository->updateLimitAmount($budget, $start, $end, $viewRange, $amount);
+        $budgetLimit = $repository->updateLimitAmount($budget, $start, $end, $amount);
         if ($amount == 0) {
-            $limitRepetition = null;
+            $budgetLimit = null;
         }
         Preferences::mark();
 
-        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0, 'amount' => $amount]);
+        return Response::json(['name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
 
     }
 
