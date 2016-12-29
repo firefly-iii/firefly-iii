@@ -134,7 +134,7 @@ class Transaction extends Twig_Extension
             // not equal to transaction amount?
             if (bccomp($amount, $transactionAmount) !== 0 && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0) {
                 //$currency =
-                return sprintf(' (%s)', 'x'); // Amount::formatWithCode($code, $amount, true)
+                return sprintf(' (%s)', Amount::formatByCode($code, $amount, true));
             }
 
             return '';

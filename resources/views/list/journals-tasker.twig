@@ -26,12 +26,6 @@
         {% endif %}
     </tr>
     </thead>
-    <!-- to be fixed:
-        SORTING
-        ATTACHMENT COUNT
-        SPLIT JOURNAL INDICATOR
-
-    -->
     <tbody>
     {% for transaction in journals %}
         <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
