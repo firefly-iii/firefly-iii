@@ -15,6 +15,8 @@ namespace FireflyIII\Console\Commands;
 
 
 use DB;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -57,6 +59,29 @@ class UpgradeDatabase extends Command
     public function handle()
     {
         $this->setTransactionIdentifier();
+        $this->migrateRepetitions();
+    }
+
+    private function migrateRepetitions()
+    {
+        if (!Schema::hasTable('budget_limits')) {
+            return;
+        }
+        // get all budget limits with end_date NULL
+        $set = BudgetLimit::whereNull('end_date')->get();
+        $this->line(sprintf('Found %d budget limit(s) to update', $set->count()));
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($set as $budgetLimit) {
+            // get limit repetition (should be just one):
+            /** @var LimitRepetition $repetition */
+            $repetition = $budgetLimit->limitrepetitions()->first();
+            if (!is_null($repetition)) {
+                $budgetLimit->end_date = $repetition->enddate;
+                $budgetLimit->save();
+                $this->line(sprintf('Updated budget limit #%d', $budgetLimit->id));
+                $repetition->delete();
+            }
+        }
     }
 
     /**
@@ -83,7 +108,7 @@ class UpgradeDatabase extends Command
         $journalIds = array_unique($result->pluck('id')->toArray());
 
         foreach ($journalIds as $journalId) {
-            $this->updateJournal($journalId);
+            $this->updateJournal(intval($journalId));
         }
     }
 

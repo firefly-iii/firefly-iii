@@ -25,10 +25,16 @@ class ChangesForV431 extends Migration
         // reinstate "repeats" and "repeat_freq".
         Schema::table(
             'budget_limits', function (Blueprint $table) {
-            $table->string('repeat_freq', 30);
+            $table->string('repeat_freq', 30)->nullable();
+        }
+        );
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
             $table->boolean('repeats')->default(0);
         }
         );
+
+
         // remove date field "end_date"
         Schema::table(
             'budget_limits', function (Blueprint $table) {
@@ -37,11 +43,11 @@ class ChangesForV431 extends Migration
         );
 
         // change field "start_date" to "startdate"
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->renameColumn('startdate', 'start_date');
-        }
-        );
+//        Schema::table(
+//            'budget_limits', function (Blueprint $table) {
+//            $table->renameColumn('startdate', 'start_date');
+//        }
+//        );
 
     }
 
@@ -77,9 +83,15 @@ class ChangesForV431 extends Migration
         Schema::table(
             'budget_limits', function (Blueprint $table) {
             $table->dropColumn('repeats');
+
+        }
+        );
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
             $table->dropColumn('repeat_freq');
         }
         );
+
 
     }
 }
