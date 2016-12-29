@@ -22,6 +22,27 @@ class ChangesForV431 extends Migration
      */
     public function down()
     {
+        // reinstate "repeats" and "repeat_freq".
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->string('repeat_freq', 30);
+            $table->boolean('repeats')->default(0);
+        }
+        );
+        // remove date field "end_date"
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropColumn('end_date');
+        }
+        );
+
+        // change field "start_date" to "startdate"
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->renameColumn('startdate', 'start_date');
+        }
+        );
+
     }
 
     /**
@@ -35,6 +56,28 @@ class ChangesForV431 extends Migration
         Schema::table(
             'transaction_currencies', function (Blueprint $table) {
             $table->smallInteger('decimal_places', false, true)->default(2);
+        }
+        );
+
+        // change field "startdate" to "start_date"
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->renameColumn('startdate', 'start_date');
+        }
+        );
+
+        // add date field "end_date" after "start_date"
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->date('end_date')->nullable()->after('start_date');
+        }
+        );
+
+        // drop "repeats" and "repeat_freq".
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropColumn('repeats');
+            $table->dropColumn('repeat_freq');
         }
         );
 
