@@ -32,9 +32,18 @@ class ChangesForV431 extends Migration
      */
     public function up()
     {
+        // add decimal places to "transaction currencies".
         Schema::table(
             'transaction_currencies', function (Blueprint $table) {
-            $table->smallInteger('decimal_places',false, true)->default(2);
+            $table->smallInteger('decimal_places', false, true)->default(2);
+        }
+        );
+
+        // add end date to budget limits, forget budget limit repetitions:
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->renameColumn('startdate', 'start_date');
+            $table->date('end_date');
         }
         );
     }
