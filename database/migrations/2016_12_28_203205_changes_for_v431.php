@@ -44,6 +44,8 @@ class ChangesForV431 extends Migration
             'budget_limits', function (Blueprint $table) {
             $table->renameColumn('startdate', 'start_date');
             $table->date('end_date');
+            $table->dropColumn('repeat_freq');
+            $table->dropColumn('repeats');
         }
         );
     }
