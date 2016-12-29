@@ -60,10 +60,9 @@
             <td class="hide-balance_before">{{ transaction.before|formatAmount }}</td>
             <td class="hide-amount">
                 <!-- format amount of transaction -->
-                {{ formatAmountWithCode(transaction.transaction_amount, transaction.transaction_currency_code) }}
+                {{ formatByCode(transaction.transaction_currency_code, transaction.transaction_amount) }}
                 <!-- and then amount of journal itself. -->
-                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount,
-                transaction.transaction_currency_code, transaction.transaction_type_type) }}
+                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount, transaction.transaction_currency_code, transaction.transaction_type_type) }}
             </td>
             <td class="hide-balance_after">{{ transaction.after|formatAmount }}</td>
 

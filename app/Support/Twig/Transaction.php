@@ -17,6 +17,7 @@ use Amount;
 use Crypt;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction as TransactionModel;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -29,15 +30,16 @@ use Twig_SimpleFunction;
  */
 class Transaction extends Twig_Extension
 {
+
     /**
      * @return Twig_SimpleFunction
      */
-    public function formatAmountPlainWithCode(): Twig_SimpleFunction
+    public function formatAnything(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountPlainWithCode', function (string $amount, string $code): string {
+            'formatAnything', function (TransactionCurrency $currency, string $amount): string {
 
-            return Amount::formatWithCode($code, $amount, false);
+            return Amount::formatAnything($currency, $amount, true);
 
         }, ['is_safe' => ['html']]
         );
@@ -46,12 +48,26 @@ class Transaction extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    public function formatAmountWithCode(): Twig_SimpleFunction
+    public function formatAnythingPlain(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountWithCode', function (string $amount, string $code): string {
+            'formatAnythingPlain', function (TransactionCurrency $currency, string $amount): string {
 
-            return Amount::formatWithCode($code, $amount, true);
+            return Amount::formatAnything($currency, $amount, false);
+
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function formatByCode(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatByCode', function (string $currencyCode, string $amount): string {
+
+            return Amount::formatByCode($currencyCode, $amount, true);
 
         }, ['is_safe' => ['html']]
         );
@@ -75,8 +91,8 @@ class Transaction extends Twig_Extension
     public function getFunctions(): array
     {
         $functions = [
-            $this->formatAmountWithCode(),
-            $this->formatAmountPlainWithCode(),
+            $this->formatAnything(),
+            $this->formatAnythingPlain(),
             $this->transactionSourceAccount(),
             $this->transactionDestinationAccount(),
             $this->optionalJournalAmount(),
@@ -85,6 +101,7 @@ class Transaction extends Twig_Extension
             $this->transactionCategories(),
             $this->transactionIdCategories(),
             $this->splitJournalIndicator(),
+            $this->formatByCode(),
         ];
 
         return $functions;
@@ -107,24 +124,17 @@ class Transaction extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'optionalJournalAmount', function (int $journalId, string $transactionAmount, string $code, string $type): string {
-
-            $amount = strval(
-                TransactionModel::where('transaction_journal_id', $journalId)
-                                ->whereNull('deleted_at')
-                                ->where('amount', '<', 0)
-                                ->sum('amount')
-            );
-
+            // get amount of journal:
+            $amount = strval(TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->where('amount', '<', 0)->sum('amount'));
+            // display deposit and transfer positive
             if ($type === TransactionType::DEPOSIT || $type === TransactionType::TRANSFER) {
                 $amount = bcmul($amount, '-1');
             }
 
-            if (
-                bccomp($amount, $transactionAmount) !== 0
-                && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0
-            ) {
-                // not equal?
-                return sprintf(' (%s)', Amount::formatWithCode($code, $amount, true));
+            // not equal to transaction amount?
+            if (bccomp($amount, $transactionAmount) !== 0 && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0) {
+                //$currency =
+                return sprintf(' (%s)', 'x'); // Amount::formatWithCode($code, $amount, true)
             }
 
             return '';
