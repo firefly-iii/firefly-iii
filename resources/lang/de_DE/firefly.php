@@ -827,6 +827,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'transaction_journal_information'      => 'Transaktionsinformationen',
     'transaction_journal_meta'             => 'Metainformationen',
     'total_amount'                         => 'Gesamtbetrag',
+    'number_of_decimals'                   => 'Number of decimals',
 
     // administration
     'administration'                       => 'Administration',

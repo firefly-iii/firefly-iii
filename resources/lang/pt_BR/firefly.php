@@ -826,6 +826,7 @@ return [
     'transaction_journal_information'      => 'Informação da transação',
     'transaction_journal_meta'             => 'Meta-informação',
     'total_amount'                         => 'Valor total',
+    'number_of_decimals'                   => 'Number of decimals',
 
     // administration
     'administration'                       => 'Administração',
