@@ -354,7 +354,7 @@ class BudgetController extends Controller
         if ($repetitions->count() === 0) {
             $spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
             if (bccomp($spent, '0') !== 0) {
-                $return[$budget->name]['spent']     = $spent;
+                $return[$budget->name]['spent']     = bcmul($spent, '-1');
                 $return[$budget->name]['left']      = 0;
                 $return[$budget->name]['overspent'] = 0;
             }
