@@ -45,16 +45,6 @@ class EventServiceProvider extends ServiceProvider
             'FireflyIII\Events\RequestedNewPassword' => [ // is a User related event.
                                                           'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
-            'FireflyIII\Events\StoredBudgetLimit'    => // is a Budget related event.
-                [
-                    'FireflyIII\Handlers\Events\BudgetEventHandler@storeRepetition',
-                ],
-
-            'FireflyIII\Events\UpdatedBudgetLimit' => // is a Budget related event.
-                [
-                    'FireflyIII\Handlers\Events\BudgetEventHandler@updateRepetition',
-                ],
-
             'FireflyIII\Events\StoredTransactionJournal'  => // is a Transaction Journal related event.
                 [
                     'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
