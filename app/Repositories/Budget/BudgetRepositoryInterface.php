@@ -84,6 +84,8 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
+     * @deprecated
+     *
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -99,6 +101,15 @@ interface BudgetRepositoryInterface
      * @return string
      */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget, Carbon $start, Carbon $end): Collection;
 
     /**
      *

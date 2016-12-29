@@ -14,8 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Events\StoredBudgetLimit;
-use FireflyIII\Events\UpdatedBudgetLimit;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
@@ -246,6 +244,36 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $amount;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget, Carbon $start, Carbon $end): Collection
+    {
+        $set = $budget->budgetLimits()
+                      ->where(
+                          function (Builder $q1) use ($start, $end) {
+                              $q1->where(
+                                  function (Builder $q2) use ($start, $end) {
+                                      $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                      $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                  }
+                              )
+                                 ->orWhere(
+                                     function (Builder $q3) use ($start, $end) {
+                                         $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                         $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                     }
+                                 );
+                          }
+                      )->get();
+
+        return $set;
     }
 
     /**
@@ -603,9 +631,6 @@ class BudgetRepository implements BudgetRepositoryInterface
             $limit->amount = $amount;
             $limit->save();
 
-            // fire event to create or update LimitRepetition.
-            event(new UpdatedBudgetLimit($limit, $end));
-
             return $limit;
         }
 
@@ -617,7 +642,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         $limit->repeat_freq = $repeatFreq;
         $limit->repeats     = 0;
         $limit->save();
-        event(new StoredBudgetLimit($limit, $end));
 
 
         // likewise, there should be a limit repetition to match the end date

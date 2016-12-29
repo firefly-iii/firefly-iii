@@ -32,12 +32,12 @@ class BudgetLimit extends Model
                       = [
             'created_at' => 'date',
             'updated_at' => 'date',
-            'startdate'  => 'date',
+            'start_date'  => 'date',
+            'end_date'  => 'date',
             'repeats'    => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
-    protected $hidden = ['amount_encrypted'];
+    protected $dates = ['created_at', 'updated_at','start_date','end_date'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

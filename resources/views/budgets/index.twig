@@ -90,8 +90,8 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <!-- link in header -->
-                        {% if budgetInformation[budget.id]['currentRep'] %}
-                            <a href="{{ route('budgets.show.repetition', [budget.id, budgetInformation[budget.id]['currentRep'].id]) }}" class="budget-link"
+                        {% if budgetInformation[budget.id]['currentLimit'] %}
+                            <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}" class="budget-link"
                                data-id="{{ budget.id }}">{{ budget.name }}</a>
                         {% else %}
                             <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
@@ -123,8 +123,8 @@
                                     <div class="input-group">
                                         <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
                                         <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
-                                        {% if budgetInformation[budget.id]['currentRep'] %}
-                                            {% set repAmount = budgetInformation[budget.id]['currentRep'].amount %}
+                                        {% if budgetInformation[budget.id]['currentLimit'] %}
+                                            {% set repAmount = budgetInformation[budget.id]['currentLimit'].amount %}
                                         {% else %}
                                             {% set repAmount = '0' %}
                                         {% endif %}
@@ -147,18 +147,18 @@
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
                             </td>
                         </tr>
-                        {% if budgetInformation[budget.id]['otherRepetitions'].count > 0 %}
+                        {% if budgetInformation[budget.id]['otherLimits'].count > 0 %}
                             <tr>
                                 <td colspan="2">
                                     <ul class="list-unstyled">
-                                        {% for other in budgetInformation[budget.id]['otherRepetitions'] %}
+                                        {% for other in budgetInformation[budget.id]['otherLimits'] %}
                                             <li>
                                                 <!-- translate -->
                                                 Budgeted
-                                                <a href="{{ route('budgets.show.repetition', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
+                                                <a href="{{ route('budgets.show.limit', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
                                                 between
-                                                {{ other.startdate.formatLocalized(monthAndDayFormat) }}
-                                                and {{ other.enddate.formatLocalized(monthAndDayFormat) }}.
+                                                {{ other.start_date.formatLocalized(monthAndDayFormat) }}
+                                                and {{ other.end_date.formatLocalized(monthAndDayFormat) }}.
                                             </li>
                                         {% endfor %}
                                     </ul>

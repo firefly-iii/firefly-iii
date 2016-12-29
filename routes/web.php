@@ -144,7 +144,7 @@ Route::group(
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
-    Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showByRepetition', 'as' => 'show.repetition']);
+    Route::get('show/{budget}/{budgetlimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
     Route::get('list/no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
 
     Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'income.post']);
@@ -250,7 +250,7 @@ Route::group(
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
     Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget']);
     Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
-    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
+    Route::get('budget/{budget}/{budgetlimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
     Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
 

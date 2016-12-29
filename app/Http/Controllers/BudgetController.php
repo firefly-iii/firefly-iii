@@ -21,6 +21,7 @@ use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -407,24 +408,22 @@ class BudgetController extends Controller
                 'budgeted'   => '0',
                 'currentRep' => false,
             ];
-            $allRepetitions    = $this->repository->getAllBudgetLimitRepetitions($start, $end);
-            $otherRepetitions  = new Collection;
+            $budgetLimits      = $this->repository->getBudgetLimits($budget, $start, $end);
+            $otherLimits       = new Collection;
 
-            // get all the limit repetitions relevant between start and end and examine them:
-            /** @var LimitRepetition $repetition */
-            foreach ($allRepetitions as $repetition) {
-                if ($repetition->budget_id == $budget->id) {
-                    if ($repetition->startdate->isSameDay($start) && $repetition->enddate->isSameDay($end)
-                    ) {
-                        $return[$budgetId]['currentRep'] = $repetition;
-                        $return[$budgetId]['budgeted']   = $repetition->amount;
-                        continue;
-                    }
-                    // otherwise it's just one of the many relevant repetitions:
-                    $otherRepetitions->push($repetition);
+            // get all the budget limits relevant between start and end and examine them:
+            /** @var BudgetLimit $limit */
+            foreach ($budgetLimits as $limit) {
+                if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
+                ) {
+                    $return[$budgetId]['currentLimit'] = $limit;
+                    $return[$budgetId]['budgeted']   = $limit->amount;
+                    continue;
                 }
+                // otherwise it's just one of the many relevant repetitions:
+                $otherLimits->push($limit);
             }
-            $return[$budgetId]['otherRepetitions'] = $otherRepetitions;
+            $return[$budgetId]['otherLimits'] = $otherLimits;
         }
 
         return $return;
