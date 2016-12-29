@@ -17,7 +17,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use NumberFormatter;
 use Preferences as Prefs;
 
 /**
@@ -51,10 +50,20 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
-        $locale    = setlocale(LC_MONETARY, 0);
+        setlocale(LC_MONETARY, 0);
         $float     = round($amount, 12);
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result    = $formatter->formatCurrency($float, $format->code);
+        $info      = localeconv();
+        $formatted = number_format($float, $format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
+
+        // some complicated switches to format the amount correctly:
+        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
+        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
+        $space     = $separated ? ' ' : '';
+        $result    = $format->symbol . $space . $formatted;
+
+        if (!$precedes) {
+            $result = $space . $formatted . $format->symbol;
+        }
 
         if ($coloured === true) {
 
