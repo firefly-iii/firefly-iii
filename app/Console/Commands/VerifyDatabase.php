@@ -130,7 +130,7 @@ class VerifyDatabase extends Command
 
         /** @var Budget $entry */
         foreach ($set as $entry) {
-            $name = $entry->encrypted ? Crypt::decrypt($entry->name) : $entry->name;
+            $name = intval($entry->encrypted) === 1 ? Crypt::decrypt($entry->name) : $entry->name;
             $line = sprintf(
                 'Notice: User #%d (%s) has budget #%d ("%s") which has no budget limits.',
                 $entry->user_id, $entry->email, $entry->id, $name
