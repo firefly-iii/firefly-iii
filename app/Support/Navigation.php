@@ -244,28 +244,6 @@ class Navigation
     }
 
     /**
-     * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
-     * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
-     *
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     *
-     * @return string
-     */
-    public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
-    {
-        $format = 'endOfDay';
-        if ($start->diffInMonths($end) > 1) {
-            $format = 'endOfMonth';
-        }
-
-        if ($start->diffInMonths($end) > 12) {
-            $format = 'endOfYear';
-        }
-        return $format;
-    }
-
-    /**
      * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
      * method returns "Y-m". If the date difference is larger, method returns "Y".
      *
@@ -284,6 +262,7 @@ class Navigation
         if ($start->diffInMonths($end) > 12) {
             $format = 'Y';
         }
+
         return $format;
     }
 
@@ -309,6 +288,29 @@ class Navigation
 
         return $format;
 
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
+     * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
+    {
+        $format = 'endOfDay';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'endOfMonth';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'endOfYear';
+        }
+
+        return $format;
     }
 
     /**

@@ -315,7 +315,7 @@ class SingleController extends Controller
 
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // flash errors

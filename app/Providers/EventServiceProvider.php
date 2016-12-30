@@ -37,13 +37,13 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // new event handlers:
-            'FireflyIII\Events\RegisteredUser'       => // is a User related event.
+            'FireflyIII\Events\RegisteredUser'            => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                     'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
                 ],
-            'FireflyIII\Events\RequestedNewPassword' => [ // is a User related event.
-                                                          'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
+            'FireflyIII\Events\RequestedNewPassword'      => [ // is a User related event.
+                                                               'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
             'FireflyIII\Events\StoredTransactionJournal'  => // is a Transaction Journal related event.
                 [

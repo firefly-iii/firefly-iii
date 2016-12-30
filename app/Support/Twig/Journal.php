@@ -14,10 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 
-use Amount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget as ModelBudget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;

@@ -30,9 +30,6 @@ class Budget extends Model
 
     use SoftDeletes, ValidatingTrait;
 
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -46,7 +43,8 @@ class Budget extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
     protected $rules    = ['name' => 'required|between:1,200',];

@@ -26,11 +26,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AvailableBudget extends Model
 {
     use SoftDeletes;
-    /** @var array */
-    protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
-
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /**
      * The attributes that should be casted to native types.
      *
@@ -42,8 +37,12 @@ class AvailableBudget extends Model
             'updated_at' => 'date',
             'deleted_at' => 'date',
             'start_date' => 'date',
-            'end_date' => 'date',
+            'end_date'   => 'date',
         ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
+    protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

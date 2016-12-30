@@ -91,8 +91,8 @@ class BillController extends Controller
             return Response::json($cache->get());
         }
 
-        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
-        $results = $results->sortBy(
+        $results   = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
+        $results   = $results->sortBy(
             function (Transaction $transaction) {
                 return $transaction->date->format('U');
             }

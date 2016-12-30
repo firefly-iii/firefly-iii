@@ -154,6 +154,7 @@ class LoginController extends Controller
             $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
             $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $email]));
         }
+
         return $errorMessage;
     }
 }

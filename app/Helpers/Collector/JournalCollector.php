@@ -672,7 +672,9 @@ class JournalCollector implements JournalCollectorInterface
             // join some extra tables:
             $this->joinedCategory = true;
             $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('categories as transaction_journal_categories', 'transaction_journal_categories.id', '=', 'category_transaction_journal.category_id');
+            $this->query->leftJoin(
+                'categories as transaction_journal_categories', 'transaction_journal_categories.id', '=', 'category_transaction_journal.category_id'
+            );
 
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
             $this->query->leftJoin('categories as transaction_categories', 'transaction_categories.id', '=', 'category_transaction.category_id');

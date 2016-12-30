@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\User;
 
 
-use FireflyConfig;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -48,6 +47,20 @@ class UserRepository implements UserRepositoryInterface
     {
         $admin = Role::where('name', 'owner')->first();
         $user->attachRole($admin);
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * @param User   $user
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function changePassword(User $user, string $password): bool
+    {
+        $user->password = bcrypt($password);
         $user->save();
 
         return true;
@@ -133,18 +146,5 @@ class UserRepository implements UserRepositoryInterface
         $return['tags']                = $user->tags()->count();
 
         return $return;
-    }
-
-    /**
-     * @param User   $user
-     * @param string $password
-     *
-     * @return bool
-     */
-    public function changePassword(User $user, string $password): bool
-    {
-        $user->password = bcrypt($password);
-        $user->save();
-        return true;
     }
 }

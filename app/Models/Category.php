@@ -41,14 +41,14 @@ class Category extends Model
             'deleted_at' => 'date',
             'encrypted'  => 'boolean',
         ];
-    /** @var array  */
-    protected $fillable = ['user_id', 'name'];
-    /** @var array  */
-    protected $hidden   = ['encrypted'];
-    /** @var array  */
-    protected $rules    = ['name' => 'required|between:1,200',];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
+    protected $fillable = ['user_id', 'name'];
+    /** @var array */
+    protected $hidden = ['encrypted'];
+    /** @var array */
+    protected $rules = ['name' => 'required|between:1,200',];
 
     /**
      * @param array $fields

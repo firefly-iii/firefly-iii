@@ -146,7 +146,6 @@ class CategoryRepository implements CategoryRepositoryInterface
                                      ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
 
 
-
         // both exist, the one that is earliest "wins".
         if (!is_null($firstTransaction) && !is_null($first) && Carbon::parse($firstTransaction->date)->lt($first)) {
             $first = $firstTransaction->date;

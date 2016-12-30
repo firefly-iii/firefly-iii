@@ -23,6 +23,14 @@ use FireflyIII\Models\ExportJob;
 interface ExportJobRepositoryInterface
 {
     /**
+     * @param ExportJob $job
+     * @param string    $status
+     *
+     * @return bool
+     */
+    public function changeStatus(ExportJob $job, string $status): bool;
+
+    /**
      * @return bool
      */
     public function cleanup(): bool;
@@ -31,14 +39,6 @@ interface ExportJobRepositoryInterface
      * @return ExportJob
      */
     public function create(): ExportJob;
-
-    /**
-     * @param ExportJob $job
-     * @param string    $status
-     *
-     * @return bool
-     */
-    public function changeStatus(ExportJob $job, string $status): bool;
 
     /**
      * @param ExportJob $job

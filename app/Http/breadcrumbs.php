@@ -280,10 +280,10 @@ Breadcrumbs::register(
 
     $title = trans(
         'firefly.budget_in_period_breadcrumb', [
-                                      'name'  => $budget->name,
-                                      'start' => $budgetLimit->start_date->formatLocalized(strval(trans('config.month_and_day'))),
-                                      'end'   => $budgetLimit->end_date->formatLocalized(strval(trans('config.month_and_day'))),
-                                  ]
+                                                 'name'  => $budget->name,
+                                                 'start' => $budgetLimit->start_date->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $budgetLimit->end_date->formatLocalized(strval(trans('config.month_and_day'))),
+                                             ]
     );
 
     $breadcrumbs->push(

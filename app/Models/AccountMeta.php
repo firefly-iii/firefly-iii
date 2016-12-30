@@ -35,7 +35,7 @@ class AccountMeta extends Model
             'updated_at' => 'date',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
+    protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['account_id', 'name', 'data'];
     protected $table    = 'account_meta';
 

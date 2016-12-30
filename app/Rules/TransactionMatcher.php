@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules;
 
-use FireflyIII\Helpers\Collector\JournalCollector;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
