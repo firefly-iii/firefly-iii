@@ -111,7 +111,7 @@ class ChartJsGenerator implements GeneratorInterface
                 $value = bcmul($value, '-1');
             }
 
-            $chartData['datasets'][0]['data'][]            = round($value, 2);
+            $chartData['datasets'][0]['data'][]            = $value;
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['labels'][]                         = $key;
             $index++;
