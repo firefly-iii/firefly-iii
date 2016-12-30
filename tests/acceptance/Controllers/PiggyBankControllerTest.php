@@ -123,7 +123,7 @@ class PiggyBankControllerTest extends TestCase
      */
     public function testPostAdd()
     {
-        $data = ['amount' => 1];
+        $data = ['amount' => '1.123'];
         $this->be($this->user());
         $this->call('post', route('piggy-banks.add', [1]), $data);
         $this->assertResponseStatus(302);
@@ -136,7 +136,7 @@ class PiggyBankControllerTest extends TestCase
      */
     public function testPostRemove()
     {
-        $data = ['amount' => 1];
+        $data = ['amount' => '1.123'];
         $this->be($this->user());
         $this->call('post', route('piggy-banks.remove', [1]), $data);
         $this->assertResponseStatus(302);
@@ -184,7 +184,7 @@ class PiggyBankControllerTest extends TestCase
         $this->session(['piggy-banks.create.url' => 'http://localhost']);
         $data = [
             'name'                            => 'Piggy ' . rand(999, 10000),
-            'targetamount'                    => 100,
+            'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,
 
@@ -204,7 +204,7 @@ class PiggyBankControllerTest extends TestCase
         $this->session(['piggy-banks.edit.url' => 'http://localhost']);
         $data = [
             'name'                            => 'Updated Piggy ' . rand(999, 10000),
-            'targetamount'                    => 100,
+            'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,
 
