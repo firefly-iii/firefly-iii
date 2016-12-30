@@ -20,14 +20,13 @@ use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Response;
 
@@ -206,7 +205,6 @@ class BudgetReportController extends Controller
         $function     = Navigation::preferredEndOfPeriod($start, $end);
         $chartData    = [];
         $currentStart = clone $start;
-        $limits       = $repository->getAllBudgetLimitRepetitions($start, $end); // also for ALL budgets.
 
         // prep chart data:
         foreach ($budgets as $budget) {
@@ -231,8 +229,9 @@ class BudgetReportController extends Controller
                 'entries' => [],
             ];
         }
-        $sumOfExpenses = [];
-        $leftOfLimits  = [];
+        $allBudgetLimits = $repository->getAllBudgetLimits($start, $end);
+        $sumOfExpenses   = [];
+        $leftOfLimits    = [];
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd = $currentEnd->$function();
@@ -241,20 +240,20 @@ class BudgetReportController extends Controller
 
             /** @var Budget $budget */
             foreach ($budgets as $budget) {
+                // get budget limit(s) for this period):
+                $budgetLimits                                       = $this->filterBudgetLimits($allBudgetLimits, $budget, $currentStart, $currentEnd);
                 $currentExpenses                                    = $expenses[$budget->id] ?? '0';
                 $sumOfExpenses[$budget->id]                         = $sumOfExpenses[$budget->id] ?? '0';
                 $sumOfExpenses[$budget->id]                         = bcadd($currentExpenses, $sumOfExpenses[$budget->id]);
                 $chartData[$budget->id]['entries'][$label]          = round(bcmul($currentExpenses, '-1'), 2);
                 $chartData[$budget->id . '-sum']['entries'][$label] = round(bcmul($sumOfExpenses[$budget->id], '-1'), 2);
 
-                $limit = $this->filterLimits($limits, $budget, $currentStart);
-                if (!is_null($limit->id)) {
-                    $leftOfLimits[$limit->id]                            = $leftOfLimits[$limit->id] ?? strval($limit->amount);
-                    $leftOfLimits[$limit->id]                            = bcadd($leftOfLimits[$limit->id], $currentExpenses);
-                    $chartData[$budget->id . '-left']['entries'][$label] = round($leftOfLimits[$limit->id], 2);
+                if (count($budgetLimits) > 0) {
+                    $budgetLimitId                                       = $budgetLimits->first()->id;
+                    $leftOfLimits[$budgetLimitId]                        = $leftOfLimits[$budgetLimitId] ?? strval($budgetLimits->sum('amount'));
+                    $leftOfLimits[$budgetLimitId]                        = bcadd($leftOfLimits[$budgetLimitId], $currentExpenses);
+                    $chartData[$budget->id . '-left']['entries'][$label] = $leftOfLimits[$budgetLimitId];
                 }
-
-
             }
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
@@ -267,43 +266,31 @@ class BudgetReportController extends Controller
     }
 
     /**
-     * @param $limits
-     * @param $budget
-     * @param $currentStart
+     * Returns the budget limits belonging to the given budget and valid on the given day.
      *
-     * @return LimitRepetition
+     * @param Collection $budgetLimits
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
      */
-    private function filterLimits(Collection $limits, Budget $budget, Carbon $date): LimitRepetition
+    private function filterBudgetLimits(Collection $budgetLimits, Budget $budget, Carbon $start, Carbon $end): Collection
     {
-        Log::debug(sprintf('Start of filterLimits with %d limits.', $limits->count()));
-        $filtered = $limits->filter(
-            function (LimitRepetition $limit) use ($budget, $date) {
-                if ($limit->budget_id !== $budget->id) {
-                    Log::debug(sprintf('LimitRepetition has budget #%d but expecting #%d', $limit->budget_id, $budget->id));
-
-                    return false;
-                }
-                if ($date < $limit->startdate || $date > $limit->enddate) {
-                    Log::debug(
-                        sprintf(
-                            'Date %s is not between %s and %s',
-                            $date->format('Y-m-d'), $limit->startdate->format('Y-m-d'), $limit->enddate->format('Y-m-d')
-                        )
-                    );
-
-                    return false;
+        $set = $budgetLimits->filter(
+            function (BudgetLimit $budgetLimit) use ($budget, $start, $end) {
+                if ($budgetLimit->budget_id === $budget->id
+                    && $budgetLimit->start_date->lte($start) // start of budget limit is on or before start
+                    && $budgetLimit->end_date->gte($end) // end of budget limit is on or after end
+                ) {
+                    return $budgetLimit;
                 }
 
-                return $limit;
+                return false;
             }
         );
-        if ($filtered->count() === 1) {
-            return $filtered->first();
-        }
 
-        return new LimitRepetition;
+        return $set;
     }
-
 
     /**
      * @param Collection $accounts

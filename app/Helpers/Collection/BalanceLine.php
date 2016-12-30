@@ -14,6 +14,7 @@ namespace FireflyIII\Helpers\Collection;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Budget as BudgetModel;
+use FireflyIII\Models\BudgetLimit;
 use Illuminate\Support\Collection;
 
 /**
@@ -34,12 +35,27 @@ class BalanceLine
 
     /** @var BudgetModel */
     protected $budget;
-    /** @var  Carbon */
-    protected $endDate;
     /** @var int */
     protected $role = self::ROLE_DEFAULTROLE;
-    /** @var  Carbon */
-    protected $startDate;
+
+    /** @var  BudgetLimit */
+    protected $budgetLimit;
+
+    /**
+     * @return BudgetLimit
+     */
+    public function getBudgetLimit(): BudgetLimit
+    {
+        return $this->budgetLimit;
+    }
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     */
+    public function setBudgetLimit(BudgetLimit $budgetLimit)
+    {
+        $this->budgetLimit = $budgetLimit;
+    }
 
     /**
      *
@@ -95,15 +111,7 @@ class BalanceLine
      */
     public function getEndDate()
     {
-        return $this->endDate;
-    }
-
-    /**
-     * @param Carbon $endDate
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
+        return $this->budgetLimit->end_date ?? new Carbon;
     }
 
     /**
@@ -127,15 +135,7 @@ class BalanceLine
      */
     public function getStartDate()
     {
-        return $this->startDate;
-    }
-
-    /**
-     * @param Carbon $startDate
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
+        return $this->budgetLimit->start_date ?? new Carbon;
     }
 
     /**
@@ -170,7 +170,7 @@ class BalanceLine
      */
     public function leftOfRepetition(): string
     {
-        $start = $this->budget->amount ?? '0';
+        $start = $this->budgetLimit->amount ?? '0';
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
             $start = bcadd($balanceEntry->getSpent(), $start);

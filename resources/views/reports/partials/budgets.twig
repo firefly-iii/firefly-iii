@@ -24,12 +24,12 @@
             {% endif %}
 
 
-            {% if budgetLine.getRepetition.id %}
-                <td class="hidden-xs" data-value="{{ budgetLine.getRepetition.startdate.format('Y-m-d') }}">
-                    <a href="{{ route('budgets.show.repetition', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">
-                        {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
+            {% if budgetLine.getBudgetLimit.id %}
+                <td class="hidden-xs" data-value="{{ budgetLine.getBudgetLimit.start_date.format('Y-m-d') }}">
+                    <a href="{{ route('budgets.show.limit', [budgetLine.getBudget.id, budgetLine.getBudgetLimit.id]) }}">
+                        {{ budgetLine.getBudgetLimit.start_date.formatLocalized(monthAndDayFormat) }}
                         &mdash;
-                        {{ budgetLine.getRepetition.enddate.formatLocalized(monthAndDayFormat) }}
+                        {{ budgetLine.getBudgetLimit.end_date.formatLocalized(monthAndDayFormat) }}
                     </a>
                 </td>
             {% else %}
@@ -39,9 +39,9 @@
             {% endif %}
 
 
-            {% if budgetLine.getRepetition.id %}
-                <td data-value="{{ budgetLine.getRepetition.amount }}">
-                    {{ budgetLine.getRepetition.amount|formatAmount }}
+            {% if budgetLine.getBudgetLimit.id %}
+                <td data-value="{{ budgetLine.getBudgetLimit.amount }}">
+                    {{ budgetLine.getBudgetLimit.amount|formatAmount }}
                 </td>
             {% else %}
                 <td data-value="0">

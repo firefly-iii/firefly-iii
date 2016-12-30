@@ -18,7 +18,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
@@ -57,8 +57,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
         /** @var Budget $budget */
         foreach ($set as $budget) {
-            $repetitions = $budget->limitrepetitions()->before($end)->after($start)->get();
-            if ($repetitions->count() == 0) { // no repetition(s) for this budget
+            $budgetLimits = $this->repository->getBudgetLimits($budget, $start, $end);
+            if ($budgetLimits->count() == 0) { // no budget limit(s) for this budget
                 $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);// spent for budget in time range
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
@@ -67,15 +67,15 @@ class BudgetReportHelper implements BudgetReportHelperInterface
                 }
                 continue;
             }
-            /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) { // one or more repetitions for budget
-                $data       = $this->calculateExpenses($budget, $repetition, $accounts);
+            /** @var BudgetLimit $budgetLimit */
+            foreach ($budgetLimits as $budgetLimit) { // one or more repetitions for budget
+                $data       = $this->calculateExpenses($budget, $budgetLimit, $accounts);
                 $budgetLine = new BudgetLine;
-                $budgetLine->setBudget($budget)->setRepetition($repetition)
+                $budgetLine->setBudget($budget)->setBudgetLimit($budgetLimit)
                            ->setLeft($data['left'])->setSpent($data['expenses'])->setOverspent($data['overspent'])
-                           ->setBudgeted(strval($repetition->amount));
+                           ->setBudgeted(strval($budgetLimit->amount));
 
-                $object->addBudgeted(strval($repetition->amount))->addSpent($data['spent'])
+                $object->addBudgeted(strval($budgetLimit->amount))->addSpent($data['spent'])
                        ->addLeft($data['left'])->addOverspent($data['overspent'])->addBudgetLine($budgetLine);
 
             }
@@ -119,19 +119,19 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     }
 
     /**
-     * @param Budget          $budget
-     * @param LimitRepetition $repetition
-     * @param Collection      $accounts
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
+     * @param Collection  $accounts
      *
      * @return array
      */
-    private function calculateExpenses(Budget $budget, LimitRepetition $repetition, Collection $accounts): array
+    private function calculateExpenses(Budget $budget, BudgetLimit $budgetLimit, Collection $accounts): array
     {
         $array              = [];
-        $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
-        $array['left']      = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? bcadd($repetition->amount, $expenses) : '0';
-        $array['spent']     = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? $expenses : '0';
-        $array['overspent'] = bccomp(bcadd($repetition->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $repetition->amount);
+        $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
+        $array['left']      = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? bcadd($budgetLimit->amount, $expenses) : '0';
+        $array['spent']     = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? $expenses : '0';
+        $array['overspent'] = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $budgetLimit->amount);
         $array['expenses']  = $expenses;
 
         return $array;

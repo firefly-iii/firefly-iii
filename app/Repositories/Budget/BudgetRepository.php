@@ -18,7 +18,6 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -197,30 +196,35 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection
+    public function getAllBudgetLimits(Carbon $start, Carbon $end): Collection
     {
-        $query = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                ->where(
-                                    function (Builder $q1) use ($start, $end) {
-                                        $q1->where(
-                                            function (Builder $q2) use ($start, $end) {
-                                                $q2->where('limit_repetitions.enddate', '>=', $start->format('Y-m-d 00:00:00'));
-                                                $q2->where('limit_repetitions.enddate', '<=', $end->format('Y-m-d 00:00:00'));
-                                            }
-                                        )
-                                           ->orWhere(
-                                               function (Builder $q3) use ($start, $end) {
-                                                   $q3->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'));
-                                                   $q3->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'));
-                                               }
-                                           );
-                                    }
-                                )
-                                ->where('budgets.user_id', $this->user->id)
-                                ->whereNull('budgets.deleted_at');
-
-        $set = $query->get(['limit_repetitions.*', 'budget_limits.budget_id']);
+        $set = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                          ->with(['budget'])
+                          ->where('budgets.user_id', $this->user->id)
+                          ->where(
+                              function (Builder $q1) use ($start, $end) {
+                                  $q1->where(
+                                      function (Builder $q2) use ($start, $end) {
+                                          $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                          $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                      }
+                                  )
+                                     ->orWhere(
+                                         function (Builder $q3) use ($start, $end) {
+                                             $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                             $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                         }
+                                     );
+                              }
+                          )
+                          ->orWhere(
+                              function (Builder $q4) use ($start, $end) {
+                                  // or start is before start AND end is after end.
+                                  $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                  $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
+                              }
+                          )
+                          ->get(['budget_limits.*']);
 
         return $set;
     }
@@ -258,20 +262,30 @@ class BudgetRepository implements BudgetRepositoryInterface
         $set = $budget->budgetLimits()
                       ->where(
                           function (Builder $q1) use ($start, $end) {
+                              // budget limit ends within period
                               $q1->where(
                                   function (Builder $q2) use ($start, $end) {
                                       $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
                                       $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
                                   }
                               )
+                                  // budget limit start within period
                                  ->orWhere(
-                                     function (Builder $q3) use ($start, $end) {
-                                         $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                         $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
-                                     }
-                                 );
+                                      function (Builder $q3) use ($start, $end) {
+                                          $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                          $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                      }
+                                  );
                           }
-                      )->get();
+                      )
+                      ->orWhere(
+                          function (Builder $q4) use ($start, $end) {
+                              // or start is before start AND end is after end.
+                              $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                              $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
+                          }
+                      )
+                      ->get();
 
         return $set;
     }

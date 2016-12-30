@@ -13,7 +13,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
 use FireflyIII\Models\Budget as BudgetModel;
-use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\BudgetLimit;
 
 /**
  *
@@ -26,14 +26,14 @@ class BudgetLine
 
     /** @var  BudgetModel */
     protected $budget;
+    /** @var  BudgetLimit */
+    protected $budgetLimit;
     /** @var string */
     protected $budgeted = '0';
     /** @var string */
     protected $left = '0';
     /** @var string */
     protected $overspent = '0';
-    /** @var  LimitRepetition */
-    protected $repetition;
     /** @var string */
     protected $spent = '0';
 
@@ -53,6 +53,26 @@ class BudgetLine
     public function setBudget(BudgetModel $budget): BudgetLine
     {
         $this->budget = $budget;
+
+        return $this;
+    }
+
+    /**
+     * @return BudgetLimit
+     */
+    public function getBudgetLimit(): BudgetLimit
+    {
+        return $this->budgetLimit ?? new BudgetLimit;
+    }
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     *
+     * @return BudgetLimit
+     */
+    public function setBudgetLimit(BudgetLimit $budgetLimit): BudgetLine
+    {
+        $this->budgetLimit = $budgetLimit;
 
         return $this;
     }
@@ -113,26 +133,6 @@ class BudgetLine
     public function setOverspent(string $overspent): BudgetLine
     {
         $this->overspent = $overspent;
-
-        return $this;
-    }
-
-    /**
-     * @return LimitRepetition
-     */
-    public function getRepetition(): LimitRepetition
-    {
-        return $this->repetition ?? new LimitRepetition;
-    }
-
-    /**
-     * @param LimitRepetition $repetition
-     *
-     * @return BudgetLine
-     */
-    public function setRepetition(LimitRepetition $repetition): BudgetLine
-    {
-        $this->repetition = $repetition;
 
         return $this;
     }

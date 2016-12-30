@@ -119,14 +119,6 @@ class Budget extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function limitrepetitions()
-    {
-        return $this->hasManyThrough('FireflyIII\Models\LimitRepetition', 'FireflyIII\Models\BudgetLimit', 'budget_id');
-    }
-
-    /**
      * @param $value
      */
     public function setNameAttribute($value)
