@@ -262,7 +262,7 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id);
 
 
-        $set      = $budget->budgetlimits()->orderBy('start_date', 'DESC')->get();
+        $set      = $repository->getBudgetLimits($budget, $start, $end);
         $subTitle = e($budget->name);
         $limits   = new Collection();
 

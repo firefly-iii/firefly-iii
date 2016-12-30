@@ -8,11 +8,13 @@
  *
  * See the LICENSE file for details.
  */
+use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -110,10 +112,18 @@ class AccountControllerTest extends TestCase
      */
     public function testShow(string $range)
     {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
 
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        // mock repository:
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date);
+        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
 
         $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();

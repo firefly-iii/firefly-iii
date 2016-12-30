@@ -291,7 +291,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                                      }
                                  );
                           }
-                      )->get(['budget_limits.*']);
+                      )->orderBy('budget_limits.start_date','DESC')->get(['budget_limits.*']);
 
         return $set;
     }

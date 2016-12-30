@@ -8,7 +8,12 @@
  *
  * See the LICENSE file for details.
  */
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -70,6 +75,7 @@ class BudgetControllerTest extends TestCase
     public function testDestroy()
     {
         $this->session(['budgets.delete.url' => 'http://localhost']);
+
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
 
@@ -99,6 +105,13 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndex(string $range)
     {
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('cleanupBudgets');
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('budgets.index'));
@@ -115,6 +128,18 @@ class BudgetControllerTest extends TestCase
      */
     public function testNoBudget(string $range)
     {
+        $date = new Carbon();
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('withoutBudget')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('budgets.no-budget'));
@@ -129,7 +154,7 @@ class BudgetControllerTest extends TestCase
     public function testPostUpdateIncome()
     {
         $data = [
-            'amount'   => '200',
+            'amount' => '200',
         ];
         $this->be($this->user());
         $this->call('post', route('budgets.income.post'), $data);
@@ -144,6 +169,30 @@ class BudgetControllerTest extends TestCase
      */
     public function testShow(string $range)
     {
+        $date = new Carbon();
+        $date->subDay();
+        $this->session(['first' => $date]);
+
+        // mock account repository
+        $accountRepository = $this->mock(AccountRepositoryInterface::class);
+        $accountRepository->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
+
+        // mock budget repository
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
+        $budgetRepository->shouldReceive('spentInPeriod')->andReturn('1');
+        // mock journal collector:
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('budgets.show', [1]));
@@ -159,6 +208,25 @@ class BudgetControllerTest extends TestCase
      */
     public function testShowByBudgetLimit(string $range)
     {
+        // mock account repository
+        $accountRepository = $this->mock(AccountRepositoryInterface::class);
+        $accountRepository->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
+        // mock budget repository
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepository->shouldReceive('spentInPeriod')->andReturn('1');
+
+        // mock journal collector:
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $this->call('GET', route('budgets.show.limit', [1, 1]));
@@ -181,14 +249,6 @@ class BudgetControllerTest extends TestCase
         $this->call('post', route('budgets.store'), $data);
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
-
-        // must be in list
-        $this->be($this->user());
-        $this->call('GET', route('budgets.index'));
-        $this->assertResponseStatus(200);
-        $this->see('<ol class="breadcrumb">');
-        $this->see($data['name']);
-
     }
 
     /**
@@ -206,14 +266,7 @@ class BudgetControllerTest extends TestCase
         $this->call('post', route('budgets.update', [1]), $data);
         $this->assertResponseStatus(302);
         $this->assertSessionHas('success');
-
-        // must be in list
-        $this->be($this->user());
-        $this->call('GET', route('budgets.index'));
-        $this->assertResponseStatus(200);
-        $this->see('<ol class="breadcrumb">');
-        $this->see($data['name']);
-    }
+        }
 
     /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::updateIncome
