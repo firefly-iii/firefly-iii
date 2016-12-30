@@ -152,16 +152,16 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\BudgetController::showByRepetition
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::showByBudgetLimit()
      * @dataProvider dateRangeProvider
      *
      * @param string $range
      */
-    public function testShowByRepetition(string $range)
+    public function testShowByBudgetLimit(string $range)
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $this->call('GET', route('budgets.show.repetition', [1, 1]));
+        $this->call('GET', route('budgets.show.limit', [1, 1]));
         $this->assertResponseStatus(200);
         // has bread crumb
         $this->see('<ol class="breadcrumb">');
