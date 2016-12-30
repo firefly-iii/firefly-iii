@@ -75,7 +75,7 @@ final class Entry
         $entry                           = new self;
         $entry->journal_id               = $object->transaction_journal_id;
         $entry->description              = self::decrypt($object->journal_encrypted, $object->journal_description);
-        $entry->amount                   = round($object->amount, 2); // always positive
+        $entry->amount                   = $object->amount;
         $entry->date                     = $object->date;
         $entry->transaction_type         = $object->transaction_type;
         $entry->currency_code            = $object->transaction_currency_code;
