@@ -22,7 +22,6 @@ use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\Request;
@@ -77,7 +76,7 @@ class BudgetController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end             = session('end', Carbon::now()->endOfMonth());
+        $end         = session('end', Carbon::now()->endOfMonth());
         $budgetLimit = $repository->updateLimitAmount($budget, $start, $end, $amount);
         if ($amount == 0) {
             $budgetLimit = null;
@@ -263,13 +262,13 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id);
 
 
-        $set      = $budget->limitrepetitions()->orderBy('startdate', 'DESC')->get();
+        $set      = $budget->budgetlimits()->orderBy('start_date', 'DESC')->get();
         $subTitle = e($budget->name);
         $limits   = new Collection();
 
-        /** @var LimitRepetition $entry */
+        /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->startdate, $entry->enddate);
+            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
             $limits->push($entry);
         }
 
@@ -277,16 +276,17 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request         $request
-     * @param Budget          $budget
-     * @param LimitRepetition $repetition
+     * @param Request     $request
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
      *
      * @return View
      * @throws FireflyException
      */
-    public function showByRepetition(Request $request, Budget $budget, LimitRepetition $repetition)
+    public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
-        if ($repetition->budgetLimit->budget->id != $budget->id) {
+        if ($budgetLimit->budget->id
+            != $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
@@ -294,28 +294,30 @@ class BudgetController extends Controller
         $repository = app(BudgetRepositoryInterface::class);
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $start             = $repetition->startdate;
-        $end               = $repetition->enddate;
         $page              = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize          = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle          = trans(
-            'firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]
+            'firefly.budget_in_period', [
+                                          'name'  => $budget->name,
+                                          'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
+                                          'end'   => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
+                                      ]
         );
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-
 
         // collector:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+        $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
+                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/budgets/show/' . $budget->id . '/' . $repetition->id);
+        $journals->setPath('/budgets/show/' . $budget->id . '/' . $budgetLimit->id);
 
 
-        $repetition->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $repetition->startdate, $repetition->enddate);
-        $limits            = new Collection([$repetition]);
+        $budgetLimit->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
+        $limits             = new Collection([$budgetLimit]);
 
-        return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
+        return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'journals', 'subTitle'));
 
     }
 
@@ -416,7 +418,7 @@ class BudgetController extends Controller
                 if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
                 ) {
                     $return[$budgetId]['currentLimit'] = $limit;
-                    $return[$budgetId]['budgeted']   = $limit->amount;
+                    $return[$budgetId]['budgeted']     = $limit->amount;
                     continue;
                 }
                 // otherwise it's just one of the many relevant repetitions:

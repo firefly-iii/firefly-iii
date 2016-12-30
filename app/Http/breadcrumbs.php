@@ -17,9 +17,9 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -274,11 +274,20 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'budgets.show.repetition', function (BreadCrumbGenerator $breadcrumbs, Budget $budget, LimitRepetition $repetition) {
+    'budgets.show.limit', function (BreadCrumbGenerator $breadcrumbs, Budget $budget, BudgetLimit $budgetLimit) {
     $breadcrumbs->parent('budgets.index');
-    $breadcrumbs->push(e($budget->name), route('budgets.show.repetition', [$budget->id, $repetition->id]));
+    $breadcrumbs->push(e($budget->name), route('budgets.show', [$budget->id]));
+
+    $title = trans(
+        'firefly.budget_in_period_breadcrumb', [
+                                      'name'  => $budget->name,
+                                      'start' => $budgetLimit->start_date->formatLocalized(strval(trans('config.month_and_day'))),
+                                      'end'   => $budgetLimit->end_date->formatLocalized(strval(trans('config.month_and_day'))),
+                                  ]
+    );
+
     $breadcrumbs->push(
-        Navigation::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq), route('budgets.show', [$budget->id, $repetition->id])
+        $title, route('budgets.show.limit', [$budget->id, $budgetLimit->id])
     );
 }
 );

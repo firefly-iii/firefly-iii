@@ -149,6 +149,7 @@ return [
         'transaction_type'  => 'FireflyIII\Models\TransactionType',
         'currency'          => 'FireflyIII\Models\TransactionCurrency',
         'limitrepetition'   => 'FireflyIII\Models\LimitRepetition',
+        'budgetlimit'   => 'FireflyIII\Models\BudgetLimit',
         'piggyBank'         => 'FireflyIII\Models\PiggyBank',
         'tj'                => 'FireflyIII\Models\TransactionJournal',
         'unfinishedJournal' => 'FireflyIII\Support\Binder\UnfinishedJournal',
