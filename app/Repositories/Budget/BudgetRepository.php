@@ -202,29 +202,32 @@ class BudgetRepository implements BudgetRepositoryInterface
                           ->with(['budget'])
                           ->where('budgets.user_id', $this->user->id)
                           ->where(
-                              function (Builder $q1) use ($start, $end) {
-                                  $q1->where(
-                                      function (Builder $q2) use ($start, $end) {
-                                          $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                          $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                              function (Builder $q5) use ($start, $end) {
+                                  $q5->where(
+                                      function (Builder $q1) use ($start, $end) {
+                                          $q1->where(
+                                              function (Builder $q2) use ($start, $end) {
+                                                  $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                  $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                              }
+                                          )
+                                             ->orWhere(
+                                                 function (Builder $q3) use ($start, $end) {
+                                                     $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                     $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                                 }
+                                             );
                                       }
                                   )
                                      ->orWhere(
-                                         function (Builder $q3) use ($start, $end) {
-                                             $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                             $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                         function (Builder $q4) use ($start, $end) {
+                                             // or start is before start AND end is after end.
+                                             $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                             $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
                                          }
                                      );
                               }
-                          )
-                          ->orWhere(
-                              function (Builder $q4) use ($start, $end) {
-                                  // or start is before start AND end is after end.
-                                  $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
-                                  $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
-                              }
-                          )
-                          ->get(['budget_limits.*']);
+                          )->get(['budget_limits.*']);
 
         return $set;
     }
@@ -261,31 +264,34 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $set = $budget->budgetLimits()
                       ->where(
-                          function (Builder $q1) use ($start, $end) {
-                              // budget limit ends within period
-                              $q1->where(
-                                  function (Builder $q2) use ($start, $end) {
-                                      $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                      $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                          function (Builder $q5) use ($start, $end) {
+                              $q5->where(
+                                  function (Builder $q1) use ($start, $end) {
+                                      // budget limit ends within period
+                                      $q1->where(
+                                          function (Builder $q2) use ($start, $end) {
+                                              $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                              $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                          }
+                                      )
+                                          // budget limit start within period
+                                         ->orWhere(
+                                              function (Builder $q3) use ($start, $end) {
+                                                  $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
+                                              }
+                                          );
                                   }
                               )
-                                  // budget limit start within period
                                  ->orWhere(
-                                      function (Builder $q3) use ($start, $end) {
-                                          $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                          $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 00:00:00'));
-                                      }
-                                  );
+                                     function (Builder $q4) use ($start, $end) {
+                                         // or start is before start AND end is after end.
+                                         $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
+                                         $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
+                                     }
+                                 );
                           }
-                      )
-                      ->orWhere(
-                          function (Builder $q4) use ($start, $end) {
-                              // or start is before start AND end is after end.
-                              $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d 00:00:00'));
-                              $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d 00:00:00'));
-                          }
-                      )
-                      ->get();
+                      )->get(['budget_limits.*']);
 
         return $set;
     }
