@@ -128,7 +128,7 @@ class AccountController extends Controller
             $endBalance   = $endBalances[$id] ?? '0';
             $diff         = bcsub($endBalance, $startBalance);
             if (bccomp($diff, '0') !== 0) {
-                $chartData[$account->name] = round($diff, 2);
+                $chartData[$account->name] = $diff;
             }
         }
         arsort($chartData);
@@ -391,7 +391,7 @@ class AccountController extends Controller
             $diff         = bcsub($endBalance, $startBalance);
             $diff         = bcmul($diff, '-1');
             if (bccomp($diff, '0') !== 0) {
-                $chartData[$account->name] = round($diff, 2);
+                $chartData[$account->name] = $diff;
             }
         }
 
@@ -475,11 +475,11 @@ class AccountController extends Controller
             ];
             $currentStart = clone $start;
             $range        = Steam::balanceInRange($account, $start, clone $end);
-            $previous     = round(array_values($range)[0], 2);
+            $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->formatLocalized(strval(trans('config.month_and_day')));
-                $balance  = isset($range[$format]) ? round($range[$format], 2) : $previous;
+                $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;

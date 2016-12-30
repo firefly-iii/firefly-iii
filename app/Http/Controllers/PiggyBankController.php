@@ -219,7 +219,7 @@ class PiggyBankController extends Controller
         $accounts = [];
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
-            $piggyBank->savedSoFar = round($piggyBank->currentRelevantRep()->currentamount, 2);
+            $piggyBank->savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
             $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = bcsub($piggyBank->targetamount, strval($piggyBank->savedSoFar));
             $piggyBank->percentage = $piggyBank->percentage > 100 ? 100 : $piggyBank->percentage;
@@ -234,7 +234,7 @@ class PiggyBankController extends Controller
                     'balance'           => Steam::balanceIgnoreVirtual($account, $end),
                     'leftForPiggyBanks' => $piggyBank->leftOnAccount($end),
                     'sumOfSaved'        => strval($piggyBank->savedSoFar),
-                    'sumOfTargets'      => strval(round($piggyBank->targetamount, 2)),
+                    'sumOfTargets'      => $piggyBank->targetamount,
                     'leftToSave'        => $piggyBank->leftToSave,
                 ];
             } else {
@@ -279,15 +279,15 @@ class PiggyBankController extends Controller
      */
     public function postAdd(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = strval(round($request->get('amount'), 2));
+        $amount = $request->get('amount');
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $piggyBank->leftOnAccount($date);
         $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
+        $maxAmount     = strval(min(round($leftOnAccount, 12), round($leftToSave, 12)));
 
-        if ($amount <= $maxAmount) {
+        if (bccomp($amount, $maxAmount) === -1) {
             $repetition                = $piggyBank->currentRelevantRep();
             $currentAmount             = $repetition->currentamount ?? '0';
             $repetition->currentamount = bcadd($currentAmount, $amount);
@@ -319,11 +319,11 @@ class PiggyBankController extends Controller
      */
     public function postRemove(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = strval(round($request->get('amount'), 2));
+        $amount = strval(round($request->get('amount'), 12));
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
-        if ($amount <= $savedSoFar) {
+        if (bccomp($amount, $savedSoFar) === -1) {
             $repetition                = $piggyBank->currentRelevantRep();
             $repetition->currentamount = bcsub($repetition->currentamount, $amount);
             $repetition->save();

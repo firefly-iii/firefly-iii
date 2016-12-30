@@ -231,9 +231,9 @@ class BudgetController extends Controller
         $current  = clone $start;
         while ($current < $end) {
 
-            $currentStart = Navigation::startOfPeriod($current, $range);
-            $currentEnd   = Navigation::endOfPeriod($current, $range);
-            $budgetLimits = $repository->getBudgetLimits($budget, $currentStart, $currentEnd);
+            $currentStart     = Navigation::startOfPeriod($current, $range);
+            $currentEnd       = Navigation::endOfPeriod($current, $range);
+            $budgetLimits     = $repository->getBudgetLimits($budget, $currentStart, $currentEnd);
             $index            = $currentStart->format($key);
             $budgeted[$index] = $budgetLimits->sum('amount');
             $currentEnd->addDay();
@@ -258,7 +258,7 @@ class BudgetController extends Controller
             $label                           = $periods[$period];
             $spent                           = isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0';
             $limit                           = isset($budgeted[$period]) ? $budgeted[$period] : 0;
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 2);
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = $limit;
 
         }

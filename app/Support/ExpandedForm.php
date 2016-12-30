@@ -506,7 +506,7 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (!is_null($value) && $value !== '') {
-            $value = round($value, 2);
+            $value = round($value, $defaultCurrency->decimal_places);
         }
 
 

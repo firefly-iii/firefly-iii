@@ -35,27 +35,10 @@ class BalanceLine
 
     /** @var BudgetModel */
     protected $budget;
-    /** @var int */
-    protected $role = self::ROLE_DEFAULTROLE;
-
     /** @var  BudgetLimit */
     protected $budgetLimit;
-
-    /**
-     * @return BudgetLimit
-     */
-    public function getBudgetLimit(): BudgetLimit
-    {
-        return $this->budgetLimit;
-    }
-
-    /**
-     * @param BudgetLimit $budgetLimit
-     */
-    public function setBudgetLimit(BudgetLimit $budgetLimit)
-    {
-        $this->budgetLimit = $budgetLimit;
-    }
+    /** @var int */
+    protected $role = self::ROLE_DEFAULTROLE;
 
     /**
      *
@@ -104,6 +87,22 @@ class BalanceLine
     public function setBudget(BudgetModel $budget)
     {
         $this->budget = $budget;
+    }
+
+    /**
+     * @return BudgetLimit
+     */
+    public function getBudgetLimit(): BudgetLimit
+    {
+        return $this->budgetLimit;
+    }
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     */
+    public function setBudgetLimit(BudgetLimit $budgetLimit)
+    {
+        $this->budgetLimit = $budgetLimit;
     }
 
     /**

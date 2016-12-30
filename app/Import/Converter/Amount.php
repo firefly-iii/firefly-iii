@@ -62,7 +62,7 @@ class Amount extends BasicConverter implements ConverterInterface
         $this->setCertainty(90);
 
 
-        return round(floatval($value), 4);
+        return round(floatval($value), 12);
 
     }
 }

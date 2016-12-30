@@ -58,7 +58,7 @@ class ChartJsGenerator implements GeneratorInterface
     {
         reset($data);
         $first  = current($data);
-        $labels = array_keys($first['entries']);
+        $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
             'count'    => count($data),

@@ -59,7 +59,7 @@ class JournalFormRequest extends Request
 
             // transaction / journal data:
             'description'              => $this->getFieldOrEmptyString('description'),
-            'amount'                   => round($this->get('amount'), 2),
+            'amount'                   => round($this->get('amount'), 12),
             'budget_id'                => intval($this->get('budget_id')),
             'category'                 => $this->getFieldOrEmptyString('category'),
             'source_account_id'        => intval($this->get('source_account_id')),

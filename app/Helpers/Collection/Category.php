@@ -55,7 +55,6 @@ class Category
      */
     public function addTotal(string $add)
     {
-        $add         = strval(round($add, 2));
         $this->total = bcadd($this->total, $add);
     }
 
@@ -79,7 +78,7 @@ class Category
      */
     public function getTotal(): string
     {
-        return strval(round($this->total, 2));
+        return $this->total;
     }
 
 

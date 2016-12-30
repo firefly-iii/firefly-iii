@@ -245,8 +245,8 @@ class BudgetReportController extends Controller
                 $currentExpenses                                    = $expenses[$budget->id] ?? '0';
                 $sumOfExpenses[$budget->id]                         = $sumOfExpenses[$budget->id] ?? '0';
                 $sumOfExpenses[$budget->id]                         = bcadd($currentExpenses, $sumOfExpenses[$budget->id]);
-                $chartData[$budget->id]['entries'][$label]          = round(bcmul($currentExpenses, '-1'), 2);
-                $chartData[$budget->id . '-sum']['entries'][$label] = round(bcmul($sumOfExpenses[$budget->id], '-1'), 2);
+                $chartData[$budget->id]['entries'][$label]          = bcmul($currentExpenses, '-1');
+                $chartData[$budget->id . '-sum']['entries'][$label] = bcmul($sumOfExpenses[$budget->id], '-1');
 
                 if (count($budgetLimits) > 0) {
                     $budgetLimitId                                       = $budgetLimits->first()->id;

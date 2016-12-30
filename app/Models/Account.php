@@ -318,7 +318,7 @@ class Account extends Model
      */
     public function setVirtualBalanceAttribute($value)
     {
-        $this->attributes['virtual_balance'] = strval(round($value, 2));
+        $this->attributes['virtual_balance'] = strval(round($value, 12));
     }
 
     /**

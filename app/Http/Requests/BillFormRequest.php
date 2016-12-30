@@ -40,10 +40,10 @@ class BillFormRequest extends Request
         return [
             'name'                          => $this->get('name'),
             'match'                         => $this->get('match'),
-            'amount_min'                    => round($this->get('amount_min'), 2),
+            'amount_min'                    => round($this->get('amount_min'), 12),
             'amount_currency_id_amount_min' => intval($this->get('amount_currency_id_amount_min')),
             'amount_currency_id_amount_max' => intval($this->get('amount_currency_id_amount_max')),
-            'amount_max'                    => round($this->get('amount_max'), 2),
+            'amount_max'                    => round($this->get('amount_max'), 12),
             'date'                          => new Carbon($this->get('date')),
             'repeat_freq'                   => $this->get('repeat_freq'),
             'skip'                          => intval($this->get('skip')),
