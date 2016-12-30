@@ -189,7 +189,7 @@ class BudgetController extends Controller
 
         return view(
             'budgets.index',
-            compact('available', 'periodStart', 'periodEnd', 'budgetInformation', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
+            compact('available', 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets', 'spent', 'budgeted')
         );
     }
 
