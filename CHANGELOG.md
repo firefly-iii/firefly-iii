@@ -298,7 +298,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Bug in the mass edit routines.
-- Firefly III over a proxy will now work (see [issue #290](https://github.com/JC5/firefly-iii/issues/290)), thanks @dfiel for reporting.
+- Firefly III over a proxy will now work (see [issue #290](https://github.com/firefly-iii/firefly-iii/issues/290)), thanks @dfiel for reporting.
 - Sneaky bug in the import routine, fixed by @Bonno 
 
 ## [3.10.1] - 2016-08-25

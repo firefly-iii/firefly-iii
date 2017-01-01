@@ -15,13 +15,13 @@
     "management"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/JC5/firefly-iii",
+  "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "authors": [
     {
       "name": "James Cole",
       "email": "thegrumpydictator@gmail.com",
-      "homepage": "https://github.com/JC5",
+      "homepage": "https://github.com/firefly-iii",
       "role": "Developer"
     }
   ],
