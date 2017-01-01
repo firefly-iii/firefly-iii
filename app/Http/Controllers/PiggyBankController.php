@@ -280,6 +280,7 @@ class PiggyBankController extends Controller
     public function postAdd(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $amount = $request->get('amount');
+        Log::debug(sprintf('Found amount is %s', $amount));
         /** @var Carbon $date */
         $date          = session('end', Carbon::now()->endOfMonth());
         $leftOnAccount = $piggyBank->leftOnAccount($date);
@@ -287,7 +288,7 @@ class PiggyBankController extends Controller
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = strval(min(round($leftOnAccount, 12), round($leftToSave, 12)));
 
-        if (bccomp($amount, $maxAmount) === -1) {
+        if (bccomp($amount, $maxAmount) <= 0) {
             $repetition                = $piggyBank->currentRelevantRep();
             $currentAmount             = $repetition->currentamount ?? '0';
             $repetition->currentamount = bcadd($currentAmount, $amount);
