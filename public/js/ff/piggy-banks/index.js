@@ -73,7 +73,7 @@ function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
     var order = [];
-    $.each($('#sortable>tbody>tr'), function (i, v) {
+    $.each($('#sortable-piggy>tbody>tr'), function (i, v) {
         var holder = $(v);
         var id = holder.data('id');
         order.push(id);
