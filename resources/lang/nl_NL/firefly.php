@@ -103,6 +103,7 @@ return [
     'all_periods'                                => 'Alle perioden',
     'current_period'                             => 'Current period',
     'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
+    'pref_languages_locale'                      => 'For a language other than English to work properly, your operating system must be equipped with the correct locale-information. If these are not present, currency data, dates and amounts may be formatted wrong.',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
