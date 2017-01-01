@@ -84,7 +84,7 @@ return [
     'destination_accounts'                       => 'Zielkonto',
     'user_id_is'                                 => 'Ihre Benutzerkennung ist <strong>:user</strong>',
     'field_supports_markdown'                    => 'Diese Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/"> Abschlag </a>.',
-    'need_more_help'                             => 'Wenn Sie weitere Hilfe für das Verwenden von Firefly III benötigen, <a href="https://github.com/JC5/firefly-iii/issues">öffnen Sie ein Ticket auf Github</a>.',
+    'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/firefly-iii/firefly-iii/issues">open a ticket on Github</a>.',
     'nothing_to_display'                         => 'Es gibt keine Transaktionen zum Anzeigen',
     'show_all_no_filter'                         => 'Alle Transaktionen anzeigen, ohne diese nach Datum zu gruppieren.',
     'expenses_by_category'                       => 'Ausgaben nach Kategorie',
