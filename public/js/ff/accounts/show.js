@@ -92,4 +92,5 @@ function sortStop(event, ui) {
         $(this).animate({backgroundColor: originalBG}, 200);
         return undefined;
     });
+    return undefined;
 }

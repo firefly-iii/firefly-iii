@@ -112,7 +112,7 @@ return [
             'Cash account'        => 'cash',
         ],
     'languages'                => [
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => false],
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => true],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish', 'complete' => false],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
