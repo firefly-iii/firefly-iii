@@ -84,7 +84,7 @@ return [
     'destination_accounts'                       => 'Doelrekening(en)',
     'user_id_is'                                 => 'Je gebruikersnummer is <strong>:user</strong>',
     'field_supports_markdown'                    => 'Dit veld ondersteunt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
-    'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/firefly-iii/firefly-iii/issues">open a ticket on Github</a>.',
+    'need_more_help'                             => 'Als je meer hulp nodig hebt met Firefly III, <a href="https://github.com/firefly-iii/firefly-iii/issues">open dan een ticket op Github</a>.',
     'nothing_to_display'                         => 'Er zijn hier geen transacties te zien',
     'show_all_no_filter'                         => 'Laat alle transacties zien, zonder te groeperen op datum.',
     'expenses_by_category'                       => 'Uitgaven per categorie',
@@ -101,11 +101,11 @@ return [
     'cannot_reset_demo_user'                     => 'Je kan het wachtwoord van de demonstratie-account niet resetten',
     'per_period'                                 => 'Per periode',
     'all_periods'                                => 'Alle perioden',
-    'current_period'                             => 'Current period',
+    'current_period'                             => 'Huidige periode',
     'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
-    'pref_languages_locale'                      => 'For a language other than English to work properly, your operating system must be equipped with the correct locale-information. If these are not present, currency data, dates and amounts may be formatted wrong.',
-    'budget_in_period'                           => '":name" between :start and :end',
-    'budget_in_period_breadcrumb'                => 'Between :start and :end',
+    'pref_languages_locale'                      => 'Als je hier een andere taal dan Engels hebt geselecteerd, zorg er dan voor dat je besturingssysteem ook in staat is om valuta, data en bedragen in die taal weer te geven.',
+    'budget_in_period'                           => '":name" tussen :start en :end',
+    'budget_in_period_breadcrumb'                => 'Tussen :start en :end',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -829,7 +829,7 @@ return [
     'transaction_journal_information'      => 'Transactieinformatie',
     'transaction_journal_meta'             => 'Metainformatie',
     'total_amount'                         => 'Totaalbedrag',
-    'number_of_decimals'                   => 'Number of decimals',
+    'number_of_decimals'                   => 'Aantal decimalen',
 
     // administration
     'administration'                       => 'Administratie',
