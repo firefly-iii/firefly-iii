@@ -8,8 +8,8 @@
  */
 
 return [
-    'no_demo_text'                   => 'Sorry, there is no extra demo-explanation text for <abbr title=":route">this page</abbr>.',
-    'see_help_icon'                  => 'However, the <i class="fa fa-question-circle"></i>-icon in the top right corner may tell you more.',
+    'no_demo_text'                   => 'Leider gibt es keine zusätzlichen Demoerklärungen für <abbr title=":route">diese Seite</abbr>.',
+    'see_help_icon'                  => 'Trotzdem kann der <i class="fa fa-question-circle"></i>-Icon in der oberen rechten Ecke mehr erzählen.',
     'index'                          => 'Welcome to <strong>Firefly III</strong>! On this page you get a quick overview of your finances. For more information, check out Accounts &rarr; <a href=":asset">Asset Accounts</a> and of course the <a href=":budgets">Budgets</a> and <a href=":reports">Reports</a> pages. Or just take a look around and see where you end up.',
     'accounts-index'                 => 'Asset accounts are your personal bank ac   counts. Expense accounts are the accounts you spend money at, such as stores and friends. Revenue accounts are accounts you receive money from, such as your job, the government or other sources of income. On this page you can edit or remove them.',
     'budgets-index'                  => 'This page shows you an overview of your budgets. The top bar shows the amount that is available to be budgeted. This can be customized for any period by clicking the amount on the right. The amount you\'ve actually spent is shown in the bar below. Below that are the expenses per budget and what you\'ve budgeted for them.',
