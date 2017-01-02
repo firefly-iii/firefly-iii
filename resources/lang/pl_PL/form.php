@@ -12,9 +12,9 @@
 return [
 
     // new user:
-    'bank_name'                      => 'Bank name',
-    'bank_balance'                   => 'Balance',
-    'savings_balance'                => 'Savings balance',
+    'bank_name'                      => 'Nazwa banku',
+    'bank_balance'                   => 'Saldo',
+    'savings_balance'                => 'Saldo oszczędności',
     'credit_card_limit'              => 'Credit card limit',
     'automatch'                      => 'Match automatically',
     'skip'                           => 'Skip',
