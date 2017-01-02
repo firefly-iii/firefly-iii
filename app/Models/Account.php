@@ -69,10 +69,14 @@ class Account extends Model
     /**
      * @param array $fields
      *
-     * @return Account|null
+     * @return Account
+     * @throws FireflyException
      */
     public static function firstOrCreateEncrypted(array $fields)
     {
+        if (!isset($fields['user_id'])) {
+            throw new FireflyException('Missing required field "user_id".');
+        }
         // everything but the name:
         $query  = self::orderBy('id');
         $search = $fields;
@@ -81,16 +85,20 @@ class Account extends Model
         foreach ($search as $name => $value) {
             $query->where($name, $value);
         }
-        $set = $query->get(['accounts.*']);
+        $set       = $query->get(['accounts.*']);
+
+        // account must have a name. If not set, use IBAN.
+        if (!isset($fields['name'])) {
+            $fields['name'] = $fields['iban'];
+        }
+
+
+
         /** @var Account $account */
         foreach ($set as $account) {
             if ($account->name == $fields['name']) {
                 return $account;
             }
-        }
-        // account must have a name. If not set, use IBAN.
-        if (!isset($fields['name'])) {
-            $fields['name'] = $fields['iban'];
         }
 
         // create it!
