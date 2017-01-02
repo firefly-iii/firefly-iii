@@ -79,7 +79,6 @@ function updateForm() {
             }
 
             break;
-        default:
         case 'transfer':
             // show source_id and dest_id:
             $('#source_account_id_holder').show();
@@ -97,6 +96,9 @@ function updateForm() {
             } else {
                 $('#piggy_bank_id_holder').show();
             }
+            break;
+        default:
+            // no action.
             break;
     }
 }
