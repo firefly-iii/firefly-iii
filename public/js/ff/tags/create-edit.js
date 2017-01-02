@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: zoomLevel, latitude, longitude, google */
+/** global: zoomLevel, latitude, longitude, google, apiKey */
 
 $(function () {
     "use strict";

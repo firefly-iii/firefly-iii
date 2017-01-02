@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: what */
+
 $(document).ready(function () {
     "use strict";
 

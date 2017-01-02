@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: moment, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop */
+/** global: moment, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
 
 
 $(function () {

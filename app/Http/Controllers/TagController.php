@@ -76,6 +76,7 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
+        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         $preFilled = [
             'tagMode' => 'nothing',
@@ -91,7 +92,7 @@ class TagController extends Controller
         Session::flash('gaEventCategory', 'tags');
         Session::flash('gaEventAction', 'create');
 
-        return view('tags.create', compact('subTitle', 'subTitleIcon'));
+        return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
     }
 
     /**
@@ -138,6 +139,7 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
+        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         /*
          * Default tag options (again)
@@ -167,7 +169,7 @@ class TagController extends Controller
         Session::flash('gaEventCategory', 'tags');
         Session::flash('gaEventAction', 'edit');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions', 'apiKey'));
     }
 
     /**

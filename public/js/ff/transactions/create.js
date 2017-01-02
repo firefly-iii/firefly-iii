@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt */
+/** global: what, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, doSwitch, middleCrumbUrl */
 
 $(document).ready(function () {
     "use strict";
@@ -37,7 +37,6 @@ function updateForm() {
 
     $('input[name="what"]').val(what);
     switch (what) {
-        default:
         case 'withdrawal':
             // show source_id and dest_name:
             $('#source_account_id_holder').show();
@@ -80,6 +79,7 @@ function updateForm() {
             }
 
             break;
+        default:
         case 'transfer':
             // show source_id and dest_id:
             $('#source_account_id_holder').show();

@@ -80,7 +80,9 @@
         var zoomLevel = 6;
         {% endif %}
 
+        var apiKey = "{{ apiKey }}";
+
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
-    <script src="js/ff/tags/create.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
+    <script src="js/ff/tags/create-edit.js"></script>
 {% endblock %}

@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: originalSum, amount, accounting */
+/** global: originalSum, accounting */
 
 var destAccounts = {};
 var srcAccounts = {};
@@ -61,7 +61,6 @@ function cloneRow() {
     "use strict";
     var source = $('.table.split-table tbody tr').last().clone();
     var count = $('.split-table tbody tr').length + 1;
-    var index = count - 1;
     source.removeClass('initial-row');
     source.find('.count').text('#' + count);
 
@@ -162,6 +161,6 @@ function calculateSum() {
     if (sum != originalSum) {
         var holder = $('#journal_amount_holder');
         var par = holder.find('p.form-control-static');
-        var amount = $('<span>').text(' (' + accounting.formatMoney(sum) + ')').addClass('text-danger amount-warning').appendTo(par);
+        $('<span>').text(' (' + accounting.formatMoney(sum) + ')').addClass('text-danger amount-warning').appendTo(par);
     }
 }

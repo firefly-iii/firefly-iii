@@ -147,7 +147,7 @@ function doubleYNonStackedChart(URI, container) {
         {
             display: true,
             ticks: {
-                callback: function (tickValue, index, ticks) {
+                callback: function (tickValue) {
                     "use strict";
                     return accounting.formatMoney(tickValue);
 
@@ -161,7 +161,7 @@ function doubleYNonStackedChart(URI, container) {
         {
             display: true,
             ticks: {
-                callback: function (tickValue, index, ticks) {
+                callback: function (tickValue) {
                     "use strict";
                     return accounting.formatMoney(tickValue);
 

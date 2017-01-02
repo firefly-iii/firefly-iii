@@ -15,7 +15,7 @@ $(function () {
 
     if ($('#inputDateRange').length > 0) {
 
-        var picker = $('#inputDateRange').daterangepicker(
+        $('#inputDateRange').daterangepicker(
             {
                 locale: {
                     format: 'YYYY-MM-DD',

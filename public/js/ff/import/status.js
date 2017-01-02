@@ -49,7 +49,7 @@ function updateBar(data) {
         $('#import-status-bar').text(data.stepsDone + '/' + data.steps);
 
         if (data.percentage >= 100) {
-            importComplete(data);
+            importComplete();
             return;
         }
         return;
