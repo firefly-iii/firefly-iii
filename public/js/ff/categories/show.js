@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: all, current, specific */
+
 $(function () {
     "use strict";
     columnChart(all, 'all');

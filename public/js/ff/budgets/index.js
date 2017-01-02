@@ -72,7 +72,7 @@ function updateBudgetedAmounts(e) {
         drawBudgetedBar();
 
         // send a post to Firefly to update the amount:
-        $.post('budgets/amount/' + id, {amount: value, _token: token}).done(function (data) {
+        $.post('budgets/amount/' + id, {amount: value}).done(function (data) {
             // update the link if relevant:
             if (data.repetition > 0) {
                 $('.budget-link[data-id="' + id + '"]').attr('href', 'budgets/show/' + id + '/' + data.repetition);

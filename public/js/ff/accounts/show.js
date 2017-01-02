@@ -70,6 +70,7 @@ function sortStop(event, ui) {
         // animate something with color:
         current.animate({backgroundColor: "#d9534f"}, 200, function () {
             $(this).animate({backgroundColor: originalBG}, 200);
+            return undefined;
         });
 
         return false;
