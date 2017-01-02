@@ -96,14 +96,14 @@
                                 <table class="table table-hover">
                                     {% if entry[2] != 0 %}
                                         <tr>
-                                            <td colspan="33%">{{ 'spent'|_ }}</td>
-                                            <td colspan="67%">{{ entry[2]|formatAmount }}</td>
+                                            <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                            <td style="text-align: right;">{{ entry[2]|formatAmount }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if entry[3] != 0 %}
                                         <tr>
-                                            <td colspan="33%">{{ 'earned'|_ }}</td>
-                                            <td colspan="67%">{{ entry[3]|formatAmount }}</td>
+                                            <td style="width:33%;">{{ 'earned'|_ }}</td>
+                                            <td style="text-align: right;">{{ entry[3]|formatAmount }}</td>
                                         </tr>
                                     {% endif %}
                                 </table>

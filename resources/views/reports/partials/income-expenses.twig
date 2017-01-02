@@ -2,8 +2,8 @@
     <thead>
     <tr>
         <th data-defaultsign="az">{{ 'name'|_ }}</th>
-        <th data-defaultsign="_19">{{ 'total'|_ }}</th>
-        <th data-defaultsign="_19" class="hidden-xs">{{ 'average'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ 'average'|_ }}</th>
         <th data-defaultsort="disabled"></th>
     </tr>
     </thead>
@@ -25,10 +25,10 @@
                 </small>
             {% endif %}
         </td>
-        <td data-value="{{ entry.sum }}">
+        <td data-value="{{ entry.sum }}" style="text-align: right;">
             {{ (entry.sum)|formatAmount }}
         </td>
-        <td class="hidden-xs" data-value="{{ entry.average }}">
+        <td class="hidden-xs" data-value="{{ entry.average }}" style="text-align: right;">
             {% if entry.count > 1 %}
                 {{ entry.average|formatAmount }}
             {% else %}
@@ -52,7 +52,7 @@
     {% endif %}
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
-        <td>{{ (sum)|formatAmount }}</td>
+        <td style="text-align: right;">{{ (sum)|formatAmount }}</td>
     </tr>
     </tfoot>
 </table>

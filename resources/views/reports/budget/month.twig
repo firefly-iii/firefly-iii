@@ -17,7 +17,7 @@
                         <thead>
                         <tr>
                             <th data-defaultsign="az">{{ 'name'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+                            <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -27,9 +27,9 @@
                                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
                                 </td>
                                 {% if accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id] }}">{{ accountSummary[account.id]|formatAmount }}</td>
+                                    <td data-value="{{ accountSummary[account.id] }}" style="text-align: right;">{{ accountSummary[account.id]|formatAmount }}</td>
                                 {% else %}
-                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -47,7 +47,7 @@
                         <thead>
                         <tr>
                             <th data-defaultsign="az">{{ 'name'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+                            <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,9 +57,9 @@
                                     <a href="{{ route('budgets.show', budget.id) }}" title="{{ budget.name }}">{{ budget.name }}</a>
                                 </td>
                                 {% if budgetSummary[budget.id] %}
-                                    <td data-value="{{ budgetSummary[budget.id] }}">{{ budgetSummary[budget.id]|formatAmount }}</td>
+                                    <td data-value="{{ budgetSummary[budget.id] }}" style="text-align: right;">{{ budgetSummary[budget.id]|formatAmount }}</td>
                                 {% else %}
-                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -133,8 +133,8 @@
                             <thead>
                             <tr>
                                 <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'spent_average'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'total'|_ }}</th>
+                                <th data-defaultsign="_19" style="text-align: right;">{{ 'spent_average'|_ }}</th>
+                                <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
                                 <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
                             </tr>
                             </thead>
@@ -148,10 +148,10 @@
                                 <td data-value="{{ row.name }}">
                                     <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
                                 </td>
-                                <td data-value="{{ row.average }}">
+                                <td data-value="{{ row.average }}" style="text-align: right;">
                                     {{ row.average|formatAmount }}
                                 </td>
-                                <td data-value="{{ row.sum }}">
+                                <td data-value="{{ row.sum }}" style="text-align: right;">
                                     {{ row.sum|formatAmount }}
                                 </td>
                                 <td data-value="{{ row.count }}">
@@ -188,7 +188,7 @@
                                 <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
                                 <th data-defaultsign="month">{{ 'date'|_ }}</th>
                                 <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'amount'|_ }}</th>
+                                <th data-defaultsign="_19" style="text-align: right;">{{ 'amount'|_ }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -215,7 +215,7 @@
                                         {{ row.opposing_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}">
+                                <td data-value="{{ row.transaction_amount }}" style="text-align: right;">
                                     {{ row.transaction_amount|formatAmount }}
                                 </td>
                                 </tr>
