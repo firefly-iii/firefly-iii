@@ -22,7 +22,7 @@ return [
     |
     */
 
-    'failed'   => 'These credentials do not match our records.',
+    'failed'   => 'Te poświadczenia nie zgadzają się z naszymi danymi.',
     'throttle' => 'Zbyt wiele prób logowania. Spróbuj ponownie za :seconds sekund.',
 
 ];
