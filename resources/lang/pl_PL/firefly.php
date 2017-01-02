@@ -889,13 +889,13 @@ return [
     'add_another_split'                    => 'Dodaj kolejny podział',
     'split-transactions'                   => 'Podziel transakcję',
     'split-new-transaction'                => 'Podziel nową transakcję',
-    'do_split'                             => 'Do a split',
-    'split_this_withdrawal'                => 'Split this withdrawal',
-    'split_this_deposit'                   => 'Split this deposit',
-    'split_this_transfer'                  => 'Split this transfer',
+    'do_split'                             => 'Podziel',
+    'split_this_withdrawal'                => 'Podziel tą wypłatę',
+    'split_this_deposit'                   => 'Podziel ten depozyt',
+    'split_this_transfer'                  => 'Podziel ten transfer',
     'cannot_edit_multiple_source'          => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple source accounts.',
     'cannot_edit_multiple_dest'            => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
-    'no_edit_multiple_left'                => 'You have selected no valid transactions to edit.',
+    'no_edit_multiple_left'                => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
 
     // import
     'configuration_file_help'              => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
