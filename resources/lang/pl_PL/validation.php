@@ -11,12 +11,12 @@
 
 return [
     'iban'                           => 'To nie jest prawidłowy IBAN.',
-    'unique_account_number_for_user' => 'It looks like this account number is already in use.',
-    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
+    'unique_account_number_for_user' => 'Wygląda na to, że ten numer konta jest już w użyciu.',
+    'deleted_user'                   => 'Ze względu na zabezpieczenia nie możesz się zarejestrować używając tego adresu e-mail.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
-    'rule_action_value'              => 'This value is invalid for the selected action.',
-    'invalid_domain'                 => 'Due to security constraints, you cannot register from this domain.',
-    'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
+    'rule_action_value'              => 'Ta wartość jest nieprawidłowa dla wybranej akcji.',
+    'invalid_domain'                 => 'Ze względu na zabezpieczenia nie możesz się zarejestrować z tej domeny.',
+    'file_already_attached'          => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
     'file_attached'                  => 'Pomyślnie wgrano plik ":name".',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
     'file_too_large'                 => 'Plik ": nazwa" jest zbyt duży.',
