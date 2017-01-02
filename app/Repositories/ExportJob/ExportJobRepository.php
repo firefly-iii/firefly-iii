@@ -124,7 +124,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     /**
      * @param string $key
      *
-     * @return ExportJob|null
+     * @return ExportJob
      */
     public function findByKey(string $key): ExportJob
     {
