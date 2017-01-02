@@ -49,6 +49,7 @@ class ChartJsGenerator implements GeneratorInterface
      *        ]
      *    ]
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five.
      *
      * @param array $data
      *

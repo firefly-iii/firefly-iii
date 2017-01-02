@@ -65,7 +65,12 @@ class CategoryController extends Controller
             return Response::json($cache->get());
         }
 
-        $start     = $repository->firstUseDate($category);
+        $start = $repository->firstUseDate($category);
+
+        if ($start->year == 1900) {
+            $start = new Carbon;
+        }
+
         $range     = Preferences::get('viewRange', '1M')->data;
         $start     = Navigation::startOfPeriod($start, $range);
         $end       = new Carbon;

@@ -40,6 +40,8 @@ interface ExporterInterface
     /**
      * @param Collection $entries
      *
+     * @return void
+     *
      */
     public function setEntries(Collection $entries);
 

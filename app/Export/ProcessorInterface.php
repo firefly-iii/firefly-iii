@@ -27,6 +27,7 @@ interface ProcessorInterface
      * Processor constructor.
      *
      * @param array $settings
+     *
      */
     public function __construct(array $settings);
 
