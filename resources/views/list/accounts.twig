@@ -10,7 +10,8 @@
         <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
-        <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
+        <th data-defaultsign="_19"
+            class="hidden-sm hidden-xs">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
     </tr>
     </thead>
     <tbody>
@@ -33,7 +34,11 @@
                 </td>
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}</td>
-            <td data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
+            <td data-value="{{ account.endBalance }}" style="text-align: right;">
+                <span style="margin-right:5px;">
+                {{ account.endBalance|formatAmount }}
+                </span>
+            </td>
             <td class="hidden-sm hidden-xs" data-value="{{ account.active }}">
                 {% if account.active %}
                     <i class="fa fa-fw fa-check"></i>
@@ -50,8 +55,10 @@
                     <em>{{ 'never'|_ }}</em>
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs" data-value="{{ account.difference }}">
+            <td class="hidden-sm hidden-xs" data-value="{{ account.difference }}" style="text-align: right;">
+                <span style="margin-right:5px;">
                 {{ (account.difference)|formatAmount }}
+                </span>
             </td>
 
         </tr>
