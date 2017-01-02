@@ -42,7 +42,7 @@ return [
     'internal_reference'    => 'Internal reference',
     'date'                  => 'Data',
     'interest_date'         => 'Interest date',
-    'book_date'             => 'Book date',
+    'book_date'             => 'Data księgowania',
     'process_date'          => 'Processing date',
     'due_date'              => 'Termin realizacji',
     'payment_date'          => 'Data płatności',
