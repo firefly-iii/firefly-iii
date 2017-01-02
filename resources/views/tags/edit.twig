@@ -61,7 +61,7 @@
         {% if Input.old('latitude') %}
         var latitude = {{ Input.old('latitude') }};
         {% else %}
-        var latitude = {{ tag.latitude }};
+        var latitude = {{ tag.latitude|default("52.3167") }};
         {% endif %}
 
         {% if (Input.old('latitude') and Input.old('longitude') and Input.old('zoomLevel'))
@@ -74,13 +74,13 @@
         {% if Input.old('longitude') %}
         var longitude = "{{ Input.old('longitude') }}";
         {% else %}
-        var longitude = {{ tag.longitude }};
+        var longitude = {{ tag.longitude|default("5.5500") }};
         {% endif %}
 
         {% if Input.old('zoomLevel') %}
         var zoomLevel = {{ Input.old('zoomLevel') }};
         {% else %}
-        var zoomLevel = {{ tag.zoomLevel }};
+        var zoomLevel = {{ tag.zoomLevel|default("6") }};
         {% endif %}
 
         var apiKey = "{{ apiKey }}";
