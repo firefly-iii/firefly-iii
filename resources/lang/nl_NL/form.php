@@ -63,7 +63,7 @@ return [
     'description'                    => 'Omschrijving',
     'expense_account'                => 'Crediteur',
     'revenue_account'                => 'Debiteur',
-    'decimal_places'                 => 'Decimal places',
+    'decimal_places'                 => 'Aantal decimalen',
 
     'revenue_account_source'      => 'Debiteur (bron)',
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
