@@ -52,14 +52,14 @@ function addNewAction() {
 function removeTrigger(e) {
     "use strict";
     var target = $(e.target);
-    if(target.prop("tagName") == "I") {
+    if (target.prop("tagName") == "I") {
         target = target.parent();
     }
     // remove grand parent:
     target.parent().parent().remove();
 
     // if now at zero, immediatly add one again:
-    if($('.rule-trigger-tbody tr').length == 0) {
+    if ($('.rule-trigger-tbody tr').length == 0) {
         addNewTrigger();
     }
 }
@@ -67,42 +67,41 @@ function removeTrigger(e) {
 function removeAction(e) {
     "use strict";
     var target = $(e.target);
-    if(target.prop("tagName") == "I") {
+    if (target.prop("tagName") == "I") {
         target = target.parent();
     }
     // remove grand parent:
     target.parent().parent().remove();
 
     // if now at zero, immediatly add one again:
-    if($('.rule-action-tbody tr').length == 0) {
+    if ($('.rule-action-tbody tr').length == 0) {
         addNewAction();
     }
 }
 
 function testRuleTriggers() {
-	"use strict";
-	
-	// Serialize all trigger data
-	var triggerData = $( ".rule-trigger-tbody" ).find( "input[type=text], input[type=checkbox], select" ).serializeArray();
-	
-	// Find a list of existing transactions that match these triggers
+    "use strict";
+
+    // Serialize all trigger data
+    var triggerData = $(".rule-trigger-tbody").find("input[type=text], input[type=checkbox], select").serializeArray();
+
+    // Find a list of existing transactions that match these triggers
     $.get('rules/test', triggerData).done(function (data) {
-    	var modal = $( "#testTriggerModal" );
-    	var numTriggers = $( ".rule-trigger-body > tr" ).length;
-    	
-    	// Set title and body
-    	modal.find( ".transactions-list" ).html(data.html);
-    	
-    	// Show warning if appropriate
-    	if( data.warning ) {
-    		modal.find( ".transaction-warning .warning-contents" ).text(data.warning);
-    		modal.find( ".transaction-warning" ).show();
-    	} else {
-    		modal.find( ".transaction-warning" ).hide();
-    	}
-    	
-    	// Show the modal dialog
-    	$( "#testTriggerModal" ).modal();
+        var modal = $("#testTriggerModal");
+
+        // Set title and body
+        modal.find(".transactions-list").html(data.html);
+
+        // Show warning if appropriate
+        if (data.warning) {
+            modal.find(".transaction-warning .warning-contents").text(data.warning);
+            modal.find(".transaction-warning").show();
+        } else {
+            modal.find(".transaction-warning").hide();
+        }
+
+        // Show the modal dialog
+        $("#testTriggerModal").modal();
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
     });

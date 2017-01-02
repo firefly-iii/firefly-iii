@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: triggerCount, actionCount */
+
 $(function () {
     "use strict";
     if (triggerCount === 0) {

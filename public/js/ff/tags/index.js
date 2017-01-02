@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: zoomLevel, latitude, longitude, google */
+
 $(function () {
     "use strict";
 
@@ -60,12 +62,12 @@ function initialize() {
     Respond to zoom event.
      */
     google.maps.event.addListener(map, 'zoom_changed', function () {
-        saveZoomLevel(event);
+        saveZoomLevel();
     });
     /*
     Maybe place marker?
      */
-    if(doPlaceMarker) {
+    if(doPlaceMarker == true) {
         var myLatlng = new google.maps.LatLng(latitude,longitude);
         var fakeEvent = {};
         fakeEvent.latLng = myLatlng;

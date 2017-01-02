@@ -8,6 +8,7 @@
  * See the LICENSE file for details.
  */
 
+/** global: budgetExpenseUri, accountExpenseUri, mainUri */
 
 $(function () {
     "use strict";

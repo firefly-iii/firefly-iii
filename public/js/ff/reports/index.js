@@ -8,12 +8,14 @@
  * See the LICENSE file for details.
  */
 
+/** global: minDate */
+
 $(function () {
     "use strict";
 
     if ($('#inputDateRange').length > 0) {
 
-        picker = $('#inputDateRange').daterangepicker(
+        var picker = $('#inputDateRange').daterangepicker(
             {
                 locale: {
                     format: 'YYYY-MM-DD',
@@ -168,8 +170,12 @@ function readCookie(name) {
     var ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1, c.length);
+        }
+        if (c.indexOf(nameEQ) === 0) {
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
     }
     return null;
 }

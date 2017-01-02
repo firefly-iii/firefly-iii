@@ -52,7 +52,6 @@ function sortStop(event, ui) {
     $.each(parent.children(), function (i, v) {
         var trigger = $(v);
         var id = trigger.data('id');
-        var order = i + 1;
         entries.push(id);
 
     });

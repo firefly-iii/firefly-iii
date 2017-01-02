@@ -8,12 +8,14 @@
  * See the LICENSE file for details.
  */
 
+/** global: what, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt */
+
 $(document).ready(function () {
     "use strict";
 
     // respond to switch buttons when
     // creating stuff:
-    if (doSwitch) {
+    if (doSwitch == true) {
         updateButtons();
         updateForm();
         updateLayout();
@@ -35,6 +37,7 @@ function updateForm() {
 
     $('input[name="what"]').val(what);
     switch (what) {
+        default:
         case 'withdrawal':
             // show source_id and dest_name:
             $('#source_account_id_holder').show();

@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: edit_selected_txt, delete_selected_txt */
+
 $(document).ready(function () {
     "use strict";
     $('.mass_edit_all').show();

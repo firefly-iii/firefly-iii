@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: jobKey */
+
 var intervalId = 0;
 
 $(function () {
@@ -79,7 +81,7 @@ function callExport() {
     // call status, keep calling it until response is "finished"?
     intervalId = window.setInterval(checkStatus, 500);
 
-    $.post('export/submit', data).done(function (data) {
+    $.post('export/submit', data).done(function () {
         // stop polling:
         window.clearTimeout(intervalId);
 

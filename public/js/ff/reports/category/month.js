@@ -8,6 +8,7 @@
  * See the LICENSE file for details.
  */
 
+/** global: categoryIncomeUri, categoryExpenseUri, accountIncomeUri, accountExpenseUri, mainUri */
 
 $(function () {
     "use strict";

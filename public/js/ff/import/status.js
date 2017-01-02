@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: jobImportUrl, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
+
 var startedImport = false;
 var startInterval = 2000;
 var interval = 500;
@@ -31,7 +33,7 @@ function checkImportStatus() {
     $.getJSON(jobImportUrl).done(reportOnJobImport).fail(failedJobImport);
 }
 
-function importComplete(data) {
+function importComplete() {
     "use strict";
     var bar = $('#import-status-bar');
     bar.removeClass('active');

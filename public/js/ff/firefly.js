@@ -7,6 +7,8 @@
  *
  * See the LICENSE file for details.
  */
+/** global: moment, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop */
+
 
 $(function () {
     "use strict";

@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: accountReportUri, incomeReportUri, expenseReportUri, incExpReportUri, startDate, endDate, accountIds */
+
 $(function () {
     "use strict";
 
@@ -45,7 +47,7 @@ function clickInfoButton(e) {
     $.getJSON('popup/general', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
 }
 
-function errorInfoButton(data) {
+function errorInfoButton() {
     "use strict";
     // remove wait cursor
     $('body').removeClass('waiting');

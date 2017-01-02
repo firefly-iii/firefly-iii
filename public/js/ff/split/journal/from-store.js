@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: originalSum, amount, accounting */
+
 var destAccounts = {};
 var srcAccounts = {};
 var categories = {};

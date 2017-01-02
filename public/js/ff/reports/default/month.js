@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: categoryReportUri, budgetReportUri, balanceReportUri, accountChartUri */
+
 $(function () {
     "use strict";
     drawChart();

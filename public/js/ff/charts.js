@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-
+/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart */
 var allCharts = {};
 
 /*
@@ -97,7 +97,7 @@ function doubleYChart(URI, container) {
         {
             display: true,
             ticks: {
-                callback: function (tickValue, index, ticks) {
+                callback: function (tickValue) {
                     "use strict";
                     return accounting.formatMoney(tickValue);
 
@@ -111,7 +111,7 @@ function doubleYChart(URI, container) {
         {
             display: true,
             ticks: {
-                callback: function (tickValue, index, ticks) {
+                callback: function (tickValue) {
                     "use strict";
                     return accounting.formatMoney(tickValue);
 

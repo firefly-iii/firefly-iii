@@ -58,19 +58,19 @@ $(document).ready(function () {
     }
 
 
-    if ($('input[name="description"]').length > 0 && what !== undefined) {
+    if ($('input[name="description"]').length > 0 && !(typeof what === "undefined")) {
         $.getJSON('json/transaction-journals/' + what).done(function (data) {
             $('input[name="description"]').typeahead({source: data});
         });
     }
     // also for multi input:
-    if ($('input[name="description[]"]').length > 0 && what !== undefined) {
+    if ($('input[name="description[]"]').length > 0 && !(typeof what === "undefined")) {
         $.getJSON('json/transaction-journals/' + what).done(function (data) {
             $('input[name="description[]"]').typeahead({source: data});
         });
     }
     // and for the (rare) journal_description:
-    if ($('input[name="journal_description"]').length > 0 && what !== undefined) {
+    if ($('input[name="journal_description"]').length > 0 && !(typeof what === "undefined")) {
         $.getJSON('json/transaction-journals/' + what).done(function (data) {
             $('input[name="journal_description"]').typeahead({source: data});
         });
