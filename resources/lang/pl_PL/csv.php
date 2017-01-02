@@ -30,7 +30,7 @@ return [
     'column_role'            => 'Column data meaning',
     'do_map_value'           => 'Map these values',
     'column'                 => 'Kolumna',
-    'no_example_data'        => 'No example data available',
+    'no_example_data'        => 'Brak dostępnych danych przykładowych',
     'store_column_roles'     => 'Kontynuuj import',
     'do_not_map'             => '(do not map)',
     'map_title'              => 'Connect import data to Firefly III data',
