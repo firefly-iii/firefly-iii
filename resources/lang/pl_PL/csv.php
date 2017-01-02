@@ -73,8 +73,8 @@ return [
     'column_sepa-ct-id'             => 'SEPA Credit Transfer end-to-end ID',
     'column_sepa-ct-op'             => 'SEPA Credit Transfer opposing account',
     'column_sepa-db'                => 'SEPA Direct Debet',
-    'column_tags-comma'             => 'Tags (comma separated)',
-    'column_tags-space'             => 'Tags (space separated)',
+    'column_tags-comma'             => 'Tagi (oddzielone przecinkami)',
+    'column_tags-space'             => 'Tagi (oddzielone spacjami)',
     'column_account-number'         => 'Asset account (account number)',
     'column_opposing-number'        => 'Opposing account (account number)',
 ];
