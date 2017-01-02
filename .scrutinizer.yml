@@ -4,6 +4,7 @@ tools:
 filter:
   paths:
     - app/*
+    - public/js/ff/*
   excluded_paths:
     - "database/migrations/*"
     - "bootstrap/*"
