@@ -11,12 +11,6 @@
 var triggerCount = 0;
 var actionCount = 0;
 
-$(function () {
-    "use strict";
-    console.log('edit-create');
-});
-
-
 function addNewTrigger() {
     "use strict";
     triggerCount++;
@@ -41,7 +35,6 @@ function addNewAction() {
     actionCount++;
 
     $.getJSON('json/action', {count: actionCount}).done(function (data) {
-        //console.log(data.html);
         $('tbody.rule-action-tbody').append(data.html);
 
         // add action things.

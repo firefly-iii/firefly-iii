@@ -18,19 +18,16 @@ $(function () {
 
     $.getJSON('json/expense-accounts').done(function (data) {
         destAccounts = data;
-        console.log('destAccounts length is now ' + destAccounts.length);
         $('input[name$="destination_account_name]"]').typeahead({source: destAccounts});
     });
 
     $.getJSON('json/revenue-accounts').done(function (data) {
         srcAccounts = data;
-        console.log('srcAccounts length is now ' + srcAccounts.length);
         $('input[name$="source_account_name]"]').typeahead({source: srcAccounts});
     });
 
     $.getJSON('json/categories').done(function (data) {
         categories = data;
-        console.log('categories length is now ' + categories.length);
         $('input[name$="category]"]').typeahead({source: categories});
     });
 
@@ -45,12 +42,10 @@ function removeRow(e) {
     "use strict";
     var rows = $('table.split-table tbody tr');
     if (rows.length === 1) {
-        console.log('Will not remove last split');
         return false;
     }
     var row = $(e.target);
     var index = row.data('split');
-    console.log('Trying to remove row with split ' + index);
     $('table.split-table tbody tr[data-split="' + index + '"]').remove();
 
 
@@ -70,16 +65,13 @@ function cloneRow() {
 
     source.find('input[name$="][amount]"]').val("").on('input', calculateSum);
     if (destAccounts.length > 0) {
-        console.log('Will be able to extend dest-accounts.');
         source.find('input[name$="destination_account_name]"]').typeahead({source: destAccounts});
     }
 
     if (destAccounts.length > 0) {
-        console.log('Will be able to extend src-accounts.');
         source.find('input[name$="source_account_name]"]').typeahead({source: srcAccounts});
     }
     if (categories.length > 0) {
-        console.log('Will be able to extend categories.');
         source.find('input[name$="category]"]').typeahead({source: categories});
     }
 
@@ -103,7 +95,6 @@ function resetSplits() {
     $.each($('table.split-table tbody tr'), function (i, v) {
         var row = $(v);
         row.attr('data-split', i);
-        console.log('Row is now ' + row.data('split'));
     });
 
     // loop each remove button, update the index
@@ -111,7 +102,6 @@ function resetSplits() {
         var button = $(v);
         button.attr('data-split', i);
         button.find('i').attr('data-split', i);
-        console.log('Remove button index is now ' + button.data('split'));
 
     });
 
@@ -120,7 +110,6 @@ function resetSplits() {
         var cell = $(v);
         var index = i + 1;
         cell.text('#' + index);
-        console.log('Cell is now ' + cell.text());
     });
 
     // loop each possible field.
@@ -129,37 +118,31 @@ function resetSplits() {
     $.each($('input[name$="][description]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][description]');
-        console.log('description is now ' + input.attr('name'));
     });
     // ends with ][destination_account_name]
     $.each($('input[name$="][destination_account_name]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][destination_account_name]');
-        console.log('destination_account_name is now ' + input.attr('name'));
     });
     // ends with ][source_account_name]
     $.each($('input[name$="][source_account_name]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][source_account_name]');
-        console.log('source_account_name is now ' + input.attr('name'));
     });
     // ends with ][amount]
     $.each($('input[name$="][amount]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][amount]');
-        console.log('amount is now ' + input.attr('name'));
     });
     // ends with ][budget_id]
     $.each($('select[name$="][budget_id]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][budget_id]');
-        console.log('budget_id is now ' + input.attr('name'));
     });
     // ends with ][category]
     $.each($('input[name$="][category]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][category]');
-        console.log('category is now ' + input.attr('name'));
     });
 }
 
@@ -173,10 +156,8 @@ function calculateSum() {
     }
     sum = Math.round(sum * 100) / 100;
 
-    console.log("Sum is now " + sum);
     $('.amount-warning').remove();
     if (sum != originalSum) {
-        console.log(sum + ' does not match ' + originalSum);
         var holder = $('#journal_amount_holder');
         var par = holder.find('p.form-control-static');
         var amount = $('<span>').text(' (' + accounting.formatMoney(sum) + ')').addClass('text-danger amount-warning').appendTo(par);

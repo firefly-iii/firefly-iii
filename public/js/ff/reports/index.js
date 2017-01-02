@@ -26,7 +26,6 @@ $(function () {
 
         // set values from cookies, if any:
         if (!(readCookie('report-type') === null)) {
-            console.log(readCookie('report-type'));
             $('select[name="report_type"]').val(readCookie('report-type'));
         }
 
@@ -61,7 +60,6 @@ function getReportOptions() {
     var reportType = $('select[name="report_type"]').val();
     $('#extra-options').empty();
     $('#extra-options').addClass('loading');
-    console.log('Changed report type to ' + reportType);
 
     $.getJSON('reports/options/' + reportType, function (data) {
         $('#extra-options').removeClass('loading').html(data.html);

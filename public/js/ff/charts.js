@@ -125,7 +125,6 @@ function doubleYChart(URI, container) {
     ];
     options.stacked = true;
     options.scales.xAxes[0].stacked = true;
-    // console.log(options);
 
     var chartType = 'bar';
 
@@ -240,7 +239,6 @@ function pieChart(URI, container) {
  */
 function drawAChart(URI, container, chartType, options, colorData) {
     if ($('#' + container).length === 0) {
-        console.log('No container called ' + container + ' was found.');
         return;
     }
 
@@ -249,7 +247,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
 
 
         if (data.labels.length === 0) {
-            console.log(chartType + " chart in " + container + " has no data.");
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();
             if (holder.hasClass('box') || holder.hasClass('box-body')) {
@@ -261,8 +258,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
                     boxBody = holder;
                 }
                 boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
-            } else {
-                console.log("Want to add text but holder has classes: " + holder.attr("class"));
             }
             return;
         }
@@ -273,13 +268,11 @@ function drawAChart(URI, container, chartType, options, colorData) {
         }
 
         if (allCharts.hasOwnProperty(container)) {
-            console.log('Will draw updated ' + chartType + ' chart');
             allCharts[container].data.datasets = data.datasets;
             allCharts[container].data.labels = data.labels;
             allCharts[container].update();
         } else {
             // new chart!
-            console.log('Will draw new ' + chartType + 'chart');
             var ctx = document.getElementById(container).getContext("2d");
             allCharts[container] = new Chart(ctx, {
                 type: chartType,
@@ -289,8 +282,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
         }
 
     }).fail(function () {
-        console.log('Failed to draw ' + chartType + ' in container ' + container);
         $('#' + container).addClass('general-chart-error');
     });
-    console.log('URL for ' + chartType + ' chart : ' + URI);
 }

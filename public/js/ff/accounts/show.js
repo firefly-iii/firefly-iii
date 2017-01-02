@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri */
+
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -53,8 +55,6 @@ $(function () {
                 }
             }
         ).disableSelection();
-    } else {
-        console.log('its null');
     }
 
 });
@@ -62,7 +62,6 @@ $(function () {
 function sortStop(event, ui) {
     "use strict";
     var current = $(ui.item);
-    console.log('sort stop');
     var thisDate = current.data('date');
     var originalBG = current.css('backgroundColor');
 
@@ -86,7 +85,7 @@ function sortStop(event, ui) {
     });
 
     // do extra animation when done?
-    $.post('transactions/reorder', {items: submit, date: thisDate, _token: token});
+    $.post('transactions/reorder', {items: submit, date: thisDate});
 
     current.animate({backgroundColor: "#5cb85c"}, 200, function () {
         $(this).animate({backgroundColor: originalBG}, 200);

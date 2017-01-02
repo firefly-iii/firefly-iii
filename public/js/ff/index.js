@@ -24,8 +24,6 @@ $(function () {
             tour.init();
             // Start the tour
             tour.start();
-        }).fail(function () {
-            console.log('Already had tour.');
         });
     }
 
@@ -34,7 +32,7 @@ $(function () {
 
 function endTheTour() {
     "use strict";
-    $.post('json/end-tour', {_token: token});
+    $.post('json/end-tour');
 
 }
 
@@ -69,5 +67,4 @@ function putData(data) {
 
 function failData() {
     "use strict";
-    console.log('Failed to get box!');
 }

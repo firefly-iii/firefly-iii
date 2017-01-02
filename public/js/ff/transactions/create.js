@@ -111,7 +111,6 @@ function updateButtons() {
 
         if (button.data('what') == what) {
             button.removeClass('btn-default').addClass('btn-info').html('<i class="fa fa-fw fa-check"></i> ' + txt[button.data('what')]);
-            console.log('Now displaying form for ' + what);
         } else {
             button.removeClass('btn-info').addClass('btn-default').text(txt[button.data('what')]);
         }

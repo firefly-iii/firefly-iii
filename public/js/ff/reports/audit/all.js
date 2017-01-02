@@ -18,7 +18,6 @@ $(function () {
         arr.forEach(function (val) {
             $('input[type="checkbox"][value="' + val + '"]').prop('checked', true);
         });
-        console.log('arr from cookie is ' + arr)
     } else {
         // no cookie? read list, store in array 'arr'
         // all account ids:
@@ -45,7 +44,6 @@ function clickColumnOption() {
 function storeCheckboxes(checkboxes) {
     "use strict";
     // store new cookie with those options:
-    console.log('Store new cookie with those options: ' + checkboxes);
     createCookie('audit-option-checkbox', checkboxes, 365);
 }
 
@@ -59,7 +57,6 @@ function readCheckboxes() {
             checkboxes.push(c.val());
         }
     });
-    console.log('arr is now (default): ' + checkboxes);
     return checkboxes;
 }
 
@@ -69,11 +66,9 @@ function showOnlyColumns(checkboxes) {
     for (var i = 0; i < hideable.length; i++) {
         var opt = hideable[i];
         if(checkboxes.indexOf(opt) > -1) {
-            console.log(opt + ' is in checkboxes');
             $('td.hide-' + opt).show();
             $('th.hide-' + opt).show();
         } else {
-            console.log(opt + ' is NOT in checkboxes');
             $('th.hide-' + opt).hide();
             $('td.hide-' + opt).hide();
         }

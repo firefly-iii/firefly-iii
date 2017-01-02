@@ -10,7 +10,6 @@
 
 $(function () {
     "use strict";
-    console.log("create");
     if (triggerCount === 0) {
         addNewTrigger();
     }
