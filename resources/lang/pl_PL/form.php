@@ -61,8 +61,8 @@ return [
     'returnHereExplanation'          => 'After storing, return here to create another one.',
     'returnHereUpdateExplanation'    => 'Po aktualizacji, wróć tutaj.',
     'description'                    => 'Opis',
-    'expense_account'                => 'Expense account',
-    'revenue_account'                => 'Revenue account',
+    'expense_account'                => 'Konto wydatków',
+    'revenue_account'                => 'Konto przychodów',
     'decimal_places'                 => 'Miejsca dziesiętne',
 
     'revenue_account_source'      => 'Konto przychodów (źródło)',
