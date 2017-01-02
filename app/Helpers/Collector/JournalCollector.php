@@ -563,7 +563,7 @@ class JournalCollector implements JournalCollectorInterface
             return $set;
         }
         if ($this->joinedOpposing === false) {
-            Log::error('Cannot filter internal transfers because no opposing information is present.');
+            Log::info('Cannot filter internal transfers because no opposing information is present.');
 
             return $set;
         }
