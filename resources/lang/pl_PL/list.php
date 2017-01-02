@@ -34,7 +34,7 @@ return [
     'split_number'          => 'Split #',
     'destination'           => 'Cel',
     'source'                => 'Źródło',
-    'next_expected_match'   => 'Next expected match',
+    'next_expected_match'   => 'Następne oczekiwane dopasowanie',
     'automatch'             => 'Auto dopasowanie?',
     'repeat_freq'           => 'Powtarza się',
     'description'           => 'Opis',
