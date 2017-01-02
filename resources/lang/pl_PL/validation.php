@@ -10,7 +10,7 @@
  */
 
 return [
-    'iban'                           => 'This is not a valid IBAN.',
+    'iban'                           => 'To nie jest prawidłowy IBAN.',
     'unique_account_number_for_user' => 'It looks like this account number is already in use.',
     'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
@@ -19,10 +19,10 @@ return [
     'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'                  => 'Succesfully uploaded file ":name".',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
-    'file_too_large'                 => 'File ":name" is too large.',
+    'file_too_large'                 => 'Plik ": nazwa" jest zbyt duży.',
     'belongs_to_user'                => 'The value of :attribute is unknown',
     'accepted'                       => 'The :attribute must be accepted.',
-    'bic'                            => 'This is not a valid BIC.',
+    'bic'                            => 'To nie jest prawidłowy BIC.',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',
     'alpha'                          => 'The :attribute may only contain letters.',
