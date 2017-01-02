@@ -72,9 +72,6 @@
     ],
     "post-install-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postInstall",
-      "php artisan firefly:upgrade-instructions",
-      "php artisan firefly:upgrade-database",
-      "php artisan firefly:verify",
       "php artisan firefly:github-move",
       "php artisan optimize"
     ],
