@@ -39,6 +39,7 @@ checks:
         avoid_fixme_comments: true
         avoid_multiple_statements_on_same_line: true
         align_assignments: true
+        duplication: false
     javascript: true
 
 coding_style:
