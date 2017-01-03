@@ -155,7 +155,7 @@ class Processor implements ProcessorInterface
         $zip->close();
 
         // delete the files:
-        $this->deleteFiles($disk);
+        $this->deleteFiles();
 
         return true;
     }
@@ -183,10 +183,11 @@ class Processor implements ProcessorInterface
     }
 
     /**
-     * @param FilesystemAdapter $disk
+     *
      */
-    private function deleteFiles(FilesystemAdapter $disk)
+    private function deleteFiles()
     {
+        $disk = Storage::disk('export');
         foreach ($this->getFiles() as $file) {
             $disk->delete($file);
         }

@@ -217,8 +217,8 @@ class ConvertController extends Controller
         switch ($joined) {
             default:
                 throw new FireflyException('Cannot handle ' . $joined);
-            case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT: # one
-            case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT: #six
+            case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT: // one
+            case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT: // six
                 $data   = [
                     'name'           => $data['source_account_revenue'],
                     'accountType'    => 'revenue',
@@ -228,14 +228,14 @@ class ConvertController extends Controller
                 ];
                 $source = $accountRepository->store($data);
                 break;
-            case TransactionType::WITHDRAWAL . '-' . TransactionType::TRANSFER: # two
-            case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL: #five
+            case TransactionType::WITHDRAWAL . '-' . TransactionType::TRANSFER: // two
+            case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL: // five
                 $source = $sourceAccount;
                 break;
-            case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL: # three
+            case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL: // three
                 $source = $destinationAccount;
                 break;
-            case TransactionType::DEPOSIT . '-' . TransactionType::TRANSFER: # four
+            case TransactionType::DEPOSIT . '-' . TransactionType::TRANSFER: // four
                 $source = $accountRepository->find(intval($data['source_account_asset']));
                 break;
         }
