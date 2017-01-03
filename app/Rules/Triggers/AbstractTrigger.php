@@ -23,7 +23,7 @@ use FireflyIII\Models\TransactionJournal;
  *
  * @package FireflyIII\Rules\Triggers
  */
-final class AbstractTrigger
+class AbstractTrigger
 {
     /** @var  bool */
     public $stopProcessing;
