@@ -17,6 +17,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
+use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
@@ -75,49 +76,16 @@ class CategoryReportController extends Controller
      */
     public function accountExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.category.report.account-expense');
-        $cache->addProperty($accounts);
-        $cache->addProperty($categories);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        $names     = [];
-        $set       = $this->getExpenses($accounts, $categories, $start, $end);
-        $grouped   = $this->groupByOpposingAccount($set);
-        $chartData = [];
-        $total     = '0';
-
-        foreach ($grouped as $accountId => $amount) {
-            if (!isset($names[$accountId])) {
-                $account           = $this->accountRepository->find(intval($accountId));
-                $names[$accountId] = $account->name;
-            }
-            $amount                        = bcmul($amount, '-1');
-            $total                         = bcadd($total, $amount);
-            $chartData[$names[$accountId]] = $amount;
-        }
-
-        // also collect all transactions NOT in these categories.
-        if ($others) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setCategories($categories);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'account');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
     }
@@ -133,48 +101,16 @@ class CategoryReportController extends Controller
      */
     public function accountIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.category.report.account-income');
-        $cache->addProperty($accounts);
-        $cache->addProperty($categories);
-        $cache->addProperty($start);
-        $cache->addProperty($others);
-        $cache->addProperty($end);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-
-        $names     = [];
-        $set       = $this->getIncome($accounts, $categories, $start, $end);
-        $grouped   = $this->groupByOpposingAccount($set);
-        $chartData = [];
-        $total     = '0';
-
-        foreach ($grouped as $accountId => $amount) {
-            if (!isset($names[$accountId])) {
-                $account           = $this->accountRepository->find(intval($accountId));
-                $names[$accountId] = $account->name;
-            }
-            $total                         = bcadd($total, $amount);
-            $chartData[$names[$accountId]] = $amount;
-        }
-
-        // also collect others?
-        if ($others) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setCategories($categories);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('income', 'account');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
     }
@@ -190,49 +126,16 @@ class CategoryReportController extends Controller
      */
     public function categoryExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.category.report.category-expense');
-        $cache->addProperty($accounts);
-        $cache->addProperty($categories);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        $names     = [];
-        $set       = $this->getExpenses($accounts, $categories, $start, $end);
-        $grouped   = $this->groupByCategory($set);
-        $total     = '0';
-        $chartData = [];
-
-        foreach ($grouped as $categoryId => $amount) {
-            if (!isset($names[$categoryId])) {
-                $category           = $this->categoryRepository->find(intval($categoryId));
-                $names[$categoryId] = $category->name;
-            }
-            $amount                         = bcmul($amount, '-1');
-            $total                          = bcadd($total, $amount);
-            $chartData[$names[$categoryId]] = $amount;
-        }
-
-        // also collect all transactions NOT in these categories.
-        if ($others) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setCategories($categories);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'category');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
     }
@@ -248,46 +151,17 @@ class CategoryReportController extends Controller
      */
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.category.report.category-income');
-        $cache->addProperty($accounts);
-        $cache->addProperty($categories);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
 
-        $names     = [];
-        $set       = $this->getIncome($accounts, $categories, $start, $end);
-        $grouped   = $this->groupByCategory($set);
-        $total     = '0';
-        $chartData = [];
-
-        foreach ($grouped as $categoryId => $amount) {
-            if (!isset($names[$categoryId])) {
-                $category           = $this->categoryRepository->find(intval($categoryId));
-                $names[$categoryId] = $category->name;
-            }
-            $total                          = bcadd($total, $amount);
-            $chartData[$names[$categoryId]] = $amount;
-        }
-
-        if ($others) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setCategories($categories);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('income', 'category');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
     }

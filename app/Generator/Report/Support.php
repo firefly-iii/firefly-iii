@@ -34,27 +34,7 @@ class Support
      */
     public static function filterExpenses(Collection $collection, array $accounts): Collection
     {
-        $result = $collection->filter(
-            function (Transaction $transaction) use ($accounts) {
-                $opposing = $transaction->opposing_account_id;
-                // remove internal transfer
-                if (in_array($opposing, $accounts)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
-
-                    return null;
-                }
-                // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === 1) {
-                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
-
-                    return null;
-                }
-
-                return $transaction;
-            }
-        );
-
-        return $result;
+        return self::filterTransactions($collection, $accounts, 1);
     }
 
     /**
@@ -65,8 +45,20 @@ class Support
      */
     public static function filterIncome(Collection $collection, array $accounts): Collection
     {
+        return self::filterTransactions($collection, $accounts, -1);
+    }
+
+    /**
+     * @param Collection $collection
+     * @param array      $accounts
+     * @param int        $modifier
+     *
+     * @return Collection
+     */
+    public static function filterTransactions(Collection $collection, array $accounts, int $modifier): Collection
+    {
         $result = $collection->filter(
-            function (Transaction $transaction) use ($accounts) {
+            function (Transaction $transaction) use ($accounts, $modifier) {
                 $opposing = $transaction->opposing_account_id;
                 // remove internal transfer
                 if (in_array($opposing, $accounts)) {
@@ -75,7 +67,7 @@ class Support
                     return null;
                 }
                 // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                if (bccomp($transaction->transaction_amount, '0') === $modifier) {
                     Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
 
                     return null;

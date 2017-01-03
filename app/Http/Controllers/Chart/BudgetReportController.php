@@ -17,6 +17,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
+use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
@@ -75,51 +76,19 @@ class BudgetReportController extends Controller
      */
     public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.budget.report.account-expense');
-        $cache->addProperty($accounts);
-        $cache->addProperty($budgets);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        $names     = [];
-        $set       = $this->getExpenses($accounts, $budgets, $start, $end);
-        $grouped   = $this->groupByOpposingAccount($set);
-        $chartData = [];
-        $total     = '0';
-
-        foreach ($grouped as $accountId => $amount) {
-            if (!isset($names[$accountId])) {
-                $account           = $this->accountRepository->find(intval($accountId));
-                $names[$accountId] = $account->name;
-            }
-            $amount                        = bcmul($amount, '-1');
-            $total                         = bcadd($total, $amount);
-            $chartData[$names[$accountId]] = $amount;
-        }
-
-        // also collect all transactions NOT in these budgets.
-        if ($others) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setBudgets($budgets);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'account');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
+
     }
 
     /**
@@ -133,49 +102,16 @@ class BudgetReportController extends Controller
      */
     public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.budget.report.budget-expense');
-        $cache->addProperty($accounts);
-        $cache->addProperty($budgets);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        $names     = [];
-        $set       = $this->getExpenses($accounts, $budgets, $start, $end);
-        $grouped   = $this->groupByBudget($set);
-        $total     = '0';
-        $chartData = [];
-
-        foreach ($grouped as $budgetId => $amount) {
-            if (!isset($names[$budgetId])) {
-                $budget           = $this->budgetRepository->find(intval($budgetId));
-                $names[$budgetId] = $budget->name;
-            }
-            $amount                       = bcmul($amount, '-1');
-            $total                        = bcadd($total, $amount);
-            $chartData[$names[$budgetId]] = $amount;
-        }
-
-        // also collect all transactions NOT in these budgets.
-        if ($others) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setBudgets($budgets);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'budget');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
     }
