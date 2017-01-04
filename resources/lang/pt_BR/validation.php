@@ -23,6 +23,7 @@ return [
     'belongs_to_user'                => 'O valor de :attribute é desconhecido',
     'accepted'                       => 'O campo :attribute deve ser aceito.',
     'bic'                            => 'Este não é um BIC válido.',
+    'more'                           => ':attribute must be larger than zero.',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
     'alpha'                          => 'O campo :attribute deverá conter apenas letras.',
