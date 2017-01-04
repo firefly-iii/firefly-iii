@@ -3,24 +3,29 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [4.3.1] - 2017-01-xx
+## [4.3.1] - 2017-01-04
 ### Added
-- Support for Russian. 
+- Support for Russian and Polish. 
+- Support for a proper demo website.
+- Support for custom decimal places in currencies (#506, suggested by @xpfgsyb).
+- Most amounts are now right-aligned (#511, suggested by @xpfgsyb).
+- German is now a "complete" language, more than 75% translated!
 
 ### Changed
 - **[New Github repository!](github.com/firefly-iii/firefly-iii)**
-
-### Deprecated
-- With the realization of a proper demo site many administrative functions have become deprecated, and will be removed over the coming releases. Included but not limited to the ability to block domains for registration, get email notifications for specific actions and many more.
+- Better category overview.
+- #502, thanks to @zjean
 
 ### Removed
-- Something
+- Removed a lot of administration functions.
+- Removed ability to activate users.
 
 ### Fixed
-- Something
+- #501, thanks to @zjean
+- #513, thanks to @skibbipl 
 
 ### Security
-- Something
+- #519, thanks to @xpfgsyb
 
 ## [4.3.0] - 2015-12-26
 ### Added
