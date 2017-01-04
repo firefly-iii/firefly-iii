@@ -81,6 +81,7 @@ then
     echo "Will not reset database"
 fi
 
+echo "Copy test database over original"
 # take database from copy:
 cp $DATABASECOPY $DATABASE
 

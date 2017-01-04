@@ -8,6 +8,7 @@
  * See the LICENSE file for details.
  */
 
+/** global: categoryIncomeUri, categoryExpenseUri, accountIncomeUri, accountExpenseUri, mainUri */
 
 $(function () {
     "use strict";
@@ -57,7 +58,6 @@ function redrawPieChart(container, uri) {
         others = '1';
     }
     uri = uri.replace('OTHERS', others);
-    console.log('URI for ' + container + ' is ' + uri);
 
     pieChart(uri, container);
 

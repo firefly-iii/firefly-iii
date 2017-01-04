@@ -59,12 +59,13 @@
 {% block scripts %}
     <script type="text/javascript">
         {% if Input.old('latitude') %}
-        var latitude = "{{ Input.old('latitude') }}";
+        var latitude = {{ Input.old('latitude') }};
         {% else %}
-        var latitude = "52.3167";
+        var latitude = {{ tag.latitude|default("52.3167") }};
         {% endif %}
 
-        {% if Input.old('latitude') and Input.old('longitude') and Input.old('zoomLevel') %}
+        {% if (Input.old('latitude') and Input.old('longitude') and Input.old('zoomLevel'))
+        or (tag.latitude and tag.longitude and tag.zoomLevel) %}
         var doPlaceMarker = true;
         {% else %}
         var doPlaceMarker = false;
@@ -73,16 +74,18 @@
         {% if Input.old('longitude') %}
         var longitude = "{{ Input.old('longitude') }}";
         {% else %}
-        var longitude = "5.5500";
+        var longitude = {{ tag.longitude|default("5.5500") }};
         {% endif %}
 
         {% if Input.old('zoomLevel') %}
         var zoomLevel = {{ Input.old('zoomLevel') }};
         {% else %}
-        var zoomLevel = 6;
+        var zoomLevel = {{ tag.zoomLevel|default("6") }};
         {% endif %}
 
+        var apiKey = "{{ apiKey }}";
+
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3"></script>
-    <script src="js/ff/tags/edit.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
+    <script src="js/ff/tags/create-edit.js"></script>
 {% endblock %}

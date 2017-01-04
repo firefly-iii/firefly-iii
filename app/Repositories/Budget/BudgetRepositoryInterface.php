@@ -89,7 +89,7 @@ interface BudgetRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllBudgetLimitRepetitions(Carbon $start, Carbon $end): Collection;
+    public function getAllBudgetLimits(Carbon $start, Carbon $end): Collection;
 
     /**
      * @param TransactionCurrency $currency
@@ -99,6 +99,15 @@ interface BudgetRepositoryInterface
      * @return string
      */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget, Carbon $start, Carbon $end): Collection;
 
     /**
      *
@@ -178,11 +187,10 @@ interface BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
-     * @param string $range
      * @param int    $amount
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $range, int $amount): BudgetLimit;
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit;
 
 }

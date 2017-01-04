@@ -8,11 +8,13 @@
  * See the LICENSE file for details.
  */
 
+/** global: Tour, showTour, accountFrontpageUri, billCount, accountExpenseUri, accountRevenueUri */
+
 $(function () {
     "use strict";
     // do chart JS stuff.
     drawChart();
-    if (showTour) {
+    if (showTour == true) {
         $.getJSON('json/tour').done(function (data) {
             var tour = new Tour(
                 {
@@ -24,8 +26,6 @@ $(function () {
             tour.init();
             // Start the tour
             tour.start();
-        }).fail(function () {
-            console.log('Already had tour.');
         });
     }
 
@@ -34,7 +34,7 @@ $(function () {
 
 function endTheTour() {
     "use strict";
-    $.post('json/end-tour', {_token: token});
+    $.post('json/end-tour');
 
 }
 
@@ -57,6 +57,9 @@ function getBoxAmounts() {
     "use strict";
     var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];
     for (var x in boxes) {
+        if (!boxes.hasOwnProperty(x)) {
+            continue;
+        }
         var box = boxes[x];
         $.getJSON('json/box/' + box).done(putData).fail(failData);
     }
@@ -69,5 +72,4 @@ function putData(data) {
 
 function failData() {
     "use strict";
-    console.log('Failed to get box!');
 }

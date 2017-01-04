@@ -63,6 +63,7 @@ return [
     'description'                    => '描述',
     'expense_account'                => '支出帳戶',
     'revenue_account'                => '收入帳戶',
+    'decimal_places'                 => 'Decimal places',
 
     'revenue_account_source'      => '收入帳戶 （源頭）',
     'source_account_asset'        => '來源帳戶 （資產帳戶）',
@@ -150,35 +151,30 @@ return [
     'category_keep_transactions' => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will spared deletion.',
     'tag_keep_transactions'      => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will spared deletion.',
 
-    'email'                   => 'Email address',
-    'password'                => 'Password',
-    'password_confirmation'   => 'Password (again)',
-    'blocked'                 => 'Is blocked?',
-    'blocked_code'            => 'Reason for block',
+    'email'                 => 'Email address',
+    'password'              => 'Password',
+    'password_confirmation' => 'Password (again)',
+    'blocked'               => 'Is blocked?',
+    'blocked_code'          => 'Reason for block',
 
 
     // admin
-    'domain'                  => 'Domain',
-    'single_user_mode'        => 'Single user mode',
-    'must_confirm_account'    => 'New users must activate account',
-    'is_demo_site'            => 'Is demo site',
-    'mail_for_lockout'        => 'Locked out',
-    'mail_for_blocked_domain' => 'Blocked domain',
-    'mail_for_blocked_email'  => 'Blocked email address',
-    'mail_for_bad_login'      => 'Login failure',
-    'mail_for_blocked_login'  => 'Blocked user',
+    'domain'                => 'Domain',
+    'single_user_mode'      => 'Single user mode',
+    'must_confirm_account'  => 'New users must activate account',
+    'is_demo_site'          => 'Is demo site',
 
 
     // import
-    'import_file'             => '匯入檔案',
-    'configuration_file'      => 'Configuration file',
-    'import_file_type'        => '匯入檔案類型',
-    'csv_comma'               => 'A comma (,)',
-    'csv_semicolon'           => 'A semicolon (;)',
-    'csv_tab'                 => 'A tab (invisible)',
-    'csv_delimiter'           => 'CSV field delimiter',
-    'csv_import_account'      => 'Default import account',
-    'csv_config'              => 'CSV import configuration',
+    'import_file'           => '匯入檔案',
+    'configuration_file'    => 'Configuration file',
+    'import_file_type'      => '匯入檔案類型',
+    'csv_comma'             => 'A comma (,)',
+    'csv_semicolon'         => 'A semicolon (;)',
+    'csv_tab'               => 'A tab (invisible)',
+    'csv_delimiter'         => 'CSV field delimiter',
+    'csv_import_account'    => 'Default import account',
+    'csv_config'            => 'CSV import configuration',
 
 
     'due_date'           => '到期日',

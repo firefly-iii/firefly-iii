@@ -1,0 +1,1 @@
+{{ trans('demo.budgets-index') }}

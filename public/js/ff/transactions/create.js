@@ -8,12 +8,14 @@
  * See the LICENSE file for details.
  */
 
+/** global: what, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, doSwitch, middleCrumbUrl */
+
 $(document).ready(function () {
     "use strict";
 
     // respond to switch buttons when
     // creating stuff:
-    if (doSwitch) {
+    if (doSwitch == true) {
         updateButtons();
         updateForm();
         updateLayout();
@@ -95,6 +97,9 @@ function updateForm() {
                 $('#piggy_bank_id_holder').show();
             }
             break;
+        default:
+            // no action.
+            break;
     }
 }
 
@@ -111,7 +116,6 @@ function updateButtons() {
 
         if (button.data('what') == what) {
             button.removeClass('btn-default').addClass('btn-info').html('<i class="fa fa-fw fa-check"></i> ' + txt[button.data('what')]);
-            console.log('Now displaying form for ' + what);
         } else {
             button.removeClass('btn-info').addClass('btn-default').text(txt[button.data('what')]);
         }

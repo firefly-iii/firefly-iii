@@ -23,6 +23,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Log;
 use Response;
+use Session;
 use SplFileObject;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -368,14 +369,33 @@ class ImportController extends Controller
         $content          = $uploaded->fread($uploaded->getSize());
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
-        $disk->put($newName, $contentEncrypted);
 
-        Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
+        // user is demo user, replace upload with prepared file.
+        if (auth()->user()->hasRole('demo')) {
+            $stubsDisk        = Storage::disk('stubs');
+            $content          = $stubsDisk->get('demo-import.csv');
+            $contentEncrypted = Crypt::encrypt($content);
+            $disk->put($newName, $contentEncrypted);
+            Log::debug('Replaced upload with demo file.');
 
-        // store configuration file's content into the job's configuration
-        // thing.
-        // otherwise, leave it empty.
-        if ($request->files->has('configuration_file')) {
+            // also set up prepared configuration.
+            $configuration      = json_decode($stubsDisk->get('demo-configuration.json'), true);
+            $job->configuration = $configuration;
+            $job->save();
+            Log::debug('Set configuration for demo user', $configuration);
+
+            // also flash info
+            Session::flash('info', trans('demo.import-configure-security'));
+        }
+        if (!auth()->user()->hasRole('demo')) {
+            // user is not demo, process original upload:
+            $disk->put($newName, $contentEncrypted);
+            Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
+        }
+
+        // store configuration file's content into the job's configuration thing. Otherwise, leave it empty.
+        // demo user's configuration upload is ignored completely.
+        if ($request->files->has('configuration_file') && !auth()->user()->hasRole('demo')) {
             /** @var UploadedFile $configFile */
             $configFile = $request->files->get('configuration_file');
             Log::debug(
@@ -393,6 +413,9 @@ class ImportController extends Controller
                 $job->save();
             }
         }
+
+        // if user is demo user, replace config with prepared config:
+
 
         return redirect(route('import.configure', [$job->key]));
 

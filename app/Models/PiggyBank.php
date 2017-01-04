@@ -35,7 +35,7 @@ class PiggyBank extends Model
      * @var array
      */
     protected $casts
-        = [
+                        = [
             'created_at' => 'date',
             'updated_at' => 'date',
             'deleted_at' => 'date',
@@ -168,6 +168,6 @@ class PiggyBank extends Model
      */
     public function setTargetamountAttribute($value)
     {
-        $this->attributes['targetamount'] = strval(round($value, 2));
+        $this->attributes['targetamount'] = strval(round($value, 12));
     }
 }

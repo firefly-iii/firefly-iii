@@ -1,4 +1,14 @@
-<table class="table table-hover table-condensed" id="sortable">
+<table class="table table-hover table-condensed" id="sortable-piggy">
+    <thead>
+    <tr>
+        <th colspan="2">&nbsp;</th>
+        <th>{{ 'piggy_bank'|_ }}</th>
+        <th style="text-align: right;">{{ 'saved_so_far'|_ }}</th>
+        <th colspan="3">&nbsp;</th>
+        <th style="text-align: right;">{{ 'target_amount'|_ }}</th>
+        <th style="text-align: right;">{{ 'left_to_save'|_ }}</th>
+    </tr>
+    </thead>
     <tbody>
     {% for piggyBank in piggyBanks %}
         <tr data-id="{{ piggyBank.id }}">
@@ -21,8 +31,8 @@
             <td>
                 <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.order }}">{{ piggyBank.name }}</a>
             </td>
-            <td>
-                <span title="Saved so far">{{ piggyBank.savedSoFar|formatAmountPlain }}</span>
+            <td style="text-align: right;">
+                <span title="Saved so far" style="text-align:right;">{{ piggyBank.savedSoFar|formatAmount }}</span>
             </td>
             <td class="hidden-sm hidden-xs" style="text-align:right;width:40px;">
                 {% if piggyBank.savedSoFar > 0 %}
@@ -55,10 +65,12 @@
                         <i data-id="{{ piggyBank.id }}" class="fa fa-plus"></i></a>
                 {% endif %}
             </td>
-            <td class="hidden-sm hidden-xs" style="width:200px;">
-                <span title="Target amount">{{ piggyBank.targetamount|formatAmount }}</span>
+            <td class="hidden-sm hidden-xs" style="width:200px;text-align:right;">
+                <span title="{{ 'target_amount'|_ }}">{{ piggyBank.targetamount|formatAmount }}</span>
+            </td>
+            <td class="hidden-sm hidden-xs" style="width:200px;text-align:right;">
                 {% if piggyBank.leftToSave > 0 %}
-                    <span title="Left to save">({{ piggyBank.leftToSave|formatAmount }})</span>
+                    <span title="{{ 'left_to_save'|_ }}">{{ piggyBank.leftToSave|formatAmount }}</span>
                 {% endif %}
             </td>
         </tr>

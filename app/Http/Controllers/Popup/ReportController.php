@@ -17,7 +17,7 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -102,7 +102,8 @@ class ReportController extends Controller
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
-                $collector = new JournalCollector(auth()->user());
+                /** @var JournalCollectorInterface $collector */
+                $collector = app(JournalCollectorInterface::class, [auth()->user()]);
                 $collector
                     ->setAccounts(new Collection([$account]))
                     ->setRange($attributes['startDate'], $attributes['endDate'])
@@ -112,8 +113,8 @@ class ReportController extends Controller
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
                 $budget->name = strval(trans('firefly.no_budget'));
-                // collector
-                $collector = new JournalCollector(auth()->user());
+                /** @var JournalCollectorInterface $collector */
+                $collector = app(JournalCollectorInterface::class, [auth()->user()]);
                 $collector
                     ->setAccounts(new Collection([$account]))
                     ->setTypes($types)
@@ -122,8 +123,8 @@ class ReportController extends Controller
                 $journals = $collector->getJournals();
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
-                // journals no budget, not corrected by a tag.
-                $collector = new JournalCollector(auth()->user());
+                /** @var JournalCollectorInterface $collector */
+                $collector = app(JournalCollectorInterface::class, [auth()->user()]);
                 $collector
                     ->setAccounts(new Collection([$account]))
                     ->setTypes($types)
@@ -134,7 +135,7 @@ class ReportController extends Controller
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
                 $journals     = $journals->filter(
                     function (Transaction $transaction) {
-                        $tags    = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
+                        $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
                         if ($tags === 0) {
                             return true;
                         }
@@ -167,7 +168,8 @@ class ReportController extends Controller
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $budget     = $repository->find(intval($attributes['budgetId']));
-        $collector  = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
 
         $collector
             ->setAccounts($attributes['accounts'])
@@ -200,8 +202,8 @@ class ReportController extends Controller
         $repository = app(CategoryRepositoryInterface::class);
         $category   = $repository->find(intval($attributes['categoryId']));
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        // get journal collector instead:
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($attributes['accounts'])->setTypes($types)
                   ->setRange($attributes['startDate'], $attributes['endDate'])
                   ->setCategory($category);
@@ -225,9 +227,10 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
-        $account   = $repository->find(intval($attributes['accountId']));
-        $types     = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $collector = new JournalCollector(auth()->user());
+        $account = $repository->find(intval($attributes['accountId']));
+        $types   = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
         $journals = $collector->getJournals();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
@@ -262,7 +265,8 @@ class ReportController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $account    = $repository->find(intval($attributes['accountId']));
         $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $collector  = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
         $journals = $collector->getJournals();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report

@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Amount;
 use App;
 use Carbon\Carbon;
 use Closure;
@@ -109,19 +110,21 @@ class Range
         $monthFormat       = (string)trans('config.month');
         $monthAndDayFormat = (string)trans('config.month_and_day');
         $dateTimeFormat    = (string)trans('config.date_time');
+        $defaultCurrency   = Amount::getDefaultCurrency();
 
         // change localeconv to a new array:
         $numberFormatter = numfmt_create($lang, NumberFormatter::CURRENCY);
         $localeconv      = [
             'mon_decimal_point' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL)),
             'mon_thousands_sep' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL)),
-            'frac_digits'       => $numberFormatter->getAttribute(NumberFormatter::MAX_FRACTION_DIGITS),
+            'frac_digits'       => $defaultCurrency->decimal_places,
         ];
         View::share('monthFormat', $monthFormat);
         View::share('monthAndDayFormat', $monthAndDayFormat);
         View::share('dateTimeFormat', $dateTimeFormat);
         View::share('language', $lang);
         View::share('localeconv', $localeconv);
+        View::share('defaultCurrency', $defaultCurrency);
     }
 
     /**

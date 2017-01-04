@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: jobKey */
+
 var intervalId = 0;
 
 $(function () {
@@ -24,7 +26,6 @@ $(function () {
 
 function startExport() {
     "use strict";
-    console.log('Start export...');
     hideForm();
     showLoading();
     hideError();
@@ -75,15 +76,12 @@ function showError(text) {
 
 function callExport() {
     "use strict";
-    console.log('Start callExport()...')
     var data = $('#export').serialize();
 
     // call status, keep calling it until response is "finished"?
     intervalId = window.setInterval(checkStatus, 500);
 
-    $.post('export/submit', data).done(function (data) {
-        console.log('Export hath succeeded!');
-
+    $.post('export/submit', data).done(function () {
         // stop polling:
         window.clearTimeout(intervalId);
 
@@ -114,7 +112,6 @@ function callExport() {
 
 function checkStatus() {
     "use strict";
-    console.log('get status...');
     $.getJSON('export/status/' + jobKey).done(function (data) {
         putStatusText(data.status);
     });

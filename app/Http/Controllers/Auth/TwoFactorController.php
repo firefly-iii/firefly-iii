@@ -76,6 +76,7 @@ class TwoFactorController extends Controller
 
     /**
      * @param TokenFormRequest $request
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      *
      * @return mixed
      */

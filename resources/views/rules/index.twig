@@ -28,7 +28,7 @@
                             {% if ruleGroup.active %}
                                 {{ ruleGroup.title }}
                             {% else %}
-                                <s>{{ ruleGroup.title }}</s> (inactive)
+                                <s>{{ ruleGroup.title }}</s> ({{ 'inactive'|_|lower }})
                             {% endif %}
                         </h3>
 

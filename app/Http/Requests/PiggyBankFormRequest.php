@@ -41,7 +41,7 @@ class PiggyBankFormRequest extends Request
             'name'         => trim($this->get('name')),
             'startdate'    => new Carbon,
             'account_id'   => intval($this->get('account_id')),
-            'targetamount' => round($this->get('targetamount'), 2),
+            'targetamount' => round($this->get('targetamount'), 12),
             'targetdate'   => strlen(strval($this->get('targetdate'))) > 0 ? new Carbon($this->get('targetdate')) : null,
             'note'         => trim(strval($this->get('note'))),
         ];

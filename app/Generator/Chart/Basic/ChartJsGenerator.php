@@ -49,6 +49,7 @@ class ChartJsGenerator implements GeneratorInterface
      *        ]
      *    ]
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five.
      *
      * @param array $data
      *
@@ -58,7 +59,7 @@ class ChartJsGenerator implements GeneratorInterface
     {
         reset($data);
         $first  = current($data);
-        $labels = array_keys($first['entries']);
+        $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
             'count'    => count($data),
@@ -111,7 +112,7 @@ class ChartJsGenerator implements GeneratorInterface
                 $value = bcmul($value, '-1');
             }
 
-            $chartData['datasets'][0]['data'][]            = round($value, 2);
+            $chartData['datasets'][0]['data'][]            = $value;
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['labels'][]                         = $key;
             $index++;

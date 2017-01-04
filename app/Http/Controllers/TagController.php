@@ -13,13 +13,13 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Preferences;
 use Session;
 use URL;
@@ -68,17 +68,20 @@ class TagController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
-    public function create()
+    public function create(Request $request)
     {
         $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
+        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         $preFilled = [
             'tagMode' => 'nothing',
         ];
-        if (!Input::old('tagMode')) {
+        if (!$request->old('tagMode')) {
             Session::flash('preFilled', $preFilled);
         }
         // put previous url in session if not redirect from store (not "create another").
@@ -89,7 +92,7 @@ class TagController extends Controller
         Session::flash('gaEventCategory', 'tags');
         Session::flash('gaEventAction', 'create');
 
-        return view('tags.create', compact('subTitle', 'subTitleIcon'));
+        return view('tags.create', compact('subTitle', 'subTitleIcon', 'apiKey'));
     }
 
     /**
@@ -136,6 +139,7 @@ class TagController extends Controller
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
+        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         /*
          * Default tag options (again)
@@ -165,7 +169,7 @@ class TagController extends Controller
         Session::flash('gaEventCategory', 'tags');
         Session::flash('gaEventAction', 'edit');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions', 'apiKey'));
     }
 
     /**
@@ -206,21 +210,21 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Request                   $request
+     * @param JournalCollectorInterface $collector
+     * @param Tag                       $tag
      *
      * @return View
      */
-    public function show(Tag $tag)
+    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag)
     {
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $page         = intval(Input::get('page')) === 0 ? 1 : intval(Input::get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // use collector:
-        // replace with journal collector:
-        $collector = new JournalCollector(auth()->user());
-        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag);
+        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)->withBudgetInformation()->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('tags/show/' . $tag->id);
 
@@ -248,7 +252,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.created_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('tags.create.fromStore', true);
 
@@ -275,7 +279,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('tags.edit.fromUpdate', true);
 

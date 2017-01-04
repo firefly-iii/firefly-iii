@@ -17,8 +17,8 @@
                         <thead>
                         <tr>
                             <th data-defaultsign="az">{{ 'name'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'earned'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+                            <th data-defaultsign="_19" style="text-align: right;">{{ 'earned'|_ }}</th>
+                            <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -28,14 +28,14 @@
                                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
                                 </td>
                                 {% if accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id].earned }}">{{ accountSummary[account.id].earned|formatAmount }}</td>
+                                    <td data-value="{{ accountSummary[account.id].earned }}" style="text-align: right;">{{ accountSummary[account.id].earned|formatAmount }}</td>
                                 {% else %}
-                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                                 {% if accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id].spent }}">{{ accountSummary[account.id].spent|formatAmount }}</td>
+                                    <td data-value="{{ accountSummary[account.id].spent }}" style="text-align: right;">{{ accountSummary[account.id].spent|formatAmount }}</td>
                                 {% else %}
-                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -53,8 +53,8 @@
                         <thead>
                         <tr>
                             <th data-defaultsign="az">{{ 'name'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'earned'|_ }}</th>
-                            <th data-defaultsign="_19">{{ 'spent'|_ }}</th>
+                            <th data-defaultsign="_19" style="text-align: right;">{{ 'earned'|_ }}</th>
+                            <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -64,14 +64,14 @@
                                     <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
                                 </td>
                                 {% if categorySummary[category.id] %}
-                                    <td data-value="{{ categorySummary[category.id].earned }}">{{ categorySummary[category.id].earned|formatAmount }}</td>
+                                    <td data-value="{{ categorySummary[category.id].earned }}" style="text-align: right;">{{ categorySummary[category.id].earned|formatAmount }}</td>
                                 {% else %}
-                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                                 {% if categorySummary[category.id] %}
-                                    <td data-value="{{ categorySummary[category.id].spent }}">{{ categorySummary[category.id].spent|formatAmount }}</td>
+                                    <td data-value="{{ categorySummary[category.id].spent }}" style="text-align: right;">{{ categorySummary[category.id].spent|formatAmount }}</td>
                                 {% else %}
-                                    <td data-value="0">{{ 0|formatAmount }}</td>
+                                    <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                             </tr>
                         {% endfor %}
@@ -90,7 +90,7 @@
                         <canvas id="categories-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
                         <label style="font-weight:normal;">
                             <input type="checkbox" id="categories-in-pie-chart-checked">
-                            <small>{{ 'include_not_in_category'|_ }}</small>
+                            <small>{{ 'include_income_not_in_category'|_ }}</small>
                         </label>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                         <canvas id="categories-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
                         <label style="font-weight:normal;">
                             <input type="checkbox" id="categories-out-pie-chart-checked">
-                            <small>{{ 'include_not_in_category'|_ }}</small>
+                            <small>{{ 'include_expense_not_in_category'|_ }}</small>
                         </label>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                     <canvas id="accounts-in-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
                     <label style="font-weight:normal;">
                         <input type="checkbox" id="accounts-in-pie-chart-checked">
-                        <small>{{ 'include_not_in_category'|_ }}</small>
+                        <small>{{ 'include_income_not_in_account'|_ }}</small>
                     </label>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                     <canvas id="accounts-out-pie-chart" style="margin:0 auto;" height="150" width="150"></canvas>
                     <label style="font-weight:normal;">
                         <input type="checkbox" id="accounts-out-pie-chart-checked">
-                        <small>{{ 'include_not_in_category'|_ }}</small>
+                        <small>{{ 'include_expense_not_in_account'|_ }}</small>
                     </label>
                 </div>
             </div>
@@ -164,8 +164,8 @@
                             <thead>
                             <tr>
                                 <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'spent_average'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'total'|_ }}</th>
+                                <th data-defaultsign="_19" style="text-align: right;">{{ 'spent_average'|_ }}</th>
+                                <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
                                 <th data-defaultsign="_19">{{ 'transaction_count'|_ }}</th>
                             </tr>
                             </thead>
@@ -179,10 +179,10 @@
                                 <td data-value="{{ row.name }}">
                                     <a href="{{ route('accounts.show', row.id) }}">{{ row.name }}</a>
                                 </td>
-                                <td data-value="{{ row.average }}">
+                                <td data-value="{{ row.average }}" style="text-align: right;">
                                     {{ row.average|formatAmount }}
                                 </td>
-                                <td data-value="{{ row.sum }}">
+                                <td data-value="{{ row.sum }}" style="text-align: right;">
                                     {{ row.sum|formatAmount }}
                                 </td>
                                 <td data-value="{{ row.count }}">
@@ -219,7 +219,7 @@
                                 <th data-defaultsort="disabled">{{ 'description'|_ }}</th>
                                 <th data-defaultsign="month">{{ 'date'|_ }}</th>
                                 <th data-defaultsign="az">{{ 'account'|_ }}</th>
-                                <th data-defaultsign="_19">{{ 'amount'|_ }}</th>
+                                <th data-defaultsign="_19" style="text-align: right;">{{ 'amount'|_ }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -246,7 +246,7 @@
                                         {{ row.opposing_account_name }}
                                     </a>
                                 </td>
-                                <td data-value="{{ row.transaction_amount }}">
+                                <td data-value="{{ row.transaction_amount }}" style="text-align: right;">
                                     {{ row.transaction_amount|formatAmount }}
                                 </td>
                                 </tr>

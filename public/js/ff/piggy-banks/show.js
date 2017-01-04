@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for details.
  */
+/** global: piggyBankID, lineChart */
 
 $(function () {
     "use strict";

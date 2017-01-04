@@ -29,11 +29,15 @@
                     <span class="label label-info">{{ match }}</span>
                 {% endfor %}
             </td>
-            <td data-value="{{ entry.amount_min }}">
+            <td data-value="{{ entry.amount_min }}" style="text-align: right;">
+                <span style="margin-right:5px;">
                 {{ entry.amount_min|formatAmount }}
+                </span>
             </td>
-            <td data-value="{{ entry.amount_max }}">
+            <td data-value="{{ entry.amount_max }}" style="text-align: right;">
+                <span style="margin-right:5px;">
                 {{ entry.amount_max|formatAmount }}
+                </span>
             </td>
 
             {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}

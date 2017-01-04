@@ -1,0 +1,24 @@
+from-account,to-account,amount,date,description,category,budget
+NL11XOLA6707795988,Adobe,120.00,2016-10-10,Money back from internet subscription,Reimbursements,
+NL11XOLA6707795988,KPN Phone Provider,180.00,2016-11-11,Discount from new service subscription,Reimbursements,
+NL81RCQZ7160379858,Taxes and Revenues Government service,200.00,2016-12-12,Tax break for 2016,Reimbursements,
+NL11XOLA6707795988,Alibaba,-15.00,2016-02-12,Bought some weird Chinese stuff,Internet
+NL11XOLA6707795988,amazon.com,-110.00,2016-02-24,Bought some books,Internet
+NL11XOLA6707795988,Baker Bob,-3.40,2016-03-11,Bread,Daily Groceries,Groceries
+NL11XOLA6707795988,Buy and Large,-45.00,2016-03-22,Car parts,Car,Car
+NL11XOLA6707795988,Halfords Car Parts,-20.00,2016-04-10,Oil for car,Car,Car
+NL11XOLA6707795988,iCentre Mac Store,-34.00,2016-04-20,Apple brand batteries for Magic Mouse,Electronics
+NL11XOLA6707795988,Jumper Pet Food Store,-30.00,2016-05-09,Expensive pet food,Cats
+NL11XOLA6707795988,McDonalds,-8.00,2016-05-18,McBurger with fries,Junk food,Groceries
+NL11XOLA6707795988,Student Loan Organization,-200.00,2016-06-08,Paid back first part of one million of student loans,Student loans,Bills
+NL11XOLA6707795988,SuperMarket,-14.90,2016-06-16,Did some groceries,Daily groceries,Groceries
+NL11XOLA6707795988,XS4All ISP,-50.00,2016-07-07,Forgot a bill,Internet,Bills
+NL11XOLA6707795988,Cafe Central,-34.23,2016-07-14,Drinks with friends,Drinks
+NL11XOLA6707795988,Student Loan Organization,-200.00,2016-08-06,Paid back the second part,Student loans,Bills
+NL11XOLA6707795988,The Water Company,-10.00,2016-08-12,Water bill,House,Bills
+NL11XOLA6707795988,SuperMarket,-15.30,2016-09-05,Did some groceries,Daily groceries,Groceries
+NL11XOLA6707795988,Student Loan Organization,-200.00,2016-09-10,Paid back third part,Student loans
+NL11XOLA6707795988,Cafe Central,-31.10,2016-11-04,Drinks with friends,Going out,Going out
+NL11XOLA6707795988,SuperMarket,-14.33,2016-11-08,Did some groceries,Daily groceries,Groceries
+NL11XOLA6707795988,Shell,-30.10,2016-12-03,Got gas for the car,Car,Car
+NL11XOLA6707795988,Shell,-22.91,2016-12-06,Got gas for the car,Car,Car

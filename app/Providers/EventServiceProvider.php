@@ -37,62 +37,14 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // new event handlers:
-            'FireflyIII\Events\ConfirmedUser' => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@storeConfirmationIpAddress',
-                ],
-
-            'FireflyIII\Events\DeletedUser'      => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@saveEmailAddress',
-                ],
-            'FireflyIII\Events\LockedOutUser'    => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportLockout',
-                ],
-            'FireflyIII\Events\BlockedUserLogin' => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportBlockedUser',
-                ],
-
-            'FireflyIII\Events\BlockedUseOfEmail' => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportUseOfBlockedEmail',
-                ],
-
-            'FireflyIII\Events\BlockedUseOfDomain' => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportUseBlockedDomain',
-                ],
-
-            'FireflyIII\Events\BlockedBadLogin'      => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@reportBadLogin',
-                ],
-            'FireflyIII\Events\RegisteredUser'       => // is a User related event.
+            'FireflyIII\Events\RegisteredUser'            => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                     'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
-                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessage',
-                    'FireflyIII\Handlers\Events\UserEventHandler@storeRegistrationIpAddress',
                 ],
-            'FireflyIII\Events\RequestedNewPassword' => [ // is a User related event.
-                                                          'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
+            'FireflyIII\Events\RequestedNewPassword'      => [ // is a User related event.
+                                                               'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
-            'FireflyIII\Events\ResentConfirmation'   => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessageAgain',
-                ],
-            'FireflyIII\Events\StoredBudgetLimit'    => // is a Budget related event.
-                [
-                    'FireflyIII\Handlers\Events\BudgetEventHandler@storeRepetition',
-                ],
-
-            'FireflyIII\Events\UpdatedBudgetLimit' => // is a Budget related event.
-                [
-                    'FireflyIII\Handlers\Events\BudgetEventHandler@updateRepetition',
-                ],
-
             'FireflyIII\Events\StoredTransactionJournal'  => // is a Transaction Journal related event.
                 [
                     'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',

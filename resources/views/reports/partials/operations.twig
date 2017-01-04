@@ -1,14 +1,14 @@
 <table class="table table-hover">
     <tr>
         <td>{{ 'in'|_ }}</td>
-        <td>{{ incomeSum|formatAmount }}</td>
+        <td style="text-align: right;">{{ incomeSum|formatAmount }}</td>
     </tr>
     <tr>
         <td>{{ 'out'|_ }}</td>
-        <td>{{ expensesSum|formatAmount }}</td>
+        <td style="text-align: right;">{{ expensesSum|formatAmount }}</td>
     </tr>
     <tr>
         <td>{{ 'difference'|_ }}</td>
-        <td>{{ (incomeSum + expensesSum)|formatAmount }}</td>
+        <td style="text-align: right;">{{ (incomeSum + expensesSum)|formatAmount }}</td>
     </tr>
 </table>

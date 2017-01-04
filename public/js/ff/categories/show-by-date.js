@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: specific */
+
 $(function () {
     "use strict";
         columnChart(specific, 'period-specific-period');

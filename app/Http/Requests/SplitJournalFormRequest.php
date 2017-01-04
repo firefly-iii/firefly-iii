@@ -93,7 +93,7 @@ class SplitJournalFormRequest extends Request
             $category    = $this->get('category')[$index] ?? '';
             $transaction = [
                 'description'              => $description,
-                'amount'                   => round($this->get('amount')[$index], 2),
+                'amount'                   => round($this->get('amount')[$index], 12),
                 'budget_id'                => $this->get('budget_id')[$index] ? intval($this->get('budget_id')[$index]) : 0,
                 'category'                 => trim($category),
                 'source_account_id'        => isset($this->get('source_account_id')[$index])

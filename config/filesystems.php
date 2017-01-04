@@ -73,6 +73,11 @@ return [
             'driver' => 'local',
             'root'   => base_path('resources/seeds'),
         ],
+        'stubs'    => [
+            'driver' => 'local',
+            'root'   => base_path('resources/stubs'),
+        ],
+
         'public' => [
             'driver'     => 'local',
             'root'       => storage_path('app/public'),

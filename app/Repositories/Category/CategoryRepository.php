@@ -134,26 +134,27 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $first = null;
 
-
-        /** @var TransactionJournal $first */
+        /** @var TransactionJournal $firstJournal */
         $firstJournal = $category->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.date']);
 
         if ($firstJournal) {
             $first = $firstJournal->date;
         }
-
         // check transactions:
-
         $firstTransaction = $category->transactions()
                                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                      ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
 
-        if (!is_null($firstTransaction) && ((!is_null($first) && $firstTransaction->date < $first) || is_null($first))) {
-            $first = new Carbon($firstTransaction->date);
+
+        // both exist, the one that is earliest "wins".
+        if (!is_null($firstTransaction) && !is_null($first) && Carbon::parse($firstTransaction->date)->lt($first)) {
+            $first = $firstTransaction->date;
         }
+
         if (is_null($first)) {
             return new Carbon('1900-01-01');
         }
+
 
         return $first;
     }

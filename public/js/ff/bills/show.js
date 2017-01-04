@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/* global comboChart, billID */
+/** global: billUri */
 
 $(function () {
       "use strict";

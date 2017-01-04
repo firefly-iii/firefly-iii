@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
@@ -23,7 +23,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Input;
+use Illuminate\Http\Request;
 use Preferences;
 use Response;
 
@@ -43,11 +43,13 @@ class JsonController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function action()
+    public function action(Request $request)
     {
-        $count   = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
+        $count   = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
@@ -269,18 +271,18 @@ class JsonController extends Controller
     }
 
     /**
-     * @param $what
+     * @param JournalCollectorInterface $collector
+     * @param string                    $what
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function transactionJournals($what)
+    public function transactionJournals(JournalCollectorInterface $collector, string $what)
     {
         $descriptions = [];
         $type         = config('firefly.transactionTypesByWhat.' . $what);
         $types        = [$type];
 
         // use journal collector instead:
-        $collector = new JournalCollector(auth()->user());
         $collector->setTypes($types)->setLimit(100)->setPage(1);
         $journals = $collector->getJournals();
         foreach ($journals as $j) {
@@ -296,11 +298,13 @@ class JsonController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function trigger()
+    public function trigger(Request $request)
     {
-        $count    = intval(Input::get('count')) > 0 ? intval(Input::get('count')) : 1;
+        $count    = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {

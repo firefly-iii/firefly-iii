@@ -3,6 +3,30 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [4.3.1] - 2017-01-04
+### Added
+- Support for Russian and Polish. 
+- Support for a proper demo website.
+- Support for custom decimal places in currencies (#506, suggested by @xpfgsyb).
+- Most amounts are now right-aligned (#511, suggested by @xpfgsyb).
+- German is now a "complete" language, more than 75% translated!
+
+### Changed
+- **[New Github repository!](github.com/firefly-iii/firefly-iii)**
+- Better category overview.
+- #502, thanks to @zjean
+
+### Removed
+- Removed a lot of administration functions.
+- Removed ability to activate users.
+
+### Fixed
+- #501, thanks to @zjean
+- #513, thanks to @skibbipl 
+
+### Security
+- #519, thanks to @xpfgsyb
+
 ## [4.3.0] - 2015-12-26
 ### Added
 - New method of keeping track of available budget, see issue #489
@@ -279,7 +303,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Bug in the mass edit routines.
-- Firefly III over a proxy will now work (see [issue #290](https://github.com/JC5/firefly-iii/issues/290)), thanks @dfiel for reporting.
+- Firefly III over a proxy will now work (see [issue #290](https://github.com/firefly-iii/firefly-iii/issues/290)), thanks @dfiel for reporting.
 - Sneaky bug in the import routine, fixed by @Bonno 
 
 ## [3.10.1] - 2016-08-25

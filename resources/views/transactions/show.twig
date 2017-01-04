@@ -285,8 +285,9 @@
 
                             </td>
                             <td>
-                                {{ formatAmountWithCode(transaction.source_account_before,journal.transactionCurrency.code) }}
-                                &longrightarrow; {{ formatAmountWithCode(transaction.source_account_after,journal.transactionCurrency.code) }}
+
+                                {{ formatAnything(journal.transactionCurrency, transaction.source_account_before) }}
+                                &longrightarrow; {{ formatAnything(journal.transactionCurrency, transaction.source_account_after) }}
                             </td>
                             <td>
                                 {% if transaction.destination_account_type == 'Cash account' %}
@@ -297,23 +298,26 @@
 
                             </td>
                             <td>
-                                {{ formatAmountWithCode(transaction.destination_account_before,journal.transactionCurrency.code) }}
-                                &longrightarrow; {{ formatAmountWithCode(transaction.destination_account_after,journal.transactionCurrency.code) }}
+
+                                {{ formatAnything(journal.transactionCurrency, transaction.destination_account_before) }}
+                                &longrightarrow; {{ formatAnything(journal.transactionCurrency, transaction.destination_account_after) }}
                             </td>
                             <td>
                                 {% if journal.transactiontype.type == 'Deposit' %}
                                     <!-- deposit, positive amount with correct currency -->
-                                    {{ formatAmountWithCode(transaction.destination_amount, journal.transactionCurrency.code) }}
+                                    {{ formatAnything(journal.transactionCurrency, transaction.destination_amount) }}
 
                                 {% endif %}
                                 {% if journal.transactiontype.type == 'Withdrawal' %}
                                     <!-- withdrawal, negative amount with correct currency -->
-                                    {{ formatAmountWithCode(transaction.source_amount, journal.transactionCurrency.code) }}
+                                    {{ formatAnything(journal.transactionCurrency, transaction.source_amount) }}
 
                                 {% endif %}
                                 {% if journal.transactiontype.type == 'Transfer' %}
                                     <!-- transfer, positive amount in blue -->
-                                    <span class="text-info">{{ formatAmountPlainWithCode(transaction.destination_amount, journal.transactionCurrency.code) }}</span>
+                                    <span class="text-info">
+                                        {{ formatAnythingPlain(journal.transactionCurrency, transaction.destination_amount) }}
+                                    </span>
                                 {% endif %}
                             </td>
                             <td>

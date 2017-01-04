@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: budgetChartUri */
+
 $(function () {
     "use strict";
 

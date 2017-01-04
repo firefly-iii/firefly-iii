@@ -12,12 +12,5 @@
 declare(strict_types = 1);
 
 return [
-    'text' => [
-        '3.7'  => 'Because of the upgrade to Laravel 5.2, several manual changes must be made to your Firefly III installation. ' .
-                  'Please follow the instructions on the following page: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-3.7.0',
-        '3.8'  => 'This version of Firefly III requires PHP 7.0.',
-        '3.10' => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-3.10',
-        '4.0'  => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-4.0',
-        '4.1'  => 'Please find the full upgrade instructions here: https://github.com/JC5/firefly-iii/wiki/Upgrade-to-4.0',
-    ],
+    'text' => [],
 ];

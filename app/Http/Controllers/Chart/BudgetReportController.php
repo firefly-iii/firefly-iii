@@ -17,17 +17,17 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Chart\MetaPieChartInterface;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Response;
 
@@ -76,50 +76,19 @@ class BudgetReportController extends Controller
      */
     public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.budget.report.account-expense');
-        $cache->addProperty($accounts);
-        $cache->addProperty($budgets);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        $names     = [];
-        $set       = $this->getExpenses($accounts, $budgets, $start, $end);
-        $grouped   = $this->groupByOpposingAccount($set);
-        $chartData = [];
-        $total     = '0';
-
-        foreach ($grouped as $accountId => $amount) {
-            if (!isset($names[$accountId])) {
-                $account           = $this->accountRepository->find(intval($accountId));
-                $names[$accountId] = $account->name;
-            }
-            $amount                        = bcmul($amount, '-1');
-            $total                         = bcadd($total, $amount);
-            $chartData[$names[$accountId]] = $amount;
-        }
-
-        // also collect all transactions NOT in these budgets.
-        if ($others) {
-            $collector = new JournalCollector(auth()->user());
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setBudgets($budgets);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'account');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
+
     }
 
     /**
@@ -133,48 +102,16 @@ class BudgetReportController extends Controller
      */
     public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others)
     {
-        /** @var bool $others */
-        $others = intval($others) === 1;
-        $cache  = new CacheProperties;
-        $cache->addProperty('chart.budget.report.budget-expense');
-        $cache->addProperty($accounts);
-        $cache->addProperty($budgets);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($others);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        $names     = [];
-        $set       = $this->getExpenses($accounts, $budgets, $start, $end);
-        $grouped   = $this->groupByBudget($set);
-        $total     = '0';
-        $chartData = [];
-
-        foreach ($grouped as $budgetId => $amount) {
-            if (!isset($names[$budgetId])) {
-                $budget           = $this->budgetRepository->find(intval($budgetId));
-                $names[$budgetId] = $budget->name;
-            }
-            $amount                       = bcmul($amount, '-1');
-            $total                        = bcadd($total, $amount);
-            $chartData[$names[$budgetId]] = $amount;
-        }
-
-        // also collect all transactions NOT in these budgets.
-        if ($others) {
-            $collector = new JournalCollector(auth()->user());
-            $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
-        }
-
-        $data = $this->generator->pieChart($chartData);
-        $cache->store($data);
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setBudgets($budgets);
+        $helper->setUser(auth()->user());
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'budget');
+        $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
     }
@@ -204,7 +141,6 @@ class BudgetReportController extends Controller
         $function     = Navigation::preferredEndOfPeriod($start, $end);
         $chartData    = [];
         $currentStart = clone $start;
-        $limits       = $repository->getAllBudgetLimitRepetitions($start, $end); // also for ALL budgets.
 
         // prep chart data:
         foreach ($budgets as $budget) {
@@ -229,8 +165,9 @@ class BudgetReportController extends Controller
                 'entries' => [],
             ];
         }
-        $sumOfExpenses = [];
-        $leftOfLimits  = [];
+        $allBudgetLimits = $repository->getAllBudgetLimits($start, $end);
+        $sumOfExpenses   = [];
+        $leftOfLimits    = [];
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd = $currentEnd->$function();
@@ -239,20 +176,20 @@ class BudgetReportController extends Controller
 
             /** @var Budget $budget */
             foreach ($budgets as $budget) {
+                // get budget limit(s) for this period):
+                $budgetLimits                                       = $this->filterBudgetLimits($allBudgetLimits, $budget, $currentStart, $currentEnd);
                 $currentExpenses                                    = $expenses[$budget->id] ?? '0';
                 $sumOfExpenses[$budget->id]                         = $sumOfExpenses[$budget->id] ?? '0';
                 $sumOfExpenses[$budget->id]                         = bcadd($currentExpenses, $sumOfExpenses[$budget->id]);
-                $chartData[$budget->id]['entries'][$label]          = round(bcmul($currentExpenses, '-1'), 2);
-                $chartData[$budget->id . '-sum']['entries'][$label] = round(bcmul($sumOfExpenses[$budget->id], '-1'), 2);
+                $chartData[$budget->id]['entries'][$label]          = bcmul($currentExpenses, '-1');
+                $chartData[$budget->id . '-sum']['entries'][$label] = bcmul($sumOfExpenses[$budget->id], '-1');
 
-                $limit = $this->filterLimits($limits, $budget, $currentStart);
-                if (!is_null($limit->id)) {
-                    $leftOfLimits[$limit->id]                            = $leftOfLimits[$limit->id] ?? strval($limit->amount);
-                    $leftOfLimits[$limit->id]                            = bcadd($leftOfLimits[$limit->id], $currentExpenses);
-                    $chartData[$budget->id . '-left']['entries'][$label] = round($leftOfLimits[$limit->id], 2);
+                if (count($budgetLimits) > 0) {
+                    $budgetLimitId                                       = $budgetLimits->first()->id;
+                    $leftOfLimits[$budgetLimitId]                        = $leftOfLimits[$budgetLimitId] ?? strval($budgetLimits->sum('amount'));
+                    $leftOfLimits[$budgetLimitId]                        = bcadd($leftOfLimits[$budgetLimitId], $currentExpenses);
+                    $chartData[$budget->id . '-left']['entries'][$label] = $leftOfLimits[$budgetLimitId];
                 }
-
-
             }
             $currentStart = clone $currentEnd;
             $currentStart->addDay();
@@ -265,43 +202,31 @@ class BudgetReportController extends Controller
     }
 
     /**
-     * @param $limits
-     * @param $budget
-     * @param $currentStart
+     * Returns the budget limits belonging to the given budget and valid on the given day.
      *
-     * @return LimitRepetition
+     * @param Collection $budgetLimits
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
      */
-    private function filterLimits(Collection $limits, Budget $budget, Carbon $date): LimitRepetition
+    private function filterBudgetLimits(Collection $budgetLimits, Budget $budget, Carbon $start, Carbon $end): Collection
     {
-        Log::debug(sprintf('Start of filterLimits with %d limits.', $limits->count()));
-        $filtered = $limits->filter(
-            function (LimitRepetition $limit) use ($budget, $date) {
-                if ($limit->budget_id !== $budget->id) {
-                    Log::debug(sprintf('LimitRepetition has budget #%d but expecting #%d', $limit->budget_id, $budget->id));
-
-                    return false;
-                }
-                if ($date < $limit->startdate || $date > $limit->enddate) {
-                    Log::debug(
-                        sprintf(
-                            'Date %s is not between %s and %s',
-                            $date->format('Y-m-d'), $limit->startdate->format('Y-m-d'), $limit->enddate->format('Y-m-d')
-                        )
-                    );
-
-                    return false;
+        $set = $budgetLimits->filter(
+            function (BudgetLimit $budgetLimit) use ($budget, $start, $end) {
+                if ($budgetLimit->budget_id === $budget->id
+                    && $budgetLimit->start_date->lte($start) // start of budget limit is on or before start
+                    && $budgetLimit->end_date->gte($end) // end of budget limit is on or after end
+                ) {
+                    return $budgetLimit;
                 }
 
-                return $limit;
+                return false;
             }
         );
-        if ($filtered->count() === 1) {
-            return $filtered->first();
-        }
 
-        return new LimitRepetition;
+        return $set;
     }
-
 
     /**
      * @param Collection $accounts
@@ -313,7 +238,8 @@ class BudgetReportController extends Controller
      */
     private function getExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection
     {
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();

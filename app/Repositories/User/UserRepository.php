@@ -14,8 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\User;
 
 
-use FireflyConfig;
-use FireflyIII\Events\DeletedUser;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -55,6 +53,20 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param User   $user
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function changePassword(User $user, string $password): bool
+    {
+        $user->password = bcrypt($password);
+        $user->save();
+
+        return true;
+    }
+
+    /**
      * @return int
      */
     public function count(): int
@@ -69,13 +81,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function destroy(User $user): bool
     {
-        $email = $user->email;
         Log::debug(sprintf('Calling delete() on user %d', $user->id));
         $user->delete();
-
-
-        // trigger event:
-        event(new DeletedUser($email));
 
         return true;
     }
@@ -114,14 +121,6 @@ class UserRepository implements UserRepositoryInterface
             $return['has_2fa'] = true;
         }
 
-        // is user activated?
-        $mustConfirmAccount     = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
-        $isConfirmed            = Preferences::getForUser($user, 'user_confirmed', false)->data;
-        $return['is_activated'] = true;
-        if ($isConfirmed === false && $mustConfirmAccount === true) {
-            $return['is_activated'] = false;
-        }
-
         $return['is_admin']            = $user->hasRole('owner');
         $return['blocked']             = intval($user->blocked) === 1;
         $return['blocked_code']        = $user->blocked_code;
@@ -147,18 +146,5 @@ class UserRepository implements UserRepositoryInterface
         $return['tags']                = $user->tags()->count();
 
         return $return;
-    }
-
-    /**
-     * @param User   $user
-     * @param string $password
-     *
-     * @return bool
-     */
-    public function changePassword(User $user, string $password): bool
-    {
-        $user->password = bcrypt($password);
-        $user->save();
-        return true;
     }
 }

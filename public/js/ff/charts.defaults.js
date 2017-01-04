@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: accounting */
+
 var defaultChartOptions = {
     scales: {
         xAxes: [
@@ -20,7 +22,7 @@ var defaultChartOptions = {
         yAxes: [{
             display: true,
             ticks: {
-                callback: function (tickValue, index, ticks) {
+                callback: function (tickValue) {
                     "use strict";
                     return accounting.formatMoney(tickValue);
 

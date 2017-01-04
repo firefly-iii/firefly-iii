@@ -17,7 +17,6 @@ use Cache;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Input;
 use Log;
 use Preferences;
 use Session;
@@ -170,7 +169,7 @@ class CurrencyController extends Controller
 
 
         if (!auth()->user()->hasRole('owner')) {
-            Session::flash('warning', trans('firefly.ask_site_owner', ['site_owner' => env('SITE_OWNER')]));
+            Session::flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
         }
 
 
@@ -196,7 +195,7 @@ class CurrencyController extends Controller
         $currency = $repository->store($data);
         Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             Session::put('currencies.create.fromStore', true);
 
             return redirect(route('currencies.create'))->withInput();
@@ -225,7 +224,7 @@ class CurrencyController extends Controller
         Preferences::mark();
 
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             Session::put('currencies.edit.fromUpdate', true);
 
             return redirect(route('currencies.edit', [$currency->id]));

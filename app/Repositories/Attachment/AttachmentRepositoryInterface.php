@@ -33,11 +33,6 @@ interface AttachmentRepositoryInterface
     public function destroy(Attachment $attachment): bool;
 
     /**
-     * @return Collection
-     */
-    public function get(): Collection;
-
-    /**
      * @param Attachment $attachment
      *
      * @return bool
@@ -45,11 +40,9 @@ interface AttachmentRepositoryInterface
     public function exists(Attachment $attachment): bool;
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return string
+     * @return Collection
      */
-    public function getContent(Attachment $attachment): string;
+    public function get(): Collection;
 
     /**
      * @param Carbon $start
@@ -58,6 +51,13 @@ interface AttachmentRepositoryInterface
      * @return Collection
      */
     public function getBetween(Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getContent(Attachment $attachment): string;
 
     /**
      * @param Attachment $attachment

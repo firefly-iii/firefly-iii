@@ -3,9 +3,9 @@
     <tr>
         <th data-defaultsign="az" colspan="2">{{ 'category'|_ }}</th>
         {% for period in periods %}
-            <th data-defaultsign="_19">{{ period }}</th>
+            <th data-defaultsign="_19" style="text-align: right;">{{ period }}</th>
         {% endfor %}
-        <th data-defaultsign="_19">{{ 'sum'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
     </tr>
     </thead>
     <tbody>
@@ -20,11 +20,11 @@
             {% for key, period in periods %}
                 {# income first #}
                 {% if(info.entries[key]) %}
-                    <td data-value="{{ info.entries[key] }}">
+                    <td data-value="{{ info.entries[key] }}" style="text-align: right;">
                         {{ info.entries[key]|formatAmount }}
                     </td>
                 {% else %}
-                    <td data-value="0">
+                    <td data-value="0" style="text-align: right;">
                         {{ 0|formatAmount }}
                     </td>
                 {% endif %}
@@ -32,11 +32,11 @@
 
             {# if sum of income, display: #}
             {% if info.sum %}
-                <td data-value="{{ info.sum }}">
+                <td data-value="{{ info.sum }}" style="text-align: right;">
                     {{ info.sum|formatAmount }}
                 </td>
             {% else %}
-                <td data-value="0">
+                <td data-value="0" style="text-align: right;">
                     {{ 0|formatAmount }}
                 </td>
             {% endif %}

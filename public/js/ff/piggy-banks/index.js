@@ -24,7 +24,7 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    $('#sortable tbody').sortable(
+    $('#sortable-piggy tbody').sortable(
         {
             helper: fixHelper,
             stop: stopSorting,
@@ -73,12 +73,12 @@ function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
     var order = [];
-    $.each($('#sortable>tbody>tr'), function (i, v) {
+    $.each($('#sortable-piggy>tbody>tr'), function (i, v) {
         var holder = $(v);
         var id = holder.data('id');
         order.push(id);
     });
-    $.post('piggy-banks/sort', {_token: token, order: order}).done(function () {
+    $.post('piggy-banks/sort', {order: order}).done(function () {
         $('.loadSpin').removeClass('fa fa-refresh fa-spin');
     });
 }

@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class BudgetLimit
@@ -29,15 +30,34 @@ class BudgetLimit extends Model
      * @var array
      */
     protected $casts
-                      = [
+        = [
             'created_at' => 'date',
             'updated_at' => 'date',
-            'startdate'  => 'date',
+            'start_date' => 'date',
+            'end_date'   => 'date',
             'repeats'    => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
-    protected $hidden = ['amount_encrypted'];
+    protected $dates = ['created_at', 'updated_at', 'start_date', 'end_date'];
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public static function routeBinder($value)
+    {
+        if (auth()->check()) {
+            $object = self::where('budget_limits.id', $value)
+                          ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                          ->where('budgets.user_id', auth()->user()->id)
+                          ->first(['budget_limits.*']);
+            if ($object) {
+                return $object;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -55,12 +75,13 @@ class BudgetLimit extends Model
         return $this->hasMany('FireflyIII\Models\LimitRepetition');
     }
 
+
     /**
      * @param $value
      */
     public function setAmountAttribute($value)
     {
-        $this->attributes['amount'] = strval(round($value, 2));
+        $this->attributes['amount'] = strval(round($value, 12));
     }
 
 }

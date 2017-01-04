@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 
-use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -81,30 +80,20 @@ class UserController extends Controller
      */
     public function index(UserRepositoryInterface $repository)
     {
-        $subTitle           = strval(trans('firefly.user_administration'));
-        $subTitleIcon       = 'fa-users';
-        $mustConfirmAccount = FireflyConfig::get('must_confirm_account', config('firefly.configuration.must_confirm_account'))->data;
-        $users              = $repository->all();
+        $subTitle     = strval(trans('firefly.user_administration'));
+        $subTitleIcon = 'fa-users';
+        $users        = $repository->all();
 
         // add meta stuff.
         $users->each(
-            function (User $user) use ($mustConfirmAccount) {
-                $list        = ['user_confirmed', 'twoFactorAuthEnabled', 'twoFactorAuthSecret', 'registration_ip_address', 'confirmation_ip_address'];
-                $preferences = Preferences::getArrayForUser($user, $list);
-
-                $user->activated = true;
-                if (!($preferences['user_confirmed'] === true) && $mustConfirmAccount === true) {
-                    $user->activated = false;
-                }
-
+            function (User $user) {
+                $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
+                $preferences   = Preferences::getArrayForUser($user, $list);
                 $user->isAdmin = $user->hasRole('owner');
                 $is2faEnabled  = $preferences['twoFactorAuthEnabled'] === true;
                 $has2faSecret  = !is_null($preferences['twoFactorAuthSecret']);
-                $user->has2FA  = false;
-                if ($is2faEnabled && $has2faSecret) {
-                    $user->has2FA = true;
-                }
-                $user->prefs = $preferences;
+                $user->has2FA  = ($is2faEnabled && $has2faSecret) ? true : false;
+                $user->prefs   = $preferences;
             }
         );
 
@@ -125,37 +114,12 @@ class UserController extends Controller
         $mainTitleIcon = 'fa-hand-spock-o';
         $subTitle      = strval(trans('firefly.single_user_administration', ['email' => $user->email]));
         $subTitleIcon  = 'fa-user';
-
-        // get IP info:
-        $defaultIp    = '0.0.0.0';
-        $regPref      = Preferences::getForUser($user, 'registration_ip_address');
-        $registration = $defaultIp;
-        $conPref      = Preferences::getForUser($user, 'confirmation_ip_address');
-        $confirmation = $defaultIp;
-        if (!is_null($regPref)) {
-            $registration = $regPref->data;
-        }
-        if (!is_null($conPref)) {
-            $confirmation = $conPref->data;
-        }
-
-        $registrationHost = '';
-        $confirmationHost = '';
-
-        if ($registration != $defaultIp) {
-            $registrationHost = gethostbyaddr($registration);
-        }
-        if ($confirmation != $defaultIp) {
-            $confirmationHost = gethostbyaddr($confirmation);
-        }
-
-        $information = $repository->getUserData($user);
+        $information   = $repository->getUserData($user);
 
         return view(
             'admin.users.show',
             compact(
-                'title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'information',
-                'user', 'registration', 'confirmation', 'registrationHost', 'confirmationHost'
+                'title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'information', 'user'
             )
         );
     }

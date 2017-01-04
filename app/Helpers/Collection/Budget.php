@@ -60,7 +60,6 @@ class Budget
      */
     public function addBudgeted(string $add): Budget
     {
-        $add            = strval(round($add, 2));
         $this->budgeted = bcadd($this->budgeted, $add);
 
         return $this;
@@ -73,7 +72,6 @@ class Budget
      */
     public function addLeft(string $add): Budget
     {
-        $add        = strval(round($add, 2));
         $this->left = bcadd($this->left, $add);
 
         return $this;
@@ -86,7 +84,6 @@ class Budget
      */
     public function addOverspent(string $add): Budget
     {
-        $add             = strval(round($add, 2));
         $this->overspent = bcadd($this->overspent, $add);
 
         return $this;
@@ -99,7 +96,6 @@ class Budget
      */
     public function addSpent(string $add): Budget
     {
-        $add         = strval(round($add, 2));
         $this->spent = bcadd($this->spent, $add);
 
         return $this;
@@ -168,7 +164,7 @@ class Budget
      */
     public function setOverspent(string $overspent): Budget
     {
-        $this->overspent = strval(round($overspent, 2));
+        $this->overspent = $overspent;
 
         return $this;
     }
@@ -188,7 +184,7 @@ class Budget
      */
     public function setSpent(string $spent): Budget
     {
-        $this->spent = strval(round($spent, 2));
+        $this->spent = $spent;
 
         return $this;
     }

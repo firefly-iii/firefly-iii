@@ -48,21 +48,19 @@ function sortStop(event, ui) {
     var ruleId = current.parent().data('id');
     var entries = [];
     // who am i?
-    console.log('Rule: #' + current.parent().data('id'));
 
     $.each(parent.children(), function (i, v) {
         var trigger = $(v);
         var id = trigger.data('id');
-        var order = i + 1;
         entries.push(id);
 
     });
     if (parent.hasClass('rule-triggers')) {
-        $.post('rules/trigger/order/' + ruleId, {_token: token, triggers: entries}).fail(function () {
+        $.post('rules/trigger/order/' + ruleId, {triggers: entries}).fail(function () {
             alert('Could not re-order rule triggers. Please refresh the page.');
         });
     } else {
-        $.post('rules/action/order/' + ruleId, {_token: token, actions: entries}).fail(function () {
+        $.post('rules/action/order/' + ruleId, {actions: entries}).fail(function () {
             alert('Could not re-order rule actions. Please refresh the page.');
         });
 

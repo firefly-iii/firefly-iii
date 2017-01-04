@@ -30,7 +30,6 @@ class ConfigurationControllerTest extends TestCase
     {
         parent::setUp();
 
-        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once();
     }
 
     /**
@@ -47,15 +46,7 @@ class ConfigurationControllerTest extends TestCase
         $trueConfig->data = true;
 
         FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode', true])->once()->andReturn($trueConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['must_confirm_account', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->times(2)->andReturn($falseConfig);
-
-        // new settings:
-        FireflyConfig::shouldReceive('get')->withArgs(['mail_for_lockout', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['mail_for_blocked_domain', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['mail_for_blocked_email', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['mail_for_bad_login', false])->once()->andReturn($falseConfig);
-        FireflyConfig::shouldReceive('get')->withArgs(['mail_for_blocked_login', false])->once()->andReturn($falseConfig);
 
         $this->call('GET', route('admin.configuration.index'));
         $this->assertResponseStatus(200);
@@ -65,7 +56,7 @@ class ConfigurationControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::store
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::postIndex
      */
     public function testPostIndex()
     {
@@ -74,13 +65,7 @@ class ConfigurationControllerTest extends TestCase
 
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['must_confirm_account', false])->once();
         FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['mail_for_lockout', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['mail_for_blocked_domain', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['mail_for_blocked_email', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['mail_for_bad_login', false])->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['mail_for_blocked_login', false])->once();
 
         $this->be($this->user());
         $this->call('POST', route('admin.configuration.index.post'));

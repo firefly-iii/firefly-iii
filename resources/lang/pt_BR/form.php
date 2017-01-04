@@ -63,6 +63,7 @@ return [
     'description'                    => 'Descrição',
     'expense_account'                => 'Conta de Despesa',
     'revenue_account'                => 'Conta de Receita',
+    'decimal_places'                 => 'Decimal places',
 
     'revenue_account_source'      => 'Conta de receita (fonte)',
     'source_account_asset'        => 'Conta de origem (conta de ativo)',
@@ -150,35 +151,30 @@ return [
     'category_keep_transactions' => 'A única transação ligada a esta categoria não será excluída.|Todos :count transações ligadas a esta categoria não serão excluídos.',
     'tag_keep_transactions'      => 'A única transação ligada a essa marca não será excluída.|Todos :count transações ligadas a essa marca não serão excluídos.',
 
-    'email'                   => 'Email address',
-    'password'                => 'Password',
-    'password_confirmation'   => 'Password (again)',
-    'blocked'                 => 'Is blocked?',
-    'blocked_code'            => 'Reason for block',
+    'email'                 => 'Email address',
+    'password'              => 'Password',
+    'password_confirmation' => 'Password (again)',
+    'blocked'               => 'Is blocked?',
+    'blocked_code'          => 'Reason for block',
 
 
     // admin
-    'domain'                  => 'Domínio',
-    'single_user_mode'        => 'Modo de usuário único',
-    'must_confirm_account'    => 'Novos usuários devem ativar a conta',
-    'is_demo_site'            => 'É o site de demonstração',
-    'mail_for_lockout'        => 'Locked out',
-    'mail_for_blocked_domain' => 'Blocked domain',
-    'mail_for_blocked_email'  => 'Blocked email address',
-    'mail_for_bad_login'      => 'Login failure',
-    'mail_for_blocked_login'  => 'Blocked user',
+    'domain'                => 'Domínio',
+    'single_user_mode'      => 'Modo de usuário único',
+    'must_confirm_account'  => 'Novos usuários devem ativar a conta',
+    'is_demo_site'          => 'É o site de demonstração',
 
 
     // import
-    'import_file'             => 'Importar arquivo',
-    'configuration_file'      => 'Arquivo de configuração',
-    'import_file_type'        => 'Tipo de arquivo de importação',
-    'csv_comma'               => 'Uma vírgula (,)',
-    'csv_semicolon'           => 'Um ponto e vírgula (;)',
-    'csv_tab'                 => 'Um Tab (invisível)',
-    'csv_delimiter'           => 'Delimitador de campo CSV',
-    'csv_import_account'      => 'Conta de importação padrão',
-    'csv_config'              => 'Importar CSV de configuração',
+    'import_file'           => 'Importar arquivo',
+    'configuration_file'    => 'Arquivo de configuração',
+    'import_file_type'      => 'Tipo de arquivo de importação',
+    'csv_comma'             => 'Uma vírgula (,)',
+    'csv_semicolon'         => 'Um ponto e vírgula (;)',
+    'csv_tab'               => 'Um Tab (invisível)',
+    'csv_delimiter'         => 'Delimitador de campo CSV',
+    'csv_import_account'    => 'Conta de importação padrão',
+    'csv_config'            => 'Importar CSV de configuração',
 
 
     'due_date'           => 'Data de vencimento',

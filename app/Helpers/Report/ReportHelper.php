@@ -53,6 +53,8 @@ class ReportHelper implements ReportHelperInterface
      * This method generates a full report for the given period on all
      * the users bills and their payments.
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
+     *
      * Excludes bills which have not had a payment on the mentioned accounts.
      *
      * @param Carbon     $start
@@ -80,8 +82,6 @@ class ReportHelper implements ReportHelperInterface
             $billLine->setMin(strval($bill->amount_min));
             $billLine->setMax(strval($bill->amount_max));
             $billLine->setHit(false);
-            // is hit in period?
-
             $entry = $journals->filter(
                 function (Transaction $transaction) use ($bill) {
                     return $transaction->bill_id === $bill->id;
@@ -94,14 +94,10 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setLastHitDate($first->date);
                 $billLine->setHit(true);
             }
-
-            // bill is active, or bill is hit:
             if ($billLine->isActive() || $billLine->isHit()) {
                 $collection->addBill($billLine);
             }
         }
-
-        // do some extra filtering.
         $collection->filterBills();
 
         return $collection;

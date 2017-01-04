@@ -138,9 +138,9 @@ class SplitController extends Controller
 
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
-
+        $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
-        $this->attachments->saveAttachmentsForModel($journal);
+        $this->attachments->saveAttachmentsForModel($journal, $files);
 
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
@@ -257,7 +257,7 @@ class SplitController extends Controller
                 'source_account_name'      => $transaction['source_account_name'],
                 'destination_account_id'   => $transaction['destination_account_id'],
                 'destination_account_name' => $transaction['destination_account_name'],
-                'amount'                   => round($transaction['destination_amount'], 2),
+                'amount'                   => round($transaction['destination_amount'], 12),
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'],
             ];
@@ -292,7 +292,7 @@ class SplitController extends Controller
                 'source_account_name'      => $transaction['source_account_name'] ?? '',
                 'destination_account_id'   => $transaction['destination_account_id'] ?? 0,
                 'destination_account_name' => $transaction['destination_account_name'] ?? '',
-                'amount'                   => round($transaction['amount'] ?? 0, 2),
+                'amount'                   => round($transaction['amount'] ?? 0, 12),
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'] ?? '',
             ];

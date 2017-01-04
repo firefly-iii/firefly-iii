@@ -49,24 +49,13 @@ Route::group(
 
 /**
  * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+ * @deprecated
  */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'Auth'], function () {
     Route::get('', ['uses' => 'TwoFactorController@index', 'as' => 'index']);
     Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
     Route::post('', ['uses' => 'TwoFactorController@postIndex', 'as' => 'post']);
-
-}
-);
-
-/**
- * For the confirmation routes, the user must be logged in, also 2FA, but his account must not be confirmed.
- */
-Route::group(
-    ['middleware' => 'user-logged-in-2fa-no-activation', 'namespace' => 'Auth'], function () {
-    Route::get('/confirm-your-account', ['uses' => 'ConfirmationController@confirmationError', 'as' => 'confirmation_error']);
-    Route::get('/resend-confirmation', ['uses' => 'ConfirmationController@resendConfirmation', 'as' => 'resend_confirmation']);
-    Route::get('/confirmation/{code}', ['uses' => 'ConfirmationController@doConfirmation', 'as' => 'do_confirm_account']);
 
 }
 );
@@ -155,7 +144,7 @@ Route::group(
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
-    Route::get('show/{budget}/{limitrepetition}', ['uses' => 'BudgetController@showByRepetition', 'as' => 'show.repetition']);
+    Route::get('show/{budget}/{budgetlimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
     Route::get('list/no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
 
     Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'income.post']);
@@ -177,6 +166,7 @@ Route::group(
     Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
 
     Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
+    Route::get('show/{category}/all', ['uses' => 'CategoryController@showAll', 'as' => 'show.all']);
     Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showByDate', 'as' => 'show.date']);
     Route::get('list/no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
@@ -260,7 +250,7 @@ Route::group(
     Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
     Route::get('period/0/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget']);
     Route::get('period/{budget}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
-    Route::get('budget/{budget}/{limitrepetition}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
+    Route::get('budget/{budget}/{budgetlimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
     Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
 
@@ -693,11 +683,6 @@ Route::group(
     Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
     Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
-
-    // user domain manager
-    Route::get('domains', ['uses' => 'DomainController@domains', 'as' => 'users.domains']);
-    Route::get('domains/toggle/{domain}', ['uses' => 'DomainController@toggleDomain', 'as' => 'users.domains.block-toggle']);
-    Route::post('domains/manual', ['uses' => 'DomainController@manual', 'as' => 'users.domains.manual']);
 
     // FF configuration:
     Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);

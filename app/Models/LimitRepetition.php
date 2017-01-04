@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class LimitRepetition
  *
+ * @deprecated
  * @package FireflyIII\Models
  */
 class LimitRepetition extends Model
@@ -32,7 +33,7 @@ class LimitRepetition extends Model
      * @var array
      */
     protected $casts
-        = [
+                      = [
             'created_at' => 'date',
             'updated_at' => 'date',
             'startdate'  => 'date',

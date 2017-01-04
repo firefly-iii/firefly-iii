@@ -7,9 +7,17 @@
  *
  * See the LICENSE file for details.
  */
+/** global: moment, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
+
 
 $(function () {
     "use strict";
+
+    $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="_token"]').attr('content')
+                    }
+                });
 
     // when you click on a currency, this happens:
     $('.currency-option').click(currencySelect);
@@ -49,18 +57,12 @@ $(function () {
             $.post(dateRangeConfig.URL, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
-                label: label,
-                _token: token
+                label: label
             }).done(function () {
-                console.log('Succesfully sent new date range [' + start.format('YYYY-MM-DD') + '-' + end.format('YYYY-MM-DD') + '].');
                 window.location.reload(true);
             }).fail(function () {
-                console.log('Could not send new date range.');
                 alert('Could not change date range');
-
             });
-
-            //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         }
     );
 
@@ -133,7 +135,6 @@ function triggerList(e) {
     "use strict";
     var link = $(e.target);
     var table = link.parent().parent().parent().parent();
-    console.log('data-hidden = ' + table.attr('data-hidden'));
     if (table.attr('data-hidden') === 'no') {
         // hide all elements, return false.
         table.find('.overListLength').hide();

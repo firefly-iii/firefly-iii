@@ -23,7 +23,6 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Rules\TransactionMatcher;
 use Illuminate\Http\Request;
-use Input;
 use Preferences;
 use Response;
 use Session;
@@ -58,11 +57,12 @@ class RuleController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
+     * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
      * @return View
      */
-    public function create(RuleGroup $ruleGroup)
+    public function create(Request $request, RuleGroup $ruleGroup)
     {
         // count for possible present previous entered triggers/actions.
         $triggerCount = 0;
@@ -73,13 +73,13 @@ class RuleController extends Controller
         $oldActions  = [];
 
         // has old input?
-        if (Input::old()) {
+        if ($request->old()) {
             // process old triggers.
-            $oldTriggers  = $this->getPreviousTriggers();
+            $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
 
             // process old actions
-            $oldActions  = $this->getPreviousActions();
+            $oldActions  = $this->getPreviousActions($request);
             $actionCount = count($oldActions);
         }
 
@@ -154,12 +154,13 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
      *
      * @return View
      */
-    public function edit(RuleRepositoryInterface $repository, Rule $rule)
+    public function edit(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
         $oldTriggers  = $this->getCurrentTriggers($rule);
         $triggerCount = count($oldTriggers);
@@ -167,10 +168,10 @@ class RuleController extends Controller
         $actionCount  = count($oldActions);
 
         // has old input?
-        if (Input::old()) {
-            $oldTriggers  = $this->getPreviousTriggers();
+        if ($request->old()) {
+            $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
-            $oldActions   = $this->getPreviousActions();
+            $oldActions   = $this->getPreviousActions($request);
             $actionCount  = count($oldActions);
         }
 
@@ -255,7 +256,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('rules.create.fromStore', true);
 
@@ -342,7 +343,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('rules.edit.fromUpdate', true);
 
@@ -461,22 +462,24 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return array
      */
-    private function getPreviousActions()
+    private function getPreviousActions(Request $request)
     {
         $newIndex = 0;
         $actions  = [];
         /** @var array $oldActions */
-        $oldActions = is_array(Input::old('rule-action')) ? Input::old('rule-action') : [];
+        $oldActions = is_array($request->old('rule-action')) ? $request->old('rule-action') : [];
         foreach ($oldActions as $index => $entry) {
             $count     = ($newIndex + 1);
-            $checked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
+            $checked   = isset($request->old('rule-action-stop')[$index]) ? true : false;
             $actions[] = view(
                 'rules.partials.action',
                 [
                     'oldTrigger' => $entry,
-                    'oldValue'   => Input::old('rule-action-value')[$index],
+                    'oldValue'   => $request->old('rule-action-value')[$index],
                     'oldChecked' => $checked,
                     'count'      => $count,
                 ]
@@ -488,22 +491,24 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return array
      */
-    private function getPreviousTriggers()
+    private function getPreviousTriggers(Request $request)
     {
         $newIndex = 0;
         $triggers = [];
         /** @var array $oldTriggers */
-        $oldTriggers = is_array(Input::old('rule-trigger')) ? Input::old('rule-trigger') : [];
+        $oldTriggers = is_array($request->old('rule-trigger')) ? $request->old('rule-trigger') : [];
         foreach ($oldTriggers as $index => $entry) {
             $count      = ($newIndex + 1);
-            $oldChecked = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
+            $oldChecked = isset($request->old('rule-trigger-stop')[$index]) ? true : false;
             $triggers[] = view(
                 'rules.partials.trigger',
                 [
                     'oldTrigger' => $entry,
-                    'oldValue'   => Input::old('rule-trigger-value')[$index],
+                    'oldValue'   => $request->old('rule-trigger-value')[$index],
                     'oldChecked' => $oldChecked,
                     'count'      => $count,
                 ]

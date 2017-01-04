@@ -8,9 +8,11 @@
  * See the LICENSE file for details.
  */
 
+/** global: triggerCount, actionCount */
+
+
 $(function () {
     "use strict";
-    console.log("create");
     if (triggerCount === 0) {
         addNewTrigger();
     }

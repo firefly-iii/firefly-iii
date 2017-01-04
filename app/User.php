@@ -51,15 +51,6 @@ class User extends Authenticatable
      */
     protected $table = 'users';
 
-
-    /**
-     * @return HasMany
-     */
-    public function availableBudgets(): HasMany
-    {
-        return $this->hasMany('FireflyIII\Models\AvailableBudget');
-    }
-
     /**
      * @return HasMany
      */
@@ -94,6 +85,14 @@ class User extends Authenticatable
     public function attachments(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Attachment');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function availableBudgets(): HasMany
+    {
+        return $this->hasMany('FireflyIII\Models\AvailableBudget');
     }
 
     /**

@@ -15,13 +15,13 @@
     "management"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/JC5/firefly-iii",
+  "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "authors": [
     {
       "name": "James Cole",
       "email": "thegrumpydictator@gmail.com",
-      "homepage": "https://github.com/JC5",
+      "homepage": "https://github.com/firefly-iii",
       "role": "Developer"
     }
   ],
@@ -72,9 +72,6 @@
     ],
     "post-install-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postInstall",
-      "php artisan firefly:upgrade-instructions",
-      "php artisan firefly:upgrade-database",
-      "php artisan firefly:verify",
       "php artisan firefly:github-move",
       "php artisan optimize"
     ],

@@ -113,6 +113,7 @@ class PreferencesController extends Controller
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
     public function postCode(TokenFormRequest $request)
     {

@@ -13,7 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Rules;
 
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
@@ -77,7 +77,8 @@ class TransactionMatcher
         //   - the maximum number of transactions to search in have been searched 
         do {
             // Fetch a batch of transactions from the database
-            $collector = new JournalCollector(auth()->user());
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
             $set = $collector->getPaginatedJournals();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));

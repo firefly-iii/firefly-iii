@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: spent, budgeted, available, currencySymbol */
+
 function drawSpentBar() {
     "use strict";
     if ($('.spentBar').length > 0) {
@@ -70,7 +72,7 @@ function updateBudgetedAmounts(e) {
         drawBudgetedBar();
 
         // send a post to Firefly to update the amount:
-        $.post('budgets/amount/' + id, {amount: value, _token: token}).done(function (data) {
+        $.post('budgets/amount/' + id, {amount: value}).done(function (data) {
             // update the link if relevant:
             if (data.repetition > 0) {
                 $('.budget-link[data-id="' + id + '"]').attr('href', 'budgets/show/' + id + '/' + data.repetition);
@@ -79,11 +81,6 @@ function updateBudgetedAmounts(e) {
             }
         });
     }
-
-
-    console.log('Budget id is ' + id);
-    console.log('Difference = ' + (value - original ));
-
 }
 
 $(function () {
@@ -101,17 +98,6 @@ $(function () {
      When the input changes, update the percentages for the budgeted bar:
      */
     $('input[type="number"]').on('input', updateBudgetedAmounts);
-
-
-    /*
-     Draw the charts, if necessary:
-     */
-    if (typeof budgetID !== 'undefined' && typeof repetitionID === 'undefined') {
-        columnChart('chart/budget/' + budgetID, 'budgetOverview');
-    }
-    if (typeof budgetID !== 'undefined' && typeof repetitionID !== 'undefined') {
-        lineChart('chart/budget/' + budgetID + '/' + repetitionID, 'budgetOverview');
-    }
 
 });
 

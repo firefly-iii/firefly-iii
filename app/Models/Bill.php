@@ -29,9 +29,6 @@ class Bill extends Model
 {
 
     use ValidatingTrait;
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -49,6 +46,8 @@ class Bill extends Model
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
         ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];
@@ -105,7 +104,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value)
     {
-        $this->attributes['amount_max'] = strval(round($value, 2));
+        $this->attributes['amount_max'] = strval(round($value, 12));
     }
 
     /**
@@ -113,7 +112,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value)
     {
-        $this->attributes['amount_min'] = strval(round($value, 2));
+        $this->attributes['amount_min'] = strval(round($value, 12));
     }
 
     /**

@@ -53,6 +53,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      *
@@ -71,6 +72,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -94,6 +96,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      *
@@ -115,6 +118,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      *
@@ -144,6 +148,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -256,6 +261,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -286,6 +292,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -319,30 +326,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
-     *
-     *
-     * @return bool
-     */
-    public function validateUniqueForUser($attribute, $value, $parameters): bool
-    {
-        $query = DB::table($parameters[0])->where($parameters[1], $value);
-        $query->where('user_id', auth()->user()->id);
-        if (isset($parameters[2])) {
-            $query->where('id', '!=', $parameters[2]);
-        }
-        $count = $query->count();
-        if ($count == 0) {
-            return true;
-        }
-
-        return false;
-
-    }
-
-    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * Validate an object and its unicity. Checks for encryption / encrypted values as well.
      *
      * parameter 0: the table
@@ -380,6 +364,7 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
      * @param $parameters

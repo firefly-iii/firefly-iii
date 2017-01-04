@@ -26,8 +26,7 @@ use Illuminate\Support\Facades\Auth;
 class IsAdmin
 {
     /**
-     * Handle an incoming request. User account must be confirmed for this routine to let
-     * the user pass.
+     * Handle an incoming request. Must be admin.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next

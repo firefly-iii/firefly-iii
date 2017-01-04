@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyConfig;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -23,7 +24,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Session;
 use View;
-use FireflyConfig;
 
 /**
  * Class Controller
@@ -52,8 +52,8 @@ class Controller extends BaseController
         View::share('hideTags', false);
         $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
-        View::share('DEMO_USERNAME', env('DEMO_USERNAME',''));
-        View::share('DEMO_PASSWORD', env('DEMO_PASSWORD',''));
+        View::share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
+        View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
 
         // translations:
 

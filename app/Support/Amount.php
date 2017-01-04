@@ -17,7 +17,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use NumberFormatter;
 use Preferences as Prefs;
 
 /**
@@ -43,18 +42,28 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param TransactionCurrency $format
-     * @param string              $amount
-     * @param bool                $coloured
+     * @param \FireflyIII\Models\TransactionCurrency $format
+     * @param string                                 $amount
+     * @param bool                                   $coloured
      *
      * @return string
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
-        $locale    = setlocale(LC_MONETARY, 0);
-        $float     = round($amount, 2);
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result    = $formatter->formatCurrency($float, $format->code);
+        setlocale(LC_MONETARY, 0);
+        $float     = round($amount, 12);
+        $info      = localeconv();
+        $formatted = number_format($float, $format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
+
+        // some complicated switches to format the amount correctly:
+        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
+        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
+        $space     = $separated ? ' ' : '';
+        $result    = $format->symbol . $space . $formatted;
+
+        if (!$precedes) {
+            $result = $space . $formatted . $format->symbol;
+        }
 
         if ($coloured === true) {
 
@@ -75,6 +84,22 @@ class Amount
     }
 
     /**
+     * Used in many places (unfortunately).
+     *
+     * @param string $currencyCode
+     * @param string $amount
+     * @param bool   $coloured
+     *
+     * @return string
+     */
+    public function formatByCode(string $currencyCode, string $amount, bool $coloured = true): string
+    {
+        $currency = TransactionCurrency::whereCode($currencyCode)->first();
+
+        return $this->formatAnything($currency, $amount, $coloured);
+    }
+
+    /**
      *
      * @param \FireflyIII\Models\TransactionJournal $journal
      * @param bool                                  $coloured
@@ -83,27 +108,9 @@ class Amount
      */
     public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
     {
-        $locale       = setlocale(LC_MONETARY, 0);
-        $float        = round(TransactionJournal::amount($journal), 2);
-        $formatter    = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $currencyCode = $journal->transaction_currency_code ?? $journal->transactionCurrency->code;
-        $result       = $formatter->formatCurrency($float, $currencyCode);
+        $currency = $journal->transactionCurrency;
 
-        if ($coloured === true && $float === 0.00) {
-            return '<span style="color:#999">' . $result . '</span>'; // always grey.
-        }
-        if (!$coloured) {
-            return $result;
-        }
-        if (!$journal->isTransfer()) {
-            if ($float > 0) {
-                return '<span class="text-success">' . $result . '</span>';
-            }
-
-            return '<span class="text-danger">' . $result . '</span>';
-        } else {
-            return '<span class="text-info">' . $result . '</span>';
-        }
+        return $this->formatAnything($currency, TransactionJournal::amount($journal), $coloured);
     }
 
     /**
@@ -117,41 +124,6 @@ class Amount
         $currency = $transaction->transactionJournal->transactionCurrency;
 
         return $this->formatAnything($currency, strval($transaction->amount), $coloured);
-    }
-
-    /**
-     * This method will properly format the given number, in color or "black and white",
-     * as a currency, given two things: the currency required and the currency code.
-     *
-     * @param string $code
-     * @param string $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     */
-    public function formatWithCode(string $code, string $amount, bool $coloured = true): string
-    {
-        $locale    = setlocale(LC_MONETARY, 0);
-        $float     = round($amount, 2);
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $result    = $formatter->formatCurrency($float, $code);
-
-        if ($coloured === true) {
-
-            if ($amount > 0) {
-                return sprintf('<span class="text-success">%s</span>', $result);
-            } else {
-                if ($amount < 0) {
-                    return sprintf('<span class="text-danger">%s</span>', $result);
-                }
-            }
-
-            return sprintf('<span style="color:#999">%s</span>', $result);
-
-
-        }
-
-        return $result;
     }
 
     /**

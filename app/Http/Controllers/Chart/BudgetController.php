@@ -14,11 +14,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -31,6 +32,8 @@ use Response;
 /**
  * Class BudgetController
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // can't realy be helped.
+ *
  * @package FireflyIII\Http\Controllers\Chart
  */
 class BudgetController extends Controller
@@ -39,26 +42,35 @@ class BudgetController extends Controller
     /** @var GeneratorInterface */
     protected $generator;
 
+    /** @var  BudgetRepositoryInterface */
+    protected $repository;
+
     /**
      * BudgetController constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        $this->generator = app(GeneratorInterface::class);
+
+        $this->middleware(
+            function ($request, $next) {
+                $this->generator  = app(GeneratorInterface::class);
+                $this->repository = app(BudgetRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
     }
 
     /**
-     * checked
      *
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param Budget $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budget(BudgetRepositoryInterface $repository, Budget $budget)
+    public function budget(Budget $budget)
     {
-        $first = $repository->firstUseDate($budget);
+        $first = $this->repository->firstUseDate($budget);
         $range = Preferences::get('viewRange', '1M')->data;
         $last  = session('end', new Carbon);
 
@@ -73,7 +85,6 @@ class BudgetController extends Controller
 
         $final = clone $last;
         $final->addYears(2);
-
         $budgetCollection = new Collection([$budget]);
         $last             = Navigation::endOfX($last, $range, $final); // not to overshoot.
         $entries          = [];
@@ -84,7 +95,7 @@ class BudgetController extends Controller
             $currentEnd   = Navigation::endOfPeriod($first, $range);
             // sub another day because reasons.
             $currentEnd->subDay();
-            $spent            = $repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
+            $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
             $format           = Navigation::periodShow($first, $range);
             $entries[$format] = bcmul($spent, '-1');
             $first            = Navigation::addPeriod($first, $range, 0);
@@ -100,31 +111,36 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
-     * @param LimitRepetition           $repetition
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws FireflyException
      */
-    public function budgetLimit(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition)
+    public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit)
     {
-        $start = clone $repetition->startdate;
-        $end   = $repetition->enddate;
+        if ($budgetLimit->budget->id != $budget->id) {
+            throw new FireflyException('This budget limit is not part of this budget.');
+        }
+
+        $start = clone $budgetLimit->start_date;
+        $end   = clone $budgetLimit->end_date;
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.budget.limit');
-        $cache->addProperty($repetition->id);
+        $cache->addProperty($budgetLimit->id);
 
         if ($cache->has()) {
             return Response::json($cache->get());
         }
 
         $entries          = [];
-        $amount           = $repetition->amount;
+        $amount           = $budgetLimit->amount;
         $budgetCollection = new Collection([$budget]);
         while ($start <= $end) {
-            $spent            = $repository->spentInPeriod($budgetCollection, new Collection, $start, $start);
+            $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
             $format           = $start->formatLocalized(strval(trans('config.month_and_day')));
             $entries[$format] = $amount;
@@ -139,12 +155,12 @@ class BudgetController extends Controller
 
     /**
      * Shows a budget list with spent/left/overspent.
-     *
-     * @param BudgetRepositoryInterface $repository
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // 46 lines, I'm fine with this.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(BudgetRepositoryInterface $repository)
+    public function frontpage()
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -156,58 +172,32 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $budgets     = $repository->getActiveBudgets();
-        $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
-        $chartData   = [
-            [
-                'label'   => strval(trans('firefly.spent_in_budget')),
-                'entries' => [],
-                'type'    => 'bar',
-            ],
-            [
-                'label'   => strval(trans('firefly.left_to_spend')),
-                'entries' => [],
-                'type'    => 'bar',
-            ],
-            [
-                'label'   => strval(trans('firefly.overspent')),
-                'entries' => [],
-                'type'    => 'bar',
-            ],
+        $budgets   = $this->repository->getActiveBudgets();
+        $chartData = [
+            ['label' => strval(trans('firefly.spent_in_budget')), 'entries' => [], 'type' => 'bar',],
+            ['label' => strval(trans('firefly.left_to_spend')), 'entries' => [], 'type' => 'bar',],
+            ['label' => strval(trans('firefly.overspent')), 'entries' => [], 'type' => 'bar',],
         ];
 
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             // get relevant repetitions:
-            $reps = $this->filterRepetitions($repetitions, $budget, $start, $end);
-
-            if ($reps->count() === 0) {
-                $row = $this->spentInPeriodSingle($repository, $budget, $start, $end);
-                if (bccomp($row['spent'], '0') !== 0 || bccomp($row['repetition_left'], '0') !== 0) {
-                    $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
-                    $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
-                    $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
-                }
-                continue;
+            $limits   = $this->repository->getBudgetLimits($budget, $start, $end);
+            $expenses = $this->getExpensesForBudget($limits, $budget, $start, $end);
+            foreach ($expenses as $name => $row) {
+                $chartData[0]['entries'][$name] = $row['spent'];
+                $chartData[1]['entries'][$name] = $row['left'];
+                $chartData[2]['entries'][$name] = $row['overspent'];
             }
-            $rows = $this->spentInPeriodMulti($repository, $budget, $reps);
-            foreach ($rows as $row) {
-                if (bccomp($row['spent'], '0') !== 0 || bccomp($row['repetition_left'], '0') !== 0) {
-                    $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
-                    $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
-                    $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
-                }
-            }
-            unset($rows, $row);
-
         }
         // for no budget:
-        $row = $this->spentInPeriodWithout($start, $end);
-        if (bccomp($row['repetition_overspent'], '0') !== 0) {
-            $chartData[0]['entries'][$row['name']] = bcmul($row['spent'], '-1');
-            $chartData[1]['entries'][$row['name']] = $row['repetition_left'];
-            $chartData[2]['entries'][$row['name']] = bcmul($row['repetition_overspent'], '-1');
+        $spent = $this->spentInPeriodWithout($start, $end);
+        $name  = strval(trans('firefly.no_budget'));
+        if (bccomp($spent, '0') !== 0) {
+            $chartData[0]['entries'][$name] = bcmul($spent, '-1');
+            $chartData[1]['entries'][$name] = '0';
+            $chartData[2]['entries'][$name] = '0';
         }
 
         $data = $this->generator->multiSet($chartData);
@@ -218,15 +208,16 @@ class BudgetController extends Controller
 
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
-     * @param Carbon                    $start
-     * @param Carbon                    $end
-     * @param Collection                $accounts
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     *
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function period(BudgetRepositoryInterface $repository, Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
+    public function period(Budget $budget, Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -238,56 +229,22 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-
-        // get the expenses
-        $budgeted = [];
         $periods  = Navigation::listOfPeriods($start, $end);
-        $entries  = $repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end);
-        $key      = Navigation::preferredCarbonFormat($start, $end);
-        $range    = Navigation::preferredRangeFormat($start, $end);
-
-        // get the budget limits (if any)
-        $repetitions = $repository->getAllBudgetLimitRepetitions($start, $end);
-        $current     = clone $start;
-        while ($current < $end) {
-            $currentStart     = Navigation::startOfPeriod($current, $range);
-            $currentEnd       = Navigation::endOfPeriod($current, $range);
-            $reps             = $repetitions->filter(
-                function (LimitRepetition $repetition) use ($budget, $currentStart, $currentEnd) {
-                    if ($repetition->budget_id === $budget->id && $repetition->startdate >= $currentStart && $repetition->enddate <= $currentEnd) {
-                        return true;
-                    }
-
-                    return false;
-                }
-            );
-            $index            = $currentStart->format($key);
-            $budgeted[$index] = $reps->sum('amount');
-            $currentEnd->addDay();
-            $current = clone $currentEnd;
-        }
+        $entries  = $this->repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
+        $budgeted = $this->getBudgetedInPeriod($budget, $start, $end);
 
         // join them into one set of data:
         $chartData = [
-            [
-                'label'   => strval(trans('firefly.spent')),
-                'type'    => 'bar',
-                'entries' => [],
-            ],
-            [
-                'label'   => strval(trans('firefly.budgeted')),
-                'type'    => 'bar',
-                'entries' => [],
-            ],
+            ['label' => strval(trans('firefly.spent')), 'type' => 'bar', 'entries' => [],],
+            ['label' => strval(trans('firefly.budgeted')), 'type' => 'bar', 'entries' => [],],
         ];
 
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];
             $spent                           = isset($entries[$budget->id]['entries'][$period]) ? $entries[$budget->id]['entries'][$period] : '0';
             $limit                           = isset($budgeted[$period]) ? $budgeted[$period] : 0;
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 2);
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = $limit;
-
         }
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
@@ -296,14 +253,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetRepositoryInterface $repository
-     * @param Collection                $accounts
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function periodNoBudget(BudgetRepositoryInterface $repository, Collection $accounts, Carbon $start, Carbon $end)
+    public function periodNoBudget(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -317,7 +273,7 @@ class BudgetController extends Controller
 
         // the expenses:
         $periods   = Navigation::listOfPeriods($start, $end);
-        $entries   = $repository->getNoBudgetPeriodReport($accounts, $start, $end);
+        $entries   = $this->repository->getNoBudgetPeriodReport($accounts, $start, $end);
         $chartData = [];
 
         // join them:
@@ -333,98 +289,115 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Collection $repetitions
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function getBudgetedInPeriod(Budget $budget, Carbon $start, Carbon $end): array
+    {
+        $key      = Navigation::preferredCarbonFormat($start, $end);
+        $range    = Navigation::preferredRangeFormat($start, $end);
+        $current  = clone $start;
+        $budgeted = [];
+        while ($current < $end) {
+            $currentStart     = Navigation::startOfPeriod($current, $range);
+            $currentEnd       = Navigation::endOfPeriod($current, $range);
+            $budgetLimits     = $this->repository->getBudgetLimits($budget, $currentStart, $currentEnd);
+            $index            = $currentStart->format($key);
+            $budgeted[$index] = $budgetLimits->sum('amount');
+            $currentEnd->addDay();
+            $current = clone $currentEnd;
+        }
+
+        return $budgeted;
+    }
+
+    /**
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 6 but ok.
+     *
+     * @param Collection $limits
      * @param Budget     $budget
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
-     */
-    private function filterRepetitions(Collection $repetitions, Budget $budget, Carbon $start, Carbon $end): Collection
-    {
-
-        return $repetitions->filter(
-            function (LimitRepetition $repetition) use ($budget, $start, $end) {
-                if ($repetition->startdate < $end && $repetition->enddate > $start && $repetition->budget_id === $budget->id) {
-                    return true;
-                }
-
-                return false;
-            }
-        );
-    }
-
-    /**
-     * Returns an array with the following values:
-     * 0 =>
-     *   'name' => name of budget + repetition
-     *   'repetition_left' => left in budget repetition (always zero)
-     *   'repetition_overspent' => spent more than budget repetition? (always zero)
-     *   'spent' => actually spent in period for budget
-     * 1 => (etc)
-     *
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
-     * @param Collection                $repetitions
-     *
      * @return array
      */
-    private function spentInPeriodMulti(BudgetRepositoryInterface $repository, Budget $budget, Collection $repetitions): array
+    private function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array
     {
         $return = [];
-        $format = strval(trans('config.month_and_day'));
-        $name   = $budget->name;
-        /** @var LimitRepetition $repetition */
-        foreach ($repetitions as $repetition) {
-            $expenses = $repository->spentInPeriod(new Collection([$budget]), new Collection, $repetition->startdate, $repetition->enddate);
-
-            if ($repetitions->count() > 1) {
-                $name = $budget->name . ' ' . trans(
-                        'firefly.between_dates',
-                        ['start' => $repetition->startdate->formatLocalized($format), 'end' => $repetition->enddate->formatLocalized($format)]
-                    );
+        if ($limits->count() === 0) {
+            $spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+            if (bccomp($spent, '0') !== 0) {
+                $return[$budget->name]['spent']     = bcmul($spent, '-1');
+                $return[$budget->name]['left']      = 0;
+                $return[$budget->name]['overspent'] = 0;
             }
-            $amount    = $repetition->amount;
-            $left      = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent     = $expenses;
-            $overspent = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
-            $return[]  = [
-                'name'                 => $name,
-                'repetition_left'      => $left,
-                'repetition_overspent' => $overspent,
-                'spent'                => $spent,
-            ];
+
+            return $return;
         }
+
+        $rows = $this->spentInPeriodMulti($budget, $limits);
+        foreach ($rows as $name => $row) {
+            if (bccomp($row['spent'], '0') !== 0 || bccomp($row['left'], '0') !== 0) {
+                $return[$name]['spent']     = bcmul($row['spent'], '-1');
+                $return[$name]['left']      = $row['left'];
+                $return[$name]['overspent'] = bcmul($row['overspent'], '-1');
+            }
+        }
+        unset($rows, $row);
 
         return $return;
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     *
      * Returns an array with the following values:
-     * 'name' => name of budget
-     * 'repetition_left' => left in budget repetition (always zero)
-     * 'repetition_overspent' => spent more than budget repetition? (always zero)
-     * 'spent' => actually spent in period for budget
+     * 0 =>
+     *   'name' => name of budget + repetition
+     *   'left' => left in budget repetition (always zero)
+     *   'overspent' => spent more than budget repetition? (always zero)
+     *   'spent' => actually spent in period for budget
+     * 1 => (etc)
      *
-     *
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Budget     $budget
+     * @param Collection $limits
      *
      * @return array
      */
-    private function spentInPeriodSingle(BudgetRepositoryInterface $repository, Budget $budget, Carbon $start, Carbon $end): array
+    private function spentInPeriodMulti(Budget $budget, Collection $limits): array
     {
-        $spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
-        $array = [
-            'name'                 => $budget->name,
-            'repetition_left'      => '0',
-            'repetition_overspent' => '0',
-            'spent'                => $spent,
-        ];
+        $return = [];
+        $format = strval(trans('config.month_and_day'));
+        $name   = $budget->name;
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($limits as $budgetLimit) {
+            $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
 
-        return $array;
+            if ($limits->count() > 1) {
+                $name = $budget->name . ' ' . trans(
+                        'firefly.between_dates',
+                        [
+                            'start' => $budgetLimit->start_date->formatLocalized($format),
+                            'end'   => $budgetLimit->end_date->formatLocalized($format),
+                        ]
+                    );
+            }
+            $amount        = $budgetLimit->amount;
+            $left          = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
+            $spent         = $expenses;
+            $overspent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
+            $return[$name] = [
+                'left'      => $left,
+                'overspent' => $overspent,
+                'spent'     => $spent,
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -437,12 +410,13 @@ class BudgetController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return array
+     * @return string
      */
-    private function spentInPeriodWithout(Carbon $start, Carbon $end): array
+    private function spentInPeriodWithout(Carbon $start, Carbon $end): string
     {
         // collector
-        $collector = new JournalCollector(auth()->user());
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
         $types     = [TransactionType::WITHDRAWAL];
         $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
         $journals = $collector->getJournals();
@@ -451,13 +425,7 @@ class BudgetController extends Controller
         foreach ($journals as $entry) {
             $sum = bcadd($entry->transaction_amount, $sum);
         }
-        $array = [
-            'name'                 => strval(trans('firefly.no_budget')),
-            'repetition_left'      => '0',
-            'repetition_overspent' => $sum,
-            'spent'                => '0',
-        ];
 
-        return $array;
+        return $sum;
     }
 }

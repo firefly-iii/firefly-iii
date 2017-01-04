@@ -130,10 +130,9 @@ class VerifyDatabase extends Command
 
         /** @var Budget $entry */
         foreach ($set as $entry) {
-            $name = $entry->encrypted ? Crypt::decrypt($entry->name) : $entry->name;
             $line = sprintf(
                 'Notice: User #%d (%s) has budget #%d ("%s") which has no budget limits.',
-                $entry->user_id, $entry->email, $entry->id, $name
+                $entry->user_id, $entry->email, $entry->id, $entry->name
             );
             $this->line($line);
         }
@@ -174,10 +173,8 @@ class VerifyDatabase extends Command
         $configuration = [
             // a withdrawal can not have revenue account:
             TransactionType::WITHDRAWAL => [AccountType::REVENUE],
-
             // deposit cannot have an expense account:
             TransactionType::DEPOSIT    => [AccountType::EXPENSE],
-
             // transfer cannot have either:
             TransactionType::TRANSFER   => [AccountType::EXPENSE, AccountType::REVENUE],
         ];

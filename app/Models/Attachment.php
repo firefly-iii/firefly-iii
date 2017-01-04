@@ -43,7 +43,7 @@ class Attachment extends Model
         ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-    /** @var array  */
+    /** @var array */
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
 
     /**

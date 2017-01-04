@@ -96,6 +96,9 @@ class FireflyServiceProvider extends ServiceProvider
         // chart generator:
         $this->app->bind('FireflyIII\Generator\Chart\Basic\GeneratorInterface', 'FireflyIII\Generator\Chart\Basic\ChartJsGenerator');
 
+        // chart builder
+        $this->app->bind('FireflyIII\Helpers\Chart\MetaPieChartInterface', 'FireflyIII\Helpers\Chart\MetaPieChart');
+
         // other generators
         $this->app->bind('FireflyIII\Export\ProcessorInterface', 'FireflyIII\Export\Processor');
         $this->app->bind('FireflyIII\Import\ImportProcedureInterface', 'FireflyIII\Import\ImportProcedure');

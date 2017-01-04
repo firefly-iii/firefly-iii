@@ -63,19 +63,20 @@ class UpgradeFireflyInstructions extends Command
 
         }
 
-
         if (is_null($text)) {
             $this->line(sprintf('Thank you for installing Firefly III, v%s', $version));
             $this->info('There are no extra upgrade instructions.');
             $this->line('Firefly III should be ready for use.');
-        } else {
-            $this->line('+------------------------------------------------------------------------------+');
-            $this->line('');
-            $this->line(sprintf('Thank you for installing Firefly III, v%s', $version));
-            $this->info(wordwrap($text));
-            $this->line('');
-            $this->line('+------------------------------------------------------------------------------+');
+
+            return;
         }
+
+        $this->line('+------------------------------------------------------------------------------+');
+        $this->line('');
+        $this->line(sprintf('Thank you for installing Firefly III, v%s', $version));
+        $this->info(wordwrap($text));
+        $this->line('');
+        $this->line('+------------------------------------------------------------------------------+');
 
 
     }

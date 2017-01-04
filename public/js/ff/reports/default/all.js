@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: accountReportUri, incomeReportUri, expenseReportUri, incExpReportUri, startDate, endDate, accountIds */
+
 $(function () {
     "use strict";
 
@@ -45,7 +47,7 @@ function clickInfoButton(e) {
     $.getJSON('popup/general', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
 }
 
-function errorInfoButton(data) {
+function errorInfoButton() {
     "use strict";
     // remove wait cursor
     $('body').removeClass('waiting');
@@ -62,7 +64,6 @@ function respondInfoButton(data) {
 
 function loadAjaxPartial(holder, uri) {
     "use strict";
-    console.log('Going to grab URI ' + uri);
     $.get(uri).done(function (data) {
         displayAjaxPartial(data, holder);
     }).fail(function () {
@@ -72,7 +73,6 @@ function loadAjaxPartial(holder, uri) {
 
 function displayAjaxPartial(data, holder) {
     "use strict";
-    console.log('Display stuff in ' + holder);
     var obj = $('#' + holder);
     obj.removeClass('loading').html(data);
 
@@ -98,7 +98,6 @@ function displayAjaxPartial(data, holder) {
 
 function failAjaxPartial(uri, holder) {
     "use strict";
-    console.log('Failed to load: ' + uri);
     $('#' + holder).removeClass('loading').addClass('general-chart-error');
 
 }

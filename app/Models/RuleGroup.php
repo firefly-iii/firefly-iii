@@ -32,11 +32,11 @@ class RuleGroup extends Model
      */
     protected $casts
         = [
-            'created_at'      => 'date',
-            'updated_at'      => 'date',
-            'deleted_at'      => 'date',
-            'active'          => 'boolean',
-            'order'           => 'int',
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'active'     => 'boolean',
+            'order'      => 'int',
         ];
     /** @var array */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];

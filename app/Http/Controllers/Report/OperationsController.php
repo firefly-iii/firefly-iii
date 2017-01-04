@@ -48,8 +48,9 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
-        $expenses = $this->getExpenseReport($start, $end, $accounts);
-        $result   = view('reports.partials.expenses', compact('expenses'))->render();
+        $entries = $this->getExpenseReport($start, $end, $accounts);
+        $type    = 'expense-entry';
+        $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
         $cache->store($result);
 
         return $result;
@@ -74,9 +75,10 @@ class OperationsController extends Controller
         if ($cache->has()) {
             return $cache->get();
         }
-        $income = $this->getIncomeReport($start, $end, $accounts);
+        $entries = $this->getIncomeReport($start, $end, $accounts);
+        $type    = 'income-entry';
+        $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
 
-        $result = view('reports.partials.income', compact('income'))->render();
         $cache->store($result);
 
         return $result;
@@ -227,14 +229,21 @@ class OperationsController extends Controller
             $name       = $transaction->opposing_account_name;
             if (!isset($expenses[$opposingId])) {
                 $expenses[$opposingId] = [
-                    'id'    => $opposingId,
-                    'name'  => $name,
-                    'sum'   => '0',
-                    'count' => 0,
+                    'id'      => $opposingId,
+                    'name'    => $name,
+                    'sum'     => '0',
+                    'average' => '0',
+                    'count'   => 0,
                 ];
             }
             $expenses[$opposingId]['sum'] = bcadd($expenses[$opposingId]['sum'], $transaction->transaction_amount);
             $expenses[$opposingId]['count']++;
+        }
+        // do averages:
+        foreach ($expenses as $key => $entry) {
+            if ($expenses[$key]['count'] > 1) {
+                $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], strval($expenses[$key]['count']));
+            }
         }
 
 

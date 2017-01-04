@@ -29,7 +29,7 @@ class Note extends Model
      * @var array
      */
     protected $casts
-        = [
+                        = [
             'created_at' => 'date',
             'updated_at' => 'date',
             'deleted_at' => 'date',
