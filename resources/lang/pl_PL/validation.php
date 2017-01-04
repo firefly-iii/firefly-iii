@@ -18,7 +18,7 @@ return [
     'invalid_domain'                 => 'Ze względu na zabezpieczenia nie możesz się zarejestrować z tej domeny.',
     'file_already_attached'          => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
     'file_attached'                  => 'Pomyślnie wgrano plik ":name".',
-    'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
+    'file_invalid_mime'              => 'Plik ":name" jest typu ":mime", który nie jest akceptowany jako nowy plik do przekazania.',
     'file_too_large'                 => 'Plik ": nazwa" jest zbyt duży.',
     'belongs_to_user'                => 'Wartość :attribute jest nieznana',
     'accepted'                       => ':attribute musi zostać zaakceptowany.',
