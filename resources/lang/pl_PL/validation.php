@@ -23,6 +23,7 @@ return [
     'belongs_to_user'                => 'Wartość :attribute jest nieznana',
     'accepted'                       => ':attribute musi zostać zaakceptowany.',
     'bic'                            => 'To nie jest prawidłowy BIC.',
+    'more'                           => ':attribute must be larger than zero.',
     'active_url'                     => ':attribute nie jest prawidłowym adresem URL.',
     'after'                          => ':attribute musi być datą późniejszą od :date.',
     'alpha'                          => ':attribute może zawierać tylko litery.',
