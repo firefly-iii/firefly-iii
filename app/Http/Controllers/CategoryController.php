@@ -319,6 +319,7 @@ class CategoryController extends Controller
      */
     private function getGroupedEntries(Category $category): Collection
     {
+        /** @var CategoryRepositoryInterface $repository */
         $repository        = app(CategoryRepositoryInterface::class);
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
@@ -344,8 +345,8 @@ class CategoryController extends Controller
         while ($end >= $first) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
-            $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
+            $spent      = $repository->spentInPeriodCollector(new Collection([$category]), $accounts, $end, $currentEnd);
+            $earned     = $repository->earnedInPeriodCollector(new Collection([$category]), $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
             $entries->push([$dateStr, $dateName, $spent, $earned]);
