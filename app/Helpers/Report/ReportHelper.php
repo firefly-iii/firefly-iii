@@ -104,31 +104,6 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return CategoryCollection
-     */
-    public function getCategoryReport(Collection $accounts, Carbon $start, Carbon $end): CategoryCollection
-    {
-        $object = new CategoryCollection;
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
-            // CategoryCollection expects the amount in $spent:
-            $category->spent = $spent;
-            $object->addCategory($category);
-        }
-
-        return $object;
-    }
-
-    /**
      * @param Carbon $date
      *
      * @return array

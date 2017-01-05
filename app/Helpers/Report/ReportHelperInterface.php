@@ -43,15 +43,6 @@ interface ReportHelperInterface
     public function getBillReport(Carbon $start, Carbon $end, Collection $accounts): BillCollection;
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return CategoryCollection
-     */
-    public function getCategoryReport(Collection $accounts, Carbon $start, Carbon $end): CategoryCollection;
-
-    /**
      * @param Carbon $date
      *
      * @return array
