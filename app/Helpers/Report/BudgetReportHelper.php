@@ -80,7 +80,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
 
             }
         }
-        $noBudget   = $this->repository->spentInPeriodWithoutBudget($accounts, $start, $end); // stuff outside of budgets
+        $noBudget   = $this->repository->spentInPeriodWoBudget($accounts, $start, $end); // stuff outside of budgets
         $budgetLine = new BudgetLine;
         $budgetLine->setOverspent($noBudget)->setSpent($noBudget);
         $object->addOverspent($noBudget)->addBudgetLine($budgetLine);

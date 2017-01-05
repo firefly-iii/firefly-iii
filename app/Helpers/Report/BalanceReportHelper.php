@@ -213,7 +213,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $empty = new BalanceLine;
 
         foreach ($accounts as $account) {
-            $spent = $this->budgetRepository->spentInPeriodWithoutBudget(new Collection([$account]), $start, $end);
+            $spent = $this->budgetRepository->spentInPeriodWoBudget(new Collection([$account]), $start, $end);
             // budget
             $budgetEntry = new BalanceEntry;
             $budgetEntry->setAccount($account);

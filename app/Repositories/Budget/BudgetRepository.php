@@ -467,7 +467,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutBudgetCollector(Collection $accounts, Carbon $start, Carbon $end): string
+    public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [$this->user]);
