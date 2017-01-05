@@ -124,11 +124,11 @@ class BillControllerTest extends TestCase
         $data = [
             'name'                          => 'New Bill ' . rand(1000, 9999),
             'match'                         => 'some words',
-            'amount_min'                    => 100,
+            'amount_min'                    => '100',
             'amount_currency_id_amount_min' => 1,
             'amount_currency_id_amount_max' => 1,
             'skip'                          => 0,
-            'amount_max'                    => 100,
+            'amount_max'                    => '100',
             'date'                          => '2016-01-01',
             'repeat_freq'                   => 'monthly',
         ];
@@ -154,11 +154,11 @@ class BillControllerTest extends TestCase
         $data = [
             'name'                          => 'Updated Bill ' . rand(1000, 9999),
             'match'                         => 'some more words',
-            'amount_min'                    => 100,
+            'amount_min'                    => '100',
             'amount_currency_id_amount_min' => 1,
             'amount_currency_id_amount_max' => 1,
             'skip'                          => 0,
-            'amount_max'                    => 100,
+            'amount_max'                    => '100',
             'date'                          => '2016-01-01',
             'repeat_freq'                   => 'monthly',
         ];
