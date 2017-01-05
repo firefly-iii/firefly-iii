@@ -129,12 +129,11 @@ class Navigation
     }
 
     /**
+     * @param \Carbon\Carbon      $theCurrentEnd
+     * @param string              $repeatFreq
+     * @param \Carbon\Carbon|null $maxDate
      *
-     * @param \Carbon\Carbon $theCurrentEnd
-     * @param                $repeatFreq
-     * @param \Carbon\Carbon $maxDate
-     *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null): Carbon
     {

@@ -65,7 +65,7 @@ class AccountController extends Controller
     /**
      * @param string $what
      *
-     * @return View
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory|View
      */
     public function create(string $what = 'asset')
     {

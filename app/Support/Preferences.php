@@ -85,7 +85,7 @@ class Preferences
     /**
      * @param \FireflyIII\User $user
      * @param      string      $name
-     * @param string           $default
+     * @param null|string      $default
      *
      * @return \FireflyIII\Models\Preference|null
      */

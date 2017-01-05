@@ -414,7 +414,7 @@ class PiggyBankController extends Controller
      * @param PiggyBankFormRequest         $request
      * @param PiggyBank                    $piggyBank
      *
-     * @return $this
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {

@@ -88,10 +88,11 @@ class AttachmentController extends Controller
     }
 
     /**
-     * @param Attachment $attachment
+     * @param AttachmentRepositoryInterface $repository
+     * @param Attachment                    $attachment
      *
+     * @return mixed
      * @throws FireflyException
-     *
      */
     public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
