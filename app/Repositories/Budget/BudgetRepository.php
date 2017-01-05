@@ -291,7 +291,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                                      }
                                  );
                           }
-                      )->orderBy('budget_limits.start_date','DESC')->get(['budget_limits.*']);
+                      )->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
 
         return $set;
     }
@@ -522,6 +522,33 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodCollector(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setBudgets($budgets);
+
+        if($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if($accounts->count() === 0) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
+    }
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -662,5 +689,41 @@ class BudgetRepository implements BudgetRepositoryInterface
         $limit->save();
 
         return $limit;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodWithoutBudgetCollector(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if ($accounts->count() === 0) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set = $collector->getJournals();
+        $set = $set->filter(
+            function (Transaction $transaction) {
+                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                    return $transaction;
+                }
+
+                return null;
+            }
+        );
+
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
     }
 }

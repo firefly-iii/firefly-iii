@@ -158,9 +158,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         foreach ($accounts as $account) {
             $balanceEntry = new BalanceEntry;
             $balanceEntry->setAccount($account);
-            $spent = $this->budgetRepository->spentInPeriod(
-                new Collection([$budgetLimit->budget]), new Collection([$account]), $budgetLimit->start_date, $budgetLimit->end_date
-            );
+            $spent = $this->budgetRepository->spentInPeriodCollector(new Collection([$budgetLimit->budget]), new Collection([$account]), $budgetLimit->start_date, $budgetLimit->end_date);
             $balanceEntry->setSpent($spent);
             $line->addBalanceEntry($balanceEntry);
         }

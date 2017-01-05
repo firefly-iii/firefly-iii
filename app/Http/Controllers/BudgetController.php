@@ -268,7 +268,7 @@ class BudgetController extends Controller
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
+            $entry->spent = $repository->spentInPeriodCollector(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
             $limits->push($entry);
         }
 
@@ -313,7 +313,7 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $budgetLimit->id);
 
 
-        $budgetLimit->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
+        $budgetLimit->spent = $repository->spentInPeriodCollector(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
         $limits             = new Collection([$budgetLimit]);
 
         return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'journals', 'subTitle'));
@@ -405,7 +405,7 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $budgetId          = $budget->id;
             $return[$budgetId] = [
-                'spent'      => $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
+                'spent'      => $this->repository->spentInPeriodCollector(new Collection([$budget]), $accounts, $start, $end),
                 'budgeted'   => '0',
                 'currentRep' => false,
             ];

@@ -95,7 +95,7 @@ class BudgetController extends Controller
             $currentEnd   = Navigation::endOfPeriod($first, $range);
             // sub another day because reasons.
             $currentEnd->subDay();
-            $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
+            $spent            = $this->repository->spentInPeriodCollector($budgetCollection, new Collection, $currentStart, $currentEnd);
             $format           = Navigation::periodShow($first, $range);
             $entries[$format] = bcmul($spent, '-1');
             $first            = Navigation::addPeriod($first, $range, 0);
@@ -140,7 +140,7 @@ class BudgetController extends Controller
         $amount           = $budgetLimit->amount;
         $budgetCollection = new Collection([$budget]);
         while ($start <= $end) {
-            $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $start, $start);
+            $spent            = $this->repository->spentInPeriodCollector($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
             $format           = $start->formatLocalized(strval(trans('config.month_and_day')));
             $entries[$format] = $amount;
@@ -329,7 +329,7 @@ class BudgetController extends Controller
     {
         $return = [];
         if ($limits->count() === 0) {
-            $spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+            $spent = $this->repository->spentInPeriodCollector(new Collection([$budget]), new Collection, $start, $end);
             if (bccomp($spent, '0') !== 0) {
                 $return[$budget->name]['spent']     = bcmul($spent, '-1');
                 $return[$budget->name]['left']      = 0;
@@ -375,7 +375,7 @@ class BudgetController extends Controller
         $name   = $budget->name;
         /** @var BudgetLimit $budgetLimit */
         foreach ($limits as $budgetLimit) {
-            $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
+            $expenses = $this->repository->spentInPeriodCollector(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
 
             if ($limits->count() > 1) {
                 $name = $budget->name . ' ' . trans(
