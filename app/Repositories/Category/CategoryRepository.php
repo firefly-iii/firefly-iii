@@ -396,7 +396,17 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [$this->user]);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts)->setCategories($categories);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
+
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if ($accounts->count() === 0) {
+            $collector->setAllAssetAccounts();
+        }
+
+
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));
 
@@ -414,7 +424,15 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [$this->user]);
-        $collector->setRange($start, $end)->setAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if ($accounts->count() === 0) {
+            $collector->setAllAssetAccounts();
+        }
+
         $set = $collector->getJournals();
         $set = $set->filter(
             function (Transaction $transaction) {
