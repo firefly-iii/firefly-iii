@@ -129,7 +129,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param Collection $accounts

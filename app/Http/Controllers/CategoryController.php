@@ -345,7 +345,7 @@ class CategoryController extends Controller
         while ($end >= $first) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $repository->spentInPeriodCollector(new Collection([$category]), $accounts, $end, $currentEnd);
+            $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);

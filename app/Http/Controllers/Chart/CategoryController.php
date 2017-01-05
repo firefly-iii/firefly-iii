@@ -90,7 +90,7 @@ class CategoryController extends Controller
 
         while ($start <= $end) {
             $currentEnd                      = Navigation::endOfPeriod($start, $range);
-            $spent                           = $repository->spentInPeriodCollector(new Collection([$category]), $accounts, $start, $currentEnd);
+            $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
             $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
             $label                           = Navigation::periodShow($start, $range);
             $chartData[0]['entries'][$label] = bcmul($spent, '-1');
@@ -143,7 +143,7 @@ class CategoryController extends Controller
         $accounts   = $accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         /** @var Category $category */
         foreach ($categories as $category) {
-            $spent = $repository->spentInPeriodCollector(new Collection([$category]), $accounts, $start, $end);
+            $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
             if (bccomp($spent, '0') === -1) {
                 $chartData[$category->name] = bcmul($spent, '-1');
             }
@@ -315,7 +315,7 @@ class CategoryController extends Controller
         ];
 
         while ($start <= $end) {
-            $spent  = $repository->spentInPeriodCollector(new Collection([$category]), $accounts, $start, $start);
+            $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
             $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
             $label  = Navigation::periodShow($start, '1D');
 
