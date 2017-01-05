@@ -138,7 +138,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutCategoryCollector(Collection $accounts, Carbon $start, Carbon $end): string;
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param array $data

@@ -410,7 +410,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutCategoryCollector(Collection $accounts, Carbon $start, Carbon $end): string
+    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [$this->user]);
