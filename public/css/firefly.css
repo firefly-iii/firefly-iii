@@ -96,3 +96,9 @@ body.waiting * {
     background: url('/images/loading-small.gif') no-repeat center center;
     min-height: 30px;
 }
+
+@media print {
+    a[href]:after {
+        content: none !important;
+    }
+}
