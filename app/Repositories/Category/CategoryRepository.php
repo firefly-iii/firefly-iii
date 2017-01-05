@@ -75,6 +75,25 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts)->setCategories($categories);
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
+    }
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

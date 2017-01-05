@@ -42,6 +42,16 @@ interface CategoryRepositoryInterface
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function earnedInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
