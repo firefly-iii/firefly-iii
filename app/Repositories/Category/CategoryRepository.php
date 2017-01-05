@@ -64,7 +64,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function earnedInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
+    public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class, [$this->user]);
