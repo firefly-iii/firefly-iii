@@ -415,6 +415,25 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts)->setCategories($categories);
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
+    }
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -425,6 +444,34 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         $sum   = $this->sumInPeriodWithoutCategory($accounts, $types, $start, $end);
+
+        return $sum;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function spentInPeriodWithoutCategoryCollector(Collection $accounts, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+        $set = $collector->getJournals();
+        $set = $set->filter(
+            function (Transaction $transaction) {
+                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                    return $transaction;
+                }
+
+                return null;
+            }
+        );
+
+        $sum = strval($set->sum('transaction_amount'));
 
         return $sum;
     }
