@@ -59,7 +59,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         foreach ($set as $budget) {
             $budgetLimits = $this->repository->getBudgetLimits($budget, $start, $end);
             if ($budgetLimits->count() == 0) { // no budget limit(s) for this budget
-                $spent = $this->repository->spentInPeriodCollector(new Collection([$budget]), $accounts, $start, $end);// spent for budget in time range
+                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);// spent for budget in time range
                 if ($spent > 0) {
                     $budgetLine = new BudgetLine;
                     $budgetLine->setBudget($budget)->setOverspent($spent);
@@ -104,7 +104,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $set = new Collection;
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $total = $repository->spentInPeriodCollector(new Collection([$budget]), $accounts, $start, $end);
+            $total = $repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);
             if (bccomp($total, '0') === -1) {
                 $set->push($budget);
             }
@@ -128,7 +128,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     private function calculateExpenses(Budget $budget, BudgetLimit $budgetLimit, Collection $accounts): array
     {
         $array              = [];
-        $expenses           = $this->repository->spentInPeriodCollector(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
+        $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
         $array['left']      = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? bcadd($budgetLimit->amount, $expenses) : '0';
         $array['spent']     = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? $expenses : '0';
         $array['overspent'] = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $budgetLimit->amount);

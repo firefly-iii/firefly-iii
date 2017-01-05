@@ -157,7 +157,7 @@ interface BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodCollector(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
+    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param Collection $accounts
