@@ -138,26 +138,7 @@ interface CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
     public function spentInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param Collection $accounts

@@ -406,22 +406,6 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        $sum = $this->sumInPeriod($categories, $accounts, TransactionType::WITHDRAWAL, $start, $end);
-        $sum = bcmul($sum, '-1');
-
-        return $sum;
-    }
-
-    /**
-     * @param Collection $categories
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
     public function spentInPeriodCollector(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
@@ -429,21 +413,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts)->setCategories($categories);
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));
-
-        return $sum;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
-    {
-        $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        $sum   = $this->sumInPeriodWithoutCategory($accounts, $types, $start, $end);
 
         return $sum;
     }
