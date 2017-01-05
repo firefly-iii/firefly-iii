@@ -321,6 +321,7 @@ class CategoryController extends Controller
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository        = app(CategoryRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);

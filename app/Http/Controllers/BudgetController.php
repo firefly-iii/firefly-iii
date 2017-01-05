@@ -397,6 +397,7 @@ class BudgetController extends Controller
     private function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
         // get account information
+        /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $return            = [];
