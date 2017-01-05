@@ -14,14 +14,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
