@@ -19,6 +19,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Storage;
+use Crypt;
 
 /**
  * Class AttachmentRepository
