@@ -33,6 +33,7 @@
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
     "league/commonmark": "0.15.*",
+    "twig/twig": "1.30.0",
     "rcrowe/twigbridge": "0.9.*",
     "league/csv": "8.*",
     "laravelcollective/html": "^5.3",
