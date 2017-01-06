@@ -49,7 +49,7 @@ return [
     'flash_warning'                              => 'Achtung!',
     'flash_error'                                => 'Fehler!',
     'flash_info_multiple'                        => 'Es gibt eine Nachricht | Es gibt :count Nachrichten',
-    'flash_error_multiple'                       => 'Es gibt einen Fehler | Es gibt :count Fehler',
+    'flash_error_multiple'                       => 'Es gibt einen Fehler|Es gibt :count Fehler',
     'net_worth'                                  => 'Vermögen',
     'route_has_no_help'                          => 'Es gibt keinen Hilfetext für diese Seite.',
     'help_may_not_be_your_language'              => 'Dieser Hilfstext ist in Englisch. Er ist noch nicht in Deutsch verfügbar',
