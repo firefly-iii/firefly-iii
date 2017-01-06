@@ -49,7 +49,7 @@ return [
     'flash_warning'                              => 'Attention !',
     'flash_error'                                => 'Erreur !',
     'flash_info_multiple'                        => 'Il y a un message| Il y a :count messages',
-    'flash_error_multiple'                       => 'Il y a une erreur| Il y a :count errors',
+    'flash_error_multiple'                       => 'Il y a une erreur|Il y a :count errors',
     'net_worth'                                  => 'Valeur nette',
     'route_has_no_help'                          => 'There is no help for this route.',
     'help_may_not_be_your_language'              => 'This help text is in English. It is not yet available in your language',
