@@ -244,8 +244,7 @@ function drawAChart(URI, container, chartType, options, colorData) {
 
 
     $.getJSON(URI).done(function (data) {
-
-
+        $('#' + container).removeClass('general-chart-error');
         if (data.labels.length === 0) {
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();

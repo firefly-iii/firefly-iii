@@ -324,7 +324,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed a bug where a migration would check an empty table name.
 - Fixed various bugs in the import routine.
 - Fixed various bugs in the piggy banks pages.
-- Fixed a bug in the ``firefly:verify`` routine
+- Fixed a bug in the `firefly:verify` routine
 
 ## [3.10] - 2015-05-25
 ### Added
@@ -353,11 +353,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Bulk update problems, #280, thanks @stickgrinder
 - Fixed various problems with amount reporting of split transactions.
 
-[3.9.1]
+## [3.9.1]
 ### Fixed
 - Fixed a bug where removing money from a piggy bank would not work. See issue #265 and #269
 
-[3.9.0]
+## [3.9.0]
 ### Added
 - @zjean has added code that allows you to force "https://"-URL's.
 - @tonicospinelli has added Portuguese (Brazil) translations.

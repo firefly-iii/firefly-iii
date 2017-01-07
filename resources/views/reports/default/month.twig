@@ -20,12 +20,16 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 loading">
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'accountBalances'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="accountReport">
+                <div class="box-body table-responsive no-padding" id="accountReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 
@@ -36,7 +40,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'income'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="incomeReport">
+                <div class="box-body table-responsive no-padding" id="incomeReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -45,7 +53,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="expenseReport">
+                <div class="box-body table-responsive no-padding" id="expenseReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -56,13 +68,14 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="incomeVsExpenseReport">
+                <div class="box-body table-responsive no-padding" id="incomeVsExpenseReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            {% include 'reports/partials/tags' %}
         </div>
     </div>
     <div class="row">
@@ -72,7 +85,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="budgetReport">
+                <div class="box-body table-responsive no-padding" id="budgetReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 
@@ -84,7 +101,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="categoryReport">
+                <div class="box-body table-responsive no-padding" id="categoryReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -100,7 +121,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }} ({{ 'splitByAccount'|_|lower }})</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="balanceReport">
+                <div class="box-body table-responsive no-padding" id="balanceReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 

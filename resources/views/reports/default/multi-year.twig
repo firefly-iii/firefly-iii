@@ -31,12 +31,16 @@
 
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 loading">
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'accountBalances'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="accountReport">
+                <div class="box-body table-responsive no-padding" id="accountReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -45,7 +49,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'income'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="incomeReport">
+                <div class="box-body table-responsive no-padding" id="incomeReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -54,7 +62,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="expenseReport">
+                <div class="box-body table-responsive no-padding" id="expenseReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -65,7 +77,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="incomeVsExpenseReport">
+                <div class="box-body table-responsive no-padding" id="incomeVsExpenseReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -92,7 +108,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
-                <div class="box-body no-padding table-responsive loading" id="budgetPeriodReport">
+                <div class="box-body no-padding table-responsive" id="budgetPeriodReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -108,7 +128,6 @@
                 </div>
                 <div class="box-body">
                     <canvas height="400" id="budget_chart" style="width:100%;height:400px;"></canvas>
-
                 </div>
             </div>
         </div>
@@ -121,7 +140,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }} ({{ 'expenses'|_ }})</h3>
                 </div>
-                <div class="box-body no-padding table-responsive loading" id="categoryExpense">
+                <div class="box-body no-padding table-responsive" id="categoryExpense">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -134,7 +157,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }} ({{ 'income'|_ }})</h3>
                 </div>
-                <div class="box-body no-padding table-responsive loading" id="categoryIncome">
+                <div class="box-body no-padding table-responsive" id="categoryIncome">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -149,7 +176,6 @@
                 </div>
                 <div class="box-body">
                     <canvas height="400" id="category_chart" style="width:100%;height:400px;"></canvas>
-
                 </div>
             </div>
         </div>
