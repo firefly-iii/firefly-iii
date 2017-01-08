@@ -805,6 +805,7 @@ return [
     'add_set_amount_to_piggy'    => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
     'delete_piggy_bank'          => 'Verwijder spaarpotje ":name"',
     'cannot_add_amount_piggy'    => 'Kon bedrag :amount niet aan ":name" toevoegen.',
+    'cannot_remove_from_piggy'   => 'Could not remove :amount from ":name".',
     'deleted_piggy_bank'         => 'Spaarpotje ":name" verwijderd',
     'added_amount_to_piggy'      => ':amount aan ":name" toegevoegd',
     'removed_amount_from_piggy'  => ':amount uit ":name" gehaald',
