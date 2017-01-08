@@ -111,34 +111,10 @@ class Range
         $dateTimeFormat    = (string)trans('config.date_time');
         $defaultCurrency   = Amount::getDefaultCurrency();
         $localeconv        = localeconv();
+        $accounting        = Amount::getJsConfig($localeconv);
 
         // decimal places is overruled by TransactionCurrency
         $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
-        $positiveSpace             = ' ';
-        $negativeSpace             = ' ';
-        // positive number:
-        if (!$localeconv['p_sep_by_space']) {
-            $positiveSpace = '';
-        }
-        // negative number:
-        if (!$localeconv['n_sep_by_space']) {
-            $negativeSpace = '';
-        }
-        // by default, put symbols before:
-        $accounting = [
-            'pos'  => '%s' . $positiveSpace . '%v',
-            'neg'  => '%s' . $negativeSpace . '-%v',
-            'zero' => '%s' . $positiveSpace . '%v',
-        ];
-
-        // but might be after:
-        if (!$localeconv['n_cs_precedes']) {
-            $accounting['neg'] = '-%v' . $negativeSpace . '%s';
-        }
-        if (!$localeconv['p_cs_precedes']) {
-            $accounting['pos']  = '%v' . $negativeSpace . '%s';
-            $accounting['zero'] = '%v' . $negativeSpace . '%s';
-        }
 
         View::share('monthFormat', $monthFormat);
         View::share('monthAndDayFormat', $monthAndDayFormat);

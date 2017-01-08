@@ -27,6 +27,80 @@ use Preferences as Prefs;
  */
 class Amount
 {
+    /**
+     * bool $sepBySpace is $localeconv['n_sep_by_space']
+     * int $signPosn = $localeconv['n_sign_posn']
+     * string $sign = $localeconv['negative_sign']
+     * bool $csPrecedes = $localeconv['n_cs_precedes']
+     *
+     * @param bool   $sepBySpace
+     * @param int    $signPosn
+     * @param string $sign
+     * @param bool   $csPrecedes
+     *
+     * @return string
+     */
+    public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
+    {
+        // negative first:
+        $space = ' ';
+
+        // require space between symbol and amount?
+        if (!$sepBySpace) {
+            $space = ''; // no
+        }
+
+        // there are five possible positions for the "+" or "-" sign (if it is even used)
+        // pos_a and pos_e could be the ( and ) symbol.
+        $pos_a = ''; // before everything
+        $pos_b = ''; // before currency symbol
+        $pos_c = ''; // after currency symbol
+        $pos_d = ''; // before amount
+        $pos_e = ''; // after everything
+
+        // format would be (currency before amount)
+        // AB%sC_D%vE
+        // or:
+        // AD%v_B%sCE (amount before currency)
+        // the _ is the optional space
+
+
+        // switch on how to display amount:
+        switch ($signPosn) {
+            default:
+            case 0:
+                // ( and ) around the whole thing
+                $pos_a = '(';
+                $pos_e = ')';
+                break;
+            case 1:
+                // The sign string precedes the quantity and currency_symbol
+                $pos_a = $sign;
+                break;
+            case 2:
+                // The sign string succeeds the quantity and currency_symbol
+                $pos_e = $sign;
+                break;
+            case 3:
+                // The sign string immediately precedes the currency_symbol
+                $pos_b = $sign;
+                break;
+            case 4:
+                // The sign string immediately succeeds the currency_symbol
+                $pos_c = $sign;
+        }
+
+        // default: (amount before currency)
+        $format = $pos_a . $pos_d . '%v' . $space . $pos_b . '%s' . $pos_c . $pos_e;
+
+        if ($csPrecedes) {
+            // (currency before amount)
+            $format = $pos_a . $pos_b . '%s' . $pos_c . $space . $pos_d . '%v' . $pos_e;
+        }
+        Log::debug(sprintf('Final format: "%s"', $format));
+
+        return $format;
+    }
 
     /**
      * @param string $amount
@@ -197,5 +271,25 @@ class Amount
         $cache->store($currency);
 
         return $currency;
+    }
+
+    /**
+     * This method returns the correct format rules required by accounting.js,
+     * the library used to format amounts in charts.
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    public function getJsConfig(array $config): array
+    {
+        $negative = self::getAmountJsConfig($config['n_sep_by_space'] === 1, $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes'] === 1);
+        $positive = self::getAmountJsConfig($config['p_sep_by_space'] === 1, $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes'] === 1);
+
+        return [
+            'pos'  => $positive,
+            'neg'  => $negative,
+            'zero' => $positive,
+        ];
     }
 }
