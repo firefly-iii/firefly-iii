@@ -53,7 +53,6 @@ class Amount
     {
         $locale = explode(',', trans('config.locale'));
         $locale = array_map('trim', $locale);
-        Log::debug('formatAnything(). Will set locale to', $locale);
         setlocale(LC_MONETARY, $locale);
         $float     = round($amount, 12);
         $info      = localeconv();

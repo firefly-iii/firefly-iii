@@ -215,6 +215,7 @@ class BudgetControllerTest extends TestCase
         // mock budget repository
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('spentInPeriod')->andReturn('1');
+        $budgetRepository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
 
         // mock journal collector:
         $collector = $this->mock(JournalCollectorInterface::class);
