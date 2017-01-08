@@ -208,6 +208,7 @@
     var noDataForChart = '{{ trans('firefly.no_data_for_chart')|escape }}';
     var showFullList = '{{ trans('firefly.show_full_list') }}';
     var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength}) }}';
+    var accountingConfig = {{ accountingConfig|json_encode|raw }};
 
 
 </script>

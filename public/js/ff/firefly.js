@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: moment, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
+/** global: moment, accountingConfig, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
 
 
 $(function () {
@@ -112,7 +112,7 @@ function currencySelect(e) {
 accounting.settings = {
     currency: {
         symbol: currencySymbol,   // default currency symbol is '$'
-        format: "%s %v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+        format: accountingConfig, // controls output: %s = symbol, %v = value/number (can be object: see below)
         decimal: mon_decimal_point,  // decimal point separator
         thousand: mon_thousands_sep,  // thousands separator
         precision: frac_digits   // decimal places
