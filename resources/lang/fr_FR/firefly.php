@@ -805,6 +805,7 @@ return [
     'add_set_amount_to_piggy'    => 'Add :amount to fill this piggy bank on :date',
     'delete_piggy_bank'          => 'Delete piggy bank ":name"',
     'cannot_add_amount_piggy'    => 'Could not add :amount to ":name".',
+    'cannot_remove_from_piggy'   => 'Could not remove :amount from ":name".',
     'deleted_piggy_bank'         => 'Tirelire ":name" supprimée',
     'added_amount_to_piggy'      => 'Added :amount to ":name"',
     'removed_amount_from_piggy'  => 'Removed :amount from ":name"',
