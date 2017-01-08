@@ -13,7 +13,7 @@ return [
     'iban'                           => 'To nie jest prawidłowy IBAN.',
     'unique_account_number_for_user' => 'Wygląda na to, że ten numer konta jest już w użyciu.',
     'deleted_user'                   => 'Ze względu na zabezpieczenia nie możesz się zarejestrować używając tego adresu e-mail.',
-    'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
+    'rule_trigger_value'             => 'Ta wartość jest nieprawidłowa dla wybranego wyzwalacza.',
     'rule_action_value'              => 'Ta wartość jest nieprawidłowa dla wybranej akcji.',
     'invalid_domain'                 => 'Ze względu na zabezpieczenia nie możesz się zarejestrować z tej domeny.',
     'file_already_attached'          => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
