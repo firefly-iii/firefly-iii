@@ -56,6 +56,14 @@
             </div>
         {% endif %}
     </div>
+    {% if entries %}
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('categories.show.all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row">
         <div class="{% if entries %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
 
