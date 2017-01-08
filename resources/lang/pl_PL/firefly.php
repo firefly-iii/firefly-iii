@@ -539,7 +539,7 @@ return [
     'updated_account'                            => 'Zaktualizowano konto ":name"',
     'credit_card_options'                        => 'Opcje karty kredytowej',
     'no_transactions_account'                    => 'Brak transakcji (w tym okresie) na koncie aktywów ":name".',
-    'no_data_for_chart'                          => 'Nie ma wystarczająco dużo informacji (póki co), aby wygenerować ten wykres.',
+    'no_data_for_chart'                          => 'Brak wystarczającej ilości informacji (póki co), do wygenerowania tego wykresu.',
     'select_more_than_one_account'               => 'Proszę wybierz więcej niż jedno konto',
     'select_more_than_one_category'              => 'Proszę wybierz więcej niż jedną kategorię',
     'select_more_than_one_budget'                => 'Proszę wybierz więcej niż jeden budżet',
