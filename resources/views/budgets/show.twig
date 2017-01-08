@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-7">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'overview'|_ }}</h3>
@@ -26,6 +26,17 @@
                     <canvas id="budgetOverview" style="width:100%;" height="400"></canvas>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
+            <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
             <div class="box">
                 <div class="box-header with-border">
@@ -36,13 +47,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-5">
-            {% if limits|length == 1 %}
-                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
-            {% endif %}
-
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             {% for limit in limits %}
-                <div class="box">
+                <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid{% endif %}">
                     <div class="box-header with-border">
                         <h3 class="box-title"><a
                                     href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
@@ -51,44 +58,42 @@
                             </a>
                         </h3>
                     </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                {{ 'amount'|_ }}: {{ limit.amount|formatAmount }}
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                {{ 'spent'|_ }}: {{ limit.spent|formatAmount }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                {% set overspent = limit.amount + limit.spent < 0 %}
+                    <div class="box-body no-padding">
+                        <table class="table table-hover">
+                            <tr>
+                                <td style="width:33%;">{{ 'amount'|_ }}</td>
+                                <td>{{ limit.amount|formatAmount }}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                <td>{{ limit.spent|formatAmount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    {% set overspent = limit.amount + limit.spent < 0 %}
 
-                                {% if overspent %}
-                                    {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} <!-- must have -1 here -->
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
-                                             aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
-                                    </div>
-                                {% else %}
-                                    {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} <!-- must have -1 here -->
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
-                                             aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+                                    {% if overspent %}
+                                        {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} <!-- must have -1 here -->
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
+                                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
+                                        </div>
+                                    {% else %}
+                                        {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} <!-- must have -1 here -->
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             {% endfor %}
-
-            {% if limits|length == 1 %}
-                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
-            {% endif %}
-
+            <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
         </div>
     </div>
 
