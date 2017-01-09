@@ -13,13 +13,17 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Navigation;
 use Preferences;
 use Session;
 use URL;
@@ -41,7 +45,11 @@ use View;
 class TagController extends Controller
 {
 
+    /** @var array */
     public $tagOptions = [];
+
+    /** @var  TagRepositoryInterface */
+    protected $repository;
 
     /**
      *
@@ -53,14 +61,18 @@ class TagController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                View::share('title', 'Tags');
-                View::share('mainTitleIcon', 'fa-tags');
+                $this->repository = app(TagRepositoryInterface::class);
                 $this->tagOptions = [
                     'nothing'        => trans('firefly.regular_tag'),
                     'balancingAct'   => trans('firefly.balancing_act'),
                     'advancePayment' => trans('firefly.advance_payment'),
                 ];
+
+
+                View::share('title', strval(trans('firefly.tags')));
+                View::share('mainTitleIcon', 'fa-tags');
                 View::share('tagOptions', $this->tagOptions);
+
 
                 return $next($request);
             }
@@ -113,16 +125,15 @@ class TagController extends Controller
     }
 
     /**
-     * @param TagRepositoryInterface $repository
-     * @param Tag                    $tag
+     * @param Tag $tag
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(TagRepositoryInterface $repository, Tag $tag)
+    public function destroy(Tag $tag)
     {
 
         $tagName = $tag->tag;
-        $repository->destroy($tag);
+        $this->repository->destroy($tag);
 
         Session::flash('success', strval(trans('firefly.deleted_tag', ['tag' => e($tagName)])));
         Preferences::mark();
@@ -216,15 +227,34 @@ class TagController extends Controller
      *
      * @return View
      */
-    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag)
+    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag, string $moment = '')
     {
+        $range = Preferences::get('viewRange', '1M')->data;
+
+        if (strlen($moment) > 0) {
+            try {
+                $start = new Carbon($moment);
+                $end   = Navigation::endOfPeriod($start, $range);
+            } catch (Exception $e) {
+                $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
+                $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
+            }
+        }
+        if (strlen($moment) === 0) {
+            $start = clone session('start', Carbon::now()->startOfMonth());
+            $end   = clone session('end', Carbon::now()->endOfMonth());
+        }
+
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $periods      = $this->getPeriodOverview($tag);
 
         // use collector:
-        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+        $collector->setAllAssetAccounts()
+                  ->setLimit($pageSize)->setPage($page)->setTag($tag)
+                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('tags/show/' . $tag->id);
 
@@ -234,20 +264,18 @@ class TagController extends Controller
             }
         );
 
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals', 'sum'));
+        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
     }
 
     /**
-     * @param TagFormRequest         $request
-     *
-     * @param TagRepositoryInterface $repository
+     * @param TagFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(TagFormRequest $request, TagRepositoryInterface $repository)
+    public function store(TagFormRequest $request)
     {
         $data = $request->collectTagData();
-        $repository->store($data);
+        $this->repository->store($data);
 
         Session::flash('success', strval(trans('firefly.created_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
@@ -265,16 +293,15 @@ class TagController extends Controller
     }
 
     /**
-     * @param TagFormRequest         $request
-     * @param TagRepositoryInterface $repository
-     * @param Tag                    $tag
+     * @param TagFormRequest $request
+     * @param Tag            $tag
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(TagFormRequest $request, TagRepositoryInterface $repository, Tag $tag)
+    public function update(TagFormRequest $request, Tag $tag)
     {
         $data = $request->collectTagData();
-        $repository->update($tag, $data);
+        $this->repository->update($tag, $data);
 
         Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => e($data['tag'])])));
         Preferences::mark();
@@ -288,5 +315,51 @@ class TagController extends Controller
 
         // redirect to previous URL.
         return redirect(session('tags.edit.url'));
+    }
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Collection
+     */
+    private function getPeriodOverview(Tag $tag): Collection
+    {
+        // get first and last tag date from tag:
+        $range = Preferences::get('viewRange', '1M')->data;
+        $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
+        $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
+        // properties for entries with their amounts.
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('tag.entries');
+        $cache->addProperty($tag->id);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        $collection = new Collection;
+
+        // while end larger or equal to start
+        while ($end >= $start) {
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+
+            // get expenses and what-not in this period and this tag.
+            $arr = [
+                'date_string' => $end->format('Y-m-d'),
+                'date_name'   => Navigation::periodShow($end, $range),
+                'date'        => $end,
+                'spent'       => $this->repository->spentInperiod($tag, $end, $currentEnd),
+                'earned'      => $this->repository->earnedInperiod($tag, $end, $currentEnd),
+            ];
+            $collection->push($arr);
+
+            $end = Navigation::subtractPeriod($end, $range, 1);
+        }
+        $cache->store($collection);
+
+        return $collection;
+
     }
 }

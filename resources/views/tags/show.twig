@@ -76,7 +76,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-612 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+            <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -99,11 +104,42 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            {% for period in periods %}
+                {% if period.spent != 0 or period.earned != 0 %}
+                    <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a href="{{ route('tags.show',[tag.id, period.date_string]) }}">{{ period.date_name }}</a>
+                            </h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                {% if period.spent != 0 %}
+                                    <tr>
+                                        <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                        <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if period.earned != 0 %}
+                                    <tr>
+                                        <td style="width:33%;">{{ 'earned'|_ }}</td>
+                                        <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+            <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+        </div>
     </div>
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
-        var tagID = {{ tag.id }};
-    </script>
 {% endblock %}
