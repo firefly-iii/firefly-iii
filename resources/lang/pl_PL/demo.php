@@ -9,9 +9,9 @@
 
 return [
     'no_demo_text'                   => 'Sorry, there is no extra demo-explanation text for <abbr title=":route">this page</abbr>.',
-    'see_help_icon'                  => 'However, the <i class="fa fa-question-circle"></i>-icon in the top right corner may tell you more.',
-    'index'                          => 'Welcome to <strong>Firefly III</strong>! On this page you get a quick overview of your finances. For more information, check out Accounts &rarr; <a href=":asset">Asset Accounts</a> and of course the <a href=":budgets">Budgets</a> and <a href=":reports">Reports</a> pages. Or just take a look around and see where you end up.',
-    'accounts-index'                 => 'Asset accounts are your personal bank accounts. Expense accounts are the accounts you spend money at, such as stores and friends. Revenue accounts are accounts you receive money from, such as your job, the government or other sources of income. On this page you can edit or remove them.',
+    'see_help_icon'                  => 'Jednakże ikona <i class="fa fa-question-circle"></i> w prawym górnym rogu może powiedzieć Ci więcej.',
+    'index'                          => 'Witaj w <strong>Firefly III</strong>! Na tej stronie znajduje się szybki przegląd Twoich finansów. Aby uzyskać więcej informacji sprawdź Konta &rarr; <a href=":asset">Konta aktywów</a> oraz oczywiście strony <a href=":budgets">Budżety</a> oraz <a href=":reports">Raporty</a>. Lub po prostu się rozejrzyj i zobacz gdzie trafisz w końcu.',
+    'accounts-index'                 => 'Konta aktywów są Twoimi osobistymi kontami bankowymi. Konta wydatków to konta na które wydajesz pieniądze takie jak sklepy oraz przyjaciele. Kona przychodów są kontami, z których otrzymujesz pieniądze takie jak twoja praca, zwrot podatków lub inne źródła przychodów. Na tej stronie możesz je modyfikować oraz usuwać.',
     'budgets-index'                  => 'This page shows you an overview of your budgets. The top bar shows the amount that is available to be budgeted. This can be customized for any period by clicking the amount on the right. The amount you\'ve actually spent is shown in the bar below. Below that are the expenses per budget and what you\'ve budgeted for them.',
     'reports-index-start'            => 'Firefly III supports four types of reports. Read about them by clicking on the <i class="fa fa-question-circle"></i>-icon in the top right corner.',
     'reports-index-examples'         => 'Be sure to check out these examples: <a href=":one">a monthly financial overview</a>, <a href=":two">a yearly financial overview</a> and <a href=":three">a budget overview</a>.',
@@ -20,5 +20,5 @@ return [
     'piggy-banks-index'              => 'As you can see, there are three piggy banks. Use the plus and minus buttons to influence the amount of money in each piggy bank. Click the name of the piggy bank to see the administration for each piggy bank.',
     'import-index'                   => 'Of course, any CSV file can be imported into Firefly III ',
     'import-configure-security'      => 'Because of security concerns, your upload has been replaced with a local file.',
-    'import-configure-configuration' => 'The configuration you see below is correct for the local file.',
+    'import-configure-configuration' => 'Konfiguracja, która widzisz poniżej jest prawidłowa dla lokalnego pliku.',
 ];
