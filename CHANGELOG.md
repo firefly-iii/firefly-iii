@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [4.3.2] - 2017-01-09
+
+An intermediate release because something in the Twig and Twigbridge libraries is broken and I have to make sure it doesn't affect you guys. But some cool features were on their way so there's that oo.
+
+### Added
+- Some code for issue #475, consistent overviews.
+- Better currency display. Make sure you have locale packages installed.
+
+### Changed
+- Uses a new version of Laravel.
+
+### Fixed
+- The password reset routine was broken.
+- Issue #522, thanks to @xpfgsyb
+- Issue #524, thanks to @worldworm
+- Issue #526, thanks to @worldworm
+- Issue #528, thanks to @skibbipl
+- Various other fixes.
+
 ## [4.3.1] - 2017-01-04
 ### Added
 - Support for Russian and Polish. 
