@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Tag;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
@@ -45,6 +46,15 @@ interface TagRepositoryInterface
     public function destroy(Tag $tag): bool;
 
     /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string;
+
+    /**
      * @param int $tagId
      *
      * @return Tag
@@ -59,11 +69,34 @@ interface TagRepositoryInterface
     public function findByTag(string $tag): Tag;
 
     /**
+     * @param Tag $tag
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Tag $tag): Carbon;
+
+    /**
      * This method returns all the user's tags.
      *
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Carbon
+     */
+    public function lastUseDate(Tag $tag): Carbon;
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string;
 
     /**
      * This method stores a tag.

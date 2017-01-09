@@ -14,6 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Tag;
 
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -122,6 +124,21 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @param Tag $tag
+     *
+     * @return Carbon
+     */
+    public function firstUseDate(Tag $tag): Carbon
+    {
+        $journal = $tag->transactionJournals()->orderBy('date', 'ASC')->first();
+        if (!is_null($journal)) {
+            return $journal->date;
+        }
+
+        return new Carbon;
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection
@@ -135,6 +152,21 @@ class TagRepository implements TagRepositoryInterface
         );
 
         return $tags;
+    }
+
+    /**
+     * @param Tag $tag
+     *
+     * @return Carbon
+     */
+    public function lastUseDate(Tag $tag): Carbon
+    {
+        $journal = $tag->transactionJournals()->orderBy('date', 'DESC')->first();
+        if (!is_null($journal)) {
+            return $journal->date;
+        }
+
+        return new Carbon;
     }
 
     /**
@@ -352,5 +384,41 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
     }
 }

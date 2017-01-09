@@ -23,7 +23,6 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Navigation;
-use NumberFormatter;
 use Preferences;
 use Session;
 use View;
@@ -111,20 +110,19 @@ class Range
         $monthAndDayFormat = (string)trans('config.month_and_day');
         $dateTimeFormat    = (string)trans('config.date_time');
         $defaultCurrency   = Amount::getDefaultCurrency();
+        $localeconv        = localeconv();
+        $accounting        = Amount::getJsConfig($localeconv);
 
-        // change localeconv to a new array:
-        $numberFormatter = numfmt_create($lang, NumberFormatter::CURRENCY);
-        $localeconv      = [
-            'mon_decimal_point' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL)),
-            'mon_thousands_sep' => $numberFormatter->getSymbol($numberFormatter->getAttribute(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL)),
-            'frac_digits'       => $defaultCurrency->decimal_places,
-        ];
+        // decimal places is overruled by TransactionCurrency
+        $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
+
         View::share('monthFormat', $monthFormat);
         View::share('monthAndDayFormat', $monthAndDayFormat);
         View::share('dateTimeFormat', $dateTimeFormat);
         View::share('language', $lang);
         View::share('localeconv', $localeconv);
         View::share('defaultCurrency', $defaultCurrency);
+        View::share('accountingConfig', $accounting);
     }
 
     /**

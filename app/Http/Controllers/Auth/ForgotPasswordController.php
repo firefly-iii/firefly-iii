@@ -16,6 +16,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
+use Password;
 
 /**
  * Class ForgotPasswordController

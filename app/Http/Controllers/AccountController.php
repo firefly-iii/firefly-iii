@@ -65,7 +65,7 @@ class AccountController extends Controller
     /**
      * @param string $what
      *
-     * @return View
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory|View
      */
     public function create(string $what = 'asset')
     {
@@ -75,12 +75,9 @@ class AccountController extends Controller
         $defaultCurrency = Amount::getDefaultCurrency();
         $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle        = trans('firefly.make_new_' . $what . '_account');
-        Session::flash(
-            'preFilled',
-            [
-                'currency_id' => $defaultCurrency->id,
-            ]
-        );
+
+        // pre fill some data
+        Session::flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {
@@ -248,6 +245,7 @@ class AccountController extends Controller
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $chartUri     = route('chart.account.single', [$account->id]);
+        $accountType  = $account->accountType->type;
 
         // grab those journals:
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
@@ -257,7 +255,7 @@ class AccountController extends Controller
         // generate entries for each period (and cache those)
         $entries = $this->periodEntries($account);
 
-        return view('accounts.show', compact('account', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+        return view('accounts.show', compact('account', 'accountType', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
 
     /**
@@ -298,14 +296,15 @@ class AccountController extends Controller
      */
     public function showByDate(Request $request, Account $account, string $date)
     {
-        $carbon   = new Carbon($date);
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = Navigation::startOfPeriod($carbon, $range);
-        $end      = Navigation::endOfPeriod($carbon, $range);
-        $subTitle = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
-        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
+        $carbon      = new Carbon($date);
+        $range       = Preferences::get('viewRange', '1M')->data;
+        $start       = Navigation::startOfPeriod($carbon, $range);
+        $end         = Navigation::endOfPeriod($carbon, $range);
+        $subTitle    = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
+        $page        = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize    = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri    = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
+        $accountType = $account->accountType->type;
 
         // replace with journal collector:
         /** @var JournalCollectorInterface $collector */
@@ -314,8 +313,11 @@ class AccountController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
+        // generate entries for each period (and cache those)
+        $entries = $this->periodEntries($account);
+
         // same call, except "entries".
-        return view('accounts.show', compact('account', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+        return view('accounts.show', compact('account', 'accountType', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
 
     /**
@@ -442,7 +444,7 @@ class AccountController extends Controller
             $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $entries->push([$dateStr, $dateName, $spent, $earned, clone $end]);
             $end = Navigation::subtractPeriod($end, $range, 1);
 
         }

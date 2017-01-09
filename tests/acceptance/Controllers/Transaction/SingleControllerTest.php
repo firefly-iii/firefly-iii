@@ -94,7 +94,7 @@ class SingleControllerTest extends TestCase
 
         $data = [
             'what'                      => 'withdrawal',
-            'amount'                    => 10,
+            'amount'                    => '10',
             'amount_currency_id_amount' => 1,
             'source_account_id'         => 1,
             'destination_account_name'  => 'Some destination',
@@ -119,7 +119,7 @@ class SingleControllerTest extends TestCase
             'description'               => 'Updated groceries',
             'source_account_id'         => 1,
             'destination_account_name'  => 'PLUS',
-            'amount'                    => 123,
+            'amount'                    => '123',
             'amount_currency_id_amount' => 1,
             'budget_id'                 => 1,
             'category'                  => 'Daily groceries',

@@ -24,9 +24,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use stdClass;
 
@@ -291,7 +289,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                                      }
                                  );
                           }
-                      )->orderBy('budget_limits.start_date','DESC')->get(['budget_limits.*']);
+                      )->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
 
         return $set;
     }
@@ -445,80 +443,21 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        // collect amount of transaction journals, which is easy:
-        $budgetIds = $budgets->pluck('id')->toArray();
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setBudgets($budgets);
 
-        $accountIds = $accounts->pluck('id')->toArray();
-
-        Log::debug(sprintf('spentInPeriod: Now in spentInPeriod for these budgets (%d): ', count($budgetIds)), $budgetIds);
-        Log::debug('spentInPeriod: and these accounts: ', $accountIds);
-        Log::debug(sprintf('spentInPeriod: Start date is "%s", end date is "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
-
-        $fromJournalsQuery = TransactionJournal::leftJoin(
-            'budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-        )
-                                               ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                               ->leftJoin(
-                                                   'transactions', function (JoinClause $join) {
-                                                   $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where(
-                                                       'transactions.amount', '<', 0
-                                                   );
-                                               }
-                                               )
-                                               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                                               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                                               ->whereNull('transaction_journals.deleted_at')
-                                               ->whereNull('transactions.deleted_at')
-                                               ->where('transaction_journals.user_id', $this->user->id)
-                                               ->where('transaction_types.type', 'Withdrawal');
-
-        // add budgets:
-        if ($budgets->count() > 0) {
-            $fromJournalsQuery->whereIn('budget_transaction_journal.budget_id', $budgetIds);
-        }
-
-        // add accounts:
         if ($accounts->count() > 0) {
-            $fromJournalsQuery->whereIn('transactions.account_id', $accountIds);
+            $collector->setAccounts($accounts);
         }
-        $first = strval($fromJournalsQuery->sum('transactions.amount'));
-        Log::debug(sprintf('spentInPeriod: Result from first query: %s', $first));
-        unset($fromJournalsQuery);
-
-        // collect amount from transactions:
-        /**
-         * select transactions.id, budget_transaction.budget_id , transactions.amount
-         *
-         *
-         * and budget_transaction.budget_id in (1,61)
-         * and transactions.account_id in (2)
-         */
-        $fromTransactionsQuery = Transaction::leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id')
-                                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                            ->whereNull('transactions.deleted_at')
-                                            ->whereNull('transaction_journals.deleted_at')
-                                            ->where('transactions.amount', '<', 0)
-                                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                                            ->where('transaction_journals.user_id', $this->user->id)
-                                            ->where('transaction_types.type', 'Withdrawal');
-
-        // add budgets:
-        if ($budgets->count() > 0) {
-            $fromTransactionsQuery->whereIn('budget_transaction.budget_id', $budgetIds);
+        if ($accounts->count() === 0) {
+            $collector->setAllAssetAccounts();
         }
 
-        // add accounts:
-        if ($accounts->count() > 0) {
-            $fromTransactionsQuery->whereIn('transactions.account_id', $accountIds);
-        }
-        $second = strval($fromTransactionsQuery->sum('transactions.amount'));
-        Log::debug(sprintf('spentInPeriod: Result from second query: %s', $second));
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
 
-        Log::debug(sprintf('spentInPeriod: FINAL: %s', bcadd($first, $second)));
-
-        return bcadd($first, $second);
+        return $sum;
     }
 
     /**
@@ -528,62 +467,31 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string
+    public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $types = [TransactionType::WITHDRAWAL];
-        $query = $this->user->transactionJournals()
-                            ->distinct()
-                            ->transactionTypes($types)
-                            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                            ->leftJoin(
-                                'transactions as source', function (JoinClause $join) {
-                                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-                            }
-                            )
-                            ->leftJoin(
-                                'transactions as destination', function (JoinClause $join) {
-                                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-                            }
-                            )
-                            ->leftJoin('budget_transaction', 'source.id', '=', 'budget_transaction.transaction_id')
-                            ->whereNull('budget_transaction_journal.id')
-                            ->whereNull('budget_transaction.id')
-                            ->before($end)
-                            ->after($start)
-                            ->whereNull('source.deleted_at')
-                            ->whereNull('destination.deleted_at')
-                            ->where('transaction_journals.completed', 1);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
 
         if ($accounts->count() > 0) {
-            $accountIds = $accounts->pluck('id')->toArray();
-            $query->where(
-            // source.account_id in accountIds XOR destination.account_id in accountIds
-                function (Builder $sourceXorDestinationQuery) use ($accountIds) {
-                    $sourceXorDestinationQuery->where(
-                        function (Builder $inSourceButNotDestinationQuery) use ($accountIds) {
-                            $inSourceButNotDestinationQuery->whereIn('source.account_id', $accountIds)
-                                                           ->whereNotIn('destination.account_id', $accountIds);
-                        }
-                    )->orWhere(
-                        function (Builder $inDestinationButNotSourceQuery) use ($accountIds) {
-                            $inDestinationButNotSourceQuery->whereIn('destination.account_id', $accountIds)
-                                                           ->whereNotIn('source.account_id', $accountIds);
-                        }
-                    );
+            $collector->setAccounts($accounts);
+        }
+        if ($accounts->count() === 0) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set = $collector->getJournals();
+        $set = $set->filter(
+            function (Transaction $transaction) {
+                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                    return $transaction;
                 }
-            );
-        }
-        $ids = $query->get(['transaction_journals.id'])->pluck('id')->toArray();
-        $sum = '0';
-        if (count($ids) > 0) {
-            $sum = strval(
-                $this->user->transactions()
-                           ->whereIn('transaction_journal_id', $ids)
-                           ->where('amount', '<', '0')
-                           ->whereNull('transactions.deleted_at')
-                           ->sum('amount')
-            );
-        }
+
+                return null;
+            }
+        );
+
+        $sum = strval($set->sum('transaction_amount'));
 
         return $sum;
     }

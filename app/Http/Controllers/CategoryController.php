@@ -193,14 +193,16 @@ class CategoryController extends Controller
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
+        $entries      = $this->getGroupedEntries($category);
+        $method       = 'default';
 
+        // get journals
         $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
-        $entries = $this->getGroupedEntries($category);
 
-        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category', 'method', 'journals', 'entries', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -223,7 +225,7 @@ class CategoryController extends Controller
         $hideCategory = true; // used in list.
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $showAll      = true;
+        $method       = 'all';
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -231,7 +233,7 @@ class CategoryController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/all');
 
-        return view('categories.show', compact('category', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end', 'showAll'));
+        return view('categories.show', compact('category', 'method', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -252,6 +254,8 @@ class CategoryController extends Controller
         $hideCategory = true; // used in list.
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $entries      = $this->getGroupedEntries($category);
+        $method       = 'date';
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -259,7 +263,7 @@ class CategoryController extends Controller
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
-        return view('categories.show', compact('category', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category', 'method', 'entries', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -319,7 +323,9 @@ class CategoryController extends Controller
      */
     private function getGroupedEntries(Category $category): Collection
     {
-        $repository        = app(CategoryRepositoryInterface::class);
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
@@ -348,7 +354,7 @@ class CategoryController extends Controller
             $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned]);
+            $entries->push([$dateStr, $dateName, $spent, $earned, clone $end]);
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
         $cache->store($entries);

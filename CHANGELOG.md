@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [4.3.2] - 2017-01-09
+
+An intermediate release because something in the Twig and Twigbridge libraries is broken and I have to make sure it doesn't affect you guys. But some cool features were on their way so there's that oo.
+
+### Added
+- Some code for issue #475, consistent overviews.
+- Better currency display. Make sure you have locale packages installed.
+
+### Changed
+- Uses a new version of Laravel.
+
+### Fixed
+- The password reset routine was broken.
+- Issue #522, thanks to @xpfgsyb
+- Issue #524, thanks to @worldworm
+- Issue #526, thanks to @worldworm
+- Issue #528, thanks to @skibbipl
+- Various other fixes.
+
 ## [4.3.1] - 2017-01-04
 ### Added
 - Support for Russian and Polish. 
@@ -324,7 +343,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed a bug where a migration would check an empty table name.
 - Fixed various bugs in the import routine.
 - Fixed various bugs in the piggy banks pages.
-- Fixed a bug in the ``firefly:verify`` routine
+- Fixed a bug in the `firefly:verify` routine
 
 ## [3.10] - 2015-05-25
 ### Added
@@ -353,11 +372,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Bulk update problems, #280, thanks @stickgrinder
 - Fixed various problems with amount reporting of split transactions.
 
-[3.9.1]
+## [3.9.1]
 ### Fixed
 - Fixed a bug where removing money from a piggy bank would not work. See issue #265 and #269
 
-[3.9.0]
+## [3.9.0]
 ### Added
 - @zjean has added code that allows you to force "https://"-URL's.
 - @tonicospinelli has added Portuguese (Brazil) translations.

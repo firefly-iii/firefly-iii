@@ -166,7 +166,7 @@ interface BudgetRepositoryInterface
      *
      * @return string
      */
-    public function spentInPeriodWithoutBudget(Collection $accounts, Carbon $start, Carbon $end): string;
+    public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * @param array $data

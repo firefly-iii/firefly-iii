@@ -496,9 +496,6 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        if ($view !== 'balance') {
-            $options['min'] = '0.01';
-        }
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);

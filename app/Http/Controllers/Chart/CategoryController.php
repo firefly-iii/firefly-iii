@@ -148,6 +148,7 @@ class CategoryController extends Controller
                 $chartData[$category->name] = bcmul($spent, '-1');
             }
         }
+
         $chartData[strval(trans('firefly.no_category'))] = bcmul($repository->spentInPeriodWithoutCategory(new Collection, $start, $end), '-1');
 
         // sort

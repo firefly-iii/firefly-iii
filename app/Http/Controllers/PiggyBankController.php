@@ -324,7 +324,7 @@ class PiggyBankController extends Controller
 
         $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
-        if (bccomp($amount, $savedSoFar) === -1) {
+        if (bccomp($amount, $savedSoFar) <= 0) {
             $repetition                = $piggyBank->currentRelevantRep();
             $repetition->currentamount = bcsub($repetition->currentamount, $amount);
             $repetition->save();
@@ -414,7 +414,7 @@ class PiggyBankController extends Controller
      * @param PiggyBankFormRequest         $request
      * @param PiggyBank                    $piggyBank
      *
-     * @return $this
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {

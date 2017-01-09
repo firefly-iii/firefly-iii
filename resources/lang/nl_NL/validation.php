@@ -23,6 +23,7 @@ return [
     'belongs_to_user'                => 'De waarde van :attribute is onbekend',
     'accepted'                       => ':attribute moet geaccepteerd zijn.',
     'bic'                            => 'Dit is geen geldige BIC.',
+    'more'                           => ':attribute moet groter zijn dan nul.',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',
     'alpha'                          => ':attribute mag alleen letters bevatten.',

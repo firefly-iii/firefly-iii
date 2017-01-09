@@ -63,7 +63,7 @@ class PiggyBankFormRequest extends Request
         $rules = [
             'name'                            => $nameRule,
             'account_id'                      => 'required|belongsToUser:accounts',
-            'targetamount'                    => 'required|min:0.01',
+            'targetamount'                    => 'required|numeric|more:0',
             'amount_currency_id_targetamount' => 'required|exists:transaction_currencies,id',
             'startdate'                       => 'date',
             'targetdate'                      => $targetDateRule,

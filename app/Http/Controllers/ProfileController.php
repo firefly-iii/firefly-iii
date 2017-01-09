@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -114,9 +115,11 @@ class ProfileController extends Controller
 
             return redirect(route('profile.change-password'));
         }
-        $result = $this->validatePassword($request->get('current_password'), $request->get('new_password'));
-        if (!($result === true)) {
-            Session::flash('error', $result);
+
+        try {
+            $this->validatePassword($request->get('current_password'), $request->get('new_password'));
+        } catch (ValidationException $e) {
+            Session::flash('error', $e->getMessage());
 
             return redirect(route('profile.change-password'));
         }
@@ -163,16 +166,16 @@ class ProfileController extends Controller
     }
 
     /**
-     *
      * @param string $old
-     * @param string $new1
+     * @param string $new
      *
-     * @return string|bool
+     * @return bool
+     * @throws ValidationException
      */
-    protected function validatePassword(string $old, string $new1)
+    protected function validatePassword(string $old, string $new): bool
     {
-        if ($new1 == $old) {
-            return trans('firefly.should_change');
+        if ($new === $old) {
+            throw new ValidationException(strval(trans('firefly.should_change')));
         }
 
         return true;

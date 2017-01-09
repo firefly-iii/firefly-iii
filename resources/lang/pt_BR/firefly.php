@@ -805,6 +805,7 @@ return [
     'add_set_amount_to_piggy'    => 'Adicionar :amount para encher este cofrinho em :date',
     'delete_piggy_bank'          => 'Apagar cofrinho ":name"',
     'cannot_add_amount_piggy'    => 'Não foi possível adicionar :amount a ":name".',
+    'cannot_remove_from_piggy'   => 'Could not remove :amount from ":name".',
     'deleted_piggy_bank'         => 'Apagar cofrinho ":name"',
     'added_amount_to_piggy'      => 'Adicionado :amount de ":name"',
     'removed_amount_from_piggy'  => 'Removido :amount de ":name"',

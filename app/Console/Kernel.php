@@ -63,7 +63,6 @@ class Kernel extends ConsoleKernel
             EncryptFile::class,
             ScanAttachments::class,
             UpgradeDatabase::class,
-            MoveRepository::class,
         ];
 
     /**

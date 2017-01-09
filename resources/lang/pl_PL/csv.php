@@ -38,7 +38,7 @@ return [
 
     'field_value'          => 'Wartość pola',
     'field_mapped_to'      => 'Mapped to',
-    'store_column_mapping' => 'Store mapping',
+    'store_column_mapping' => 'Zapisz mapowanie',
 
     // map things.
 

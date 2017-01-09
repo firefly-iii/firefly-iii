@@ -60,14 +60,18 @@ $(function () {
 function getReportOptions() {
     "use strict";
     var reportType = $('select[name="report_type"]').val();
-    $('#extra-options').empty();
-    $('#extra-options').addClass('loading');
+    var boxBody = $('#extra-options');
+    var box = $('#extra-options-box');
+    boxBody.empty();
+    box.find('.overlay').show();
 
     $.getJSON('reports/options/' + reportType, function (data) {
-        $('#extra-options').removeClass('loading').html(data.html);
+        boxBody.html(data.html);
         setOptionalFromCookies();
+        box.find('.overlay').hide();
     }).fail(function () {
-        $('#extra-options').removeClass('loading').addClass('error');
+        boxBody.addClass('error');
+        box.find('.overlay').hide();
     });
 }
 

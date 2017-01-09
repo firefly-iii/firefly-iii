@@ -28,11 +28,12 @@
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
-    "laravel/framework": "5.3.18",
+    "laravel/framework": "5.3.28",
     "davejamesmiller/laravel-breadcrumbs": "^3.0",
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
     "league/commonmark": "0.15.*",
+    "twig/twig": "1.30.0",
     "rcrowe/twigbridge": "0.9.*",
     "league/csv": "8.*",
     "laravelcollective/html": "^5.3",
@@ -72,7 +73,6 @@
     ],
     "post-install-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postInstall",
-      "php artisan firefly:github-move",
       "php artisan optimize"
     ],
     "post-update-cmd": [
@@ -80,7 +80,6 @@
       "php artisan firefly:upgrade-instructions",
       "php artisan firefly:upgrade-database",
       "php artisan firefly:verify",
-      "php artisan firefly:github-move",
       "php artisan optimize"
     ]
   },

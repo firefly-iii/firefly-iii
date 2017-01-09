@@ -29,9 +29,11 @@ $(document).ready(function () {
 
     if ($('input[name="tags"]').length > 0) {
         $.getJSON('json/tags').done(function (data) {
+
             var opt = {
                 typeahead: {
-                    source: data
+                    source: data,
+                    afterSelect: function(val) { this.$element.val(""); }
                 }
             };
             $('input[name="tags"]').tagsinput(

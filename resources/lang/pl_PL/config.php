@@ -12,7 +12,7 @@
 return [
     'locale'          => 'pl, Polski, pl_PL, pl_PL.utf8',
     'month'           => '%B %Y',
-    'month_and_day'   => '%B %e, %Y',
+    'month_and_day'   => '%e %B %Y',
     'date_time'       => '%B %e, %Y, @ %T',
     'specific_day'    => '%e %B %Y',
     'week_in_year'    => 'Tydzień %W, %Y',

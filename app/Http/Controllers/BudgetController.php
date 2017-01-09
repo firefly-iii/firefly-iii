@@ -24,6 +24,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -64,20 +65,19 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request                   $request
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
+    public function amount(Request $request, Budget $budget)
     {
         $amount = intval($request->get('amount'));
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end         = session('end', Carbon::now()->endOfMonth());
-        $budgetLimit = $repository->updateLimitAmount($budget, $start, $end, $amount);
+        $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         if ($amount == 0) {
             $budgetLimit = null;
         }
@@ -122,17 +122,16 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget                    $budget
-     * @param BudgetRepositoryInterface $repository
+     * @param Budget $budget
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Budget $budget, BudgetRepositoryInterface $repository)
+    public function destroy(Budget $budget)
     {
 
         $name     = $budget->name;
         $budgetId = $budget->id;
-        $repository->destroy($budget);
+        $this->repository->destroy($budget);
 
 
         Session::flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
@@ -238,21 +237,19 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request                    $request
-     * @param BudgetRepositoryInterface  $repository
-     * @param AccountRepositoryInterface $accountRepository
-     * @param Budget                     $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
      * @return View
      */
-    public function show(Request $request, BudgetRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Budget $budget)
+    public function show(Request $request, Budget $budget)
     {
         /** @var Carbon $start */
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
         $page       = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
-        $accounts   = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
         // collector:
         /** @var JournalCollectorInterface $collector */
@@ -262,15 +259,7 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id);
 
 
-        $set      = $repository->getBudgetLimits($budget, $start, $end);
         $subTitle = e($budget->name);
-        $limits   = new Collection();
-
-        /** @var BudgetLimit $entry */
-        foreach ($set as $entry) {
-            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
-            $limits->push($entry);
-        }
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }
@@ -289,8 +278,6 @@ class BudgetController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $page              = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
@@ -313,23 +300,23 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id . '/' . $budgetLimit->id);
 
 
-        $budgetLimit->spent = $repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
-        $limits             = new Collection([$budgetLimit]);
+        $start  = session('first', Carbon::create()->startOfYear());
+        $end    = new Carbon;
+        $limits = $this->getLimits($budget, $start, $end);
 
         return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'journals', 'subTitle'));
 
     }
 
     /**
-     * @param BudgetFormRequest         $request
-     * @param BudgetRepositoryInterface $repository
+     * @param BudgetFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(BudgetFormRequest $request, BudgetRepositoryInterface $repository)
+    public function store(BudgetFormRequest $request)
     {
         $data   = $request->getBudgetData();
-        $budget = $repository->store($data);
+        $budget = $this->repository->store($data);
 
         Session::flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
         Preferences::mark();
@@ -347,16 +334,15 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param BudgetFormRequest         $request
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param BudgetFormRequest $request
+     * @param Budget            $budget
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(BudgetFormRequest $request, BudgetRepositoryInterface $repository, Budget $budget)
+    public function update(BudgetFormRequest $request, Budget $budget)
     {
         $data = $request->getBudgetData();
-        $repository->update($budget, $data);
+        $this->repository->update($budget, $data);
 
         Session::flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
         Preferences::mark();
@@ -397,6 +383,7 @@ class BudgetController extends Controller
     private function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
         // get account information
+        /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $return            = [];
@@ -427,6 +414,43 @@ class BudgetController extends Controller
         }
 
         return $return;
+    }
+
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    private function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection
+    {
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($budget->id);
+        $cache->addProperty('get-limits');
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $set               = $this->repository->getBudgetLimits($budget, $start, $end);
+        $limits            = new Collection();
+
+        /** @var BudgetLimit $entry */
+        foreach ($set as $entry) {
+            $entry->spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
+            $limits->push($entry);
+        }
+        $cache->store($limits);
+
+        return $set;
     }
 
 }

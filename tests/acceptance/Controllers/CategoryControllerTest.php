@@ -193,6 +193,12 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
+        // mock category repository
+        $repository = $this->mock(CategoryRepositoryInterface::class);
+        $repository->shouldReceive('firstUseDate')->once()->andReturn(new Carbon);
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1');
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

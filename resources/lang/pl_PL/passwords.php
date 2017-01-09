@@ -15,5 +15,5 @@ return [
     'token'    => 'Ten token do resetowania hasła jest nieprawidłowy.',
     'sent'     => 'Wysłaliśmy link do resetowania hasła na twój adres email!',
     'reset'    => 'Twoje hasło zostało zresetowane!',
-    'blocked'  => 'Nice try though.',
+    'blocked'  => 'Przynajmniej próbowałeś.',
 ];

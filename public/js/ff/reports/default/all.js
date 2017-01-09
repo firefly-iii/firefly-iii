@@ -74,7 +74,8 @@ function loadAjaxPartial(holder, uri) {
 function displayAjaxPartial(data, holder) {
     "use strict";
     var obj = $('#' + holder);
-    obj.removeClass('loading').html(data);
+    obj.html(data);
+    obj.parent().find('.overlay').remove();
 
     // call some often needed recalculations and what-not:
 
@@ -98,7 +99,9 @@ function displayAjaxPartial(data, holder) {
 
 function failAjaxPartial(uri, holder) {
     "use strict";
-    $('#' + holder).removeClass('loading').addClass('general-chart-error');
+    var holder = $('#' + holder);
+    holder.parent().find('.overlay').remove();
+    holder.addClass('general-chart-error');
 
 }
 

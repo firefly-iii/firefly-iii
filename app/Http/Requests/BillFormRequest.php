@@ -67,8 +67,8 @@ class BillFormRequest extends Request
         $rules = [
             'name'                          => $nameRule,
             'match'                         => $matchRule,
-            'amount_min'                    => 'required|numeric|min:0.01',
-            'amount_max'                    => 'required|numeric|min:0.01',
+            'amount_min'                    => 'required|numeric|more:0',
+            'amount_max'                    => 'required|numeric|more:0',
             'amount_currency_id_amount_min' => 'required|exists:transaction_currencies,id',
             'amount_currency_id_amount_max' => 'required|exists:transaction_currencies,id',
             'date'                          => 'required|date',

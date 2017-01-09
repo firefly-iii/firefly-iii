@@ -148,6 +148,20 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return bool
+     */
+    public function validateMore($attribute, $value, $parameters): bool
+    {
+        $compare = $parameters[0] ?? '0';
+        return bccomp($value, $compare) > 0;
+    }
+
+    /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param $attribute
      * @param $value
