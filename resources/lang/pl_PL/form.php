@@ -22,7 +22,7 @@ return [
     'active'                         => 'Aktywny',
     'amount_min'                     => 'Minimalna kwota',
     'amount_max'                     => 'Maksymalna kwota',
-    'match'                          => 'Matches on',
+    'match'                          => 'Dopasowanie',
     'repeat_freq'                    => 'Powtarza się',
     'journal_currency_id'            => 'Waluta',
     'currency_id'                    => 'Waluta',
