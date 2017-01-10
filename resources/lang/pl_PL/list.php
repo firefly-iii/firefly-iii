@@ -20,7 +20,7 @@ return [
     'name'                  => 'Nazwa',
     'role'                  => 'Rola',
     'currentBalance'        => 'Bieżące saldo',
-    'active'                => 'Jest aktywny?',
+    'active'                => 'Jest aktywne?',
     'lastActivity'          => 'Ostatnia aktywność',
     'balanceDiff'           => 'Różnica salda między :start oraz :end',
     'matchedOn'             => 'Matched on',
