@@ -174,7 +174,7 @@ return [
     'csv_tab'               => 'Tabulator (niewidoczny)',
     'csv_delimiter'         => 'CSV field delimiter',
     'csv_import_account'    => 'Domyślne konto importu',
-    'csv_config'            => 'CSV import configuration',
+    'csv_config'            => 'Konfiguracja importu CSV',
 
 
     'due_date'           => 'Termin realizacji',
