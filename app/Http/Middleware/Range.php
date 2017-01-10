@@ -72,9 +72,6 @@ class Range
             // set view variables.
             $this->configureView();
 
-            // get variables for date range:
-            $this->datePicker();
-
             // set more view variables:
             $this->configureList();
         }
@@ -96,7 +93,6 @@ class Range
     {
         $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang = $pref->data;
-
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));
         $locale = explode(',', trans('config.locale'));
@@ -105,94 +101,15 @@ class Range
         setlocale(LC_TIME, $locale);
         setlocale(LC_MONETARY, $locale);
 
+
         // save some formats:
-        $monthFormat       = (string)trans('config.month');
         $monthAndDayFormat = (string)trans('config.month_and_day');
         $dateTimeFormat    = (string)trans('config.date_time');
         $defaultCurrency   = Amount::getDefaultCurrency();
-        $localeconv        = localeconv();
-        $accounting        = Amount::getJsConfig($localeconv);
 
-        // decimal places is overruled by TransactionCurrency
-        $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
-
-        View::share('monthFormat', $monthFormat);
         View::share('monthAndDayFormat', $monthAndDayFormat);
         View::share('dateTimeFormat', $dateTimeFormat);
-        View::share('language', $lang);
-        View::share('localeconv', $localeconv);
         View::share('defaultCurrency', $defaultCurrency);
-        View::share('accountingConfig', $accounting);
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function datePicker()
-    {
-        $viewRange = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $start */
-        $start = Session::get('start');
-        /** @var Carbon $end */
-        $end = Session::get('end');
-
-        $prevStart = clone $start;
-        $prevEnd   = clone $start;
-        $nextStart = clone $end;
-        $nextEnd   = clone $end;
-        if ($viewRange === 'custom') {
-            $days = $start->diffInDays($end);
-            $prevStart->subDays($days);
-            $nextEnd->addDays($days);
-            unset($days);
-        }
-
-        if ($viewRange !== 'custom') {
-            $prevStart = Navigation::subtractPeriod($start, $viewRange);// subtract for previous period
-            $prevEnd   = Navigation::endOfPeriod($prevStart, $viewRange);
-            $nextStart = Navigation::addPeriod($start, $viewRange, 0); // add for previous period
-            $nextEnd   = Navigation::endOfPeriod($nextStart, $viewRange);
-        }
-
-        $ranges             = [];
-        $ranges['current']  = [$start->format('Y-m-d'), $end->format('Y-m-d')];
-        $ranges['previous'] = [$prevStart->format('Y-m-d'), $prevEnd->format('Y-m-d')];
-        $ranges['next']     = [$nextStart->format('Y-m-d'), $nextEnd->format('Y-m-d')];
-
-        switch ($viewRange) {
-            default:
-                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
-            case '1D':
-            case 'custom':
-                $format = (string)trans('config.month_and_day');
-                break;
-            case '3M':
-                $format = (string)trans('config.quarter_in_year');
-                break;
-            case '6M':
-                $format = (string)trans('config.half_year');
-                break;
-            case '1Y':
-                $format = (string)trans('config.year');
-                break;
-            case '1M':
-                $format = (string)trans('config.month');
-                break;
-            case '1W':
-                $format = (string)trans('config.week_in_year');
-                break;
-        }
-
-
-        $current = $start->formatLocalized($format);
-        $next    = $nextStart->formatLocalized($format);
-        $prev    = $prevStart->formatLocalized($format);
-        View::share('dpStart', $start->format('Y-m-d'));
-        View::share('dpEnd', $end->format('Y-m-d'));
-        View::share('dpCurrent', $current);
-        View::share('dpPrevious', $prev);
-        View::share('dpNext', $next);
-        View::share('dpRanges', $ranges);
     }
 
     /**

@@ -49,6 +49,7 @@ Route::group(
 
 /**
  * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+ *
  * @deprecated
  */
 Route::group(
@@ -365,6 +366,15 @@ Route::group(
 );
 
 /**
+ * Budget Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
+    Route::get('variables.js', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
+}
+);
+
+/**
  * JSON Controller
  */
 Route::group(
@@ -382,7 +392,7 @@ Route::group(
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
-    Route::post('end-tour', ['uses' => 'JsonController@endTour','as' => 'end-tour']);
+    Route::post('end-tour', ['uses' => 'JsonController@endTour', 'as' => 'end-tour']);
 
 }
 );
