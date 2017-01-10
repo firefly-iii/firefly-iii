@@ -22,7 +22,7 @@ return [
     'currentBalance'        => 'Bieżące saldo',
     'active'                => 'Jest aktywne?',
     'lastActivity'          => 'Ostatnia aktywność',
-    'balanceDiff'           => 'Różnica salda między :start oraz :end',
+    'balanceDiff'           => 'Różnica salda między :start i :end',
     'matchedOn'             => 'Dopasowanie',
     'matchesOn'             => 'Dopasowanie',
     'account_type'          => 'Typ konta',
