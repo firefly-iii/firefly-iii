@@ -30,12 +30,44 @@ class JavascriptController extends Controller
      */
     public function variables()
     {
+        $picker                    = $this->getDateRangePicker();
+        $start                     = Session::get('start');
+        $end                       = Session::get('end');
+        $linkTitle                 = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
+        $firstDate                 = session('first')->format('Y-m-d');
+        $localeconv                = localeconv();
+        $accounting                = Amount::getJsConfig($localeconv);
+        $localeconv                = localeconv();
+        $defaultCurrency           = Amount::getDefaultCurrency();
+        $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
+        $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        $lang                      = $pref->data;
+        $data                      = [
+            'picker'         => $picker,
+            'linkTitle'      => $linkTitle,
+            'firstDate'      => $firstDate,
+            'currencyCode'   => Amount::getCurrencyCode(),
+            'currencySymbol' => Amount::getCurrencySymbol(),
+            'accounting'     => $accounting,
+            'localeconv'     => $localeconv,
+            'language'       => $lang,
+        ];
 
+        return response()
+            ->view('javascript.variables', $data, 200)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
+     * @return array
+     * @throws FireflyException
+     */
+    private function getDateRangePicker(): array
+    {
         $viewRange = Preferences::get('viewRange', '1M')->data;
         $start     = Session::get('start');
         $end       = Session::get('end');
-        $linkTitle = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
-        $firstDate = session('first')->format('Y-m-d');
+
         $prevStart = clone $start;
         $prevEnd   = clone $start;
         $nextStart = clone $end;
@@ -83,35 +115,18 @@ class JavascriptController extends Controller
                 break;
         }
 
-        $current                   = $start->formatLocalized($format);
-        $next                      = $nextStart->formatLocalized($format);
-        $prev                      = $prevStart->formatLocalized($format);
-        $localeconv                = localeconv();
-        $accounting                = Amount::getJsConfig($localeconv);
-        $localeconv                = localeconv();
-        $defaultCurrency           = Amount::getDefaultCurrency();
-        $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
-        $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
-        $lang                      = $pref->data;
-        $data                      = [
-            'dpStart'        => $start->format('Y-m-d'),
-            'dpEnd'          => $end->format('Y-m-d'),
-            'dpCurrent'      => $current,
-            'dpPrevious'     => $prev,
-            'dpNext'         => $next,
-            'dpRanges'       => $ranges,
-            'linkTitle'      => $linkTitle,
-            'firstDate'      => $firstDate,
-            'currencyCode'   => Amount::getCurrencyCode(),
-            'currencySymbol' => Amount::getCurrencySymbol(),
-            'accounting'     => $accounting,
-            'localeconv'     => $localeconv,
-            'language'       => $lang,
-        ];
+        $current = $start->formatLocalized($format);
+        $next    = $nextStart->formatLocalized($format);
+        $prev    = $prevStart->formatLocalized($format);
 
-        return response()
-            ->view('javascript.variables', $data, 200)
-            ->header('Content-Type', 'text/javascript');
+        return [
+            'start'    => $start->format('Y-m-d'),
+            'end'      => $end->format('Y-m-d'),
+            'current'  => $current,
+            'previous' => $prev,
+            'next'     => $next,
+            'ranges'   => $ranges,
+        ];
     }
 
 }
