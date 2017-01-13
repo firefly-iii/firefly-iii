@@ -124,6 +124,7 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
+            ->whereNull('transaction_journals.deleted_at')
                                   ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
