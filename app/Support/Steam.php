@@ -124,7 +124,7 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
-                                  ->orderBy('transaction_journals.date','ASC')
+                                  ->orderBy('transaction_journals.date', 'ASC')
                                   ->whereNull('transaction_journals.deleted_at')
                                   ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
         $currentBalance = $startBalance;
@@ -165,6 +165,8 @@ class Steam
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
+                               ->orderBy('transaction_journals.date', 'ASC')
+                               ->whereNull('transaction_journals.deleted_at')
                                ->get(['transactions.account_id', DB::raw('sum(transactions.amount) AS aggregate')]);
 
         $result = [];
