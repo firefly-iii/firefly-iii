@@ -54,7 +54,7 @@ $(function () {
                     ui.placeholder.html('<td colspan="' + cellCount + '">&nbsp;</td>');
                 }
             }
-        ).disableSelection();
+        );
     }
 
 });
