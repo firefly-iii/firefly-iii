@@ -285,7 +285,6 @@ class ExpandedForm
 
     /**
      * @param       $name
-     * @param null  $value
      * @param array $options
      *
      * @return string

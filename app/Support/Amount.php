@@ -90,11 +90,11 @@ class Amount
                 $pos_c = $sign;
         }
 
-        // default: (amount before currency)
+        // default is amount before currency
         $format = $pos_a . $pos_d . '%v' . $space . $pos_b . '%s' . $pos_c . $pos_e;
 
         if ($csPrecedes) {
-            // (currency before amount)
+            // alternative is currency before amount
             $format = $pos_a . $pos_b . '%s' . $pos_c . $space . $pos_d . '%v' . $pos_e;
         }
         Log::debug(sprintf('Final format: "%s"', $format));

@@ -32,9 +32,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     /** @var MessageBag */
     public $messages;
     /** @var array */
-    protected $allowedMimes;
+    protected $allowedMimes = [];
     /** @var int */
-    protected $maxUploadSize;
+    protected $maxUploadSize = 0;
 
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     protected $uploadDisk;
@@ -44,8 +44,8 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function __construct()
     {
-        $this->maxUploadSize = config('firefly.maxUploadSize');
-        $this->allowedMimes  = config('firefly.allowedMimes');
+        $this->maxUploadSize = intval(config('firefly.maxUploadSize'));
+        $this->allowedMimes  = (array) config('firefly.allowedMimes');
         $this->errors        = new MessageBag;
         $this->messages      = new MessageBag;
         $this->uploadDisk    = Storage::disk('upload');

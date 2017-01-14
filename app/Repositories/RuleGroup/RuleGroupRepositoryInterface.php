@@ -35,8 +35,8 @@ interface RuleGroupRepositoryInterface
     public function count(): int;
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param RuleGroup $moveTo
+     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup|null $moveTo
      *
      * @return bool
      */

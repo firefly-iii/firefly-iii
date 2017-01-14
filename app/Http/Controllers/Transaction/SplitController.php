@@ -138,6 +138,7 @@ class SplitController extends Controller
 
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
+        /** @var array $files */
         $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal, $files);

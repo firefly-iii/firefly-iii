@@ -477,7 +477,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param float  $amount
      * @param string $name
      *
      * @return Account

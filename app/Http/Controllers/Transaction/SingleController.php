@@ -265,6 +265,7 @@ class SingleController extends Controller
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
+        /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
@@ -315,6 +316,7 @@ class SingleController extends Controller
 
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
+        /** @var array $files */
         $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 

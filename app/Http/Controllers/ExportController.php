@@ -24,6 +24,7 @@ use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
+use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 use Response;
 use View;
@@ -73,8 +74,9 @@ class ExportController extends Controller
 
 
         $job->change('export_downloaded');
-
-        return response($content, 200)
+        /** @var LaravelResponse $response */
+        $response = response($content, 200);
+        $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
             ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -84,6 +86,8 @@ class ExportController extends Controller
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
             ->header('Content-Length', strlen($content));
+
+        return $response;
 
     }
 
@@ -128,8 +132,7 @@ class ExportController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param EJRI                       $jobs
      *
-     * @return string
-     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, EJRI $jobs)
     {

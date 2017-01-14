@@ -18,6 +18,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 use Response;
 use Session;
@@ -100,7 +101,9 @@ class AttachmentController extends Controller
             $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
-            return response($content, 200)
+            /** @var LaravelResponse $response */
+            $response = response($content, 200);
+            $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
                 ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -110,6 +113,8 @@ class AttachmentController extends Controller
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
                 ->header('Content-Length', strlen($content));
+
+            return $response;
         }
         throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
