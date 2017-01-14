@@ -22,6 +22,7 @@ return [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
+    'encryption'          => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
     'chart'               => 'chartjs',
     'version'             => '4.3.2',
     'csv_import_enabled'  => true,

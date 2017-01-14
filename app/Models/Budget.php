@@ -121,8 +121,9 @@ class Budget extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = $value;
-        $this->attributes['encrypted'] = false;
+        $encrypt                       = config('firefly.encryption');
+        $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted'] = $encrypt;
     }
 
     /**

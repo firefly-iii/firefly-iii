@@ -85,13 +85,12 @@ class Account extends Model
         foreach ($search as $name => $value) {
             $query->where($name, $value);
         }
-        $set       = $query->get(['accounts.*']);
+        $set = $query->get(['accounts.*']);
 
         // account must have a name. If not set, use IBAN.
         if (!isset($fields['name'])) {
             $fields['name'] = $fields['iban'];
         }
-
 
 
         /** @var Account $account */
@@ -316,8 +315,9 @@ class Account extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = $value;
-        $this->attributes['encrypted'] = false;
+        $encrypt                       = config('firefly.encryption');
+        $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted'] = $encrypt;
     }
 
     /**
