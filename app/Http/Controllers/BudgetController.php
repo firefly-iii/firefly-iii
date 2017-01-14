@@ -278,8 +278,6 @@ class BudgetController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
         $page              = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize          = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle          = trans(
@@ -289,7 +287,6 @@ class BudgetController extends Controller
                                           'end'   => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
                                       ]
         );
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
 
         // collector:
         /** @var JournalCollectorInterface $collector */
