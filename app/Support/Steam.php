@@ -165,7 +165,6 @@ class Steam
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
-                               ->orderBy('transaction_journals.date', 'ASC')
                                ->whereNull('transaction_journals.deleted_at')
                                ->get(['transactions.account_id', DB::raw('sum(transactions.amount) AS aggregate')]);
 
