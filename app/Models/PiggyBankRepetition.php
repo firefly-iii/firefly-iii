@@ -89,7 +89,7 @@ class PiggyBankRepetition extends Model
      */
     public function setCurrentamountAttribute($value)
     {
-        $this->attributes['currentamount'] = strval(round($value, 2));
+        $this->attributes['currentamount'] = strval(round($value, 12));
     }
 
 }
