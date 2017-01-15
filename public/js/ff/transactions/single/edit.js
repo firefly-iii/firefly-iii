@@ -8,6 +8,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: what */
+
 $(document).ready(function () {
     "use strict";
     // give date a datepicker if not natively supported.
@@ -31,7 +33,7 @@ $(document).ready(function () {
         var opt = {
             typeahead: {
                 source: data,
-                afterSelect: function (val) {
+                afterSelect: function () {
                     this.$element.val("");
                 }
             }
@@ -56,5 +58,5 @@ $(document).ready(function () {
     $.getJSON('json/categories').done(function (data) {
         $('input[name="category"]').typeahead({source: data});
     });
-    
+
 });
