@@ -241,7 +241,7 @@ class SingleController extends Controller
         Session::forget('transactions.edit.fromUpdate');
 
         return view(
-            'transactions.edit',
+            'transactions.single.edit',
             compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'subTitle')
         )->with('data', $preFilled);
     }
