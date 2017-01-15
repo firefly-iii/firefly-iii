@@ -33,7 +33,9 @@ $(document).ready(function () {
             var opt = {
                 typeahead: {
                     source: data,
-                    afterSelect: function(val) { this.$element.val(""); }
+                    afterSelect: function () {
+                        this.$element.val("");
+                    }
                 }
             };
             $('input[name="tags"]').tagsinput(
@@ -92,8 +94,6 @@ $(document).ready(function () {
             $('input[name^="category["]').typeahead({source: data});
         });
     }
-
-
 
 
 });

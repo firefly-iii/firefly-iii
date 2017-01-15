@@ -112,7 +112,7 @@ class SplitController extends Controller
         Session::forget('transactions.edit-split.fromUpdate');
 
         return view(
-            'transactions.edit-split',
+            'transactions.split.edit',
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
