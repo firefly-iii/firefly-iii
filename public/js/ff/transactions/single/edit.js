@@ -10,7 +10,15 @@
 
 $(document).ready(function () {
     "use strict";
-    // no special JS for edit transaction.
+    // give date a datepicker if not natively supported.
+    if (!Modernizr.inputtypes.date) {
+        $('input[type="date"]').datepicker(
+            {
+                dateFormat: 'yy-mm-dd'
+            }
+        );
+    }
+
 
     // the destination account name is always an expense account name.
     if ($('input[name="destination_account_name"]').length > 0) {
@@ -32,7 +40,9 @@ $(document).ready(function () {
             var opt = {
                 typeahead: {
                     source: data,
-                    afterSelect: function(val) { this.$element.val(""); }
+                    afterSelect: function (val) {
+                        this.$element.val("");
+                    }
                 }
             };
             $('input[name="tags"]').tagsinput(
