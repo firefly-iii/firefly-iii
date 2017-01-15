@@ -113,7 +113,9 @@ class SingleController extends Controller
 
         asort($piggies);
 
-        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields'));
+        return view(
+            'transactions.single.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields')
+        );
     }
 
     /**
@@ -317,7 +319,7 @@ class SingleController extends Controller
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
         /** @var array $files */
-        $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // flash errors
