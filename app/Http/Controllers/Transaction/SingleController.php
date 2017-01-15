@@ -139,7 +139,7 @@ class SingleController extends Controller
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'delete-' . $what);
 
-        return view('transactions.delete', compact('journal', 'subTitle', 'what'));
+        return view('transactions.single.delete', compact('journal', 'subTitle', 'what'));
 
 
     }
