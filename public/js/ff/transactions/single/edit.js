@@ -19,7 +19,6 @@ $(document).ready(function () {
         );
     }
 
-
     // the destination account name is always an expense account name.
     if ($('input[name="destination_account_name"]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
@@ -27,29 +26,20 @@ $(document).ready(function () {
         });
     }
 
-    // also for multi input
-    if ($('input[name="destination_account_name[]"]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_account_name[]"]').typeahead({source: data});
-        });
-    }
+    $.getJSON('json/tags').done(function (data) {
 
-    if ($('input[name="tags"]').length > 0) {
-        $.getJSON('json/tags').done(function (data) {
-
-            var opt = {
-                typeahead: {
-                    source: data,
-                    afterSelect: function (val) {
-                        this.$element.val("");
-                    }
+        var opt = {
+            typeahead: {
+                source: data,
+                afterSelect: function (val) {
+                    this.$element.val("");
                 }
-            };
-            $('input[name="tags"]').tagsinput(
-                opt
-            );
-        });
-    }
+            }
+        };
+        $('input[name="tags"]').tagsinput(
+            opt
+        );
+    });
 
     // the source account name is always a revenue account name.
     if ($('input[name="source_account_name"]').length > 0) {
@@ -57,50 +47,14 @@ $(document).ready(function () {
             $('input[name="source_account_name"]').typeahead({source: data});
         });
     }
-    // also for multi-input:
-    if ($('input[name="source_account_name[]"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_account_name[]"]').typeahead({source: data});
-        });
-    }
-    // and for split:
-    if ($('input[name="journal_source_account_name"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="journal_source_account_name"]').typeahead({source: data});
-        });
-    }
+
+    $.getJSON('json/transaction-journals/' + what).done(function (data) {
+        $('input[name="description"]').typeahead({source: data});
+    });
 
 
-    if ($('input[name="description"]').length > 0 && !(typeof what === "undefined")) {
-        $.getJSON('json/transaction-journals/' + what).done(function (data) {
-            $('input[name="description"]').typeahead({source: data});
-        });
-    }
-    // also for multi input:
-    if ($('input[name="description[]"]').length > 0 && !(typeof what === "undefined")) {
-        $.getJSON('json/transaction-journals/' + what).done(function (data) {
-            $('input[name="description[]"]').typeahead({source: data});
-        });
-    }
-    // and for the (rare) journal_description:
-    if ($('input[name="journal_description"]').length > 0 && !(typeof what === "undefined")) {
-        $.getJSON('json/transaction-journals/' + what).done(function (data) {
-            $('input[name="journal_description"]').typeahead({source: data});
-        });
-    }
-
-    if ($('input[name="category"]').length > 0) {
-        $.getJSON('json/categories').done(function (data) {
-            $('input[name="category"]').typeahead({source: data});
-        });
-    }
-
-    // also for multi input:
-    if ($('input[name^="category["]').length > 0) {
-        $.getJSON('json/categories').done(function (data) {
-            $('input[name^="category["]').typeahead({source: data});
-        });
-    }
-
-
+    $.getJSON('json/categories').done(function (data) {
+        $('input[name="category"]').typeahead({source: data});
+    });
+    
 });
