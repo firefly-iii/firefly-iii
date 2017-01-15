@@ -7,7 +7,7 @@
  */
 
 
-/** global: originalSum, accounting */
+/** global: originalSum, accounting, what */
 
 var destAccounts = {};
 var srcAccounts = {};
