@@ -152,7 +152,7 @@ class Steam
     public function balancesById(array $ids, Carbon $date): array
     {
 
-        // abuse chart properties:
+        // cache this property.
         $cache = new CacheProperties;
         $cache->addProperty($ids);
         $cache->addProperty('balances');
