@@ -74,15 +74,15 @@ final class Entry
     {
         $entry                           = new self;
         $entry->journal_id               = $object->transaction_journal_id;
-        $entry->description              = self::decrypt($object->journal_encrypted, $object->journal_description);
+        $entry->description              = self::decrypt(intval($object->journal_encrypted), $object->journal_description);
         $entry->amount                   = $object->amount;
         $entry->date                     = $object->date;
         $entry->transaction_type         = $object->transaction_type;
         $entry->currency_code            = $object->transaction_currency_code;
         $entry->source_account_id        = $object->account_id;
-        $entry->source_account_name      = self::decrypt($object->account_name_encrypted, $object->account_name);
+        $entry->source_account_name      = self::decrypt(intval($object->account_name_encrypted), $object->account_name);
         $entry->destination_account_id   = $object->opposing_account_id;
-        $entry->destination_account_name = self::decrypt($object->opposing_account_encrypted, $object->opposing_account_name);
+        $entry->destination_account_name = self::decrypt(intval($object->opposing_account_encrypted), $object->opposing_account_name);
         $entry->category_id              = $object->category_id ?? '';
         $entry->category_name            = $object->category_name ?? '';
         $entry->budget_id                = $object->budget_id ?? '';
