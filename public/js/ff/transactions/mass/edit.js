@@ -13,7 +13,6 @@ $(document).ready(function () {
 
     // destination account names:
     if ($('input[name^="destination_account_name["]').length > 0) {
-        console.log('multi dest account');
         $.getJSON('json/expense-accounts').done(function (data) {
             $('input[name^="destination_account_name["]').typeahead({source: data});
         });

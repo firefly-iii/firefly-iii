@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what */
+/** global: what, Modernizr */
 
 $(document).ready(function () {
     "use strict";

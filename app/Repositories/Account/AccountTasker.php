@@ -108,9 +108,6 @@ class AccountTasker implements AccountTaskerInterface
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $startAmount = '0';
-        $endAmount   = '0';
-        $diff        = '0';
         $ids         = $accounts->pluck('id')->toArray();
         $yesterday   = clone $start;
         $yesterday->subDay();
@@ -153,10 +150,6 @@ class AccountTasker implements AccountTaskerInterface
             $return['accounts'][$id] = $entry;
         }
 
-        foreach ($accounts as $account) {
-            $id   = $account->id;
-            $diff = bcadd($diff, bcsub($return['accounts'][$id]['end_balance'], $return['accounts'][$id]['start_balance']));
-        }
         $return['difference'] = bcsub($return['end'], $return['start']);
 
         return $return;

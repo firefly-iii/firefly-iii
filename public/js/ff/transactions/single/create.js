@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, doSwitch, middleCrumbUrl */
+/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, doSwitch, middleCrumbUrl */
 
 $(document).ready(function () {
     "use strict";
