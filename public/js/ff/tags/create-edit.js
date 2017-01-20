@@ -5,12 +5,19 @@
  *
  * See the LICENSE file for details.
  */
-/** global: zoomLevel, latitude, longitude, google, apiKey, doPlaceMarker */
+/** global: zoomLevel, latitude, longitude, google, apiKey, doPlaceMarker, Modernizr */
 
 $(function () {
     "use strict";
 
     $('#clearLocation').click(clearLocation);
+    if (!Modernizr.inputtypes.date) {
+        $('input[type="date"]').datepicker(
+            {
+                dateFormat: 'yy-mm-dd'
+            }
+        );
+    }
 
 });
 

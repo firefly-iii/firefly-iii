@@ -7,7 +7,7 @@
  */
 
 
-/** global: originalSum, accounting, what */
+/** global: originalSum, accounting, what, Modernizr */
 
 var destAccounts = {};
 var srcAccounts = {};
@@ -57,6 +57,14 @@ $(document).ready(function () {
 
 
     $('input[name$="][amount]"]').on('input', calculateSum);
+
+    if (!Modernizr.inputtypes.date) {
+        $('input[type="date"]').datepicker(
+            {
+                dateFormat: 'yy-mm-dd'
+            }
+        );
+    }
 });
 
 
