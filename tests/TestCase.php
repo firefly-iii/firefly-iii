@@ -102,7 +102,7 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
         /*
          * If on Travis, return very small set.
          */
-        if (getenv('TRAVIS') == '1') {
+        if (getenv('TRAVIS') == 'true') {
             return [['Default value']];
 
         }
