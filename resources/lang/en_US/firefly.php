@@ -106,6 +106,10 @@ return [
     'pref_languages_locale'                      => 'For a language other than English to work properly, your operating system must be equipped with the correct locale-information. If these are not present, currency data, dates and amounts may be formatted wrong.',
     'budget_in_period'                           => '":name" between :start and :end',
     'budget_in_period_breadcrumb'                => 'Between :start and :end',
+    'clone_withdrawal'                           => 'Clone this withdrawal',
+    'clone_deposit'                              => 'Clone this deposit',
+    'clone_transfer'                             => 'Clone this transfer',
+    'transaction_journal_other_options'          => 'Other options',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',

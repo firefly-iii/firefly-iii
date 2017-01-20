@@ -48,7 +48,7 @@
                         {{ ExpandedForm.amount('amount') }}
 
                         <!-- ALWAYS SHOW DATE -->
-                        {{ ExpandedForm.date('date', phpdate('Y-m-d')) }}
+                        {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
@@ -65,9 +65,9 @@
                     <div class="box-body">
                         <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
                         {% if budgets|length > 1 %}
-                            {{ ExpandedForm.select('budget_id', budgets, 0) }}
+                            {{ ExpandedForm.select('budget_id', budgets, null) }}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', budgets, 0, {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {{ ExpandedForm.select('budget_id', budgets, null, {helpText: trans('firefly.no_budget_pointer')}) }}
                         {% endif %}
 
                         <!-- CATEGORY ALWAYS -->

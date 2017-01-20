@@ -634,6 +634,7 @@ Route::group(
     Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
     Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
     Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
+    Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
 }
 );
 
@@ -667,7 +668,6 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
     Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
     Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
-
 }
 );
 

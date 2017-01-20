@@ -82,6 +82,42 @@ class SingleController extends Controller
 
     }
 
+    public function cloneTransaction(TransactionJournal $journal)
+    {
+        $source       = TransactionJournal::sourceAccountList($journal)->first();
+        $destination  = TransactionJournal::destinationAccountList($journal)->first();
+        $budget       = $journal->budgets()->first();
+        $budgetId     = is_null($budget) ? 0 : $budget->id;
+        $category     = $journal->categories()->first();
+        $categoryName = is_null($category) ? '' : $category->name;
+        $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
+
+
+        $preFilled = [
+            'description'              => $journal->description,
+            'source_account_id'        => $source->id,
+            'source_account_name'      => $source->name,
+            'destination_account_id'   => $destination->id,
+            'destination_account_name' => $destination->name,
+            'amount'                   => TransactionJournal::amountPositive($journal),
+            'date'                     => $journal->date->format('Y-m-d'),
+            'budget_id'                => $budgetId,
+            'category'                 => $categoryName,
+            'tags'                     => $tags,
+            'interest_date'            => $journal->getMeta('interest_date'),
+            'book_date'                => $journal->getMeta('book_date'),
+            'process_date'             => $journal->getMeta('process_date'),
+            'due_date'                 => $journal->getMeta('due_date'),
+            'payment_date'             => $journal->getMeta('payment_date'),
+            'invoice_date'             => $journal->getMeta('invoice_date'),
+            'internal_reference'       => $journal->getMeta('internal_reference'),
+            'notes'                    => $journal->getMeta('notes'),
+        ];
+        Session::flash('preFilled', $preFilled);
+
+        return redirect(route('transactions.create', [strtolower($journal->transactionType->type)]));
+    }
+
     /**
      * @param string $what
      *
@@ -114,7 +150,8 @@ class SingleController extends Controller
         asort($piggies);
 
         return view(
-            'transactions.single.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields')
+            'transactions.single.create',
+            compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
         );
     }
 
