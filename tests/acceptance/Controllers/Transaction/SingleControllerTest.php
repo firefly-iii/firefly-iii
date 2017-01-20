@@ -107,29 +107,6 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @dataProvider naughtyStringProvider
-     */
-    public function testStoreNaughty(string $description)
-    {
-        $this->session(['transactions.create.url' => 'http://localhost']);
-        $this->be($this->user());
-
-        $data = [
-            'what'                      => 'withdrawal',
-            'amount'                    => '10',
-            'amount_currency_id_amount' => 1,
-            'source_account_id'         => 1,
-            'destination_account_name'  => 'Some destination',
-            'date'                      => '2016-01-01',
-            'description'               => $description,
-        ];
-        $response = $this->call('post', route('transactions.store', ['withdrawal']), $data);
-        $this->assertNotEquals($response->getStatusCode(), 500);
-
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
      */
     public function testUpdate()
@@ -161,5 +138,4 @@ class SingleControllerTest extends TestCase
         $this->see('<ol class="breadcrumb">');
 
     }
-
 }

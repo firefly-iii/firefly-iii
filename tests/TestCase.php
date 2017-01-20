@@ -99,7 +99,13 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     public function naughtyStringProvider()
     {
+        /*
+         * If on Travis, return very small set.
+         */
+        if (getenv('TRAVIS') == '1') {
+            return [['Default value']];
 
+        }
         $path    = realpath(__DIR__ . '/../resources/tests/blns.base64.json');
         $content = file_get_contents($path);
         $array   = json_decode($content);
