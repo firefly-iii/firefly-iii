@@ -51,7 +51,6 @@ final class Entry
     public $destination_account_id;
     public $destination_account_name;
 
-
     public $budget_id;
     public $budget_name;
     public $category_id;

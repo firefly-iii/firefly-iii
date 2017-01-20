@@ -38,8 +38,8 @@ class RuleGroupFormRequest extends Request
     public function getRuleGroupData(): array
     {
         return [
-            'title'       => trim($this->input('title')),
-            'description' => trim($this->input('description')),
+            'title'       => $this->getFieldOrEmptyString('title'),
+            'description' => $this->getFieldOrEmptyString('description'),
         ];
     }
 

@@ -38,10 +38,10 @@ class RuleFormRequest extends Request
     public function getRuleData(): array
     {
         return [
-            'title'               => trim($this->get('title')),
+            'title'               => $this->getFieldOrEmptyString('title'),
             'active'              => intval($this->get('active')) == 1,
-            'trigger'             => trim($this->get('trigger')),
-            'description'         => trim($this->get('description')),
+            'trigger'             => $this->getFieldOrEmptyString('trigger'),
+            'description'         => $this->getFieldOrEmptyString('description'),
             'rule-triggers'       => $this->get('rule-trigger'),
             'rule-trigger-values' => $this->get('rule-trigger-value'),
             'rule-trigger-stop'   => $this->get('rule-trigger-stop'),

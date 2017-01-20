@@ -38,7 +38,7 @@ class PiggyBankFormRequest extends Request
     public function getPiggyBankData(): array
     {
         return [
-            'name'         => trim($this->get('name')),
+            'name'         => $this->getFieldOrEmptyString('name'),
             'startdate'    => new Carbon,
             'account_id'   => intval($this->get('account_id')),
             'targetamount' => round($this->get('targetamount'), 12),

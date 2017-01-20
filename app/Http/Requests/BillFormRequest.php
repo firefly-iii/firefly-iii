@@ -38,14 +38,14 @@ class BillFormRequest extends Request
     public function getBillData()
     {
         return [
-            'name'                          => $this->get('name'),
-            'match'                         => $this->get('match'),
+            'name'                          => $this->getFieldOrEmptyString('name'),
+            'match'                         => $this->getFieldOrEmptyString('match'),
             'amount_min'                    => round($this->get('amount_min'), 12),
             'amount_currency_id_amount_min' => intval($this->get('amount_currency_id_amount_min')),
             'amount_currency_id_amount_max' => intval($this->get('amount_currency_id_amount_max')),
             'amount_max'                    => round($this->get('amount_max'), 12),
             'date'                          => new Carbon($this->get('date')),
-            'repeat_freq'                   => $this->get('repeat_freq'),
+            'repeat_freq'                   => $this->getFieldOrEmptyString('repeat_freq'),
             'skip'                          => intval($this->get('skip')),
             'automatch'                     => intval($this->get('automatch')) === 1,
             'active'                        => intval($this->get('active')) === 1,

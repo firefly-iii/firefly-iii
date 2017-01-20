@@ -36,9 +36,9 @@ class CurrencyFormRequest extends Request
     public function getCurrencyData()
     {
         return [
-            'name'           => $this->get('name'),
-            'code'           => $this->get('code'),
-            'symbol'         => $this->get('symbol'),
+            'name'           => $this->getFieldOrEmptyString('name'),
+            'code'           => $this->getFieldOrEmptyString('code'),
+            'symbol'         => $this->getFieldOrEmptyString('symbol'),
             'decimal_places' => intval($this->get('decimal_places')),
         ];
     }

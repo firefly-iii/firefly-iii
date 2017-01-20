@@ -39,21 +39,21 @@ class AccountFormRequest extends Request
     public function getAccountData(): array
     {
         return [
-            'name'                   => trim(strval($this->input('name'))),
+            'name'                   => $this->getFieldOrEmptyString('name'),
             'active'                 => intval($this->input('active')) === 1,
-            'accountType'            => $this->input('what'),
+            'accountType'            => $this->getFieldOrEmptyString('what'),
             'currency_id'            => intval($this->input('currency_id')),
             'virtualBalance'         => round($this->input('virtualBalance'), 12),
             'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'iban'                   => trim(strval($this->input('iban'))),
-            'BIC'                    => trim(strval($this->input('BIC'))),
-            'accountNumber'          => trim(strval($this->input('accountNumber'))),
-            'accountRole'            => $this->input('accountRole'),
+            'iban'                   => $this->getFieldOrEmptyString('iban'),
+            'BIC'                    => $this->getFieldOrEmptyString('BIC'),
+            'accountNumber'          => $this->getFieldOrEmptyString('accountNumber'),
+            'accountRole'            => $this->getFieldOrEmptyString('accountRole'),
             'openingBalance'         => round($this->input('openingBalance'), 12),
             'openingBalanceDate'     => new Carbon((string)$this->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($this->input('amount_currency_id_openingBalance')),
-            'ccType'                 => $this->input('ccType'),
-            'ccMonthlyPaymentDate'   => $this->input('ccMonthlyPaymentDate'),
+            'ccType'                 => $this->getFieldOrEmptyString('ccType'),
+            'ccMonthlyPaymentDate'   => $this->getFieldOrEmptyString('ccMonthlyPaymentDate'),
         ];
     }
 
@@ -72,7 +72,7 @@ class AccountFormRequest extends Request
         $idRule   = '';
         if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|min:1|uniqueAccountForUser:' . $this->get('id');
+            $nameRule = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
         }
 
         return [
