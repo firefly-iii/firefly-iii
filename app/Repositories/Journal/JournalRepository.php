@@ -138,6 +138,14 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getTransactionTypes(): Collection
+    {
+        return TransactionType::orderBy('type', 'ASC')->get();
+    }
+
+    /**
      * @param array $data
      *
      * @return TransactionJournal

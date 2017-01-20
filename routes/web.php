@@ -380,6 +380,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'json.'], function () {
     Route::get('expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'expense-accounts']);
+    Route::get('all-accounts', ['uses' => 'JsonController@allAccounts', 'as' => 'all-accounts']);
     Route::get('revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'revenue-accounts']);
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
     Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
@@ -388,7 +389,9 @@ Route::group(
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.paid']);
     Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.unpaid']);
+    Route::get('transaction-journals/all', ['uses' => 'JsonController@allTransactionJournals', 'as' => 'all-transaction-journals']);
     Route::get('transaction-journals/{what}', ['uses' => 'JsonController@transactionJournals', 'as' => 'transaction-journals']);
+    Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 

@@ -20,7 +20,6 @@ $(function () {
         addNewAction();
     }
 
-
     $('.add_rule_trigger').click(function () {
         addNewTrigger();
 
