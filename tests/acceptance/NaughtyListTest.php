@@ -110,14 +110,6 @@ class NaughtyListTest extends TestCase
 
         $response = $this->call('post', route('transactions.update', [123]), $data);
         $this->assertNotEquals($response->getStatusCode(), 500);
-        $this->assertSessionHas('success');
-
-        $this->call('get', route('transactions.show', [123]));
-        $this->assertResponseStatus(200);
-        $this->see($description);
-        // has bread crumb
-        $this->see('<ol class="breadcrumb">');
-
     }
 
 }
