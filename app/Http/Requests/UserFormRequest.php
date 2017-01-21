@@ -36,11 +36,10 @@ class UserFormRequest extends Request
     public function getUserData(): array
     {
         return [
-            'email'        => trim($this->get('email')),
-            'blocked'      => intval($this->get('blocked')),
-            'blocked_code' => trim($this->get('blocked_code')),
-            'password'     => trim($this->get('password')),
-
+            'email'        => $this->string('email'),
+            'blocked'      => $this->integer('blocked'),
+            'blocked_code' => $this->string('blocked_code'),
+            'password'     => $this->string('password'),
         ];
     }
 

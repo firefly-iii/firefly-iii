@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
@@ -39,21 +38,21 @@ class AccountFormRequest extends Request
     public function getAccountData(): array
     {
         return [
-            'name'                   => $this->getFieldOrEmptyString('name'),
-            'active'                 => intval($this->input('active')) === 1,
-            'accountType'            => $this->getFieldOrEmptyString('what'),
-            'currency_id'            => intval($this->input('currency_id')),
-            'virtualBalance'         => round($this->input('virtualBalance'), 12),
-            'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'iban'                   => $this->getFieldOrEmptyString('iban'),
-            'BIC'                    => $this->getFieldOrEmptyString('BIC'),
-            'accountNumber'          => $this->getFieldOrEmptyString('accountNumber'),
-            'accountRole'            => $this->getFieldOrEmptyString('accountRole'),
-            'openingBalance'         => round($this->input('openingBalance'), 12),
-            'openingBalanceDate'     => new Carbon((string)$this->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($this->input('amount_currency_id_openingBalance')),
-            'ccType'                 => $this->getFieldOrEmptyString('ccType'),
-            'ccMonthlyPaymentDate'   => $this->getFieldOrEmptyString('ccMonthlyPaymentDate'),
+            'name'                   => $this->string('name'),
+            'active'                 => $this->boolean('active'),
+            'accountType'            => $this->string('what'),
+            'currency_id'            => $this->integer('currency_id'),
+            'virtualBalance'         => $this->float('virtualBalance'),
+            'virtualBalanceCurrency' => $this->integer('amount_currency_id_virtualBalance'),
+            'iban'                   => $this->string('iban'),
+            'BIC'                    => $this->string('BIC'),
+            'accountNumber'          => $this->string('accountNumber'),
+            'accountRole'            => $this->string('accountRole'),
+            'openingBalance'         => $this->float('openingBalance'),
+            'openingBalanceDate'     => $this->date('openingBalanceDate'),
+            'openingBalanceCurrency' => $this->integer('amount_currency_id_openingBalance'),
+            'ccType'                 => $this->string('ccType'),
+            'ccMonthlyPaymentDate'   => $this->string('ccMonthlyPaymentDate'),
         ];
     }
 

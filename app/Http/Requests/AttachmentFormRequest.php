@@ -36,9 +36,9 @@ class AttachmentFormRequest extends Request
     public function getAttachmentData(): array
     {
         return [
-            'title'       => $this->getFieldOrEmptyString('title'),
-            'description' => $this->getFieldOrEmptyString('description'),
-            'notes'       => $this->getFieldOrEmptyString('notes'),
+            'title'       => $this->string('title'),
+            'description' => $this->string('description'),
+            'notes'       => $this->string('notes'),
         ];
     }
 

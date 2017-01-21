@@ -38,7 +38,7 @@ class CategoryFormRequest extends Request
     public function getCategoryData(): array
     {
         return [
-            'name' => $this->getFieldOrEmptyString('name'),
+            'name' => $this->string('name'),
         ];
     }
 

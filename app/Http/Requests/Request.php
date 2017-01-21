@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -25,9 +26,66 @@ class Request extends FormRequest
     /**
      * @param string $field
      *
+     * @return bool
+     */
+    protected function boolean(string $field): bool
+    {
+        return intval($this->input($field)) === 1;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function date(string $field)
+    {
+        return $this->get($field) ? new Carbon($this->get($field)) : null;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return float
+     */
+    protected function float(string $field): float
+    {
+        return round($this->input($field), 12);
+    }
+
+    /**
+     * @param string $field
+     * @param string $type
+     *
+     * @return array
+     */
+    protected function getArray(string $field, string $type): array
+    {
+        $original = $this->get($field);
+        $return   = [];
+        foreach ($original as $index => $value) {
+            $return[$index] = $this->$type($value);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return int
+     */
+    protected function integer(string $field): int
+    {
+        return intval($this->get($field));
+    }
+
+    /**
+     * @param string $field
+     *
      * @return string
      */
-    protected function getFieldOrEmptyString(string $field): string
+    protected function string(string $field): string
     {
         $string = $this->get($field) ?? '';
 

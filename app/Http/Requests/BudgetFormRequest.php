@@ -37,8 +37,8 @@ class BudgetFormRequest extends Request
     public function getBudgetData(): array
     {
         return [
-            'name'   => $this->getFieldOrEmptyString('name'),
-            'active' => intval($this->input('active')) == 1,
+            'name'   => $this->string('name'),
+            'active' => $this->boolean('active'),
         ];
     }
 
