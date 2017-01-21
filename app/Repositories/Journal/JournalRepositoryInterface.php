@@ -76,15 +76,6 @@ interface JournalRepositoryInterface
     public function store(array $data): TransactionJournal;
 
     /**
-     * Store journal only, uncompleted, with attachments if necessary.
-     *
-     * @param array $data
-     *
-     * @return TransactionJournal
-     */
-    public function storeJournal(array $data): TransactionJournal;
-
-    /**
      * @param TransactionJournal $journal
      * @param array              $data
      *

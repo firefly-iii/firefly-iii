@@ -217,40 +217,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Store journal only, uncompleted, with attachments if necessary.
-     *
-     * @param array $data
-     *
-     * @return TransactionJournal
-     */
-    public function storeJournal(array $data): TransactionJournal
-    {
-        // find transaction type.
-        $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
-
-        // store actual journal.
-        $journal = new TransactionJournal(
-            [
-                'user_id'                 => $this->user->id,
-                'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['amount_currency_id_amount'],
-                'description'             => $data['description'],
-                'completed'               => 0,
-                'date'                    => $data['date'],
-            ]
-        );
-
-        $result = $journal->save();
-        if ($result) {
-            return $journal;
-        }
-
-        return new TransactionJournal();
-
-
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param array              $data
      *
