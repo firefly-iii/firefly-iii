@@ -41,12 +41,7 @@ return [
     'default_export_format'    => 'csv',
     'default_import_format'    => 'csv',
     'bill_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'accountRoles'             => [
-        'defaultAsset' => 'Default asset account',
-        'sharedAsset'  => 'Shared asset account',
-        'savingAsset'  => 'Savings account',
-        'ccAsset'      => 'Credit card',
-    ],
+    'accountRoles'             => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset',],
     'ccTypes'                  => [
         'monthlyFull' => 'Full payment every month',
     ],

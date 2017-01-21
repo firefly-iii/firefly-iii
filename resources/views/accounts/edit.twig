@@ -38,7 +38,7 @@
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
                         {{ ExpandedForm.balance('openingBalance',null, {'currency' : openingBalance ? openingBalance.transactionCurrency : null}) }}
                         {{ ExpandedForm.date('openingBalanceDate') }}
-                        {{ ExpandedForm.select('accountRole',Config.get('firefly.accountRoles')) }}
+                        {{ ExpandedForm.select('accountRole', roles) }}
                         {{ ExpandedForm.balance('virtualBalance',null) }}
 
                     {% endif %}

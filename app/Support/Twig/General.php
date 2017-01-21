@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Route;
@@ -42,7 +41,6 @@ class General extends Twig_Extension
             $this->formatAmountPlain(),
             $this->formatJournal(),
             $this->balance(),
-            $this->getAccountRole(),
             $this->formatFilesize(),
             $this->mimeIcon(),
         ];
@@ -231,18 +229,6 @@ class General extends Twig_Extension
             'formatJournal', function (TransactionJournal $journal): string {
             return app('amount')->formatJournal($journal);
         }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function getAccountRole(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'getAccountRole', function (string $name): string {
-            return Config::get('firefly.accountRoles.' . $name);
-        }
         );
     }
 

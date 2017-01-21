@@ -28,7 +28,7 @@
                 <td class="hidden-sm hidden-xs">
                     {% for entry in account.accountmeta %}
                         {% if entry.name == 'accountRole' %}
-                            {{ entry.data|getAccountRole }}
+                            {{ ('account_role_'~entry.data)|_ }}
                         {% endif %}
                     {% endfor %}
                 </td>
