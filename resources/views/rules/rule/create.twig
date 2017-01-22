@@ -63,7 +63,7 @@
                         </table>
                         <p>
                             <br/>
-                            <a href="#" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</a>
+                            <button type="button" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</button>
                             <a href="#" class="btn btn-default test_rule_triggers">{{ 'test_rule_triggers'|_ }}</a>
                         </p>
                     </div>
@@ -128,12 +128,12 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
-    <script type="text/javascript" src="js/ff/rules/create-edit.js"></script>
     <script type="text/javascript">
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
     </script>
-    <script type="text/javascript" src="js/ff/rules/create.js"></script>
+    <script type="text/javascript" src="js/ff/rules/create-edit.js"></script>
+
 {% endblock %}
 {% block styles %}
 {% endblock %}

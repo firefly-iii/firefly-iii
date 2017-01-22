@@ -20,7 +20,8 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -50,6 +51,7 @@ class JsonController extends Controller
      */
     public function action(Request $request)
     {
+        sleep(5);
         $count   = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
@@ -80,6 +82,22 @@ class JsonController extends Controller
         sort($return);
 
         return Response::json($return);
+
+    }
+
+    /**
+     * @param JournalCollectorInterface $collector
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function allTransactionJournals(JournalCollectorInterface $collector)
+    {
+        $collector->setLimit(100)->setPage(1);
+        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
+        sort($return);
+
+        return Response::json($return);
+
 
     }
 
@@ -180,13 +198,26 @@ class JsonController extends Controller
     }
 
     /**
-     * Returns a list of categories.
-     *
-     * @param CRI $repository
+     * @param BudgetRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categories(CRI $repository)
+    public function budgets(BudgetRepositoryInterface $repository)
+    {
+        $return = array_unique($repository->getBudgets()->pluck('name')->toArray());
+        sort($return);
+
+        return Response::json($return);
+    }
+
+    /**
+     * Returns a list of categories.
+     *
+     * @param CategoryRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categories(CategoryRepositoryInterface $repository)
     {
         $return = array_unique($repository->getCategories()->pluck('name')->toArray());
         sort($return);
@@ -280,30 +311,14 @@ class JsonController extends Controller
 
     /**
      * @param JournalCollectorInterface $collector
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function allTransactionJournals(JournalCollectorInterface $collector)
-    {
-        $collector->setLimit(100)->setPage(1);
-        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
-        sort($return);
-
-        return Response::json($return);
-
-
-    }
-
-    /**
-     * @param JournalCollectorInterface $collector
      * @param string                    $what
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function transactionJournals(JournalCollectorInterface $collector, string $what)
     {
-        $type         = config('firefly.transactionTypesByWhat.' . $what);
-        $types        = [$type];
+        $type  = config('firefly.transactionTypesByWhat.' . $what);
+        $types = [$type];
 
         $collector->setTypes($types)->setLimit(100)->setPage(1);
         $return = array_unique($collector->getJournals()->pluck('description')->toArray());
@@ -332,6 +347,7 @@ class JsonController extends Controller
      */
     public function trigger(Request $request)
     {
+        sleep(5);
         $count    = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
