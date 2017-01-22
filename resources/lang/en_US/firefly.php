@@ -256,6 +256,8 @@ return [
     'rule_trigger_description_ends_choice'       => 'Description ends with..',
     'rule_trigger_description_contains_choice'   => 'Description contains..',
     'rule_trigger_description_is_choice'         => 'Description is..',
+    'rule_trigger_category_is_choice'            => 'Category is..',
+    'rule_trigger_budget_is_choice'              => 'Budget is..',
     'rule_trigger_store_journal'                 => 'When a transaction is created',
     'rule_trigger_update_journal'                => 'When a transaction is updated',
     'rule_action_set_category'                   => 'Set category to ":action_value"',
