@@ -174,6 +174,8 @@ return [
         'description_ends'      => 'FireflyIII\Rules\Triggers\DescriptionEnds',
         'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
         'description_is'        => 'FireflyIII\Rules\Triggers\DescriptionIs',
+        'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
+        'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
     ],
     'rule-actions'             => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
