@@ -262,6 +262,7 @@ return [
     'rule_trigger_description_is_choice'         => 'Beschreibung ist..',
     'rule_trigger_category_is_choice'            => 'Category is..',
     'rule_trigger_budget_is_choice'              => 'Budget is..',
+    'rule_trigger_tag_is_choice'                 => '(A) tag is..',
     'rule_trigger_store_journal'                 => 'Wenn eine Transaktion erstellt wird',
     'rule_trigger_update_journal'                => 'Wenn eine Transaktion aktualisiert wird',
     'rule_action_set_category'                   => 'Kategorie zu ":action_value" festlegen',
