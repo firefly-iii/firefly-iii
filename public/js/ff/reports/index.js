@@ -8,7 +8,13 @@
  * See the LICENSE file for details.
  */
 
-/** global: minDate */
+/** global: minDate, nonSelectedText, allSelectedText */
+
+var defaultMultiSelect = {
+    disableIfEmpty: true,
+    nonSelectedText: nonSelectedText,
+    allSelectedText: allSelectedText
+};
 
 $(function () {
     "use strict";
@@ -40,7 +46,7 @@ $(function () {
         }
 
         // make account select a hip new bootstrap multi-select thing.
-        $('#inputAccounts').multiselect();
+        $('#inputAccounts').multiselect(defaultMultiSelect);
 
         // set date:
         var startStr = readCookie('report-start');

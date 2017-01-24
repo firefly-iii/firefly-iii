@@ -110,6 +110,9 @@ return [
     'clone_deposit'                              => 'Clone this deposit',
     'clone_transfer'                             => 'Clone this transfer',
     'transaction_journal_other_options'          => 'Other options',
+    'multi_select_no_selection'                  => 'None selected',
+    'multi_select_all_selected'                  => 'All selected',
+
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
