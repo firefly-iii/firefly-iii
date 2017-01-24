@@ -51,7 +51,7 @@ return [
     'tagPosition'                    => 'Lokalizacja taga',
     'virtualBalance'                 => 'Wirtualne saldo',
     'longitude_latitude'             => 'Lokalizacja',
-    'targetamount'                   => 'Docelowa kwota',
+    'targetamount'                   => 'Kwota docelowa',
     'accountRole'                    => 'Rola konta',
     'openingBalanceDate'             => 'Data salda otwarcia',
     'ccType'                         => 'Plan płatności kartą kredytową',
