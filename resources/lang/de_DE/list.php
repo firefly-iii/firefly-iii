@@ -12,7 +12,7 @@
 return [
     'buttons'               => 'Schaltfläche',
     'icon'                  => 'Icon',
-    'id'                    => 'ID',
+    'id'                    => 'Id',
     'create_date'           => 'Erstellt am',
     'update_date'           => 'Aktualisiert am',
     'balance_before'        => 'Bilanz vor',
