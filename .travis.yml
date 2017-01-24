@@ -1,7 +1,19 @@
 language: php
 sudo: false
 php:
-  - '7.0'
+  - 7.0
+  - 7.1
+  - nightly
+  - hhvm
+
+matrix: 
+  allow_failures:
+    - php: hhvm
+
+cache:
+    directories:
+        - vendor
+        - $HOME/.composer/cache
 
 install:
   - phpenv config-rm xdebug.ini
