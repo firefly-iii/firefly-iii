@@ -31,7 +31,7 @@ return [
     'account'               => 'Konto',
     'matchingAmount'        => 'Kwota',
     'lastMatch'             => 'Ostatnie dopasowanie',
-    'split_number'          => 'Split #',
+    'split_number'          => '# podziału',
     'destination'           => 'Cel',
     'source'                => 'Źródło',
     'next_expected_match'   => 'Następne oczekiwane dopasowanie',
