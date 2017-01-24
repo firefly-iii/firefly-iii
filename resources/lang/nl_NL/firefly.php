@@ -112,6 +112,7 @@ return [
     'transaction_journal_other_options'          => 'Andere opties',
     'multi_select_no_selection'                  => 'Niets geselecteerd',
     'multi_select_all_selected'                  => 'Alles geselecteerd',
+    'multi_select_filter_placeholder'            => 'Find..',
 
 
     // repeat frequencies:
