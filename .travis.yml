@@ -2,7 +2,6 @@ language: php
 php:
   - 7.0
   - 7.1
-  - nightly
 
 cache:
     directories:
@@ -10,8 +9,7 @@ cache:
         - $HOME/.composer/cache
 
 install:
-  - if [[ "$(php -v | grep 'PHP 7.0')" ]]; then phpenv config-rm xdebug.ini; fi
-  - if [[ "$(php -v | grep 'PHP 7.1')" ]]; then phpenv config-rm xdebug.ini; fi
+  - if [[ "$(php -v | grep 'PHP 7')" ]]; then phpenv config-rm xdebug.ini; fi
   - rm composer.lock
   - composer update --no-scripts
   - cp .env.testing .env
