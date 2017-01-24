@@ -8,12 +8,16 @@
  * See the LICENSE file for details.
  */
 
-/** global: minDate, nonSelectedText, allSelectedText */
+/** global: minDate, nonSelectedText, allSelectedText, filterPlaceholder */
 
 var defaultMultiSelect = {
     disableIfEmpty: true,
     nonSelectedText: nonSelectedText,
-    allSelectedText: allSelectedText
+    allSelectedText: allSelectedText,
+    includeSelectAllOption: true,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true,
+    filterPlaceholder: filterPlaceholder
 };
 
 $(function () {
@@ -33,11 +37,12 @@ $(function () {
         );
 
 
-        // set values from cookies, if any:
+        // set report type from cookie, if any:
         if (!(readCookie('report-type') === null)) {
             $('select[name="report_type"]').val(readCookie('report-type'));
         }
 
+        // set accounts from cookie
         if ((readCookie('report-accounts') !== null)) {
             var arr = readCookie('report-accounts').split(',');
             arr.forEach(function (val) {
@@ -48,7 +53,7 @@ $(function () {
         // make account select a hip new bootstrap multi-select thing.
         $('#inputAccounts').multiselect(defaultMultiSelect);
 
-        // set date:
+        // set date from cookie
         var startStr = readCookie('report-start');
         var endStr = readCookie('report-end');
         if (startStr !== null && endStr !== null && startStr.length == 8 && endStr.length == 8) {
@@ -91,16 +96,18 @@ function setOptionalFromCookies() {
     if ((readCookie('report-categories') !== null)) {
         arr = readCookie('report-categories').split(',');
         arr.forEach(function (val) {
-            $('input[class="category-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
+            $('#inputCategories').find('option[value="' + val + '"]').prop('selected', true);
         });
+        $('#inputCategories').multiselect(defaultMultiSelect);
     }
 
     // and budgets!
     if ((readCookie('report-budgets') !== null)) {
         arr = readCookie('report-budgets').split(',');
         arr.forEach(function (val) {
-            $('input[class="budget-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
+            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
         });
+        $('#inputBudgets').multiselect(defaultMultiSelect);
     }
 }
 

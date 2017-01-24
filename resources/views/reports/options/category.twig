@@ -1,8 +1,8 @@
 <p>
     {{ 'select_category'|_ }}
 </p>
-{% for category in categories %}
-<label class="checkbox-inline">
-    <input type="checkbox" class="category-checkbox" name="category[]" value="{{ category.id }}"> {{ category.name }}
-</label>
-{% endfor %}
+<select id="inputCategories" name="category[]" multiple="multiple" class="form-control">
+    {% for category in categories %}
+        <option value="{{ category.id }}" label="{{ category.name }}">{{ category.name }}</option>
+    {% endfor %}
+</select>
