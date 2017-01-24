@@ -15,7 +15,7 @@ cache:
         - $HOME/.composer/cache
 
 install:
-  - phpenv config-rm xdebug.ini
+  - if [[ "$(php -v | grep 'PHP 7')" ]]; then phpenv config-rm xdebug.ini; fi
   - rm composer.lock
   - composer update --no-scripts
   - cp .env.testing .env
