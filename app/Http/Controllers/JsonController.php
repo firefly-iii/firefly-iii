@@ -51,7 +51,6 @@ class JsonController extends Controller
      */
     public function action(Request $request)
     {
-        sleep(5);
         $count   = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
@@ -347,7 +346,6 @@ class JsonController extends Controller
      */
     public function trigger(Request $request)
     {
-        sleep(5);
         $count    = intval($request->get('count')) > 0 ? intval($request->get('count')) : 1;
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
