@@ -268,6 +268,16 @@ function updateTriggerInput(selectList) {
         case 'to_account_contains':
             createAutoComplete(input, 'json/all-accounts');
             break;
+        case 'tag_is':
+            // also make tag thing?
+            createAutoComplete(input, 'json/tags');
+            break;
+        case 'budget_is':
+            createAutoComplete(input, 'json/budgets');
+            break;
+        case 'category_is':
+            createAutoComplete(input, 'json/categories');
+            break;
         case 'transaction_type':
             createAutoComplete(input, 'json/transaction-types');
             break;

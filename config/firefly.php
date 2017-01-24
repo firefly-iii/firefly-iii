@@ -166,7 +166,6 @@ return [
         'to_account_ends'       => 'FireflyIII\Rules\Triggers\ToAccountEnds',
         'to_account_is'         => 'FireflyIII\Rules\Triggers\ToAccountIs',
         'to_account_contains'   => 'FireflyIII\Rules\Triggers\ToAccountContains',
-        'transaction_type'      => 'FireflyIII\Rules\Triggers\TransactionType',
         'amount_less'           => 'FireflyIII\Rules\Triggers\AmountLess',
         'amount_exactly'        => 'FireflyIII\Rules\Triggers\AmountExactly',
         'amount_more'           => 'FireflyIII\Rules\Triggers\AmountMore',
@@ -174,8 +173,10 @@ return [
         'description_ends'      => 'FireflyIII\Rules\Triggers\DescriptionEnds',
         'description_contains'  => 'FireflyIII\Rules\Triggers\DescriptionContains',
         'description_is'        => 'FireflyIII\Rules\Triggers\DescriptionIs',
+        'transaction_type'      => 'FireflyIII\Rules\Triggers\TransactionType',
         'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
+        'tag_is'             => 'FireflyIII\Rules\Triggers\TagIs',
     ],
     'rule-actions'             => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
