@@ -23,7 +23,7 @@ return [
     'report-menu-title'      => 'Overzichten',
     'report-menu-text'       => 'Bekijk dit als je een goed overzicht van je financiën wil.',
     'transaction-menu-title' => 'Transacties',
-    'transaction-menu-text'  => 'Hier vind je al je bijschrijvingen, afschrijvingen en overboekingen.',
+    'transaction-menu-text'  => 'Hier vind je al je bijschrijvingen, afschrijvingen en overschrijvingen.',
     'option-menu-title'      => 'Opties',
     'option-menu-text'       => 'Hier vind je alle opties.',
     'main-content-end-title' => 'Einde!',
