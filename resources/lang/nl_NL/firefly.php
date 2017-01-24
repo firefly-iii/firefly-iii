@@ -106,6 +106,13 @@ return [
     'pref_languages_locale'                      => 'Als je hier een andere taal dan Engels hebt geselecteerd, zorg er dan voor dat je besturingssysteem ook in staat is om valuta, data en bedragen in die taal weer te geven.',
     'budget_in_period'                           => '":name" tussen :start en :end',
     'budget_in_period_breadcrumb'                => 'Tussen :start en :end',
+    'clone_withdrawal'                           => 'Clone this withdrawal',
+    'clone_deposit'                              => 'Clone this deposit',
+    'clone_transfer'                             => 'Clone this transfer',
+    'transaction_journal_other_options'          => 'Other options',
+    'multi_select_no_selection'                  => 'None selected',
+    'multi_select_all_selected'                  => 'All selected',
+
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -252,6 +259,8 @@ return [
     'rule_trigger_description_ends_choice'       => 'Omschrijving eindigt op..',
     'rule_trigger_description_contains_choice'   => 'Omschrijving bevat..',
     'rule_trigger_description_is_choice'         => 'Omschrijving is..',
+    'rule_trigger_category_is_choice'            => 'Category is..',
+    'rule_trigger_budget_is_choice'              => 'Budget is..',
     'rule_trigger_store_journal'                 => 'Als een transactie wordt gemaakt',
     'rule_trigger_update_journal'                => 'Als een transactie wordt bijgewerkt',
     'rule_action_set_category'                   => 'Verander categorie naar ":action_value"',
@@ -741,7 +750,10 @@ return [
     'description'                                => 'Omschrijving',
     'sum_of_period'                              => 'Som van periode',
     'average_in_period'                          => 'Gemiddelde in periode',
-
+    'account_role_defaultAsset'                  => 'Default asset account',
+    'account_role_sharedAsset'                   => 'Shared asset account',
+    'account_role_savingAsset'                   => 'Savings account',
+    'account_role_ccAsset'                       => 'Credit card',
 
     // charts:
     'chart'                                      => 'Diagram',
