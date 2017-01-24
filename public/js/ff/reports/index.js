@@ -26,6 +26,7 @@ $(function () {
             }
         );
 
+
         // set values from cookies, if any:
         if (!(readCookie('report-type') === null)) {
             $('select[name="report_type"]').val(readCookie('report-type'));
@@ -34,9 +35,12 @@ $(function () {
         if ((readCookie('report-accounts') !== null)) {
             var arr = readCookie('report-accounts').split(',');
             arr.forEach(function (val) {
-                $('input[class="account-checkbox"][type="checkbox"][value="' + val + '"]').prop('checked', true);
+                $('#inputAccounts').find('option[value="' + val + '"]').prop('selected', true);
             });
         }
+
+        // make account select a hip new bootstrap multi-select thing.
+        $('#inputAccounts').multiselect();
 
         // set date:
         var startStr = readCookie('report-start');
