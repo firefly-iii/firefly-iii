@@ -112,7 +112,7 @@ return [
     'transaction_journal_other_options'          => 'Andere opties',
     'multi_select_no_selection'                  => 'Niets geselecteerd',
     'multi_select_all_selected'                  => 'Alles geselecteerd',
-    'multi_select_filter_placeholder'            => 'Find..',
+    'multi_select_filter_placeholder'            => 'Vinden..',
 
 
     // repeat frequencies:
@@ -262,7 +262,7 @@ return [
     'rule_trigger_description_is_choice'         => 'Omschrijving is..',
     'rule_trigger_category_is_choice'            => 'Categorie is..',
     'rule_trigger_budget_is_choice'              => 'Budget is..',
-    'rule_trigger_tag_is_choice'                 => '(A) tag is..',
+    'rule_trigger_tag_is_choice'                 => '(Een) tag is..',
     'rule_trigger_store_journal'                 => 'Als een transactie wordt gemaakt',
     'rule_trigger_update_journal'                => 'Als een transactie wordt bijgewerkt',
     'rule_action_set_category'                   => 'Verander categorie naar ":action_value"',
