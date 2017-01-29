@@ -28,7 +28,7 @@ return [
     'column_name'            => 'Nome da coluna',
     'column_example'         => 'Dados de exemplo da coluna',
     'column_role'            => 'Significado de dados de coluna',
-    'do_map_value'           => 'Mapear esses valores',
+    'do_map_value'           => 'Mapeie esses valores',
     'column'                 => 'Coluna',
     'no_example_data'        => 'Não há dados de exemplo disponíveis',
     'store_column_roles'     => 'Continuar a importação',
