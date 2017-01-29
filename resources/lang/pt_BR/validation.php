@@ -12,7 +12,7 @@
 return [
     'iban'                           => 'Este não é um válido IBAN.',
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
-    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
+    'deleted_user'                   => 'Devido a restrições de segurança, você não pode registrar usando este endereço de e-mail.',
     'rule_trigger_value'             => 'Este valor é inválido para o disparo selecionado.',
     'rule_action_value'              => 'Este valor é inválido para a ação selecionada.',
     'invalid_domain'                 => 'Devido a restrições de segurança, você não pode registrar deste domínio.',
@@ -87,5 +87,5 @@ return [
     'file'                           => 'O :attribute deve ser um arquivo.',
     'in_array'                       => 'O campo :attribute não existe em :other.',
     'present'                        => 'O campo :attribute deve estar presente.',
-    'amount_zero'                    => 'The total amount cannot be zero',
+    'amount_zero'                    => 'A quantidade total não pode ser zero',
 ];
