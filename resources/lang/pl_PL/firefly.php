@@ -635,7 +635,7 @@ return [
     'reports'                                    => 'Raporty',
     'transactions'                               => 'Transakcje',
     'expenses'                                   => 'Wydatki',
-    'income'                                     => 'Przychód / dochód',
+    'income'                                     => 'Przychody / dochody',
     'transfers'                                  => 'Transfery',
     'moneyManagement'                            => 'Zarządzanie pieniędzmi',
     'piggyBanks'                                 => 'Skarbonki',
