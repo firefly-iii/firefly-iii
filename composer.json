@@ -48,7 +48,7 @@
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
-    "laravel/framework": "5.3.29",
+    "laravel/framework": "5.4.*",
     "davejamesmiller/laravel-breadcrumbs": "^3.0",
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
@@ -56,7 +56,7 @@
     "twig/twig": "1.30.0",
     "rcrowe/twigbridge": "0.9.*",
     "league/csv": "8.*",
-    "laravelcollective/html": "^5.3",
+    "laravelcollective/html": "^5.4",
     "rmccue/requests": "1.*",
     "pragmarx/google2fa": "1.*",
     "bacon/bacon-qr-code": "1.*"
