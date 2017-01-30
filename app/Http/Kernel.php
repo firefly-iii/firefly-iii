@@ -50,7 +50,7 @@ class Kernel extends HttpKernel
         = [
             'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
             'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            'FireflyIII\Bootstrap\ConfigureLogging',
+            //'FireflyIII\Bootstrap\ConfigureLogging',
             'Illuminate\Foundation\Bootstrap\HandleExceptions',
             'Illuminate\Foundation\Bootstrap\RegisterFacades',
             'Illuminate\Foundation\Bootstrap\RegisterProviders',
