@@ -9,7 +9,9 @@
         <a href="#">
             <i class="fa fa-credit-card fa-fw"></i>
             <span>{{ 'accounts'|_ }}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
         <!-- submenu for accounts -->
         <ul class="treeview-menu">
@@ -63,11 +65,11 @@
     <!-- transactions -->
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
-            <i class="fa fa-repeat fa-fw"></i>
-            <span>
-                {{ 'transactions'|_ }}<span class="fa arrow"></span>
+            <i class="fa fa-repeat"></i>
+            <span>{{ 'transactions'|_ }}</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
             </span>
-            <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartialWhat('transactions','withdrawal') }}">
@@ -90,7 +92,9 @@
         <a href="#">
             <i class="fa fa-euro fa-fw"></i>
             <span>{{ 'moneyManagement'|_ }}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('piggy-banks') }}">
@@ -116,7 +120,9 @@
             <span>
                 {{ 'import_and_export'|_ }}
             </span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('import') }}">
@@ -135,7 +141,9 @@
         <a href="#">
             <i class="fa fa-gears fa-fw"></i>
             <span>{{ 'options'|_ }}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
 
         <ul class="treeview-menu">

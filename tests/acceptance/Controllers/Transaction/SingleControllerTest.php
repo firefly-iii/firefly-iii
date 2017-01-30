@@ -85,7 +85,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      */
     public function testStore()
     {
@@ -99,7 +99,7 @@ class SingleControllerTest extends TestCase
             'source_account_id'         => 1,
             'destination_account_name'  => 'Some destination',
             'date'                      => '2016-01-01',
-            'description'               => 'Some description',
+            'description'               => 'Test descr',
         ];
         $this->call('post', route('transactions.store', ['withdrawal']), $data);
         $this->assertResponseStatus(302);
@@ -138,5 +138,4 @@ class SingleControllerTest extends TestCase
         $this->see('<ol class="breadcrumb">');
 
     }
-
 }

@@ -36,8 +36,8 @@ class ConfigurationRequest extends Request
     public function getConfigurationData(): array
     {
         return [
-            'single_user_mode' => intval($this->get('single_user_mode')) === 1,
-            'is_demo_site'     => intval($this->get('is_demo_site')) === 1,
+            'single_user_mode' => $this->boolean('single_user_mode'),
+            'is_demo_site'     => $this->boolean('is_demo_site'),
         ];
     }
 

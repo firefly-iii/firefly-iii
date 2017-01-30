@@ -21,6 +21,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as LaravelResponse;
 use Log;
 use Response;
 use Session;
@@ -120,15 +121,18 @@ class ImportController extends Controller
         $result                            = json_encode($config, JSON_PRETTY_PRINT);
         $name                              = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
-        return response($result, 200)
-            ->header('Content-disposition', 'attachment; filename=' . $name)
-            ->header('Content-Type', 'application/json')
-            ->header('Content-Description', 'File Transfer')
-            ->header('Connection', 'Keep-Alive')
-            ->header('Expires', '0')
-            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-            ->header('Pragma', 'public')
-            ->header('Content-Length', strlen($result));
+        /** @var LaravelResponse $response */
+        $response = response($result, 200);
+        $response->header('Content-disposition', 'attachment; filename=' . $name)
+                 ->header('Content-Type', 'application/json')
+                 ->header('Content-Description', 'File Transfer')
+                 ->header('Connection', 'Keep-Alive')
+                 ->header('Expires', '0')
+                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+                 ->header('Pragma', 'public')
+                 ->header('Content-Length', strlen($result));
+
+        return $response;
 
 
     }

@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 
@@ -43,30 +42,30 @@ class JournalFormRequest extends Request
     {
         $data = [
             'what'                     => $this->get('what'), // type. can be 'deposit', 'withdrawal' or 'transfer'
-            'date'                     => new Carbon($this->get('date')),
-            'tags'                     => explode(',', $this->getFieldOrEmptyString('tags')),
-            'currency_id'              => intval($this->get('amount_currency_id_amount')),
+            'date'                     => $this->date('date'),
+            'tags'                     => explode(',', $this->string('tags')),
+            'currency_id'              => $this->integer('amount_currency_id_amount'),
 
             // all custom fields:
-            'interest_date'            => $this->getDateOrNull('interest_date'),
-            'book_date'                => $this->getDateOrNull('book_date'),
-            'process_date'             => $this->getDateOrNull('process_date'),
-            'due_date'                 => $this->getDateOrNull('due_date'),
-            'payment_date'             => $this->getDateOrNull('payment_date'),
-            'invoice_date'             => $this->getDateOrNull('invoice_date'),
-            'internal_reference'       => trim(strval($this->get('internal_reference'))),
-            'notes'                    => trim(strval($this->get('notes'))),
+            'interest_date'            => $this->date('interest_date'),
+            'book_date'                => $this->date('book_date'),
+            'process_date'             => $this->date('process_date'),
+            'due_date'                 => $this->date('due_date'),
+            'payment_date'             => $this->date('payment_date'),
+            'invoice_date'             => $this->date('invoice_date'),
+            'internal_reference'       => $this->string('internal_reference'),
+            'notes'                    => $this->string('notes'),
 
             // transaction / journal data:
-            'description'              => $this->getFieldOrEmptyString('description'),
-            'amount'                   => round($this->get('amount'), 12),
-            'budget_id'                => intval($this->get('budget_id')),
-            'category'                 => $this->getFieldOrEmptyString('category'),
-            'source_account_id'        => intval($this->get('source_account_id')),
-            'source_account_name'      => $this->getFieldOrEmptyString('source_account_name'),
-            'destination_account_id'   => $this->getFieldOrEmptyString('destination_account_id'),
-            'destination_account_name' => $this->getFieldOrEmptyString('destination_account_name'),
-            'piggy_bank_id'            => intval($this->get('piggy_bank_id')),
+            'description'              => $this->string('description'),
+            'amount'                   => $this->float('amount'),
+            'budget_id'                => $this->integer('budget_id'),
+            'category'                 => $this->string('category'),
+            'source_account_id'        => $this->integer('source_account_id'),
+            'source_account_name'      => $this->string('source_account_name'),
+            'destination_account_id'   => $this->string('destination_account_id'),
+            'destination_account_name' => $this->string('destination_account_name'),
+            'piggy_bank_id'            => $this->integer('piggy_bank_id'),
 
         ];
 
@@ -141,27 +140,5 @@ class JournalFormRequest extends Request
         }
 
         return $rules;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return Carbon|null
-     */
-    private function getDateOrNull(string $field)
-    {
-        return $this->get($field) ? new Carbon($this->get($field)) : null;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return string
-     */
-    private function getFieldOrEmptyString(string $field): string
-    {
-        $string = $this->get($field) ?? '';
-
-        return trim($string);
     }
 }

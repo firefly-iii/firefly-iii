@@ -49,8 +49,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param RuleGroup $moveTo
+     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup|null $moveTo
      *
      * @return bool
      */

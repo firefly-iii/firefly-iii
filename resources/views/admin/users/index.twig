@@ -17,6 +17,7 @@
                             <th data-defaultsign="_19" class="hidden-xs" colspan="2">&nbsp;</th>
                             <th data-defaultsign="az">{{ trans('list.email') }}</th>
                             <th data-defaultsign="month" class="hidden-xs">{{ trans('list.registered_at') }}</th>
+                            <th data-defaultsign="month" class="hidden-xs">{{ trans('list.updated_at') }}</th>
                             <th class="hidden-xs">{{ trans('list.is_admin') }}</th>
                             <th class="hidden-xs">{{ trans('list.has_two_factor') }}</th>
                             <th>{{ trans('list.is_blocked') }}</th>
@@ -37,6 +38,10 @@
                                 <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d H-i-s') }}">
                                     {{ user.created_at.formatLocalized(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
+                                </td>
+                                <td class="hidden-xs" data-value="{{ user.updated_at.format('Y-m-d H-i-s') }}">
+                                    {{ user.updated_at.formatLocalized(monthAndDayFormat) }}
+                                    {{ user.updated_at.format('H:i') }}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">
                                     {% if user.isAdmin %}

@@ -31,7 +31,7 @@ body.waiting * {
 }
 
 .preferences-box {
-    border:1px #ddd solid;
+    border: 1px #ddd solid;
     border-radius: 4px 4px 0 0;
     padding: 15px;
     margin: 15px;
@@ -101,4 +101,13 @@ body.waiting * {
     a[href]:after {
         content: none !important;
     }
+}
+
+.edit_tr_buttons {
+    white-space: nowrap;
+}
+
+.edit_tr_buttons .btn {
+    float: none;
+    display: inline-block;
 }

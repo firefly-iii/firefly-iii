@@ -106,6 +106,14 @@ return [
     'pref_languages_locale'                      => 'For a language other than English to work properly, your operating system must be equipped with the correct locale-information. If these are not present, currency data, dates and amounts may be formatted wrong.',
     'budget_in_period'                           => '":name" between :start and :end',
     'budget_in_period_breadcrumb'                => 'Between :start and :end',
+    'clone_withdrawal'                           => 'Clone this withdrawal',
+    'clone_deposit'                              => 'Clone this deposit',
+    'clone_transfer'                             => 'Clone this transfer',
+    'transaction_journal_other_options'          => 'Other options',
+    'multi_select_no_selection'                  => 'None selected',
+    'multi_select_all_selected'                  => 'All selected',
+    'multi_select_filter_placeholder'            => 'Find..',
+
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
@@ -252,6 +260,9 @@ return [
     'rule_trigger_description_ends_choice'       => 'Description ends with..',
     'rule_trigger_description_contains_choice'   => 'Description contains..',
     'rule_trigger_description_is_choice'         => 'Description is..',
+    'rule_trigger_category_is_choice'            => 'Category is..',
+    'rule_trigger_budget_is_choice'              => 'Budget is..',
+    'rule_trigger_tag_is_choice'                 => '(A) tag is..',
     'rule_trigger_store_journal'                 => 'When a transaction is created',
     'rule_trigger_update_journal'                => 'When a transaction is updated',
     'rule_action_set_category'                   => 'Set category to ":action_value"',
@@ -741,7 +752,10 @@ return [
     'description'                                => 'Description',
     'sum_of_period'                              => 'Sum of period',
     'average_in_period'                          => 'Average in period',
-
+    'account_role_defaultAsset'                  => 'Default asset account',
+    'account_role_sharedAsset'                   => 'Shared asset account',
+    'account_role_savingAsset'                   => 'Savings account',
+    'account_role_ccAsset'                       => 'Credit card',
 
     // charts:
     'chart'                                      => 'Chart',

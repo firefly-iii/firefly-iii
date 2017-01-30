@@ -82,6 +82,15 @@
                             <td>{{ 'budgets'|_ }}</td>
                             <td>{{ journalBudgets(journal)|raw }}</td>
                         </tr>
+
+                        {% if journal.hasMeta('interest_date') %}
+                            <tr>
+                                <td>{{ trans('list.interest_date') }}</td>
+                                <td>{{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}</td>
+                            </tr>
+
+                        {% endif %}
+
                         {% if journal.hasMeta('book_date') %}
                             <tr>
                                 <td>{{ trans('list.book_date') }}</td>
@@ -95,13 +104,7 @@
                             </tr>
 
                         {% endif %}
-                        {% if journal.hasMeta('interest_date') %}
-                            <tr>
-                                <td>{{ trans('list.interest_date') }}</td>
-                                <td>{{ journal.getMeta('interest_date').formatLocalized(monthAndDayFormat) }}</td>
-                            </tr>
 
-                        {% endif %}
                         {% if journal.hasMeta('due_date') %}
                             <tr>
                                 <td>{{ trans('list.due_date') }}</td>
@@ -211,7 +214,7 @@
             {% if transactions|length == 1 %}
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'transaction_journal_convert_options'|_ }}</h3>
+                        <h3 class="box-title">{{ 'transaction_journal_other_options'|_ }}</h3>
                     </div>
                     <div class="box-body">
                         {% if journal.transactionType.type != "Withdrawal" %}
@@ -238,6 +241,14 @@
                                     {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
                                 </a>
                             </p>
+                        {% endif %}
+                        {% if transactions|length == 1 %}
+                        <p>
+                            <i class="fa fa-copy" aria-hidden="true"></i>
+                            <a href="{{ route('transactions.clone', [journal.id]) }}">
+                                {{ ('clone_'~journal.transactionType.type|lower)|_ }}
+                            </a>
+                        </p>
                         {% endif %}
 
                     </div>

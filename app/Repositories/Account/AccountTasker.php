@@ -14,8 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Account as AccountCollection;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
@@ -106,55 +104,55 @@ class AccountTasker implements AccountTaskerInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return AccountCollection
+     * @return array
      */
-    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): AccountCollection
+    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $startAmount = '0';
-        $endAmount   = '0';
-        $diff        = '0';
         $ids         = $accounts->pluck('id')->toArray();
         $yesterday   = clone $start;
         $yesterday->subDay();
-        $startSet  = Steam::balancesById($ids, $yesterday);
-        $backupSet = Steam::balancesById($ids, $start);
-        $endSet    = Steam::balancesById($ids, $end);
+        $startSet = Steam::balancesById($ids, $yesterday);
+        $endSet   = Steam::balancesById($ids, $end);
 
-        Log::debug(
-            sprintf(
-                'getAccountReport from %s to %s for %d accounts.',
-                $start->format('Y-m-d'),
-                $end->format('Y-m-d'),
-                $accounts->count()
-            )
-        );
-        $accounts->each(
-            function (Account $account) use ($startSet, $endSet, $backupSet) {
-                $account->startBalance = $startSet[$account->id] ?? '0';
-                $account->endBalance   = $endSet[$account->id] ?? '0';
+        Log::debug('Start of accountreport');
 
-                // check backup set just in case:
-                if ($account->startBalance === '0' && isset($backupSet[$account->id])) {
-                    $account->startBalance = $backupSet[$account->id];
-                }
-            }
-        );
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
 
-        // summarize:
+        $return = [
+            'start'      => '0',
+            'end'        => '0',
+            'difference' => '0',
+            'accounts'   => [],
+        ];
+
         foreach ($accounts as $account) {
-            $startAmount = bcadd($startAmount, $account->startBalance);
-            $endAmount   = bcadd($endAmount, $account->endBalance);
-            $diff        = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
+            $id    = $account->id;
+            $entry = [
+                'name'          => $account->name,
+                'id'            => $account->id,
+                'start_balance' => '0',
+                'end_balance'   => '0',
+            ];
+
+            // get first journal date:
+            $first                  = $repository->oldestJournal($account);
+            $entry['start_balance'] = $startSet[$account->id] ?? '0';
+            $entry['end_balance']   = $endSet[$account->id] ?? '0';
+            if (!is_null($first->id) && $yesterday < $first->date && $end >= $first->date) {
+                // something about balance?
+                $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
+                Log::debug(sprintf('Account was opened before %s, so opening balance is %f', $yesterday->format('Y-m-d'), $entry['start_balance']));
+            }
+            $return['start'] = bcadd($return['start'], $entry['start_balance']);
+            $return['end']   = bcadd($return['end'], $entry['end_balance']);
+
+            $return['accounts'][$id] = $entry;
         }
 
-        $object = new AccountCollection;
-        $object->setStart($startAmount);
-        $object->setEnd($endAmount);
-        $object->setDifference($diff);
-        $object->setAccounts($accounts);
+        $return['difference'] = bcsub($return['end'], $return['start']);
 
-
-        return $object;
+        return $return;
     }
 
     /**

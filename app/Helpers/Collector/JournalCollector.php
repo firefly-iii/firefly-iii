@@ -167,6 +167,7 @@ class JournalCollector implements JournalCollectorInterface
     public function getJournals(): Collection
     {
         $this->run = true;
+        /** @var Collection $set */
         $set       = $this->query->get(array_values($this->fields));
         Log::debug(sprintf('Count of set is %d', $set->count()));
         $set = $this->filterTransfers($set);

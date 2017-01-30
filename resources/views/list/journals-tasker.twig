@@ -33,13 +33,7 @@
                 <div class="select_single" style="display:none;">
                     <input name="select_all_single[]" class="select_all_single" value="{{ transaction.journal_id }}" type="checkbox"/>
                 </div>
-                <div class="btn-group btn-group-xs edit_buttons">
-                    {% if sorting %}
-                        <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
-                    {% endif %}
-                    <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                    <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
-                </div>
+                <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">{% if sorting %}<a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>{% endif %}<a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a><a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
 
             <td class="hidden-xs">

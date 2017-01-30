@@ -288,22 +288,39 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @param Account $account
      *
+     * @return TransactionJournal
+     */
+    public function oldestJournal(Account $account): TransactionJournal
+    {
+        $first = $account->transactions()
+                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                         ->orderBy('transaction_journals.date', 'ASC')
+                         ->orderBy('transaction_journals.order', 'DESC')
+                         ->where('transaction_journals.user_id', $this->user->id)
+                         ->orderBy('transaction_journals.id', 'ASC')
+                         ->first(['transaction_journals.id']);
+        if (!is_null($first)) {
+            return TransactionJournal::find(intval($first->id));
+        }
+
+        return new TransactionJournal();
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
      * @return Carbon
      */
     public function oldestJournalDate(Account $account): Carbon
     {
-        $first = new Carbon;
-        $date  = $account->transactions()
-                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                         ->orderBy('transaction_journals.date', 'ASC')
-                         ->orderBy('transaction_journals.order', 'DESC')
-                         ->orderBy('transaction_journals.id', 'ASC')
-                         ->first(['transaction_journals.date']);
-        if (!is_null($date)) {
-            $first = new Carbon($date->date);
+        $journal = $this->oldestJournal($account);
+        if (is_null($journal->id)) {
+            return new Carbon;
         }
 
-        return $first;
+        return $journal->date;
     }
 
     /**
@@ -477,7 +494,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param float  $amount
      * @param string $name
      *
      * @return Account

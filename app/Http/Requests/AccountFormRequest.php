@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
@@ -39,21 +38,21 @@ class AccountFormRequest extends Request
     public function getAccountData(): array
     {
         return [
-            'name'                   => trim(strval($this->input('name'))),
-            'active'                 => intval($this->input('active')) === 1,
-            'accountType'            => $this->input('what'),
-            'currency_id'            => intval($this->input('currency_id')),
-            'virtualBalance'         => round($this->input('virtualBalance'), 12),
-            'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'iban'                   => trim(strval($this->input('iban'))),
-            'BIC'                    => trim(strval($this->input('BIC'))),
-            'accountNumber'          => trim(strval($this->input('accountNumber'))),
-            'accountRole'            => $this->input('accountRole'),
-            'openingBalance'         => round($this->input('openingBalance'), 12),
-            'openingBalanceDate'     => new Carbon((string)$this->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($this->input('amount_currency_id_openingBalance')),
-            'ccType'                 => $this->input('ccType'),
-            'ccMonthlyPaymentDate'   => $this->input('ccMonthlyPaymentDate'),
+            'name'                   => $this->string('name'),
+            'active'                 => $this->boolean('active'),
+            'accountType'            => $this->string('what'),
+            'currency_id'            => $this->integer('currency_id'),
+            'virtualBalance'         => $this->float('virtualBalance'),
+            'virtualBalanceCurrency' => $this->integer('amount_currency_id_virtualBalance'),
+            'iban'                   => $this->string('iban'),
+            'BIC'                    => $this->string('BIC'),
+            'accountNumber'          => $this->string('accountNumber'),
+            'accountRole'            => $this->string('accountRole'),
+            'openingBalance'         => $this->float('openingBalance'),
+            'openingBalanceDate'     => $this->date('openingBalanceDate'),
+            'openingBalanceCurrency' => $this->integer('amount_currency_id_openingBalance'),
+            'ccType'                 => $this->string('ccType'),
+            'ccMonthlyPaymentDate'   => $this->string('ccMonthlyPaymentDate'),
         ];
     }
 
@@ -72,7 +71,7 @@ class AccountFormRequest extends Request
         $idRule   = '';
         if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|min:1|uniqueAccountForUser:' . $this->get('id');
+            $nameRule = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
         }
 
         return [

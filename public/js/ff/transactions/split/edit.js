@@ -1,19 +1,20 @@
 /*
- * from-store.js
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * edit.js
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
  *
  * See the LICENSE file for details.
  */
 
-/** global: originalSum, accounting */
+
+/** global: originalSum, accounting, what, Modernizr */
 
 var destAccounts = {};
 var srcAccounts = {};
 var categories = {};
-$(function () {
+var descriptions = {};
+
+$(document).ready(function () {
     "use strict";
     $('.btn-do-split').click(cloneRow);
     $('.remove-current-split').click(removeRow);
@@ -33,12 +34,39 @@ $(function () {
         $('input[name$="category]"]').typeahead({source: categories});
     });
 
+    $.getJSON('json/transaction-journals/' + what).done(function (data) {
+        descriptions = data;
+        $('input[name="journal_description"]').typeahead({source: descriptions});
+        $('input[name$="description]"]').typeahead({source: descriptions});
+    });
+
+    $.getJSON('json/tags').done(function (data) {
+
+        var opt = {
+            typeahead: {
+                source: data,
+                afterSelect: function () {
+                    this.$element.val("");
+                }
+            }
+        };
+        $('input[name="tags"]').tagsinput(
+            opt
+        );
+    });
+
+
     $('input[name$="][amount]"]').on('input', calculateSum);
 
-    // add auto complete:
-
-
+    if (!Modernizr.inputtypes.date) {
+        $('input[type="date"]').datepicker(
+            {
+                dateFormat: 'yy-mm-dd'
+            }
+        );
+    }
 });
+
 
 function removeRow(e) {
     "use strict";
@@ -74,6 +102,9 @@ function cloneRow() {
     }
     if (categories.length > 0) {
         source.find('input[name$="category]"]').typeahead({source: categories});
+    }
+    if (descriptions.length > 0) {
+        source.find('input[name$="description]"]').typeahead({source: descriptions});
     }
 
     $('.split-table tbody').append(source);

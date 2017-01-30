@@ -124,6 +124,8 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
+                                  ->orderBy('transaction_journals.date', 'ASC')
+                                  ->whereNull('transaction_journals.deleted_at')
                                   ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
@@ -150,7 +152,7 @@ class Steam
     public function balancesById(array $ids, Carbon $date): array
     {
 
-        // abuse chart properties:
+        // cache this property.
         $cache = new CacheProperties;
         $cache->addProperty($ids);
         $cache->addProperty('balances');
@@ -163,6 +165,7 @@ class Steam
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
+                               ->whereNull('transaction_journals.deleted_at')
                                ->get(['transactions.account_id', DB::raw('sum(transactions.amount) AS aggregate')]);
 
         $result = [];

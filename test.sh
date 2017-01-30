@@ -70,7 +70,7 @@ then
     php artisan migrate:refresh --seed
 
     # call test data generation script
-    $(which php) /sites/FF3/test-data/artisan generate:data testing sqlite
+    $(which php) /sites/FF3/test-data/artisan generate:data local sqlite
     # copy new database over backup (resets backup)
     cp $DATABASE $DATABASECOPY
 fi

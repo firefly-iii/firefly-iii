@@ -112,7 +112,7 @@ class SplitController extends Controller
         Session::forget('transactions.edit-split.fromUpdate');
 
         return view(
-            'transactions.edit-split',
+            'transactions.split.edit',
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
@@ -138,6 +138,7 @@ class SplitController extends Controller
 
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
+        /** @var array $files */
         $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal, $files);

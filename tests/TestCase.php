@@ -85,16 +85,6 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-    }
-
-    /**
      * @return User
      */
     public function emptyUser()
@@ -102,6 +92,39 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
         $user = User::find(2);
 
         return $user;
+    }
+
+    /**
+     * @return array
+     */
+    public function naughtyStringProvider()
+    {
+        /*
+         * If on Travis, return very small set.
+         */
+        if (getenv('TRAVIS') == 'true') {
+            return [['Default value']];
+
+        }
+        $path    = realpath(__DIR__ . '/../resources/tests/blns.base64.json');
+        $content = file_get_contents($path);
+        $array   = json_decode($content);
+        $return  = [];
+        foreach ($array as $entry) {
+            $return[] = [base64_decode($entry)];
+        }
+
+        return $return;
+    }
+
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
     }
 
     /**

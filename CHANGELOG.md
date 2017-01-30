@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.3.3] - 2017-01-30
+
+_The 100th release of Firefly!_
+
+### Added
+- Add locales to Docker (#534) by @elohmeier.
+- Optional database encryption. On by default.
+- Datepicker for Firefox and other browsers.
+- New instruction block for updating and installing.
+- Ability to clone transactions.
+- Use multi-select Bootstrap thing instead of massive lists of checkboxes.
+
+### Removed
+- Lots of old Javascript
+
+### Fixed
+- Missing sort broke various charts
+- Bug in reports that made amounts behave weird
+- Various bug fixes
+
+### Security
+- Tested FF against the naughty string list.
 
 ## [4.3.2] - 2017-01-09
 

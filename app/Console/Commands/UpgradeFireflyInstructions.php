@@ -33,7 +33,7 @@ class UpgradeFireflyInstructions extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:upgrade-instructions';
+    protected $signature = 'firefly:instructions {task}';
 
     /**
      * Create a new command instance.
@@ -49,11 +49,60 @@ class UpgradeFireflyInstructions extends Command
      */
     public function handle()
     {
-        //
+
+        if ($this->argument('task') == 'update') {
+            $this->updateInstructions();
+        }
+        if ($this->argument('task') == 'install') {
+            $this->installInstructions();
+        }
+    }
+
+    /**
+     * Show a nice box
+     *
+     * @param string $text
+     */
+    private function boxed(string $text)
+    {
+        $parts = explode("\n", wordwrap($text));
+        foreach ($parts as $string) {
+            $this->line('| ' . sprintf('%-77s', $string) . '|');
+        }
+    }
+
+    /**
+     * Show a nice info box
+     *
+     * @param string $text
+     */
+    private function boxedInfo(string $text)
+    {
+        $parts = explode("\n", wordwrap($text));
+        foreach ($parts as $string) {
+            $this->info('| ' . sprintf('%-77s', $string) . '|');
+        }
+    }
+
+    /**
+     * Show a line
+     */
+    private function showLine()
+    {
+        $line = '+';
+        for ($i = 0; $i < 78; $i++) {
+            $line .= '-';
+        }
+        $line .= '+';
+        $this->line($line);
+
+    }
+
+    private function installInstructions() {
         /** @var string $version */
         $version = config('firefly.version');
-        $config  = config('upgrade.text');
-        $text    = null;
+        $config  = config('upgrade.text.install');
+        $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             $len = strlen($compare);
@@ -62,22 +111,53 @@ class UpgradeFireflyInstructions extends Command
             }
 
         }
-
+        $this->showLine();
+        $this->boxed('');
         if (is_null($text)) {
-            $this->line(sprintf('Thank you for installing Firefly III, v%s', $version));
-            $this->info('There are no extra upgrade instructions.');
-            $this->line('Firefly III should be ready for use.');
 
+            $this->boxed(sprintf('Thank you for installin Firefly III, v%s!', $version));
+            $this->boxedInfo('There are no extra installation instructions.');
+            $this->boxed('Firefly III should be ready for use.');
+            $this->boxed('');
+            $this->showLine();
             return;
         }
 
-        $this->line('+------------------------------------------------------------------------------+');
-        $this->line('');
-        $this->line(sprintf('Thank you for installing Firefly III, v%s', $version));
-        $this->info(wordwrap($text));
-        $this->line('');
-        $this->line('+------------------------------------------------------------------------------+');
+        $this->boxed(sprintf('Thank you for installing Firefly III, v%s!', $version));
+        $this->boxedInfo($text);
+        $this->boxed('');
+        $this->showLine();
+    }
 
+    private function updateInstructions()
+    {
+        /** @var string $version */
+        $version = config('firefly.version');
+        $config  = config('upgrade.text.upgrade');
+        $text    = '';
+        foreach (array_keys($config) as $compare) {
+            // if string starts with:
+            $len = strlen($compare);
+            if (substr($version, 0, $len) === $compare) {
+                $text = $config[$compare];
+            }
 
+        }
+        $this->showLine();
+        $this->boxed('');
+        if (is_null($text)) {
+
+            $this->boxed(sprintf('Thank you for updating to Firefly III, v%s', $version));
+            $this->boxedInfo('There are no extra upgrade instructions.');
+            $this->boxed('Firefly III should be ready for use.');
+            $this->boxed('');
+            $this->showLine();
+            return;
+        }
+
+        $this->boxed(sprintf('Thank you for updating to Firefly III, v%s!', $version));
+        $this->boxedInfo($text);
+        $this->boxed('');
+        $this->showLine();
     }
 }

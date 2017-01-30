@@ -230,6 +230,8 @@ class TagController extends Controller
     public function show(Request $request, JournalCollectorInterface $collector, Tag $tag, string $moment = '')
     {
         $range = Preferences::get('viewRange', '1M')->data;
+        $start = new Carbon;
+        $end   = new Carbon;
 
         if (strlen($moment) > 0) {
             try {

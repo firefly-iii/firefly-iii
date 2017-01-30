@@ -75,6 +75,11 @@ class AccountController extends Controller
         $defaultCurrency = Amount::getDefaultCurrency();
         $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle        = trans('firefly.make_new_' . $what . '_account');
+        $roles           = [];
+        foreach (config('firefly.accountRoles') as $role) {
+            $roles[$role] = strval(trans('firefly.account_role_' . $role));
+        }
+
 
         // pre fill some data
         Session::flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
@@ -87,7 +92,7 @@ class AccountController extends Controller
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'create-' . $what);
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies', 'roles'));
 
     }
 
@@ -155,6 +160,11 @@ class AccountController extends Controller
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
         $currencies = ExpandedForm::makeSelectList($repository->get());
+        $roles      = [];
+        foreach (config('firefly.accountRoles') as $role) {
+            $roles[$role] = strval(trans('firefly.account_role_' . $role));
+        }
+
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {
@@ -185,7 +195,7 @@ class AccountController extends Controller
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'edit-' . $what);
 
-        return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
+        return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'));
     }
 
     /**

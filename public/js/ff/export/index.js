@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: jobKey */
+/** global: jobKey, Modernizr */
 
 var intervalId = 0;
 
@@ -21,6 +21,14 @@ $(function () {
       // - return false,
 
       $('#export').submit(startExport);
+
+      if (!Modernizr.inputtypes.date) {
+          $('input[type="date"]').datepicker(
+              {
+                  dateFormat: 'yy-mm-dd'
+              }
+          );
+      }
   }
 );
 

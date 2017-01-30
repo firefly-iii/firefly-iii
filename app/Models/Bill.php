@@ -35,7 +35,7 @@ class Bill extends Model
      * @var array
      */
     protected $casts
-                      = [
+        = [
             'created_at'      => 'date',
             'updated_at'      => 'date',
             'deleted_at'      => 'date',
@@ -47,7 +47,7 @@ class Bill extends Model
             'match_encrypted' => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates  = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];
@@ -120,8 +120,9 @@ class Bill extends Model
      */
     public function setMatchAttribute($value)
     {
-        $this->attributes['match']           = Crypt::encrypt($value);
-        $this->attributes['match_encrypted'] = true;
+        $encrypt                             = config('firefly.encryption');
+        $this->attributes['match']           = $encrypt ? Crypt::encrypt($value) : $value;
+        $this->attributes['match_encrypted'] = $encrypt;
     }
 
     /**
@@ -129,8 +130,9 @@ class Bill extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']           = Crypt::encrypt($value);
-        $this->attributes['name_encrypted'] = true;
+        $encrypt                            = config('firefly.encryption');
+        $this->attributes['name']           = $encrypt ? Crypt::encrypt($value) : $value;
+        $this->attributes['name_encrypted'] = $encrypt;
     }
 
     /**

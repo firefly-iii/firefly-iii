@@ -49,6 +49,7 @@ Route::group(
 
 /**
  * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+ *
  * @deprecated
  */
 Route::group(
@@ -365,24 +366,37 @@ Route::group(
 );
 
 /**
+ * Budget Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
+    Route::get('variables.js', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
+}
+);
+
+/**
  * JSON Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'json.'], function () {
     Route::get('expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'expense-accounts']);
+    Route::get('all-accounts', ['uses' => 'JsonController@allAccounts', 'as' => 'all-accounts']);
     Route::get('revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'revenue-accounts']);
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
+    Route::get('budgets', ['uses' => 'JsonController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
     Route::get('tour', ['uses' => 'JsonController@tour', 'as' => 'tour']);
     Route::get('box/in', ['uses' => 'JsonController@boxIn', 'as' => 'box.in']);
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.paid']);
     Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.unpaid']);
+    Route::get('transaction-journals/all', ['uses' => 'JsonController@allTransactionJournals', 'as' => 'all-transaction-journals']);
     Route::get('transaction-journals/{what}', ['uses' => 'JsonController@transactionJournals', 'as' => 'transaction-journals']);
+    Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
-    Route::post('end-tour', ['uses' => 'JsonController@endTour','as' => 'end-tour']);
+    Route::post('end-tour', ['uses' => 'JsonController@endTour', 'as' => 'end-tour']);
 
 }
 );
@@ -624,6 +638,7 @@ Route::group(
     Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
     Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
     Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
+    Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
 }
 );
 
@@ -657,7 +672,6 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
     Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
     Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
-
 }
 );
 

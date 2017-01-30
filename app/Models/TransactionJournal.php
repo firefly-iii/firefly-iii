@@ -371,8 +371,9 @@ class TransactionJournal extends TransactionJournalSupport
      */
     public function setDescriptionAttribute($value)
     {
-        $this->attributes['description'] = $value;
-        $this->attributes['encrypted']   = false;
+        $encrypt                         = config('firefly.encryption');
+        $this->attributes['description'] = $encrypt ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted']   = $encrypt;
     }
 
     /**

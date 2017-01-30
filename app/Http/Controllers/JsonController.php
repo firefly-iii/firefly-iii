@@ -20,7 +20,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
@@ -59,6 +61,43 @@ class JsonController extends Controller
 
 
         return Response::json(['html' => $view]);
+    }
+
+    /**
+     * Returns a JSON list of all accounts.
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function allAccounts(AccountRepositoryInterface $repository)
+    {
+        $return = array_unique(
+            $repository->getAccountsByType(
+                [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]
+            )->pluck('name')->toArray()
+        );
+        sort($return);
+
+        return Response::json($return);
+
+    }
+
+    /**
+     * @param JournalCollectorInterface $collector
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function allTransactionJournals(JournalCollectorInterface $collector)
+    {
+        $collector->setLimit(100)->setPage(1);
+        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
+        sort($return);
+
+        return Response::json($return);
+
+
     }
 
     /**
@@ -158,19 +197,29 @@ class JsonController extends Controller
     }
 
     /**
-     * Returns a list of categories.
-     *
-     * @param CRI $repository
+     * @param BudgetRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categories(CRI $repository)
+    public function budgets(BudgetRepositoryInterface $repository)
     {
-        $list   = $repository->getCategories();
-        $return = [];
-        foreach ($list as $entry) {
-            $return[] = $entry->name;
-        }
+        $return = array_unique($repository->getBudgets()->pluck('name')->toArray());
+        sort($return);
+
+        return Response::json($return);
+    }
+
+    /**
+     * Returns a list of categories.
+     *
+     * @param CategoryRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categories(CategoryRepositoryInterface $repository)
+    {
+        $return = array_unique($repository->getCategories()->pluck('name')->toArray());
+        sort($return);
 
         return Response::json($return);
     }
@@ -195,14 +244,10 @@ class JsonController extends Controller
      */
     public function expenseAccounts(AccountRepositoryInterface $repository)
     {
-        $list   = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        $return = [];
-        foreach ($list as $entry) {
-            $return[] = $entry->name;
-        }
+        $return = array_unique($repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY])->pluck('name')->toArray());
+        sort($return);
 
         return Response::json($return);
-
     }
 
     /**
@@ -213,14 +258,10 @@ class JsonController extends Controller
      */
     public function revenueAccounts(AccountRepositoryInterface $repository)
     {
-        $list   = $repository->getAccountsByType([AccountType::REVENUE]);
-        $return = [];
-        foreach ($list as $entry) {
-            $return[] = $entry->name;
-        }
+        $return = array_unique($repository->getAccountsByType([AccountType::REVENUE])->pluck('name')->toArray());
+        sort($return);
 
         return Response::json($return);
-
     }
 
     /**
@@ -232,11 +273,8 @@ class JsonController extends Controller
      */
     public function tags(TagRepositoryInterface $tagRepository)
     {
-        $list   = $tagRepository->get();
-        $return = [];
-        foreach ($list as $entry) {
-            $return[] = $entry->tag;
-        }
+        $return = array_unique($tagRepository->get()->pluck('tag')->toArray());
+        sort($return);
 
         return Response::json($return);
 
@@ -278,23 +316,27 @@ class JsonController extends Controller
      */
     public function transactionJournals(JournalCollectorInterface $collector, string $what)
     {
-        $descriptions = [];
-        $type         = config('firefly.transactionTypesByWhat.' . $what);
-        $types        = [$type];
+        $type  = config('firefly.transactionTypesByWhat.' . $what);
+        $types = [$type];
 
-        // use journal collector instead:
         $collector->setTypes($types)->setLimit(100)->setPage(1);
-        $journals = $collector->getJournals();
-        foreach ($journals as $j) {
-            $descriptions[] = $j->description;
-        }
+        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
+        sort($return);
 
-        $descriptions = array_unique($descriptions);
-        sort($descriptions);
-
-        return Response::json($descriptions);
+        return Response::json($return);
 
 
+    }
+
+    /**
+     *
+     */
+    public function transactionTypes(JournalRepositoryInterface $repository)
+    {
+        $return = array_unique($repository->getTransactionTypes()->pluck('type')->toArray());
+        sort($return);
+
+        return Response::json($return);
     }
 
     /**

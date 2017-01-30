@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Journal;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -35,6 +36,11 @@ interface JournalRepositoryInterface
      * @return MessageBag
      */
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
+
+    /**
+     * @return Collection
+     */
+    public function getTransactionTypes(): Collection;
 
     /**
      * Deletes a journal.
@@ -68,15 +74,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function store(array $data): TransactionJournal;
-
-    /**
-     * Store journal only, uncompleted, with attachments if necessary.
-     *
-     * @param array $data
-     *
-     * @return TransactionJournal
-     */
-    public function storeJournal(array $data): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal

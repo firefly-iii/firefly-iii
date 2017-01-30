@@ -163,11 +163,11 @@ class MassController extends Controller
                 $journal->transaction_count = $journal->transactions()->count();
                 if (!is_null($sources->first())) {
                     $journal->source_account_id   = $sources->first()->id;
-                    $journal->source_account_name = $sources->first()->name;
+                    $journal->source_account_name = $sources->first()->editname;
                 }
                 if (!is_null($destinations->first())) {
                     $journal->destination_account_id   = $destinations->first()->id;
-                    $journal->destination_account_name = $destinations->first()->name;
+                    $journal->destination_account_name = $destinations->first()->editname;
                 }
             }
         );
@@ -178,7 +178,7 @@ class MassController extends Controller
 
         $journals = $filtered;
 
-        return view('transactions.mass-edit', compact('journals', 'subTitle', 'accountList'));
+        return view('transactions.mass.edit', compact('journals', 'subTitle', 'accountList'));
     }
 
     /**
