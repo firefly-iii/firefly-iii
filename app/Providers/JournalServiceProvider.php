@@ -59,10 +59,10 @@ class JournalServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var JournalCollectorInterface $collector */
                 $collector = app(JournalCollector::class);
-
                 if ($app->auth->check()) {
                     $collector->setUser(auth()->user());
                 }
+                $collector->startQuery();
 
                 return $collector;
             }
