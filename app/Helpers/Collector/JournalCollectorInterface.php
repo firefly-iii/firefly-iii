@@ -28,7 +28,6 @@ use Illuminate\Support\Collection;
  */
 interface JournalCollectorInterface
 {
-
     /**
      * @return int
      */
@@ -150,6 +149,11 @@ interface JournalCollectorInterface
     public function setTypes(array $types): JournalCollectorInterface;
 
     public function setUser(User $user);
+
+    /**
+     *
+     */
+    public function startQuery();
 
     /**
      * @return JournalCollectorInterface
