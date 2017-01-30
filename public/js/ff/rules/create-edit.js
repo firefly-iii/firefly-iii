@@ -189,9 +189,6 @@ function updateActionInput(selectList) {
     var input = parent.find('input[name^="rule-action-value["]');
     input.removeAttr('disabled');
     switch (selectList.val()) {
-        default:
-            input.typeahead('destroy');
-            break;
         case 'set_category':
             createAutoComplete(input, 'json/categories');
             break;
@@ -216,6 +213,9 @@ function updateActionInput(selectList) {
         case 'set_destination_account':
             createAutoComplete(input, 'json/all-accounts');
             break;
+        default:
+            input.typeahead('destroy');
+            break;
     }
 }
 
@@ -230,9 +230,6 @@ function updateTriggerInput(selectList) {
     // the text input we're looking for:
     var input = parent.find('input[name^="rule-trigger-value["]');
     switch (selectList.val()) {
-        default:
-            input.typeahead('destroy');
-            break;
         case 'from_account_starts':
         case 'from_account_ends':
         case 'from_account_is':
@@ -261,6 +258,9 @@ function updateTriggerInput(selectList) {
         case 'description_contains':
         case 'description_is':
             createAutoComplete(input, 'json/transaction-journals/all');
+            break;
+        default:
+            input.typeahead('destroy');
             break;
     }
 }
