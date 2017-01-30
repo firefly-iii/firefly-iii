@@ -153,6 +153,14 @@ class JournalTasker implements JournalTaskerInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Collect the balance of an account before the given transaction has hit. This is tricky, because
      * the balance does not depend on the transaction itself but the journal it's part of. And of course
      * the order of transactions within the journal. So the query is pretty complex:

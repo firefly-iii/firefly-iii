@@ -30,7 +30,13 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 {
     /** @var User */
     private $user;
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * AttachmentRepository constructor.
      *

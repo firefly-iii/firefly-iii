@@ -36,7 +36,13 @@ class BillRepository implements BillRepositoryInterface
 
     /** @var User */
     private $user;
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * BillRepository constructor.
      *

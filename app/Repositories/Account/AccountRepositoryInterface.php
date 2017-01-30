@@ -28,11 +28,6 @@ interface AccountRepositoryInterface
 {
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * Moved here from account CRUD.
      *
      * @param array $types
@@ -129,6 +124,11 @@ interface AccountRepositoryInterface
      * @return Carbon
      */
     public function oldestJournalDate(Account $account): Carbon;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

@@ -41,7 +41,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $this->user = $user;
     }
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * @param PiggyBank $piggyBank
      * @param string    $amount

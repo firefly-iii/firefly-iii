@@ -47,7 +47,13 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $this->user = $user;
     }
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * @return bool
      */

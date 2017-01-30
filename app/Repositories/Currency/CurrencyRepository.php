@@ -39,7 +39,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         $this->user = $user;
     }
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * @param TransactionCurrency $currency
      *

@@ -38,7 +38,13 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     {
         $this->user = $user;
     }
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * @param ExportJob $job
      * @param string    $status

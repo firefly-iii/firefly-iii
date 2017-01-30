@@ -25,11 +25,6 @@ use Illuminate\Support\Collection;
 interface AccountTaskerInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param Collection $accounts
      * @param Collection $excluded
      * @param Carbon     $start
@@ -61,5 +56,10 @@ interface AccountTaskerInterface
      * @return array
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
 }

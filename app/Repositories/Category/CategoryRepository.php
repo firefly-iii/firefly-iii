@@ -43,7 +43,13 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $this->user = $user;
     }
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      * @param Category $category
      *

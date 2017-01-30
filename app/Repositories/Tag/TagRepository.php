@@ -43,7 +43,13 @@ class TagRepository implements TagRepositoryInterface
     {
         $this->user = $user;
     }
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
     /**
      *
      * @param TransactionJournal $journal
