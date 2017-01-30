@@ -24,7 +24,7 @@ return [
     ],
     'encryption'          => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
     'chart'               => 'chartjs',
-    'version'             => '4.3.2',
+    'version'             => '4.3.3',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
