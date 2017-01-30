@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\ExportJob;
 
 use FireflyIII\Models\ExportJob;
+use FireflyIII\User;
 
 /**
  * Interface ExportJobRepositoryInterface
@@ -22,6 +23,11 @@ use FireflyIII\Models\ExportJob;
  */
 interface ExportJobRepositoryInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
+
     /**
      * @param ExportJob $job
      * @param string    $status

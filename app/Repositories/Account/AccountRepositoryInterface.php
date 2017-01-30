@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Account;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -25,6 +26,11 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * Moved here from account CRUD.

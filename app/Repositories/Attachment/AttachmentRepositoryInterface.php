@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\Attachment;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Attachment;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,6 +25,11 @@ use Illuminate\Support\Collection;
  */
 interface AttachmentRepositoryInterface
 {
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Attachment $attachment

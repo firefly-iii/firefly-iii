@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -98,6 +99,10 @@ interface PiggyBankRepositoryInterface
      */
     public function setOrder(int $piggyBankId, int $order): bool;
 
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * Store new piggy bank.

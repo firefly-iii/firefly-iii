@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -23,6 +24,10 @@ use Illuminate\Support\Collection;
  */
 interface AccountTaskerInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Collection $accounts

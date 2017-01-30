@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\ImportJob;
 
 use FireflyIII\Models\ImportJob;
+use FireflyIII\User;
 
 /**
  * Interface ImportJobRepositoryInterface
@@ -22,6 +23,11 @@ use FireflyIII\Models\ImportJob;
  */
 interface ImportJobRepositoryInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
+
     /**
      * @param string $fileType
      *

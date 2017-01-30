@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Currency;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -25,6 +26,11 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
+
     /**
      * @param TransactionCurrency $currency
      *

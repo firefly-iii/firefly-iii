@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\Journal;
 
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,6 +25,10 @@ use Illuminate\Support\Collection;
  */
 interface JournalTaskerInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param TransactionJournal $journal

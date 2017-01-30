@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Category;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,6 +25,11 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
+
     /**
      * @param Category $category
      *

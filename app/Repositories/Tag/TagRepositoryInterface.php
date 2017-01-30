@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Tag;
 use Carbon\Carbon;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 
@@ -26,6 +27,11 @@ use Illuminate\Support\Collection;
  */
 interface TagRepositoryInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
+
     /**
      * This method will connect a journal with a tag.
      *

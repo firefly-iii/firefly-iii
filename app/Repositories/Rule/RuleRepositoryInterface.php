@@ -17,6 +17,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\User;
 
 /**
  * Interface RuleRepositoryInterface
@@ -25,7 +26,10 @@ use FireflyIII\Models\RuleTrigger;
  */
 interface RuleRepositoryInterface
 {
-
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
     /**
      * @return int
      */
