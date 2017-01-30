@@ -106,6 +106,14 @@ return [
     'pref_languages_locale'                      => 'Als je hier een andere taal dan Engels hebt geselecteerd, zorg er dan voor dat je besturingssysteem ook in staat is om valuta, data en bedragen in die taal weer te geven.',
     'budget_in_period'                           => '":name" tussen :start en :end',
     'budget_in_period_breadcrumb'                => 'Tussen :start en :end',
+    'clone_withdrawal'                           => 'Kopieer deze uitgave',
+    'clone_deposit'                              => 'Kopieer deze inkomsten',
+    'clone_transfer'                             => 'Kopieer deze overschrijving',
+    'transaction_journal_other_options'          => 'Andere opties',
+    'multi_select_no_selection'                  => 'Niets geselecteerd',
+    'multi_select_all_selected'                  => 'Alles geselecteerd',
+    'multi_select_filter_placeholder'            => 'Vinden..',
+
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -139,10 +147,10 @@ return [
     'do_export'                                  => 'Exporteren',
     'export_status_never_started'                => 'Het exporteren is nog niet begonnen',
     'export_status_make_exporter'                => 'Exporteerding maken...',
-    'export_status_collecting_journals'          => 'Overboekingen verzamelen...',
-    'export_status_collected_journals'           => 'Overboekingen verzameld!',
-    'export_status_converting_to_export_format'  => 'Overboekingen overzetten...',
-    'export_status_converted_to_export_format'   => 'Overboekingen overgezet!',
+    'export_status_collecting_journals'          => 'Transacties verzamelen...',
+    'export_status_collected_journals'           => 'Transacties verzameld!',
+    'export_status_converting_to_export_format'  => 'Transacties overzetten...',
+    'export_status_converted_to_export_format'   => 'Transacties overgezet!',
     'export_status_creating_journal_file'        => 'Exportbestand maken...',
     'export_status_created_journal_file'         => 'Exportbestand gemaakt!',
     'export_status_collecting_attachments'       => 'Bijlagen verzamelen...',
@@ -159,7 +167,7 @@ return [
 
     // rules
     'rules'                                      => 'Regels',
-    'rules_explanation'                          => 'Hier kan je regels instellen. Regels worden in werking gesteld als je een bij-, afschrijving of overboeking maakt (of verandert). Als die transactie bepaalde eigenschappen heeft (zogenaamde "triggers") zal Firefly de bijbehorende "acties" uitvoeren. Gecombineerd kan je Firefly op een bepaalde manier laten reageren op nieuwe transacties.',
+    'rules_explanation'                          => 'Hier kan je regels instellen. Regels worden in werking gesteld als je een bij-, afschrijving of overschrijving maakt (of verandert). Als die transactie bepaalde eigenschappen heeft (zogenaamde "triggers") zal Firefly de bijbehorende "acties" uitvoeren. Gecombineerd kan je Firefly op een bepaalde manier laten reageren op nieuwe transacties.',
     'rule_name'                                  => 'Regelnaam',
     'rule_triggers'                              => 'Regel reageert op',
     'rule_actions'                               => 'Regel zal dan',
@@ -252,6 +260,9 @@ return [
     'rule_trigger_description_ends_choice'       => 'Omschrijving eindigt op..',
     'rule_trigger_description_contains_choice'   => 'Omschrijving bevat..',
     'rule_trigger_description_is_choice'         => 'Omschrijving is..',
+    'rule_trigger_category_is_choice'            => 'Categorie is..',
+    'rule_trigger_budget_is_choice'              => 'Budget is..',
+    'rule_trigger_tag_is_choice'                 => '(Een) tag is..',
     'rule_trigger_store_journal'                 => 'Als een transactie wordt gemaakt',
     'rule_trigger_update_journal'                => 'Als een transactie wordt bijgewerkt',
     'rule_action_set_category'                   => 'Verander categorie naar ":action_value"',
@@ -386,8 +397,8 @@ return [
     'title_withdrawal'                           => 'Uitgaven',
     'title_revenue'                              => 'Inkomsten',
     'title_deposit'                              => 'Inkomsten',
-    'title_transfer'                             => 'Overboekingen',
-    'title_transfers'                            => 'Overboekingen',
+    'title_transfer'                             => 'Overschrijvingen',
+    'title_transfers'                            => 'Overschrijvingen',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'         => 'Deze transactie is al een uitgave',
@@ -741,7 +752,10 @@ return [
     'description'                                => 'Omschrijving',
     'sum_of_period'                              => 'Som van periode',
     'average_in_period'                          => 'Gemiddelde in periode',
-
+    'account_role_defaultAsset'                  => 'Standaard betaalrekening',
+    'account_role_sharedAsset'                   => 'Gedeelde betaalrekening',
+    'account_role_savingAsset'                   => 'Spaarrekening',
+    'account_role_ccAsset'                       => 'Credit card',
 
     // charts:
     'chart'                                      => 'Diagram',
@@ -896,7 +910,7 @@ return [
     'do_split'                             => 'Splits',
     'split_this_withdrawal'                => 'Splits deze uitgave',
     'split_this_deposit'                   => 'Splits deze inkomsten',
-    'split_this_transfer'                  => 'Splits deze overboeking',
+    'split_this_transfer'                  => 'Splits deze overschrijving',
     'cannot_edit_multiple_source'          => 'Je kan transactie #:id met omschrijving ":description" niet splitsen, want deze bevat meerdere bronrekeningen.',
     'cannot_edit_multiple_dest'            => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
     'no_edit_multiple_left'                => 'Je hebt geen geldige transacties geselecteerd.',
