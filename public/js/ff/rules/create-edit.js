@@ -13,20 +13,16 @@
 $(function () {
     "use strict";
     if (triggerCount === 0) {
-        console.log('addNewTrigger() because count is zero');
         addNewTrigger();
     }
     if (actionCount === 0) {
-        console.log('addNewAction() because count is zero');
         addNewAction();
     }
     if (triggerCount > 0) {
-        console.log('onAddNewTrigger() because count is > zero');
         onAddNewTrigger();
     }
 
     if (actionCount > 0) {
-        console.log('onAddNewAction() because count is > zero');
         onAddNewAction();
     }
 
@@ -43,15 +39,12 @@ $(function () {
 function addNewTrigger() {
     "use strict";
     triggerCount++;
-    console.log('click on add_rule_trigger');
 
     // disable the button
     $('.add_rule_trigger').attr('disabled', 'disabled');
-    console.log('Disabled the button');
 
     // get the HTML for the new trigger
     $.getJSON('json/trigger', {count: triggerCount}).done(function (data) {
-        console.log('new trigger html retrieved');
 
         // append it to the other triggers
         $('tbody.rule-trigger-tbody').append(data.html);
@@ -62,7 +55,6 @@ function addNewTrigger() {
         onAddNewTrigger();
 
         $('.add_rule_trigger').removeAttr('disabled');
-        console.log('Enabled the button');
 
 
     }).fail(function () {
@@ -78,12 +70,10 @@ function addNewTrigger() {
  */
 function addNewAction() {
     "use strict";
-    console.log('click on add_rule_action');
     actionCount++;
 
     // disable the button
     $('.add_rule_action').attr('disabled', 'disabled');
-    console.log('Disabled the button');
 
 
     $.getJSON('json/action', {count: actionCount}).done(function (data) {
@@ -97,13 +87,11 @@ function addNewAction() {
         onAddNewAction();
 
         $('.add_rule_action').removeAttr('disabled');
-        console.log('Enabled the button');
 
     }).fail(function () {
         alert('Cannot get a new action.');
 
         $('.add_rule_action').removeAttr('disabled');
-        console.log('Enabled the button');
     });
     return false;
 }
@@ -115,7 +103,6 @@ function addNewAction() {
  */
 function removeTrigger(e) {
     "use strict";
-    console.log('click on remove-trigger');
     var target = $(e.target);
     if (target.prop("tagName") == "I") {
         target = target.parent();
@@ -125,7 +112,6 @@ function removeTrigger(e) {
 
     // if now at zero, immediatly add one again:
     if ($('.rule-trigger-tbody tr').length == 0) {
-        console.log('Add a new trigger again');
         addNewTrigger();
     }
     return false;
@@ -138,7 +124,6 @@ function removeTrigger(e) {
  */
 function removeAction(e) {
     "use strict";
-    console.log('click on remove-action');
     var target = $(e.target);
     if (target.prop("tagName") == "I") {
         target = target.parent();
@@ -148,7 +133,6 @@ function removeAction(e) {
 
     // if now at zero, immediatly add one again:
     if ($('.rule-action-tbody tr').length == 0) {
-        console.log('Add a new action again');
         addNewAction();
     }
     return false;
@@ -160,7 +144,6 @@ function removeAction(e) {
  */
 function onAddNewAction() {
     "use strict";
-    console.log('now in onAddNewAction');
 
     // update all "select action type" dropdown buttons so they will respond correctly
     $('select[name^="rule-action["]').unbind('change').change(function (e) {
@@ -169,7 +152,6 @@ function onAddNewAction() {
     });
 
     $.each($('.rule-action-holder'), function (i, v) {
-        console.log('Update action input for row ' + i);
         var holder = $(v);
         var select = holder.find('select');
         updateActionInput(select);
@@ -181,7 +163,6 @@ function onAddNewAction() {
  */
 function onAddNewTrigger() {
     "use strict";
-    console.log('now in onAddNewTrigger');
 
     // update all "select trigger type" dropdown buttons so they will respond correctly
     $('select[name^="rule-trigger["]').unbind('change').change(function (e) {
@@ -190,7 +171,6 @@ function onAddNewTrigger() {
     });
 
     $.each($('.rule-trigger-holder'), function (i, v) {
-        console.log('Update trigger input for row ' + i);
         var holder = $(v);
         var select = holder.find('select');
         updateTriggerInput(select);
@@ -203,7 +183,6 @@ function onAddNewTrigger() {
  * @param selectList
  */
 function updateActionInput(selectList) {
-    console.log('now in updateActionInput');
     // the actual row this select list is in:
     var parent = selectList.parent().parent();
     // the text input we're looking for:
@@ -212,10 +191,8 @@ function updateActionInput(selectList) {
     switch (selectList.val()) {
         default:
             input.typeahead('destroy');
-            console.log('Cannot or will not do stuff to "' + selectList.val() + '"');
             break;
         case 'set_category':
-            console.log('Create autocomplete for category list');
             createAutoComplete(input, 'json/categories');
             break;
         case 'clear_category':
@@ -224,7 +201,6 @@ function updateActionInput(selectList) {
             input.attr('disabled', 'disabled');
             break;
         case 'set_budget':
-            console.log('Create autocomplete for budget list');
             createAutoComplete(input, 'json/budgets');
             break;
         case 'add_tag':
@@ -256,7 +232,6 @@ function updateTriggerInput(selectList) {
     switch (selectList.val()) {
         default:
             input.typeahead('destroy');
-            console.log('Cannot or will not add autocomplete to "' + selectList.val() + '"');
             break;
         case 'from_account_starts':
         case 'from_account_ends':
@@ -296,18 +271,15 @@ function updateTriggerInput(selectList) {
  * @param URI
  */
 function createAutoComplete(input, URI) {
-    console.log('Will create auto-complete for "' + URI + '".');
     input.typeahead('destroy');
     $.getJSON(URI).done(function (data) {
         input.typeahead({source: data});
-        console.log('Created new auto-complete!');
     });
 
 }
 
 function testRuleTriggers() {
     "use strict";
-    console.log('click on test_rule_triggers');
 
     // Serialize all trigger data
     var triggerData = $(".rule-trigger-tbody").find("input[type=text], input[type=checkbox], select").serializeArray();
