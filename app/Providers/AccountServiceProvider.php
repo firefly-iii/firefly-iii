@@ -14,7 +14,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\Account\AccountRepository;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountTasker;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -44,8 +47,6 @@ class AccountServiceProvider extends ServiceProvider
     {
         $this->registerRepository();
         $this->registerTasker();
-
-
     }
 
     /**
@@ -54,16 +55,16 @@ class AccountServiceProvider extends ServiceProvider
     private function registerRepository()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Account\AccountRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Account\AccountRepository', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            AccountRepositoryInterface::class,
+            function (Application $app) {
+                /** @var AccountRepositoryInterface $repository */
+                $repository = app(AccountRepository::class);
+
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Account\AccountRepository', $arguments);
+                return $repository;
             }
         );
     }
@@ -74,16 +75,16 @@ class AccountServiceProvider extends ServiceProvider
     private function registerTasker()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Account\AccountTaskerInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Account\AccountTasker', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            AccountTaskerInterface::class,
+            function (Application $app) {
+                /** @var AccountTaskerInterface $tasker */
+                $tasker = app(AccountTasker::class);
+
+                if ($app->auth->check()) {
+                    $tasker->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Account\AccountTasker', $arguments);
+                return $tasker;
             }
         );
     }
