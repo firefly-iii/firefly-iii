@@ -98,12 +98,9 @@ class JournalCollector implements JournalCollectorInterface
 
     /**
      * JournalCollector constructor.
-     *
-     * @param User $user
      */
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user  = $user;
         $this->query = $this->startQuery();
     }
 
@@ -168,7 +165,7 @@ class JournalCollector implements JournalCollectorInterface
     {
         $this->run = true;
         /** @var Collection $set */
-        $set       = $this->query->get(array_values($this->fields));
+        $set = $this->query->get(array_values($this->fields));
         Log::debug(sprintf('Count of set is %d', $set->count()));
         $set = $this->filterTransfers($set);
         Log::debug(sprintf('Count of set after filterTransfers() is %d', $set->count()));
@@ -454,6 +451,14 @@ class JournalCollector implements JournalCollectorInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
