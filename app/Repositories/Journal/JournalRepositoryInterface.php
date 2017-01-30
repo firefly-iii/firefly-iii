@@ -28,10 +28,6 @@ use Illuminate\Support\MessageBag;
 interface JournalRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-    /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
      * @param Account            $source
@@ -40,11 +36,6 @@ interface JournalRepositoryInterface
      * @return MessageBag
      */
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
-
-    /**
-     * @return Collection
-     */
-    public function getTransactionTypes(): Collection;
 
     /**
      * Deletes a journal.
@@ -71,6 +62,15 @@ interface JournalRepositoryInterface
      */
     public function first(): TransactionJournal;
 
+    /**
+     * @return Collection
+     */
+    public function getTransactionTypes(): Collection;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

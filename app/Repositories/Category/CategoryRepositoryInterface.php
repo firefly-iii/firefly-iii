@@ -26,11 +26,6 @@ use Illuminate\Support\Collection;
 interface CategoryRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param Category $category
      *
      * @return bool
@@ -126,6 +121,11 @@ interface CategoryRepositoryInterface
      * @return array
      */
     public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Collection $categories

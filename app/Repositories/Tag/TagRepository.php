@@ -35,21 +35,13 @@ class TagRepository implements TagRepositoryInterface
     private $user;
 
     /**
-     * TagRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @param User $user
      */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
+
     /**
      *
      * @param TransactionJournal $journal

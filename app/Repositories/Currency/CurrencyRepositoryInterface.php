@@ -27,11 +27,6 @@ use Illuminate\Support\Collection;
 interface CurrencyRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param TransactionCurrency $currency
      *
      * @return bool
@@ -99,6 +94,11 @@ interface CurrencyRepositoryInterface
      * @return TransactionCurrency
      */
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

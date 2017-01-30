@@ -28,11 +28,6 @@ use Illuminate\Support\Collection;
 interface TagRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * This method will connect a journal with a tag.
      *
      * @param TransactionJournal $journal
@@ -94,6 +89,11 @@ interface TagRepositoryInterface
      * @return Carbon
      */
     public function lastUseDate(Tag $tag): Carbon;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Tag    $tag

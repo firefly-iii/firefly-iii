@@ -28,11 +28,6 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @return bool
      */
     public function cleanupBudgets(): bool;
@@ -153,6 +148,11 @@ interface BudgetRepositoryInterface
      * @return bool
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Collection $budgets

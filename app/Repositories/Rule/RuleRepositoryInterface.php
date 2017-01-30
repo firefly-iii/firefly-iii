@@ -27,10 +27,6 @@ use FireflyIII\User;
 interface RuleRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-    /**
      * @return int
      */
     public function count(): int;
@@ -97,6 +93,11 @@ interface RuleRepositoryInterface
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

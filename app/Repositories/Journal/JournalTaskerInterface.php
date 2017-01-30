@@ -26,11 +26,6 @@ use Illuminate\Support\Collection;
 interface JournalTaskerInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param TransactionJournal $journal
      *
      * @return Collection
@@ -46,4 +41,9 @@ interface JournalTaskerInterface
      * @return array
      */
     public function getTransactionsOverview(TransactionJournal $journal): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 }

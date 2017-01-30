@@ -29,22 +29,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     private $user;
 
     /**
-     * ExportJobRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @param string $fileType
      *
      * @return ImportJob
@@ -100,5 +84,13 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 }

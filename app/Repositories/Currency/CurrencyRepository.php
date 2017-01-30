@@ -31,21 +31,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     private $user;
 
     /**
-     * CategoryRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @param User $user
      */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
+
     /**
      * @param TransactionCurrency $currency
      *

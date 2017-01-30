@@ -33,22 +33,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     private $user;
 
     /**
-     * PiggyBankRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
@@ -171,6 +155,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

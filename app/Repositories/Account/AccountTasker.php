@@ -32,16 +32,6 @@ class AccountTasker implements AccountTaskerInterface
     private $user;
 
     /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @see self::amountInPeriod
      *
      * @param Collection $accounts

@@ -35,22 +35,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $user;
 
     /**
-     * CategoryRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @param Category $category
      *
      * @return bool
@@ -388,6 +372,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         Log::debug('Finished periodIncomeNoCategory()');
 
         return $result;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

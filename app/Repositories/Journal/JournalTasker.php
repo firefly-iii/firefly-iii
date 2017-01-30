@@ -35,15 +35,6 @@ class JournalTasker implements JournalTaskerInterface
     /** @var User */
     private $user;
 
-    /**
-     * JournalRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
      * @param TransactionJournal $journal

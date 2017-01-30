@@ -24,11 +24,6 @@ use FireflyIII\User;
 interface ExportJobRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param ExportJob $job
      * @param string    $status
      *
@@ -66,5 +61,10 @@ interface ExportJobRepositoryInterface
      * @return string
      */
     public function getContent(ExportJob $job): string;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
 }

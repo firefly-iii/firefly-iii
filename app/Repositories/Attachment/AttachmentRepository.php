@@ -14,12 +14,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Attachment;
 
 use Carbon\Carbon;
+use Crypt;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Storage;
-use Crypt;
 
 /**
  * Class AttachmentRepository
@@ -30,22 +30,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 {
     /** @var User */
     private $user;
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
      * @param Attachment $attachment
@@ -121,6 +105,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         }
 
         return '';
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

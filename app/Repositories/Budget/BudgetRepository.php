@@ -39,22 +39,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     private $user;
 
     /**
-     * BudgetRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @return bool
      */
     public function cleanupBudgets(): bool
@@ -437,6 +421,14 @@ class BudgetRepository implements BudgetRepositoryInterface
         $availableBudget->save();
 
         return true;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

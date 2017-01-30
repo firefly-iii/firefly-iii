@@ -27,11 +27,6 @@ interface AttachmentRepositoryInterface
 {
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param Attachment $attachment
      *
      * @return bool
@@ -64,6 +59,11 @@ interface AttachmentRepositoryInterface
      * @return string
      */
     public function getContent(Attachment $attachment): string;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Attachment $attachment

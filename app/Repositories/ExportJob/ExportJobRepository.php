@@ -30,22 +30,6 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     private $user;
 
     /**
-     * ExportJobRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-    /**
      * @param ExportJob $job
      * @param string    $status
      *
@@ -154,5 +138,13 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         $content = $disk->get($file);
 
         return $content;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 }

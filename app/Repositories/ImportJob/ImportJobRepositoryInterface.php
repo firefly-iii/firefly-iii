@@ -24,11 +24,6 @@ use FireflyIII\User;
 interface ImportJobRepositoryInterface
 {
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param string $fileType
      *
      * @return ImportJob
@@ -41,4 +36,9 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function findByKey(string $key): ImportJob;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 }
