@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3baa1b043873285dc937f9dad0083506",
+    "content-hash": "485d633a8ac40b245a597a33fae7abf4",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -104,16 +104,16 @@
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
-            "version": "3.0.1",
+            "version": "3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/davejamesmiller/laravel-breadcrumbs.git",
-                "reference": "460bf79e83ff9e3db1e3f1c40169d8893893f8ff"
+                "url": "https://github.com/firefly-iii/laravel-breadcrumbs.git",
+                "reference": "afebafc321432188b10dafc7b4c072501687f3d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/davejamesmiller/laravel-breadcrumbs/zipball/460bf79e83ff9e3db1e3f1c40169d8893893f8ff",
-                "reference": "460bf79e83ff9e3db1e3f1c40169d8893893f8ff",
+                "url": "https://api.github.com/repos/firefly-iii/laravel-breadcrumbs/zipball/afebafc321432188b10dafc7b4c072501687f3d0",
+                "reference": "afebafc321432188b10dafc7b4c072501687f3d0",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,6 @@
                     "DaveJamesMiller\\Breadcrumbs\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT License"
             ],
@@ -141,15 +140,18 @@
                 {
                     "name": "Dave James Miller",
                     "email": "dave@davejamesmiller.com",
-                    "homepage": "http://davejamesmiller.com/"
+                    "homepage": "https://davejamesmiller.com/"
                 }
             ],
             "description": "A simple Laravel-style way to create breadcrumbs in Laravel 4+.",
-            "homepage": "http://laravel-breadcrumbs.davejamesmiller.com",
+            "homepage": "https://laravel-breadcrumbs.readthedocs.io/",
             "keywords": [
                 "laravel"
             ],
-            "time": "2016-08-28T16:57:03+00:00"
+            "support": {
+                "source": "https://github.com/firefly-iii/laravel-breadcrumbs/tree/3.1"
+            },
+            "time": "2017-01-30T07:52:50+00:00"
         },
         {
             "name": "doctrine/annotations",
