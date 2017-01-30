@@ -73,7 +73,6 @@ return [
         /*
          * More service providers.
         */
-        FireflyIII\Providers\CrudServiceProvider::class,
         FireflyIII\Providers\AccountServiceProvider::class,
         FireflyIII\Providers\AttachmentServiceProvider::class,
         FireflyIII\Providers\BillServiceProvider::class,
