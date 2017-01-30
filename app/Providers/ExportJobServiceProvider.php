@@ -15,6 +15,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\ExportJob\ExportJobRepository;
+use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,8 +35,7 @@ class ExportJobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->exportJob();
-        $this->importJob();
+
 
     }
 
@@ -45,7 +46,8 @@ class ExportJobServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->exportJob();
+        $this->importJob();
     }
 
     /**
@@ -53,18 +55,16 @@ class ExportJobServiceProvider extends ServiceProvider
      */
     private function exportJob()
     {
-
         $this->app->bind(
-            'FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            ExportJobRepositoryInterface::class,
+            function (Application $app) {
+                /** @var ExportJobRepository $repository */
+                $repository = app(ExportJobRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\ExportJob\ExportJobRepository', $arguments);
+                return $repository;
             }
         );
     }
