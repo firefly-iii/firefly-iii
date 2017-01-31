@@ -14,31 +14,31 @@ declare(strict_types = 1);
 return [
 
     'import_configure_title' => 'Configure sua importação',
-    'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
+    'import_configure_intro' => 'Existem algumas opções para sua importação CSV. Por favor, indique se o seu arquivo CSV contém cabeçalhos na primeira coluna, e qual o formato de data de seus campos de data. Isso pode exigir alguma experimentação. O delimitador de campo é geralmente um ",", mas também poderia ser um ";". Verifique isto cuidadosamente.',
     'import_configure_form'  => 'Opções básicas de importação CSV',
     'header_help'            => 'Verifique se a primeira linha do seu arquivo CSV está com os títulos de coluna',
-    'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'import_account_help'    => 'Se seu arquivo CSV NÃO contém informações sobre sua(s) conta(s) ativa(s), use este combobox para selecionar para qual conta pertencem as transações no CSV.',
-    'upload_not_writeable'   => 'Na caixa cinza contém um caminho de arquivo. Deve ser possível gravar nele. Por favor, certifique-se de que é.',
+    'date_help'              => 'Formato de data e hora em seu CSV. Siga o formato como indica <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">esta página</a>. O valor padrão analisará datas que se parecem com isso: :dateExample.',
+    'delimiter_help'         => 'Escolha o delimitador de campo que é usado em seu arquivo de entrada. Se não tiver certeza, a vírgula é a opção mais segura.',
+    'import_account_help'    => 'Se o seu arquivo CSV NÃO contém informações sobre sua(s) conta(s) ativa(s), use este combobox para selecionar para qual conta pertencem as transações no CSV.',
+    'upload_not_writeable'   => 'A caixa cinza contém um caminho para um arquivo. Deve ser possível escrever nele. Por favor, certifique-se de que é.',
 
     // roles
-    'column_roles_title'     => 'Definir papeis da coluna',
+    'column_roles_title'     => 'Definir as funções da coluna',
     'column_roles_table'     => 'Tabela',
     'column_name'            => 'Nome da coluna',
     'column_example'         => 'Dados de exemplo da coluna',
-    'column_role'            => 'Significado de dados de coluna',
-    'do_map_value'           => 'Mapeie esses valores',
+    'column_role'            => 'Significado dos dados da coluna',
+    'do_map_value'           => 'Mapear estes valores',
     'column'                 => 'Coluna',
     'no_example_data'        => 'Não há dados de exemplo disponíveis',
     'store_column_roles'     => 'Continuar a importação',
     'do_not_map'             => '(não mapear)',
     'map_title'              => 'Conectar dados importados para dados do Firefly III',
-    'map_text'               => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'map_text'               => 'Nas tabelas a seguir, o valor à esquerda mostra informações encontradas no seu arquivo CSV carregado. É sua tarefa mapear esse valor, se possível, para um valor já presente em seu banco de dados. O Firefly vai se ater a esse mapeamento. Se não há nenhum valor para mapear, ou não quer mapear o valor específico, não selecione nada.',
 
     'field_value'          => 'Valor do campo',
     'field_mapped_to'      => 'Mapeado para',
-    'store_column_mapping' => 'Mapear armazenamento',
+    'store_column_mapping' => 'Armazenar mapeamento',
 
     // map things.
 
