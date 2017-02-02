@@ -63,7 +63,7 @@ class AccountFormRequest extends Request
     {
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
-        $accountRoles   = join(',', array_keys(config('firefly.accountRoles')));
+        $accountRoles   = join(',', config('firefly.accountRoles'));
         $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
 
