@@ -370,7 +370,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
-    Route::get('variables.js', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
+    Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
 }
 );
 
