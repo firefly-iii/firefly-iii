@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: Tour, showTour, accountFrontpageUri, billCount, accountExpenseUri, accountRevenueUri */
+/** global: Tour, showTour, accountFrontpageUri, token, billCount, accountExpenseUri, accountRevenueUri */
 
 $(function () {
     "use strict";
@@ -34,7 +34,7 @@ $(function () {
 
 function endTheTour() {
     "use strict";
-    $.post('json/end-tour');
+    $.post('json/end-tour', {_token: token});
 
 }
 
