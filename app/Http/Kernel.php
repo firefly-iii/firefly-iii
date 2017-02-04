@@ -20,6 +20,7 @@ use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
+use FireflyIII\Http\Middleware\Sandstorm;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
@@ -80,6 +81,7 @@ class Kernel extends HttpKernel
             // does not check 2fa
             // does not check activation
             'web'                              => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -87,8 +89,11 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
             ],
+
+
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
             'user-not-logged-in'               => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -101,6 +106,7 @@ class Kernel extends HttpKernel
             // MUST NOT have 2FA
             // don't care about confirmation:
             'user-logged-in-no-2fa'            => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -110,24 +116,12 @@ class Kernel extends HttpKernel
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
             ],
-            // MUST be logged in
-            // MUST have 2FA
-            // MUST NOT have confirmation.
-            'user-logged-in-2fa-no-activation' => [
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                Authenticate::class,
-                AuthenticateTwoFactor::class,
-            ],
 
             // MUST be logged in
             // don't care about 2fa
             // don't care about confirmation.
             'user-simple-auth'                 => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -142,6 +136,7 @@ class Kernel extends HttpKernel
             // MUST be confirmed.
             // (this group includes the other Firefly middleware)
             'user-full-auth'                   => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
@@ -159,6 +154,7 @@ class Kernel extends HttpKernel
             // MUST have owner role
             // (this group includes the other Firefly middleware)
             'admin'                            => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,

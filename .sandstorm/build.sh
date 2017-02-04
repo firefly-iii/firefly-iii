@@ -1,6 +1,6 @@
 #!/bin/bash
 # Checks if there's a composer.json, and if so, installs/runs composer.
-# Only runs when we connect the app to sandstorm (so once).
+# This script only runs once, when the app connects to sandstorm.
 set -euo pipefail
 
 

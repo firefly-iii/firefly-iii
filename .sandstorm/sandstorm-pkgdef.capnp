@@ -15,7 +15,7 @@ const pkgdef :Spk.PackageDefinition = (
 
   manifest = (
     appTitle = (defaultText = "Firefly III"),
-    appVersion = 0,
+    appVersion = 1,
     appMarketingVersion = (defaultText = "3.4.3"),
     actions = [
       # Define your "new document" handlers here.
@@ -42,7 +42,8 @@ const pkgdef :Spk.PackageDefinition = (
 
       website = "https://firefly-iii.github.io/",
       codeUrl = "https://github.com/firefly-iii/firefly-iii",
-      license = (openSource = mit),
+      #license = (openSource = mit),
+      license = (proprietary = (defaultText = embed "../LICENSE")),
       # The license this package is distributed under.  See
       # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#license
 
@@ -54,40 +55,23 @@ const pkgdef :Spk.PackageDefinition = (
       author = (
         contactEmail = "thegrumpydictator@gmail.com",
         upstreamAuthor = "James Cole",
+        pgpSignature = embed "pgp-signature",
       ),
 
-      #pgpKeyring = embed "path/to/pgp-keyring",
-      # A keyring in GPG keyring format containing all public keys needed to verify PGP signatures in
-      # this manifest (as of this writing, there is only one: `author.pgpSignature`).
-      #
-      # To generate a keyring containing just your public key, do:
-      #
-      #     gpg --export <key-id> > keyring
-      #
-      # Where `<key-id>` is a PGP key ID or email address associated with the key.
-
-      #description = (defaultText = embed "path/to/description.md"),
-      # The app's description in Github-flavored Markdown format, to be displayed e.g.
-      # in an app store. Note that the Markdown is not permitted to contain HTML nor image tags (but
-      # you can include a list of screenshots separately).
-
+      pgpKeyring = embed "pgp-keyring",
+      description = (defaultText = embed "description.md"),
       shortDescription = (defaultText = "Financial management"),
-      # A very short (one-to-three words) description of what the app does. For example,
-      # "Document editor", or "Notetaking", or "Email client". This will be displayed under the app
-      # title in the grid view in the app market.
-
       screenshots = [
         # Screenshots to use for marketing purposes.  Examples below.
         # Sizes are given in device-independent pixels, so if you took these
         # screenshots on a Retina-style high DPI screen, divide each dimension by two.
 
-        #(width = 746, height = 795, jpeg = embed "path/to/screenshot-1.jpeg"),
-        #(width = 640, height = 480, png = embed "path/to/screenshot-2.png"),
+        (width = 1200, height = 1000, png = embed "screenshot-1.png"),
+        (width = 1200, height = 1000, png = embed "screenshot-2.png"),
+        (width = 1200, height = 1518, png = embed "screenshot-3.png"),
+
       ],
-      #changeLog = (defaultText = embed "path/to/sandstorm-specific/changelog.md"),
-      # Documents the history of changes in Github-flavored markdown format (with the same restrictions
-      # as govern `description`). We recommend formatting this with an H1 heading for each version
-      # followed by a bullet list of changes.
+      changeLog = (defaultText = embed "changelog.md"),
     ),
   ),
 

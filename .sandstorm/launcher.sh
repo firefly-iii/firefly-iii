@@ -54,10 +54,6 @@ echo "Installing database.."
 echo "CREATE DATABASE IF NOT EXISTS firefly; GRANT ALL on firefly.* TO 'firefly'@'localhost' IDENTIFIED BY 'firefly';" | mysql -uroot
 echo "Done!"
 
-#echo "Generate key..."
-#php /opt/app/artisan key:generate
-#echo "Done!"
-
 echo "Migrating..."
 php /opt/app/artisan migrate:refresh --seed --force
 echo "Done!"
