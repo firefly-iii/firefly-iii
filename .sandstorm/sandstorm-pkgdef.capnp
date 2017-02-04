@@ -14,17 +14,9 @@ const pkgdef :Spk.PackageDefinition = (
   # your keyring. All updates must be signed with the same key.
 
   manifest = (
-    # This manifest is included in your app package to tell Sandstorm
-    # about your app.
-
     appTitle = (defaultText = "Firefly III"),
-
-    appVersion = 0,  # Increment this for every release.
-
+    appVersion = 0,
     appMarketingVersion = (defaultText = "3.4.3"),
-    # Human-readable representation of appVersion. Should match the way you
-    # identify versions of your app in documentation and marketing.
-
     actions = [
       # Define your "new document" handlers here.
       ( nounPhrase = (defaultText = "administration"),
@@ -41,27 +33,16 @@ const pkgdef :Spk.PackageDefinition = (
     # case.
 
     metadata = (
-      # Data which is not needed specifically to execute the app, but is useful
-      # for purposes like marketing and display.  These fields are documented at
-      # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#add-required-metadata
-      # and (in deeper detail) in the sandstorm source code, in the Metadata section of
-      # https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/package.capnp
-      icons = (
-        # Various icons to represent the app in various contexts.
-        appGrid = (png = (dpi1x = embed "public/images/logo/firefly-iii-128.png")),
-                grain = (png = (dpi1x = embed "public/images/logo/firefly-iii-24.png",
-                                dpi2x = embed "public/images/logo/firefly-iii-48.png")),
-                market = (png = (dpi1x = embed "public/images/logo/firefly-iii-150.png"))
+         icons = (
+        appGrid = (png = (dpi1x = embed "app-graphics/firefly-iii-128.png")),
+        grain = (png = (dpi1x = embed "app-graphics/firefly-iii-24.png",
+                        dpi2x = embed "app-graphics/firefly-iii-48.png")),
+        market = (png = (dpi1x = embed "app-graphics/firefly-iii-150.png"))
       ),
 
       website = "https://firefly-iii.github.io/",
-      # This should be the app's main website url.
-
       codeUrl = "https://github.com/firefly-iii/firefly-iii",
-      # URL of the app's source code repository, e.g. a GitHub URL.
-      # Required if you specify a license requiring redistributing code, but optional otherwise.
-
-      license = (openSource = void),
+      license = (openSource = mit),
       # The license this package is distributed under.  See
       # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#license
 
@@ -71,32 +52,8 @@ const pkgdef :Spk.PackageDefinition = (
       # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#categories
 
       author = (
-        # Fields relating to the author of this app.
-
         contactEmail = "thegrumpydictator@gmail.com",
-        # Email address to contact for any issues with this app. This includes end-user support
-        # requests as well as app store administrator requests, so it is very important that this be a
-        # valid address with someone paying attention to it.
-
-        #pgpSignature = embed "path/to/pgp-signature",
-        # PGP signature attesting responsibility for the app ID. This is a binary-format detached
-        # signature of the following ASCII message (not including the quotes, no newlines, and
-        # replacing <app-id> with the standard base-32 text format of the app's ID):
-        #
-        # "I am the author of the Sandstorm.io app with the following ID: <app-id>"
-        #
-        # You can create a signature file using `gpg` like so:
-        #
-        #     echo -n "I am the author of the Sandstorm.io app with the following ID: <app-id>" | gpg --sign > pgp-signature
-        #
-        # Further details including how to set up GPG and how to use keybase.io can be found
-        # at https://docs.sandstorm.io/en/latest/developing/publishing-apps/#verify-your-identity
-
-        # upstreamAuthor = "Example App Team",
-        # Name of the original primary author of this app, if it is different from the person who
-        # produced the Sandstorm package. Setting this implies that the author connected to the PGP
-        # signature only "packaged" the app for Sandstorm, rather than developing the app.
-        # Remove this line if you consider yourself as the author of the app.
+        upstreamAuthor = "James Cole",
       ),
 
       #pgpKeyring = embed "path/to/pgp-keyring",
