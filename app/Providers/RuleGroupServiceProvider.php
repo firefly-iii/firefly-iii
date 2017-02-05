@@ -46,7 +46,7 @@ class RuleGroupServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             RuleGroupRepositoryInterface::class,
-            function (Application $app, array $arguments) {
+            function (Application $app) {
                 /** @var RuleGroupRepository $repository */
                 $repository = app(RuleGroupRepository::class);
                 if ($app->auth->check()) {

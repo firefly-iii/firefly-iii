@@ -14,7 +14,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Search\Search;
+use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,16 +44,15 @@ class SearchServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'FireflyIII\Support\Search\SearchInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Support\Search\Search', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            SearchInterface::class,
+            function (Application $app) {
+                /** @var Search $search */
+                $search = app(Search::class);
+                if ($app->auth->check()) {
+                    $search->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Support\Search\Search', $arguments);
+                return $search;
             }
         );
     }
