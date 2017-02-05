@@ -43,10 +43,8 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
 
     /**
      * AttachmentCollector constructor.
-     *
-     * @param ExportJob $job
      */
-    public function __construct(ExportJob $job)
+    public function __construct()
     {
         /** @var AttachmentRepositoryInterface repository */
         $this->repository = app(AttachmentRepositoryInterface::class);
@@ -54,7 +52,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         $this->uploadDisk = Storage::disk('upload');
         $this->exportDisk = Storage::disk('export');
 
-        parent::__construct($job);
+        parent::__construct();
     }
 
     /**
