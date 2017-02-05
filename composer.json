@@ -68,8 +68,7 @@
     "symfony/css-selector": "3.1.*",
     "symfony/dom-crawler": "3.1.*",
     "barryvdh/laravel-debugbar": "2.*",
-    "barryvdh/laravel-ide-helper": "2.*",
-    "johnkary/phpunit-speedtrap": "^1.0"
+    "barryvdh/laravel-ide-helper": "2.*"
   },
   "autoload": {
     "classmap": [
@@ -80,9 +79,9 @@
     }
   },
   "autoload-dev": {
-    "classmap": [
-      "tests/TestCase.php"
-    ]
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   },
   "scripts": {
     "post-root-package-install": [
