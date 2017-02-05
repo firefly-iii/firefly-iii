@@ -23,6 +23,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Session;
+use URL;
 use View;
 
 /**
@@ -56,7 +57,6 @@ class Controller extends BaseController
         View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
 
         // translations:
-
         $this->middleware(
             function ($request, $next) {
                 $this->monthFormat       = (string)trans('config.month');
@@ -69,6 +69,32 @@ class Controller extends BaseController
 
     }
 
+    /**
+     * Functionality:
+     *
+     * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
+     *   will be returned.
+     * - If the remembered uri contains "javascript/" the remembered uri will not be returned but instead the index (/) will be returned.
+     *
+     * @param string $identifier
+     *
+     * @return string
+     */
+    protected function getPreviousUri(string $identifier): string
+    {
+        $uri = strval(session($identifier));
+        // 1 (see above):
+        if (!(strpos($identifier, 'delete') === false) && !(strpos($uri, '/show/') === false)) {
+            $uri = route('index');
+        }
+
+        // 2 (see above)
+        if (!(strpos($uri, 'javascript') === false)) {
+            $uri = route('index');
+        }
+
+        return $uri;
+    }
 
     /**
      * @param TransactionJournal $journal
@@ -100,6 +126,14 @@ class Controller extends BaseController
         Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
 
         return redirect(route('index'));
+    }
+
+    /**
+     * @param string $identifier
+     */
+    protected function rememberPreviousUri(string $identifier)
+    {
+        Session::put($identifier, URL::previous());
     }
 
 }

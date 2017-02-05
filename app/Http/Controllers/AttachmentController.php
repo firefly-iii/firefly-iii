@@ -22,7 +22,6 @@ use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 use Response;
 use Session;
-use URL;
 use View;
 
 /**
@@ -63,7 +62,7 @@ class AttachmentController extends Controller
         $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
-        Session::put('attachments.delete.url', URL::previous());
+        $this->rememberPreviousUri('attachments.delete.uri');
         Session::flash('gaEventCategory', 'attachments');
         Session::flash('gaEventAction', 'delete-attachment');
 
@@ -85,7 +84,7 @@ class AttachmentController extends Controller
         Session::flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
         Preferences::mark();
 
-        return redirect(session('attachments.delete.url'));
+        return redirect($this->getPreviousUri('attachments.delete.uri'));
     }
 
     /**
@@ -131,7 +130,7 @@ class AttachmentController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('attachments.edit.fromUpdate') !== true) {
-            Session::put('attachments.edit.url', URL::previous());
+            $this->rememberPreviousUri('attachments.edit.uri');
         }
         Session::forget('attachments.edit.fromUpdate');
 
@@ -181,7 +180,7 @@ class AttachmentController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('attachments.edit.url'));
+        return redirect($this->getPreviousUri('attachments.edit.uri'));
 
     }
 

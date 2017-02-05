@@ -34,7 +34,6 @@ use Navigation;
 use Preferences;
 use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -86,7 +85,7 @@ class AccountController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {
-            Session::put('accounts.create.url', URL::previous());
+            $this->rememberPreviousUri('accounts.create.uri');
         }
         Session::forget('accounts.create.fromStore');
         Session::flash('gaEventCategory', 'accounts');
@@ -110,7 +109,7 @@ class AccountController extends Controller
         unset($accountList[$account->id]);
 
         // put previous url in session
-        Session::put('accounts.delete.url', URL::previous());
+        $this->rememberPreviousUri('accounts.delete.uri');
         Session::flash('gaEventCategory', 'accounts');
         Session::flash('gaEventAction', 'delete-' . $typeName);
 
@@ -126,24 +125,17 @@ class AccountController extends Controller
      */
     public function destroy(Request $request, ARI $repository, Account $account)
     {
-        $type      = $account->accountType->type;
-        $typeName  = config('firefly.shortNamesByFullName.' . $type);
-        $name      = $account->name;
-        $accountId = $account->id;
-        $moveTo    = $repository->find(intval($request->get('move_account_before_delete')));
+        $type     = $account->accountType->type;
+        $typeName = config('firefly.shortNamesByFullName.' . $type);
+        $name     = $account->name;
+        $moveTo   = $repository->find(intval($request->get('move_account_before_delete')));
 
         $repository->destroy($account, $moveTo);
 
         Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
 
-        $uri = session('accounts.delete.url');
-        if (!(strpos($uri, sprintf('accounts/show/%s', $accountId)) === false)) {
-            // uri would point back to account
-            $uri = route('accounts.index', [$typeName]);
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('accounts.delete.uri'));
     }
 
     /**
@@ -168,7 +160,7 @@ class AccountController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {
-            Session::put('accounts.edit.url', URL::previous());
+            $this->rememberPreviousUri('accounts.edit.uri');
         }
         Session::forget('accounts.edit.fromUpdate');
 
@@ -360,7 +352,7 @@ class AccountController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('accounts.create.url'));
+        return redirect($this->getPreviousUri('accounts.create.uri'));
     }
 
     /**
@@ -386,7 +378,7 @@ class AccountController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('accounts.edit.url'));
+        return redirect($this->getPreviousUri('accounts.edit.uri'));
 
     }
 

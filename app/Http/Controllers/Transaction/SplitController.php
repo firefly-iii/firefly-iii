@@ -30,7 +30,6 @@ use Log;
 use Preferences;
 use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -107,7 +106,7 @@ class SplitController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('transactions.edit-split.fromUpdate') !== true) {
-            Session::put('transactions.edit-split.url', URL::previous());
+            $this->rememberPreviousUri('transactions.edit-split.uri');
         }
         Session::forget('transactions.edit-split.fromUpdate');
 
@@ -139,7 +138,7 @@ class SplitController extends Controller
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
         /** @var array $files */
-        $files   = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
@@ -163,8 +162,7 @@ class SplitController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('transactions.edit-split.url'));
-
+        return redirect($this->getPreviousUri('transactions.edit-split.uri'));
     }
 
     /**

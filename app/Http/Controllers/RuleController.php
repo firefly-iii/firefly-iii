@@ -26,7 +26,6 @@ use Illuminate\Http\Request;
 use Preferences;
 use Response;
 use Session;
-use URL;
 use View;
 
 /**
@@ -88,7 +87,7 @@ class RuleController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('rules.create.fromStore') !== true) {
-            Session::put('rules.create.url', URL::previous());
+            $this->rememberPreviousUri('rules.create.uri');
         }
         Session::forget('rules.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
@@ -111,7 +110,7 @@ class RuleController extends Controller
         $subTitle = trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
-        Session::put('rules.delete.url', URL::previous());
+        $this->rememberPreviousUri('rules.delete.uri');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'delete-rule');
 
@@ -135,8 +134,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.deleted_rule', ['title' => $title]));
         Preferences::mark();
 
-
-        return redirect(session('rules.delete.url'));
+        return redirect($this->getPreviousUri('rules.delete.uri'));
     }
 
     /**
@@ -181,7 +179,7 @@ class RuleController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('rules.edit.fromUpdate') !== true) {
-            Session::put('rules.edit.url', URL::previous());
+            $this->rememberPreviousUri('rules.edit.uri');
         }
         Session::forget('rules.edit.fromUpdate');
         Session::flash('gaEventCategory', 'rules');
@@ -263,9 +261,7 @@ class RuleController extends Controller
             return redirect(route('rules.create', [$ruleGroup]))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('rules.create.url'));
-
+        return redirect($this->getPreviousUri('rules.create.uri'));
     }
 
     /**
@@ -350,8 +346,7 @@ class RuleController extends Controller
             return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect(session('rules.edit.url'));
+        return redirect($this->getPreviousUri('rules.edit.uri'));
     }
 
     private function createDefaultRule()

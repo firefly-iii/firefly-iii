@@ -66,7 +66,7 @@ class BillController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('bills.create.fromStore') !== true) {
-            Session::put('bills.create.url', URL::previous());
+            $this->rememberPreviousUri('bills.create.uri');
         }
         Session::forget('bills.create.fromStore');
         Session::flash('gaEventCategory', 'bills');
@@ -83,7 +83,7 @@ class BillController extends Controller
     public function delete(Bill $bill)
     {
         // put previous url in session
-        Session::put('bills.delete.url', URL::previous());
+        $this->rememberPreviousUri('bills.delete.uri');
         Session::flash('gaEventCategory', 'bills');
         Session::flash('gaEventAction', 'delete');
         $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
@@ -99,20 +99,13 @@ class BillController extends Controller
      */
     public function destroy(BillRepositoryInterface $repository, Bill $bill)
     {
-        $name   = $bill->name;
-        $billId = $bill->id;
+        $name = $bill->name;
         $repository->destroy($bill);
 
         Session::flash('success', strval(trans('firefly.deleted_bill', ['name' => $name])));
         Preferences::mark();
 
-        $uri = session('bills.delete.url');
-        if (!(strpos($uri, sprintf('bills/show/%s', $billId)) === false)) {
-            // uri would point back to bill
-            $uri = route('bills.index');
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('bills.delete.uri'));
     }
 
     /**
@@ -130,7 +123,7 @@ class BillController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('bills.edit.fromUpdate') !== true) {
-            Session::put('bills.edit.url', URL::previous());
+            $this->rememberPreviousUri('bills.edit.uri');
         }
         Session::forget('bills.edit.fromUpdate');
         Session::flash('gaEventCategory', 'bills');
@@ -249,7 +242,7 @@ class BillController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('bills.create.url'));
+        return redirect($this->getPreviousUri('bills.create.uri'));
 
     }
 
@@ -275,8 +268,7 @@ class BillController extends Controller
             return redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect(session('bills.edit.url'));
+        return redirect($this->getPreviousUri('bills.edit.uri'));
 
     }
 

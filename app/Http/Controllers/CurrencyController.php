@@ -20,7 +20,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Log;
 use Preferences;
 use Session;
-use URL;
 use View;
 
 /**
@@ -60,7 +59,7 @@ class CurrencyController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('currencies.create.fromStore') !== true) {
-            Session::put('currencies.create.url', URL::previous());
+            $this->rememberPreviousUri('currencies.create.uri');
         }
         Session::forget('currencies.create.fromStore');
         Session::flash('gaEventCategory', 'currency');
@@ -105,7 +104,7 @@ class CurrencyController extends Controller
 
 
         // put previous url in session
-        Session::put('currencies.delete.url', URL::previous());
+        $this->rememberPreviousUri('currencies.delete.uri');
         Session::flash('gaEventCategory', 'currency');
         Session::flash('gaEventAction', 'delete');
         $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
@@ -131,7 +130,7 @@ class CurrencyController extends Controller
         $repository->destroy($currency);
         Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
 
-        return redirect(session('currencies.delete.url'));
+        return redirect($this->getPreviousUri('currencies.delete.uri'));
     }
 
     /**
@@ -147,7 +146,7 @@ class CurrencyController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('currencies.edit.fromUpdate') !== true) {
-            Session::put('currencies.edit.url', URL::previous());
+            $this->rememberPreviousUri('currencies.edit.uri');
         }
         Session::forget('currencies.edit.fromUpdate');
         Session::flash('gaEventCategory', 'currency');
@@ -188,7 +187,7 @@ class CurrencyController extends Controller
         if (!auth()->user()->hasRole('owner')) {
             Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
 
-            return redirect(session('currencies.create.url'));
+            return redirect($this->getPreviousUri('currencies.create.uri'));
         }
 
         $data     = $request->getCurrencyData();
@@ -201,10 +200,7 @@ class CurrencyController extends Controller
             return redirect(route('currencies.create'))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('currencies.create.url'));
-
-
+        return redirect($this->getPreviousUri('currencies.create.uri'));
     }
 
     /**
@@ -230,8 +226,6 @@ class CurrencyController extends Controller
             return redirect(route('currencies.edit', [$currency->id]));
         }
 
-        // redirect to previous URL.
-        return redirect(session('currencies.edit.url'));
-
+        return redirect($this->getPreviousUri('currencies.edit.uri'));
     }
 }

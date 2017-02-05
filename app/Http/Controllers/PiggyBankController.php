@@ -27,7 +27,6 @@ use Preferences;
 use Response;
 use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -116,7 +115,7 @@ class PiggyBankController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('piggy-banks.create.fromStore') !== true) {
-            Session::put('piggy-banks.create.url', URL::previous());
+            $this->rememberPreviousUri('piggy-banks.create.uri');
         }
         Session::forget('piggy-banks.create.fromStore');
         Session::flash('gaEventCategory', 'piggy-banks');
@@ -135,7 +134,7 @@ class PiggyBankController extends Controller
         $subTitle = trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
-        Session::put('piggy-banks.delete.url', URL::previous());
+        $this->rememberPreviousUri('piggy-banks.delete.uri');
         Session::flash('gaEventCategory', 'piggy-banks');
         Session::flash('gaEventAction', 'delete');
 
@@ -152,16 +151,9 @@ class PiggyBankController extends Controller
     {
         Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => e($piggyBank->name)])));
         Preferences::mark();
-        $piggyBankId = $piggyBank->id;
         $repository->destroy($piggyBank);
 
-        $uri = session('piggy-banks.delete.url');
-        if (!(strpos($uri, sprintf('piggy-banks/show/%s', $piggyBankId)) === false)) {
-            // uri would point back to piggy bank
-            $uri = route('piggy-banks.index');
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('piggy-banks.delete.uri'));
     }
 
     /**
@@ -197,7 +189,7 @@ class PiggyBankController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('piggy-banks.edit.fromUpdate') !== true) {
-            Session::put('piggy-banks.edit.url', URL::previous());
+            $this->rememberPreviousUri('piggy-banks.edit.uri');
         }
         Session::forget('piggy-banks.edit.fromUpdate');
 
@@ -404,9 +396,7 @@ class PiggyBankController extends Controller
             return redirect(route('piggy-banks.create'))->withInput();
         }
 
-
-        // redirect to previous URL.
-        return redirect(session('piggy-banks.create.url'));
+        return redirect($this->getPreviousUri('piggy-banks.edit.uri'));
     }
 
     /**
@@ -430,12 +420,6 @@ class PiggyBankController extends Controller
             return redirect(route('piggy-banks.edit', [$piggyBank->id]));
         }
 
-
-        // redirect to previous URL.
-        return redirect(session('piggy-banks.edit.url'));
-
-
+        return redirect($this->getPreviousUri('piggy-banks.edit.uri'));
     }
-
-
 }

@@ -30,7 +30,6 @@ use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 use Session;
-use URL;
 use View;
 
 /**
@@ -94,7 +93,7 @@ class BudgetController extends Controller
     {
         // put previous url in session if not redirect from store (not "create another").
         if (session('budgets.create.fromStore') !== true) {
-            Session::put('budgets.create.url', URL::previous());
+            $this->rememberPreviousUri('budgets.create.uri');
         }
         Session::forget('budgets.create.fromStore');
         Session::flash('gaEventCategory', 'budgets');
@@ -114,7 +113,7 @@ class BudgetController extends Controller
         $subTitle = trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
-        Session::put('budgets.delete.url', URL::previous());
+        $this->rememberPreviousUri('budgets.delete.uri');
         Session::flash('gaEventCategory', 'budgets');
         Session::flash('gaEventAction', 'delete');
 
@@ -129,21 +128,12 @@ class BudgetController extends Controller
     public function destroy(Budget $budget)
     {
 
-        $name     = $budget->name;
-        $budgetId = $budget->id;
+        $name = $budget->name;
         $this->repository->destroy($budget);
-
-
         Session::flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
         Preferences::mark();
 
-        $uri = session('budgets.delete.url');
-        if (!(strpos($uri, sprintf('budgets/show/%s', $budgetId)) === false)) {
-            // uri would point back to budget
-            $uri = route('budgets.index');
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('budgets.delete.uri'));
     }
 
     /**
@@ -157,7 +147,7 @@ class BudgetController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('budgets.edit.fromUpdate') !== true) {
-            Session::put('budgets.edit.url', URL::previous());
+            $this->rememberPreviousUri('budgets.edit.uri');
         }
         Session::forget('budgets.edit.fromUpdate');
         Session::flash('gaEventCategory', 'budgets');
@@ -278,9 +268,9 @@ class BudgetController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        $page              = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
-        $pageSize          = intval(Preferences::get('transactionPageSize', 50)->data);
-        $subTitle          = trans(
+        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $subTitle = trans(
             'firefly.budget_in_period', [
                                           'name'  => $budget->name,
                                           'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
@@ -325,9 +315,7 @@ class BudgetController extends Controller
             return redirect(route('budgets.create'))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('budgets.create.url'));
-
+        return redirect($this->getPreviousUri('budgets.create.uri'));
     }
 
     /**
@@ -351,9 +339,7 @@ class BudgetController extends Controller
             return redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect(session('budgets.edit.url'));
-
+        return redirect($this->getPreviousUri('budgets.edit.uri'));
     }
 
     /**
