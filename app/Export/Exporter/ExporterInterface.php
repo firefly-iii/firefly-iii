@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export\Exporter;
 
+use FireflyIII\Models\ExportJob;
 use Illuminate\Support\Collection;
 
 /**
@@ -44,5 +45,10 @@ interface ExporterInterface
      *
      */
     public function setEntries(Collection $entries);
+
+    /**
+     * @param ExportJob $job
+     */
+    public function setJob(ExportJob $job);
 
 }

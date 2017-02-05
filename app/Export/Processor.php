@@ -19,7 +19,6 @@ use FireflyIII\Export\Collector\JournalExportCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -78,7 +77,8 @@ class Processor implements ProcessorInterface
     public function collectAttachments(): bool
     {
         /** @var AttachmentCollector $attachmentCollector */
-        $attachmentCollector = app(AttachmentCollector::class, [$this->job]);
+        $attachmentCollector = app(AttachmentCollector::class);
+        $attachmentCollector->setJob($this->job);
         $attachmentCollector->setDates($this->settings['startDate'], $this->settings['endDate']);
         $attachmentCollector->run();
         $this->files = $this->files->merge($attachmentCollector->getEntries());
@@ -92,7 +92,8 @@ class Processor implements ProcessorInterface
     public function collectJournals(): bool
     {
         /** @var JournalExportCollector $collector */
-        $collector = app(JournalExportCollector::class, [$this->job]);
+        $collector = app(JournalExportCollector::class);
+        $collector->setJob($this->job);
         $collector->setDates($this->settings['startDate'], $this->settings['endDate']);
         $collector->setAccounts($this->settings['accounts']);
         $collector->run();
@@ -108,7 +109,8 @@ class Processor implements ProcessorInterface
     public function collectOldUploads(): bool
     {
         /** @var UploadCollector $uploadCollector */
-        $uploadCollector = app(UploadCollector::class, [$this->job]);
+        $uploadCollector = app(UploadCollector::class);
+        $uploadCollector->setJob($this->job);
         $uploadCollector->run();
 
         $this->files = $this->files->merge($uploadCollector->getEntries());
@@ -166,7 +168,8 @@ class Processor implements ProcessorInterface
     public function exportJournals(): bool
     {
         $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
-        $exporter      = app($exporterClass, [$this->job]);
+        $exporter      = app($exporterClass);
+        $exporter->setJob($this->job);
         $exporter->setEntries($this->exportEntries);
         $exporter->run();
         $this->files->push($exporter->getFileName());
