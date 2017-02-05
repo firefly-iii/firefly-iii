@@ -136,6 +136,7 @@
     </li>
 
     <!-- options and preferences -->
+
     <li id="option-menu"
         class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
         <a href="#">
@@ -147,9 +148,11 @@
         </a>
 
         <ul class="treeview-menu">
+            {% if not SANDSTORM %}
             <li class="{{ activeRoutePartial('profile') }}">
                 <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}</a>
             </li>
+            {% endif %}
             <li class="{{ activeRoutePartial('preferences') }}">
                 <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
             </li>
@@ -171,12 +174,12 @@
 
     <!-- other options -->
 
-
+    {% if not SANDSTORM %}
     <li>
         <a href="{{ route('logout') }}">
             <i class="fa fa-sign-out fa-fw"></i>
             <span>{{ 'logout'|_ }}</span>
         </a>
     </li>
-
+    {% endif %}
 </ul>

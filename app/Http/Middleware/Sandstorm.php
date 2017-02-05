@@ -15,6 +15,7 @@ use Auth;
 use Closure;
 use FireflyIII\User;
 use Illuminate\Http\Request;
+use View;
 
 /**
  * Class Sandstorm
@@ -37,6 +38,7 @@ class Sandstorm
     {
         // is in Sandstorm environment?
         $sandstorm = intval(getenv('SANDSTORM')) === 1;
+        View::share('SANDSTORM', $sandstorm);
         if (!$sandstorm) {
             return $next($request);
         }
@@ -55,6 +57,7 @@ class Sandstorm
                             'password' => str_random(16),
                         ]
                     );
+
                 }
 
 
