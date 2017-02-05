@@ -83,12 +83,9 @@ class Controller extends BaseController
     protected function getPreviousUri(string $identifier): string
     {
         $uri = strval(session($identifier));
-        // 1 (see above):
         if (!(strpos($identifier, 'delete') === false) && !(strpos($uri, '/show/') === false)) {
             $uri = route('index');
         }
-
-        // 2 (see above)
         if (!(strpos($uri, 'javascript') === false)) {
             $uri = route('index');
         }
