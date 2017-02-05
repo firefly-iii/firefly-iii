@@ -14,7 +14,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\Category\CategoryRepository;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,16 +44,15 @@ class CategoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Category\CategoryRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Category\CategoryRepository', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            CategoryRepositoryInterface::class,
+            function (Application $app) {
+                /** @var CategoryRepository $repository */
+                $repository = app(CategoryRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Category\CategoryRepository', $arguments);
+                return $repository;
             }
         );
 

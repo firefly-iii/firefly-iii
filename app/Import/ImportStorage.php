@@ -159,7 +159,8 @@ class ImportStorage
     private function createImportTag(): Tag
     {
         /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class, [$this->user]);
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($this->user);
         $data       = [
             'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,

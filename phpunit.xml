@@ -17,7 +17,6 @@
             <directory suffix="Test.php">./tests/unit</directory>
         </testsuite>
     </testsuites>
-
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>

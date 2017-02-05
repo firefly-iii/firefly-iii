@@ -79,7 +79,8 @@ class CreateImport extends Command
         $this->info(sprintf('Type of import: %s', $type));
 
         /** @var ImportJobRepositoryInterface $jobRepository */
-        $jobRepository = app(ImportJobRepositoryInterface::class, [$user]);
+        $jobRepository = app(ImportJobRepositoryInterface::class);
+        $jobRepository->setUser($user);
         $job           = $jobRepository->create($type);
         $this->line(sprintf('Created job "%s"...', $job->key));
 

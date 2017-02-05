@@ -17,6 +17,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\User;
 
 /**
  * Interface RuleRepositoryInterface
@@ -25,7 +26,6 @@ use FireflyIII\Models\RuleTrigger;
  */
 interface RuleRepositoryInterface
 {
-
     /**
      * @return int
      */
@@ -93,6 +93,11 @@ interface RuleRepositoryInterface
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

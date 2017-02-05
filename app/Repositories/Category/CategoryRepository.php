@@ -35,16 +35,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     private $user;
 
     /**
-     * CategoryRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @param Category $category
      *
      * @return bool
@@ -67,7 +57,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts)->setCategories($categories);
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));
@@ -385,6 +376,14 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
@@ -395,7 +394,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
 
 
@@ -423,7 +423,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
 
         if ($accounts->count() > 0) {

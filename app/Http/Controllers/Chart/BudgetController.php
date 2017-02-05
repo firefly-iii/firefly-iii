@@ -416,7 +416,8 @@ class BudgetController extends Controller
     {
         // collector
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $types     = [TransactionType::WITHDRAWAL];
         $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
         $journals = $collector->getJournals();

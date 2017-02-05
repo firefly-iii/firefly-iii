@@ -35,11 +35,9 @@ class TagRepository implements TagRepositoryInterface
     private $user;
 
     /**
-     * TagRepository constructor.
-     *
      * @param User $user
      */
-    public function __construct(User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -396,7 +394,8 @@ class TagRepository implements TagRepositoryInterface
     public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));
@@ -414,7 +413,8 @@ class TagRepository implements TagRepositoryInterface
     public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));

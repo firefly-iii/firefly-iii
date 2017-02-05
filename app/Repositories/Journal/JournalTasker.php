@@ -35,15 +35,6 @@ class JournalTasker implements JournalTaskerInterface
     /** @var User */
     private $user;
 
-    /**
-     * JournalRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
      * @param TransactionJournal $journal
@@ -150,6 +141,14 @@ class JournalTasker implements JournalTaskerInterface
         }
 
         return $transactions;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

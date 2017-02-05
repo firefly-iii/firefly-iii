@@ -14,7 +14,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\Currency\CurrencyRepository;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,16 +44,15 @@ class CurrencyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Currency\CurrencyRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Currency\CurrencyRepository', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            CurrencyRepositoryInterface::class,
+            function (Application $app) {
+                /** @var CurrencyRepository $repository */
+                $repository = app(CurrencyRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Currency\CurrencyRepository', $arguments);
+                return $repository;
             }
         );
     }

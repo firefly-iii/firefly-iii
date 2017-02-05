@@ -289,7 +289,7 @@ class RuleController extends Controller
         $range = config('firefly.test-triggers.range');
 
         /** @var TransactionMatcher $matcher */
-        $matcher = app('FireflyIII\Rules\TransactionMatcher');
+        $matcher = app(TransactionMatcher::class);
         $matcher->setLimit($limit);
         $matcher->setRange($range);
         $matcher->setTriggers($triggers);
@@ -352,7 +352,7 @@ class RuleController extends Controller
     private function createDefaultRule()
     {
         /** @var RuleRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Rule\RuleRepositoryInterface');
+        $repository = app(RuleRepositoryInterface::class);
 
         if ($repository->count() === 0) {
             $data = [

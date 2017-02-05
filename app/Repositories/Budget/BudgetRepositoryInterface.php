@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -26,7 +27,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-
     /**
      * @return bool
      */
@@ -148,6 +148,11 @@ interface BudgetRepositoryInterface
      * @return bool
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Collection $budgets

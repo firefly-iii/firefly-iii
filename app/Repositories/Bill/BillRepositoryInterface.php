@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -25,7 +26,6 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
-
     /**
      * @param Bill $bill
      *
@@ -158,6 +158,11 @@ interface BillRepositoryInterface
      * @return bool
      */
     public function scan(Bill $bill, TransactionJournal $journal): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

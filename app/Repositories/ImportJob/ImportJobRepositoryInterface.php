@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\ImportJob;
 
 use FireflyIII\Models\ImportJob;
+use FireflyIII\User;
 
 /**
  * Interface ImportJobRepositoryInterface
@@ -35,4 +36,9 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function findByKey(string $key): ImportJob;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 }

@@ -284,7 +284,8 @@ class CategoryReportController extends Controller
     private function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();
@@ -305,7 +306,8 @@ class CategoryReportController extends Controller
     private function getIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount();
         $accountIds   = $accounts->pluck('id')->toArray();

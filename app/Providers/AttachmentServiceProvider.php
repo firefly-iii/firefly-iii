@@ -14,7 +14,8 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\Attachment\AttachmentRepository;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,16 +44,15 @@ class AttachmentServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Attachment\AttachmentRepository', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            AttachmentRepositoryInterface::class,
+            function (Application $app) {
+                /** @var AttachmentRepositoryInterface $repository */
+                $repository = app(AttachmentRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Attachment\AttachmentRepository', $arguments);
+                return $repository;
             }
         );
     }

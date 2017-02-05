@@ -44,11 +44,9 @@ class JournalRepository implements JournalRepositoryInterface
     private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
 
     /**
-     * JournalRepository constructor.
-     *
      * @param User $user
      */
-    public function __construct(User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }

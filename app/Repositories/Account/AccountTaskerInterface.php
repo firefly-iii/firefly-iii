@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -23,7 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountTaskerInterface
 {
-
     /**
      * @param Collection $accounts
      * @param Collection $excluded
@@ -56,5 +56,10 @@ interface AccountTaskerInterface
      * @return array
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
 }

@@ -26,8 +26,8 @@ return [
     'providers'       => [
 
         /*
-         * Laravel Framework Service Providers...
-         */
+        * Laravel Framework Service Providers...
+        */
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -50,12 +50,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
-
 
         /*
          * Application Service Providers...
          */
+        FireflyIII\Providers\LogServiceProvider::class,
         FireflyIII\Providers\AppServiceProvider::class,
         FireflyIII\Providers\AuthServiceProvider::class,
         // FireflyIII\Providers\BroadcastServiceProvider::class,
@@ -74,7 +73,6 @@ return [
         /*
          * More service providers.
         */
-        FireflyIII\Providers\CrudServiceProvider::class,
         FireflyIII\Providers\AccountServiceProvider::class,
         FireflyIII\Providers\AttachmentServiceProvider::class,
         FireflyIII\Providers\BillServiceProvider::class,
@@ -92,11 +90,12 @@ return [
 
     ],
     'aliases'         => [
-
         'App'           => Illuminate\Support\Facades\App::class,
         'Artisan'       => Illuminate\Support\Facades\Artisan::class,
         'Auth'          => Illuminate\Support\Facades\Auth::class,
         'Blade'         => Illuminate\Support\Facades\Blade::class,
+        'Broadcast'     => Illuminate\Support\Facades\Broadcast::class,
+        'Bus'           => Illuminate\Support\Facades\Bus::class,
         'Cache'         => Illuminate\Support\Facades\Cache::class,
         'Config'        => Illuminate\Support\Facades\Config::class,
         'Cookie'        => Illuminate\Support\Facades\Cookie::class,

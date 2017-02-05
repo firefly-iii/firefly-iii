@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Category;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -120,6 +121,11 @@ interface CategoryRepositoryInterface
      * @return array
      */
     public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Collection $categories

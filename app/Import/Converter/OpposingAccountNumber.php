@@ -43,7 +43,8 @@ class OpposingAccountNumber extends BasicConverter implements ConverterInterface
         }
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
 
 
         if (isset($this->mapping[$value])) {

@@ -239,7 +239,8 @@ class BudgetReportController extends Controller
     private function getExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();

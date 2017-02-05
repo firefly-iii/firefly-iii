@@ -97,17 +97,6 @@ class JournalCollector implements JournalCollectorInterface
     private $user;
 
     /**
-     * JournalCollector constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user  = $user;
-        $this->query = $this->startQuery();
-    }
-
-    /**
      * @return int
      * @throws FireflyException
      */
@@ -168,7 +157,7 @@ class JournalCollector implements JournalCollectorInterface
     {
         $this->run = true;
         /** @var Collection $set */
-        $set       = $this->query->get(array_values($this->fields));
+        $set = $this->query->get(array_values($this->fields));
         Log::debug(sprintf('Count of set is %d', $set->count()));
         $set = $this->filterTransfers($set);
         Log::debug(sprintf('Count of set after filterTransfers() is %d', $set->count()));
@@ -244,7 +233,8 @@ class JournalCollector implements JournalCollectorInterface
     public function setAllAssetAccounts(): JournalCollectorInterface
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
         $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
@@ -454,6 +444,37 @@ class JournalCollector implements JournalCollectorInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     *
+     */
+    public function startQuery()
+    {
+        /** @var EloquentBuilder $query */
+        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
+                            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
+                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                            ->whereNull('transactions.deleted_at')
+                            ->whereNull('transaction_journals.deleted_at')
+                            ->where('transaction_journals.user_id', $this->user->id)
+                            ->orderBy('transaction_journals.date', 'DESC')
+                            ->orderBy('transaction_journals.order', 'ASC')
+                            ->orderBy('transaction_journals.id', 'DESC');
+
+        $this->query = $query;
+
     }
 
     /**
@@ -728,28 +749,5 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedTag = true;
             $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
         }
-    }
-
-    /**
-     * @return EloquentBuilder
-     */
-    private function startQuery(): EloquentBuilder
-    {
-        /** @var EloquentBuilder $query */
-        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
-                            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-                            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
-                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                            ->whereNull('transactions.deleted_at')
-                            ->whereNull('transaction_journals.deleted_at')
-                            ->where('transaction_journals.user_id', $this->user->id)
-                            ->orderBy('transaction_journals.date', 'DESC')
-                            ->orderBy('transaction_journals.order', 'ASC')
-                            ->orderBy('transaction_journals.id', 'DESC');
-
-        return $query;
-
     }
 }

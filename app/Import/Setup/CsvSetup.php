@@ -181,7 +181,8 @@ class CsvSetup implements SetupInterface
     public function saveImportConfiguration(array $data, FileBag $files): bool
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [auth()->user()]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser(auth()->user());
 
         $importId = $data['csv_import_account'] ?? 0;
         $account  = $repository->find(intval($importId));

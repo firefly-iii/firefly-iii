@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -27,7 +28,6 @@ use Illuminate\Support\Collection;
  */
 interface JournalCollectorInterface
 {
-
     /**
      * @return int
      */
@@ -83,7 +83,6 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setBudget(Budget $budget): JournalCollectorInterface;
-
 
     /**
      * @param Collection $budgets
@@ -148,6 +147,13 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setTypes(array $types): JournalCollectorInterface;
+
+    public function setUser(User $user);
+
+    /**
+     *
+     */
+    public function startQuery();
 
     /**
      * @return JournalCollectorInterface

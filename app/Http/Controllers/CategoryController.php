@@ -157,7 +157,8 @@ class CategoryController extends Controller
 
         // new collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAllAssetAccounts()->setRange($start, $end)->withoutCategory();//->groupJournals();
         $journals = $collector->getJournals();
         $subTitle = trans(

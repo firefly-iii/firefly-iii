@@ -32,16 +32,6 @@ class AccountTasker implements AccountTaskerInterface
     private $user;
 
     /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @see self::amountInPeriod
      *
      * @param Collection $accounts
@@ -108,8 +98,8 @@ class AccountTasker implements AccountTaskerInterface
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $ids         = $accounts->pluck('id')->toArray();
-        $yesterday   = clone $start;
+        $ids       = $accounts->pluck('id')->toArray();
+        $yesterday = clone $start;
         $yesterday->subDay();
         $startSet = Steam::balancesById($ids, $yesterday);
         $endSet   = Steam::balancesById($ids, $end);
@@ -153,6 +143,14 @@ class AccountTasker implements AccountTaskerInterface
         $return['difference'] = bcsub($return['end'], $return['start']);
 
         return $return;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
