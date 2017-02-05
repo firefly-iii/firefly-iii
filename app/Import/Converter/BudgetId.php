@@ -42,7 +42,8 @@ class BudgetId extends BasicConverter implements ConverterInterface
         }
 
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class, [$this->user]);
+        $repository = app(BudgetRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         if (isset($this->mapping[$value])) {
             Log::debug('Found budget in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);

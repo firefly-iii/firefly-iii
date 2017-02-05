@@ -57,7 +57,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts)->setCategories($categories);
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));
@@ -393,7 +394,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
 
 
@@ -421,7 +423,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
 
         if ($accounts->count() > 0) {

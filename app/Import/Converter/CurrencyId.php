@@ -42,7 +42,8 @@ class CurrencyId extends BasicConverter implements ConverterInterface
         }
 
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class, [$this->user]);
+        $repository = app(CurrencyRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         if (isset($this->mapping[$value])) {
             Log::debug('Found currency in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);

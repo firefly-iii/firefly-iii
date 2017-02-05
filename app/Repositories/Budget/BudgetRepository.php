@@ -442,7 +442,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setBudgets($budgets);
 
         if ($accounts->count() > 0) {
@@ -468,7 +469,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
 
         if ($accounts->count() > 0) {

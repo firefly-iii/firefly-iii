@@ -23,7 +23,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -97,12 +96,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return View
      */
-    public function delete(ARI $repository, Account $account)
+    public function delete(AccountRepositoryInterface $repository, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
@@ -119,12 +118,12 @@ class AccountController extends Controller
 
     /**
      * @param Request $request
-     * @param ARI     $repository
+     * @param AccountRepositoryInterface     $repository
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Request $request, ARI $repository, Account $account)
+    public function destroy(Request $request, AccountRepositoryInterface $repository, Account $account)
     {
         $type      = $account->accountType->type;
         $typeName  = config('firefly.shortNamesByFullName.' . $type);
@@ -199,12 +198,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ARI    $repository
+     * @param AccountRepositoryInterface    $repository
      * @param string $what
      *
      * @return View
      */
-    public function index(ARI $repository, string $what)
+    public function index(AccountRepositoryInterface $repository, string $what)
     {
         $what         = $what ?? 'asset';
         $subTitle     = trans('firefly.' . $what . '_accounts');
@@ -270,7 +269,7 @@ class AccountController extends Controller
 
     /**
      * @param Request $request
-     * @param ARI     $repository
+     * @param AccountRepositoryInterface     $repository
      * @param Account $account
      *
      * @return View
@@ -284,7 +283,8 @@ class AccountController extends Controller
 
         // replace with journal collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/all');
@@ -318,7 +318,8 @@ class AccountController extends Controller
 
         // replace with journal collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
@@ -332,12 +333,12 @@ class AccountController extends Controller
 
     /**
      * @param AccountFormRequest $request
-     * @param ARI                $repository
+     * @param AccountRepositoryInterface                $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      */
-    public function store(AccountFormRequest $request, ARI $repository)
+    public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
         $data    = $request->getAccountData();
         $account = $repository->store($data);
@@ -365,12 +366,12 @@ class AccountController extends Controller
 
     /**
      * @param AccountFormRequest $request
-     * @param ARI                $repository
+     * @param AccountRepositoryInterface                $repository
      * @param Account            $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(AccountFormRequest $request, ARI $repository, Account $account)
+    public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
     {
         $data = $request->getAccountData();
         $repository->update($account, $data);
@@ -417,8 +418,8 @@ class AccountController extends Controller
      */
     private function periodEntries(Account $account): Collection
     {
-        /** @var ARI $repository */
-        $repository = app(ARI::class);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
         /** @var AccountTaskerInterface $tasker */
         $tasker = app(AccountTaskerInterface::class);
 

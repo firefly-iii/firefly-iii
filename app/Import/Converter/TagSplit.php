@@ -39,7 +39,8 @@ class TagSplit
         Log::debug('Exploded parts.', $parts);
 
         /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class, [$user]);
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($user);
 
 
         /** @var string $part */

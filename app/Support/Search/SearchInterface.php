@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Search;
 
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -28,6 +29,11 @@ interface SearchInterface
      * @return Collection
      */
     public function searchAccounts(array $words): Collection;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $words

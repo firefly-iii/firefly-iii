@@ -233,7 +233,8 @@ class JournalCollector implements JournalCollectorInterface
     public function setAllAssetAccounts(): JournalCollectorInterface
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
         $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();

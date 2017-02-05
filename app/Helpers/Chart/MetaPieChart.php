@@ -85,7 +85,8 @@ class MetaPieChart implements MetaPieChartInterface
         // also collect all other transactions
         if ($this->collectOtherObjects && $direction === 'expense') {
             /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [$this->user]);
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -96,7 +97,8 @@ class MetaPieChart implements MetaPieChartInterface
 
         if ($this->collectOtherObjects && $direction === 'income') {
             /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setUser(auth()->user());
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -201,7 +203,8 @@ class MetaPieChart implements MetaPieChartInterface
             $modifier = 1;
         }
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts($this->accounts);
         $collector->setRange($this->start, $this->end);
         $collector->setTypes($types);
@@ -258,7 +261,8 @@ class MetaPieChart implements MetaPieChartInterface
     {
         $chartData  = [];
         $names      = [];
-        $repository = app($this->repositories[$type], [$this->user]);
+        $repository = app($this->repositories[$type]);
+        $repository->setUser($this->user);
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
                 $object           = $repository->find(intval($objectId));

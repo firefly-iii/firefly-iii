@@ -212,7 +212,8 @@ class BudgetController extends Controller
 
         // collector
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/list/noBudget');
@@ -253,7 +254,8 @@ class BudgetController extends Controller
         $repetition = null;
         // collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id);
@@ -290,7 +292,8 @@ class BudgetController extends Controller
 
         // collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();

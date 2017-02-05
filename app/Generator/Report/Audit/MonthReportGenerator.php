@@ -139,7 +139,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     {
 
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
         $journals         = $collector->getJournals();
         $journals         = $journals->reverse();

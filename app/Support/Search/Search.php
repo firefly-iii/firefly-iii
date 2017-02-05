@@ -38,16 +38,6 @@ class Search implements SearchInterface
     private $user;
 
     /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * The search will assume that the user does not have so many accounts
      * that this search should be paginated.
      *
@@ -164,7 +154,8 @@ class Search implements SearchInterface
         $result    = new Collection();
         do {
             /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [$this->user]);
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setUser($this->user);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
             $set = $collector->getPaginatedJournals();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
@@ -223,6 +214,14 @@ class Search implements SearchInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param string $haystack
      * @param array  $needle
      *
@@ -241,4 +240,4 @@ class Search implements SearchInterface
 
         return false;
     }
-} 
+}
