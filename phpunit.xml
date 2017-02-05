@@ -18,10 +18,6 @@
         </testsuite>
     </testsuites>
 
-    <listeners>
-        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener"/>
-    </listeners>
-
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
