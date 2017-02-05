@@ -25,11 +25,8 @@ interface ProcessorInterface
 
     /**
      * Processor constructor.
-     *
-     * @param array $settings
-     *
      */
-    public function __construct(array $settings);
+    public function __construct();
 
     /**
      * @return bool
@@ -65,4 +62,9 @@ interface ProcessorInterface
      * @return Collection
      */
     public function getFiles(): Collection;
+
+    /**
+     * @param array $settings
+     */
+    public function setSettings(array $settings);
 }

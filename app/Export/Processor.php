@@ -53,21 +53,12 @@ class Processor implements ProcessorInterface
 
     /**
      * Processor constructor.
-     *
-     * @param array $settings
      */
-    public function __construct(array $settings)
+    public function __construct()
     {
-        // save settings
-        $this->settings           = $settings;
-        $this->accounts           = $settings['accounts'];
-        $this->exportFormat       = $settings['exportFormat'];
-        $this->includeAttachments = $settings['includeAttachments'];
-        $this->includeOldUploads  = $settings['includeOldUploads'];
-        $this->job                = $settings['job'];
-        $this->journals           = new Collection;
-        $this->exportEntries      = new Collection;
-        $this->files              = new Collection;
+        $this->journals      = new Collection;
+        $this->exportEntries = new Collection;
+        $this->files         = new Collection;
 
     }
 
@@ -183,6 +174,20 @@ class Processor implements ProcessorInterface
     public function getFiles(): Collection
     {
         return $this->files;
+    }
+
+    /**
+     * @param array $settings
+     */
+    public function setSettings(array $settings)
+    {
+        // save settings
+        $this->settings           = $settings;
+        $this->accounts           = $settings['accounts'];
+        $this->exportFormat       = $settings['exportFormat'];
+        $this->includeAttachments = $settings['includeAttachments'];
+        $this->includeOldUploads  = $settings['includeOldUploads'];
+        $this->job                = $settings['job'];
     }
 
     /**
