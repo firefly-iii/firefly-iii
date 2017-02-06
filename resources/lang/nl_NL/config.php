@@ -10,7 +10,7 @@
  */
 
 return [
-    'locale'          => 'nl, Dutch, nl_NL, nl_NL.utf8',
+    'locale'          => 'en, English, en_US, en_US.utf8, en_US.UTF-8',
     'month'           => '%B %Y',
     'month_and_day'   => '%e %B %Y',
     'date_time'       => '%e %B %Y, @ %T',
