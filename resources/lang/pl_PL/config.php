@@ -10,7 +10,7 @@
  */
 
 return [
-    'locale'          => 'pl, Polski, pl_PL, pl_PL.utf8',
+    'locale'          => 'en, English, en_US, en_US.utf8, en_US.UTF-8',
     'month'           => '%B %Y',
     'month_and_day'   => '%e %B %Y',
     'date_time'       => '%B %e, %Y, @ %T',
