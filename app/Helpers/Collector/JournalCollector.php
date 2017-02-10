@@ -618,7 +618,7 @@ class JournalCollector implements JournalCollectorInterface
      * account, chances are the set include double entries: transfers get selected
      * on both the source, and then again on the destination account.
      *
-     * This method filters them out.
+     * This method filters them out by removing transfers that have been selected twice.
      *
      * @param Collection $set
      *
@@ -627,36 +627,18 @@ class JournalCollector implements JournalCollectorInterface
     private function filterTransfers(Collection $set): Collection
     {
         if ($this->filterTransfers) {
-            $set = $set->filter(
-                function (Transaction $transaction) {
-                    if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
-
-                        Log::debug(
-                            sprintf(
-                                'Included journal #%d (transaction #%d) because its a %s with amount %f',
-                                $transaction->transaction_journal_id,
-                                $transaction->id,
-                                $transaction->transaction_type_type,
-                                $transaction->transaction_amount
-                            )
-                        );
-
-                        return $transaction;
-                    }
-
-                    Log::debug(
-                        sprintf(
-                            'Removed journal #%d (transaction #%d) because its a %s with amount %f',
-                            $transaction->transaction_journal_id,
-                            $transaction->id,
-                            $transaction->transaction_type_type,
-                            $transaction->transaction_amount
-                        )
-                    );
-
-                    return false;
+            $count = [];
+            $new = new Collection;
+            /** @var Transaction $transaction */
+            foreach($set as $transaction) {
+                $journalId =$transaction->transaction_journal_id;
+                if(!isset($count[$journalId]) ) {
+                    // not yet counted? add to new set and count it:
+                    $new->push($transaction);
+                    $count[$journalId] = 1;
                 }
-            );
+            }
+            return $new;
         }
 
         return $set;
