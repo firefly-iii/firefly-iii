@@ -11,26 +11,33 @@
     </tr>
     </thead>
     <tbody>
-    {% for budgetLine in budgets.getBudgetLines %}
-        <tr>
+    {% set sum_budgeted = 0 %}
+    {% set sum_spent = 0 %}
+    {% set sum_left = 0 %}
+    {% set sum_overspent = 0 %}
+    {% for line in budgets %}
 
-            {% if budgetLine.getBudget.id %}
-                <td data-value="{{ budgetLine.getBudget.name }}">
-                    <a href="{{ route('budgets.show',budgetLine.getBudget.id) }}">{{ budgetLine.getBudget.name }}</a>
-                </td>
-            {% else %}
+        {% set sum_budgeted = sum_budgeted + line.budgeted %}
+        {% set sum_spent = sum_spent + line.spent %}
+        {% set sum_left = sum_left + line.left %}
+        {% set sum_overspent = sum_overspent + line.overspent %}
+
+        <tr>
+            {% if line.type == 'no-budget' %}
                 <td data-value="zzzzzzz">
                     <em>{{ 'no_budget'|_ }}</em>
                 </td>
+            {% else %}
+                <td data-value="{{ line.name }}">
+                    <a href="{{ route('budgets.show',line.id) }}">{{ line.name }}</a>
+                </td>
             {% endif %}
-
-
-            {% if budgetLine.getBudgetLimit.id %}
-                <td class="hidden-xs" data-value="{{ budgetLine.getBudgetLimit.start_date.format('Y-m-d') }}">
-                    <a href="{{ route('budgets.show.limit', [budgetLine.getBudget.id, budgetLine.getBudgetLimit.id]) }}">
-                        {{ budgetLine.getBudgetLimit.start_date.formatLocalized(monthAndDayFormat) }}
+            {% if line.type == 'budget-line' %}
+                <td class="hidden-xs" data-value="{{ line.start.format('Y-m-d') }}">
+                    <a href="{{ route('budgets.show.limit', [line.id, line.limit]) }}">
+                        {{ line.start.formatLocalized(monthAndDayFormat) }}
                         &mdash;
-                        {{ budgetLine.getBudgetLimit.end_date.formatLocalized(monthAndDayFormat) }}
+                        {{ line.end.formatLocalized(monthAndDayFormat) }}
                     </a>
                 </td>
             {% else %}
@@ -38,47 +45,23 @@
 
                 </td>
             {% endif %}
-
-
-            {% if budgetLine.getBudgetLimit.id %}
-                <td data-value="{{ budgetLine.getBudgetLimit.amount }}" style="text-align: right;">
-                    {{ budgetLine.getBudgetLimit.amount|formatAmount }}
-                </td>
-            {% else %}
-                <td data-value="0" style="text-align: right;">
-                    {{ 0|formatAmount }}
-                </td>
-            {% endif %}
-
-            <td data-value="{{ budgetLine.getSpent }}" style="text-align: right;">
-                {% if budgetLine.getSpent != 0 %}
-                    {{ budgetLine.getSpent|formatAmount }}
-                    <!-- <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
-                       data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"></i>
-                       -->
-                {% endif %}
-
-                {% if budgetLine.getSpent == 0 %}
-                    {{ budgetLine.getSpent|formatAmount }}
-                {% endif %}
+            <td data-value="{{ line.budgeted }}" style="text-align: right;">
+                {{ line.budgeted|formatAmount }}
+            </td>
+            <td data-value="{{ line.spent }}" style="text-align: right;">
+                {{ line.spent|formatAmount }}
             </td>
             <td>
-                {% if budgetLine.getSpent != 0 %}
+                {% if line.spent != 0 %}
                     <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
-                       data-location="budget-spent-amount" data-budget-id="{{ budgetLine.getBudget.id }}"></i>
-
+                       data-location="budget-spent-amount" data-budget-id="{{ line.id }}"></i>
                 {% endif %}
             </td>
-
-            <td data-value="{{ budgetLine.getLeft }}" style="text-align: right;">
-                {% if(budgetLine.getOverspent == 0) %}
-                    {{ budgetLine.getLeft|formatAmount }}
-                {% endif %}
+            <td data-value="{{ line.left }}" style="text-align: right;">
+                {{ line.left|formatAmount }}
             </td>
-            <td data-value="{{ budgetLine.getOverspent }}" style="text-align: right;">
-                {% if budgetLine.getOverspent != 0 %}
-                    {{ budgetLine.getOverspent|formatAmount }}
-                {% endif %}
+            <td data-value="{{ line.overspent }}" style="text-align: right;">
+                {{ line.overspent|formatAmount }}
             </td>
         </tr>
     {% endfor %}
@@ -87,18 +70,11 @@
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
         <td class="hidden-xs">&nbsp;</td>
-        <td style="text-align: right;">{{ budgets.getBudgeted|formatAmount }}</td>
-        <td style="text-align: right;">
-            {% if budgets.getSpent != 0 %}
-                <span class="text-danger">{{ budgets.getSpent|formatAmountPlain }}</span>
-            {% endif %}
-            {% if budgets.getSpent == 0 %}
-                {{ budgets.getSpent|formatAmount }}
-            {% endif %}
-        </td>
+        <td style="text-align: right;">{{ sum_budgeted|formatAmount }}</td>
+        <td style="text-align: right;">{{ sum_spent|formatAmount }}</td>
         <td>&nbsp;</td>
-        <td style="text-align: right;">{{ budgets.getLeft|formatAmount }}</td>
-        <td style="text-align: right;"><span class="text-danger">{{ budgets.getOverspent|formatAmountPlain }}</span></td>
+        <td style="text-align: right;">{{ sum_left|formatAmount }}</td>
+        <td style="text-align: right;">{{ sum_overspent|formatAmount }}</td>
     </tr>
     </tfoot>
 </table>
