@@ -77,11 +77,11 @@ class AccountFormRequest extends Request
         return [
             'id'                                => $idRule,
             'name'                              => $nameRule,
-            'openingBalance'                    => 'numeric',
+            'openingBalance'                    => 'numeric|required_with:openingBalanceDate',
+            'openingBalanceDate'                => 'date|required_with:openingBalance',
             'iban'                              => 'iban',
             'BIC'                               => 'bic',
             'virtualBalance'                    => 'numeric',
-            'openingBalanceDate'                => 'date',
             'currency_id'                       => 'exists:transaction_currencies,id',
             'accountNumber'                     => 'between:1,255|uniqueAccountNumberForUser',
             'accountRole'                       => 'in:' . $accountRoles,
