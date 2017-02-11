@@ -21,6 +21,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class MetaPieChart
@@ -268,10 +269,7 @@ class MetaPieChart implements MetaPieChartInterface
                 $object           = $repository->find(intval($objectId));
                 $names[$objectId] = $object->name;
             }
-            if (bccomp($amount, '0') === -1) {
-                $amount = bcmul($amount, '-1');
-            }
-
+            $amount                       = Steam::positive($amount);
             $this->total                  = bcadd($this->total, $amount);
             $chartData[$names[$objectId]] = $amount;
         }

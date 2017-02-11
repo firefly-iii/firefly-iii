@@ -16,4 +16,4 @@ Take the time to read the [installation guide FAQ](https://firefly-iii.github.io
 
 ## Pull requests
 
-I can only accept pull requests against the `develop` branch, never the `master` branch
+I can only accept pull requests against the `develop` branch, never the `master` branch.

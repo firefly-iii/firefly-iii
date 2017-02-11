@@ -245,7 +245,7 @@ class Steam
      */
     public function positive(string $amount): string
     {
-        if (bccomp($amount, '0') === 1) {
+        if (bccomp($amount, '0') === -1) {
             $amount = bcmul($amount, '-1');
         }
 

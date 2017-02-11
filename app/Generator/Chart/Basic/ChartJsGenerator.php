@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Generator\Chart\Basic;
 
 use FireflyIII\Support\ChartColour;
+use Steam;
 
 /**
  * Class ChartJsGenerator
@@ -108,11 +109,7 @@ class ChartJsGenerator implements GeneratorInterface
         foreach ($data as $key => $value) {
 
             // make larger than 0
-            if (bccomp($value, '0') === -1) {
-                $value = bcmul($value, '-1');
-            }
-
-            $chartData['datasets'][0]['data'][]            = $value;
+            $chartData['datasets'][0]['data'][]            = floatval(Steam::positive($value));
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['labels'][]                         = $key;
             $index++;

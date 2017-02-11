@@ -60,7 +60,7 @@ final class AmountLess extends AbstractTrigger implements TriggerInterface
     {
         $amount  = $journal->destination_amount ?? TransactionJournal::amountPositive($journal);
         $compare = $this->triggerValue;
-        $result  = bccomp($amount, $compare, 4);
+        $result  = bccomp($amount, $compare);
         if ($result === -1) {
             Log::debug(sprintf('RuleTrigger AmountLess for journal #%d: %d is less than %d, so return true', $journal->id, $amount, $compare));
 

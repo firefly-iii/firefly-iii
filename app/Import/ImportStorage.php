@@ -27,6 +27,7 @@ use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Steam;
 
 /**
  * Class ImportStorage
@@ -198,21 +199,6 @@ class ImportStorage
     }
 
     /**
-     * @param float $amount
-     *
-     * @return string
-     */
-    private function makePositive(float $amount): string
-    {
-        $amount = strval($amount);
-        if (bccomp($amount, '0', 4) === -1) { // left is larger than right
-            $amount = bcmul($amount, '-1');
-        }
-
-        return $amount;
-    }
-
-    /**
      * @param $entry
      *
      * @return array
@@ -370,7 +356,7 @@ class ImportStorage
 
 
         $journal  = $this->storeJournal($entry);
-        $amount   = $this->makePositive($entry->fields['amount']);
+        $amount   = Steam::positive($entry->fields['amount']);
         $accounts = $this->storeAccounts($entry);
 
         // create new transactions. This is something that needs a rewrite for multiple/split transactions.
