@@ -32,6 +32,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use Steam;
 
 /**
  * Maybe this is a good idea after all...
@@ -235,7 +236,7 @@ class JournalCollector implements JournalCollectorInterface
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accounts = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
@@ -628,16 +629,27 @@ class JournalCollector implements JournalCollectorInterface
     {
         if ($this->filterTransfers) {
             $count = [];
-            $new = new Collection;
+            $new   = new Collection;
             /** @var Transaction $transaction */
-            foreach($set as $transaction) {
-                $journalId =$transaction->transaction_journal_id;
-                if(!isset($count[$journalId]) ) {
+            foreach ($set as $transaction) {
+                if ($transaction->transaction_type_type !== TransactionType::TRANSFER) {
+                    $new->push($transaction);
+                    continue;
+                }
+                // make property string:
+                $journalId = $transaction->transaction_journal_id;
+                $amount    = Steam::positive($transaction->transaction_amount);
+                $source    = $transaction->account_id;
+                $dest      = $transaction->opposing_account_id;
+                $key       = $journalId . $source . $dest . $amount;
+
+                if (!isset($count[$key])) {
                     // not yet counted? add to new set and count it:
                     $new->push($transaction);
-                    $count[$journalId] = 1;
+                    $count[$key] = 1;
                 }
             }
+
             return $new;
         }
 

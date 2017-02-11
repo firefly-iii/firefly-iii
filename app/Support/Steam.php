@@ -26,7 +26,6 @@ use FireflyIII\Models\Transaction;
 class Steam
 {
 
-
     /**
      *
      * @param \FireflyIII\Models\Account $account
@@ -202,8 +201,6 @@ class Steam
         return $list;
     }
 
-    // parse PHP size:
-
     /**
      * @param $string
      *
@@ -237,6 +234,22 @@ class Steam
         return intval($string);
 
 
+    }
+
+    // parse PHP size:
+
+    /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function positive(string $amount): string
+    {
+        if (bccomp($amount, '0') === 1) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
     }
 
 }
