@@ -12,6 +12,7 @@ RUN apt-get update -y && \
                                                libxml2-dev \
                                                libsqlite3-dev \
                                                libbz2-dev \
+                                               gettext-base \
                                                locales && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -44,3 +45,5 @@ WORKDIR /var/www/firefly-iii
 RUN composer install --no-scripts --no-dev
 
 USER root
+
+ENTRYPOINT ["/var/www/firefly-iii/docker/entrypoint.sh"]
