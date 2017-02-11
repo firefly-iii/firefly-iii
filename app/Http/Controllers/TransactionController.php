@@ -73,7 +73,6 @@ class TransactionController extends Controller
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
         $collector->setRange($start, $end)->withBudgetInformation()->withCategoryInformation();
 
@@ -124,7 +123,6 @@ class TransactionController extends Controller
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
 
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->withBudgetInformation()->withCategoryInformation();
 
         // do not filter transfers if $what = transfer.

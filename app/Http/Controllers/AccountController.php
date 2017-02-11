@@ -311,7 +311,6 @@ class AccountController extends Controller
         // replace with journal collector:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
