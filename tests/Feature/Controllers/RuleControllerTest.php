@@ -11,6 +11,8 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\Rule;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Tests\TestCase;
 
 class RuleControllerTest extends TestCase

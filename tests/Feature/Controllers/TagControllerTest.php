@@ -11,6 +11,8 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Tests\TestCase;
 
 class TagControllerTest extends TestCase

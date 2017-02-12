@@ -11,6 +11,8 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class SearchControllerTest extends TestCase

@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Tests\TestCase;
 
 class ProfileControllerTest extends TestCase
