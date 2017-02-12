@@ -1,33 +1,9 @@
 version: '2'
 
 services:
-  firefly-db:
-    image: mysql:8
-    environment:
-      - MYSQL_DATABASE=firefly_db
-      - MYSQL_USER=firefly_db
-      - MYSQL_PASSWORD=firefly_db_secret
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    volumes:
-      - firefly-db-storage:/var/lib/mysql
-
   firefly-app:
-    image: firefly-iii
     container_name: firefly-iii
-    build: .
     environment:
-      - FF_DB_HOST=firefly-db
-      - FF_DB_NAME=firefly_db
-      - FF_DB_USER=firefly_db
-      - FF_DB_PASSWORD=firefly_db_secret
-      - FF_APP_KEY=SomeRandomStringOf32CharsExactly
       - FF_APP_ENV=production
-    ports:
-      - "80:80"
-    links:
-      - firefly-db
     volumes:
       - ./storage:/var/www/firefly-iii/storage
-volumes:
-  firefly-db-storage:
-    driver: local
