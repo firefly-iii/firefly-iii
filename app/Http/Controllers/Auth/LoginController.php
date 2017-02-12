@@ -81,6 +81,26 @@ class LoginController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function logout(Request $request)
+    {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        $this->guard()->logout();
+
+        $request->session()->flush();
+
+        $request->session()->regenerate();
+
+        return redirect('/');
+    }
+
+    /**
      * Show the application login form.
      *
      * @param Request $request

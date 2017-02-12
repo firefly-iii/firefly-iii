@@ -51,9 +51,6 @@ fi
 # enable testing config
 cp $TESTINGENV $ORIGINALENV
 
-# clear cache:
-php artisan cache:clear
-
 # reset database (optional)
 if [[ $resetTestFlag == "true" ]]
 then
@@ -84,6 +81,13 @@ fi
 echo "Copy test database over original"
 # take database from copy:
 cp $DATABASECOPY $DATABASE
+
+echo "clear caches and what-not.."
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan twig:clean
+php artisan view:clear
 
 # run PHPUnit
 if [[ $testflag == "" ]]
