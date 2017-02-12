@@ -52,6 +52,10 @@ class ProfileController extends Controller
      */
     public function changePassword()
     {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
         if (auth()->user()->hasRole('demo')) {
             Session::flash('info', strval(trans('firefly.cannot_change_demo')));
 
@@ -70,6 +74,10 @@ class ProfileController extends Controller
      */
     public function deleteAccount()
     {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
         if (auth()->user()->hasRole('demo')) {
             Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
 
@@ -103,6 +111,10 @@ class ProfileController extends Controller
      */
     public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository)
     {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
         if (auth()->user()->hasRole('demo')) {
             Session::flash('info', strval(trans('firefly.cannot_change_demo')));
 
@@ -139,6 +151,10 @@ class ProfileController extends Controller
      */
     public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request)
     {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
         if (auth()->user()->hasRole('demo')) {
             Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
 

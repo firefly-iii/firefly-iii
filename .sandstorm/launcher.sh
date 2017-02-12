@@ -55,7 +55,7 @@ echo "CREATE DATABASE IF NOT EXISTS firefly; GRANT ALL on firefly.* TO 'firefly'
 echo "Done!"
 
 echo "Migrating..."
-php /opt/app/artisan migrate:refresh --seed --force
+php /opt/app/artisan migrate --seed --force
 echo "Done!"
 
 # Start nginx.
