@@ -9,7 +9,7 @@
 
 declare(strict_types = 1);
 
-namespace Feature\Controllers;
+namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
