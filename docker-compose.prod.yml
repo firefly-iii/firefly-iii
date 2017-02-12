@@ -2,7 +2,6 @@ version: '2'
 
 services:
   firefly-app:
-    container_name: firefly-iii
     environment:
       - FF_APP_ENV=production
     volumes:
