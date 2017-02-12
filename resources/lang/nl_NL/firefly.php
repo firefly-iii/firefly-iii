@@ -959,4 +959,7 @@ return [
     'import_finished_intro'                => 'De import is klaar! Je kan de transacties nu terugvinden in Firefly.',
     'import_finished_text_without_link'    => 'Er is geen tag die al je transacties bevat. Kijk links in het menu onder "Transacties" en zoek daar je nieuwe transacties op.',
     'import_finished_text_with_link'       => 'Je kan je geïmporteerde transacties <a href="tags/show/:tag">op deze pagina</a> terug vinden.',
+
+    // sandstorm.io errors and messages:
+    'sandstorm_not_available' => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 ];
