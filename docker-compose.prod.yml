@@ -9,7 +9,7 @@ services:
       - MYSQL_PASSWORD=firefly_db_secret
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
     volumes:
-      - ./firefly-db-storage:/var/lib/mysql
+      - firefly-db-storage:/var/lib/mysql
 
   firefly-app:
     image: firefly-iii
@@ -28,3 +28,6 @@ services:
       - firefly-db
     volumes:
       - ./storage:/var/www/firefly-iii/storage
+volumes:
+  firefly-db-storage:
+    driver: local

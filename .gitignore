@@ -2,7 +2,6 @@
 /public/storage
 /vendor
 /.idea
-/firefly-db-storage
 Homestead.json
 Homestead.yaml
 .env
