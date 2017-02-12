@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [4.3.3] - 2017-02-02
+## [4.3.4] - 2017-02-02
 ### Fixed
 - Fixed bug #550, reported by @worldworm!
 - Fixed bug #551, reported by @t-me!
