@@ -23,10 +23,10 @@ class AttachmentControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $this->call('GET', route('attachments.delete', [1]));
-        $this->assertResponseStatus(200);
+        $response = $this->get(route('attachments.delete', [1]));
+        $response->assertStatus(200);
         // has bread crumb
-        $this->see('<ol class="breadcrumb">');
+        $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
@@ -39,9 +39,9 @@ class AttachmentControllerTest extends TestCase
         $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
         $this->be($this->user());
-        $this->call('post', route('attachments.destroy', [1]));
-        $this->assertResponseStatus(302);
-        $this->assertSessionHas('success');
+        $response = $this->post(route('attachments.destroy', [1]));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
     }
 
     /**
@@ -54,10 +54,10 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
 
         $this->be($this->user());
-        $this->call('GET', route('attachments.download', [1]));
-        $this->assertResponseStatus(200);
+        $response = $this->get(route('attachments.download', [1]));
+        $response->assertStatus(200);
         // has bread crumb
-        $this->see('This is attachment number one.');
+        $response->assertSee('This is attachment number one.');
     }
 
     /**
@@ -66,10 +66,10 @@ class AttachmentControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $this->call('GET', route('attachments.edit', [1]));
-        $this->assertResponseStatus(200);
+        $response = $this->get(route('attachments.edit', [1]));
+        $response->assertStatus(200);
         // has bread crumb
-        $this->see('<ol class="breadcrumb">');
+        $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
@@ -78,8 +78,8 @@ class AttachmentControllerTest extends TestCase
     public function testPreview()
     {
         $this->be($this->user());
-        $this->call('GET', route('attachments.preview', [1]));
-        $this->assertResponseStatus(200);
+        $response = $this->get(route('attachments.preview', [1]));
+        $response->assertStatus(200);
     }
 
     /**
@@ -95,17 +95,17 @@ class AttachmentControllerTest extends TestCase
         ];
 
         $this->be($this->user());
-        $this->call('post', route('attachments.update', [1]), $data);
-        $this->assertResponseStatus(302);
-        $this->assertSessionHas('success');
+        $response = $this->post(route('attachments.update', [1]), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
 
         // view should be updated
         $this->be($this->user());
-        $this->call('GET', route('attachments.edit', [1]));
-        $this->assertResponseStatus(200);
+        $response = $this->get(route('attachments.edit', [1]));
+        $response->assertStatus(200);
         // has bread crumb
-        $this->see('<ol class="breadcrumb">');
-        $this->see($data['title']);
+        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee($data['title']);
     }
 
 
