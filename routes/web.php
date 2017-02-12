@@ -74,7 +74,6 @@ Route::group(
     Route::get('/flash', ['uses' => 'HomeController@testFlash', 'as' => 'test-flash']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
-    Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'all-routes']);
 }
 );
 

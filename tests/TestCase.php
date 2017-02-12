@@ -2,12 +2,13 @@
 
 namespace Tests;
 
+use Carbon\Carbon;
+use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Log;
 use Mockery;
-use FireflyIII\Models\Preference;
-use Carbon\Carbon;
+
 /**
  * Class TestCase
  *
@@ -16,16 +17,6 @@ use Carbon\Carbon;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
-
-    /**
-     * @return User
-     */
-    public function user()
-    {
-        $user = User::find(1);
-
-        return $user;
-    }
 
     /**
      * @param User   $user
@@ -56,21 +47,6 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-
-    /**
-     * @param string $class
-     *
-     * @return \Mockery\MockInterface
-     */
-    protected function mock($class)
-    {
-        Log::debug(sprintf('Will now mock %s', $class));
-        $object = Mockery::mock($class);
-        $this->app->instance($class, $object);
-
-        return $object;
-    }
-
     /**
      * @return array
      */
@@ -85,6 +61,40 @@ abstract class TestCase extends BaseTestCase
             'one year'     => ['1Y'],
             'custom range' => ['custom'],
         ];
+    }
+
+    /**
+     * @return User
+     */
+    public function emptyUser()
+    {
+        $user = User::find(2);
+
+        return $user;
+    }
+
+    /**
+     * @return User
+     */
+    public function user()
+    {
+        $user = User::find(1);
+
+        return $user;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return \Mockery\MockInterface
+     */
+    protected function mock($class)
+    {
+        Log::debug(sprintf('Will now mock %s', $class));
+        $object = Mockery::mock($class);
+        $this->app->instance($class, $object);
+
+        return $object;
     }
 
 }

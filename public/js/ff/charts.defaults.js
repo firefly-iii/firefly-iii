@@ -12,7 +12,7 @@
 
 var defaultChartOptions = {
     elements: {
-        line : {
+        line: {
             cubicInterpolationMode: 'monotone'
         }
     },

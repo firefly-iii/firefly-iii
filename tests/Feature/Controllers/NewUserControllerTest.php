@@ -16,4 +16,30 @@ use Tests\TestCase;
 class NewUserControllerTest extends TestCase
 {
 
+    /**
+     * @covers \FireflyIII\Http\Controllers\NewUserController::index
+     */
+    public function testIndex()
+    {
+        $this->be($this->emptyUser());
+        $response = $this->get(route('new-user.index'));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\NewUserController::submit
+     */
+    public function testSubmit()
+    {
+        $data = [
+            'bank_name'    => 'New bank',
+            'bank_balance' => 100,
+        ];
+        $this->be($this->emptyUser());
+        $response = $this->post(route('new-user.submit'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
 }
