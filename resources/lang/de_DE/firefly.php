@@ -960,4 +960,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'import_finished_intro'                => 'The import has finished! You can now see the new transactions in Firefly.',
     'import_finished_text_without_link'    => 'It seems there is no tag that points to all your imported transactions. Please look for your imported data in the menu on the left, under "Transactions".',
     'import_finished_text_with_link'       => 'You can find a list of your imported transactions on the page of the <a href="tags/show/:tag">tag that was created for this import</a>.',
+
+    // sandstorm.io errors and messages:
+    'sandstorm_not_available' => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 ];
