@@ -5,4 +5,8 @@ services:
     environment:
       - FF_APP_ENV=production
     volumes:
-      - ./storage:/var/www/firefly-iii/storage
+      - firefly-app-storage:/var/www/firefly-iii/storage
+
+volumes:
+  firefly-app-storage:
+    driver: local
