@@ -37,7 +37,7 @@ class PreferencesControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
         $response->assertSessionHas('info');
-        $this->assertRedirectedToRoute('preferences.index');
+        $response->assertRedirect(route('preferences.index'));
     }
 
     /**
@@ -72,7 +72,7 @@ class PreferencesControllerTest extends TestCase
         $response = $this->post(route('preferences.update'), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('preferences.index');
+        $response->assertRedirect(route('preferences.index'));
     }
 
 }

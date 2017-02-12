@@ -11,6 +11,7 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\PiggyBank;
 use Tests\TestCase;
 
 class PiggyBankControllerTest extends TestCase
@@ -72,7 +73,7 @@ class PiggyBankControllerTest extends TestCase
         $response = $this->post(route('piggy-banks.destroy', [2]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('index');
+        $response->assertRedirect(route('index'));
     }
 
     /**
@@ -116,7 +117,7 @@ class PiggyBankControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.add', [1]), $data);
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('piggy-banks.index');
+        $response->assertRedirect(route('piggy-banks.index'));
         $response->assertSessionHas('success');
     }
 
@@ -137,7 +138,7 @@ class PiggyBankControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.add', [$piggy->id]), $data);
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('piggy-banks.index');
+        $response->assertRedirect(route('piggy-banks.index'));
         $response->assertSessionHas('success');
     }
 
@@ -150,7 +151,7 @@ class PiggyBankControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.remove', [1]), $data);
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('piggy-banks.index');
+        $response->assertRedirect(route('piggy-banks.index'));
         $response->assertSessionHas('success');
     }
 
@@ -203,7 +204,7 @@ class PiggyBankControllerTest extends TestCase
         $response = $this->post(route('piggy-banks.store'), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('index');
+        $response->assertRedirect(route('index'));
     }
 
     /**
@@ -223,7 +224,7 @@ class PiggyBankControllerTest extends TestCase
         $response = $this->post(route('piggy-banks.update', [3]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('index');
+        $response->assertRedirect(route('index'));
     }
 
 

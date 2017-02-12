@@ -95,7 +95,7 @@ class ImportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('import.process-configuration', ['p-configure']), $data);
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('import.settings', ['p-configure']);
+        $response->assertRedirect(route('import.settings', ['p-configure']));
     }
 
     /**
@@ -110,7 +110,7 @@ class ImportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('import.post-settings', ['p-settings']), $data);
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('import.settings', ['p-settings']);
+        $response->assertRedirect(route('import.settings', ['p-settings']));
     }
 
     /**
@@ -124,7 +124,7 @@ class ImportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('import.settings', ['settings']));
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('import.complete', ['settings']);
+        $response->assertRedirect(route('import.complete', ['settings']));
     }
 
     /**

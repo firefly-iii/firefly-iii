@@ -51,7 +51,7 @@ class RuleGroupControllerTest extends TestCase
         $response = $this->post(route('rule-groups.destroy', [1]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('index');
+        $response->assertRedirect(route('index'));
     }
 
     /**
@@ -62,7 +62,7 @@ class RuleGroupControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('rule-groups.down', [1]));
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('rules.index');
+        $response->assertRedirect(route('rules.index'));
     }
 
     /**
@@ -91,7 +91,7 @@ class RuleGroupControllerTest extends TestCase
         $response = $this->post(route('rule-groups.execute', [1]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('rules.index');
+        $response->assertRedirect(route('rules.index'));
     }
 
     /**
@@ -134,7 +134,7 @@ class RuleGroupControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('rule-groups.up', [1]));
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('rules.index');
+        $response->assertRedirect(route('rules.index'));
     }
 
     /**

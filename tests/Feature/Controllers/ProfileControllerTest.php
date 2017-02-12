@@ -81,7 +81,7 @@ class ProfileControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('profile.delete-account.post'), $data);
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('index');
+        $response->assertRedirect(route('index'));
     }
 
 }

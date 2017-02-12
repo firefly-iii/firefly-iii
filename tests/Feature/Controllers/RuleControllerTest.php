@@ -51,7 +51,7 @@ class RuleControllerTest extends TestCase
         $response = $this->post(route('rules.destroy', [1]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $this->assertRedirectedToRoute('index');
+        $response->assertRedirect(route('index'));
     }
 
     /**
@@ -62,7 +62,7 @@ class RuleControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('rules.down', [1]));
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('rules.index');
+        $response->assertRedirect(route('rules.index'));
     }
 
     /**
@@ -176,7 +176,7 @@ class RuleControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('rules.up', [1]));
         $response->assertStatus(302);
-        $this->assertRedirectedToRoute('rules.index');
+        $response->assertRedirect(route('rules.index'));
     }
 
     /**
