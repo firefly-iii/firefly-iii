@@ -4,6 +4,7 @@ services:
   firefly-db:
     volumes:
       - firefly-dev-storage:/var/lib/mysql
+      - .:/var/www/firefly-iii
   firefly-app:
     environment:
       - INIT_DATABASE=yes
