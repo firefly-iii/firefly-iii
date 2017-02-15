@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
 
         // force root URL.
         $forcedUrl = env('APP_FORCE_ROOT', '');
-        if (strlen($forcedUrl) > 0) {
+        if (strlen(strval($forcedUrl)) > 0) {
             URL::forceRootUrl($forcedUrl);
         }
 
