@@ -19,9 +19,11 @@ use FireflyIII\Generator\Report\ReportGeneratorFactory;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Requests\ReportFormRequest;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -90,6 +92,42 @@ class ReportController extends Controller
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
+        $result = $generator->generate();
+
+        return $result;
+
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
+        }
+
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_tag',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+        $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);
+        $generator->setAccounts($accounts);
+        $generator->setTags($tags);
         $result = $generator->generate();
 
         return $result;
@@ -238,6 +276,9 @@ class ReportController extends Controller
             case 'budget':
                 $result = $this->budgetReportOptions();
                 break;
+            case 'tag':
+                $result = $this->tagReportOptions();
+                break;
         }
 
         return Response::json(['html' => $result]);
@@ -258,6 +299,7 @@ class ReportController extends Controller
         $accounts   = join(',', $request->getAccountList()->pluck('id')->toArray());
         $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
         $budgets    = join(',', $request->getBudgetList()->pluck('id')->toArray());
+        $tags       = join(',', $request->getTagList()->pluck('tag')->toArray());
 
         if ($request->getAccountList()->count() === 0) {
             Session::flash('error', trans('firefly.select_more_than_one_account'));
@@ -273,6 +315,12 @@ class ReportController extends Controller
 
         if ($request->getBudgetList()->count() === 0 && $reportType === 'budget') {
             Session::flash('error', trans('firefly.select_more_than_one_budget'));
+
+            return redirect(route('reports.index'));
+        }
+
+        if ($request->getTagList()->count() === 0 && $reportType === 'tag') {
+            Session::flash('error', trans('firefly.select_more_than_one_tag'));
 
             return redirect(route('reports.index'));
         }
@@ -300,6 +348,9 @@ class ReportController extends Controller
                 break;
             case 'budget':
                 $uri = route('reports.report.budget', [$accounts, $budgets, $start, $end]);
+                break;
+            case 'tag':
+                $uri = route('reports.report.tag', [$accounts, $tags, $start, $end]);
                 break;
         }
 
@@ -340,5 +391,23 @@ class ReportController extends Controller
     private function noReportOptions(): string
     {
         return view('reports.options.no-options')->render();
+    }
+
+    /**
+     * @return string
+     */
+    private function tagReportOptions(): string
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $tags       = $repository->get()->sortBy(
+            function (Tag $tag) {
+                return $tag->tag;
+            }
+        );
+        $result     = view('reports.options.tag', compact('tags'))->render();
+
+        return $result;
+
     }
 }

@@ -153,6 +153,7 @@ return [
         'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
         'journalList'       => 'FireflyIII\Support\Binder\JournalList',
         'categoryList'      => 'FireflyIII\Support\Binder\CategoryList',
+        'tagList'           => 'FireflyIII\Support\Binder\TagList',
         'start_date'        => 'FireflyIII\Support\Binder\Date',
         'end_date'          => 'FireflyIII\Support\Binder\Date',
     ],
@@ -176,7 +177,7 @@ return [
         'transaction_type'      => 'FireflyIII\Rules\Triggers\TransactionType',
         'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
-        'tag_is'             => 'FireflyIII\Rules\Triggers\TagIs',
+        'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
     ],
     'rule-actions'             => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',

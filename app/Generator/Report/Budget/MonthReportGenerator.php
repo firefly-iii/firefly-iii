@@ -132,6 +132,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $tags
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setTags(Collection $tags): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
      * @param Collection $collection
      * @param int        $sortFlag
      *

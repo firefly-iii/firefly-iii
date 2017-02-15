@@ -1,8 +1,11 @@
-<p>
-    {{ 'select_category'|_ }}
-</p>
-<select id="inputCategories" name="category[]" multiple="multiple" class="form-control">
-    {% for category in categories %}
-        <option value="{{ category.id }}" label="{{ category.name }}">{{ category.name }}</option>
-    {% endfor %}
-</select>
+<div class="form-group">
+    <label for="inputCategories" class="col-sm-3 control-label">{{ 'select_category'|_ }}</label>
+    <div class="col-sm-9">
+        <select id="inputCategories" name="category[]" multiple="multiple" class="form-control">
+            {% for category in categories %}
+                <option value="{{ category.id }}" label="{{ category.name }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+
+    </div>
+</div>
