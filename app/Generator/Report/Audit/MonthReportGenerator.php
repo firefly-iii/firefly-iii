@@ -130,6 +130,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $tags
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setTags(Collection $tags): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
      * @param Account $account
      * @param Carbon  $date
      *
