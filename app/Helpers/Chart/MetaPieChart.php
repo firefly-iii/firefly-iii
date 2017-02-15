@@ -261,7 +261,6 @@ class MetaPieChart implements MetaPieChartInterface
         $chartData  = [];
         $names      = [];
         $repository = app($this->repositories[$type]);
-        $repository->setUser($this->user);
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
                 $object           = $repository->find(intval($objectId));
