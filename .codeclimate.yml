@@ -1,2 +1,15 @@
+engines:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+  phpmd:
+    enabled: true
 exclude_paths:
 - "resources/lang/**"
