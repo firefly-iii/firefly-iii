@@ -157,7 +157,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
+        $collector->setUser($this->user);
         $collector->setAccounts($this->accounts)->setRange($this->startDate, $this->endDate);
 
         return $collector->getJournals();

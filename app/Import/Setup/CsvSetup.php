@@ -182,8 +182,6 @@ class CsvSetup implements SetupInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-
         $importId = $data['csv_import_account'] ?? 0;
         $account  = $repository->find(intval($importId));
 

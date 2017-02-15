@@ -69,7 +69,6 @@ class ReportHelper implements ReportHelperInterface
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
         $collector  = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setBills($bills);
         $journals   = $collector->getJournals();
         $collection = new BillCollection;

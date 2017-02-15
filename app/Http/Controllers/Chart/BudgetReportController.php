@@ -80,7 +80,6 @@ class BudgetReportController extends Controller
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setBudgets($budgets);
-        $helper->setUser(auth()->user());
         $helper->setStart($start);
         $helper->setEnd($end);
         $helper->setCollectOtherObjects(intval($others) === 1);
@@ -106,7 +105,6 @@ class BudgetReportController extends Controller
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setBudgets($budgets);
-        $helper->setUser(auth()->user());
         $helper->setStart($start);
         $helper->setEnd($end);
         $helper->setCollectOtherObjects(intval($others) === 1);
@@ -240,7 +238,6 @@ class BudgetReportController extends Controller
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();

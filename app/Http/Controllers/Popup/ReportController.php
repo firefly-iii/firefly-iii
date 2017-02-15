@@ -104,7 +104,6 @@ class ReportController extends Controller
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
                 /** @var JournalCollectorInterface $collector */
                 $collector = app(JournalCollectorInterface::class);
-                $collector->setUser(auth()->user());
                 $collector
                     ->setAccounts(new Collection([$account]))
                     ->setRange($attributes['startDate'], $attributes['endDate'])
@@ -116,7 +115,6 @@ class ReportController extends Controller
                 $budget->name = strval(trans('firefly.no_budget'));
                 /** @var JournalCollectorInterface $collector */
                 $collector = app(JournalCollectorInterface::class);
-                $collector->setUser(auth()->user());
                 $collector
                     ->setAccounts(new Collection([$account]))
                     ->setTypes($types)
@@ -127,7 +125,6 @@ class ReportController extends Controller
             case ($role === BalanceLine::ROLE_DIFFROLE):
                 /** @var JournalCollectorInterface $collector */
                 $collector = app(JournalCollectorInterface::class);
-                $collector->setUser(auth()->user());
                 $collector
                     ->setAccounts(new Collection([$account]))
                     ->setTypes($types)
@@ -173,7 +170,6 @@ class ReportController extends Controller
         $budget     = $repository->find(intval($attributes['budgetId']));
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
 
         $collector
             ->setAccounts($attributes['accounts'])
@@ -208,7 +204,6 @@ class ReportController extends Controller
         $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts($attributes['accounts'])->setTypes($types)
                   ->setRange($attributes['startDate'], $attributes['endDate'])
                   ->setCategory($category);
@@ -236,7 +231,6 @@ class ReportController extends Controller
         $types   = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
         $journals = $collector->getJournals();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
@@ -273,7 +267,6 @@ class ReportController extends Controller
         $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
         $journals = $collector->getJournals();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report

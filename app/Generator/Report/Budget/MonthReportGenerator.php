@@ -186,7 +186,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->setBudgets($this->budgets)->withOpposingAccount()->disableFilter();
