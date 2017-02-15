@@ -439,8 +439,9 @@ class CsvSetup implements SetupInterface
         Log::debug('Now in getDataForColumnRoles()');
         $config = $this->job->configuration;
         $data   = [
-            'columns'     => [],
-            'columnCount' => 0,
+            'columns'       => [],
+            'columnCount'   => 0,
+            'columnHeaders' => [],
         ];
 
         // show user column role configuration.
@@ -449,8 +450,13 @@ class CsvSetup implements SetupInterface
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $start = $config['has-headers'] ? 1 : 0;
-        $end   = $start + config('csv.example_rows');
+        $start  = $config['has-headers'] ? 1 : 0;
+        $end    = $start + config('csv.example_rows');
+        $header = [];
+        if ($config['has-headers']) {
+            $header = $reader->fetchOne(0);
+        }
+
 
         // collect example data in $data['columns']
         Log::debug(sprintf('While %s is smaller than %d', $start, $end));
@@ -468,7 +474,8 @@ class CsvSetup implements SetupInterface
             }
 
             foreach ($row as $index => $value) {
-                $value = trim($value);
+                $value                         = trim($value);
+                $data['columnHeaders'][$index] = $header[$index] ?? '';
                 if (strlen($value) > 0) {
                     $data['columns'][$index][] = $value;
                 }

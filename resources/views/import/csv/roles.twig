@@ -45,7 +45,13 @@
                             {% for i in 0..(data.columnCount-1) %}
 
                                 <tr>
-                                    <td>{{ trans('csv.column') }} #{{ loop.index }}</td>
+                                    <td>
+                                        {% if data.columnHeaders[i] == '' %}
+                                            {{ trans('csv.column') }} #{{ loop.index }}
+                                        {% else %}
+                                            {{ data.columnHeaders[i] }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if data.columns[i]|length == 0 %}
                                             <em>{{ trans('csv.no_example_data') }}</em>
