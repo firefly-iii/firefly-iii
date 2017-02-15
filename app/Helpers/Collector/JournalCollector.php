@@ -506,6 +506,7 @@ class JournalCollector implements JournalCollectorInterface
     {
         $this->joinOpposingTables();
 
+        /**
         $accountIds = $this->accountIds;
         $this->query->where(
             function (EloquentBuilder $q1) use ($accountIds) {
@@ -535,6 +536,7 @@ class JournalCollector implements JournalCollectorInterface
                 );
             }
         );
+         * **/
 
         return $this;
     }
@@ -637,12 +639,12 @@ class JournalCollector implements JournalCollectorInterface
                     continue;
                 }
                 // make property string:
-                $journalId = $transaction->transaction_journal_id;
-                $amount    = Steam::positive($transaction->transaction_amount);
-                $source    = $transaction->account_id;
-                $dest      = $transaction->opposing_account_id;
-                $key       = $journalId . $source . $dest . $amount;
-
+                $journalId  = $transaction->transaction_journal_id;
+                $amount     = Steam::positive($transaction->transaction_amount);
+                $accountIds = [intval($transaction->account_id), intval($transaction->opposing_account_id)];
+                sort($accountIds);
+                $key = $journalId . '-' . join(',', $accountIds) . '-' . $amount;
+                Log::debug(sprintf('Key is %s', $key));
                 if (!isset($count[$key])) {
                     // not yet counted? add to new set and count it:
                     $new->push($transaction);
