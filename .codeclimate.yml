@@ -3,6 +3,10 @@ engines:
     enabled: true
   duplication:
     enabled: true
+    config:
+      languages:
+        - php
+        - javascript
   eslint:
     enabled: true
   fixme:
