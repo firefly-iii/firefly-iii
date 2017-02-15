@@ -31,13 +31,6 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
-
-    /**
      * Create a new controller instance.
      *
      */
@@ -98,6 +91,14 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         return redirect('/');
+    }
+
+    /**
+     * @return string
+     */
+    public function redirectTo(): string
+    {
+        return route('index');
     }
 
     /**
