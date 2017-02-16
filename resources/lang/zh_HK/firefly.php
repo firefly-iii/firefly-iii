@@ -554,6 +554,7 @@ return [
     'select_more_than_one_account'               => 'Please select more than one account',
     'select_more_than_one_category'              => 'Please select more than one category',
     'select_more_than_one_budget'                => 'Please select more than one budget',
+    'select_more_than_one_tag'                   => 'Please select more than one tag',
     'from_to'                                    => 'From :start to :end',
 
     // categories:
@@ -711,6 +712,7 @@ return [
     'report_type_audit'                          => 'Transaction history overview (audit)',
     'report_type_category'                       => 'Category report',
     'report_type_budget'                         => 'Budget report',
+    'report_type_tag'                            => 'Tag report',
     'report_type_meta-history'                   => 'Categories, budgets and bills overview',
     'more_info_help'                             => 'More information about these types of reports can be found in the help pages. Press the (?) icon in the top right corner.',
     'report_included_accounts'                   => 'Included accounts',
@@ -729,8 +731,9 @@ return [
     'report_has_no_extra_options'                => 'This report has no extra options',
     'reports_submit'                             => 'View report',
     'end_after_start_date'                       => 'End date of report must be after start date.',
-    'select_category'                            => 'Select one or more categories.',
-    'select_budget'                              => 'Select one or more budgets.',
+    'select_category'                            => 'Select category(ies)',
+    'select_budget'                              => 'Select budget(s).',
+    'select_tag'                                 => 'Select tag(s).',
     'income_per_category'                        => 'Income per category',
     'expense_per_category'                       => 'Expense per category',
     'expense_per_budget'                         => 'Expense per budget',
@@ -959,4 +962,7 @@ return [
     'import_finished_intro'                => 'The import has finished! You can now see the new transactions in Firefly.',
     'import_finished_text_without_link'    => 'It seems there is no tag that points to all your imported transactions. Please look for your imported data in the menu on the left, under "Transactions".',
     'import_finished_text_with_link'       => 'You can find a list of your imported transactions on the page of the <a href="tags/show/:tag">tag that was created for this import</a>.',
+
+    // sandstorm.io errors and messages:
+    'sandstorm_not_available'              => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 ];
