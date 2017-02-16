@@ -55,9 +55,7 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.encrypted',
-            //'transaction_journals.transaction_currency_id',
             'transaction_currencies.code as transaction_currency_code',
-            //'transaction_currencies.symbol as transaction_currency_symbol',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
             'bills.name as bill_name',
@@ -505,39 +503,6 @@ class JournalCollector implements JournalCollectorInterface
     public function withOpposingAccount(): JournalCollectorInterface
     {
         $this->joinOpposingTables();
-
-        /**
-        $accountIds = $this->accountIds;
-        $this->query->where(
-            function (EloquentBuilder $q1) use ($accountIds) {
-                // set 1:
-                // where source is in the set of $accounts
-                // but destination is not.
-                $q1->where(
-                    function (EloquentBuilder $q2) use ($accountIds) {
-                        // transactions.account_id in set
-                        $q2->whereIn('transactions.account_id', $accountIds);
-                        // opposing.account_id not in set
-                        $q2->whereNotIn('opposing.account_id', $accountIds);
-
-                    }
-                );
-                // set 1:
-                // where source is not in the set of $accounts
-                // but destination is.
-                $q1->orWhere(
-                    function (EloquentBuilder $q3) use ($accountIds) {
-                        // transactions.account_id not in set
-                        $q3->whereNotIn('transactions.account_id', $accountIds);
-                        // B in set
-                        // opposing.account_id not in set
-                        $q3->whereIn('opposing.account_id', $accountIds);
-                    }
-                );
-            }
-        );
-         * **/
-
         return $this;
     }
 
