@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TokenFormRequest;
+use Illuminate\Http\Request;
 use Log;
 use Preferences;
 use Session;
@@ -30,11 +31,14 @@ class TwoFactorController extends Controller
 {
 
     /**
-     * @return mixed
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      * @throws FireflyException
      */
-    public function index()
+    public function index(Request $request)
     {
+
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
@@ -50,7 +54,7 @@ class TwoFactorController extends Controller
         if (strlen(strval($secret)) === 0) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
-        Session::flash('two-factor-secret', $secret);
+        $request->session()->flash('two-factor-secret', $secret);
 
         return view('auth.two-factor', compact('user', 'title'));
     }
