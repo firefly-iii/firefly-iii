@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
@@ -33,7 +33,7 @@
                                 {% endif %}
                             </p>
                         {% endif %}
-                        {% if account.transactions|length > 0 %}
+                        {% if account.transactions.count > 0 %}
                             <p class="text-success">
                                 {{ 'save_transactions_by_moving'|_ }}
                             </p>

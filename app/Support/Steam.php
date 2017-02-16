@@ -26,7 +26,6 @@ use FireflyIII\Models\Transaction;
 class Steam
 {
 
-
     /**
      *
      * @param \FireflyIII\Models\Account $account
@@ -124,6 +123,8 @@ class Steam
                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
                                   ->groupBy('transaction_journals.date')
+                                  ->orderBy('transaction_journals.date', 'ASC')
+                                  ->whereNull('transaction_journals.deleted_at')
                                   ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
         $currentBalance = $startBalance;
         foreach ($set as $entry) {
@@ -150,7 +151,7 @@ class Steam
     public function balancesById(array $ids, Carbon $date): array
     {
 
-        // abuse chart properties:
+        // cache this property.
         $cache = new CacheProperties;
         $cache->addProperty($ids);
         $cache->addProperty('balances');
@@ -159,11 +160,11 @@ class Steam
             return $cache->get();
         }
 
-        $balances = Transaction::
-        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $balances = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
                                ->groupBy('transactions.account_id')
                                ->whereIn('transactions.account_id', $ids)
+                               ->whereNull('transaction_journals.deleted_at')
                                ->get(['transactions.account_id', DB::raw('sum(transactions.amount) AS aggregate')]);
 
         $result = [];
@@ -200,8 +201,6 @@ class Steam
         return $list;
     }
 
-    // parse PHP size:
-
     /**
      * @param $string
      *
@@ -235,6 +234,22 @@ class Steam
         return intval($string);
 
 
+    }
+
+    // parse PHP size:
+
+    /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function positive(string $amount): string
+    {
+        if (bccomp($amount, '0') === -1) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
     }
 
 }

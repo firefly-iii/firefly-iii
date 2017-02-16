@@ -26,21 +26,11 @@ use Illuminate\Support\Facades\Password;
  *
  * @package FireflyIII\Http\Controllers\Auth
  * @method getEmailSubject()
- * @method getSendResetLinkEmailSuccessResponse()
- * @method getSendResetLinkEmailFailureResponse()
+ * @method getSendResetLinkEmailSuccessResponse(string $response)
+ * @method getSendResetLinkEmailFailureResponse(string $response)
  */
 class PasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
 
     use ResetsPasswords;
 
@@ -57,6 +47,7 @@ class PasswordController extends Controller
 
     /**
      * Send a reset link to the given user.
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 7 but ok
      *
      * @param  \Illuminate\Http\Request $request
      *

@@ -50,13 +50,10 @@ class CreateImport extends Command
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped
      */
     public function handle()
     {
-        // find the file
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = app(UserRepositoryInterface::class);
         $file           = $this->argument('file');
@@ -69,7 +66,6 @@ class CreateImport extends Command
             return;
         }
 
-        // try to parse configuration data:
         $configurationData = json_decode(file_get_contents($configuration));
         if (is_null($configurationData)) {
             $this->error(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
@@ -83,22 +79,19 @@ class CreateImport extends Command
         $this->info(sprintf('Type of import: %s', $type));
 
         /** @var ImportJobRepositoryInterface $jobRepository */
-        $jobRepository = app(ImportJobRepositoryInterface::class, [$user]);
-
-        $job = $jobRepository->create($type);
+        $jobRepository = app(ImportJobRepositoryInterface::class);
+        $jobRepository->setUser($user);
+        $job           = $jobRepository->create($type);
         $this->line(sprintf('Created job "%s"...', $job->key));
 
-        // put the file in the proper place:
         Artisan::call('firefly:encrypt', ['file' => $file, 'key' => $job->key]);
         $this->line('Stored import data...');
 
-        // store the configuration in the job:
         $job->configuration = $configurationData;
         $job->status        = 'settings_complete';
         $job->save();
         $this->line('Stored configuration...');
 
-        // if user wants to run it, do!
         if ($this->option('start') === true) {
             $this->line('The import will start in a moment. This process is not visible...');
             Log::debug('Go for import!');
@@ -111,10 +104,10 @@ class CreateImport extends Command
 
     /**
      * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five exactly.
      */
     private function validArguments(): bool
     {
-        // find the file
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = app(UserRepositoryInterface::class);
         $file           = $this->argument('file');

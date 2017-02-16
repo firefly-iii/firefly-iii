@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
@@ -39,19 +38,21 @@ class AccountFormRequest extends Request
     public function getAccountData(): array
     {
         return [
-            'name'                   => trim($this->input('name')),
-            'active'                 => intval($this->input('active')) === 1,
-            'accountType'            => $this->input('what'),
-            'virtualBalance'         => round($this->input('virtualBalance'), 2),
-            'virtualBalanceCurrency' => intval($this->input('amount_currency_id_virtualBalance')),
-            'iban'                   => trim($this->input('iban')),
-            'accountNumber'          => trim($this->input('accountNumber')),
-            'accountRole'            => $this->input('accountRole'),
-            'openingBalance'         => round($this->input('openingBalance'), 2),
-            'openingBalanceDate'     => new Carbon((string)$this->input('openingBalanceDate')),
-            'openingBalanceCurrency' => intval($this->input('amount_currency_id_openingBalance')),
-            'ccType'                 => $this->input('ccType'),
-            'ccMonthlyPaymentDate'   => $this->input('ccMonthlyPaymentDate'),
+            'name'                   => $this->string('name'),
+            'active'                 => $this->boolean('active'),
+            'accountType'            => $this->string('what'),
+            'currency_id'            => $this->integer('currency_id'),
+            'virtualBalance'         => $this->float('virtualBalance'),
+            'virtualBalanceCurrency' => $this->integer('amount_currency_id_virtualBalance'),
+            'iban'                   => $this->string('iban'),
+            'BIC'                    => $this->string('BIC'),
+            'accountNumber'          => $this->string('accountNumber'),
+            'accountRole'            => $this->string('accountRole'),
+            'openingBalance'         => $this->float('openingBalance'),
+            'openingBalanceDate'     => $this->date('openingBalanceDate'),
+            'openingBalanceCurrency' => $this->integer('amount_currency_id_openingBalance'),
+            'ccType'                 => $this->string('ccType'),
+            'ccMonthlyPaymentDate'   => $this->string('ccMonthlyPaymentDate'),
         ];
     }
 
@@ -62,7 +63,7 @@ class AccountFormRequest extends Request
     {
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
-        $accountRoles   = join(',', array_keys(config('firefly.accountRoles')));
+        $accountRoles   = join(',', config('firefly.accountRoles'));
         $types          = join(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = join(',', array_keys(config('firefly.ccTypes')));
 
@@ -70,16 +71,18 @@ class AccountFormRequest extends Request
         $idRule   = '';
         if (!is_null($repository->find(intval($this->get('id')))->id)) {
             $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|min:1|uniqueAccountForUser:' . $this->get('id');
+            $nameRule = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
         }
 
         return [
             'id'                                => $idRule,
             'name'                              => $nameRule,
-            'openingBalance'                    => 'numeric',
+            'openingBalance'                    => 'numeric|required_with:openingBalanceDate',
+            'openingBalanceDate'                => 'date|required_with:openingBalance',
             'iban'                              => 'iban',
+            'BIC'                               => 'bic',
             'virtualBalance'                    => 'numeric',
-            'openingBalanceDate'                => 'date',
+            'currency_id'                       => 'exists:transaction_currencies,id',
             'accountNumber'                     => 'between:1,255|uniqueAccountNumberForUser',
             'accountRole'                       => 'in:' . $accountRoles,
             'active'                            => 'boolean',

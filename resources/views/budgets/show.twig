@@ -1,25 +1,21 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, budget, repetition) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, budget, budgetLimit) }}
 {% endblock %}
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-7">
+        <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'overview'|_ }}</h3>
 
-
                     <!-- ACTIONS MENU -->
-                    <div class="pull-right">
+                    <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                {{ 'actions'|_ }}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
@@ -30,66 +26,74 @@
                     <canvas id="budgetOverview" style="width:100%;" height="400"></canvas>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
+            <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals' with {budgetPerspective: budget} %}
+                    {% include 'list.journals-tasker' %}
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-5">
-            {% if limits|length == 1 %}
-                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
-            {% endif %}
-
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
             {% for limit in limits %}
-                <div class="box">
+                <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid{% endif %}">
                     <div class="box-header with-border">
                         <h3 class="box-title"><a
-                                    href="{{ route('budgets.showWithRepetition',[budget.id,limit.id]) }}">{{ limit.startdate.formatLocalized(monthFormat) }}</a>
+                                    href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
+                                {{ limit.start_date.formatLocalized(monthAndDayFormat) }} &mdash;
+                                {{ limit.end_date.formatLocalized(monthAndDayFormat) }}
+                            </a>
                         </h3>
                     </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                {{ 'amount'|_ }}: {{ limit.amount|formatAmount }}
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                {{ 'spent'|_ }}: {{ limit.spent|formatAmount }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                {% set overspent = limit.amount + limit.spent < 0 %}
+                    <div class="box-body no-padding">
+                        <table class="table table-hover">
+                            <tr>
+                                <td style="width:33%;">{{ 'amount'|_ }}</td>
+                                <td>{{ limit.amount|formatAmount }}</td>
+                            </tr>
+                            <tr>
+                                <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                <td>{{ limit.spent|formatAmount }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    {% set overspent = limit.amount + limit.spent < 0 %}
 
-                                {% if overspent %}
-                                    {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} <!-- must have -1 here -->
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
-                                             aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
-                                    </div>
-                                {% else %}
-                                    {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} <!-- must have -1 here -->
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
-                                             aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
+                                    {% if overspent %}
+                                        {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} <!-- must have -1 here -->
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
+                                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
+                                        </div>
+                                    {% else %}
+                                        {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} <!-- must have -1 here -->
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             {% endfor %}
-
-            {% if limits|length == 1 %}
-                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
-            {% endif %}
-
+            <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
         </div>
     </div>
 
@@ -97,16 +101,17 @@
 {% block scripts %}
     <script type="text/javascript">
         var budgetID = {{ budget.id }};
-        {% if repetition.id %}
-        var repetitionID = {{ repetition.id }};
-        var year = {{ repetition.startdate.format('Y') }};
+        {% if budgetLimit.id %}
+        var budgetLimitID = {{ budgetLimit.id }};
+        var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
         {% else %}
-        var year = {{ Session.get('start').format('Y') }};
+        var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
         {% endif %}
 
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
     <script type="text/javascript" src="js/ff/charts.js"></script>
     <script type="text/javascript" src="js/ff/budgets/show.js"></script>
     <script type="text/javascript" src="js/ff/transactions/list.js"></script>

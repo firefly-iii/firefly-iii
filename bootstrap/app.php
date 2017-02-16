@@ -23,8 +23,7 @@ declare(strict_types = 1);
 |
 */
 
-bcscale(4);
-
+bcscale(12);
 
 $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')

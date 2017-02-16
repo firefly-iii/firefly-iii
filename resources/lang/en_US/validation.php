@@ -12,6 +12,7 @@
 return [
     'iban'                           => 'This is not a valid IBAN.',
     'unique_account_number_for_user' => 'It looks like this account number is already in use.',
+    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
     'rule_action_value'              => 'This value is invalid for the selected action.',
     'invalid_domain'                 => 'Due to security constraints, you cannot register from this domain.',
@@ -21,6 +22,8 @@ return [
     'file_too_large'                 => 'File ":name" is too large.',
     'belongs_to_user'                => 'The value of :attribute is unknown',
     'accepted'                       => 'The :attribute must be accepted.',
+    'bic'                            => 'This is not a valid BIC.',
+    'more'                           => ':attribute must be larger than zero.',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',
     'alpha'                          => 'The :attribute may only contain letters.',
@@ -84,4 +87,5 @@ return [
     'file'                           => 'The :attribute must be a file.',
     'in_array'                       => 'The :attribute field does not exist in :other.',
     'present'                        => 'The :attribute field must be present.',
+    'amount_zero'                    => 'The total amount cannot be zero',
 ];

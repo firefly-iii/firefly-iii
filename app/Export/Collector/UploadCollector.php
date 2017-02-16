@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Collector;
 
 use Crypt;
-use FireflyIII\Models\ExportJob;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
 use Storage;
@@ -35,22 +34,12 @@ class UploadCollector extends BasicCollector implements CollectorInterface
 
     /**
      * AttachmentCollector constructor.
-     *
-     * @param ExportJob $job
      */
-    public function __construct(ExportJob $job)
+    public function __construct()
     {
-        parent::__construct($job);
-
-        Log::debug('Going to collect attachments', ['key' => $job->key]);
-
-        // make storage:
+        parent::__construct();
         $this->uploadDisk = Storage::disk('upload');
         $this->exportDisk = Storage::disk('export');
-
-        // file names associated with the old import routine.
-        $this->vintageFormat = sprintf('csv-upload-%d-', auth()->user()->id);
-
     }
 
     /**
@@ -60,6 +49,11 @@ class UploadCollector extends BasicCollector implements CollectorInterface
      */
     public function run(): bool
     {
+        Log::debug('Going to collect attachments', ['key' => $this->job->key]);
+
+        // file names associated with the old import routine.
+        $this->vintageFormat = sprintf('csv-upload-%d-', $this->job->user->id);
+
         // collect old upload files (names beginning with "csv-upload".
         $this->collectVintageUploads();
 
@@ -94,7 +88,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
      *
      * @return bool
      */
-    private function collectVintageUploads():bool
+    private function collectVintageUploads(): bool
     {
         // grab upload directory.
         $files = $this->uploadDisk->files();

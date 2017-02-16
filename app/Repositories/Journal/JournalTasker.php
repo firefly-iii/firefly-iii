@@ -13,15 +13,15 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use Carbon\Carbon;
 use Crypt;
 use DB;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -35,82 +35,6 @@ class JournalTasker implements JournalTaskerInterface
     /** @var User */
     private $user;
 
-    /**
-     * JournalRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * Returns a page of a specific type(s) of journal.
-     *
-     * @param array $types
-     * @param int   $page
-     * @param int   $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(array $types, int $page, int $pageSize = 50): LengthAwarePaginator
-    {
-        $offset = ($page - 1) * $pageSize;
-        $query  = $this->user->transactionJournals()->expanded()->sortCorrectly();
-        $query->where('transaction_journals.completed', 1);
-        if (count($types) > 0) {
-            $query->transactionTypes($types);
-        }
-        $count    = $this->user->transactionJournals()->transactionTypes($types)->count();
-        $set      = $query->take($pageSize)->offset($offset)->get(TransactionJournal::queryFields());
-        $journals = new LengthAwarePaginator($set, $count, $pageSize, $page);
-
-        return $journals;
-    }
-
-    /**
-     * Returns a collection of ALL journals, given a specific account and a date range.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection
-    {
-        $query = $this->user->transactionJournals()->expanded()->sortCorrectly();
-        $query->where('transaction_journals.completed', 1);
-        $query->before($end);
-        $query->after($start);
-
-        if ($accounts->count() > 0) {
-            $ids = $accounts->pluck('id')->toArray();
-            // join source and destination:
-            $query->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
-            }
-            );
-            $query->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
-            }
-            );
-
-            $query->where(
-                function (Builder $q) use ($ids) {
-                    $q->whereIn('destination.account_id', $ids);
-                    $q->orWhereIn('source.account_id', $ids);
-                }
-            );
-        }
-
-        $set = $query->get(TransactionJournal::queryFields());
-
-        return $set;
-    }
 
     /**
      * @param TransactionJournal $journal
@@ -141,34 +65,6 @@ class JournalTasker implements JournalTaskerInterface
     public function getTransactionsOverview(TransactionJournal $journal): array
     {
         // get all transaction data + the opposite site in one list.
-        /**
-         * select
-         *
-         * source.id,
-         * source.account_id,
-         * source_accounts.name as account_name,
-         * source_accounts.encrypted as account_encrypted,
-         * source.amount,
-         * source.description,
-         *
-         * destination.id as destination_id,
-         * destination.account_id as destination_account_id,
-         * destination_accounts.name as destination_account_name,
-         * destination_accounts.encrypted as destination_account_encrypted
-         *
-         *
-         * from transactions as source
-         *
-         * left join transactions as destination ON source.transaction_journal_id =
-         * destination.transaction_journal_id AND source.amount = destination.amount * -1 AND source.identifier = destination.identifier
-         * -- left join source account name:
-         * left join accounts as source_accounts ON source.account_id = source_accounts.id
-         * left join accounts as destination_accounts ON destination.account_id = destination_accounts.id
-         *
-         * where source.transaction_journal_id = 6600
-         * and source.amount < 0
-         * and source.deleted_at is null
-         */
         $set = $journal
             ->transactions()// "source"
             ->leftJoin(
@@ -182,7 +78,9 @@ class JournalTasker implements JournalTaskerInterface
             )
             ->with(['budgets', 'categories'])
             ->leftJoin('accounts as source_accounts', 'transactions.account_id', '=', 'source_accounts.id')
+            ->leftJoin('account_types as source_account_types', 'source_accounts.account_type_id', '=', 'source_account_types.id')
             ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
+            ->leftJoin('account_types as destination_account_types', 'destination_accounts.account_type_id', '=', 'destination_account_types.id')
             ->where('transactions.amount', '<', 0)
             ->whereNull('transactions.deleted_at')
             ->get(
@@ -191,12 +89,14 @@ class JournalTasker implements JournalTaskerInterface
                     'transactions.account_id',
                     'source_accounts.name as account_name',
                     'source_accounts.encrypted as account_encrypted',
+                    'source_account_types.type as account_type',
                     'transactions.amount',
                     'transactions.description',
                     'destination.id as destination_id',
                     'destination.account_id as destination_account_id',
                     'destination_accounts.name as destination_account_name',
                     'destination_accounts.encrypted as destination_account_encrypted',
+                    'destination_account_types.type as destination_account_type',
                 ]
             );
 
@@ -204,22 +104,23 @@ class JournalTasker implements JournalTaskerInterface
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            $sourceBalance      = $this->getBalance($entry->id);
-            $destinationBalance = $this->getBalance($entry->destination_id);
+            $sourceBalance      = $this->getBalance(intval($entry->id));
+            $destinationBalance = $this->getBalance(intval($entry->destination_id));
             $budget             = $entry->budgets->first();
             $category           = $entry->categories->first();
             $transaction        = [
-                'source_id'     => $entry->id,
-                'source_amount' => $entry->amount,
-
+                'source_id'                  => $entry->id,
+                'source_amount'              => $entry->amount,
                 'description'                => $entry->description,
                 'source_account_id'          => $entry->account_id,
                 'source_account_name'        => intval($entry->account_encrypted) === 1 ? Crypt::decrypt($entry->account_name) : $entry->account_name,
+                'source_account_type'        => $entry->account_type,
                 'source_account_before'      => $sourceBalance,
                 'source_account_after'       => bcadd($sourceBalance, $entry->amount),
                 'destination_id'             => $entry->destination_id,
                 'destination_amount'         => bcmul($entry->amount, '-1'),
                 'destination_account_id'     => $entry->destination_account_id,
+                'destination_account_type'   => $entry->destination_account_type,
                 'destination_account_name'   =>
                     intval($entry->destination_account_encrypted) === 1 ? Crypt::decrypt($entry->destination_account_name) : $entry->destination_account_name,
                 'destination_account_before' => $destinationBalance,
@@ -227,12 +128,27 @@ class JournalTasker implements JournalTaskerInterface
                 'budget_id'                  => is_null($budget) ? 0 : $budget->id,
                 'category'                   => is_null($category) ? '' : $category->name,
             ];
+            if ($entry->destination_account_type === AccountType::CASH) {
+                $transaction['destination_account_name'] = '';
+            }
+
+            if ($entry->account_type === AccountType::CASH) {
+                $transaction['source_account_name'] = '';
+            }
 
 
             $transactions[] = $transaction;
         }
 
         return $transactions;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
@@ -254,39 +170,37 @@ class JournalTasker implements JournalTaskerInterface
         $identifier  = intval($transaction->identifier);
 
         // go!
-        $sum
-            = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('account_id', $transaction->account_id)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transactions.id', '!=', $transactionId)
-            ->where(
-                function (Builder $q1) use ($date, $order, $journalId, $identifier) {
-                    $q1->where('transaction_journals.date', '<', $date); // date
-                    $q1->orWhere(
-                        function (Builder $q2) use ($date, $order) { // function 1
-                            $q2->where('transaction_journals.date', $date);
-                            $q2->where('transaction_journals.order', '>', $order);
-                        }
-                    );
-                    $q1->orWhere(
-                        function (Builder $q3) use ($date, $order, $journalId) { // function 2
-                            $q3->where('transaction_journals.date', $date);
-                            $q3->where('transaction_journals.order', $order);
-                            $q3->where('transaction_journals.id', '<', $journalId);
-                        }
-                    );
-                    $q1->orWhere(
-                        function (Builder $q4) use ($date, $order, $journalId, $identifier) { // function 3
-                            $q4->where('transaction_journals.date', $date);
-                            $q4->where('transaction_journals.order', $order);
-                            $q4->where('transaction_journals.id', $journalId);
-                            $q4->where('transactions.identifier', '>', $identifier);
-                        }
-                    );
-                }
-            )->sum('transactions.amount');
+        $sum = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->where('account_id', $transaction->account_id)
+                          ->whereNull('transactions.deleted_at')
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->where('transactions.id', '!=', $transactionId)
+                          ->where(
+                              function (Builder $q1) use ($date, $order, $journalId, $identifier) {
+                                  $q1->where('transaction_journals.date', '<', $date); // date
+                                  $q1->orWhere(
+                                      function (Builder $q2) use ($date, $order) { // function 1
+                                          $q2->where('transaction_journals.date', $date);
+                                          $q2->where('transaction_journals.order', '>', $order);
+                                      }
+                                  );
+                                  $q1->orWhere(
+                                      function (Builder $q3) use ($date, $order, $journalId) { // function 2
+                                          $q3->where('transaction_journals.date', $date);
+                                          $q3->where('transaction_journals.order', $order);
+                                          $q3->where('transaction_journals.id', '<', $journalId);
+                                      }
+                                  );
+                                  $q1->orWhere(
+                                      function (Builder $q4) use ($date, $order, $journalId, $identifier) { // function 3
+                                          $q4->where('transaction_journals.date', $date);
+                                          $q4->where('transaction_journals.order', $order);
+                                          $q4->where('transaction_journals.id', $journalId);
+                                          $q4->where('transactions.identifier', '>', $identifier);
+                                      }
+                                  );
+                              }
+                          )->sum('transactions.amount');
 
         return strval($sum);
     }

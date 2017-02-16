@@ -34,7 +34,7 @@ interface HelpInterface
      *
      * @return string
      */
-    public function getFromGithub(string $language, string $route):string;
+    public function getFromGithub(string $language, string $route): string;
 
     /**
      * @param string $route
@@ -49,7 +49,7 @@ interface HelpInterface
      *
      * @return bool
      */
-    public function inCache(string $route, string $language ): bool;
+    public function inCache(string $route, string $language): bool;
 
     /**
      * @param string $route

@@ -112,14 +112,16 @@ class CsvSetup implements SetupInterface
      */
     public function getDataForSettings(): array
     {
-
+        Log::debug('Now in getDataForSettings()');
         if ($this->doColumnRoles()) {
+            Log::debug('doColumnRoles() is true.');
             $data = $this->getDataForColumnRoles();
 
             return $data;
         }
 
         if ($this->doColumnMapping()) {
+            Log::debug('doColumnMapping() is true.');
             $data = $this->getDataForColumnMapping();
 
             return $data;
@@ -179,8 +181,7 @@ class CsvSetup implements SetupInterface
     public function saveImportConfiguration(array $data, FileBag $files): bool
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [auth()->user()]);
-
+        $repository = app(AccountRepositoryInterface::class);
         $importId = $data['csv_import_account'] ?? 0;
         $account  = $repository->find(intval($importId));
 
@@ -323,6 +324,7 @@ class CsvSetup implements SetupInterface
 
         foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
             if ($mustBeMapped) {
+
                 $column = $config['column-roles'][$index] ?? '_ignore';
 
                 // is valid column?
@@ -426,14 +428,18 @@ class CsvSetup implements SetupInterface
     }
 
     /**
+     * This method collects the data that will enable a user to choose column content.
+     *
      * @return array
      */
-    private function getDataForColumnRoles():array
+    private function getDataForColumnRoles(): array
     {
+        Log::debug('Now in getDataForColumnRoles()');
         $config = $this->job->configuration;
         $data   = [
-            'columns'     => [],
-            'columnCount' => 0,
+            'columns'       => [],
+            'columnCount'   => 0,
+            'columnHeaders' => [],
         ];
 
         // show user column role configuration.
@@ -442,25 +448,32 @@ class CsvSetup implements SetupInterface
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $start = $config['has-headers'] ? 1 : 0;
-        $end   = $start + config('csv.example_rows');
+        $start  = $config['has-headers'] ? 1 : 0;
+        $end    = $start + config('csv.example_rows');
+        $header = [];
+        if ($config['has-headers']) {
+            $header = $reader->fetchOne(0);
+        }
+
 
         // collect example data in $data['columns']
+        Log::debug(sprintf('While %s is smaller than %d', $start, $end));
         while ($start < $end) {
             $row = $reader->fetchOne($start);
-
+            Log::debug(sprintf('Row %d has %d columns', $start, count($row)));
             // run specifics here:
             // and this is the point where the specifix go to work.
             foreach ($config['specifics'] as $name => $enabled) {
                 /** @var SpecificInterface $specific */
                 $specific = app('FireflyIII\Import\Specifics\\' . $name);
-
+                Log::debug(sprintf('Will now apply specific "%s" to row %d.', $name, $start));
                 // it returns the row, possibly modified:
                 $row = $specific->run($row);
             }
 
             foreach ($row as $index => $value) {
-                $value = trim($value);
+                $value                         = trim($value);
+                $data['columnHeaders'][$index] = $header[$index] ?? '';
                 if (strlen($value) > 0) {
                     $data['columns'][$index][] = $value;
                 }

@@ -20,29 +20,23 @@ use Illuminate\Database\Eloquent\Model;
 use Log;
 
 /**
- * FireflyIII\Models\Preference
+ * Class Preference
  *
- * @property integer               $id
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
- * @property integer               $user_id
- * @property string                $name
- * @property string                $name_encrypted
- * @property string                $data
- * @property-read \FireflyIII\User $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereNameEncrypted($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereData($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereDataEncrypted($value)
- * @mixin \Eloquent
+ * @package FireflyIII\Models
  */
 class Preference extends Model
 {
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
     protected $dates    = ['created_at', 'updated_at'];
     protected $fillable = ['user_id', 'data', 'name', 'data'];
 
@@ -64,7 +58,7 @@ class Preference extends Model
         }
 
 
-        return json_decode($data);
+        return json_decode($data, true);
     }
 
     /**

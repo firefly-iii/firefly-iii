@@ -35,8 +35,16 @@ class PreferencesController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.preferences'));
-        View::share('mainTitleIcon', 'fa-gear');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.preferences'));
+                View::share('mainTitleIcon', 'fa-gear');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -48,9 +56,9 @@ class PreferencesController extends Controller
     {
         $domain = $this->getDomain();
         /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $secret = $google2fa->generateSecretKey(16, auth()->user()->id);
+        $secret = $google2fa->generateSecretKey(32, auth()->user()->id);
         Session::flash('two-factor-secret', $secret);
-        $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, null, $secret, 150);
+        $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, auth()->user()->email, $secret, 150);
 
 
         return view('preferences.code', compact('image'));
@@ -66,7 +74,7 @@ class PreferencesController extends Controller
         Session::flash('success', strval(trans('firefly.pref_two_factor_auth_disabled')));
         Session::flash('info', strval(trans('firefly.pref_two_factor_auth_remove_it')));
 
-        return redirect(route('preferences'));
+        return redirect(route('preferences.index'));
     }
 
     /**
@@ -105,6 +113,7 @@ class PreferencesController extends Controller
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -114,7 +123,7 @@ class PreferencesController extends Controller
         Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
-        return redirect(route('preferences'));
+        return redirect(route('preferences.index'));
     }
 
     /**
@@ -142,7 +151,7 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear = intval($request->get('customFiscalYear')) === 1;
-        $fiscalYearStart  = date('m-d', strtotime($request->get('fiscalYearStart')));
+        $fiscalYearStart  = date('m-d', strtotime(strval($request->get('fiscalYearStart'))));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
@@ -158,13 +167,17 @@ class PreferencesController extends Controller
             Preferences::set('transactionPageSize', 50);
         }
 
-        // two factor auth
-        $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
-        $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+        $twoFactorAuthEnabled   = false;
+        $hasTwoFactorAuthSecret = false;
+        if (!auth()->user()->hasRole('demo')) {
+            // two factor auth
+            $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
+            $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
 
-        // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
-        if ($hasTwoFactorAuthSecret) {
-            Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
+            // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
+            if ($hasTwoFactorAuthSecret) {
+                Preferences::set('twoFactorAuthEnabled', $twoFactorAuthEnabled);
+            }
         }
 
         // language:
@@ -198,13 +211,13 @@ class PreferencesController extends Controller
             return redirect(route('preferences.code'));
         }
 
-        return redirect(route('preferences'));
+        return redirect(route('preferences.index'));
     }
 
     /**
      * @return string
      */
-    private function getDomain() : string
+    private function getDomain(): string
     {
         $url   = url()->to('/');
         $parts = parse_url($url);

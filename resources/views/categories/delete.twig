@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
@@ -24,8 +24,8 @@
                         </p>
 
                         <p>
-                            {% if category.transactionjournals|length > 0 %}
-                                {{ Lang.choice('form.category_keep_transactions', category.transactionjournals|length, {count: category.transactionjournals|length}) }}
+                            {% if category.transactionjournals.count > 0 %}
+                                {{ Lang.choice('form.category_keep_transactions', category.transactionjournals.count, {count: category.transactionjournals.count }) }}
                             {% endif %}
                         </p>
                     </div>

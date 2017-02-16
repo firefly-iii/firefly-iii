@@ -16,7 +16,7 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Pagination\LengthAwarePaginator;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -26,7 +26,6 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
-
     /**
      * @param Bill $bill
      *
@@ -41,7 +40,7 @@ interface BillRepositoryInterface
      *
      * @return Bill
      */
-    public function find(int $billId) : Bill;
+    public function find(int $billId): Bill;
 
     /**
      * Find a bill by name.
@@ -50,24 +49,12 @@ interface BillRepositoryInterface
      *
      * @return Bill
      */
-    public function findByName(string $name) : Bill;
+    public function findByName(string $name): Bill;
 
     /**
      * @return Collection
      */
     public function getActiveBills(): Collection;
-
-    /**
-     * Returns all journals connected to these bills in the given range. Amount paid
-     * is stored in "journalAmount" as a negative number.
-     *
-     * @param Collection $bills
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getAllJournalsInRange(Collection $bills, Carbon $start, Carbon $end): Collection;
 
     /**
      * @return Collection
@@ -102,16 +89,6 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Bill $bill
-     *
-     * @param int  $page
-     * @param int  $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(Bill $bill, int $page, int $pageSize = 50): LengthAwarePaginator;
 
     /**
      * @param Bill $bill
@@ -181,6 +158,11 @@ interface BillRepositoryInterface
      * @return bool
      */
     public function scan(Bill $bill, TransactionJournal $journal): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

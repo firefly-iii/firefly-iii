@@ -22,10 +22,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use Input;
+use Illuminate\Http\Request;
 use Preferences;
 use Session;
-use URL;
 use View;
 
 /**
@@ -41,8 +40,16 @@ class RuleGroupController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.rules'));
-        View::share('mainTitleIcon', 'fa-random');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.rules'));
+                View::share('mainTitleIcon', 'fa-random');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -54,10 +61,10 @@ class RuleGroupController extends Controller
         $subTitle     = trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rules.rule-group.create.fromStore') !== true) {
-            Session::put('rules.rule-group.create.url', URL::previous());
+        if (session('rule-groups.create.fromStore') !== true) {
+            $this->rememberPreviousUri('rule-groups.create.uri');
         }
-        Session::forget('rules.rule-group.create.fromStore');
+        Session::forget('rule-groups.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule-group');
 
@@ -78,7 +85,7 @@ class RuleGroupController extends Controller
         unset($ruleGroupList[$ruleGroup->id]);
 
         // put previous url in session
-        Session::put('rules.rule-group.delete.url', URL::previous());
+        $this->rememberPreviousUri('rule-groups.delete.uri');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'delete-rule-group');
 
@@ -86,17 +93,17 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * @param Request                      $request
      * @param RuleGroupRepositoryInterface $repository
-     *
      * @param RuleGroup                    $ruleGroup
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
+    public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
 
         $title  = $ruleGroup->title;
-        $moveTo = auth()->user()->ruleGroups()->find(intval(Input::get('move_rules_before_delete')));
+        $moveTo = auth()->user()->ruleGroups()->find(intval($request->get('move_rules_before_delete')));
 
         $repository->destroy($ruleGroup, $moveTo);
 
@@ -104,8 +111,7 @@ class RuleGroupController extends Controller
         Session::flash('success', strval(trans('firefly.deleted_rule_group', ['title' => $title])));
         Preferences::mark();
 
-
-        return redirect(session('rules.rule-group.delete.url'));
+        return redirect($this->getPreviousUri('rule-groups.delete.uri'));
     }
 
     /**
@@ -132,10 +138,10 @@ class RuleGroupController extends Controller
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rules.rule-group.edit.fromUpdate') !== true) {
-            Session::put('rules.rule-group.edit.url', URL::previous());
+        if (session('rule-groups.edit.fromUpdate') !== true) {
+            $this->rememberPreviousUri('rule-groups.edit.uri');
         }
-        Session::forget('rules.rule-group.edit.fromUpdate');
+        Session::forget('rule-groups.edit.fromUpdate');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule-group');
 
@@ -204,21 +210,20 @@ class RuleGroupController extends Controller
      */
     public function store(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository)
     {
-        $data            = $request->getRuleGroupData();
-        $ruleGroup       = $repository->store($data);
+        $data      = $request->getRuleGroupData();
+        $ruleGroup = $repository->store($data);
 
         Session::flash('success', strval(trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('rules.rule-group.create.fromStore', true);
+            Session::put('rule-groups.create.fromStore', true);
 
-            return redirect(route('rules.rule-group.create'))->withInput();
+            return redirect(route('rule-groups.create'))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('rules.rule-group.create.url'));
+        return redirect($this->getPreviousUri('rule-groups.create.uri'));
     }
 
     /**
@@ -255,15 +260,15 @@ class RuleGroupController extends Controller
         Session::flash('success', strval(trans('firefly.updated_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('rules.rule-group.edit.fromUpdate', true);
+            Session::put('rule-groups.edit.fromUpdate', true);
 
-            return redirect(route('rules.rule-group.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect(session('rules.rule-group.edit.url'));
+        return redirect($this->getPreviousUri('rule-groups.edit.uri'));
 
     }
 }

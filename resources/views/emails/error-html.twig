@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-
-</head>
-<body>
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     Firefly III ran into an error: <span style="font-family: monospace;">{{ errorMessage }}</span>
 </p>
@@ -40,13 +34,12 @@
     This can help fix the bug you just encountered.
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    If you prefer, you can also open a new issue on <a href="https://github.com/JC5/firefly-iii/issues/new">Github</a>.
+    If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">Github</a>.
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     The full stacktrace is below:</p>
 <p style="font-family: monospace;font-size:11px;color:#aaa">
-    {{ stacktrace|nl2br }}
+    {{ stackTrace|nl2br }}
 </p>
-</body>
-</html>
+{% include 'emails.footer-html' %}

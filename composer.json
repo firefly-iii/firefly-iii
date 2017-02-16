@@ -5,49 +5,70 @@
     "finance",
     "finances",
     "manager",
+    "management",
     "euro",
+    "dollar",
     "laravel",
     "money",
+    "currency",
     "financials",
+    "financial",
     "budgets",
+    "administration",
+    "tool",
+    "tooling",
+    "help",
+    "helper",
+    "assistant",
+    "planning",
+    "organizing",
+    "bills",
+    "personal finance",
+    "budgets",
+    "budgeting",
+    "budgeting tool",
+    "budgeting application",
     "transactions",
+    "self hosted",
+    "self-hosted",
     "transfers",
     "management"
   ],
-  "license": "MIT",
-  "homepage": "https://github.com/JC5/firefly-iii",
+  "license": "Creative Commons Attribution-ShareAlike 4.0 International License",
+  "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "authors": [
     {
       "name": "James Cole",
       "email": "thegrumpydictator@gmail.com",
-      "homepage": "https://github.com/JC5",
+      "homepage": "https://github.com/firefly-iii",
       "role": "Developer"
     }
   ],
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
-    "laravel/framework": "5.3.18",
-    "davejamesmiller/laravel-breadcrumbs": "^3.0",
-    "watson/validating": "^3.0",
+    "laravel/framework": "5.4.*",
+    "davejamesmiller/laravel-breadcrumbs": "3.*",
+    "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
-    "league/commonmark": "^0.15.0",
-    "rcrowe/twigbridge": "^0.9.3",
-    "league/csv": "^8.1",
-    "laravelcollective/html": "^5.3",
-    "rmccue/requests": "^1.6",
-    "pragmarx/google2fa": "^1.0",
-    "barryvdh/laravel-debugbar": "^2.2",
-    "barryvdh/laravel-ide-helper": "^2.2",
-    "bacon/bacon-qr-code": "^1.0"
+    "league/commonmark": "0.15.*",
+    "twig/twig": "1.30.0",
+    "rcrowe/twigbridge": "0.9.*",
+    "league/csv": "8.*",
+    "laravelcollective/html": "^5.4",
+    "rmccue/requests": "1.*",
+    "pragmarx/google2fa": "1.*",
+    "bacon/bacon-qr-code": "1.*"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
     "mockery/mockery": "0.9.*",
     "phpunit/phpunit": "~5.0",
     "symfony/css-selector": "3.1.*",
-    "symfony/dom-crawler": "3.1.*"
+    "symfony/dom-crawler": "3.1.*",
+    "barryvdh/laravel-debugbar": "2.*",
+    "barryvdh/laravel-ide-helper": "2.*"
   },
   "autoload": {
     "classmap": [
@@ -58,9 +79,9 @@
     }
   },
   "autoload-dev": {
-    "classmap": [
-      "tests/TestCase.php"
-    ]
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   },
   "scripts": {
     "post-root-package-install": [
@@ -71,13 +92,14 @@
     ],
     "post-install-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postInstall",
-      "php artisan optimize"
+      "php artisan optimize",
+      "php artisan firefly:instructions install"
     ],
     "post-update-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-      "php artisan firefly:upgrade-instructions",
       "php artisan firefly:upgrade-database",
       "php artisan firefly:verify",
+      "php artisan firefly:instructions update",
       "php artisan optimize"
     ]
   },

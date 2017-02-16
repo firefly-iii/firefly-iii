@@ -35,12 +35,12 @@ class TagFormRequest extends Request
     /**
      * @return array
      */
-    public function collectTagData() :array
+    public function collectTagData(): array
     {
         if ($this->get('setTag') == 'true') {
-            $latitude  = $this->get('latitude');
-            $longitude = $this->get('longitude');
-            $zoomLevel = $this->get('zoomLevel');
+            $latitude  = $this->string('latitude');
+            $longitude = $this->string('longitude');
+            $zoomLevel = $this->integer('zoomLevel');
         } else {
             $latitude  = null;
             $longitude = null;
@@ -49,13 +49,13 @@ class TagFormRequest extends Request
         $date = $this->get('date') ?? '';
 
         $data = [
-            'tag'         => $this->get('tag'),
-            'date'        => strlen($date) > 0 ? new Carbon($date) : null,
-            'description' => $this->get('description') ?? '',
+            'tag'         => $this->string('tag'),
+            'date'        => $this->date($date),
+            'description' => $this->string('description'),
             'latitude'    => $latitude,
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,
-            'tagMode'     => $this->get('tagMode'),
+            'tagMode'     => $this->string('tagMode'),
         ];
 
         return $data;

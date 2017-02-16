@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
 use Illuminate\Support\Str;
+use Storage;
 
 /**
  * Class ExportJobRepository
@@ -29,13 +30,16 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     private $user;
 
     /**
-     * ExportJobRepository constructor.
+     * @param ExportJob $job
+     * @param string    $status
      *
-     * @param User $user
+     * @return bool
      */
-    public function __construct(User $user)
+    public function changeStatus(ExportJob $job, string $status): bool
     {
-        $this->user = $user;
+        $job->change($status);
+
+        return true;
     }
 
     /**
@@ -95,9 +99,22 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
+     * @param ExportJob $job
+     *
+     * @return bool
+     */
+    public function exists(ExportJob $job): bool
+    {
+        $disk = Storage::disk('export');
+        $file = $job->key . '.zip';
+
+        return $disk->exists($file);
+    }
+
+    /**
      * @param string $key
      *
-     * @return ExportJob|null
+     * @return ExportJob
      */
     public function findByKey(string $key): ExportJob
     {
@@ -109,4 +126,25 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         return $result;
     }
 
+    /**
+     * @param ExportJob $job
+     *
+     * @return string
+     */
+    public function getContent(ExportJob $job): string
+    {
+        $disk    = Storage::disk('export');
+        $file    = $job->key . '.zip';
+        $content = $disk->get($file);
+
+        return $content;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
 }

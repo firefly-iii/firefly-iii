@@ -24,6 +24,7 @@ use Illuminate\Support\Collection;
  */
 interface UserRepositoryInterface
 {
+
     /**
      * Returns a collection of all users.
      *
@@ -42,11 +43,26 @@ interface UserRepositoryInterface
     public function attachRole(User $user, string $role): bool;
 
     /**
+     * @param User   $user
+     * @param string $password
+     *
+     * @return mixed
+     */
+    public function changePassword(User $user, string $password);
+
+    /**
      * Returns a count of all users.
      *
      * @return int
      */
     public function count(): int;
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function destroy(User $user): bool;
 
     /**
      * @param int $userId

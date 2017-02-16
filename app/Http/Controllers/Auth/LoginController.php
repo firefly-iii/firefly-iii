@@ -18,11 +18,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
 use Lang;
-use Log;
-use Mail;
-use Swift_TransportException;
 
 /**
  * Class LoginController
@@ -31,25 +27,8 @@ use Swift_TransportException;
  */
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
 
     use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -64,49 +43,62 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function login(Request $request)
     {
         $this->validateLogin($request);
-
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if ($lockedOut = $this->hasTooManyLoginAttempts($request)) {
+        $lockedOut = $this->hasTooManyLoginAttempts($request);
+        if ($lockedOut) {
             $this->fireLockoutEvent($request);
 
             return $this->sendLockoutResponse($request);
         }
 
         $credentials            = $this->credentials($request);
-        $credentials['blocked'] = 0; // most not be blocked.
+        $credentials['blocked'] = 0; // must not be blocked.
 
         if ($this->guard()->attempt($credentials, $request->has('remember'))) {
             return $this->sendLoginResponse($request);
         }
 
-        // check if user is blocked:
-        $errorMessage = '';
-        /** @var User $foundUser */
-        $foundUser = User::where('email', $credentials['email'])->where('blocked', 1)->first();
-        if (!is_null($foundUser)) {
-            // if it exists, show message:
-            $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
-            $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $credentials['email']]));
-            $this->reportBlockedUserLoginAttempt($foundUser, $code, $request->ip());
-        }
+        $errorMessage = $this->getBlockedError($credentials['email']);
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
         if (!$lockedOut) {
             $this->incrementLoginAttempts($request);
         }
 
         return $this->sendFailedLoginResponse($request, $errorMessage);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function logout(Request $request)
+    {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        $this->guard()->logout();
+
+        $request->session()->flush();
+
+        $request->session()->regenerate();
+
+        return redirect('/');
+    }
+
+    /**
+     * @return string
+     */
+    public function redirectTo(): string
+    {
+        return route('index');
     }
 
     /**
@@ -168,32 +160,22 @@ class LoginController extends Controller
     }
 
     /**
-     * Send a message home about the  blocked attempt to login.
-     * Perhaps in a later stage, simply log these messages.
+     * @param string $email
      *
-     * @param User   $user
-     * @param string $code
-     * @param string $ipAddress
+     * @return string
      */
-    private function reportBlockedUserLoginAttempt(User $user, string $code, string $ipAddress)
+    private function getBlockedError(string $email): string
     {
-
-        try {
-            $email  = env('SITE_OWNER', false);
-            $fields = [
-                'user_id'      => $user->id,
-                'user_address' => $user->email,
-                'code'         => $code,
-                'ip'           => $ipAddress,
-            ];
-
-            Mail::send(
-                ['emails.blocked-login-html', 'emails.blocked-login'], $fields, function (Message $message) use ($email, $user) {
-                $message->to($email, $email)->subject('Blocked a login attempt from ' . trim($user->email) . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
+        // check if user is blocked:
+        $errorMessage = '';
+        /** @var User $foundUser */
+        $foundUser = User::where('email', $email)->where('blocked', 1)->first();
+        if (!is_null($foundUser)) {
+            // user exists, but is blocked:
+            $code         = strlen(strval($foundUser->blocked_code)) > 0 ? $foundUser->blocked_code : 'general_blocked';
+            $errorMessage = strval(trans('firefly.' . $code . '_error', ['email' => $email]));
         }
+
+        return $errorMessage;
     }
 }

@@ -13,15 +13,12 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
-use FireflyIII\Events\ConfirmedUser;
 use FireflyIII\Events\RegisteredUser;
-use FireflyIII\Events\ResentConfirmation;
+use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Mail\Message;
 use Log;
 use Mail;
-use Preferences;
 use Session;
 use Swift_TransportException;
 
@@ -31,7 +28,6 @@ use Swift_TransportException;
  * This class responds to any events that have anything to do with the User object.
  *
  * The method name reflects what is being done. This is in the present tense.
- *
  *
  * @package FireflyIII\Handlers\Events
  */
@@ -73,88 +69,30 @@ class UserEventHandler
     }
 
     /**
-     * This method will send a newly registered user a confirmation message, urging him or her to activate their account.
-     *
-     * @param RegisteredUser $event
+     * @param RequestedNewPassword $event
      *
      * @return bool
      */
-    public function sendConfirmationMessage(RegisteredUser $event): bool
+    public function sendNewPassword(RequestedNewPassword $event): bool
     {
-        $user           = $event->user;
-        $ipAddress      = $event->ipAddress;
-        $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
-        if ($confirmAccount === false) {
-            Preferences::setForUser($user, 'user_confirmed', true);
-            Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
-            Preferences::mark();
+        $email     = $event->user->email;
+        $ipAddress = $event->ipAddress;
+        $token     = $event->token;
 
-            return true;
-        }
-        $email = $user->email;
-        $code  = str_random(16);
-        $route = route('do_confirm_account', [$code]);
-        Preferences::setForUser($user, 'user_confirmed', false);
-        Preferences::setForUser($user, 'user_confirmed_last_mail', time());
-        Preferences::setForUser($user, 'user_confirmed_code', $code);
+        $url = route('password.reset', [$token]);
+
+        // send email.
         try {
             Mail::send(
-                ['emails.confirm-account-html', 'emails.confirm-account'], ['route' => $route, 'ip' => $ipAddress],
-                function (Message $message) use ($email) {
-                    $message->to($email, $email)->subject('Please confirm your Firefly III account');
-                }
+                ['emails.password-html', 'emails.password-text'], ['url' => $url, 'ip' => $ipAddress], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Your password reset request');
+            }
             );
         } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 
         return true;
-    }
-
-    /**
-     * If the user has somehow lost his or her confirmation message, this event will send it to the user again.
-     *
-     * At the moment, this method is exactly the same as the ::sendConfirmationMessage method, but that will change.
-     *
-     * @param ResentConfirmation $event
-     *
-     * @return bool
-     */
-    function sendConfirmationMessageAgain(ResentConfirmation $event): bool
-    {
-        $user           = $event->user;
-        $ipAddress      = $event->ipAddress;
-        $confirmAccount = env('MUST_CONFIRM_ACCOUNT', false);
-        if ($confirmAccount === false) {
-            Preferences::setForUser($user, 'user_confirmed', true);
-            Preferences::setForUser($user, 'user_confirmed_last_mail', 0);
-            Preferences::mark();
-
-            return true;
-        }
-        $email = $user->email;
-        $code  = str_random(16);
-        $route = route('do_confirm_account', [$code]);
-        Preferences::setForUser($user, 'user_confirmed', false);
-        Preferences::setForUser($user, 'user_confirmed_last_mail', time());
-        Preferences::setForUser($user, 'user_confirmed_code', $code);
-        try {
-            Mail::send(
-                ['emails.confirm-account-html', 'emails.confirm-account'], ['route' => $route, 'ip' => $ipAddress],
-                function (Message $message) use ($email) {
-                    $message->to($email, $email)->subject('Please confirm your Firefly III account');
-                }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-        return true;
-
     }
 
     /**
@@ -179,8 +117,8 @@ class UserEventHandler
         // send email.
         try {
             Mail::send(
-                ['emails.registered-html', 'emails.registered'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
-                $message->to($email, $email)->subject('Welcome to Firefly III! ');
+                ['emails.registered-html', 'emails.registered-text'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Welcome to Firefly III!');
             }
             );
         } catch (Swift_TransportException $e) {
@@ -189,37 +127,4 @@ class UserEventHandler
 
         return true;
     }
-
-    /**
-     * When the user is confirmed, this method stores the IP address of the user
-     * as a preference. Since this preference cannot be edited, it is effectively hidden
-     * from the user yet stored conveniently.
-     *
-     * @param ConfirmedUser $event
-     *
-     * @return bool
-     */
-    public function storeConfirmationIpAddress(ConfirmedUser $event): bool
-    {
-        Preferences::setForUser($event->user, 'confirmation_ip_address', $event->ipAddress);
-
-        return true;
-    }
-
-    /**
-     * This message stores the users IP address on registration, in much the same
-     * fashion as the previous method.
-     *
-     * @param RegisteredUser $event
-     *
-     * @return bool
-     */
-    public function storeRegistrationIpAddress(RegisteredUser $event): bool
-    {
-        Preferences::setForUser($event->user, 'registration_ip_address', $event->ipAddress);
-
-        return true;
-
-    }
-
 }

@@ -15,7 +15,6 @@ namespace FireflyIII\Helpers\Report;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use Illuminate\Support\Collection;
 
 /**
@@ -25,23 +24,15 @@ use Illuminate\Support\Collection;
  */
 interface BudgetReportHelperInterface
 {
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return Collection
-     */
-    public function budgetYearOverview(Carbon $start, Carbon $end, Collection $accounts): Collection;
 
     /**
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
-     * @return BudgetCollection
+     * @return array
      */
-    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): BudgetCollection;
+    public function getBudgetReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
      * @param Carbon     $start

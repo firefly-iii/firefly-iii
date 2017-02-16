@@ -1,21 +1,23 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
 {% endblock %}
 
 {% block content %}
+
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'reports'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">
-                        {{ 'more_info_help'|_ }}
-                    </p>
-                    <form class="form-horizontal" id="report-form" action="{{ route('reports.index') }}" method="post">
+        <form class="form-horizontal" id="report-form" action="{{ route('reports.index.post') }}" method="post">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'reports'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'more_info_help'|_ }}
+                        </p>
+
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <div class="form-group">
                             <label for="inputReportType" class="col-sm-3 control-label">{{ 'report_type'|_ }}</label>
@@ -24,6 +26,9 @@
                                 <select name="report_type" class="form-control" id="inputReportType">
                                     <option selected label="{{ 'report_type_default'|_ }}" value="default">{{ 'report_type_default'|_ }}</option>
                                     <option label="{{ 'report_type_audit'|_ }}" value="audit">{{ 'report_type_audit'|_ }}</option>
+                                    <option label="{{ 'report_type_budget'|_ }}" value="budget">{{ 'report_type_budget'|_ }}</option>
+                                    <option label="{{ 'report_type_category'|_ }}" value="category">{{ 'report_type_category'|_ }}</option>
+                                    <option label="{{ 'report_type_tag'|_ }}" value="tag">{{ 'report_type_tag'|_ }}</option>
                                 </select>
                             </div>
                         </div>
@@ -31,21 +36,16 @@
                             <label for="inputAccounts" class="col-sm-3 control-label">{{ 'report_included_accounts'|_ }}</label>
 
                             <div class="col-sm-9">
-                                {% for account in accounts %}
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="account-checkbox" name="accounts[]" value="{{ account.id }}">
-                                            {{ account.name }}
-                                            {% if account.getMeta('accountRole') == 'sharedAsset' %}
-                                                ({{ 'shared'|_|lower }})
-                                            {% endif %}
-                                        </label>
-                                    </div>
-                                {% endfor %}
+                                <select id="inputAccounts" name="accounts[]" multiple="multiple" class="form-control">
+                                    {% for account in accounts %}
+                                        <option
+                                                value="{{ account.id }}"
+                                                label="{{ account.name }}{% if account.getMeta('accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}">
+                                            {{ account.name }}{% if account.getMeta('accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
 
-                                <p class="help-block">
-                                    {{ 'report_include_help'|_ }}
-                                </p>
                             </div>
                         </div>
 
@@ -81,98 +81,119 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+                <div class="box" id="extra-options-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'reports_extra_options'|_ }}</h3>
+                    </div>
+                    <div class="box-body" id="extra-options">
+                    </div>
+                    {# loading indicator #}
+                    <div class="overlay">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'reports_submit'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-9">
                                 <button type="submit" class="btn btn-default">{{ 'submit'|_ }}</button>
                             </div>
                         </div>
-                    </form>
-
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'quick_link_reports'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <h4>{{ 'quick_link_default_report'|_ }}</h4>
+
+                    <h4>{{ ('quick_link_default_report')|_ }}</h4>
                     <ul>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
-                            'currentMonthStart',
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_month_quick'|_ }}</a>
+                            <a href="{{ route('reports.report.default',[accountList, 'currentMonthStart','currentMonthEnd']) }}">{{ 'report_this_month_quick'|_ }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
-                            'currentYearStart',
-                            'currentYearEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_year_quick'|_ }}</a>
+                            <a href="{{ route('reports.report.default',[accountList, 'currentYearStart','currentYearEnd']) }}">{{ 'report_this_year_quick'|_ }}</a>
                         </li>
                         {% if customFiscalYear == 1 %}
                             <li>
-                                <a href="{{ route('reports.report',
-                                ['default',
-                                'currentFiscalYearStart',
-                                'currentFiscalYearEnd',
-                                accountList
-                                ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                                <a href="{{ route('reports.report.default',[accountList, 'currentFiscalYearStart','currentFiscalYearEnd']) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
                             </li>
                         {% endif %}
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['default',
-                            start.format('Ymd'),
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_all_time_quick'|_ }}</a>
+                            <a href="{{ route('reports.report.default',[accountList, start.format('Ymd'),'currentMonthEnd']) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>
                     </ul>
 
-                    <h4>{{ 'quick_link_audit_report'|_ }}</h4>
+                    <h4>{{ ('quick_link_audit_report')|_ }}</h4>
                     <ul>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['audit',
-                            'currentMonthStart',
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_month_quick'|_ }}</a>
+                            <a href="{{ route('reports.report.audit',[accountList, 'currentMonthStart','currentMonthEnd']) }}">{{ 'report_this_month_quick'|_ }}</a>
                         </li>
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['audit',
-                            'currentYearStart',
-                            'currentYearEnd',
-                            accountList
-                            ]) }}">{{ 'report_this_year_quick'|_ }}</a>
+                            <a href="{{ route('reports.report.audit',[accountList, 'currentYearStart','currentYearEnd']) }}">{{ 'report_this_year_quick'|_ }}</a>
                         </li>
                         {% if customFiscalYear == 1 %}
                             <li>
-                                <a href="{{ route('reports.report',
-                                ['audit',
-                                'currentFiscalYearStart',
-                                'currentFiscalYearEnd',
-                                accountList
-                                ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                                <a href="{{ route('reports.report.audit',[accountList, 'currentFiscalYearStart','currentFiscalYearEnd']) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
                             </li>
                         {% endif %}
                         <li>
-                            <a href="{{ route('reports.report',
-                            ['audit',
-                            start.format('Ymd'),
-                            'currentMonthEnd',
-                            accountList
-                            ]) }}">{{ 'report_all_time_quick'|_ }}</a>
+                            <a href="{{ route('reports.report.audit',[accountList, start.format('Ymd'),'currentMonthEnd']) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>
                     </ul>
+                    {#<h4>{{ ('quick_link_category_report')|_ }}</h4>#}
+
+
+                    {#
+
+                    {% for type in ['default','audit'] %}
+
+
+                        <ul>
+                            <li>
+
+                            </li>
+                            <li>
+                                <a href="{{ route('reports.report.'~type,
+                                [
+                                'currentYearStart',
+                                'currentYearEnd',
+                                accountList
+                                ]) }}">{{ 'report_this_year_quick'|_ }}</a>
+                            </li>
+                            {% if customFiscalYear == 1 %}
+                                <li>
+                                    <a href="{{ route('reports.report.'~type,
+                                    ['default',
+                                    'currentFiscalYearStart',
+                                    'currentFiscalYearEnd',
+                                    accountList
+                                    ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="{{ route('reports.report.'~type,
+                                [
+                                start.format('Ymd'),
+                                'currentMonthEnd',
+                                accountList
+                                ]) }}">{{ 'report_all_time_quick'|_ }}</a>
+                            </li>
+                        </ul>
+                    {% endfor %}
+                    #}
 
                     <p>
                         <em>{{ 'reports_can_bookmark'|_ }}</em>
@@ -185,13 +206,18 @@
 
 {% endblock %}
 
+{% block styles %}
+    <link href="css/bootstrap-multiselect.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
 {% block scripts %}
     <script type="text/javascript">
-
-        var reportURL = "{{ route('reports.report', ['','','','']) }}";
         var minDate = "{{ start.format('m/d/Y') }}";
         var picker;
+        var nonSelectedText = "{{ 'multi_select_no_selection'|_ }}";
+        var allSelectedText = "{{ 'multi_select_all_selected'|_ }}";
+        var filterPlaceholder = "{{ 'multi_select_filter_placeholder'|_ }}";
     </script>
-
+    <script type="text/javascript" src="js/lib/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="js/ff/reports/index.js"></script>
 {% endblock %}

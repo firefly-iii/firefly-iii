@@ -14,10 +14,12 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Attachment;
 
 use Carbon\Carbon;
+use Crypt;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Storage;
 
 /**
  * Class AttachmentRepository
@@ -28,16 +30,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
      * @param Attachment $attachment
@@ -54,6 +46,19 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $attachment->delete();
 
         return true;
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function exists(Attachment $attachment): bool
+    {
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $disk->exists($attachment->fileName());
     }
 
     /**
@@ -80,6 +85,34 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             ->get(['attachments.*']);
 
         return $query;
+    }
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getContent(Attachment $attachment): string
+    {
+        // create a disk.
+        $disk = Storage::disk('upload');
+        $file = $attachment->fileName();
+
+        if ($disk->exists($file)) {
+            $content = Crypt::decrypt($disk->get($file));
+
+            return $content;
+        }
+
+        return '';
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

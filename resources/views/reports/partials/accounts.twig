@@ -1,30 +1,30 @@
 <table class="table table-hover sortable">
     <thead>
     <tr>
-        <th>{{ 'name'|_ }}</th>
-        <th>{{ 'balanceStart'|_ }}</th>
-        <th>{{ 'balanceEnd'|_ }}</th>
-        <th>{{ 'difference'|_ }}</th>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ 'balanceStart'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ 'balanceEnd'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'difference'|_ }}</th>
     </tr>
     </thead>
     <tbody>
-    {% for account in accountReport.getAccounts %}
+    {% for account in accountReport.accounts %}
         <tr>
-            <td>
+            <td data-value="{{ account.name }}">
                 <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
             </td>
-            <td data-value="{{ account.startBalance }}">{{ account.startBalance|formatAmount }}</td>
-            <td data-value="{{ account.endBalance }}">{{ account.endBalance|formatAmount }}</td>
-            <td data-value="{{ (account.endBalance - account.startBalance) }}">{{ (account.endBalance - account.startBalance)|formatAmount }}</td>
+            <td class="hidden-xs" data-value="{{ account.start_balance }}" style="text-align: right;">{{ account.start_balance|formatAmount }}</td>
+            <td class="hidden-xs" data-value="{{ account.end_balance }}" style="text-align: right;">{{ account.end_balance|formatAmount }}</td>
+            <td style="text-align: right;" data-value="{{ (account.end_balance - account.start_balance) }}">{{ (account.end_balance - account.start_balance)|formatAmount }}</td>
         </tr>
     {% endfor %}
     </tbody>
     <tfoot>
     <tr>
         <td><em>{{ 'sumOfSums'|_ }}</em></td>
-        <td>{{ accountReport.getStart|formatAmount }}</td>
-        <td>{{ accountReport.getEnd|formatAmount }}</td>
-        <td>{{ accountReport.getDifference|formatAmount }}</td>
+        <td class="hidden-xs" style="text-align: right;">{{ accountReport.start|formatAmount }}</td>
+        <td class="hidden-xs" style="text-align: right;">{{ accountReport.end|formatAmount }}</td>
+        <td style="text-align: right;">{{ accountReport.difference|formatAmount }}</td>
     </tr>
     </tfoot>
 </table>

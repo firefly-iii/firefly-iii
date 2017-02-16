@@ -9,7 +9,9 @@
         <a href="#">
             <i class="fa fa-credit-card fa-fw"></i>
             <span>{{ 'accounts'|_ }}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
         <!-- submenu for accounts -->
         <ul class="treeview-menu">
@@ -63,11 +65,11 @@
     <!-- transactions -->
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
-            <i class="fa fa-repeat fa-fw"></i>
-            <span>
-                {{ 'transactions'|_ }}<span class="fa arrow"></span>
+            <i class="fa fa-repeat"></i>
+            <span>{{ 'transactions'|_ }}</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
             </span>
-            <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartialWhat('transactions','withdrawal') }}">
@@ -90,7 +92,9 @@
         <a href="#">
             <i class="fa fa-euro fa-fw"></i>
             <span>{{ 'moneyManagement'|_ }}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('piggy-banks') }}">
@@ -116,7 +120,9 @@
             <span>
                 {{ 'import_and_export'|_ }}
             </span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
         <ul class="treeview-menu">
             <li class="{{ activeRoutePartial('import') }}">
@@ -130,23 +136,28 @@
     </li>
 
     <!-- options and preferences -->
+
     <li id="option-menu"
         class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
         <a href="#">
             <i class="fa fa-gears fa-fw"></i>
             <span>{{ 'options'|_ }}</span>
-            <i class="fa fa-angle-left pull-right"></i>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
 
         <ul class="treeview-menu">
+            {% if not SANDSTORM %}
             <li class="{{ activeRoutePartial('profile') }}">
-                <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}</a>
+                <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}</a>
             </li>
+            {% endif %}
             <li class="{{ activeRoutePartial('preferences') }}">
-                <a class="{{ activeRouteStrict('preferences') }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+                <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
             </li>
             <li class="{{ activeRoutePartial('currency') }}">
-                <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
+                <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currencies.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
             </li>
             <!-- admin (if user admin) -->
             {% if Auth.user.hasRole('owner') %}
@@ -162,13 +173,12 @@
 
 
     <!-- other options -->
-
-
+    {% if not SANDSTORM %}
     <li>
         <a href="{{ route('logout') }}">
             <i class="fa fa-sign-out fa-fw"></i>
             <span>{{ 'logout'|_ }}</span>
         </a>
     </li>
-
+    {% endif %}
 </ul>

@@ -14,11 +14,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use Input;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Preferences;
 use Session;
 use URL;
@@ -38,8 +40,16 @@ class BillController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.bills'));
-        View::share('mainTitleIcon', 'fa-calendar-o');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.bills'));
+                View::share('mainTitleIcon', 'fa-calendar-o');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -56,7 +66,7 @@ class BillController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('bills.create.fromStore') !== true) {
-            Session::put('bills.create.url', URL::previous());
+            $this->rememberPreviousUri('bills.create.uri');
         }
         Session::forget('bills.create.fromStore');
         Session::flash('gaEventCategory', 'bills');
@@ -73,7 +83,7 @@ class BillController extends Controller
     public function delete(Bill $bill)
     {
         // put previous url in session
-        Session::put('bills.delete.url', URL::previous());
+        $this->rememberPreviousUri('bills.delete.uri');
         Session::flash('gaEventCategory', 'bills');
         Session::flash('gaEventAction', 'delete');
         $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
@@ -95,7 +105,7 @@ class BillController extends Controller
         Session::flash('success', strval(trans('firefly.deleted_bill', ['name' => $name])));
         Preferences::mark();
 
-        return redirect(session('bills.delete.url'));
+        return redirect($this->getPreviousUri('bills.delete.uri'));
     }
 
     /**
@@ -113,7 +123,7 @@ class BillController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('bills.edit.fromUpdate') !== true) {
-            Session::put('bills.edit.url', URL::previous());
+            $this->rememberPreviousUri('bills.edit.uri');
         }
         Session::forget('bills.edit.fromUpdate');
         Session::flash('gaEventCategory', 'bills');
@@ -140,7 +150,7 @@ class BillController extends Controller
 
                 // paid in this period?
                 $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
-                $bill->payDates        = $repository->getPayDatesInRange($bill, $start, $end);
+                $bill->payDates  = $repository->getPayDatesInRange($bill, $start, $end);
                 $lastDate        = clone $start;
                 if ($bill->paidDates->count() >= $bill->payDates->count()) {
                     $lastDate = $end;
@@ -180,22 +190,30 @@ class BillController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param BillRepositoryInterface $repository
      * @param Bill                    $bill
      *
      * @return View
      */
-    public function show(BillRepositoryInterface $repository, Bill $bill)
+    public function show(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
         /** @var Carbon $date */
         $date           = session('start');
         $year           = $date->year;
-        $page           = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $page           = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
-        $journals       = $repository->getJournals($bill, $page, $pageSize);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
+
+        // use collector:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
+                  ->withCategoryInformation();
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('/bills/show/' . $bill->id);
+
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;
         $subTitle                = e($bill->name);
@@ -216,7 +234,7 @@ class BillController extends Controller
         Session::flash('success', strval(trans('firefly.stored_new_bill', ['name' => e($bill->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('bills.create.fromStore', true);
 
@@ -224,7 +242,7 @@ class BillController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('bills.create.url'));
+        return redirect($this->getPreviousUri('bills.create.uri'));
 
     }
 
@@ -243,15 +261,14 @@ class BillController extends Controller
         Session::flash('success', strval(trans('firefly.updated_bill', ['name' => e($bill->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('bills.edit.fromUpdate', true);
 
             return redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect(session('bills.edit.url'));
+        return redirect($this->getPreviousUri('bills.edit.uri'));
 
     }
 

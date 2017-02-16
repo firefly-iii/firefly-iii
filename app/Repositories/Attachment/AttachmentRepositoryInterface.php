@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\Attachment;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Attachment;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -33,6 +34,13 @@ interface AttachmentRepositoryInterface
     public function destroy(Attachment $attachment): bool;
 
     /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function exists(Attachment $attachment): bool;
+
+    /**
      * @return Collection
      */
     public function get(): Collection;
@@ -44,6 +52,18 @@ interface AttachmentRepositoryInterface
      * @return Collection
      */
     public function getBetween(Carbon $start, Carbon $end): Collection;
+
+    /**
+     * @param Attachment $attachment
+     *
+     * @return string
+     */
+    public function getContent(Attachment $attachment): string;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Attachment $attachment

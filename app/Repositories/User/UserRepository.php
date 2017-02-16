@@ -18,6 +18,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 
 /**
@@ -52,11 +53,38 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param User   $user
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function changePassword(User $user, string $password): bool
+    {
+        $user->password = bcrypt($password);
+        $user->save();
+
+        return true;
+    }
+
+    /**
      * @return int
      */
     public function count(): int
     {
         return $this->all()->count();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function destroy(User $user): bool
+    {
+        Log::debug(sprintf('Calling delete() on user %d', $user->id));
+        $user->delete();
+
+        return true;
     }
 
     /**
@@ -93,14 +121,6 @@ class UserRepository implements UserRepositoryInterface
             $return['has_2fa'] = true;
         }
 
-        // is user activated?
-        $confirmAccount         = env('MUST_CONFIRM_ACCOUNT', false);
-        $isConfirmed            = Preferences::getForUser($user, 'user_confirmed', false)->data;
-        $return['is_activated'] = true;
-        if ($isConfirmed === false && $confirmAccount === true) {
-            $return['is_activated'] = false;
-        }
-
         $return['is_admin']            = $user->hasRole('owner');
         $return['blocked']             = intval($user->blocked) === 1;
         $return['blocked_code']        = $user->blocked_code;
@@ -112,12 +132,11 @@ class UserRepository implements UserRepositoryInterface
         $return['bills']               = $user->bills()->count();
         $return['categories']          = $user->categories()->count();
         $return['budgets']             = $user->budgets()->count();
-        $return['budgets_with_limits'] = BudgetLimit
-            ::distinct()
-            ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-            ->where('amount', '>', 0)
-            ->whereNull('budgets.deleted_at')
-            ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
+        $return['budgets_with_limits'] = BudgetLimit::distinct()
+                                                    ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                                    ->where('amount', '>', 0)
+                                                    ->whereNull('budgets.deleted_at')
+                                                    ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
         $return['export_jobs']         = $user->exportJobs()->count();
         $return['export_jobs_success'] = $user->exportJobs()->where('status', 'export_downloaded')->count();
         $return['import_jobs']         = $user->exportJobs()->count();

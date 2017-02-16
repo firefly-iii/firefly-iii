@@ -52,7 +52,7 @@ return [
 
     'disks' => [
 
-        'local'    => [
+        'local' => [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
@@ -69,7 +69,14 @@ return [
             'driver' => 'local',
             'root'   => storage_path('database'),
         ],
-
+        'seeds'    => [
+            'driver' => 'local',
+            'root'   => base_path('resources/seeds'),
+        ],
+        'stubs'    => [
+            'driver' => 'local',
+            'root'   => base_path('resources/stubs'),
+        ],
 
         'public' => [
             'driver'     => 'local',

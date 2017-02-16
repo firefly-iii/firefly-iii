@@ -22,11 +22,10 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Rules\TransactionMatcher;
-use Input;
+use Illuminate\Http\Request;
 use Preferences;
 use Response;
 use Session;
-use URL;
 use View;
 
 /**
@@ -42,18 +41,27 @@ class RuleController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.rules'));
-        View::share('mainTitleIcon', 'fa-random');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.rules'));
+                View::share('mainTitleIcon', 'fa-random');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
+     * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
      * @return View
      */
-    public function create(RuleGroup $ruleGroup)
+    public function create(Request $request, RuleGroup $ruleGroup)
     {
         // count for possible present previous entered triggers/actions.
         $triggerCount = 0;
@@ -64,13 +72,13 @@ class RuleController extends Controller
         $oldActions  = [];
 
         // has old input?
-        if (Input::old()) {
+        if ($request->old()) {
             // process old triggers.
-            $oldTriggers  = $this->getPreviousTriggers();
+            $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
 
             // process old actions
-            $oldActions  = $this->getPreviousActions();
+            $oldActions  = $this->getPreviousActions($request);
             $actionCount = count($oldActions);
         }
 
@@ -78,10 +86,10 @@ class RuleController extends Controller
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rules.rule.create.fromStore') !== true) {
-            Session::put('rules.rule.create.url', URL::previous());
+        if (session('rules.create.fromStore') !== true) {
+            $this->rememberPreviousUri('rules.create.uri');
         }
-        Session::forget('rules.rule.create.fromStore');
+        Session::forget('rules.create.fromStore');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'create-rule');
 
@@ -96,14 +104,13 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return View
-     * @internal param RuleRepositoryInterface $repository
      */
     public function delete(Rule $rule)
     {
         $subTitle = trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
-        Session::put('rules.rule.delete.url', URL::previous());
+        $this->rememberPreviousUri('rules.delete.uri');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'delete-rule');
 
@@ -127,8 +134,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.deleted_rule', ['title' => $title]));
         Preferences::mark();
 
-
-        return redirect(session('rules.rule.delete.url'));
+        return redirect($this->getPreviousUri('rules.delete.uri'));
     }
 
     /**
@@ -146,12 +152,13 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
      *
      * @return View
      */
-    public function edit(RuleRepositoryInterface $repository, Rule $rule)
+    public function edit(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
         $oldTriggers  = $this->getCurrentTriggers($rule);
         $triggerCount = count($oldTriggers);
@@ -159,10 +166,10 @@ class RuleController extends Controller
         $actionCount  = count($oldActions);
 
         // has old input?
-        if (Input::old()) {
-            $oldTriggers  = $this->getPreviousTriggers();
+        if ($request->old()) {
+            $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
-            $oldActions   = $this->getPreviousActions();
+            $oldActions   = $this->getPreviousActions($request);
             $actionCount  = count($oldActions);
         }
 
@@ -171,10 +178,10 @@ class RuleController extends Controller
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rules.rule.edit.fromUpdate') !== true) {
-            Session::put('rules.rule.edit.url', URL::previous());
+        if (session('rules.edit.fromUpdate') !== true) {
+            $this->rememberPreviousUri('rules.edit.uri');
         }
-        Session::forget('rules.rule.edit.fromUpdate');
+        Session::forget('rules.edit.fromUpdate');
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
@@ -196,14 +203,15 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorderRuleActions(RuleRepositoryInterface $repository, Rule $rule)
+    public function reorderRuleActions(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
-        $ids = Input::get('actions');
+        $ids = $request->get('actions');
         if (is_array($ids)) {
             $repository->reorderRuleActions($rule, $ids);
         }
@@ -213,14 +221,15 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request                 $request
      * @param RuleRepositoryInterface $repository
      * @param Rule                    $rule
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reorderRuleTriggers(RuleRepositoryInterface $repository, Rule $rule)
+    public function reorderRuleTriggers(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
-        $ids = Input::get('triggers');
+        $ids = $request->get('triggers');
         if (is_array($ids)) {
             $repository->reorderRuleTriggers($rule, $ids);
         }
@@ -245,16 +254,14 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('rules.rule.create.fromStore', true);
+            Session::put('rules.create.fromStore', true);
 
-            return redirect(route('rules.rule.create', [$ruleGroup]))->withInput();
+            return redirect(route('rules.create', [$ruleGroup]))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('rules.rule.create.url'));
-
+        return redirect($this->getPreviousUri('rules.create.uri'));
     }
 
     /**
@@ -282,7 +289,7 @@ class RuleController extends Controller
         $range = config('firefly.test-triggers.range');
 
         /** @var TransactionMatcher $matcher */
-        $matcher = app('FireflyIII\Rules\TransactionMatcher');
+        $matcher = app(TransactionMatcher::class);
         $matcher->setLimit($limit);
         $matcher->setRange($range);
         $matcher->setTriggers($triggers);
@@ -298,7 +305,7 @@ class RuleController extends Controller
         }
 
         // Return json response
-        $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+        $view = view('list.journals-tiny-tasker', ['transactions' => $matchingTransactions])->render();
 
         return Response::json(['html' => $view, 'warning' => $warning]);
     }
@@ -332,21 +339,20 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('rules.rule.edit.fromUpdate', true);
+            Session::put('rules.edit.fromUpdate', true);
 
-            return redirect(route('rules.rule.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect(session('rules.rule.edit.url'));
+        return redirect($this->getPreviousUri('rules.edit.uri'));
     }
 
     private function createDefaultRule()
     {
         /** @var RuleRepositoryInterface $repository */
-        $repository = app('FireflyIII\Repositories\Rule\RuleRepositoryInterface');
+        $repository = app(RuleRepositoryInterface::class);
 
         if ($repository->count() === 0) {
             $data = [
@@ -451,22 +457,24 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return array
      */
-    private function getPreviousActions()
+    private function getPreviousActions(Request $request)
     {
         $newIndex = 0;
         $actions  = [];
         /** @var array $oldActions */
-        $oldActions = is_array(Input::old('rule-action')) ? Input::old('rule-action') : [];
+        $oldActions = is_array($request->old('rule-action')) ? $request->old('rule-action') : [];
         foreach ($oldActions as $index => $entry) {
             $count     = ($newIndex + 1);
-            $checked   = isset(Input::old('rule-action-stop')[$index]) ? true : false;
+            $checked   = isset($request->old('rule-action-stop')[$index]) ? true : false;
             $actions[] = view(
                 'rules.partials.action',
                 [
                     'oldTrigger' => $entry,
-                    'oldValue'   => Input::old('rule-action-value')[$index],
+                    'oldValue'   => $request->old('rule-action-value')[$index],
                     'oldChecked' => $checked,
                     'count'      => $count,
                 ]
@@ -478,22 +486,24 @@ class RuleController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return array
      */
-    private function getPreviousTriggers()
+    private function getPreviousTriggers(Request $request)
     {
         $newIndex = 0;
         $triggers = [];
         /** @var array $oldTriggers */
-        $oldTriggers = is_array(Input::old('rule-trigger')) ? Input::old('rule-trigger') : [];
+        $oldTriggers = is_array($request->old('rule-trigger')) ? $request->old('rule-trigger') : [];
         foreach ($oldTriggers as $index => $entry) {
             $count      = ($newIndex + 1);
-            $oldChecked = isset(Input::old('rule-trigger-stop')[$index]) ? true : false;
+            $oldChecked = isset($request->old('rule-trigger-stop')[$index]) ? true : false;
             $triggers[] = view(
                 'rules.partials.trigger',
                 [
                     'oldTrigger' => $entry,
-                    'oldValue'   => Input::old('rule-trigger-value')[$index],
+                    'oldValue'   => $request->old('rule-trigger-value')[$index],
                     'oldChecked' => $oldChecked,
                     'count'      => $count,
                 ]

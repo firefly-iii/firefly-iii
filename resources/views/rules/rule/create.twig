@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, ruleGroup) }}
@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('rules.rule.store', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('rules.store', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="store">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input type="hidden" name="rule_group_id" value="{{ ruleGroup.id }}"/>
         <input type="hidden" name="active" value="1"/>
@@ -63,7 +63,7 @@
                         </table>
                         <p>
                             <br/>
-                            <a href="#" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</a>
+                            <button type="button" class="btn btn-default add_rule_trigger">{{ 'add_rule_trigger'|_ }}</button>
                             <a href="#" class="btn btn-default test_rule_triggers">{{ 'test_rule_triggers'|_ }}</a>
                         </p>
                     </div>
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        {% include '/rules/partials/test-trigger-modal.twig' %}
+        {% include '/rules/partials/test-trigger-modal' %}
 
         <!-- RULE ACTIONS -->
         <div class="row">
@@ -127,10 +127,13 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/ff/rules/create-edit.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
     <script type="text/javascript">
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
     </script>
-    <script type="text/javascript" src="js/ff/rules/create.js"></script>
+    <script type="text/javascript" src="js/ff/rules/create-edit.js"></script>
+
+{% endblock %}
+{% block styles %}
 {% endblock %}

@@ -19,33 +19,35 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * FireflyIII\Models\TransactionCurrency
+ * Class TransactionCurrency
  *
- * @property integer                                                            $id
- * @property \Carbon\Carbon                                                     $created_at
- * @property \Carbon\Carbon                                                     $updated_at
- * @property \Carbon\Carbon                                                     $deleted_at
- * @property string                                                             $code
- * @property string                                                             $name
- * @property string                                                             $symbol
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereCode($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionCurrency whereSymbol($value)
- * @mixin \Eloquent
+ * @package FireflyIII\Models
  */
 class TransactionCurrency extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
-    protected $fillable = ['name', 'code', 'symbol'];
-    protected $rules    = ['name' => 'required|between:1,200', 'code' => 'required|between:3,3', 'symbol' => 'required|between:1,12'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                        = [
+            'created_at'     => 'date',
+            'updated_at'     => 'date',
+            'deleted_at'     => 'date',
+            'decimal_places' => 'int',
+        ];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'date'];
+    protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
+    protected $rules
+                        = [
+            'name'           => 'required|between:1,48',
+            'code'           => 'required|between:3,3',
+            'symbol'         => 'required|between:1,8',
+            'decimal_places' => 'required|min:0|max:12|numeric',
+        ];
 
     /**
      * @param TransactionCurrency $currency

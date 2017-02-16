@@ -13,12 +13,12 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Events\DeletedUser;
+use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
-use FireflyIII\User;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Hash;
-use Preferences;
+use Log;
 use Session;
 use View;
 
@@ -36,8 +36,15 @@ class ProfileController extends Controller
     {
         parent::__construct();
 
-        View::share('title', trans('firefly.profile'));
-        View::share('mainTitleIcon', 'fa-user');
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.profile'));
+                View::share('mainTitleIcon', 'fa-user');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -45,9 +52,21 @@ class ProfileController extends Controller
      */
     public function changePassword()
     {
-        return view('profile.change-password')->with('title', auth()->user()->email)->with('subTitle', trans('firefly.change_your_password'))->with(
-            'mainTitleIcon', 'fa-user'
-        );
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_change_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
+        $title        = auth()->user()->email;
+        $subTitle     = strval(trans('firefly.change_your_password'));
+        $subTitleIcon = 'fa-key';
+
+        return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -55,9 +74,21 @@ class ProfileController extends Controller
      */
     public function deleteAccount()
     {
-        return view('profile.delete-account')->with('title', auth()->user()->email)->with('subTitle', trans('firefly.delete_account'))->with(
-            'mainTitleIcon', 'fa-user'
-        );
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
+        $title        = auth()->user()->email;
+        $subTitle     = strval(trans('firefly.delete_account'));
+        $subTitleIcon = 'fa-trash';
+
+        return view('profile.delete-account', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -73,91 +104,94 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param ProfileFormRequest $request
+     * @param ProfileFormRequest      $request
+     * @param UserRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postChangePassword(ProfileFormRequest $request)
+    public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository)
     {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_change_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
         // old, new1, new2
         if (!Hash::check($request->get('current_password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_current_password')));
 
             return redirect(route('profile.change-password'));
         }
-        $result = $this->validatePassword($request->get('current_password'), $request->get('new_password'));
-        if (!($result === true)) {
-            Session::flash('error', $result);
+
+        try {
+            $this->validatePassword($request->get('current_password'), $request->get('new_password'));
+        } catch (ValidationException $e) {
+            Session::flash('error', $e->getMessage());
 
             return redirect(route('profile.change-password'));
         }
 
         // update the user with the new password.
-        auth()->user()->password = bcrypt($request->get('new_password'));
-        auth()->user()->save();
-
+        $repository->changePassword(auth()->user(), $request->get('new_password'));
         Session::flash('success', strval(trans('firefly.password_changed')));
 
-        return redirect(route('profile'));
+        return redirect(route('profile.index'));
     }
 
     /**
+     * @param UserRepositoryInterface  $repository
      * @param DeleteAccountFormRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postDeleteAccount(DeleteAccountFormRequest $request)
+    public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request)
     {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        if (auth()->user()->hasRole('demo')) {
+            Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
+
+            return redirect(route('profile.index'));
+        }
+
         // old, new1, new2
         if (!Hash::check($request->get('password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_password')));
 
             return redirect(route('profile.delete-account'));
         }
-
-        // store some stuff for the future:
-        $registration = Preferences::get('registration_ip_address')->data;
-        $confirmation = Preferences::get('confirmation_ip_address')->data;
-
-        // DELETE!
-        $email = auth()->user()->email;
-        auth()->user()->delete();
+        $user = auth()->user();
+        Log::info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
+        // make repository delete user:
+        auth()->logout();
         Session::flush();
+        $repository->destroy($user);
+
         Session::flash('gaEventCategory', 'user');
         Session::flash('gaEventAction', 'delete-account');
 
-        // create a new user with the same email address so re-registration is blocked.
-        $newUser = User::create(
-            [
-                'email'        => $email,
-                'password'     => 'deleted',
-                'blocked'      => 1,
-                'blocked_code' => 'deleted',
-            ]
-        );
-        if (strlen($registration) > 0) {
-            Preferences::setForUser($newUser, 'registration_ip_address', $registration);
-
-        }
-        if (strlen($confirmation) > 0) {
-            Preferences::setForUser($newUser, 'confirmation_ip_address', $confirmation);
-        }
 
         return redirect(route('index'));
     }
 
     /**
-     *
      * @param string $old
-     * @param string $new1
+     * @param string $new
      *
-     * @return string|bool
+     * @return bool
+     * @throws ValidationException
      */
-    protected function validatePassword(string $old, string $new1)
+    protected function validatePassword(string $old, string $new): bool
     {
-        if ($new1 == $old) {
-            return trans('firefly.should_change');
+        if ($new === $old) {
+            throw new ValidationException(strval(trans('firefly.should_change')));
         }
 
         return true;

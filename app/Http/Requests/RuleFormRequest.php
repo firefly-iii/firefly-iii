@@ -38,17 +38,17 @@ class RuleFormRequest extends Request
     public function getRuleData(): array
     {
         return [
-            'title'               => trim($this->get('title')),
-            'active'              => intval($this->get('active')) == 1,
-            'trigger'             => trim($this->get('trigger')),
-            'description'         => trim($this->get('description')),
+            'title'               => $this->string('title'),
+            'active'              => $this->boolean('active'),
+            'trigger'             => $this->string('trigger'),
+            'description'         => $this->string('description'),
             'rule-triggers'       => $this->get('rule-trigger'),
             'rule-trigger-values' => $this->get('rule-trigger-value'),
             'rule-trigger-stop'   => $this->get('rule-trigger-stop'),
             'rule-actions'        => $this->get('rule-action'),
             'rule-action-values'  => $this->get('rule-action-value'),
             'rule-action-stop'    => $this->get('rule-action-stop'),
-            'stop_processing'     => intval($this->get('stop_processing')) === 1,
+            'stop_processing'     => $this->boolean('stop_processing'),
         ];
     }
 

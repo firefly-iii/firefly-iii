@@ -45,15 +45,12 @@ class FireflyConfig
      * @param      $name
      * @param null $default
      *
-     * @return Configuration|null
+     * @return \FireflyIII\Models\Configuration|null
      */
     public function get($name, $default = null)
     {
-        Log::debug('Now in FFConfig::get()', ['name' => $name]);
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
-            Log::debug('Return cache.');
-
             return Cache::get($fullName);
         }
 
@@ -61,22 +58,15 @@ class FireflyConfig
 
         if ($config) {
             Cache::forever($fullName, $config);
-            Log::debug('Return found one.');
 
             return $config;
         }
         // no preference found and default is null:
         if (is_null($default)) {
-            // return NULL
-            Log::debug('Return null.');
-
             return null;
         }
 
-        Log::debug('Return this->set().');
-
         return $this->set($name, $default);
-
     }
 
     /**
@@ -91,12 +81,12 @@ class FireflyConfig
     }
 
     /**
-     * @param        $name
-     * @param string $value
+     * @param string $name
+     * @param        $value
      *
      * @return Configuration
      */
-    public function set($name, $value): Configuration
+    public function set(string $name, $value): Configuration
     {
         Log::debug('Set new value for ', ['name' => $name]);
         $config = Configuration::whereName($name)->first();

@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
@@ -23,7 +23,7 @@
 
                 </div>
                 <div class="box-body no-padding">
-                    {% include 'list/categories.twig' %}
+                    {% include 'list/categories' %}
                 </div>
             </div>
         </div>
@@ -35,6 +35,7 @@
 
 {% block scripts %}
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
     <script type="text/javascript" src="js/ff/charts.js"></script>
     <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
     <script type="text/javascript" src="js/ff/categories/index.js"></script>

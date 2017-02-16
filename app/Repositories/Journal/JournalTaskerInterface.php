@@ -14,9 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Journal;
 
 
-use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Pagination\LengthAwarePaginator;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -26,28 +25,6 @@ use Illuminate\Support\Collection;
  */
 interface JournalTaskerInterface
 {
-    /**
-     * Returns a page of a specific type(s) of journal.
-     *
-     * @param array $types
-     * @param int   $page
-     * @param int   $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getJournals(array $types, int $page, int $pageSize = 50): LengthAwarePaginator;
-
-    /**
-     * Returns a collection of ALL journals, given a specific account and a date range.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInRange(Collection $accounts, Carbon $start, Carbon $end): Collection;
-
     /**
      * @param TransactionJournal $journal
      *
@@ -64,4 +41,9 @@ interface JournalTaskerInterface
      * @return array
      */
     public function getTransactionsOverview(TransactionJournal $journal): array;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 }

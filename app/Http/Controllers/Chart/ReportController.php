@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
-use FireflyIII\Generator\Chart\Report\ReportChartGeneratorInterface;
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -32,7 +32,7 @@ use Steam;
 class ReportController extends Controller
 {
 
-    /** @var ReportChartGeneratorInterface */
+    /** @var GeneratorInterface */
     protected $generator;
 
     /**
@@ -42,290 +42,176 @@ class ReportController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app(ReportChartGeneratorInterface::class);
+        $this->generator = app(GeneratorInterface::class);
     }
 
     /**
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * @param string     $reportType
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function netWorth(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('chart.report.net-worth');
+        $cache->addProperty($start);
+        $cache->addProperty($accounts);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+        $ids       = $accounts->pluck('id')->toArray();
+        $current   = clone $start;
+        $chartData = [];
+        while ($current < $end) {
+            $balances          = Steam::balancesById($ids, $current);
+            $sum               = $this->arraySum($balances);
+            $label             = $current->formatLocalized(strval(trans('config.month_and_day')));
+            $chartData[$label] = $sum;
+            $current->addDays(7);
+        }
+
+        $data = $this->generator->singleSet(strval(trans('firefly.net_worth')), $chartData);
+        $cache->store($data);
+
+        return Response::json($data);
+    }
+
+
+    /**
+     * Shows income and expense, debet/credit: operations
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function operations(Collection $accounts, Carbon $start, Carbon $end)
+    {
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty('chart.report.operations');
+        $cache->addProperty($start);
+        $cache->addProperty($accounts);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return Response::json($cache->get());
+        }
+        $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $source    = $this->getChartData($accounts, $start, $end);
+        $chartData = [
+            [
+                'label'   => trans('firefly.income'),
+                'type'    => 'bar',
+                'entries' => [],
+            ],
+            [
+                'label'   => trans('firefly.expenses'),
+                'type'    => 'bar',
+                'entries' => [],
+            ],
+        ];
+
+        foreach ($source['earned'] as $date => $amount) {
+            $carbon                          = new Carbon($date);
+            $label                           = $carbon->formatLocalized($format);
+            $earned                          = $chartData[0]['entries'][$label] ?? '0';
+            $chartData[0]['entries'][$label] = bcadd($earned, $amount);
+        }
+        foreach ($source['spent'] as $date => $amount) {
+            $carbon                          = new Carbon($date);
+            $label                           = $carbon->formatLocalized($format);
+            $spent                           = $chartData[1]['entries'][$label] ?? '0';
+            $chartData[1]['entries'][$label] = bcadd($spent, $amount);
+        }
+
+
+        $data = $this->generator->multiSet($chartData);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
+     * Shows sum income and expense, debet/credit: operations
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function netWorth(string $reportType, Carbon $start, Carbon $end, Collection $accounts)
+    public function sum(Collection $accounts, Carbon $start, Carbon $end)
     {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty('netWorth');
-        $cache->addProperty($start);
-        $cache->addProperty($reportType);
-        $cache->addProperty($accounts);
-        $cache->addProperty($end);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-        $ids     = $accounts->pluck('id')->toArray();
-        $current = clone $start;
-        $entries = new Collection;
-        while ($current < $end) {
-            $balances = Steam::balancesById($ids, $current);
-            $sum      = $this->arraySum($balances);
-            $entries->push(
-                [
-                    'date'      => clone $current,
-                    'net-worth' => $sum,
-                ]
-            );
 
-            $current->addDays(7);
-        }
-        $data = $this->generator->netWorth($entries);
-
-        $cache->store($data);
-
-        return Response::json($data);
-    }
-
-
-    /**
-     * @param AccountTaskerInterface $accountTasker
-     * @param string                 $reportType
-     * @param Carbon                 $start
-     * @param Carbon                 $end
-     * @param Collection             $accounts
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @internal param AccountRepositoryInterface $repository
-     */
-    public function yearInOut(AccountTaskerInterface $accountTasker, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties;
-        $cache->addProperty('yearInOut');
-        $cache->addProperty($start);
-        $cache->addProperty($reportType);
-        $cache->addProperty($accounts);
-        $cache->addProperty($end);
-        if ($cache->has()) {
-            return Response::json($cache->get());
-        }
-
-        // always per month.
-        $currentStart = clone $start;
-        $spentArray   = [];
-        $earnedArray  = [];
-        while ($currentStart <= $end) {
-            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
-            $date               = $currentStart->format('Y-m');
-            $spent              = $accountTasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $earned             = $accountTasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $spentArray[$date]  = bcmul($spent, '-1');
-            $earnedArray[$date] = $earned;
-            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
-        }
-
-        if ($start->diffInMonths($end) > 12) {
-            // data = method X
-            $data = $this->multiYearInOut($earnedArray, $spentArray, $start, $end);
-            $cache->store($data);
-
-            return Response::json($data);
-        }
-
-        // data = method Y
-        $data = $this->singleYearInOut($earnedArray, $spentArray, $start, $end);
-        $cache->store($data);
-
-        return Response::json($data);
-
-
-    }
-
-    /**
-     * @param AccountTaskerInterface $accountTasker
-     * @param string                 $reportType
-     * @param Carbon                 $start
-     * @param Carbon                 $end
-     * @param Collection             $accounts
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @internal param AccountRepositoryInterface $repository
-     */
-    public function yearInOutSummarized(AccountTaskerInterface $accountTasker, string $reportType, Carbon $start, Carbon $end, Collection $accounts)
-    {
 
         // chart properties for cache:
         $cache = new CacheProperties;
-        $cache->addProperty('yearInOutSummarized');
+        $cache->addProperty('chart.report.sum');
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($reportType);
         $cache->addProperty($accounts);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-
-        // always per month.
-        $currentStart = clone $start;
-        $spentArray   = [];
-        $earnedArray  = [];
-        while ($currentStart <= $end) {
-            $currentEnd         = Navigation::endOfPeriod($currentStart, '1M');
-            $date               = $currentStart->format('Y-m');
-            $spent              = $accountTasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $earned             = $accountTasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $spentArray[$date]  = bcmul($spent, '-1');
-            $earnedArray[$date] = $earned;
-            $currentStart       = Navigation::addPeriod($currentStart, '1M', 0);
+        $source  = $this->getChartData($accounts, $start, $end);
+        $numbers = [
+            'sum_earned'   => '0',
+            'avg_earned'   => '0',
+            'count_earned' => 0,
+            'sum_spent'    => '0',
+            'avg_spent'    => '0',
+            'count_spent'  => 0,
+        ];
+        foreach ($source['earned'] as $amount) {
+            $numbers['sum_earned'] = bcadd($amount, $numbers['sum_earned']);
+            $numbers['count_earned']++;
+        }
+        if ($numbers['count_earned'] > 0) {
+            $numbers['avg_earned'] = $numbers['sum_earned'] / $numbers['count_earned'];
+        }
+        foreach ($source['spent'] as $amount) {
+            $numbers['sum_spent'] = bcadd($amount, $numbers['sum_spent']);
+            $numbers['count_spent']++;
+        }
+        if ($numbers['count_spent'] > 0) {
+            $numbers['avg_spent'] = $numbers['sum_spent'] / $numbers['count_spent'];
         }
 
-        if ($start->diffInMonths($end) > 12) {
-            // per year
-            $data = $this->multiYearInOutSummarized($earnedArray, $spentArray, $start, $end);
-            $cache->store($data);
+        $chartData = [
+            [
+                'label'   => strval(trans('firefly.income')),
+                'type'    => 'bar',
+                'entries' => [
+                    strval(trans('firefly.sum_of_period'))     => $numbers['sum_earned'],
+                    strval(trans('firefly.average_in_period')) => $numbers['avg_earned'],
+                ],
+            ],
+            [
+                'label'   => trans('firefly.expenses'),
+                'type'    => 'bar',
+                'entries' => [
+                    strval(trans('firefly.sum_of_period'))     => $numbers['sum_spent'],
+                    strval(trans('firefly.average_in_period')) => $numbers['avg_spent'],
+                ],
+            ],
+        ];
 
-            return Response::json($data);
-        }
-        // per month!
-        $data = $this->singleYearInOutSummarized($earnedArray, $spentArray, $start, $end);
+
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);
 
-    }
-
-    /**
-     * @param array  $earned
-     * @param array  $spent
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    protected function multiYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
-    {
-        $entries = new Collection;
-        while ($start < $end) {
-
-            $incomeSum  = $this->pluckFromArray($start->year, $earned);
-            $expenseSum = $this->pluckFromArray($start->year, $spent);
-
-            $entries->push([clone $start, $incomeSum, $expenseSum]);
-            $start->addYear();
-        }
-
-        $data = $this->generator->multiYearInOut($entries);
-
-        return $data;
-    }
-
-    /**
-     * @param array  $earned
-     * @param array  $spent
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    protected function multiYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
-    {
-        $income  = '0';
-        $expense = '0';
-        $count   = 0;
-        while ($start < $end) {
-
-            $currentIncome  = $this->pluckFromArray($start->year, $earned);
-            $currentExpense = $this->pluckFromArray($start->year, $spent);
-            $income         = bcadd($income, $currentIncome);
-            $expense        = bcadd($expense, $currentExpense);
-
-            $count++;
-            $start->addYear();
-        }
-
-        $data = $this->generator->multiYearInOutSummarized($income, $expense, $count);
-
-        return $data;
-    }
-
-    /**
-     * @param int   $year
-     * @param array $set
-     *
-     * @return string
-     */
-    protected function pluckFromArray($year, array $set)
-    {
-        $sum = '0';
-        foreach ($set as $date => $amount) {
-            if (substr($date, 0, 4) == $year) {
-                $sum = bcadd($sum, $amount);
-            }
-        }
-
-        return $sum;
-
-    }
-
-    /**
-     * @param array  $earned
-     * @param array  $spent
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    protected function singleYearInOut(array $earned, array $spent, Carbon $start, Carbon $end)
-    {
-        // per month? simply use each month.
-
-        $entries = new Collection;
-        while ($start < $end) {
-            // total income and total expenses:
-            $date       = $start->format('Y-m');
-            $incomeSum  = isset($earned[$date]) ? $earned[$date] : 0;
-            $expenseSum = isset($spent[$date]) ? $spent[$date] : 0;
-
-            $entries->push([clone $start, $incomeSum, $expenseSum]);
-            $start->addMonth();
-        }
-
-        $data = $this->generator->yearInOut($entries);
-
-        return $data;
-    }
-
-    /**
-     * @param array  $earned
-     * @param array  $spent
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    protected function singleYearInOutSummarized(array $earned, array $spent, Carbon $start, Carbon $end)
-    {
-        $income  = '0';
-        $expense = '0';
-        $count   = 0;
-        while ($start < $end) {
-            $date           = $start->format('Y-m');
-            $currentIncome  = isset($earned[$date]) ? $earned[$date] : 0;
-            $currentExpense = isset($spent[$date]) ? $spent[$date] : 0;
-            $income         = bcadd($income, $currentIncome);
-            $expense        = bcadd($expense, $currentExpense);
-
-            $count++;
-            $start->addMonth();
-        }
-
-        $data = $this->generator->yearInOutSummarized($income, $expense, $count);
-
-        return $data;
     }
 
     /**
@@ -333,7 +219,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function arraySum($array) : string
+    private function arraySum($array): string
     {
         $sum = '0';
         foreach ($array as $entry) {
@@ -341,5 +227,48 @@ class ReportController extends Controller
         }
 
         return $sum;
+    }
+
+    /**
+     * Collects the incomes and expenses for the given periods, grouped per month. Will cache its results
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    private function getChartData(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty('chart.report.get-chart-data');
+        $cache->addProperty($start);
+        $cache->addProperty($accounts);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+
+        $tasker       = app(AccountTaskerInterface::class);
+        $currentStart = clone $start;
+        $spentArray   = [];
+        $earnedArray  = [];
+        while ($currentStart <= $end) {
+            $currentEnd          = Navigation::endOfPeriod($currentStart, '1M');
+            $label               = $currentStart->format('Y-m') . '-01';
+            $spent               = $tasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
+            $earned              = $tasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
+            $spentArray[$label]  = bcmul($spent, '-1');
+            $earnedArray[$label] = $earned;
+            $currentStart        = Navigation::addPeriod($currentStart, '1M', 0);
+        }
+        $result = [
+            'spent'  => $spentArray,
+            'earned' => $earnedArray,
+        ];
+        $cache->store($result);
+
+        return $result;
     }
 }

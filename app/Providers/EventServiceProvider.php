@@ -18,6 +18,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Log;
 
@@ -36,31 +37,14 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // new event handlers:
-            'FireflyIII\Events\ConfirmedUser'      => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@storeConfirmationIpAddress',
-                ],
-            'FireflyIII\Events\RegisteredUser'     => // is a User related event.
+            'FireflyIII\Events\RegisteredUser'            => // is a User related event.
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                     'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
-                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessage',
-                    'FireflyIII\Handlers\Events\UserEventHandler@storeRegistrationIpAddress',
                 ],
-            'FireflyIII\Events\ResentConfirmation' => // is a User related event.
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@sendConfirmationMessageAgain',
-                ],
-            'FireflyIII\Events\StoredBudgetLimit'  => // is a Budget related event.
-                [
-                    'FireflyIII\Handlers\Events\BudgetEventHandler@storeRepetition',
-                ],
-
-            'FireflyIII\Events\UpdatedBudgetLimit' => // is a Budget related event.
-                [
-                    'FireflyIII\Handlers\Events\BudgetEventHandler@updateRepetition',
-                ],
-
+            'FireflyIII\Events\RequestedNewPassword'      => [ // is a User related event.
+                                                               'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
+            ],
             'FireflyIII\Events\StoredTransactionJournal'  => // is a Transaction Journal related event.
                 [
                     'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
@@ -70,7 +54,6 @@ class EventServiceProvider extends ServiceProvider
             'FireflyIII\Events\UpdatedTransactionJournal' => // is a Transaction Journal related event.
                 [
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
-                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@connectToPiggyBank',
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
                 ],
 
@@ -135,12 +118,20 @@ class EventServiceProvider extends ServiceProvider
 
         TransactionJournal::deleted(
             function (TransactionJournal $journal) {
-                Log::debug('Now triggered journal delete response #' . $journal->id);
+                Log::debug(sprintf('Now triggered journal delete response #%d', $journal->id));
 
                 /** @var Transaction $transaction */
                 foreach ($journal->transactions()->get() as $transaction) {
-                    Log::debug('Will now delete transaction #' . $transaction->id);
+                    Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
                     $transaction->delete();
+                }
+
+                // also delete journal_meta entries.
+
+                /** @var TransactionJournalMeta $meta */
+                foreach ($journal->transactionJournalMeta()->get() as $meta) {
+                    Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
+                    $meta->delete();
                 }
             }
         );

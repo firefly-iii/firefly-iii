@@ -23,7 +23,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Import
  */
-class ImportProcedure
+class ImportProcedure implements ImportProcedureInterface
 {
 
     /**
@@ -31,7 +31,7 @@ class ImportProcedure
      *
      * @return Collection
      */
-    public static function runImport(ImportJob $job): Collection
+    public function runImport(ImportJob $job): Collection
     {
         // update job to say we started.
         $job->status = 'import_running';
@@ -58,7 +58,8 @@ class ImportProcedure
         if ($job->configuration['import-account'] != 0) {
 
             /** @var AccountRepositoryInterface $repository */
-            $repository = app(AccountRepositoryInterface::class, [$job->user]);
+            $repository = app(AccountRepositoryInterface::class);
+            $repository->setUser($job->user);
             $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
         }
 

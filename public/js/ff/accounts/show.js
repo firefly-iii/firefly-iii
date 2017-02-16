@@ -1,7 +1,15 @@
-/* global $, lineChart, accountID, token */
+/*
+ * show.js
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
+/** global: chartUri, incomeCategoryUri, expenseCategoryUri, expenseBudgetUri */
 
-// Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -15,10 +23,11 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    if (typeof(lineChart) === "function" && typeof accountID !== 'undefined') {
+    lineChart(chartUri, 'overview-chart');
+    pieChart(incomeCategoryUri, 'account-cat-in');
+    pieChart(expenseCategoryUri, 'account-cat-out');
+    pieChart(expenseBudgetUri, 'account-budget-out');
 
-        lineChart('chart/account/' + accountID, 'overview-chart');
-    }
 
     // sortable!
     if (typeof $(".sortable-table tbody").sortable !== "undefined") {
@@ -45,9 +54,7 @@ $(function () {
                     ui.placeholder.html('<td colspan="' + cellCount + '">&nbsp;</td>');
                 }
             }
-        ).disableSelection();
-    } else {
-        console.log('its null');
+        );
     }
 
 });
@@ -55,7 +62,6 @@ $(function () {
 function sortStop(event, ui) {
     "use strict";
     var current = $(ui.item);
-    console.log('sort stop');
     var thisDate = current.data('date');
     var originalBG = current.css('backgroundColor');
 
@@ -64,6 +70,7 @@ function sortStop(event, ui) {
         // animate something with color:
         current.animate({backgroundColor: "#d9534f"}, 200, function () {
             $(this).animate({backgroundColor: originalBG}, 200);
+            return undefined;
         });
 
         return false;
@@ -79,9 +86,11 @@ function sortStop(event, ui) {
     });
 
     // do extra animation when done?
-    $.post('transaction/reorder', {items: submit, date: thisDate, _token: token});
+    $.post('transactions/reorder', {items: submit, date: thisDate});
 
     current.animate({backgroundColor: "#5cb85c"}, 200, function () {
         $(this).animate({backgroundColor: originalBG}, 200);
+        return undefined;
     });
+    return undefined;
 }

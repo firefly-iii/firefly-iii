@@ -42,7 +42,8 @@ class BillId extends BasicConverter implements ConverterInterface
         }
 
         /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class, [$this->user]);
+        $repository = app(BillRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         if (isset($this->mapping[$value])) {
             Log::debug('Found bill in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);

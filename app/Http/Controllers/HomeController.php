@@ -15,18 +15,17 @@ namespace FireflyIII\Http\Controllers;
 use Artisan;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Route;
 use Session;
-
+use View;
 
 /**
  * Class HomeController
@@ -41,6 +40,8 @@ class HomeController extends Controller
     public function __construct()
     {
         parent::__construct();
+        View::share('title', 'Firefly III');
+        View::share('mainTitleIcon', 'fa-fire');
     }
 
     /**
@@ -83,44 +84,26 @@ class HomeController extends Controller
     }
 
     /**
-     * @param TagRepositoryInterface $repository
+     * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function flush(TagRepositoryInterface $repository)
+    public function flush(Request $request)
     {
-
         Preferences::mark();
-
-        // get all tags.
-        // update all counts:
-        $tags = $repository->get();
-
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            foreach ($tag->transactionJournals()->get() as $journal) {
-                $count              = $journal->tags()->count();
-                $journal->tag_count = $count;
-                $journal->save();
-            }
-        }
-
-
-        Session::clear();
+        $request->session()->forget(['start', 'end','_previous', 'viewRange', 'range', 'is_custom_range']);
         Artisan::call('cache:clear');
 
         return redirect(route('index'));
     }
 
     /**
-     * @param ARI                    $repository
-     * @param AccountTaskerInterface $tasker
+     * @param ARI $repository
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function index(ARI $repository, AccountTaskerInterface $tasker)
+    public function index(ARI $repository)
     {
-
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
@@ -128,11 +111,9 @@ class HomeController extends Controller
             return redirect(route('new-user.index'));
         }
 
-        $title         = 'Firefly';
-        $subTitle      = trans('firefly.welcomeBack');
-        $mainTitleIcon = 'fa-fire';
-        $transactions  = [];
-        $frontPage     = Preferences::get(
+        $subTitle     = trans('firefly.welcomeBack');
+        $transactions = [];
+        $frontPage    = Preferences::get(
             'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
@@ -143,50 +124,21 @@ class HomeController extends Controller
         $accounts              = $repository->getAccountsById($frontPage->data);
         $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
-        foreach ($accounts as $account) {
-            $set = $tasker->getJournalsInPeriod(new Collection([$account]), [], $start, $end);
-            $set = $set->splice(0, 10);
+        // zero bills? Hide some elements from view.
+        /** @var BillRepositoryInterface $billRepository */
+        $billRepository = app(BillRepositoryInterface::class);
+        $billCount      = $billRepository->getBills()->count();
 
-            if (count($set) > 0) {
-                $transactions[] = [$set, $account];
-            }
+        foreach ($accounts as $account) {
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
+            $set            = $collector->getJournals();
+            $transactions[] = [$set, $account];
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage')
+            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
         );
-    }
-
-    /**
-     * Display a list of named routes. Excludes some that cannot be "shown". This method
-     * is used to generate help files (down the road).
-     */
-    public function routes()
-    {
-        // these routes are not relevant for the help pages:
-        $ignore = ['login', 'registe', 'logout', 'two-fac', 'lost-two', 'confirm', 'resend', 'do_confirm', 'testFla', 'json.', 'piggy-banks.add',
-                   'piggy-banks.remove', 'preferences.', 'rules.rule.up', 'rules.rule.down', 'rules.rule-group.up', 'rules.rule-group.down', 'popup.report',
-                   'admin.users.domains.block-','import.json','help.'
-        ];
-        $routes = Route::getRoutes();
-
-        echo '<pre>';
-
-        /** @var \Illuminate\Routing\Route $route */
-        foreach ($routes as $route) {
-            $name    = $route->getName();
-            $methods = $route->getMethods();
-
-            if (!is_null($name) && strlen($name) > 0 && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                echo sprintf('touch %s.md', $name)."\n";
-
-            }
-        }
-        echo '</pre>';
-
-        echo '<hr />';
-
-        return '&nbsp;';
     }
 
     /**
@@ -200,26 +152,6 @@ class HomeController extends Controller
         Session::flash('error', 'This is an error!');
 
         return redirect(route('home'));
-    }
-
-    /**
-     * @param array  $array
-     * @param string $needle
-     *
-     * @return bool
-     */
-    private
-    function startsWithAny(
-        array $array, string $needle
-    ): bool
-    {
-        foreach ($array as $entry) {
-            if ((substr($needle, 0, strlen($entry)) === $entry)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }

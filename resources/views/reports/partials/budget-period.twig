@@ -1,0 +1,38 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az" colspan="2">{{ 'budget'|_ }}</th>
+        {% for period in periods %}
+            <th data-defaultsign="_19" style="text-align: right;">{{ period }}</th>
+        {% endfor %}
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for id, info in report %}
+        <tr>
+            <td>
+                <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </td>
+            <td data-value="{{ info.name }}">
+                <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>
+            </td>
+            {% for key, period in periods %}
+                {% if(info.entries[key]) %}
+                    <td data-value="{{ info.entries[key] }}" style="text-align: right;">
+                        {{ info.entries[key]|formatAmount }}
+                    </td>
+                {% else %}
+                    <td data-value="0" style="text-align: right;">
+                        {{ 0|formatAmount }}
+                    </td>
+                {% endif %}
+
+            {% endfor %}
+            <td data-value="{{ info.sum }}" style="text-align: right;">
+                {{ info.sum|formatAmount }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

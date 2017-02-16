@@ -21,7 +21,6 @@ class CreateSupportTables extends Migration
     /**
      * Reverse the migrations.
      *
-     * @return void
      */
     public function down()
     {
@@ -42,56 +41,20 @@ class CreateSupportTables extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up()
     {
-        /*
-         * account_types
-         */
         $this->createAccountTypeTable();
-        /*
-         * transaction_currencies
-         */
         $this->createCurrencyTable();
-
-        /*
-         * transaction_types
-         */
         $this->createTransactionTypeTable();
-
-        /*
-         * jobs
-         */
         $this->createJobsTable();
-
-        /*
-         * password_resets
-         */
         $this->createPasswordTable();
-
-        /*
-         * permissions
-         */
         $this->createPermissionsTable();
-
-        /*
-         * roles
-         */
         $this->createRolesTable();
-
-        /*
-         * permission_role
-         */
         $this->createPermissionRoleTable();
-
-        /*
-         * sessions
-         */
         $this->createSessionsTable();
-
         $this->createConfigurationTable();
-
     }
 
     /**

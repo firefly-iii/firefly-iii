@@ -1,57 +1,28 @@
-/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds, lineChart, categoryReportUrl, balanceReportUrl */
+/*
+ * month.js
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
+/** global: categoryReportUri, budgetReportUri, balanceReportUri, accountChartUri */
 
 $(function () {
     "use strict";
     drawChart();
 
-    loadCategoryReport();
-    loadBalanceReport();
+    loadAjaxPartial('categoryReport', categoryReportUri);
+    loadAjaxPartial('budgetReport', budgetReportUri);
+    loadAjaxPartial('balanceReport',balanceReportUri);
 });
-
-function loadCategoryReport() {
-    "use strict";
-    console.log('Going to grab ' + categoryReportUrl);
-    $.get(categoryReportUrl).done(placeCategoryReport).fail(failCategoryReport);
-}
-
-function loadBalanceReport() {
-    "use strict";
-    console.log('Going to grab ' + categoryReportUrl);
-    $.get(balanceReportUrl).done(placeBalanceReport).fail(failBalanceReport);
-}
-
-function placeBalanceReport(data) {
-    "use strict";
-    $('#balanceReport').removeClass('loading').html(data);
-    listLengthInitial();
-    triggerInfoClick();
-}
-
-function placeCategoryReport(data) {
-    "use strict";
-    $('#categoryReport').removeClass('loading').html(data);
-    listLengthInitial();
-    triggerInfoClick();
-}
-
-function failBalanceReport() {
-    "use strict";
-    console.log('Fail balance report data!');
-    $('#balanceReport').removeClass('loading').addClass('general-chart-error');
-}
-
-function failCategoryReport() {
-    "use strict";
-    console.log('Fail category report data!');
-    $('#categoryReport').removeClass('loading').addClass('general-chart-error');
-}
-
 
 function drawChart() {
     "use strict";
 
     // month view:
     // draw account chart
-    lineChart('chart/account/report/' + reportType + '/' + startDate + '/' + endDate + '/' + accountIds, 'account-balances-chart');
+    lineChart(accountChartUri, 'account-balances-chart');
 }

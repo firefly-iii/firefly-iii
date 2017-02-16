@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
@@ -55,4 +55,14 @@
         </div>
     </div>
     {{ Form.close|raw }}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/ff/piggy-banks/create.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="css/jquery-ui/jquery-ui.structure.min.css" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.theme.min.css" type="text/css" rel="stylesheet" media="all">
 {% endblock %}

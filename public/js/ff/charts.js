@@ -2,11 +2,13 @@
  * charts.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
-
-/* globals $, Chart, currencySymbol,mon_decimal_point ,accounting, mon_thousands_sep, frac_digits */
+/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart */
+var allCharts = {};
 
 /*
  Make some colours:
@@ -29,7 +31,6 @@ var colourSet = [
     [240, 98, 146],
     [0, 121, 107],
     [194, 24, 91]
-
 ];
 
 var fillColors = [];
@@ -46,332 +47,240 @@ Chart.defaults.global.animation.duration = 0;
 Chart.defaults.global.responsive = true;
 Chart.defaults.global.maintainAspectRatio = false;
 
-/*
- Set default options:
+
+/**
+ *
+ * @param data
+ * @returns {{}}
  */
-var defaultAreaOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            display: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
+function colorizeData(data) {
+    var newData = {};
+    newData.datasets = [];
 
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
+    for (var i = 0; i < data.count; i++) {
+        newData.labels = data.labels;
+        var dataset = data.datasets[i];
+        dataset.backgroundColor = fillColors[i];
+        newData.datasets.push(dataset);
     }
-};
-
-
-var defaultPieOptions = {
-    tooltips: {
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                var value = data.datasets[0].data[tooltipItem.index];
-                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
-            }
-        }
-    }
-};
-
-
-var defaultLineOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            display: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-var defaultColumnOptions = {
-    scales: {
-        xAxes: [
-            {
-                gridLines: {
-                    display: false
-                }
-            }
-        ],
-        yAxes: [{
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-                },
-                beginAtZero: true
-            }
-        }]
-    },
-    elements: {
-        line: {
-            fill: false
-        }
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
-
-var defaultStackedColumnOptions = {
-    stacked: true,
-    scales: {
-        xAxes: [{
-            stacked: true,
-            gridLines: {
-                display: false
-            }
-        }],
-        yAxes: [{
-            stacked: true,
-            ticks: {
-                callback: function (tickValue, index, ticks) {
-                    "use strict";
-                    return accounting.formatMoney(tickValue);
-
-                }
-            }
-        }]
-    },
-    tooltips: {
-        mode: 'label',
-        callbacks: {
-            label: function (tooltipItem, data) {
-                "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
-            }
-        }
-    }
-};
+    return newData;
+}
 
 /**
  * Function to draw a line chart:
- * @param URL
+ * @param URI
  * @param container
- * @param options
  */
-function lineChart(URL, container, options) {
+function lineChart(URI, container) {
     "use strict";
-    $.getJSON(URL).done(function (data) {
 
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
+    var colorData = true;
+    var options = defaultChartOptions;
+    var chartType = 'line';
 
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-
-        new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: defaultLineOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for line chart : ' + URL);
+    drawAChart(URI, container, chartType, options, colorData);
 }
 
 /**
- * Function to draw an area chart:
+ * Function to draw a chart with double Y Axes and stacked columns.
  *
- * @param URL
+ * @param URI
  * @param container
- * @param options
  */
-function areaChart(URL, container, options) {
+function doubleYChart(URI, container) {
     "use strict";
 
-    $.getJSON(URL).done(function (data) {
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
+    var colorData = true;
+    var options = defaultChartOptions;
+    options.scales.yAxes = [
+        // y axis 0:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
 
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
+                },
+                beginAtZero: true
+            },
+            position: "left",
+            "id": "y-axis-0"
+        },
+        // and y axis 1:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "right",
+            "id": "y-axis-1"
         }
 
-        new Chart(ctx, {
-            type: 'line',
-            data: newData,
-            options: defaultAreaOptions
-        });
+    ];
+    options.stacked = true;
+    options.scales.xAxes[0].stacked = true;
 
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
+    var chartType = 'bar';
 
-    console.log('URL for area chart: ' + URL);
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
+ * Function to draw a chart with double Y Axes and non stacked columns.
+ *
+ * @param URI
+ * @param container
+ */
+function doubleYNonStackedChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+    options.scales.yAxes = [
+        // y axis 0:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "left",
+            "id": "y-axis-0"
+        },
+        // and y axis 1:
+        {
+            display: true,
+            ticks: {
+                callback: function (tickValue) {
+                    "use strict";
+                    return accounting.formatMoney(tickValue);
+
+                },
+                beginAtZero: true
+            },
+            position: "right",
+            "id": "y-axis-1"
+        }
+
+    ];
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function columnChart(URI, container) {
+    "use strict";
+
+    var colorData = true;
+    var options = defaultChartOptions;
+    var chartType = 'bar';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
 }
 
 /**
  *
- * @param URL
+ * @param URI
  * @param container
- * @param options
  */
-function columnChart(URL, container, options) {
+function stackedColumnChart(URI, container) {
     "use strict";
 
-    options = options || {};
+    var colorData = true;
+    var options = defaultChartOptions;
+    options.stacked = true;
+    options.scales.xAxes[0].stacked = true;
 
-    $.getJSON(URL).done(function (data) {
+    var chartType = 'bar';
 
-        var result = true;
-        if (options.beforeDraw) {
-            result = options.beforeDraw(data, {url: URL, container: container});
-        }
-        if (result === false) {
+    drawAChart(URI, container, chartType, options, colorData);
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function pieChart(URI, container) {
+    "use strict";
+
+    var colorData = false;
+    var options = defaultPieOptions;
+    var chartType = 'pie';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
+
+
+/**
+ * @param URI
+ * @param container
+ * @param chartType
+ * @param options
+ * @param colorData
+ */
+function drawAChart(URI, container, chartType, options, colorData) {
+    if ($('#' + container).length === 0) {
+        return;
+    }
+
+
+    $.getJSON(URI).done(function (data) {
+        $('#' + container).removeClass('general-chart-error');
+        if (data.labels.length === 0) {
+            // remove the chart container + parent
+            var holder = $('#' + container).parent().parent();
+            if (holder.hasClass('box') || holder.hasClass('box-body')) {
+                // find box-body:
+                var boxBody;
+                if (!holder.hasClass('box-body')) {
+                    boxBody = holder.find('.box-body');
+                } else {
+                    boxBody = holder;
+                }
+                boxBody.empty().append($('<p>').append($('<em>').text(noDataForChart)));
+            }
             return;
         }
-        console.log('Will draw columnChart(' + URL + ')');
 
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
 
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
+        if (colorData) {
+            data = colorizeData(data);
         }
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: defaultColumnOptions
-        });
+
+        if (allCharts.hasOwnProperty(container)) {
+            allCharts[container].data.datasets = data.datasets;
+            allCharts[container].data.labels = data.labels;
+            allCharts[container].update();
+        } else {
+            // new chart!
+            var ctx = document.getElementById(container).getContext("2d");
+            allCharts[container] = new Chart(ctx, {
+                type: chartType,
+                data: data,
+                options: options
+            });
+        }
 
     }).fail(function () {
         $('#' + container).addClass('general-chart-error');
     });
-    console.log('URL for column chart : ' + URL);
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
-function stackedColumnChart(URL, container, options) {
-    "use strict";
-
-    options = options || {};
-
-
-    $.getJSON(URL).done(function (data) {
-
-        var result = true;
-        if (options.beforeDraw) {
-            result = options.beforeDraw(data, {url: URL, container: container});
-        }
-        if (result === false) {
-            return;
-        }
-
-
-        var ctx = document.getElementById(container).getContext("2d");
-        var newData = {};
-        newData.datasets = [];
-
-        for (var i = 0; i < data.count; i++) {
-            newData.labels = data.labels;
-            var dataset = data.datasets[i];
-            dataset.backgroundColor = fillColors[i];
-            newData.datasets.push(dataset);
-        }
-        new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: defaultStackedColumnOptions
-        });
-
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-    console.log('URL for stacked column chart : ' + URL);
-}
-
-/**
- *
- * @param URL
- * @param container
- * @param options
- */
-function pieChart(URL, container, options) {
-    "use strict";
-
-    $.getJSON(URL).done(function (data) {
-
-        var ctx = document.getElementById(container).getContext("2d");
-        new Chart(ctx, {
-            type: 'pie',
-            data: data,
-            options: defaultPieOptions
-        });
-
-    }).fail(function () {
-        $('#' + container).addClass('general-chart-error');
-    });
-
-
-    console.log('URL for pie chart : ' + URL);
-
 }

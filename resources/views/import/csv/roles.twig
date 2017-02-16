@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
@@ -13,13 +13,15 @@
                     <h3 class="box-title">{{ trans('csv.column_roles_title') }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>{{ trans('csv.column_roles_text')|raw }}</p>
+                    <p>
+                        {{ 'see_help_top_right'|_ }}
+                    </p>
                 </div>
             </div>
 
         </div>
     </div>
-    <form action="{{ route('import.postSettings', job.key) }}" method="post">
+    <form action="{{ route('import.post-settings', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="settings" value="roles"/>
 
@@ -43,7 +45,13 @@
                             {% for i in 0..(data.columnCount-1) %}
 
                                 <tr>
-                                    <td>{{ trans('csv.column') }} #{{ loop.index }}</td>
+                                    <td>
+                                        {% if data.columnHeaders[i] == '' %}
+                                            {{ trans('csv.column') }} #{{ loop.index }}
+                                        {% else %}
+                                            {{ data.columnHeaders[i] }}
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if data.columns[i]|length == 0 %}
                                             <em>{{ trans('csv.no_example_data') }}</em>

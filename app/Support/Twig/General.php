@@ -14,10 +14,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
-use Config;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Route;
+use Steam;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -42,9 +42,9 @@ class General extends Twig_Extension
             $this->formatAmountPlain(),
             $this->formatJournal(),
             $this->balance(),
-            $this->getAccountRole(),
             $this->formatFilesize(),
             $this->mimeIcon(),
+
         ];
 
     }
@@ -61,6 +61,7 @@ class General extends Twig_Extension
             $this->env(),
             $this->getAmountFromJournal(),
             $this->activeRouteStrict(),
+            $this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
         ];
@@ -84,7 +85,7 @@ class General extends Twig_Extension
     protected function activeRoutePartial(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartial', function () : string {
+            'activeRoutePartial', function (): string {
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
             $name  = Route::getCurrentRoute()->getName() ?? '';
@@ -106,7 +107,7 @@ class General extends Twig_Extension
     protected function activeRoutePartialWhat(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartialWhat', function ($context) : string {
+            'activeRoutePartialWhat', function ($context): string {
             $args       = func_get_args();
             $route      = $args[1]; // name of the route.
             $what       = $args[2]; // name of the route.
@@ -130,7 +131,7 @@ class General extends Twig_Extension
     protected function activeRouteStrict(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRouteStrict', function () : string {
+            'activeRouteStrict', function (): string {
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
 
@@ -149,7 +150,7 @@ class General extends Twig_Extension
     protected function balance(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'balance', function (Account $account = null) : string {
+            'balance', function (Account $account = null): string {
             if (is_null($account)) {
                 return 'NULL';
             }
@@ -166,7 +167,7 @@ class General extends Twig_Extension
     protected function env(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'env', function (string $name, string $default) : string {
+            'env', function (string $name, string $default): string {
             return env($name, $default);
         }
         );
@@ -179,7 +180,7 @@ class General extends Twig_Extension
     protected function formatAmount(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'formatAmount', function (string $string) : string {
+            'formatAmount', function (string $string): string {
 
             return app('amount')->format($string);
         }, ['is_safe' => ['html']]
@@ -192,7 +193,7 @@ class General extends Twig_Extension
     protected function formatAmountPlain(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'formatAmountPlain', function (string $string) : string {
+            'formatAmountPlain', function (string $string): string {
 
             return app('amount')->format($string, false);
         }, ['is_safe' => ['html']]
@@ -205,7 +206,7 @@ class General extends Twig_Extension
     protected function formatFilesize(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'filesize', function (int $size) : string {
+            'filesize', function (int $size): string {
 
             // less than one GB, more than one MB
             if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
@@ -228,21 +229,9 @@ class General extends Twig_Extension
     protected function formatJournal(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'formatJournal', function (TransactionJournal $journal) : string {
+            'formatJournal', function (TransactionJournal $journal): string {
             return app('amount')->formatJournal($journal);
         }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function getAccountRole(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'getAccountRole', function (string $name) : string {
-            return Config::get('firefly.accountRoles.' . $name);
-        }
         );
     }
 
@@ -252,7 +241,7 @@ class General extends Twig_Extension
     protected function getCurrencyCode(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'getCurrencyCode', function () : string {
+            'getCurrencyCode', function (): string {
             return app('amount')->getCurrencyCode();
         }
         );
@@ -264,7 +253,7 @@ class General extends Twig_Extension
     protected function getCurrencySymbol(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'getCurrencySymbol', function () : string {
+            'getCurrencySymbol', function (): string {
             return app('amount')->getCurrencySymbol();
         }
         );
@@ -276,7 +265,7 @@ class General extends Twig_Extension
     protected function mimeIcon(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'mimeIcon', function (string $string) : string {
+            'mimeIcon', function (string $string): string {
             switch ($string) {
                 default:
                     return 'fa-file-o';
@@ -296,8 +285,20 @@ class General extends Twig_Extension
     protected function phpdate()
     {
         return new Twig_SimpleFunction(
-            'phpdate', function (string $str) : string {
+            'phpdate', function (string $str): string {
             return date($str);
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function steamPositive()
+    {
+        return new Twig_SimpleFunction(
+            'steam_positive', function (string $str): string {
+            return Steam::positive($str);
         }
         );
     }
@@ -308,7 +309,7 @@ class General extends Twig_Extension
     private function getAmountFromJournal()
     {
         return new Twig_SimpleFunction(
-            'getAmount', function (TransactionJournal $journal) : string {
+            'getAmount', function (TransactionJournal $journal): string {
             return TransactionJournal::amount($journal);
         }
         );

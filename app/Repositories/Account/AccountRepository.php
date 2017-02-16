@@ -41,17 +41,7 @@ class AccountRepository implements AccountRepositoryInterface
     /** @var User */
     private $user;
     /** @var array */
-    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber'];
-
-    /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
 
     /**
      * Moved here from account CRUD
@@ -60,7 +50,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return int
      */
-    public function count(array $types):int
+    public function count(array $types): int
     {
         $count = $this->user->accounts()->accountTypeIn($types)->count();
 
@@ -261,6 +251,52 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon
+    {
+        $last = new Carbon;
+        $date = $account->transactions()
+                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                        ->orderBy('transaction_journals.date', 'DESC')
+                        ->orderBy('transaction_journals.order', 'ASC')
+                        ->orderBy('transaction_journals.id', 'DESC')
+                        ->first(['transaction_journals.date']);
+        if (!is_null($date)) {
+            $last = new Carbon($date->date);
+        }
+
+        return $last;
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return TransactionJournal
+     */
+    public function oldestJournal(Account $account): TransactionJournal
+    {
+        $first = $account->transactions()
+                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                         ->orderBy('transaction_journals.date', 'ASC')
+                         ->orderBy('transaction_journals.order', 'DESC')
+                         ->where('transaction_journals.user_id', $this->user->id)
+                         ->orderBy('transaction_journals.id', 'ASC')
+                         ->first(['transaction_journals.id']);
+        if (!is_null($first)) {
+            return TransactionJournal::find(intval($first->id));
+        }
+
+        return new TransactionJournal();
+    }
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
@@ -269,20 +305,20 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): Carbon
     {
-        $first = new Carbon;
-
-        /** @var Transaction $first */
-        $date = $account->transactions()
-                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                        ->orderBy('transaction_journals.date', 'ASC')
-                        ->orderBy('transaction_journals.order', 'DESC')
-                        ->orderBy('transaction_journals.id', 'ASC')
-                        ->first(['transaction_journals.date']);
-        if (!is_null($date)) {
-            $first = new Carbon($date->date);
+        $journal = $this->oldestJournal($account);
+        if (is_null($journal->id)) {
+            return new Carbon;
         }
 
-        return $first;
+        return $journal->date;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
@@ -322,7 +358,9 @@ class AccountRepository implements AccountRepositoryInterface
         $account->save();
 
         $this->updateMetadata($account, $data);
-        $this->updateInitialBalance($account, $data);
+        if ($this->validOpeningBalanceData($data)) {
+            $this->updateInitialBalance($account, $data);
+        }
 
         return $account;
     }
@@ -346,12 +384,11 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function openingBalanceTransaction(Account $account): TransactionJournal
     {
-        $journal = TransactionJournal
-            ::sortCorrectly()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
+        $journal = TransactionJournal::sortCorrectly()
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $account->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
         if (is_null($journal)) {
             Log::debug('Could not find a opening balance journal, return empty one.');
 
@@ -418,7 +455,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $amount          = $data['openingBalance'];
         $name            = $data['name'];
-        $opposing        = $this->storeOpposingAccount($amount, $name);
+        $opposing        = $this->storeOpposingAccount($name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         $journal         = TransactionJournal::create(
             [
@@ -428,7 +465,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
-                'encrypted'               => true,
             ]
         );
         Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));
@@ -456,22 +492,20 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param float  $amount
      * @param string $name
      *
      * @return Account
      */
-    protected function storeOpposingAccount(float $amount, string $name):Account
+    protected function storeOpposingAccount(string $name): Account
     {
-        $type         = $amount < 0 ? 'expense' : 'revenue';
         $opposingData = [
-            'accountType'    => $type,
+            'accountType'    => 'initial',
             'name'           => $name . ' initial balance',
             'active'         => false,
             'iban'           => '',
             'virtualBalance' => 0,
         ];
-        Log::debug('Going to create an opening balance opposing account');
+        Log::debug('Going to create an opening balance opposing account.');
 
         return $this->storeAccount($opposingData);
     }
@@ -602,5 +636,4 @@ class AccountRepository implements AccountRepositoryInterface
 
         return false;
     }
-
 }

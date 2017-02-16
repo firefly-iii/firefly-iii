@@ -22,7 +22,7 @@
                 {% endif %}
             </td>
 
-            <td>
+            <td style="text-align: right;">
                 {% if event.amount < 0 %}
                     <span class="text-danger">{{ trans('firefly.removed_amount', {amount: (event.amount)|formatAmountPlain})|raw }}</span>
                 {% else %}

@@ -17,6 +17,7 @@ use Amount;
 use Crypt;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction as TransactionModel;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -29,15 +30,16 @@ use Twig_SimpleFunction;
  */
 class Transaction extends Twig_Extension
 {
+
     /**
      * @return Twig_SimpleFunction
      */
-    public function formatAmountPlainWithCode(): Twig_SimpleFunction
+    public function formatAnything(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountPlainWithCode', function (string $amount, string $code): string {
+            'formatAnything', function (TransactionCurrency $currency, string $amount): string {
 
-            return Amount::formatWithCode($code, $amount, false);
+            return Amount::formatAnything($currency, $amount, true);
 
         }, ['is_safe' => ['html']]
         );
@@ -46,12 +48,26 @@ class Transaction extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    public function formatAmountWithCode(): Twig_SimpleFunction
+    public function formatAnythingPlain(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountWithCode', function (string $amount, string $code): string {
+            'formatAnythingPlain', function (TransactionCurrency $currency, string $amount): string {
 
-            return Amount::formatWithCode($code, $amount, true);
+            return Amount::formatAnything($currency, $amount, false);
+
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function formatByCode(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatByCode', function (string $currencyCode, string $amount): string {
+
+            return Amount::formatByCode($currencyCode, $amount, true);
 
         }, ['is_safe' => ['html']]
         );
@@ -75,8 +91,8 @@ class Transaction extends Twig_Extension
     public function getFunctions(): array
     {
         $functions = [
-            $this->formatAmountWithCode(),
-            $this->formatAmountPlainWithCode(),
+            $this->formatAnything(),
+            $this->formatAnythingPlain(),
             $this->transactionSourceAccount(),
             $this->transactionDestinationAccount(),
             $this->optionalJournalAmount(),
@@ -85,6 +101,7 @@ class Transaction extends Twig_Extension
             $this->transactionCategories(),
             $this->transactionIdCategories(),
             $this->splitJournalIndicator(),
+            $this->formatByCode(),
         ];
 
         return $functions;
@@ -107,25 +124,17 @@ class Transaction extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'optionalJournalAmount', function (int $journalId, string $transactionAmount, string $code, string $type): string {
-
-            $amount = strval(
-                TransactionModel
-                    ::where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->where('amount', '<', 0)
-                    ->sum('amount')
-            );
-
+            // get amount of journal:
+            $amount = strval(TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->where('amount', '<', 0)->sum('amount'));
+            // display deposit and transfer positive
             if ($type === TransactionType::DEPOSIT || $type === TransactionType::TRANSFER) {
                 $amount = bcmul($amount, '-1');
             }
 
-            if (
-                bccomp($amount, $transactionAmount) !== 0
-                && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0
-            ) {
-                // not equal?
-                return ' (' . Amount::formatWithCode($code, $amount, true) . ')';
+            // not equal to transaction amount?
+            if (bccomp($amount, $transactionAmount) !== 0 && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0) {
+                //$currency =
+                return sprintf(' (%s)', Amount::formatByCode($code, $amount, true));
             }
 
             return '';
@@ -144,7 +153,7 @@ class Transaction extends Twig_Extension
             'splitJournalIndicator', function (int $journalId) {
             $count = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
             if ($count > 2) {
-                return '<i class="fa fa-fw fa-share-alt-square" aria-hidden="true"></i>';
+                return '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
             }
 
             return '';
@@ -189,18 +198,25 @@ class Transaction extends Twig_Extension
             $name = intval($transaction->account_encrypted) === 1 ? Crypt::decrypt($transaction->account_name) : $transaction->account_name;
             $id   = intval($transaction->account_id);
             $type = $transaction->account_type;
-            // if the amount is positive, assume that the current account (the one in $transaction) is indeed the destination account.
 
-            if (bccomp($transaction->transaction_amount, '0') === -1) {
+            // name is present in object, use that one:
+            if (bccomp($transaction->transaction_amount, '0') === -1 && !is_null($transaction->opposing_account_id)) {
+
+                $name = $transaction->opposing_account_name;
+                $id   = intval($transaction->opposing_account_id);
+                $type = intval($transaction->opposing_account_type);
+            }
+
+            // Find the opposing account and use that one:
+            if (bccomp($transaction->transaction_amount, '0') === -1 && is_null($transaction->opposing_account_id)) {
                 // if the amount is negative, find the opposing account and use that one:
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
-                $other = TransactionModel
-                    ::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                    ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+                $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
+                                         ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
+                                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                         ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
                 $name  = intval($other->encrypted) === 1 ? Crypt::decrypt($other->name) : $other->name;
                 $id    = $other->account_id;
                 $type  = $other->type;
@@ -210,7 +226,7 @@ class Transaction extends Twig_Extension
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
+            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$id]));
 
         }, ['is_safe' => ['html']]
         );
@@ -252,21 +268,27 @@ class Transaction extends Twig_Extension
         return new Twig_SimpleFunction(
             'transactionSourceAccount', function (TransactionModel $transaction): string {
 
+            // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
             $name = intval($transaction->account_encrypted) === 1 ? Crypt::decrypt($transaction->account_name) : $transaction->account_name;
             $id   = intval($transaction->account_id);
             $type = $transaction->account_type;
-            // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
 
-            if (bccomp($transaction->transaction_amount, '0') === 1) {
-                // if the amount is positive, find the opposing account and use that one:
+            // name is present in object, use that one:
+            if (bccomp($transaction->transaction_amount, '0') === 1 && !is_null($transaction->opposing_account_id)) {
+
+                $name = $transaction->opposing_account_name;
+                $id   = intval($transaction->opposing_account_id);
+                $type = intval($transaction->opposing_account_type);
+            }
+            // Find the opposing account and use that one:
+            if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
-                $other = TransactionModel
-                    ::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                    ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+                $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
+                                         ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
+                                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                         ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
                 $name  = intval($other->encrypted) === 1 ? Crypt::decrypt($other->name) : $other->name;
                 $id    = $other->account_id;
                 $type  = $other->type;
@@ -276,7 +298,7 @@ class Transaction extends Twig_Extension
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return '<a title="' . e($name) . '" href="' . route('accounts.show', [$id]) . '">' . e($name) . '</a>';
+            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$id]));
 
         }, ['is_safe' => ['html']]
         );
@@ -294,16 +316,16 @@ class Transaction extends Twig_Extension
 
             switch ($transaction->transaction_type_type) {
                 case TransactionType::WITHDRAWAL:
-                    $txt = '<i class="fa fa-long-arrow-left fa-fw" title="' . trans('firefly.withdrawal') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
                     break;
                 case TransactionType::DEPOSIT:
-                    $txt = '<i class="fa fa-long-arrow-right fa-fw" title="' . trans('firefly.deposit') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
                     break;
                 case TransactionType::TRANSFER:
-                    $txt = '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
+                    $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
                     break;
                 case TransactionType::OPENING_BALANCE:
-                    $txt = '<i class="fa-fw fa fa-ban" title="' . trans('firefly.openingBalance') . '"></i>';
+                    $txt = sprintf('<i class="fa-fw fa fa-ban" title="%s"></i>', trans('firefly.openingBalance'));
                     break;
                 default:
                     $txt = '';
@@ -316,12 +338,41 @@ class Transaction extends Twig_Extension
     }
 
     /**
+     * @param int    $isEncrypted
+     * @param string $value
+     *
+     * @return string
+     */
+    private function encrypted(int $isEncrypted, string $value): string
+    {
+        if ($isEncrypted === 1) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param TransactionModel $transaction
      *
      * @return string
      */
     private function getTransactionBudgets(TransactionModel $transaction): string
     {
+        // journal has a budget:
+        if (isset($transaction->transaction_journal_budget_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
+        }
+
+        // transaction has a budget
+        if (isset($transaction->transaction_budget_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
+        }
+
         // see if the transaction has a budget:
         $budgets = $transaction->budgets()->get();
         if ($budgets->count() === 0) {
@@ -347,6 +398,20 @@ class Transaction extends Twig_Extension
      */
     private function getTransactionCategories(TransactionModel $transaction): string
     {
+        // journal has a category:
+        if (isset($transaction->transaction_journal_category_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
+        }
+
+        // transaction has a category:
+        if (isset($transaction->transaction_category_id)) {
+            $name = $this->encrypted(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
+
+            return sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
+        }
+
         // see if the transaction has a category:
         $categories = $transaction->categories()->get();
         if ($categories->count() === 0) {

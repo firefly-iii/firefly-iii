@@ -1,16 +1,16 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
-    <form action="{{ route('admin.configuration.store') }}" method="post" id="store" class="form-horizontal">
+    <form action="{{ route('admin.configuration.index.post') }}" method="post" id="store" class="form-horizontal">
 
         <div class="row">
 
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-            <!-- single user mode -->
+            {# single user mode #}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
@@ -25,21 +25,38 @@
                 </div>
             </div>
 
+            {# installation is demo site #}
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'setting_is_demo_site'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">
+                            {{ 'setting_is_demo_site_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('is_demo_site','1', isDemoSite) }}
+                    </div>
+                </div>
+            </div>
+            {# send email messages #}
+
             <!-- configuration setting block -->
             <!--
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'setting'|_ }}</h3>
+                        <h3 class="box-title">{{ 'setting_x'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        Bla bla bla
+                        <p class="text-info">
+                            {{ 'setting_x_explain'|_ }}
+                        </p>
                     </div>
                 </div>
             </div>
             -->
         </div>
-
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <button type="submit" class="btn btn-success">

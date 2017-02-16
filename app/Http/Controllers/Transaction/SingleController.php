@@ -31,7 +31,6 @@ use Log;
 use Preferences;
 use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -59,8 +58,6 @@ class SingleController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.transactions'));
-        View::share('mainTitleIcon', 'fa-repeat');
 
         $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
@@ -75,11 +72,49 @@ class SingleController extends Controller
                 $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
 
+                View::share('title', trans('firefly.transactions'));
+                View::share('mainTitleIcon', 'fa-repeat');
+
                 return $next($request);
             }
         );
 
+    }
 
+    public function cloneTransaction(TransactionJournal $journal)
+    {
+        $source       = TransactionJournal::sourceAccountList($journal)->first();
+        $destination  = TransactionJournal::destinationAccountList($journal)->first();
+        $budget       = $journal->budgets()->first();
+        $budgetId     = is_null($budget) ? 0 : $budget->id;
+        $category     = $journal->categories()->first();
+        $categoryName = is_null($category) ? '' : $category->name;
+        $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
+
+
+        $preFilled = [
+            'description'              => $journal->description,
+            'source_account_id'        => $source->id,
+            'source_account_name'      => $source->name,
+            'destination_account_id'   => $destination->id,
+            'destination_account_name' => $destination->name,
+            'amount'                   => TransactionJournal::amountPositive($journal),
+            'date'                     => $journal->date->format('Y-m-d'),
+            'budget_id'                => $budgetId,
+            'category'                 => $categoryName,
+            'tags'                     => $tags,
+            'interest_date'            => $journal->getMeta('interest_date'),
+            'book_date'                => $journal->getMeta('book_date'),
+            'process_date'             => $journal->getMeta('process_date'),
+            'due_date'                 => $journal->getMeta('due_date'),
+            'payment_date'             => $journal->getMeta('payment_date'),
+            'invoice_date'             => $journal->getMeta('invoice_date'),
+            'internal_reference'       => $journal->getMeta('internal_reference'),
+            'notes'                    => $journal->getMeta('notes'),
+        ];
+        Session::flash('preFilled', $preFilled);
+
+        return redirect(route('transactions.create', [strtolower($journal->transactionType->type)]));
     }
 
     /**
@@ -104,8 +139,7 @@ class SingleController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('transactions.create.fromStore') !== true) {
-            $url = URL::previous();
-            Session::put('transactions.create.url', $url);
+            $this->rememberPreviousUri('transactions.create.uri');
         }
         Session::forget('transactions.create.fromStore');
         Session::flash('gaEventCategory', 'transactions');
@@ -113,7 +147,10 @@ class SingleController extends Controller
 
         asort($piggies);
 
-        return view('transactions.create', compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields'));
+        return view(
+            'transactions.single.create',
+            compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
+        );
     }
 
     /**
@@ -125,15 +162,19 @@ class SingleController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
-        Session::put('transactions.delete.url', URL::previous());
+        $this->rememberPreviousUri('transactions.delete.uri');
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'delete-' . $what);
 
-        return view('transactions.delete', compact('journal', 'subTitle', 'what'));
+        return view('transactions.single.delete', compact('journal', 'subTitle', 'what'));
 
 
     }
@@ -146,15 +187,17 @@ class SingleController extends Controller
      */
     public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
     {
-        $type = TransactionJournal::transactionTypeStr($transactionJournal);
-        Session::flash('success', strval(trans('firefly.deleted_' . $type, ['description' => e($transactionJournal->description)])));
+        if ($this->isOpeningBalance($transactionJournal)) {
+            return $this->redirectToAccount($transactionJournal);
+        }
+        $type      = TransactionJournal::transactionTypeStr($transactionJournal);
+        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
 
         Preferences::mark();
 
-        // redirect to previous URL:
-        return redirect(session('transactions.delete.url'));
+        return redirect($this->getPreviousUri('transactions.delete.uri'));
     }
 
     /**
@@ -164,18 +207,23 @@ class SingleController extends Controller
      */
     public function edit(TransactionJournal $journal)
     {
-        $count = $journal->transactions()->count();
-        if ($count > 2) {
-            return redirect(route('transactions.edit-split', [$journal->id]));
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
         }
 
+        $count = $journal->transactions()->count();
+
+        if ($count > 2) {
+            return redirect(route('transactions.split.edit', [$journal->id]));
+        }
+
+        $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
         $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
-        $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
-        $piggyBankList = ExpandedForm::makeSelectListWithEmpty($this->piggyBanks->getPiggyBanks());
+        $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $what     = strtolower(TransactionJournal::transactionTypeStr($journal));
+
 
         // journal related code
         $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
@@ -188,12 +236,11 @@ class SingleController extends Controller
             'process_date'             => TransactionJournal::dateAsString($journal, 'process_date'),
             'category'                 => TransactionJournal::categoryAsString($journal),
             'budget_id'                => TransactionJournal::budgetId($journal),
-            'piggy_bank_id'            => TransactionJournal::piggyBankId($journal),
             'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
             'source_account_id'        => $sourceAccounts->first()->id,
-            'source_account_name'      => $sourceAccounts->first()->name,
+            'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
-            'destination_account_name' => $destinationAccounts->first()->name,
+            'destination_account_name' => $destinationAccounts->first()->edit_name,
             'amount'                   => TransactionJournal::amountPositive($journal),
 
             // new custom fields:
@@ -219,13 +266,13 @@ class SingleController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('transactions.edit.fromUpdate') !== true) {
-            Session::put('transactions.edit.url', URL::previous());
+            $this->rememberPreviousUri('transactions.edit.uri');
         }
         Session::forget('transactions.edit.fromUpdate');
 
         return view(
-            'transactions.edit',
-            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'piggyBankList', 'subTitle')
+            'transactions.single.edit',
+            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'subTitle')
         )->with('data', $preFilled);
     }
 
@@ -248,8 +295,9 @@ class SingleController extends Controller
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
-
-        $this->attachments->saveAttachmentsForModel($journal);
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // store the journal only, flash the rest.
         if (count($this->attachments->getErrors()->get('attachments')) > 0) {
@@ -274,12 +322,12 @@ class SingleController extends Controller
 
         if ($doSplit === true) {
             // redirect to edit screen:
-            return redirect(route('transactions.edit-split', [$journal->id]));
+            return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
 
         // redirect to previous URL.
-        return redirect(session('transactions.create.url'));
+        return redirect($this->getPreviousUri('transactions.create.uri'));
 
     }
 
@@ -292,9 +340,15 @@ class SingleController extends Controller
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
-        $this->attachments->saveAttachmentsForModel($journal);
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // flash errors
         if (count($this->attachments->getErrors()->get('attachments')) > 0) {
@@ -323,9 +377,6 @@ class SingleController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('transactions.edit.url'));
-
+        return redirect($this->getPreviousUri('transactions.edit.uri'));
     }
-
-
 }

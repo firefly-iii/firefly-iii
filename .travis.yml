@@ -1,0 +1,23 @@
+language: php
+php:
+  - 7.0
+  - 7.1
+
+cache:
+    directories:
+        - vendor
+        - $HOME/.composer/cache
+
+install:
+  - if [[ "$(php -v | grep 'PHP 7')" ]]; then phpenv config-rm xdebug.ini; fi
+  - rm composer.lock
+  - composer update --no-scripts
+  - cp .env.testing .env
+  - php artisan clear-compiled
+  - php artisan optimize
+  - php artisan env
+  - cp .env.testing .env
+  - mv storage/database/databasecopy.sqlite storage/database/database.sqlite
+
+script:
+  - phpunit

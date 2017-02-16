@@ -13,8 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
-
 /**
  * Class BillFormRequest
  *
@@ -38,17 +36,17 @@ class BillFormRequest extends Request
     public function getBillData()
     {
         return [
-            'name'                          => $this->get('name'),
-            'match'                         => $this->get('match'),
-            'amount_min'                    => round($this->get('amount_min'), 2),
-            'amount_currency_id_amount_min' => intval($this->get('amount_currency_id_amount_min')),
-            'amount_currency_id_amount_max' => intval($this->get('amount_currency_id_amount_max')),
-            'amount_max'                    => round($this->get('amount_max'), 2),
-            'date'                          => new Carbon($this->get('date')),
-            'repeat_freq'                   => $this->get('repeat_freq'),
-            'skip'                          => intval($this->get('skip')),
-            'automatch'                     => intval($this->get('automatch')) === 1,
-            'active'                        => intval($this->get('active')) === 1,
+            'name'                          => $this->string('name'),
+            'match'                         => $this->string('match'),
+            'amount_min'                    => $this->float('amount_min'),
+            'amount_currency_id_amount_min' => $this->integer('amount_currency_id_amount_min'),
+            'amount_currency_id_amount_max' => $this->integer('amount_currency_id_amount_max'),
+            'amount_max'                    => $this->float('amount_max'),
+            'date'                          => $this->date('date'),
+            'repeat_freq'                   => $this->string('repeat_freq'),
+            'skip'                          => $this->integer('skip'),
+            'automatch'                     => $this->boolean('automatch'),
+            'active'                        => $this->boolean('active'),
         ];
     }
 
@@ -67,8 +65,8 @@ class BillFormRequest extends Request
         $rules = [
             'name'                          => $nameRule,
             'match'                         => $matchRule,
-            'amount_min'                    => 'required|numeric|min:0.01',
-            'amount_max'                    => 'required|numeric|min:0.01',
+            'amount_min'                    => 'required|numeric|more:0',
+            'amount_max'                    => 'required|numeric|more:0',
             'amount_currency_id_amount_min' => 'required|exists:transaction_currencies,id',
             'amount_currency_id_amount_max' => 'required|exists:transaction_currencies,id',
             'date'                          => 'required|date',

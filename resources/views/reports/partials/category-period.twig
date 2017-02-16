@@ -1,0 +1,46 @@
+<table class="table table-hover sortable table-condensed">
+    <thead>
+    <tr>
+        <th data-defaultsign="az" colspan="2">{{ 'category'|_ }}</th>
+        {% for period in periods %}
+            <th data-defaultsign="_19" style="text-align: right;">{{ period }}</th>
+        {% endfor %}
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for id, info in report %}
+        <tr>
+            <td>
+                <a class="btn btn-default btn-xs" href="{{ route('categories.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </td>
+            <td data-value="{{ info.name }}">
+                <a title="{{ info.name }}" href="#" data-category="{{ id }}" class="category-chart-activate">{{ info.name }}</a>
+            </td>
+            {% for key, period in periods %}
+                {# income first #}
+                {% if(info.entries[key]) %}
+                    <td data-value="{{ info.entries[key] }}" style="text-align: right;">
+                        {{ info.entries[key]|formatAmount }}
+                    </td>
+                {% else %}
+                    <td data-value="0" style="text-align: right;">
+                        {{ 0|formatAmount }}
+                    </td>
+                {% endif %}
+            {% endfor %}
+
+            {# if sum of income, display: #}
+            {% if info.sum %}
+                <td data-value="{{ info.sum }}" style="text-align: right;">
+                    {{ info.sum|formatAmount }}
+                </td>
+            {% else %}
+                <td data-value="0" style="text-align: right;">
+                    {{ 0|formatAmount }}
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

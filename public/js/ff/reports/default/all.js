@@ -1,99 +1,33 @@
-/* globals startDate, showOnlyTop, showFullList, endDate, reportType, accountIds, inOutReportUrl, accountReportUrl */
 /*
  * all.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
+
+/** global: accountReportUri, incomeReportUri, expenseReportUri, incExpReportUri, startDate, endDate, accountIds */
 
 $(function () {
     "use strict";
 
 
-
     // load the account report, which this report shows:
-    loadAccountReport();
+    loadAjaxPartial('accountReport', accountReportUri);
 
-    // load income / expense / difference:
-    loadInOutReport();
-
-    // trigger info click
-    triggerInfoClick();
-
-    // trigger list length things:
-    listLengthInitial();
+    // load income and expense reports:
+    loadAjaxPartial('incomeReport', incomeReportUri);
+    loadAjaxPartial('expenseReport', expenseReportUri);
+    loadAjaxPartial('incomeVsExpenseReport', incExpReportUri);
 
 });
 
 function triggerInfoClick() {
     "use strict";
     // find the little info buttons and respond to them.
-    $('.firefly-info-button').unbind('clicl').click(clickInfoButton);
-}
-
-function listLengthInitial() {
-    "use strict";
-    $('.overListLength').hide();
-    $('.listLengthTrigger').unbind('click').click(triggerList)
-}
-
-function triggerList(e) {
-    "use strict";
-    var link = $(e.target);
-    var table = link.parent().parent().parent().parent();
-    console.log('data-hidden = ' + table.attr('data-hidden'));
-    if (table.attr('data-hidden') === 'no') {
-        // hide all elements, return false.
-        table.find('.overListLength').hide();
-        table.attr('data-hidden', 'yes');
-        link.text(showFullList);
-        return false;
-    }
-    // show all, return false
-    table.find('.overListLength').show();
-    table.attr('data-hidden', 'no');
-    link.text(showOnlyTop);
-
-    return false;
-}
-
-function loadInOutReport() {
-    "use strict";
-    console.log('Going to grab ' + inOutReportUrl);
-    $.get(inOutReportUrl).done(placeInOutReport).fail(failInOutReport);
-}
-
-function placeInOutReport(data) {
-    "use strict";
-    $('#incomeReport').removeClass('loading').html(data.income);
-    $('#expenseReport').removeClass('loading').html(data.expenses);
-    $('#incomeVsExpenseReport').removeClass('loading').html(data.incomes_expenses);
-    listLengthInitial();
-    triggerInfoClick();
-}
-
-function failInOutReport() {
-    "use strict";
-    console.log('Fail in/out report data!');
-    $('#incomeReport').removeClass('loading').addClass('general-chart-error');
-    $('#expenseReport').removeClass('loading').addClass('general-chart-error');
-    $('#incomeVsExpenseReport').removeClass('loading').addClass('general-chart-error');
-}
-
-function loadAccountReport() {
-    "use strict";
-    $.get(accountReportUrl).done(placeAccountReport).fail(failAccountReport);
-}
-
-function placeAccountReport(data) {
-    "use strict";
-    $('#accountReport').removeClass('loading').html(data);
-}
-
-function failAccountReport(data) {
-    "use strict";
-    $('#accountReport').removeClass('loading').addClass('general-chart-error');
+    $('.firefly-info-button').unbind('click').click(clickInfoButton);
 }
 
 function clickInfoButton(e) {
@@ -108,13 +42,12 @@ function clickInfoButton(e) {
     // add some more elements:
     attributes.startDate = startDate;
     attributes.endDate = endDate;
-    attributes.reportType = reportType;
     attributes.accounts = accountIds;
 
-    $.getJSON('popup/report', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
+    $.getJSON('popup/general', {attributes: attributes}).done(respondInfoButton).fail(errorInfoButton);
 }
 
-function errorInfoButton(data) {
+function errorInfoButton() {
     "use strict";
     // remove wait cursor
     $('body').removeClass('waiting');
@@ -125,7 +58,71 @@ function respondInfoButton(data) {
     "use strict";
     // remove wait cursor
     $('body').removeClass('waiting');
-    $('#defaultModal').empty().html(data.html);
-    $('#defaultModal').modal('show');
+    $('#defaultModal').empty().html(data.html).modal('show');
 
+}
+
+function loadAjaxPartial(holder, uri) {
+    "use strict";
+    $.get(uri).done(function (data) {
+        displayAjaxPartial(data, holder);
+    }).fail(function () {
+        failAjaxPartial(uri, holder);
+    });
+}
+
+function displayAjaxPartial(data, holder) {
+    "use strict";
+    var obj = $('#' + holder);
+    obj.html(data);
+    obj.parent().find('.overlay').remove();
+
+    // call some often needed recalculations and what-not:
+
+    // find a sortable table and make it sortable:
+    if (typeof $.bootstrapSortable === "function") {
+        $.bootstrapSortable(true);
+    }
+
+    // find the info click things and respond to them:
+    triggerInfoClick();
+
+    // trigger list thing
+    listLengthInitial();
+
+    // budget thing in year and multi year report:
+    $('.budget-chart-activate').unbind('click').on('click', clickBudgetChart);
+
+    // category thing in year and multi year report:
+    $('.category-chart-activate').unbind('click').on('click', clickCategoryChart);
+}
+
+function failAjaxPartial(uri, holder) {
+    "use strict";
+    var holder = $('#' + holder);
+    holder.parent().find('.overlay').remove();
+    holder.addClass('general-chart-error');
+
+}
+
+function clickCategoryChart(e) {
+    "use strict";
+    var link = $(e.target);
+    var categoryId = link.data('category');
+
+    var URL = 'chart/category/report-period/' + categoryId + '/' + accountIds + '/' + startDate + '/' + endDate;
+    var container = 'category_chart';
+    columnChart(URL, container);
+    return false;
+}
+
+function clickBudgetChart(e) {
+    "use strict";
+    var link = $(e.target);
+    var budgetId = link.data('budget');
+
+    var URL = 'chart/budget/period/' + budgetId + '/' + accountIds + '/' + startDate + '/' + endDate;
+    var container = 'budget_chart';
+    columnChart(URL, container);
+    return false;
 }

@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="_token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofolllow, noarchive, noodp, NoImageIndex, noydir">
-    <title>Firefly
-        {% if title != "Firefly" %}
-            // {{ title }}
+    <title>
+        {% if subTitle %}
+            {{ subTitle }} »
+        {% endif %}
+        {% if title != "Firefly III" %}
+            {{ title }} »
         {% endif %}
 
-        {% if subTitle %}
-            // {{ subTitle }}
-        {% endif %}
+        Firefly III
+
     </title>
     <base href="{{ route('index') }}/">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
@@ -29,8 +32,8 @@
     <script src="js/lib/respond.min.js"></script>
     <![endif]-->
 
-    <!-- favicons -->
-    {% include('partials/favicons.twig') %}
+    {# favicons #}
+    {% include('partials.favicons') %}
 
 </head>
 <body class="skin-blue-light sidebar-mini hold-transition">
@@ -65,17 +68,17 @@
                     <!-- Messages: style can be found in dropdown.less-->
                     <li>
                         <span style="color:#fff;padding: 15px;display: block;line-height: 20px;">
-                            <span class="hidden-xs" id="daterange"></span>
+                            <span id="daterange"></span>
                         </span>
                     </li>
 
-                    <!-- Notifications: style can be found in dropdown.less -->
-                    <!-- User Account: style can be found in dropdown.less -->
+                    {% if not SANDSTORM %}
                     <li class="dropdown user user-menu">
                         <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
                             <span class="hidden-xs">{{ Auth.user.email }}</span>
                         </span>
                     </li>
+                    {% endif %}
                     <li id="sidebar-toggle">
                         <a href="#" data-toggle="control-sidebar"><i class="fa fa-plus-circle"></i></a>
                     </li>
@@ -89,7 +92,7 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <!-- search form -->
-            <form action="{{ route('search') }}" method="get" class="sidebar-form">
+            <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
                     <span class="input-group-btn">
@@ -99,7 +102,7 @@
             </form>
             <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            {% include('partials/menu-sidebar.twig') %}
+            {% include('partials.menu-sidebar') %}
         </section>
         <!-- /.sidebar -->
     </aside>
@@ -108,14 +111,23 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            {% include('partials/page-header.twig') %}
+            {% include('partials.page-header') %}
             {% block breadcrumbs %}{% endblock %}
-
         </section>
 
         <!-- Main content -->
         <section class="content">
-            {% include('partials/flashes.twig') %}
+            {% if IS_DEMO_SITE %}
+                <div class="row no-print">
+                    <div class="col-lg-12">
+                        <p class="well">
+                            {% include ['demo.' ~ Route.getCurrentRoute.getName, 'demo.no-demo-text'] %}
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% include('partials.flashes') %}
 
             <!-- actual content -->
             {% block content %}{% endblock %}
@@ -128,10 +140,10 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> {{ Config.get('firefly.version') }}
         </div>
-        <strong><a href="https://github.com/JC5/firefly-iii">Firefly III</a></strong>
+        <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
     </footer>
 
-    {% include('partials/control-bar.twig') %}
+    {% include('partials.control-bar') %}
 
 </div>
 <!-- ./wrapper -->
@@ -149,55 +161,23 @@
             </div>
             <div class="modal-body" id="helpBody">&nbsp;</div>
             <div class="modal-footer">
+                <small class="pull-left">
+                    {{ 'need_more_help'|_ }}
+                </small>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
             </div>
         </div>
     </div>
 </div>
 
-<script src="js/lib/jquery-3.1.0.min.js" type="text/javascript"></script>
+<script src="js/lib/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/lib/moment.min.js" type="text/javascript"></script>
 <script src="js/lib/daterangepicker.js" type="text/javascript"></script>
 <script src="lib/adminlte/js/app.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/lib/accounting.min.js"></script>
 <script src="js/lib/bootstrap-tour.min.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-
-    // date range picker configuration:
-    var dateRangeConfig = {
-        startDate: moment("{{ dpStart }}"),
-        endDate: moment("{{ dpEnd }}"),
-        linkTitle: "{{ Session.get('start').formatLocalized(monthAndDayFormat) }} - {{ Session.get('end').formatLocalized(monthAndDayFormat) }}",
-        URL: "{{ route('daterange') }}",
-        firstDate: moment("{{ Session.get('first').format('Y-m-d') }}"),
-        currentPeriod: "{{ dpCurrent }}",
-        previousPeriod: "{{ dpPrevious }}",
-        nextPeriod: "{{ dpNext }}",
-        everything: '{{ 'everything'|_ }}',
-        customRangeLabel: '{{ 'customRange'|_ }}',
-        applyLabel: '{{ 'apply'|_ }}',
-        cancelLabel: '{{ 'cancel'|_ }}',
-        fromLabel: '{{ 'from'|_ }}',
-        toLabel: '{{ 'to'|_ }}',
-        ranges: {{ dpRanges|json_encode|raw }}
-    };
-
-    var token = "{{ csrf_token() }}";
-    var language = "{{ language }}";
-    var currencyCode = '{{ getCurrencyCode()|escape('js') }}';
-    var currencySymbol = '{{ getCurrencySymbol()|escape('js') }}';
-    var mon_decimal_point = "{{ localeconv.mon_decimal_point|escape('js') }}";
-    var mon_thousands_sep = "{{ localeconv.mon_thousands_sep|escape('js') }}";
-    var frac_digits = {{ localeconv.frac_digits }};
-
-    var showFullList = '{{ trans('firefly.show_full_list') }}';
-    var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength}) }}';
-
-
-</script>
-
+<script src="{{ route('javascript.variables') }}?ext=.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/ff/firefly.js"></script>
 <script type="text/javascript" src="js/ff/help.js"></script>
 {% block scripts %}{% endblock %}

@@ -1,11 +1,11 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journals) }}
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.mass-destroy') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('transactions.mass.destroy') }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -49,18 +49,10 @@
                                         {{ journal.date.formatLocalized(monthAndDayFormat) }}
                                     </td>
                                     <td>
-                                        {% if journal.source_account_type == 'Cash account' %}
-                                            <span class="text-success">(cash)</span>
-                                        {% else %}
-                                            <a href="{{ route('accounts.show',journal.source_account_id) }}">{{ journal.source_account_name }}</a>
-                                        {% endif %}
+                                        {{ sourceAccount(journal)|raw }}
                                     </td>
                                     <td>
-                                        {% if journal.destination_account_type == 'Cash account' %}
-                                            <span class="text-success">(cash)</span>
-                                        {% else %}
-                                            <a href="{{ route('accounts.show',journal.destination_account_id) }}">{{ journal.destination_account_name }}</a>
-                                        {% endif %}
+                                        {{ destinationAccount(journal)|raw }}
                                     </td>
                                 </tr>
                             {% endfor %}

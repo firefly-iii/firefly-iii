@@ -15,10 +15,9 @@
             {% endif %}
             <span class="pull-right small">
             <!-- format amount of transaction -->
-                {{ formatAmountWithCode(transaction.transaction_amount, transaction.transaction_currency_code) }}
+                {{ formatByCode(transaction.transaction_currency_code, transaction.transaction_amount) }}
                 <!-- and then amount of journal itself. -->
-                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount,
-                transaction.transaction_currency_code, transaction.transaction_type_type) }}
+                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount, transaction.transaction_currency_code, transaction.transaction_type_type) }}
         </span>
         </a>
     {% endfor %}

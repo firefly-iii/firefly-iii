@@ -1,11 +1,11 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, rule) }}
 {% endblock %}
 
 {% block content %}
-    {{ Form.model(rule, {'class' : 'form-horizontal','id' : 'store','url' : route('rules.rule.update', rule.id)}) }}
+    {{ Form.model(rule, {'class' : 'form-horizontal','id' : 'store','url' : route('rules.update', rule.id)}) }}
     <input type="hidden" name="rule_group_id" value="{{ rule.rule_group_id }}"/>
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    {% include '/rules/partials/test-trigger-modal.twig' %}
+    {% include '/rules/partials/test-trigger-modal' %}
 
     <!-- RULE ACTIONS -->
     <div class="row">
@@ -126,10 +126,11 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/ff/rules/create-edit.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
     <script type="text/javascript">
         var triggerCount = {{ triggerCount }};
         var actionCount = {{ actionCount }};
     </script>
-    <script type="text/javascript" src="js/ff/rules/edit.js"></script>
+    <script type="text/javascript" src="js/ff/rules/create-edit.js"></script>
+
 {% endblock %}

@@ -19,8 +19,8 @@ use FireflyIII\Console\Commands\Import;
 use FireflyIII\Console\Commands\ScanAttachments;
 use FireflyIII\Console\Commands\UpgradeDatabase;
 use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
+use FireflyIII\Console\Commands\UseEncryption;
 use FireflyIII\Console\Commands\VerifyDatabase;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /**
@@ -39,9 +39,9 @@ class Kernel extends ConsoleKernel
      */
     protected $bootstrappers
         = [
-            'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+            'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
             'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            'FireflyIII\Bootstrap\ConfigureLogging',
+            //'FireflyIII\Bootstrap\ConfigureLogging',
             'Illuminate\Foundation\Bootstrap\HandleExceptions',
             'Illuminate\Foundation\Bootstrap\RegisterFacades',
             'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
@@ -63,7 +63,7 @@ class Kernel extends ConsoleKernel
             EncryptFile::class,
             ScanAttachments::class,
             UpgradeDatabase::class,
-
+            UseEncryption::class,
         ];
 
     /**
@@ -74,16 +74,5 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         require base_path('routes/console.php');
-    }
-
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    protected function schedule(Schedule $schedule)
-    {
     }
 }

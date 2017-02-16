@@ -15,36 +15,30 @@ namespace FireflyIII\Models;
 
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Log;
 use Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 /**
- * FireflyIII\Models\ImportJob
+ * Class ImportJob
  *
- * @property integer               $id
- * @property \Carbon\Carbon        $created_at
- * @property \Carbon\Carbon        $updated_at
- * @property integer               $user_id
- * @property string                $key
- * @property string                $file_type
- * @property string                $status
- * @property array                 $configuration
- * @property-read \FireflyIII\User $user
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereKey($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereFileType($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereStatus($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereConfiguration($value)
- * @mixin \Eloquent
- * @property string                $extended_status
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\ImportJob whereExtendedStatus($value)
+ * @package FireflyIII\Models
  */
 class ImportJob extends Model
 {
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+        ];
+    /** @var array */
+    protected $dates = ['created_at', 'updated_at'];
 
     protected $validStatus
         = [
@@ -171,6 +165,7 @@ class ImportJob extends Model
         $disk             = Storage::disk('upload');
         $encryptedContent = $disk->get($fileName);
         $content          = Crypt::decrypt($encryptedContent);
+        Log::debug(sprintf('Content size is %d bytes.', $content));
 
         return $content;
     }

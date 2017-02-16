@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException as ValException;
+use Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -72,12 +73,14 @@ class Handler extends ExceptionHandler
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
      * @param  Exception $exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      *
      * @return void
      */
     public function report(Exception $exception)
     {
-        if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
+        $doMailError = env('SEND_ERROR_MESSAGE', true);
+        if (($exception instanceof FireflyException || $exception instanceof ErrorException) && $doMailError) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
@@ -97,8 +100,8 @@ class Handler extends ExceptionHandler
             ];
 
             // create job that will mail.
-            $ip  = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-            $job = new MailError($userData, env('SITE_OWNER', ''), $ip, $data);
+            $ipAddress = Request::ip() ?? '0.0.0.0';
+            $job       = new MailError($userData, env('SITE_OWNER', ''), $ipAddress, $data);
             dispatch($job);
         }
 
@@ -108,9 +111,9 @@ class Handler extends ExceptionHandler
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     protected function unauthenticated($request)
     {

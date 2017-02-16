@@ -12,6 +12,7 @@
 declare(strict_types = 1);
 namespace FireflyIII\Helpers\Collection;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Bill as BillModel;
 
 /**
@@ -23,8 +24,6 @@ use FireflyIII\Models\Bill as BillModel;
 class BillLine
 {
 
-    /** @var  bool */
-    protected $active;
     /** @var  string */
     protected $amount;
     /** @var  BillModel */
@@ -35,9 +34,18 @@ class BillLine
     protected $max;
     /** @var  string */
     protected $min;
-
+    /** @var  Carbon */
+    private $lastHitDate;
     /** @var  int */
     private $transactionJournalId;
+
+    /**
+     * BillLine constructor.
+     */
+    public function __construct()
+    {
+        $this->lastHitDate = new Carbon;
+    }
 
     /**
      * @return string
@@ -69,6 +77,22 @@ class BillLine
     public function setBill(BillModel $bill)
     {
         $this->bill = $bill;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getLastHitDate(): Carbon
+    {
+        return $this->lastHitDate;
+    }
+
+    /**
+     * @param Carbon $lastHitDate
+     */
+    public function setLastHitDate(Carbon $lastHitDate)
+    {
+        $this->lastHitDate = $lastHitDate;
     }
 
     /**
@@ -124,15 +148,7 @@ class BillLine
      */
     public function isActive(): bool
     {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     */
-    public function setActive(bool $active)
-    {
-        $this->active = $active;
+        return intval($this->bill->active) === 1;
     }
 
     /**
@@ -150,5 +166,6 @@ class BillLine
     {
         $this->hit = $hit;
     }
+
 
 }

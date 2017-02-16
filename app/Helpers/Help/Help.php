@@ -14,7 +14,9 @@ namespace FireflyIII\Helpers\Help;
 
 use Cache;
 use League\CommonMark\CommonMarkConverter;
+use Log;
 use Requests;
+use Requests_Exception;
 use Route;
 
 /**
@@ -24,6 +26,8 @@ use Route;
  */
 class Help implements HelpInterface
 {
+    /** @var string */
+    protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36';
 
     /**
      * @param string $route
@@ -33,7 +37,9 @@ class Help implements HelpInterface
      */
     public function getFromCache(string $route, string $language): string
     {
-        return Cache::get('help.' . $route . '.' . $language);
+        $line = sprintf('help.%s.%s', $route, $language);
+
+        return Cache::get($line);
     }
 
     /**
@@ -45,23 +51,31 @@ class Help implements HelpInterface
     public function getFromGithub(string $language, string $route): string
     {
 
-        $uri     = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
-        $content = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
-        $result  = Requests::get($uri);
+        $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
+        Log::debug(sprintf('Trying to get %s...', $uri));
+        $opt     = ['useragent' => $this->userAgent];
+        $content = '';
+        try {
+            $result = Requests::get($uri, [], $opt);
+        } catch (Requests_Exception $e) {
+            Log::error($e);
+
+            return '';
+        }
+
+
+        Log::debug(sprintf('Status code is %d', $result->status_code));
 
         if ($result->status_code === 200) {
-            $content = $result->body;
+            $content = trim($result->body);
         }
-
-
-        if (strlen(trim($content)) == 0) {
-            $content = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
+        if (strlen($content) > 0) {
+            Log::debug('Content is longer than zero. Expect something.');
+            $converter = new CommonMarkConverter();
+            $content   = $converter->convertToHtml($content);
         }
-        $converter = new CommonMarkConverter();
-        $content   = $converter->convertToHtml($content);
 
         return $content;
-
     }
 
     /**
@@ -70,7 +84,7 @@ class Help implements HelpInterface
      *
      * @return bool
      */
-    public function hasRoute(string $route):bool
+    public function hasRoute(string $route): bool
     {
         return Route::has($route);
     }
@@ -81,9 +95,19 @@ class Help implements HelpInterface
      *
      * @return bool
      */
-    public function inCache(string $route, string $language):bool
+    public function inCache(string $route, string $language): bool
     {
-        return Cache::has('help.' . $route . '.' . $language);
+        $line   = sprintf('help.%s.%s', $route, $language);
+        $result = Cache::has($line);
+        if ($result) {
+            Log::debug(sprintf('Cache has this entry: %s', 'help.' . $route . '.' . $language));
+        }
+        if (!$result) {
+            Log::debug(sprintf('Cache does not have this entry: %s', 'help.' . $route . '.' . $language));
+        }
+
+        return $result;
+
     }
 
     /**
@@ -92,10 +116,15 @@ class Help implements HelpInterface
      * @param string $language
      * @param string $content
      *
-     * @internal param $title
      */
     public function putInCache(string $route, string $language, string $content)
     {
-        Cache::put('help.' . $route . '.' . $language, $content, 10080); // a week.
+        $key = sprintf('help.%s.%s', $route, $language);
+        if (strlen($content) > 0) {
+            Log::debug(sprintf('Will store entry in cache: %s', $key));
+            Cache::put($key, $content, 10080); // a week.
+            return;
+        }
+        Log::info(sprintf('Will not cache %s because content is empty.', $key));
     }
 }

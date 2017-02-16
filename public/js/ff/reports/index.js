@@ -1,12 +1,31 @@
-/* globals google,  startDate ,reportURL, endDate , reportType ,accountIds , picker:true, minDate, year, month, columnChart, lineChart, stackedColumnChart */
+/*
+ * index.js
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
+/** global: minDate, nonSelectedText, allSelectedText, filterPlaceholder */
+
+var defaultMultiSelect = {
+    disableIfEmpty: true,
+    nonSelectedText: nonSelectedText,
+    allSelectedText: allSelectedText,
+    includeSelectAllOption: true,
+    enableFiltering: true,
+    enableCaseInsensitiveFiltering: true,
+    filterPlaceholder: filterPlaceholder
+};
 
 $(function () {
     "use strict";
 
     if ($('#inputDateRange').length > 0) {
 
-        picker = $('#inputDateRange').daterangepicker(
+        $('#inputDateRange').daterangepicker(
             {
                 locale: {
                     format: 'YYYY-MM-DD',
@@ -18,19 +37,23 @@ $(function () {
         );
 
 
-        // set values from cookies, if any:
-        if (readCookie('report-type') !== null) {
+        // set report type from cookie, if any:
+        if (!(readCookie('report-type') === null)) {
             $('select[name="report_type"]').val(readCookie('report-type'));
         }
 
+        // set accounts from cookie
         if ((readCookie('report-accounts') !== null)) {
             var arr = readCookie('report-accounts').split(',');
             arr.forEach(function (val) {
-                $('input[type="checkbox"][value="' + val + '"]').prop('checked', true);
+                $('#inputAccounts').find('option[value="' + val + '"]').prop('selected', true);
             });
         }
 
-        // set date:
+        // make account select a hip new bootstrap multi-select thing.
+        $('#inputAccounts').multiselect(defaultMultiSelect);
+
+        // set date from cookie
         var startStr = readCookie('report-start');
         var endStr = readCookie('report-end');
         if (startStr !== null && endStr !== null && startStr.length == 8 && endStr.length == 8) {
@@ -44,43 +67,81 @@ $(function () {
 
     $('.date-select').on('click', preSelectDate);
     $('#report-form').on('submit', catchSubmit);
+    $('select[name="report_type"]').on('change', getReportOptions);
+    getReportOptions();
 
 });
 
+function getReportOptions() {
+    "use strict";
+    var reportType = $('select[name="report_type"]').val();
+    var boxBody = $('#extra-options');
+    var box = $('#extra-options-box');
+    boxBody.empty();
+    box.find('.overlay').show();
+
+    $.getJSON('reports/options/' + reportType, function (data) {
+        boxBody.html(data.html);
+        setOptionalFromCookies();
+        box.find('.overlay').hide();
+    }).fail(function () {
+        boxBody.addClass('error');
+        box.find('.overlay').hide();
+    });
+}
+
+function setOptionalFromCookies() {
+    var arr;
+    // categories
+    if ((readCookie('report-categories') !== null)) {
+        arr = readCookie('report-categories').split(',');
+        arr.forEach(function (val) {
+            $('#inputCategories').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+    $('#inputCategories').multiselect(defaultMultiSelect);
+
+    // and budgets!
+    if ((readCookie('report-budgets') !== null)) {
+        arr = readCookie('report-budgets').split(',');
+        arr.forEach(function (val) {
+            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+    $('#inputBudgets').multiselect(defaultMultiSelect);
+
+    // and tags!
+    if ((readCookie('report-tags') !== null)) {
+        arr = readCookie('report-tags').split(',');
+        arr.forEach(function (val) {
+            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+    $('#inputTags').multiselect(defaultMultiSelect);
+}
+
 function catchSubmit() {
     "use strict";
-    // default;20141201;20141231;4;5
-    // report name:
-    var url = '' + $('select[name="report_type"]').val() + '/';
-
     // date, processed:
     var picker = $('#inputDateRange').data('daterangepicker');
-    url += moment(picker.startDate).format("YYYYMMDD") + '/';
-    url += moment(picker.endDate).format("YYYYMMDD") + '/';
 
     // all account ids:
-    var count = 0;
-    var accounts = [];
-    $.each($('.account-checkbox'), function (i, v) {
-        var c = $(v);
-        if (c.prop('checked')) {
-            url += c.val() + ',';
-            accounts.push(c.val());
-            count++;
-        }
-    });
-    if (count > 0) {
-        // set cookie to remember choices.
-        createCookie('report-type', $('select[name="report_type"]').val(), 365);
-        createCookie('report-accounts', accounts, 365);
-        createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
-        createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
+    var accounts = $('#inputAccounts').val();
+    var categories = $('#inputCategories').val();
+    var budgets = $('#inputBudgets').val();
+    var tags = $('#inputTags').val();
 
-        window.location.href = reportURL + "/" + url;
-    }
-    //console.log(url);
+    // remember all
+    // set cookie to remember choices.
+    createCookie('report-type', $('select[name="report_type"]').val(), 365);
+    createCookie('report-accounts', accounts, 365);
+    createCookie('report-categories', categories, 365);
+    createCookie('report-budgets', budgets, 365);
+    createCookie('report-tags', tags, 365);
+    createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
+    createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
 
-    return false;
+    return true;
 }
 
 function preSelectDate(e) {
@@ -114,8 +175,12 @@ function readCookie(name) {
     var ca = document.cookie.split(';');
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1, c.length);
+        }
+        if (c.indexOf(nameEQ) === 0) {
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
     }
     return null;
 }

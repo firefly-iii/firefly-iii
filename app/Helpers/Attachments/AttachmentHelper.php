@@ -16,11 +16,8 @@ use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\MessageBag;
-use Input;
-use Log;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use TypeError;
 
 /**
  * Class AttachmentHelper
@@ -35,9 +32,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     /** @var MessageBag */
     public $messages;
     /** @var array */
-    protected $allowedMimes;
+    protected $allowedMimes = [];
     /** @var int */
-    protected $maxUploadSize;
+    protected $maxUploadSize = 0;
 
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     protected $uploadDisk;
@@ -47,8 +44,8 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function __construct()
     {
-        $this->maxUploadSize = config('firefly.maxUploadSize');
-        $this->allowedMimes  = config('firefly.allowedMimes');
+        $this->maxUploadSize = intval(config('firefly.maxUploadSize'));
+        $this->allowedMimes  = (array) config('firefly.allowedMimes');
         $this->errors        = new MessageBag;
         $this->messages      = new MessageBag;
         $this->uploadDisk    = Storage::disk('upload');
@@ -83,20 +80,19 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * @param Model $model
+     * @param Model      $model
+     * @param array|null $files
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model): bool
+    public function saveAttachmentsForModel(Model $model, array $files = null): bool
     {
-        $files = $this->getFiles();
-
-        if (!is_null($files) && !is_array($files)) {
-            $this->processFile($files, $model);
-        }
-
         if (is_array($files)) {
-            $this->processFiles($files, $model);
+            foreach ($files as $entry) {
+                if (!is_null($entry)) {
+                    $this->processFile($entry, $model);
+                }
+            }
         }
 
         return true;
@@ -229,42 +225,4 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         return true;
     }
-
-    /**
-     * @return array|null|UploadedFile
-     */
-    private function getFiles()
-    {
-        $files = null;
-        try {
-            if (Input::hasFile('attachments')) {
-                $files = Input::file('attachments');
-            }
-        } catch (TypeError $e) {
-            // Log it, do nothing else.
-            Log::error($e->getMessage());
-        }
-
-        return $files;
-    }
-
-    /**
-     * @param array $files
-     *
-     * @param Model $model
-     *
-     * @return bool
-     */
-    private function processFiles(array $files, Model $model): bool
-    {
-        foreach ($files as $entry) {
-            if (!is_null($entry)) {
-                $this->processFile($entry, $model);
-            }
-        }
-
-        return true;
-    }
-
-
 }

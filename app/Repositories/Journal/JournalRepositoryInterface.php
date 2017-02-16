@@ -13,7 +13,12 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Repositories\Journal;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 
 /**
  * Interface JournalRepositoryInterface
@@ -22,6 +27,15 @@ use FireflyIII\Models\TransactionJournal;
  */
 interface JournalRepositoryInterface
 {
+    /**
+     * @param TransactionJournal $journal
+     * @param TransactionType    $type
+     * @param Account            $source
+     * @param Account            $destination
+     *
+     * @return MessageBag
+     */
+    public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
     /**
      * Deletes a journal.
@@ -39,7 +53,7 @@ interface JournalRepositoryInterface
      *
      * @return TransactionJournal
      */
-    public function find(int $journalId) : TransactionJournal;
+    public function find(int $journalId): TransactionJournal;
 
     /**
      * Get users very first transaction journal
@@ -48,6 +62,15 @@ interface JournalRepositoryInterface
      */
     public function first(): TransactionJournal;
 
+    /**
+     * @return Collection
+     */
+    public function getTransactionTypes(): Collection;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data
@@ -55,15 +78,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function store(array $data): TransactionJournal;
-
-    /**
-     * Store journal only, uncompleted, with attachments if necessary.
-     *
-     * @param array $data
-     *
-     * @return TransactionJournal
-     */
-    public function storeJournal(array $data): TransactionJournal;
 
     /**
      * @param TransactionJournal $journal

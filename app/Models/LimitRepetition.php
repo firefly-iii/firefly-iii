@@ -19,32 +19,26 @@ use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\LimitRepetition
+ * Class LimitRepetition
  *
- * @property integer          $id
- * @property \Carbon\Carbon   $created_at
- * @property \Carbon\Carbon   $updated_at
- * @property integer          $budget_limit_id
- * @property \Carbon\Carbon   $startdate
- * @property \Carbon\Carbon   $enddate
- * @property float            $amount
- * @property-read BudgetLimit $budgetLimit
- * @property int              $budget_id
- * @property string           $spent
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereBudgetLimitId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereEnddate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereAmount($value)
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition after($date)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition before($date)
+ * @deprecated
+ * @package FireflyIII\Models
  */
 class LimitRepetition extends Model
 {
 
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                      = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'startdate'  => 'date',
+            'enddate'    => 'date',
+        ];
     protected $dates  = ['created_at', 'updated_at', 'startdate', 'enddate'];
     protected $hidden = ['amount_encrypted'];
 
@@ -56,11 +50,11 @@ class LimitRepetition extends Model
     public static function routeBinder($value)
     {
         if (auth()->check()) {
-            $object = LimitRepetition::where('limit_repetitions.id', $value)
-                                     ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
-                                     ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                     ->where('budgets.user_id', auth()->user()->id)
-                                     ->first(['limit_repetitions.*']);
+            $object = self::where('limit_repetitions.id', $value)
+                          ->leftJoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                          ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                          ->where('budgets.user_id', auth()->user()->id)
+                          ->first(['limit_repetitions.*']);
             if ($object) {
                 return $object;
             }

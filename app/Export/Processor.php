@@ -15,11 +15,10 @@ namespace FireflyIII\Export;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Collector\AttachmentCollector;
-use FireflyIII\Export\Collector\JournalCollector;
+use FireflyIII\Export\Collector\JournalExportCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Models\ExportJob;
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -30,7 +29,7 @@ use ZipArchive;
  *
  * @package FireflyIII\Export
  */
-class Processor
+class Processor implements ProcessorInterface
 {
 
     /** @var Collection */
@@ -45,8 +44,6 @@ class Processor
     public $job;
     /** @var array */
     public $settings;
-    /** @var  \FireflyIII\Export\ConfigurationFile */
-    private $configurationMaker;
     /** @var  Collection */
     private $exportEntries;
     /** @var  Collection */
@@ -56,21 +53,12 @@ class Processor
 
     /**
      * Processor constructor.
-     *
-     * @param array $settings
      */
-    public function __construct(array $settings)
+    public function __construct()
     {
-        // save settings
-        $this->settings           = $settings;
-        $this->accounts           = $settings['accounts'];
-        $this->exportFormat       = $settings['exportFormat'];
-        $this->includeAttachments = $settings['includeAttachments'];
-        $this->includeOldUploads  = $settings['includeOldUploads'];
-        $this->job                = $settings['job'];
-        $this->journals           = new Collection;
-        $this->exportEntries      = new Collection;
-        $this->files              = new Collection;
+        $this->journals      = new Collection;
+        $this->exportEntries = new Collection;
+        $this->files         = new Collection;
 
     }
 
@@ -80,7 +68,8 @@ class Processor
     public function collectAttachments(): bool
     {
         /** @var AttachmentCollector $attachmentCollector */
-        $attachmentCollector = app(AttachmentCollector::class, [$this->job]);
+        $attachmentCollector = app(AttachmentCollector::class);
+        $attachmentCollector->setJob($this->job);
         $attachmentCollector->setDates($this->settings['startDate'], $this->settings['endDate']);
         $attachmentCollector->run();
         $this->files = $this->files->merge($attachmentCollector->getEntries());
@@ -93,8 +82,9 @@ class Processor
      */
     public function collectJournals(): bool
     {
-        /** @var JournalCollector $collector */
-        $collector = app(JournalCollector::class, [$this->job]);
+        /** @var JournalExportCollector $collector */
+        $collector = app(JournalExportCollector::class);
+        $collector->setJob($this->job);
         $collector->setDates($this->settings['startDate'], $this->settings['endDate']);
         $collector->setAccounts($this->settings['accounts']);
         $collector->run();
@@ -110,7 +100,8 @@ class Processor
     public function collectOldUploads(): bool
     {
         /** @var UploadCollector $uploadCollector */
-        $uploadCollector = app(UploadCollector::class, [$this->job]);
+        $uploadCollector = app(UploadCollector::class);
+        $uploadCollector->setJob($this->job);
         $uploadCollector->run();
 
         $this->files = $this->files->merge($uploadCollector->getEntries());
@@ -157,7 +148,7 @@ class Processor
         $zip->close();
 
         // delete the files:
-        $this->deleteFiles($disk);
+        $this->deleteFiles();
 
         return true;
     }
@@ -168,7 +159,8 @@ class Processor
     public function exportJournals(): bool
     {
         $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
-        $exporter      = app($exporterClass, [$this->job]);
+        $exporter      = app($exporterClass);
+        $exporter->setJob($this->job);
         $exporter->setEntries($this->exportEntries);
         $exporter->run();
         $this->files->push($exporter->getFileName());
@@ -185,10 +177,25 @@ class Processor
     }
 
     /**
-     * @param FilesystemAdapter $disk
+     * @param array $settings
      */
-    private function deleteFiles(FilesystemAdapter $disk)
+    public function setSettings(array $settings)
     {
+        // save settings
+        $this->settings           = $settings;
+        $this->accounts           = $settings['accounts'];
+        $this->exportFormat       = $settings['exportFormat'];
+        $this->includeAttachments = $settings['includeAttachments'];
+        $this->includeOldUploads  = $settings['includeOldUploads'];
+        $this->job                = $settings['job'];
+    }
+
+    /**
+     *
+     */
+    private function deleteFiles()
+    {
+        $disk = Storage::disk('export');
         foreach ($this->getFiles() as $file) {
             $disk->delete($file);
         }

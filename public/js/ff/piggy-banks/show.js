@@ -2,11 +2,12 @@
  * show.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
-
-/* globals $, lineChart, piggyBankID */
+/** global: piggyBankID, lineChart */
 
 $(function () {
     "use strict";

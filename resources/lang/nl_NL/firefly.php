@@ -454,7 +454,7 @@ return [
     'deleted_currency'                           => 'Valuta :name verwijderd',
     'created_currency'                           => 'Nieuwe valuta :name opgeslagen',
     'updated_currency'                           => 'Valuta :name bijgewerkt',
-    'ask_site_owner'                             => 'Vraag :owner of deze valuta wilt toevoegen, verwijderen of wijzigen.',
+    'ask_site_owner'                             => 'Vraag :site_owner of deze valuta wilt toevoegen, verwijderen of wijzigen.',
     'currencies_intro'                           => 'Firefly III ondersteunt diverse valuta die je hier kan instellen en bewerken.',
     'make_default_currency'                      => 'maak standaard',
     'default_currency'                           => 'standaard',

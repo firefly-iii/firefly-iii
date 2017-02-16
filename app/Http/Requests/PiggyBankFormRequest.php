@@ -38,12 +38,12 @@ class PiggyBankFormRequest extends Request
     public function getPiggyBankData(): array
     {
         return [
-            'name'         => trim($this->get('name')),
+            'name'         => $this->string('name'),
             'startdate'    => new Carbon,
-            'account_id'   => intval($this->get('account_id')),
-            'targetamount' => round($this->get('targetamount'), 2),
-            'targetdate'   => strlen($this->get('targetdate')) > 0 ? new Carbon($this->get('targetdate')) : null,
-            'note'         => trim($this->get('note')),
+            'account_id'   => $this->integer('account_id'),
+            'targetamount' => $this->float('targetamount'),
+            'targetdate'   => $this->date('targetdate'),
+            'note'         => $this->string('note'),
         ];
     }
 
@@ -63,8 +63,8 @@ class PiggyBankFormRequest extends Request
         $rules = [
             'name'                            => $nameRule,
             'account_id'                      => 'required|belongsToUser:accounts',
-            'targetamount'                    => 'required|min:0.01',
-            'amount_currency_id_targetamount' => 'exists:transaction_currencies,id',
+            'targetamount'                    => 'required|numeric|more:0',
+            'amount_currency_id_targetamount' => 'required|exists:transaction_currencies,id',
             'startdate'                       => 'date',
             'targetdate'                      => $targetDateRule,
             'order'                           => 'integer|min:1',

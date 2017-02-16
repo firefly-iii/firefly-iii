@@ -1,7 +1,7 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, end, reportType, accountIds) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, accountIds, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -20,12 +20,16 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 loading">
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'accountBalances'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="accountReport">
+                <div class="box-body table-responsive no-padding" id="accountReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 
@@ -36,7 +40,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'income'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="incomeReport">
+                <div class="box-body table-responsive no-padding" id="incomeReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -45,7 +53,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="expenseReport">
+                <div class="box-body table-responsive no-padding" id="expenseReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -56,26 +68,44 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="incomeVsExpenseReport">
+                <div class="box-body table-responsive no-padding" id="incomeVsExpenseReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            {% include 'reports/partials/tags.twig' %}
-        </div>
     </div>
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-12">
-            <!-- budgets -->
-            {% include 'reports/partials/budgets.twig' %}
+            <div class="box">
+
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="budgetReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+
+
+
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="categoryReport">
+                <div class="box-body table-responsive no-padding" id="categoryReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>
@@ -91,7 +121,11 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgets'|_ }} ({{ 'splitByAccount'|_|lower }})</h3>
                 </div>
-                <div class="box-body table-responsive no-padding loading" id="balanceReport">
+                <div class="box-body table-responsive no-padding" id="balanceReport">
+                </div>
+                {# loading indicator #}
+                <div class="overlay">
+                    <i class="fa fa-refresh fa-spin"></i>
                 </div>
             </div>
 
@@ -99,7 +133,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {% include 'reports/partials/bills.twig' %}
+            {% include 'reports/partials/bills' %}
 
         </div>
     </div>
@@ -111,6 +145,7 @@
 
     <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
     <script type="text/javascript" src="js/ff/charts.js"></script>
     <script type="text/javascript">
         var year = {{ start.year }};
@@ -122,11 +157,18 @@
         var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
-        <!-- some URL's -->
-        var accountReportUrl = '{{ route('reports.data.accountReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var inOutReportUrl = '{{ route('reports.data.inOutReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var categoryReportUrl = '{{ route('reports.data.categoryReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
-        var balanceReportUrl = '{{ route('reports.data.balanceReport', [start.format('Ymd'), end.format('Ymd'), accountIds]) }}';
+        // uri's for data
+        var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryReportUri = '{{ route('report-data.category.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetReportUri = '{{ route('report-data.budget.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var balanceReportUri = '{{ route('report-data.balance.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incExpReportUri = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
+        // uri's for charts:
+        var accountChartUri = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+
     </script>
     <script type="text/javascript" src="js/ff/reports/default/all.js"></script>
     <script type="text/javascript" src="js/ff/reports/default/month.js"></script>

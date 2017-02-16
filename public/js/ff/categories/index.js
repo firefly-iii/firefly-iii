@@ -1,19 +1,13 @@
-/* globals $, categoryID, columnChart, categoryDate */
+/*
+ * index.js
+ * Copyright (C) 2016 thegrumpydictator@gmail.com
+ *
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
+
 $(function () {
     "use strict";
-    if (typeof categoryID !== 'undefined') {
-        // more splits:
-        if ($('#all').length > 0) {
-            columnChart('chart/category/' + categoryID + '/all', 'all');
-        }
-        if ($('#period').length > 0) {
-            columnChart('chart/category/' + categoryID + '/period', 'period');
-        }
-
-    }
-    if (typeof categoryID !== 'undefined' && typeof categoryDate !== undefined) {
-        columnChart('chart/category/' + categoryID + '/period/' + categoryDate, 'period-specific-period');
-    }
-
-
 });

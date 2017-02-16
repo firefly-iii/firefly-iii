@@ -14,17 +14,13 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Auth;
 use Config;
+use FireflyConfig;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
-use Log;
-use Mail;
 use Session;
-use Swift_TransportException;
 use Validator;
 
 /**
@@ -34,16 +30,6 @@ use Validator;
  */
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
 
     use RegistersUsers;
 
@@ -86,19 +72,6 @@ class RegisterController extends Controller
             $this->throwValidationException($request, $validator);
         }
 
-        $data             = $request->all();
-        $data['password'] = bcrypt($data['password']);
-
-        // is user email domain blocked?
-        if ($this->isBlockedDomain($data['email'])) {
-            $validator->getMessageBag()->add('email', (string)trans('validation.invalid_domain'));
-
-            $this->reportBlockedDomainRegistrationAttempt($data['email'], $request->ip());
-
-            $this->throwValidationException($request, $validator);
-        }
-
-
         $user = $this->create($request->all());
 
         // trigger user registration event:
@@ -123,7 +96,8 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(Request $request)
     {
-        $showDemoWarning = config('firefly.show-demo-warning', false);
+        // is demo site?
+        $isDemoSite = FireflyConfig::get('is_demo_site', Config::get('firefly.configuration.is_demo_site'))->data;
 
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
@@ -136,7 +110,7 @@ class RegisterController extends Controller
 
         $email = $request->old('email');
 
-        return view('auth.register', compact('showDemoWarning', 'email'));
+        return view('auth.register', compact('isDemoSite', 'email'));
     }
 
     /**
@@ -171,58 +145,5 @@ class RegisterController extends Controller
                      'password' => 'required|min:6|confirmed',
                  ]
         );
-    }
-
-    /**
-     * @return array
-     */
-    private function getBlockedDomains()
-    {
-        return FireflyConfig::get('blocked-domains', [])->data;
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    private function isBlockedDomain(string $email)
-    {
-        $parts   = explode('@', $email);
-        $blocked = $this->getBlockedDomains();
-
-        if (isset($parts[1]) && in_array($parts[1], $blocked)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Send a message home about a blocked domain and the address attempted to register.
-     *
-     * @param string $registrationMail
-     * @param string $ipAddress
-     */
-    private function reportBlockedDomainRegistrationAttempt(string $registrationMail, string $ipAddress)
-    {
-        try {
-            $email  = env('SITE_OWNER', false);
-            $parts  = explode('@', $registrationMail);
-            $domain = $parts[1];
-            $fields = [
-                'email_address'  => $registrationMail,
-                'blocked_domain' => $domain,
-                'ip'             => $ipAddress,
-            ];
-
-            Mail::send(
-                ['emails.blocked-registration-html', 'emails.blocked-registration'], $fields, function (Message $message) use ($email, $domain) {
-                $message->to($email, $email)->subject('Blocked a registration attempt with domain ' . $domain . '.');
-            }
-            );
-        } catch (Swift_TransportException $e) {
-            Log::error($e->getMessage());
-        }
     }
 }

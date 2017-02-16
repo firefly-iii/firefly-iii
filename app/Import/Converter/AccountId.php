@@ -40,7 +40,8 @@ class AccountId extends BasicConverter implements ConverterInterface
             return new Account;
         }
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         if (isset($this->mapping[$value])) {
             Log::debug('Found account in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);

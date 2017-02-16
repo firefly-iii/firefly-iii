@@ -31,11 +31,9 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
-     *
      * @param User $user
      */
-    public function __construct(User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -49,8 +47,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param RuleGroup $moveTo
+     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup|null $moveTo
      *
      * @return bool
      */

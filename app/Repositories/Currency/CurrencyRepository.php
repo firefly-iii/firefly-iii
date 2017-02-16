@@ -16,7 +16,9 @@ namespace FireflyIII\Repositories\Currency;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Preferences;
 
 /**
  * Class CurrencyRepository
@@ -25,6 +27,48 @@ use Illuminate\Support\Collection;
  */
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function canDeleteCurrency(TransactionCurrency $currency): bool
+    {
+        if ($this->countJournals($currency) > 0) {
+            return false;
+        }
+
+        // is the only currency left
+        if ($this->get()->count() === 1) {
+            return false;
+        }
+
+        // is the default currency for the user or the system
+        $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+        if ($currency->code === $defaultCode) {
+            return false;
+        }
+
+        // is the default currency for the system
+        $defaultSystemCode = config('firefly.default_currency', 'EUR');
+        if ($currency->code === $defaultSystemCode) {
+            return false;
+        }
+
+        // can be deleted
+        return true;
+    }
 
     /**
      * @param TransactionCurrency $currency
@@ -37,13 +81,27 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function destroy(TransactionCurrency $currency): bool
+    {
+        if ($this->user->hasRole('owner')) {
+            $currency->forceDelete();
+        }
+
+        return true;
+    }
+
+    /**
      * Find by ID
      *
      * @param int $currencyId
      *
      * @return TransactionCurrency
      */
-    public function find(int $currencyId) : TransactionCurrency
+    public function find(int $currencyId): TransactionCurrency
     {
         $currency = TransactionCurrency::find($currencyId);
         if (is_null($currency)) {
@@ -61,7 +119,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findByCode(string $currencyCode) : TransactionCurrency
+    public function findByCode(string $currencyCode): TransactionCurrency
     {
         $currency = TransactionCurrency::whereCode($currencyCode)->first();
         if (is_null($currency)) {
@@ -78,7 +136,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findByName(string $currencyName) : TransactionCurrency
+    public function findByName(string $currencyName): TransactionCurrency
     {
         $preferred = TransactionCurrency::whereName($currencyName)->first();
         if (is_null($preferred)) {
@@ -95,7 +153,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
-    public function findBySymbol(string $currencySymbol) : TransactionCurrency
+    public function findBySymbol(string $currencySymbol): TransactionCurrency
     {
         $currency = TransactionCurrency::whereSymbol($currencySymbol)->first();
         if (is_null($currency)) {
@@ -137,9 +195,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         $currency = TransactionCurrency::create(
             [
-                'name'   => $data['name'],
-                'code'   => $data['code'],
-                'symbol' => $data['symbol'],
+                'name'           => $data['name'],
+                'code'           => $data['code'],
+                'symbol'         => $data['symbol'],
+                'decimal_places' => $data['decimal_places'],
             ]
         );
 
@@ -154,9 +213,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
-        $currency->code   = $data['code'];
-        $currency->symbol = $data['symbol'];
-        $currency->name   = $data['name'];
+        $currency->code           = $data['code'];
+        $currency->symbol         = $data['symbol'];
+        $currency->name           = $data['name'];
+        $currency->decimal_places = $data['decimal_places'];
         $currency->save();
 
         return $currency;

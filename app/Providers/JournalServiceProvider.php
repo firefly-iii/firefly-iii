@@ -14,7 +14,12 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Repositories\Journal\JournalRepository;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalTasker;
+use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -44,21 +49,39 @@ class JournalServiceProvider extends ServiceProvider
     {
         $this->registerRepository();
         $this->registerTasker();
+        $this->registerCollector();
+    }
+
+    private function registerCollector()
+    {
+        $this->app->bind(
+            JournalCollectorInterface::class,
+            function (Application $app) {
+                /** @var JournalCollectorInterface $collector */
+                $collector = app(JournalCollector::class);
+                if ($app->auth->check()) {
+                    $collector->setUser(auth()->user());
+                }
+                $collector->startQuery();
+
+                return $collector;
+            }
+        );
     }
 
     private function registerRepository()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Journal\JournalRepositoryInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Journal\JournalRepository', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            JournalRepositoryInterface::class,
+            function (Application $app) {
+                /** @var JournalRepositoryInterface $repository */
+                $repository = app(JournalRepository::class);
+                if ($app->auth->check()) {
+
+                    $repository->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Journal\JournalRepository', $arguments);
+                return $repository;
             }
         );
     }
@@ -66,16 +89,16 @@ class JournalServiceProvider extends ServiceProvider
     private function registerTasker()
     {
         $this->app->bind(
-            'FireflyIII\Repositories\Journal\JournalTaskerInterface',
-            function (Application $app, array $arguments) {
-                if (!isset($arguments[0]) && $app->auth->check()) {
-                    return app('FireflyIII\Repositories\Journal\JournalTasker', [auth()->user()]);
-                }
-                if (!isset($arguments[0]) && !$app->auth->check()) {
-                    throw new FireflyException('There is no user present.');
+            JournalTaskerInterface::class,
+            function (Application $app) {
+                /** @var JournalTaskerInterface $tasker */
+                $tasker = app(JournalTasker::class);
+
+                if ($app->auth->check()) {
+                    $tasker->setUser(auth()->user());
                 }
 
-                return app('FireflyIII\Repositories\Journal\JournalTasker', $arguments);
+                return $tasker;
             }
         );
     }

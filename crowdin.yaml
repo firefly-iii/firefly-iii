@@ -1,4 +1,4 @@
 files:
   - 
     source: /resources/lang/en_US/*.php
-    translation: /resources/lang/%locale_with_underscore%/
+    translation: /resources/lang/%locale_with_underscore%/%original_file_name%

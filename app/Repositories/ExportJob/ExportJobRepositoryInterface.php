@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\ExportJob;
 
 use FireflyIII\Models\ExportJob;
+use FireflyIII\User;
 
 /**
  * Interface ExportJobRepositoryInterface
@@ -22,6 +23,14 @@ use FireflyIII\Models\ExportJob;
  */
 interface ExportJobRepositoryInterface
 {
+    /**
+     * @param ExportJob $job
+     * @param string    $status
+     *
+     * @return bool
+     */
+    public function changeStatus(ExportJob $job, string $status): bool;
+
     /**
      * @return bool
      */
@@ -33,10 +42,29 @@ interface ExportJobRepositoryInterface
     public function create(): ExportJob;
 
     /**
+     * @param ExportJob $job
+     *
+     * @return bool
+     */
+    public function exists(ExportJob $job): bool;
+
+    /**
      * @param string $key
      *
-     * @return ExportJob|null
+     * @return ExportJob
      */
     public function findByKey(string $key): ExportJob;
+
+    /**
+     * @param ExportJob $job
+     *
+     * @return string
+     */
+    public function getContent(ExportJob $job): string;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
 }

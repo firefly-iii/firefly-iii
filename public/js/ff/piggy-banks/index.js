@@ -2,13 +2,12 @@
  * index.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
 
-/* globals $, lineChart, token, piggyBankID */
-
-// Return a helper with preserved width of cells
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -25,7 +24,7 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    $('#sortable tbody').sortable(
+    $('#sortable-piggy tbody').sortable(
         {
             helper: fixHelper,
             stop: stopSorting,
@@ -74,12 +73,12 @@ function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
     var order = [];
-    $.each($('#sortable>tbody>tr'), function (i, v) {
+    $.each($('#sortable-piggy>tbody>tr'), function (i, v) {
         var holder = $(v);
         var id = holder.data('id');
         order.push(id);
     });
-    $.post('piggy-banks/sort', {_token: token, order: order}).done(function () {
+    $.post('piggy-banks/sort', {order: order}).done(function () {
         $('.loadSpin').removeClass('fa fa-refresh fa-spin');
     });
 }

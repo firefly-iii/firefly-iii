@@ -16,6 +16,7 @@ namespace FireflyIII\Support;
 use Cache;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Session;
 
 /**
  * Class Preferences
@@ -32,7 +33,7 @@ class Preferences
      */
     public function delete($name): bool
     {
-        $fullName = 'preference' . auth()->user()->id . $name;
+        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -59,14 +60,38 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
+     * @param array            $list
+     *
+     * @return array
+     */
+    public function getArrayForUser(User $user, array $list): array
+    {
+        $result      = [];
+        $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
+        /** @var Preference $preference */
+        foreach ($preferences as $preference) {
+            $result[$preference->name] = $preference->data;
+        }
+        foreach ($list as $name) {
+            if (!isset($result[$name])) {
+                $result[$name] = null;
+            }
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * @param \FireflyIII\User $user
      * @param      string      $name
-     * @param string           $default
+     * @param null|string      $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
     public function getForUser(User $user, $name, $default = null)
     {
-        $fullName = 'preference' . $user->id . $name;
+        $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -104,6 +129,7 @@ class Preferences
     public function mark(): bool
     {
         $this->set('lastActivity', microtime());
+        Session::forget('first');
 
         return true;
     }
@@ -138,7 +164,7 @@ class Preferences
      */
     public function setForUser(User $user, $name, $value): Preference
     {
-        $fullName = 'preference' . $user->id . $name;
+        $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
 

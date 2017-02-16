@@ -17,11 +17,11 @@ use FireflyIII\Http\Middleware\AuthenticateTwoFactor;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\IsAdmin;
-use FireflyIII\Http\Middleware\IsConfirmed;
-use FireflyIII\Http\Middleware\IsNotConfirmed;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
+use FireflyIII\Http\Middleware\Sandstorm;
+use FireflyIII\Http\Middleware\StartFireflySession;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
@@ -30,7 +30,6 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
-use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
@@ -50,9 +49,8 @@ class Kernel extends HttpKernel
      */
     protected $bootstrappers
         = [
-            'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+            'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
             'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            'FireflyIII\Bootstrap\ConfigureLogging',
             'Illuminate\Foundation\Bootstrap\HandleExceptions',
             'Illuminate\Foundation\Bootstrap\RegisterFacades',
             'Illuminate\Foundation\Bootstrap\RegisterProviders',
@@ -81,19 +79,23 @@ class Kernel extends HttpKernel
             // does not check login
             // does not check 2fa
             // does not check activation
-            'web'                              => [
+            'web'                   => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartSession::class,
+                StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
             ],
+
+
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
-            'user-not-logged-in'               => [
+            'user-not-logged-in'    => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartSession::class,
+                StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -102,38 +104,26 @@ class Kernel extends HttpKernel
             // MUST be logged in.
             // MUST NOT have 2FA
             // don't care about confirmation:
-            'user-logged-in-no-2fa'            => [
+            'user-logged-in-no-2fa' => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartSession::class,
+                StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 Authenticate::class,
                 RedirectIfTwoFactorAuthenticated::class,
             ],
-            // MUST be logged in
-            // MUST have 2FA
-            // MUST NOT have confirmation.
-            'user-logged-in-2fa-no-activation' => [
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                Authenticate::class,
-                AuthenticateTwoFactor::class,
-                IsNotConfirmed::class,
-            ],
 
             // MUST be logged in
             // don't care about 2fa
             // don't care about confirmation.
-            'user-simple-auth'                 => [
+            'user-simple-auth'      => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartSession::class,
+                StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -144,16 +134,16 @@ class Kernel extends HttpKernel
             // MUST have 2fa
             // MUST be confirmed.
             // (this group includes the other Firefly middleware)
-            'user-full-auth'                   => [
+            'user-full-auth'        => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartSession::class,
+                StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
-                IsConfirmed::class,
                 Range::class,
                 Binder::class,
             ],
@@ -162,20 +152,19 @@ class Kernel extends HttpKernel
             // MUST be confirmed.
             // MUST have owner role
             // (this group includes the other Firefly middleware)
-            'admin'                            => [
+            'admin'                 => [
+                Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartSession::class,
+                StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 Authenticate::class,
                 AuthenticateTwoFactor::class,
-                IsConfirmed::class,
                 IsAdmin::class,
                 Range::class,
                 Binder::class,
-
             ],
 
 

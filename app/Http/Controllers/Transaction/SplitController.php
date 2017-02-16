@@ -30,7 +30,6 @@ use Log;
 use Preferences;
 use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -63,8 +62,7 @@ class SplitController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-share-alt');
-        View::share('title', trans('firefly.split-transactions'));
+
 
         // some useful repositories:
         $this->middleware(
@@ -74,6 +72,8 @@ class SplitController extends Controller
                 $this->tasker      = app(JournalTaskerInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
+                View::share('mainTitleIcon', 'fa-share-alt');
+                View::share('title', trans('firefly.split-transactions'));
 
                 return $next($request);
             }
@@ -88,6 +88,10 @@ class SplitController extends Controller
      */
     public function edit(Request $request, TransactionJournal $journal)
     {
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies     = ExpandedForm::makeSelectList($this->currencies->get());
         $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
@@ -102,12 +106,12 @@ class SplitController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('transactions.edit-split.fromUpdate') !== true) {
-            Session::put('transactions.edit-split.url', URL::previous());
+            $this->rememberPreviousUri('transactions.edit-split.uri');
         }
         Session::forget('transactions.edit-split.fromUpdate');
 
         return view(
-            'transactions.edit-split',
+            'transactions.split.edit',
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
@@ -126,11 +130,17 @@ class SplitController extends Controller
      */
     public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+
+        if ($this->isOpeningBalance($journal)) {
+            return $this->redirectToAccount($journal);
+        }
+
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
-
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
-        $this->attachments->saveAttachmentsForModel($journal);
+        $this->attachments->saveAttachmentsForModel($journal, $files);
 
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
@@ -148,12 +158,11 @@ class SplitController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
-            return redirect(route('transactions.edit-split', [$journal->id]))->withInput(['return_to_edit' => 1]);
+            return redirect(route('transactions.split.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect(session('transactions.edit-split.url'));
-
+        return redirect($this->getPreviousUri('transactions.edit-split.uri'));
     }
 
     /**
@@ -185,6 +194,7 @@ class SplitController extends Controller
             // transactions.
             'transactions'                   => $this->getTransactionDataFromRequest($request),
         ];
+
 
         return $array;
     }
@@ -239,17 +249,26 @@ class SplitController extends Controller
         $transactions = $this->tasker->getTransactionsOverview($journal);
         $return       = [];
         /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = [
+        foreach ($transactions as $index => $transaction) {
+            $set = [
                 'description'              => $transaction['description'],
                 'source_account_id'        => $transaction['source_account_id'],
                 'source_account_name'      => $transaction['source_account_name'],
                 'destination_account_id'   => $transaction['destination_account_id'],
                 'destination_account_name' => $transaction['destination_account_name'],
-                'amount'                   => round($transaction['destination_amount'], 2),
+                'amount'                   => round($transaction['destination_amount'], 12),
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'],
             ];
+
+            // set initial category and/or budget:
+            if (count($transactions) === 1 && $index === 0) {
+                $set['budget_id'] = TransactionJournal::budgetId($journal);
+                $set['category']  = TransactionJournal::categoryAsString($journal);
+            }
+
+            $return[] = $set;
+
         }
 
         return $return;
@@ -272,7 +291,7 @@ class SplitController extends Controller
                 'source_account_name'      => $transaction['source_account_name'] ?? '',
                 'destination_account_id'   => $transaction['destination_account_id'] ?? 0,
                 'destination_account_name' => $transaction['destination_account_name'] ?? '',
-                'amount'                   => round($transaction['amount'] ?? 0, 2),
+                'amount'                   => round($transaction['amount'] ?? 0, 12),
                 'budget_id'                => isset($transaction['budget_id']) ? intval($transaction['budget_id']) : 0,
                 'category'                 => $transaction['category'] ?? '',
             ];
@@ -281,5 +300,6 @@ class SplitController extends Controller
 
         return $return;
     }
+
 
 }

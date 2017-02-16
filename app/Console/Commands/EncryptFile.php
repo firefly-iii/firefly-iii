@@ -35,7 +35,7 @@ class EncryptFile extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:encrypt {file} {key}';
+    protected $signature = 'firefly:encrypt-file {file} {key}';
 
     /**
      * Create a new command instance.

@@ -1,25 +1,14 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-
-</head>
-<body>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Hey there!
-</p>
-
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     To start using your brand new Firefly III account, you need to activate it. Activating your account allows the website to verify that this email address is
     valid. Unfortunately, not even the most complex routines can work this out, without actually sending an email message. And here it is!
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    To active your account, <a href="{{ route }}" style="color:#337ab7">click on this link</a>.
+    To active your account please follow the link below.
 </p>
-<p>
-    If the link does not work, you can browse there manually by copy/pasting it:
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    <strong>PLEASE</strong> verify that this activation link goes to the Firefly III installation you expect it to be:
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     <a href="{{ route }}" style="color:#337ab7">{{ route }}</a>
@@ -28,15 +17,4 @@
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     You should be redirected to the index page right away. The link expires in about four hours.
 </p>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    Thank you, and enjoy!
-</p>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    James Cole
-</p>
-
-<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;color:#aaa;">
-    You are getting this activation message because a new registration from IP {{ ip }} triggered it.
-</p>
+{% include 'emails.footer-html' %}

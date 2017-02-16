@@ -24,7 +24,6 @@ use FireflyIII\Exceptions\FireflyException;
 class Navigation
 {
 
-
     /**
      * @param \Carbon\Carbon $theDate
      * @param                $repeatFreq
@@ -44,6 +43,7 @@ class Navigation
             '1M'      => 'addMonths', 'month' => 'addMonths', 'monthly' => 'addMonths', '3M' => 'addMonths',
             'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
             'year'    => 'addYears', 'yearly' => 'addYears', '1Y' => 'addYears',
+            'custom'  => 'addMonths', // custom? just add one month.
         ];
         $modifierMap = [
             'quarter'   => 3,
@@ -54,7 +54,7 @@ class Navigation
         ];
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
+            throw new FireflyException(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
         }
         if (isset($modifierMap[$repeatFreq])) {
             $add = $add * $modifierMap[$repeatFreq];
@@ -108,7 +108,7 @@ class Navigation
         }
 
         if (!isset($functionMap[$repeatFreq])) {
-            throw new FireflyException('Cannot do endOfPeriod for $repeat_freq "' . $repeatFreq . '"');
+            throw new FireflyException(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
         }
         $function = $functionMap[$repeatFreq];
         if (isset($modifierMap[$repeatFreq])) {
@@ -129,12 +129,11 @@ class Navigation
     }
 
     /**
+     * @param \Carbon\Carbon      $theCurrentEnd
+     * @param string              $repeatFreq
+     * @param \Carbon\Carbon|null $maxDate
      *
-     * @param \Carbon\Carbon $theCurrentEnd
-     * @param                $repeatFreq
-     * @param \Carbon\Carbon $maxDate
-     *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null): Carbon
     {
@@ -171,6 +170,44 @@ class Navigation
     }
 
     /**
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return array
+     */
+    public function listOfPeriods(Carbon $start, Carbon $end): array
+    {
+        // define period to increment
+        $increment     = 'addDay';
+        $format        = self::preferredCarbonFormat($start, $end);
+        $displayFormat = strval(trans('config.month_and_day'));
+        // increment by month (for year)
+        if ($start->diffInMonths($end) > 1) {
+            $increment     = 'addMonth';
+            $displayFormat = strval(trans('config.month'));
+        }
+
+        // increment by year (for multi year)
+        if ($start->diffInMonths($end) > 12) {
+            $increment     = 'addYear';
+            $displayFormat = strval(trans('config.year'));
+        }
+
+        $begin   = clone $start;
+        $entries = [];
+        while ($begin < $end) {
+            $formatted           = $begin->format($format);
+            $displayed           = $begin->formatLocalized($displayFormat);
+            $entries[$formatted] = $displayed;
+
+            $begin->$increment();
+        }
+
+        return $entries;
+
+    }
+
+    /**
      * @param \Carbon\Carbon $date
      * @param                $repeatFrequency
      *
@@ -202,7 +239,125 @@ class Navigation
         if (isset($formatMap[$repeatFrequency])) {
             return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
-        throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
+        throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
+     * method returns "Y-m". If the date difference is larger, method returns "Y".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredCarbonFormat(Carbon $start, Carbon $end): string
+    {
+        $format = 'Y-m-d';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'Y-m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'Y';
+        }
+
+        return $format;
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
+     * method returns "config.month". If the date difference is larger, method returns "config.year".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
+    {
+        $format = strval(trans('config.month_and_day'));
+        if ($start->diffInMonths($end) > 1) {
+            $format = strval(trans('config.month'));
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = strval(trans('config.year'));
+        }
+
+        return $format;
+
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
+     * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredEndOfPeriod(Carbon $start, Carbon $end): string
+    {
+        $format = 'endOfDay';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'endOfMonth';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'endOfYear';
+        }
+
+        return $format;
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "1D". If the difference is less than a year,
+     * method returns "1M". If the date difference is larger, method returns "1Y".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredRangeFormat(Carbon $start, Carbon $end): string
+    {
+        $format = '1D';
+        if ($start->diffInMonths($end) > 1) {
+            $format = '1M';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = '1Y';
+        }
+
+        return $format;
+
+    }
+
+    /**
+     * If the date difference between start and end is less than a month, method returns "%Y-%m-%d". If the difference is less than a year,
+     * method returns "%Y-%m". If the date difference is larger, method returns "%Y".
+     *
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @return string
+     */
+    public function preferredSqlFormat(Carbon $start, Carbon $end): string
+    {
+        $format = '%Y-%m-%d';
+        if ($start->diffInMonths($end) > 1) {
+            $format = '%Y-%m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = '%Y';
+        }
+
+        return $format;
+
     }
 
     /**
@@ -252,7 +407,7 @@ class Navigation
         }
 
 
-        throw new FireflyException('Cannot do startOfPeriod for $repeat_freq "' . $repeatFreq . '"');
+        throw new FireflyException(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
     }
 
     /**
@@ -313,7 +468,7 @@ class Navigation
             return $date;
         }
 
-        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq "' . $repeatFreq . '"');
+        throw new FireflyException(sprintf('Cannot do subtractPeriod for $repeat_freq "%s"', $repeatFreq));
     }
 
     /**
@@ -326,11 +481,12 @@ class Navigation
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
         $functionMap = [
-            '1D' => 'endOfDay',
-            '1W' => 'endOfWeek',
-            '1M' => 'endOfMonth',
-            '3M' => 'lastOfQuarter',
-            '1Y' => 'endOfYear',
+            '1D'     => 'endOfDay',
+            '1W'     => 'endOfWeek',
+            '1M'     => 'endOfMonth',
+            '3M'     => 'lastOfQuarter',
+            '1Y'     => 'endOfYear',
+            'custom' => 'startOfMonth', // this only happens in test situations.
         ];
         $end         = clone $start;
 
@@ -350,7 +506,7 @@ class Navigation
 
             return $end;
         }
-        throw new FireflyException('updateEndDate cannot handle $range "' . $range . '"');
+        throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));
     }
 
     /**
@@ -363,11 +519,12 @@ class Navigation
     public function updateStartDate(string $range, Carbon $start): Carbon
     {
         $functionMap = [
-            '1D' => 'startOfDay',
-            '1W' => 'startOfWeek',
-            '1M' => 'startOfMonth',
-            '3M' => 'firstOfQuarter',
-            '1Y' => 'startOfYear',
+            '1D'     => 'startOfDay',
+            '1W'     => 'startOfWeek',
+            '1M'     => 'startOfMonth',
+            '3M'     => 'firstOfQuarter',
+            '1Y'     => 'startOfYear',
+            'custom' => 'startOfMonth', // this only happens in test situations.
         ];
         if (isset($functionMap[$range])) {
             $function = $functionMap[$range];
@@ -387,7 +544,7 @@ class Navigation
 
 
         }
-        throw new FireflyException('updateStartDate cannot handle $range "' . $range . '"');
+        throw new FireflyException(sprintf('updateStartDate cannot handle range "%s"', $range));
     }
 
 

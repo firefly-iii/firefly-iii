@@ -1,12 +1,14 @@
-/* globals token, jobKey */
-
 /*
  * index.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
+
+/** global: jobKey, Modernizr */
 
 var intervalId = 0;
 
@@ -19,12 +21,19 @@ $(function () {
       // - return false,
 
       $('#export').submit(startExport);
+
+      if (!Modernizr.inputtypes.date) {
+          $('input[type="date"]').datepicker(
+              {
+                  dateFormat: 'yy-mm-dd'
+              }
+          );
+      }
   }
 );
 
 function startExport() {
     "use strict";
-    console.log('Start export...');
     hideForm();
     showLoading();
     hideError();
@@ -75,15 +84,12 @@ function showError(text) {
 
 function callExport() {
     "use strict";
-    console.log('Start callExport()...')
     var data = $('#export').serialize();
 
     // call status, keep calling it until response is "finished"?
     intervalId = window.setInterval(checkStatus, 500);
 
-    $.post('export/submit', data).done(function (data) {
-        console.log('Export hath succeeded!');
-
+    $.post('export/submit', data).done(function () {
         // stop polling:
         window.clearTimeout(intervalId);
 
@@ -114,7 +120,6 @@ function callExport() {
 
 function checkStatus() {
     "use strict";
-    console.log('get status...');
     $.getJSON('export/status/' + jobKey).done(function (data) {
         putStatusText(data.status);
     });

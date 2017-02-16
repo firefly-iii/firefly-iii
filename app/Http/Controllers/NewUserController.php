@@ -32,6 +32,13 @@ class NewUserController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        $this->middleware(
+            function ($request, $next) {
+
+                return $next($request);
+            }
+        );
     }
 
 
@@ -71,14 +78,16 @@ class NewUserController extends Controller
         $this->createAssetAccount($request, $repository);
 
         // create savings account
-        if (strlen($request->get('savings_balance')) > 0) {
+        $savingBalance = strval($request->get('savings_balance')) === '' ? '0' : strval($request->get('savings_balance'));
+        if (bccomp($savingBalance, '0') !== 0) {
             $this->createSavingsAccount($request, $repository);
             $count++;
         }
 
 
         // create credit card.
-        if (strlen($request->get('credit_card_limit')) > 0) {
+        $limit = strval($request->get('credit_card_limit')) === '' ? '0' : strval($request->get('credit_card_limit'));
+        if (bccomp($limit, '0') !== 0) {
             $this->storeCreditCard($request, $repository);
             $count++;
         }
@@ -108,7 +117,7 @@ class NewUserController extends Controller
             'virtualBalance'         => 0,
             'active'                 => true,
             'accountRole'            => 'defaultAsset',
-            'openingBalance'         => round($request->input('bank_balance'), 2),
+            'openingBalance'         => round($request->input('bank_balance'), 12),
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_bank_balance')),
         ];
@@ -133,7 +142,7 @@ class NewUserController extends Controller
             'virtualBalance'         => 0,
             'active'                 => true,
             'accountRole'            => 'savingAsset',
-            'openingBalance'         => round($request->input('savings_balance'), 2),
+            'openingBalance'         => round($request->input('savings_balance'), 12),
             'openingBalanceDate'     => new Carbon,
             'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
         ];
@@ -154,7 +163,7 @@ class NewUserController extends Controller
             'name'                   => 'Credit card',
             'iban'                   => null,
             'accountType'            => 'asset',
-            'virtualBalance'         => round($request->get('credit_card_limit'), 2),
+            'virtualBalance'         => round($request->get('credit_card_limit'), 12),
             'active'                 => true,
             'accountRole'            => 'ccAsset',
             'openingBalance'         => null,

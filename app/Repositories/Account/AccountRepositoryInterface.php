@@ -15,6 +15,8 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -97,6 +99,24 @@ interface AccountRepositoryInterface
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon
+     */
+    public function newestJournalDate(Account $account): Carbon;
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return TransactionJournal
+     */
+    public function oldestJournal(Account $account): TransactionJournal;
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
@@ -106,10 +126,15 @@ interface AccountRepositoryInterface
     public function oldestJournalDate(Account $account): Carbon;
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user);
+
+    /**
      * @param array $data
      *
      * @return Account
      */
-    public function store(array $data) : Account;
+    public function store(array $data): Account;
 
 }

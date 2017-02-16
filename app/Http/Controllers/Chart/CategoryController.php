@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
-use FireflyIII\Generator\Chart\Category\CategoryChartGeneratorInterface;
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
@@ -26,7 +26,6 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
-use stdClass;
 
 /**
  * Class CategoryController
@@ -35,7 +34,7 @@ use stdClass;
  */
 class CategoryController extends Controller
 {
-    /** @var  CategoryChartGeneratorInterface */
+    /** @var  GeneratorInterface */
     protected $generator;
 
     /**
@@ -45,9 +44,8 @@ class CategoryController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $this->generator = app(CategoryChartGeneratorInterface::class);
+        $this->generator = app(GeneratorInterface::class);
     }
-
 
     /**
      * Show an overview for a category for all time, per month/week/year.
@@ -60,34 +58,47 @@ class CategoryController extends Controller
      */
     public function all(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
     {
-        $start              = $repository->firstUseDate($category);
-        $range              = Preferences::get('viewRange', '1M')->data;
-        $start              = Navigation::startOfPeriod($start, $range);
-        $categoryCollection = new Collection([$category]);
-        $end                = new Carbon;
-        $entries            = new Collection;
-        $cache              = new CacheProperties;
-        $accounts           = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('all');
-        $cache->addProperty('categories');
+        $cache = new CacheProperties;
+        $cache->addProperty('chart.category.all');
+        $cache->addProperty($category->id);
         if ($cache->has()) {
             return Response::json($cache->get());
         }
 
-        while ($start <= $end) {
-            $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriod($categoryCollection, $accounts, $start, $currentEnd);
-            $earned     = $repository->earnedInPeriod($categoryCollection, $accounts, $start, $currentEnd);
-            $date       = Navigation::periodShow($start, $range);
-            $entries->push([clone $start, $date, $spent, $earned]);
-            $start = Navigation::addPeriod($start, $range, 0);
+        $start = $repository->firstUseDate($category);
+
+        if ($start->year == 1900) {
+            $start = new Carbon;
         }
-        $entries = $entries->reverse();
-        $entries = $entries->slice(0, 48);
-        $entries = $entries->reverse();
-        $data    = $this->generator->all($entries);
+
+        $range     = Preferences::get('viewRange', '1M')->data;
+        $start     = Navigation::startOfPeriod($start, $range);
+        $end       = new Carbon;
+        $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $chartData = [
+            [
+                'label'   => strval(trans('firefly.spent')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+            [
+                'label'   => strval(trans('firefly.earned')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+        ];
+
+        while ($start <= $end) {
+            $currentEnd                      = Navigation::endOfPeriod($start, $range);
+            $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
+            $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
+            $label                           = Navigation::periodShow($start, $range);
+            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $chartData[1]['entries'][$label] = $earned;
+            $start                           = Navigation::addPeriod($start, $range, 0);
+        }
+
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);
@@ -123,106 +134,126 @@ class CategoryController extends Controller
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('category');
-        $cache->addProperty('frontpage');
+        $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
             return Response::json($cache->get());
         }
+        $chartData  = [];
         $categories = $repository->getCategories();
         $accounts   = $accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        $set        = new Collection;
         /** @var Category $category */
         foreach ($categories as $category) {
             $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
             if (bccomp($spent, '0') === -1) {
-                $category->spent = $spent;
-                $set->push($category);
+                $chartData[$category->name] = bcmul($spent, '-1');
             }
         }
-        // this is a "fake" entry for the "no category" entry.
-        $entry        = new stdClass;
-        $entry->name  = trans('firefly.no_category');
-        $entry->spent = $repository->spentInPeriodWithoutCategory(new Collection, $start, $end);
-        $set->push($entry);
 
-        $set  = $set->sortBy('spent');
-        $data = $this->generator->frontpage($set);
+        $chartData[strval(trans('firefly.no_category'))] = bcmul($repository->spentInPeriodWithoutCategory(new Collection, $start, $end), '-1');
+
+        // sort
+        arsort($chartData);
+
+        $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
+     * @param CRI        $repository
+     * @param Category   $category
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
-     * @param Collection $categories
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|mixed
      */
-    public function multiYear(Carbon $start, Carbon $end, Collection $accounts, Collection $categories)
+    public function reportPeriod(CRI $repository, Category $category, Collection $accounts, Carbon $start, Carbon $end)
     {
-
-        /** @var CRI $repository */
-        $repository = app(CRI::class);
-
-        // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($accounts);
-        $cache->addProperty($categories);
-        $cache->addProperty('multiYearCategory');
-
+        $cache->addProperty('chart.category.period');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        $cache->addProperty($category);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return $cache->get();
+        }
+        $expenses  = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
+        $income    = $repository->periodIncome(new Collection([$category]), $accounts, $start, $end);
+        $periods   = Navigation::listOfPeriods($start, $end);
+        $chartData = [
+            [
+                'label'   => strval(trans('firefly.spent')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+            [
+                'label'   => strval(trans('firefly.earned')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+        ];
+
+        foreach (array_keys($periods) as $period) {
+            $label                           = $periods[$period];
+            $spent                           = $expenses[$category->id]['entries'][$period] ?? '0';
+            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $chartData[1]['entries'][$label] = $income[$category->id]['entries'][$period] ?? '0';
         }
 
-        $entries = new Collection;
-
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $entry = ['name' => '', 'spent' => [], 'earned' => []];
-
-            $currentStart = clone $start;
-            while ($currentStart < $end) {
-                // fix the date:
-                $year       = $currentStart->year;
-                $currentEnd = clone $currentStart;
-                $currentEnd->endOfYear();
-
-                // get data:
-                if (is_null($category->id)) {
-                    $entry['name']          = trans('firefly.noCategory');
-                    $entry['spent'][$year]  = ($repository->spentInPeriodWithoutCategory($accounts, $currentStart, $currentEnd) * -1);
-                    $entry['earned'][$year] = $repository->earnedInPeriodWithoutCategory($accounts, $currentStart, $currentEnd);
-
-                    // jump to next year.
-                    $currentStart = clone $currentEnd;
-                    $currentStart->addDay();
-                    continue;
-
-                }
-                // alternative is a normal category:
-                $entry['name']          = $category->name;
-                $entry['spent'][$year]  = ($repository->spentInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd) * -1);
-                $entry['earned'][$year] = $repository->earnedInPeriod(new Collection([$category]), $accounts, $currentStart, $currentEnd);
-
-                // jump to next year.
-                $currentStart = clone $currentEnd;
-                $currentStart->addDay();
-            }
-            $entries->push($entry);
-        }
-
-        // generate chart with data:
-        $data = $this->generator->multiYear($entries);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return Response::json($data);
+    }
 
+    /**
+     * @param CRI        $repository
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    public function reportPeriodNoCategory(CRI $repository, Collection $accounts, Carbon $start, Carbon $end)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('chart.category.period.no-cat');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $expenses  = $repository->periodExpensesNoCategory($accounts, $start, $end);
+        $income    = $repository->periodIncomeNoCategory($accounts, $start, $end);
+        $periods   = Navigation::listOfPeriods($start, $end);
+        $chartData = [
+            [
+                'label'   => strval(trans('firefly.spent')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+            [
+                'label'   => strval(trans('firefly.earned')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+        ];
 
+        foreach (array_keys($periods) as $period) {
+            $label                           = $periods[$period];
+            $spent                           = $expenses['entries'][$period] ?? '0';
+            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $chartData[1]['entries'][$label] = $income['entries'][$period] ?? '0';
+
+        }
+        $data = $this->generator->multiSet($chartData);
+        $cache->store($data);
+
+        return Response::json($data);
     }
 
     /**
@@ -244,6 +275,7 @@ class CategoryController extends Controller
         return Response::json($data);
     }
 
+
     /**
      * @param CRI      $repository
      * @param Category $category
@@ -254,33 +286,47 @@ class CategoryController extends Controller
      */
     private function makePeriodChart(CRI $repository, Category $category, Carbon $start, Carbon $end)
     {
-        $categoryCollection = new Collection([$category]);
-        $cache              = new CacheProperties;
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($category->id);
+        $cache->addProperty('chart.category.period-chart');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($accounts);
-        $cache->addProperty($category->id);
-        $cache->addProperty('specific-period');
-
-
         if ($cache->has()) {
             return $cache->get();
         }
-        $entries = new Collection;
+
+        // chart data
+        $chartData = [
+            [
+                'label'   => strval(trans('firefly.spent')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+            [
+                'label'   => strval(trans('firefly.earned')),
+                'entries' => [],
+                'type'    => 'bar',
+            ],
+        ];
+
         while ($start <= $end) {
-            $spent  = $repository->spentInPeriod($categoryCollection, $accounts, $start, $start);
-            $earned = $repository->earnedInPeriod($categoryCollection, $accounts, $start, $start);
-            $date   = Navigation::periodShow($start, '1D');
-            $entries->push([clone $start, $date, $spent, $earned]);
+            $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
+            $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
+            $label  = Navigation::periodShow($start, '1D');
+
+            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
+            $chartData[1]['entries'][$label] = $earned;
+
+
             $start->addDay();
         }
 
-        $data = $this->generator->period($entries);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;

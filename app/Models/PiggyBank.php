@@ -21,51 +21,33 @@ use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * FireflyIII\Models\PiggyBank
+ * Class PiggyBank
  *
- * @property integer                                                             $id
- * @property \Carbon\Carbon                                                      $created_at
- * @property \Carbon\Carbon                                                      $updated_at
- * @property \Carbon\Carbon                                                      $deleted_at
- * @property integer                                                             $account_id
- * @property string                                                              $name
- * @property float                                                               $targetamount
- * @property \Carbon\Carbon                                                      $startdate
- * @property \Carbon\Carbon                                                      $targetdate
- * @property integer                                                             $order
- * @property boolean                                                             $encrypted
- * @property-read Account                                                        $account
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property string                                                              $reminder
- * @property PiggyBankRepetition                                                 $currentRep
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetamount($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereTargetdate($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereReminderSkip($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereRemindMe($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
- * @mixin \Eloquent
- * @property boolean                                                             $active
- * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @package FireflyIII\Models
  */
 class PiggyBank extends Model
 {
     use SoftDeletes;
 
-    protected $dates  = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
-    protected $fillable
-                      = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
-    protected $hidden = ['targetamount_encrypted', 'encrypted'];
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+                        = [
+            'created_at' => 'date',
+            'updated_at' => 'date',
+            'deleted_at' => 'date',
+            'startdate'  => 'date',
+            'targetdate' => 'date',
+            'order'      => 'int',
+            'active'     => 'boolean',
+            'encrypted'  => 'boolean',
+        ];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
+    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
 
     /**
      * @param PiggyBank $value
@@ -119,7 +101,7 @@ class PiggyBank extends Model
     public function getNameAttribute($value)
     {
 
-        if (intval($this->encrypted) == 1) {
+        if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -177,8 +159,9 @@ class PiggyBank extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $encrypt                       = config('firefly.encryption');
+        $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted'] = $encrypt;
     }
 
     /**
@@ -186,6 +169,6 @@ class PiggyBank extends Model
      */
     public function setTargetamountAttribute($value)
     {
-        $this->attributes['targetamount'] = strval(round($value, 2));
+        $this->attributes['targetamount'] = strval(round($value, 12));
     }
 }

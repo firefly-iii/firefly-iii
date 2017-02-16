@@ -14,8 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
-use FireflyIII\Export\Entry\EntryAccount;
-use FireflyIII\Models\ExportJob;
 use League\Csv\Writer;
 use SplFileObject;
 
@@ -31,13 +29,10 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
     /**
      * CsvExporter constructor.
-     *
-     * @param ExportJob $job
      */
-    public function __construct(ExportJob $job)
+    public function __construct()
     {
-        parent::__construct($job);
-
+        parent::__construct();
     }
 
     /**

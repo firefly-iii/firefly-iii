@@ -14,7 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collection\Account as AccountCollection;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,7 +24,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountTaskerInterface
 {
-
     /**
      * @param Collection $accounts
      * @param Collection $excluded
@@ -51,49 +50,16 @@ interface AccountTaskerInterface
 
     /**
      * @param Collection $accounts
-     * @param Collection $excluded
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @see AccountTasker::financialReport()
-     *
-     * @return Collection
-     *
+     * @return array
      */
-    public function expenseReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection;
+    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return AccountCollection
+     * @param User $user
      */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection;
-
-    /**
-     * Experimental getJournals method.
-     *
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection;
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $excluded
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountTasker::financialReport()
-     *
-     * @return Collection
-     *
-     */
-    public function incomeReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection;
+    public function setUser(User $user);
 
 }

@@ -177,7 +177,8 @@ class ImportValidator
         // find it first by new type:
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         $result = $repository->findByName($account->name, [$type]);
         if (is_null($result->id)) {
@@ -214,7 +215,8 @@ class ImportValidator
     {
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         $name   = 'Unknown expense account';
         $result = $repository->findByName($name, [AccountType::EXPENSE]);
@@ -235,7 +237,8 @@ class ImportValidator
     {
 
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         $name   = 'Unknown revenue account';
         $result = $repository->findByName($name, [AccountType::REVENUE]);
@@ -382,7 +385,8 @@ class ImportValidator
     {
         if (is_null($entry->fields['currency'])) {
             /** @var CurrencyRepositoryInterface $repository */
-            $repository = app(CurrencyRepositoryInterface::class, [$this->user]);
+            $repository = app(CurrencyRepositoryInterface::class);
+            $repository->setUser($this->user);
             // is the default currency for the user or the system
             $defaultCode = Preferences::getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
 
@@ -416,6 +420,7 @@ class ImportValidator
                 Log::debug('Transaction type is now deposit.');
 
                 return $entry;
+            case AccountType::DEFAULT:
             case AccountType::ASSET:
                 $entry->fields['transaction-type'] = TransactionType::whereType(TransactionType::TRANSFER)->first();
                 Log::debug('Transaction type is now transfer.');

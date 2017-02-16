@@ -26,7 +26,6 @@ use Illuminate\Support\Collection;
 interface RuleGroupRepositoryInterface
 {
 
-
     /**
      *
      *
@@ -35,8 +34,8 @@ interface RuleGroupRepositoryInterface
     public function count(): int;
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param RuleGroup $moveTo
+     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup|null $moveTo
      *
      * @return bool
      */
@@ -91,6 +90,11 @@ interface RuleGroupRepositoryInterface
      * @return bool
      */
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

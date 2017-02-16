@@ -36,7 +36,8 @@ class ConfigurationRequest extends Request
     public function getConfigurationData(): array
     {
         return [
-            'single_user_mode' => intval($this->get('single_user_mode')) === 1,
+            'single_user_mode' => $this->boolean('single_user_mode'),
+            'is_demo_site'     => $this->boolean('is_demo_site'),
         ];
     }
 
@@ -47,6 +48,7 @@ class ConfigurationRequest extends Request
     {
         $rules = [
             'single_user_mode' => 'between:0,1|numeric',
+            'is_demo_site'     => 'between:0,1|numeric',
         ];
 
         return $rules;

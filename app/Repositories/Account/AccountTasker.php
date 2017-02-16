@@ -14,17 +14,11 @@ declare(strict_types = 1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use Crypt;
-use DB;
-use FireflyIII\Helpers\Collection\Account as AccountCollection;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
-use stdClass;
 use Steam;
 
 /**
@@ -36,16 +30,6 @@ class AccountTasker implements AccountTaskerInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
      * @see self::amountInPeriod
@@ -107,187 +91,68 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @param Collection $accounts
-     * @param Collection $excluded
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Collection
-     * @see self::financialReport
-     *
+     * @return array
      */
-    public function expenseReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection
+    public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $idList = [
-            'accounts' => $accounts->pluck('id')->toArray(),
-            'exclude'  => $excluded->pluck('id')->toArray(),
-        ];
-
-        Log::debug(
-            'Now calling expenseReport.',
-            ['accounts' => $idList['accounts'], 'excluded' => $idList['exclude'],
-             'start'    => $start->format('Y-m-d'),
-             'end'      => $end->format('Y-m-d'),
-            ]
-        );
-
-        return $this->financialReport($idList, $start, $end, false);
-
-    }
-
-    /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return AccountCollection
-     */
-    public function getAccountReport(Carbon $start, Carbon $end, Collection $accounts): AccountCollection
-    {
-        $startAmount = '0';
-        $endAmount   = '0';
-        $diff        = '0';
-        $ids         = $accounts->pluck('id')->toArray();
-        $yesterday   = clone $start;
+        $ids       = $accounts->pluck('id')->toArray();
+        $yesterday = clone $start;
         $yesterday->subDay();
-        $startSet  = Steam::balancesById($ids, $yesterday);
-        $backupSet = Steam::balancesById($ids, $start);
-        $endSet    = Steam::balancesById($ids, $end);
+        $startSet = Steam::balancesById($ids, $yesterday);
+        $endSet   = Steam::balancesById($ids, $end);
 
-        Log::debug(
-            sprintf(
-                'getAccountReport from %s to %s for %d accounts.',
-                $start->format('Y-m-d'),
-                $end->format('Y-m-d'),
-                $accounts->count()
-            )
-        );
-        $accounts->each(
-            function (Account $account) use ($startSet, $endSet, $backupSet) {
-                $account->startBalance = $startSet[$account->id] ?? '0';
-                $account->endBalance   = $endSet[$account->id] ?? '0';
+        Log::debug('Start of accountreport');
 
-                // check backup set just in case:
-                if ($account->startBalance === '0' && isset($backupSet[$account->id])) {
-                    $account->startBalance = $backupSet[$account->id];
-                }
-            }
-        );
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
 
-        // summarize:
-        foreach ($accounts as $account) {
-            $startAmount = bcadd($startAmount, $account->startBalance);
-            $endAmount   = bcadd($endAmount, $account->endBalance);
-            $diff        = bcadd($diff, bcsub($account->endBalance, $account->startBalance));
-        }
-
-        $object = new AccountCollection;
-        $object->setStart($startAmount);
-        $object->setEnd($endAmount);
-        $object->setDifference($diff);
-        $object->setAccounts($accounts);
-
-
-        return $object;
-    }
-
-    /**
-     * It might be worth it to expand this query to include all account information required.
-     *
-     * @param Collection $accounts
-     * @param array      $types
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    public function getJournalsInPeriod(Collection $accounts, array $types, Carbon $start, Carbon $end): Collection
-    {
-        $accountIds = $accounts->pluck('id')->toArray();
-        $query      = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-            ->whereIn('transactions.account_id', $accountIds)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC');
-
-        if (count($types) > 0) {
-            $query->whereIn('transaction_types.type', $types);
-        }
-
-        $set = $query->get(
-            [
-                'transaction_journals.id as journal_id',
-                'transaction_journals.description',
-                'transaction_journals.date',
-                'transaction_journals.encrypted',
-                //'transaction_journals.transaction_currency_id',
-                'transaction_currencies.code as transaction_currency_code',
-                //'transaction_currencies.symbol as transaction_currency_symbol',
-                'transaction_types.type as transaction_type_type',
-                'transaction_journals.bill_id',
-                'bills.name as bill_name',
-                'transactions.id as id',
-                'transactions.amount as transaction_amount',
-                'transactions.description as transaction_description',
-                'transactions.account_id',
-                'transactions.identifier',
-                'transactions.transaction_journal_id',
-                'accounts.name as account_name',
-                'accounts.encrypted as account_encrypted',
-                'account_types.type as account_type',
-
-            ]
-        );
-
-        // loop for decryption.
-        $set->each(
-            function (Transaction $transaction) {
-                $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = intval($transaction->encrypted) === 1 ? Crypt::decrypt($transaction->description) : $transaction->description;
-                $transaction->bill_name   = !is_null($transaction->bill_name) ? Crypt::decrypt($transaction->bill_name) : '';
-            }
-        );
-
-        return $set;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $excluded
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountTasker::financialReport()
-     *
-     * @return Collection
-     *
-     */
-    public function incomeReport(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): Collection
-    {
-        $idList = [
-            'accounts' => $accounts->pluck('id')->toArray(),
-            'exclude'  => $excluded->pluck('id')->toArray(),
+        $return = [
+            'start'      => '0',
+            'end'        => '0',
+            'difference' => '0',
+            'accounts'   => [],
         ];
 
-        Log::debug(
-            'Now calling expenseReport.',
-            ['accounts' => $idList['accounts'], 'excluded' => $idList['exclude'],
-             'start'    => $start->format('Y-m-d'),
-             'end'      => $end->format('Y-m-d'),
-            ]
-        );
+        foreach ($accounts as $account) {
+            $id    = $account->id;
+            $entry = [
+                'name'          => $account->name,
+                'id'            => $account->id,
+                'start_balance' => '0',
+                'end_balance'   => '0',
+            ];
 
-        return $this->financialReport($idList, $start, $end, true);
+            // get first journal date:
+            $first = $repository->oldestJournal($account);
+            Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
+            $entry['start_balance'] = $startSet[$account->id] ?? '0';
+            $entry['end_balance']   = $endSet[$account->id] ?? '0';
+
+            // first journal exists, and is on start, then this is the actual opening balance:
+            if (!is_null($first->id) && $first->date->isSameDay($start)) {
+                $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
+                Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
+            }
+            $return['start'] = bcadd($return['start'], $entry['start_balance']);
+            $return['end']   = bcadd($return['end'], $entry['end_balance']);
+
+            $return['accounts'][$id] = $entry;
+        }
+
+        $return['difference'] = bcsub($return['end'], $return['start']);
+
+        return $return;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
@@ -320,22 +185,20 @@ class AccountTasker implements AccountTaskerInterface
         $joinModifier = $incoming ? '<' : '>';
         $selection    = $incoming ? '>' : '<';
 
-        $query = Transaction
-            ::distinct()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin(
-                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
-                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
-            }
-            )
-
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereIn('transactions.account_id', $accounts['accounts'])
-            ->where('transactions.amount', $selection, 0);
+        $query = Transaction::distinct()
+                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->leftJoin(
+                                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
+                                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
+                            }
+                            )
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                            ->where('transaction_journals.user_id', $this->user->id)
+                            ->whereNull('transactions.deleted_at')
+                            ->whereNull('transaction_journals.deleted_at')
+                            ->whereIn('transactions.account_id', $accounts['accounts'])
+                            ->where('transactions.amount', $selection, 0);
         if (count($accounts['exclude']) > 0) {
             $query->whereNotIn('other_side.account_id', $accounts['exclude']);
         }
@@ -351,90 +214,4 @@ class AccountTasker implements AccountTaskerInterface
         return $sum;
     }
 
-    /**
-     *
-     * This method will determin how much has flown (in the given period) from OR to $accounts to/from anywhere else,
-     * except $excluded. This could be a list of incomes, or a list of expenses. This method shows
-     * the name, the amount and the number of transactions. It is a summary, and only used in some reports.
-     *
-     * $incoming=true a list of incoming money (earnings)
-     * $incoming=false a list of outgoing money (expenses).
-     *
-     * @param array  $accounts
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $incoming
-     *
-     * Opening balances are ignored.
-     *
-     * @return Collection
-     */
-    protected function financialReport(array $accounts, Carbon $start, Carbon $end, bool $incoming): Collection
-    {
-        $collection   = new Collection;
-        $joinModifier = $incoming ? '<' : '>';
-        $selection    = $incoming ? '>' : '<';
-        $query        = Transaction
-            ::distinct()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-            ->leftJoin(
-                'transactions as other_side', function (JoinClause $join) use ($joinModifier) {
-                $join->on('transaction_journals.id', '=', 'other_side.transaction_journal_id')->where('other_side.amount', $joinModifier, 0);
-            }
-            )
-            ->leftJoin('accounts as other_account', 'other_account.id', '=', 'other_side.account_id')
-            ->where('transaction_types.type','!=', TransactionType::OPENING_BALANCE)
-            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-            ->where('transaction_journals.user_id', $this->user->id)
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereIn('transactions.account_id', $accounts['accounts'])
-            ->where('other_side.amount', '=', DB::raw('transactions.amount * -1'))
-            ->where('transactions.amount', $selection, 0)
-            ->orderBy('transactions.amount');
-
-        if (count($accounts['exclude']) > 0) {
-            $query->whereNotIn('other_side.account_id', $accounts['exclude']);
-        }
-        $set = $query->get(
-            [
-                'transaction_journals.id',
-                'other_side.account_id',
-                'other_account.name',
-                'other_account.encrypted',
-                'transactions.amount',
-            ]
-        );
-        // summarize ourselves:
-        $temp = [];
-        foreach ($set as $entry) {
-            // save into $temp:
-            $id = intval($entry->account_id);
-            if (isset($temp[$id])) {
-                $temp[$id]['count']++;
-                $temp[$id]['amount'] = bcadd($temp[$id]['amount'], $entry->amount);
-            }
-            if (!isset($temp[$id])) {
-                $temp[$id] = [
-                    'name'   => intval($entry->encrypted) === 1 ? Crypt::decrypt($entry->name) : $entry->name,
-                    'amount' => $entry->amount,
-                    'count'  => 1,
-                ];
-            }
-        }
-
-        // loop $temp and create collection:
-        foreach ($temp as $key => $entry) {
-            $object         = new stdClass();
-            $object->id     = $key;
-            $object->name   = $entry['name'];
-            $object->count  = $entry['count'];
-            $object->amount = $entry['amount'];
-            $collection->push($object);
-        }
-
-        return $collection;
-    }
 }

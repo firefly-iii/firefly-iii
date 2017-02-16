@@ -1,4 +1,4 @@
-{% extends "./layout/default.twig" %}
+{% extends "./layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
@@ -17,6 +17,10 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
+                    {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
+                        {# Not really mandatory but OK #}
+                        {{ ExpandedForm.select('currency_id', currencies) }}
+                    {% endif %}
                 </div>
             </div>
 
@@ -28,12 +32,13 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('iban') }}
+                    {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
                     {{ ExpandedForm.text('accountNumber') }}
 
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
                         {{ ExpandedForm.balance('openingBalance',null, {'currency' : openingBalance ? openingBalance.transactionCurrency : null}) }}
                         {{ ExpandedForm.date('openingBalanceDate') }}
-                        {{ ExpandedForm.select('accountRole',Config.get('firefly.accountRoles')) }}
+                        {{ ExpandedForm.select('accountRole', roles) }}
                         {{ ExpandedForm.balance('virtualBalance',null) }}
 
                     {% endif %}
@@ -71,4 +76,14 @@
         </div>
     </div>
     {{ Form.close|raw }}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/ff/accounts/edit.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="css/jquery-ui/jquery-ui.structure.min.css" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.theme.min.css" type="text/css" rel="stylesheet" media="all">
 {% endblock %}

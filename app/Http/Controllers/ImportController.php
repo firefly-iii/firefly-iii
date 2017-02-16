@@ -15,14 +15,16 @@ namespace FireflyIII\Http\Controllers;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\ImportUploadRequest;
-use FireflyIII\Import\ImportProcedure;
+use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as LaravelResponse;
 use Log;
 use Response;
+use Session;
 use SplFileObject;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -41,8 +43,15 @@ class ImportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-archive');
-        View::share('title', trans('firefly.import_data_full'));
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-archive');
+                View::share('title', trans('firefly.import_data_full'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -112,15 +121,18 @@ class ImportController extends Controller
         $result                            = json_encode($config, JSON_PRETTY_PRINT);
         $name                              = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
-        return response($result, 200)
-            ->header('Content-disposition', 'attachment; filename=' . $name)
-            ->header('Content-Type', 'application/json')
-            ->header('Content-Description', 'File Transfer')
-            ->header('Connection', 'Keep-Alive')
-            ->header('Expires', '0')
-            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-            ->header('Pragma', 'public')
-            ->header('Content-Length', strlen($result));
+        /** @var LaravelResponse $response */
+        $response = response($result, 200);
+        $response->header('Content-disposition', 'attachment; filename=' . $name)
+                 ->header('Content-Type', 'application/json')
+                 ->header('Content-Description', 'File Transfer')
+                 ->header('Connection', 'Keep-Alive')
+                 ->header('Expires', '0')
+                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+                 ->header('Pragma', 'public')
+                 ->header('Content-Length', strlen($result));
+
+        return $response;
 
 
     }
@@ -138,10 +150,13 @@ class ImportController extends Controller
             return $this->redirectToCorrectStep($job);
         }
 
+        // if there is a tag (there might not be), we can link to it:
+        $tagId = $job->extended_status['importTag'] ?? 0;
+
         $subTitle     = trans('firefly.import_finished');
         $subTitleIcon = 'fa-star';
 
-        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon'));
+        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon', 'tagId'));
     }
 
     /**
@@ -305,13 +320,14 @@ class ImportController extends Controller
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportProcedureInterface $importProcedure
+     * @param ImportJob                $job
      */
-    public function start(ImportJob $job)
+    public function start(ImportProcedureInterface $importProcedure, ImportJob $job)
     {
         set_time_limit(0);
         if ($job->status == 'settings_complete') {
-            ImportProcedure::runImport($job);
+            $importProcedure->runImport($job);
         }
     }
 
@@ -323,7 +339,7 @@ class ImportController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function status(ImportJob $job)
-    {
+    { //
         Log::debug('Now in status()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'status')) {
             return $this->redirectToCorrectStep($job);
@@ -357,14 +373,33 @@ class ImportController extends Controller
         $content          = $uploaded->fread($uploaded->getSize());
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
-        $disk->put($newName, $contentEncrypted);
 
-        Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
+        // user is demo user, replace upload with prepared file.
+        if (auth()->user()->hasRole('demo')) {
+            $stubsDisk        = Storage::disk('stubs');
+            $content          = $stubsDisk->get('demo-import.csv');
+            $contentEncrypted = Crypt::encrypt($content);
+            $disk->put($newName, $contentEncrypted);
+            Log::debug('Replaced upload with demo file.');
 
-        // store configuration file's content into the job's configuration
-        // thing.
-        // otherwise, leave it empty.
-        if ($request->files->has('configuration_file')) {
+            // also set up prepared configuration.
+            $configuration      = json_decode($stubsDisk->get('demo-configuration.json'), true);
+            $job->configuration = $configuration;
+            $job->save();
+            Log::debug('Set configuration for demo user', $configuration);
+
+            // also flash info
+            Session::flash('info', trans('demo.import-configure-security'));
+        }
+        if (!auth()->user()->hasRole('demo')) {
+            // user is not demo, process original upload:
+            $disk->put($newName, $contentEncrypted);
+            Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
+        }
+
+        // store configuration file's content into the job's configuration thing. Otherwise, leave it empty.
+        // demo user's configuration upload is ignored completely.
+        if ($request->files->has('configuration_file') && !auth()->user()->hasRole('demo')) {
             /** @var UploadedFile $configFile */
             $configFile = $request->files->get('configuration_file');
             Log::debug(
@@ -382,6 +417,9 @@ class ImportController extends Controller
                 $job->save();
             }
         }
+
+        // if user is demo user, replace config with prepared config:
+
 
         return redirect(route('import.configure', [$job->key]));
 

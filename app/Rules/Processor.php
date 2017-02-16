@@ -16,6 +16,7 @@ namespace FireflyIII\Rules;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\Actions\ActionInterface;
 use FireflyIII\Rules\Factory\ActionFactory;
@@ -142,6 +143,36 @@ final class Processor
     public function getRule(): Rule
     {
         return $this->rule;
+    }
+
+    /**
+     * This method will scan the given transaction journal and check if it matches the triggers found in the Processor
+     * If so, it will also attempt to run the given actions on the journal. It returns a bool indicating if the transaction journal
+     * matches all of the triggers (regardless of whether the Processor could act on it).
+     *
+     * @param Transaction $transaction
+     *
+     * @return bool
+     */
+    public function handleTransaction(Transaction $transaction): bool
+    {
+        Log::debug(sprintf('handleTransactionJournal for journal #%d (transaction #%d)', $transaction->transaction_journal_id, $transaction->id));
+
+        // grab the actual journal.
+        $journal       = $transaction->transactionJournal()->first();
+        $this->journal = $journal;
+        // get all triggers:
+        $triggered = $this->triggered();
+        if ($triggered) {
+            if ($this->actions->count() > 0) {
+                $this->actions();
+            }
+
+            return true;
+        }
+
+        return false;
+
     }
 
     /**

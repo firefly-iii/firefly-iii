@@ -14,19 +14,18 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input;
 use Navigation;
 use Preferences;
 use Session;
-use URL;
 use View;
 
 /**
@@ -43,8 +42,16 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', trans('firefly.categories'));
-        View::share('mainTitleIcon', 'fa-bar-chart');
+
+
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.categories'));
+                View::share('mainTitleIcon', 'fa-bar-chart');
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -52,9 +59,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        // put previous url in session if not redirect from store (not "create another").
         if (session('categories.create.fromStore') !== true) {
-            Session::put('categories.create.url', URL::previous());
+            $this->rememberPreviousUri('categories.create.uri');
         }
         Session::forget('categories.create.fromStore');
         Session::flash('gaEventCategory', 'categories');
@@ -74,20 +80,21 @@ class CategoryController extends Controller
         $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
-        Session::put('categories.delete.url', URL::previous());
+        $this->rememberPreviousUri('categories.delete.uri');
         Session::flash('gaEventCategory', 'categories');
         Session::flash('gaEventAction', 'delete');
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
 
+
     /**
-     * @param CRI      $repository
-     * @param Category $category
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(CRI $repository, Category $category)
+    public function destroy(CategoryRepositoryInterface $repository, Category $category)
     {
 
         $name = $category->name;
@@ -96,7 +103,7 @@ class CategoryController extends Controller
         Session::flash('success', strval(trans('firefly.deleted_category', ['name' => e($name)])));
         Preferences::mark();
 
-        return redirect(session('categories.delete.url'));
+        return redirect($this->getPreviousUri('categories.delete.uri'));
     }
 
     /**
@@ -110,7 +117,7 @@ class CategoryController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('categories.edit.fromUpdate') !== true) {
-            Session::put('categories.edit.url', URL::previous());
+            $this->rememberPreviousUri('categories.edit.uri');
         }
         Session::forget('categories.edit.fromUpdate');
         Session::flash('gaEventCategory', 'categories');
@@ -121,11 +128,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI $repository
+     * @param CategoryRepositoryInterface $repository
      *
      * @return View
      */
-    public function index(CRI $repository)
+    public function index(CategoryRepositoryInterface $repository)
     {
         $categories = $repository->getCategories();
 
@@ -139,130 +146,125 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI $repository
-     *
      * @return View
      */
-    public function noCategory(CRI $repository)
+    public function noCategory()
     {
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->startOfMonth());
-        $list     = $repository->journalsInPeriodWithoutCategory(new Collection(), [], $start, $end); // category
+        $end = session('end', Carbon::now()->startOfMonth());
+
+        // new collector:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->withoutCategory();//->groupJournals();
+        $journals = $collector->getJournals();
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
 
-        return view('categories.noCategory', compact('list', 'subTitle'));
+        return view('categories.no-category', compact('journals', 'subTitle'));
     }
 
     /**
-     * @param CRI                        $repository
-     * @param AccountRepositoryInterface $accountRepository
-     * @param Category                   $category
+     * @param Request                   $request
+     * @param JournalCollectorInterface $collector
+     * @param Category                  $category
      *
      * @return View
      */
-    public function show(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
+    public function show(Request $request, JournalCollectorInterface $collector, Category $category)
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        /** @var Carbon $start */
-        $start = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        /** @var Carbon $end */
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
         $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
-        $count        = $set->count();
-        $subSet       = $set->splice($offset, $pageSize);
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
-        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $entries      = $this->getGroupedEntries($category);
+        $method       = 'default';
+
+        // get journals
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category)->withBudgetInformation();
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id);
 
-        // oldest transaction in category:
+
+        return view('categories.show', compact('category', 'method', 'journals', 'entries', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
+    }
+
+    /**
+     * @param Request                     $request
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     *
+     * @return View
+     */
+    public function showAll(Request $request, CategoryRepositoryInterface $repository, Category $category)
+    {
+        $range = Preferences::get('viewRange', '1M')->data;
         $start = $repository->firstUseDate($category);
         if ($start->year == 1900) {
             $start = new Carbon;
         }
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = Navigation::startOfPeriod($start, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
-        $entries = new Collection;
+        $end          = Navigation::endOfPeriod(new Carbon, $range);
+        $subTitle     = $category->name;
+        $subTitleIcon = 'fa-bar-chart';
+        $hideCategory = true; // used in list.
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $method       = 'all';
 
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('category-show');
-        $cache->addProperty($category->id);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setCategory($category)->withBudgetInformation();
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('categories/show/' . $category->id . '/all');
 
-
-        if ($cache->has()) {
-            $entries = $cache->get();
-
-            return view('categories.show', compact('category', 'journals', 'entries', 'subTitleIcon', 'hideCategory', 'subTitle'));
-        }
-
-
-        $categoryCollection = new Collection([$category]);
-        $accounts           = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        while ($end >= $start) {
-            $end        = Navigation::startOfPeriod($end, $range);
-            $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $repository->spentInPeriod($categoryCollection, $accounts, $end, $currentEnd);
-            $earned     = $repository->earnedInPeriod($categoryCollection, $accounts, $end, $currentEnd);
-            $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned]);
-
-            $end = Navigation::subtractPeriod($end, $range, 1);
-
-        }
-        $cache->store($entries);
-
-        return view('categories.show', compact('category', 'journals', 'entries', 'hideCategory', 'subTitle'));
+        return view('categories.show', compact('category', 'method', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
-     * @param CRI                               $repository
-     * @param Category                          $category
-     *
-     * @param                                   $date
+     * @param Request  $request
+     * @param Category $category
+     * @param string   $date
      *
      * @return View
      */
-    public function showWithDate(CRI $repository, Category $category, string $date)
+    public function showByDate(Request $request, Category $category, string $date)
     {
         $carbon       = new Carbon($date);
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = Navigation::startOfPeriod($carbon, $range);
         $end          = Navigation::endOfPeriod($carbon, $range);
         $subTitle     = $category->name;
+        $subTitleIcon = 'fa-bar-chart';
         $hideCategory = true; // used in list.
-        $page         = intval(Input::get('page'));
-        $pageSize     = Preferences::get('transactionPageSize', 50)->data;
-        $offset       = ($page - 1) * $pageSize;
-        $set          = $repository->journalsInPeriod(new Collection([$category]), new Collection, [], $start, $end); // category
-        $count        = $set->count();
-        $subSet       = $set->splice($offset, $pageSize);
-        $journals     = new LengthAwarePaginator($subSet, $count, $pageSize, $page);
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $entries      = $this->getGroupedEntries($category);
+        $method       = 'date';
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category)->withBudgetInformation();
+        $journals = $collector->getPaginatedJournals();
         $journals->setPath('categories/show/' . $category->id . '/' . $date);
 
-        return view('categories.show_with_date', compact('category', 'journals', 'hideCategory', 'subTitle', 'carbon'));
+        return view('categories.show', compact('category', 'method', 'entries', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
-     * @param CategoryFormRequest $request
-     * @param CRI                 $repository
+     * @param CategoryFormRequest         $request
+     * @param CategoryRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(CategoryFormRequest $request, CRI $repository)
+    public function store(CategoryFormRequest $request, CategoryRepositoryInterface $repository)
     {
         $data     = $request->getCategoryData();
         $category = $repository->store($data);
@@ -270,7 +272,7 @@ class CategoryController extends Controller
         Session::flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('create_another')) === 1) {
+        if (intval($request->get('create_another')) === 1) {
             Session::put('categories.create.fromStore', true);
 
             return redirect(route('categories.create'))->withInput();
@@ -281,13 +283,13 @@ class CategoryController extends Controller
 
 
     /**
-     * @param CategoryFormRequest $request
-     * @param CRI                 $repository
-     * @param Category            $category
+     * @param CategoryFormRequest         $request
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(CategoryFormRequest $request, CRI $repository, Category $category)
+    public function update(CategoryFormRequest $request, CategoryRepositoryInterface $repository, Category $category)
     {
         $data = $request->getCategoryData();
         $repository->update($category, $data);
@@ -295,15 +297,59 @@ class CategoryController extends Controller
         Session::flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             Session::put('categories.edit.fromUpdate', true);
 
             return redirect(route('categories.edit', [$category->id]));
         }
 
-        // redirect to previous URL.
-        return redirect(session('categories.edit.url'));
+        return redirect($this->getPreviousUri('categories.edit.uri'));
+    }
 
+    /**
+     * @param Category $category
+     *
+     * @return Collection
+     */
+    private function getGroupedEntries(Category $category): Collection
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $first             = $repository->firstUseDate($category);
+        if ($first->year == 1900) {
+            $first = new Carbon;
+        }
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $first   = Navigation::startOfPeriod($first, $range);
+        $end     = Navigation::endOfX(new Carbon, $range);
+        $entries = new Collection;
+
+        // properties for entries with their amounts.
+        $cache = new CacheProperties();
+        $cache->addProperty($first);
+        $cache->addProperty($end);
+        $cache->addProperty('categories.entries');
+        $cache->addProperty($category->id);
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        while ($end >= $first) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+            $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
+            $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
+            $dateStr    = $end->format('Y-m-d');
+            $dateName   = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $spent, $earned, clone $end]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+        }
+        $cache->store($entries);
+
+        return $entries;
     }
 
 }

@@ -20,8 +20,6 @@ class ChangesFor3101 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -31,13 +29,13 @@ class ChangesFor3101 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up()
     {
         Schema::table(
             'import_jobs', function (Blueprint $table) {
-            $table->text('extended_status');
+            $table->text('extended_status')->nullable();
         }
         );
     }

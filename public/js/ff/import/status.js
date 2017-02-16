@@ -2,11 +2,13 @@
  * status.js
  * Copyright (C) 2016 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms
- * of the MIT license.  See the LICENSE file for details.
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
  */
-/* globals $, jobImportUrl, jobStartUrl, token, langImportMultiError, langImportSingleError, langImportFatalError, langImportTimeOutError  */
 
+/** global: jobImportUrl, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
 
 var startedImport = false;
 var startInterval = 2000;
@@ -28,20 +30,17 @@ $(function () {
 
 function checkImportStatus() {
     "use strict";
-    console.log('checkImportStatus()');
     $.getJSON(jobImportUrl).done(reportOnJobImport).fail(failedJobImport);
 }
 
-function importComplete(data) {
+function importComplete() {
     "use strict";
-    console.log('importComplete()');
     var bar = $('#import-status-bar');
     bar.removeClass('active');
 }
 
 function updateBar(data) {
     "use strict";
-    console.log('updateBar()');
     var bar = $('#import-status-bar');
     if (data.showPercentage) {
         bar.addClass('progress-bar-success').removeClass('progress-bar-info');
@@ -50,7 +49,7 @@ function updateBar(data) {
         $('#import-status-bar').text(data.stepsDone + '/' + data.steps);
 
         if (data.percentage >= 100) {
-            importComplete(data);
+            importComplete();
             return;
         }
         return;
@@ -63,7 +62,6 @@ function updateBar(data) {
 
 function reportErrors(data) {
     "use strict";
-    console.log('reportErrors()');
     if (data.errors.length == 1) {
         $('#import-status-error-intro').text(langImportSingleError);
         //'An error has occured during the import. The import can continue, however.'
@@ -83,21 +81,18 @@ function reportErrors(data) {
 
 function reportStatus(data) {
     "use strict";
-    console.log('reportStatus()');
     $('#import-status-txt').removeClass('text-danger').text(data.statusText);
 }
 
 function kickStartJob() {
     "use strict";
-    console.log('kickStartJob()');
-    $.post(jobStartUrl, {_token: token});
+    $.post(jobStartUrl);
     startedTheImport();
     startedImport = true;
 }
 
 function updateTimeout(data) {
     "use strict";
-    console.log('updateTimeout()');
     if (data.stepsDone != stepCount) {
         stepCount = data.stepsDone;
         currentLimit = 0;
@@ -105,12 +100,10 @@ function updateTimeout(data) {
     }
 
     currentLimit = currentLimit + interval;
-    // console.log("stepCount: " + stepCount + ", stepsDone: " + data.stepsDone + ", currentLimit: " + currentLimit);
 }
 
 function timeoutError() {
     "use strict";
-    console.log('timeoutError()');
     // set status
     $('#import-status-txt').addClass('text-danger').text(langImportTimeOutError);
 
@@ -121,13 +114,11 @@ function timeoutError() {
 
 function importJobFinished(data) {
     "use strict";
-    console.log('importJobFinished() = ' + data.finished);
     return data.finished;
 }
 
 function finishedJob(data) {
     "use strict";
-    console.log('finishedJob()');
     // "There was an error during the import routine. Please check the log files. The error seems to be: '"
     $('#import-status-txt').removeClass('text-danger').addClass('text-success').text(langImportFinished);
 
@@ -142,7 +133,6 @@ function finishedJob(data) {
 
 function reportOnJobImport(data) {
     "use strict";
-    console.log('reportOnJobImport()');
     updateBar(data);
     reportErrors(data);
     reportStatus(data);
@@ -173,13 +163,11 @@ function reportOnJobImport(data) {
 
 function startedTheImport() {
     "use strict";
-    console.log('startedTheImport()');
     setTimeout(checkImportStatus, interval);
 }
 
 function failedJobImport(jqxhr, textStatus, error) {
     "use strict";
-    console.log('failedJobImport()');
     // set status
     // "There was an error during the import routine. Please check the log files. The error seems to be: '"
     $('#import-status-txt').addClass('text-danger').text(langImportFatalError + ' ' + textStatus + ' ' + error);

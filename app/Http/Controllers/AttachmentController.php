@@ -13,23 +13,21 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Crypt;
 use File;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use Input;
-use Log;
+use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 use Response;
 use Session;
-use Storage;
-use URL;
 use View;
 
 /**
  * Class AttachmentController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it's 13.
  *
  * @package FireflyIII\Http\Controllers
  */
@@ -42,8 +40,16 @@ class AttachmentController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('mainTitleIcon', 'fa-paperclip');
-        View::share('title', trans('firefly.attachments'));
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                View::share('mainTitleIcon', 'fa-paperclip');
+                View::share('title', trans('firefly.attachments'));
+
+                return $next($request);
+            }
+        );
     }
 
     /**
@@ -56,7 +62,7 @@ class AttachmentController extends Controller
         $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
-        Session::put('attachments.delete.url', URL::previous());
+        $this->rememberPreviousUri('attachments.delete.uri');
         Session::flash('gaEventCategory', 'attachments');
         Session::flash('gaEventAction', 'delete-attachment');
 
@@ -78,29 +84,25 @@ class AttachmentController extends Controller
         Session::flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
         Preferences::mark();
 
-        return redirect(session('attachments.delete.url'));
+        return redirect($this->getPreviousUri('attachments.delete.uri'));
     }
 
     /**
-     * @param Attachment $attachment
+     * @param AttachmentRepositoryInterface $repository
+     * @param Attachment                    $attachment
      *
+     * @return mixed
      * @throws FireflyException
-     *
      */
-    public function download(Attachment $attachment)
+    public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
-        // create a disk.
-        $disk = Storage::disk('upload');
-        $file = $attachment->fileName();
-
-        if ($disk->exists($file)) {
-
+        if ($repository->exists($attachment)) {
+            $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
-            $content = Crypt::decrypt($disk->get($file));
 
-            Log::debug('Send file to user', ['file' => $quoted, 'size' => strlen($content)]);
-
-            return response($content, 200)
+            /** @var LaravelResponse $response */
+            $response = response($content, 200);
+            $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
                 ->header('Content-Disposition', 'attachment; filename=' . $quoted)
@@ -111,6 +113,7 @@ class AttachmentController extends Controller
                 ->header('Pragma', 'public')
                 ->header('Content-Length', strlen($content));
 
+            return $response;
         }
         throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
     }
@@ -127,7 +130,7 @@ class AttachmentController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('attachments.edit.fromUpdate') !== true) {
-            Session::put('attachments.edit.url', URL::previous());
+            $this->rememberPreviousUri('attachments.edit.uri');
         }
         Session::forget('attachments.edit.fromUpdate');
 
@@ -142,7 +145,6 @@ class AttachmentController extends Controller
     public function preview(Attachment $attachment)
     {
         $image = 'images/page_green.png';
-
 
         if ($attachment->mime == 'application/pdf') {
             $image = 'images/page_white_acrobat.png';
@@ -170,7 +172,7 @@ class AttachmentController extends Controller
         Session::flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();
 
-        if (intval(Input::get('return_to_edit')) === 1) {
+        if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('attachments.edit.fromUpdate', true);
 
@@ -178,7 +180,7 @@ class AttachmentController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('attachments.edit.url'));
+        return redirect($this->getPreviousUri('attachments.edit.uri'));
 
     }
 

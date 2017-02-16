@@ -27,6 +27,7 @@ use FireflyIII\Rules\Processor;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Steam;
 
 /**
  * Class ImportStorage
@@ -113,7 +114,11 @@ class ImportStorage
     private function alreadyImported(string $hash): TransactionJournal
     {
 
-        $meta = TransactionJournalMeta::where('name', 'originalImportHash')->where('data', json_encode($hash))->first(['journal_meta.*']);
+        $meta = TransactionJournalMeta
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->where('journal_meta.name', 'originalImportHash')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->where('journal_meta.data', json_encode($hash))->first(['journal_meta.*']);
         if (!is_null($meta)) {
             /** @var TransactionJournal $journal */
             $journal = $meta->transactionjournal;
@@ -155,7 +160,8 @@ class ImportStorage
     private function createImportTag(): Tag
     {
         /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class, [$this->user]);
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($this->user);
         $data       = [
             'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,
@@ -190,21 +196,6 @@ class ImportStorage
 
         return $set;
 
-    }
-
-    /**
-     * @param float $amount
-     *
-     * @return string
-     */
-    private function makePositive(float $amount): string
-    {
-        $amount = strval($amount);
-        if (bccomp($amount, '0', 4) === -1) { // left is larger than right
-            $amount = bcmul($amount, '-1');
-        }
-
-        return $amount;
     }
 
     /**
@@ -365,21 +356,21 @@ class ImportStorage
 
 
         $journal  = $this->storeJournal($entry);
-        $amount   = $this->makePositive($entry->fields['amount']);
+        $amount   = Steam::positive($entry->fields['amount']);
         $accounts = $this->storeAccounts($entry);
 
         // create new transactions. This is something that needs a rewrite for multiple/split transactions.
         $sourceData = [
             'account_id'             => $accounts['source']->id,
             'transaction_journal_id' => $journal->id,
-            'description'            => $journal->description,
+            'description'            => null,
             'amount'                 => bcmul($amount, '-1'),
         ];
 
         $destinationData = [
             'account_id'             => $accounts['destination']->id,
             'transaction_journal_id' => $journal->id,
-            'description'            => $journal->description,
+            'description'            => null,
             'amount'                 => $amount,
         ];
 

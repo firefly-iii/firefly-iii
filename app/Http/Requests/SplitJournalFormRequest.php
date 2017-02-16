@@ -13,8 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
-
+use Steam;
 
 /**
  * Class SplitJournalFormRequest
@@ -38,18 +37,18 @@ class SplitJournalFormRequest extends Request
     public function getSplitData(): array
     {
         $data = [
-            'id'                               => $this->get('id') ?? 0,
-            'journal_description'              => $this->get('journal_description'),
-            'journal_currency_id'              => intval($this->get('journal_currency_id')),
-            'journal_source_account_id'        => intval($this->get('journal_source_account_id')),
-            'journal_source_account_name'      => $this->get('journal_source_account_name'),
-            'journal_destination_account_id'   => intval($this->get('journal_destination_account_id')),
-            'journal_destination_account_name' => $this->get('journal_source_destination_name'),
-            'date'                             => new Carbon($this->get('date')),
-            'what'                             => $this->get('what'),
-            'interest_date'                    => $this->get('interest_date') ? new Carbon($this->get('interest_date')) : null,
-            'book_date'                        => $this->get('book_date') ? new Carbon($this->get('book_date')) : null,
-            'process_date'                     => $this->get('process_date') ? new Carbon($this->get('process_date')) : null,
+            'id'                               => $this->integer('id'),
+            'journal_description'              => $this->string('journal_description'),
+            'journal_currency_id'              => $this->integer('journal_currency_id'),
+            'journal_source_account_id'        => $this->integer('journal_source_account_id'),
+            'journal_source_account_name'      => $this->string('journal_source_account_name'),
+            'journal_destination_account_id'   => $this->integer('journal_destination_account_id'),
+            'journal_destination_account_name' => $this->string('journal_source_destination_name'),
+            'date'                             => $this->date('date'),
+            'what'                             => $this->string('what'),
+            'interest_date'                    => $this->date('interest_date'),
+            'book_date'                        => $this->date('book_date'),
+            'process_date'                     => $this->date('process_date'),
             'transactions'                     => $this->getTransactionData(),
         ];
 
@@ -87,27 +86,30 @@ class SplitJournalFormRequest extends Request
      */
     private function getTransactionData(): array
     {
+        $descriptions    = $this->getArray('description', 'string');
+        $categories      = $this->getArray('category', 'string');
+        $amounts         = $this->getArray('amount', 'float');
+        $budgets         = $this->getArray('amount', 'integer');
+        $srcAccountIds   = $this->getArray('source_account_id', 'integer');
+        $srcAccountNames = $this->getArray('source_account_name', 'string');
+        $dstAccountIds   = $this->getArray('destination_account_id', 'integer');
+        $dstAccountNames = $this->getArray('destination_account_name', 'string');
+        $piggyBankIds    = $this->getArray('piggy_bank_id', 'integer');
+
         $return = [];
         // description is leading because it is one of the mandatory fields.
-        foreach ($this->get('description') as $index => $description) {
+        foreach ($descriptions as $index => $description) {
+            $category    = $categories[$index] ?? '';
             $transaction = [
                 'description'              => $description,
-                'amount'                   => round($this->get('amount')[$index], 2),
-                'budget_id'                => $this->get('budget_id')[$index] ? intval($this->get('budget_id')[$index]) : 0,
-                'category'                 => $this->get('category')[$index] ?? '',
-                'source_account_id'        => isset($this->get('source_account_id')[$index])
-                    ? intval($this->get('source_account_id')[$index])
-                    : intval(
-                        $this->get('journal_source_account_id')
-                    ),
-                'source_account_name'      => $this->get('source_account_name')[$index] ?? '',
-                'piggy_bank_id'            => isset($this->get('piggy_bank_id')[$index]) ? intval($this->get('piggy_bank_id')[$index]) : 0,
-                'destination_account_id'   => isset($this->get('destination_account_id')[$index])
-                    ? intval($this->get('destination_account_id')[$index])
-                    : intval(
-                        $this->get('journal_destination_account_id')
-                    ),
-                'destination_account_name' => $this->get('destination_account_name')[$index] ?? '',
+                'amount'                   => Steam::positive($amounts[$index]),
+                'budget_id'                => $budgets[$index] ?? 0,
+                'category'                 => $category,
+                'source_account_id'        => $srcAccountIds[$index] ?? $this->get('journal_source_account_id'),
+                'source_account_name'      => $srcAccountNames[$index] ?? '',
+                'piggy_bank_id'            => $piggyBankIds[$index] ?? 0,
+                'destination_account_id'   => $dstAccountIds[$index] ?? $this->get('journal_destination_account_id'),
+                'destination_account_name' => $dstAccountNames[$index] ?? '',
             ];
             $return[]    = $transaction;
         }
