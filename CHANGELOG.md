@@ -2,7 +2,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.3.5] - 2017-02-19
+### Added
+- Beta support for Sandstorm.IO
+- Docker support by [@schoentoon](https://github.com/schoentoon), [@elohmeier](https://github.com/elohmeier), [@patrickkostjens](https://github.com/patrickkostjens) and [@crash7](https://github.com/crash7)!
 
+### Changed
+- Updated to laravel 5.4!
+- User friendly error message
+- Updated locales to support more operating systems, first reported in #536 by [dabenzel](https://github.com/dabenzel)
+- Updated budget report
+- Improved 404 page
+- Smooth curves, improved by [elamperti](https://github.com/elamperti).
+
+### Fixed
+- #549
+- #553
+- Fixed #559 reported by [elamperti](https://github.com/elamperti).
+- #565, as reported by a user over the mail
+- #566, as reported by [dspeckmann](https://github.com/dspeckmann)
+- #567, as reported by [winsomniak](https://github.com/winsomniak)
+- #569, as reported by [winsomniak](https://github.com/winsomniak)
+- #572, as reported by [zjean](https://github.com/zjean)
+- Many issues with the transaction filters which will fix reports (they tended to display the wrong amount).
 
 ## [4.3.4] - 2017-02-02
 ### Fixed
