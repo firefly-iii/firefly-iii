@@ -49,7 +49,7 @@
     "php": ">=7.0.0",
     "ext-intl": "*",
     "laravel/framework": "5.4.*",
-    "davejamesmiller/laravel-breadcrumbs": "3.1",
+    "davejamesmiller/laravel-breadcrumbs": "3.*",
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
     "league/commonmark": "0.15.*",
@@ -105,11 +105,5 @@
   },
   "config": {
     "preferred-install": "dist"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/firefly-iii/laravel-breadcrumbs.git"
-    }
-  ]
+  }
 }
