@@ -31,14 +31,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     private $user;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @param TransactionCurrency $currency
      *
      * @return bool
@@ -184,6 +176,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return $preferred;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

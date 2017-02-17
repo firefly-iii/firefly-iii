@@ -16,7 +16,6 @@ namespace FireflyIII\Export\Collector;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;

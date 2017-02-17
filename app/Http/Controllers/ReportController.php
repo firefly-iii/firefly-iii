@@ -100,42 +100,6 @@ class ReportController extends Controller
 
     /**
      * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     */
-    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
-    {
-        if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));
-        }
-        if ($start < session('first')) {
-            $start = session('first');
-        }
-
-        View::share(
-            'subTitle', trans(
-                          'firefly.report_tag',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
-        );
-
-        $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);
-        $generator->setAccounts($accounts);
-        $generator->setTags($tags);
-        $result = $generator->generate();
-
-        return $result;
-
-    }
-
-    /**
-     * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
@@ -355,6 +319,42 @@ class ReportController extends Controller
         }
 
         return redirect($uri);
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return string
+     */
+    public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    {
+        if ($end < $start) {
+            return view('error')->with('message', trans('firefly.end_after_start_date'));
+        }
+        if ($start < session('first')) {
+            $start = session('first');
+        }
+
+        View::share(
+            'subTitle', trans(
+                          'firefly.report_tag',
+                          [
+                              'start' => $start->formatLocalized($this->monthFormat),
+                              'end'   => $end->formatLocalized($this->monthFormat),
+                          ]
+                      )
+        );
+
+        $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);
+        $generator->setAccounts($accounts);
+        $generator->setTags($tags);
+        $result = $generator->generate();
+
+        return $result;
+
     }
 
     /**

@@ -35,14 +35,6 @@ class TagRepository implements TagRepositoryInterface
     private $user;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      *
      * @param TransactionJournal $journal
      * @param Tag                $tag
@@ -86,6 +78,25 @@ class TagRepository implements TagRepositoryInterface
         $tag->delete();
 
         return true;
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
     }
 
     /**
@@ -165,6 +176,33 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return new Carbon;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
+        $set = $collector->getJournals();
+        $sum = strval($set->sum('transaction_amount'));
+
+        return $sum;
     }
 
     /**
@@ -382,43 +420,5 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
-        $set = $collector->getJournals();
-        $sum = strval($set->sum('transaction_amount'));
-
-        return $sum;
-    }
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
-        $set = $collector->getJournals();
-        $sum = strval($set->sum('transaction_amount'));
-
-        return $sum;
     }
 }

@@ -44,14 +44,6 @@ class JournalRepository implements JournalRepositoryInterface
     private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
      * @param Account            $source
@@ -141,6 +133,14 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactionTypes(): Collection
     {
         return TransactionType::orderBy('type', 'ASC')->get();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

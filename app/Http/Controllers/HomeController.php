@@ -23,7 +23,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Route;
 use Session;
 use View;
 
@@ -91,7 +90,7 @@ class HomeController extends Controller
     public function flush(Request $request)
     {
         Preferences::mark();
-        $request->session()->forget(['start', 'end','_previous', 'viewRange', 'range', 'is_custom_range']);
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
         Artisan::call('cache:clear');
 
         return redirect(route('index'));

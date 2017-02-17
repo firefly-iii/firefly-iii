@@ -116,9 +116,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param AccountRepositoryInterface     $repository
-     * @param Account $account
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -190,8 +190,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface    $repository
-     * @param string $what
+     * @param AccountRepositoryInterface $repository
+     * @param string                     $what
      *
      * @return View
      */
@@ -260,9 +260,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param AccountRepositoryInterface     $repository
-     * @param Account $account
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return View
      */
@@ -323,8 +323,8 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param AccountRepositoryInterface                $repository
+     * @param AccountFormRequest         $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
@@ -356,9 +356,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param AccountRepositoryInterface                $repository
-     * @param Account            $account
+     * @param AccountFormRequest         $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

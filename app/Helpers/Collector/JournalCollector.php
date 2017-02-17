@@ -503,6 +503,7 @@ class JournalCollector implements JournalCollectorInterface
     public function withOpposingAccount(): JournalCollectorInterface
     {
         $this->joinOpposingTables();
+
         return $this;
     }
 

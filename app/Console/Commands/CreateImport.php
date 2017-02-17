@@ -81,7 +81,7 @@ class CreateImport extends Command
         /** @var ImportJobRepositoryInterface $jobRepository */
         $jobRepository = app(ImportJobRepositoryInterface::class);
         $jobRepository->setUser($user);
-        $job           = $jobRepository->create($type);
+        $job = $jobRepository->create($type);
         $this->line(sprintf('Created job "%s"...', $job->key));
 
         Artisan::call('firefly:encrypt', ['file' => $file, 'key' => $job->key]);

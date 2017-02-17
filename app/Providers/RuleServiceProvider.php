@@ -51,6 +51,7 @@ class RuleServiceProvider extends ServiceProvider
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }
+
                 return $repository;
             }
         );

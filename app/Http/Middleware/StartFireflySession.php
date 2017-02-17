@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Session\SessionManager;
-use Log;
 
 /**
  * Class StartFireflySession

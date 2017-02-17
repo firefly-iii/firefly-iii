@@ -122,14 +122,14 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(MetaPieChartInterface::class, MetaPieChart::class);
 
         // other generators
-        $this->app->bind(ProcessorInterface::class,Processor::class);
-        $this->app->bind(ImportProcedureInterface::class,ImportProcedure::class);
+        $this->app->bind(ProcessorInterface::class, Processor::class);
+        $this->app->bind(ImportProcedureInterface::class, ImportProcedure::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
         $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
-        $this->app->bind(FiscalHelperInterface::class,FiscalHelper::class);
+        $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
         $this->app->bind(BudgetReportHelperInterface::class, BudgetReportHelper::class);
     }

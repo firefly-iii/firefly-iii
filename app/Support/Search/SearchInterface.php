@@ -31,11 +31,6 @@ interface SearchInterface
     public function searchAccounts(array $words): Collection;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param array $words
      *
      * @return Collection
@@ -63,4 +58,9 @@ interface SearchInterface
      * @return Collection
      */
     public function searchTransactions(array $words): Collection;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 }

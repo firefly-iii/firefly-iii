@@ -87,7 +87,7 @@ class Request extends FormRequest
      */
     protected function string(string $field): string
     {
-        $string = $this->get($field) ?? '';
+        $string  = $this->get($field) ?? '';
         $search  = [
             "\u{0001}", // start of heading
             "\u{0002}", // start of text
