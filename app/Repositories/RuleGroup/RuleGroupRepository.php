@@ -31,14 +31,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     private $user;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return int
      */
     public function count(): int
@@ -226,6 +218,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         return true;
 
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

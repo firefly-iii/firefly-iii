@@ -62,8 +62,8 @@ class UserEventHandler
     public function logoutUser(): bool
     {
         // dump stuff from the session:
-        Session::forget('twofactor-authenticated');
-        Session::forget('twofactor-authenticated-date');
+        Session::forget('twoFactorAuthenticated');
+        Session::forget('twoFactorAuthenticatedDate');
 
         return true;
     }

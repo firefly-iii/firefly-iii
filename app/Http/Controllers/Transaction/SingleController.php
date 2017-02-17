@@ -190,7 +190,7 @@ class SingleController extends Controller
         if ($this->isOpeningBalance($transactionJournal)) {
             return $this->redirectToAccount($transactionJournal);
         }
-        $type      = TransactionJournal::transactionTypeStr($transactionJournal);
+        $type = TransactionJournal::transactionTypeStr($transactionJournal);
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);

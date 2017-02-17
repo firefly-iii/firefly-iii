@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 use Preferences;
-use Session;
 use Steam;
 use View;
 
@@ -61,11 +60,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param string $what
+     * @param Request $request
+     * @param string  $what
      *
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory|View
+     * @return View
      */
-    public function create(string $what = 'asset')
+    public function create(Request $request, string $what = 'asset')
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository      = app(CurrencyRepositoryInterface::class);
@@ -80,27 +80,28 @@ class AccountController extends Controller
 
 
         // pre fill some data
-        Session::flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
+        $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {
             $this->rememberPreviousUri('accounts.create.uri');
         }
-        Session::forget('accounts.create.fromStore');
-        Session::flash('gaEventCategory', 'accounts');
-        Session::flash('gaEventAction', 'create-' . $what);
+        $request->session()->forget('accounts.create.fromStore');
+        $request->session()->flash('gaEventCategory', 'accounts');
+        $request->session()->flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies', 'roles'));
 
     }
 
     /**
+     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
      * @return View
      */
-    public function delete(AccountRepositoryInterface $repository, Account $account)
+    public function delete(Request $request, AccountRepositoryInterface $repository, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
@@ -109,8 +110,8 @@ class AccountController extends Controller
 
         // put previous url in session
         $this->rememberPreviousUri('accounts.delete.uri');
-        Session::flash('gaEventCategory', 'accounts');
-        Session::flash('gaEventAction', 'delete-' . $typeName);
+        $request->session()->flash('gaEventCategory', 'accounts');
+        $request->session()->flash('gaEventAction', 'delete-' . $typeName);
 
         return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
     }
@@ -131,18 +132,19 @@ class AccountController extends Controller
 
         $repository->destroy($account, $moveTo);
 
-        Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
+        $request->session()->flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('accounts.delete.uri'));
     }
 
     /**
+     * @param Request $request
      * @param Account $account
      *
      * @return View
      */
-    public function edit(Account $account)
+    public function edit(Request $request, Account $account)
     {
 
         $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -161,7 +163,7 @@ class AccountController extends Controller
         if (session('accounts.edit.fromUpdate') !== true) {
             $this->rememberPreviousUri('accounts.edit.uri');
         }
-        Session::forget('accounts.edit.fromUpdate');
+        $request->session()->forget('accounts.edit.fromUpdate');
 
         // pre fill some useful values.
 
@@ -182,9 +184,9 @@ class AccountController extends Controller
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $account->getMeta('currency_id'),
         ];
-        Session::flash('preFilled', $preFilled);
-        Session::flash('gaEventCategory', 'accounts');
-        Session::flash('gaEventAction', 'edit-' . $what);
+        $request->session()->flash('preFilled', $preFilled);
+        $request->session()->flash('gaEventCategory', 'accounts');
+        $request->session()->flash('gaEventAction', 'edit-' . $what);
 
         return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'));
     }
@@ -334,7 +336,7 @@ class AccountController extends Controller
         $data    = $request->getAccountData();
         $account = $repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
 
         // update preferences if necessary:
@@ -346,7 +348,7 @@ class AccountController extends Controller
 
         if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('accounts.create.fromStore', true);
+            $request->session()->put('accounts.create.fromStore', true);
 
             return redirect(route('accounts.create', [$request->input('what')]))->withInput();
         }
@@ -367,12 +369,12 @@ class AccountController extends Controller
         $data = $request->getAccountData();
         $repository->update($account, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
+        $request->session()->flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('accounts.edit.fromUpdate', true);
+            $request->session()->put('accounts.edit.fromUpdate', true);
 
             return redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }

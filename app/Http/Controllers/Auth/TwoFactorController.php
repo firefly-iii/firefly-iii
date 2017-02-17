@@ -86,8 +86,8 @@ class TwoFactorController extends Controller
      */
     public function postIndex(TokenFormRequest $request)
     {
-        Session::put('twofactor-authenticated', true);
-        Session::put('twofactor-authenticated-date', new Carbon);
+        Session::put('twoFactorAuthenticated', true);
+        Session::put('twoFactorAuthenticatedDate', new Carbon);
 
         return redirect(route('home'));
     }
