@@ -16,6 +16,7 @@ use Config;
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Lang;
@@ -74,15 +75,18 @@ class LoginController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
+     * @param CookieJar $cookieJar
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this
      */
-    public function logout(Request $request)
+    public function logout(Request $request, CookieJar $cookieJar)
     {
         if (intval(getenv('SANDSTORM')) === 1) {
             return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
         }
+
+        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'false');
 
         $this->guard()->logout();
 
@@ -90,7 +94,7 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect('/');
+        return redirect('/')->withCookie($cookie);
     }
 
     /**

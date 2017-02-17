@@ -13,14 +13,13 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TokenFormRequest;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
-use Session;
 
 /**
  * Class TwoFactorController
@@ -84,12 +83,12 @@ class TwoFactorController extends Controller
      *
      * @return mixed
      */
-    public function postIndex(TokenFormRequest $request)
+    public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {
-        Session::put('twoFactorAuthenticated', true);
-        Session::put('twoFactorAuthenticatedDate', new Carbon);
+        // set cookie!
+        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'true');
 
-        return redirect(route('home'));
+        return redirect(route('home'))->withCookie($cookie);
     }
 
 }

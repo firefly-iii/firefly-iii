@@ -17,7 +17,8 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
 use Session;
-
+use Log;
+use Cookie;
 /**
  * Class RedirectIfTwoFactorAuthenticated
  *
@@ -40,7 +41,10 @@ class RedirectIfTwoFactorAuthenticated
 
             $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
             $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
-            $is2faAuthed  = Session::get('twoFactorAuthenticated');
+
+            // grab 2auth information from cookie
+            $is2faAuthed = Cookie::get('twoFactorAuthenticated') === 'true';
+
             if ($is2faEnabled && $has2faSecret && $is2faAuthed) {
                 return redirect('/');
             }

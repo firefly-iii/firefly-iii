@@ -19,7 +19,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Mail\Message;
 use Log;
 use Mail;
-use Session;
 use Swift_TransportException;
 
 /**
@@ -50,20 +49,6 @@ class UserEventHandler
         if ($repository->count() === 1) {
             $repository->attachRole($event->user, 'owner');
         }
-
-        return true;
-    }
-
-    /**
-     * Handle user logout events.
-     *
-     * @return bool
-     */
-    public function logoutUser(): bool
-    {
-        // dump stuff from the session:
-        Session::forget('twoFactorAuthenticated');
-        Session::forget('twoFactorAuthenticatedDate');
 
         return true;
     }

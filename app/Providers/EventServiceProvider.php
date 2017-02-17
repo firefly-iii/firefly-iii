@@ -56,12 +56,6 @@ class EventServiceProvider extends ServiceProvider
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
                 ],
-
-            // LARAVEL EVENTS:
-            'Illuminate\Auth\Events\Logout'               =>
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@logoutUser',
-                ],
         ];
 
     /**
