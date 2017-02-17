@@ -30,6 +30,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController::index
+     * @covers \FireflyIII\Http\Controllers\Admin\UserController::__construct
      */
     public function testIndex()
     {

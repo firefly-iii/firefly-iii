@@ -19,6 +19,7 @@ class MassControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::__construct
      */
     public function testDelete()
     {

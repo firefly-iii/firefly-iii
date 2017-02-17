@@ -18,6 +18,7 @@ class NewUserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::index
+     * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
      */
     public function testIndex()
     {

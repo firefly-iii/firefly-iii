@@ -80,6 +80,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::index
+     * @covers \FireflyIII\Http\Controllers\RuleController::__construct
      */
     public function testIndex()
     {

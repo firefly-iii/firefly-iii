@@ -99,6 +99,7 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::selectTransactions
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
      */
     public function testSelectTransactions()
     {

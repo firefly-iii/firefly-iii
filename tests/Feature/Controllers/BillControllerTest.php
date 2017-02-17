@@ -71,6 +71,7 @@ class BillControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\BillController::index
+     * @covers \FireflyIII\Http\Controllers\BillController::__construct
      */
     public function testIndex()
     {

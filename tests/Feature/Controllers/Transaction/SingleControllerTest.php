@@ -26,6 +26,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
      */
     public function testCreate()
     {

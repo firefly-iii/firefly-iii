@@ -24,6 +24,7 @@ class ConvertControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::__construct
      */
     public function testIndexDepositTransfer()
     {

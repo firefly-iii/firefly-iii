@@ -77,6 +77,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\AccountController::index
+     * @covers       \FireflyIII\Http\Controllers\AccountController::__construct
      * @covers       \FireflyIII\Http\Controllers\AccountController::isInArray
      * @dataProvider dateRangeProvider
      *

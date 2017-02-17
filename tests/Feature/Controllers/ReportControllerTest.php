@@ -62,6 +62,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::index
+     * @covers \FireflyIII\Http\Controllers\ReportController::__construct
      */
     public function testIndex()
     {

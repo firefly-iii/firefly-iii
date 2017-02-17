@@ -82,6 +82,7 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::index
+     * @covers \FireflyIII\Http\Controllers\CurrencyController::__construct
      */
     public function testIndex()
     {

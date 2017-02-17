@@ -18,6 +18,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
+     * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
      */
     public function testIndex()
     {

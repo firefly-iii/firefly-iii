@@ -18,6 +18,7 @@ class PiggyBankControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\PiggyBankController::history
+     * @covers \FireflyIII\Http\Controllers\Chart\PiggyBankController::__construct
      */
     public function testHistory()
     {

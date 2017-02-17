@@ -67,6 +67,7 @@ class TagControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::index
+     * @covers \FireflyIII\Http\Controllers\TagController::__construct
      */
     public function testIndex()
     {

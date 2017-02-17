@@ -19,6 +19,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::netWorth
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::__construct
      */
     public function testNetWorth()
     {

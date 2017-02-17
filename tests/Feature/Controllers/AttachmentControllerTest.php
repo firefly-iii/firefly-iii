@@ -74,6 +74,7 @@ class AttachmentControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::preview
+     * @covers \FireflyIII\Http\Controllers\AttachmentController::__construct
      */
     public function testPreview()
     {

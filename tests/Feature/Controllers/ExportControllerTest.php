@@ -48,6 +48,7 @@ class ExportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::index
+     * @covers \FireflyIII\Http\Controllers\ExportController::__construct
      */
     public function testIndex()
     {

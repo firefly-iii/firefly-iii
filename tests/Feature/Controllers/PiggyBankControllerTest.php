@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Tests\TestCase;
 
 class PiggyBankControllerTest extends TestCase
@@ -89,6 +90,7 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::index
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController::__construct
      */
     public function testIndex()
     {

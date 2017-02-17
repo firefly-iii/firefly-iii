@@ -21,6 +21,7 @@ class ConfigurationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::index
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::__construct
      */
     public function testIndex()
     {

@@ -88,6 +88,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::index
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::__construct
      * @dataProvider dateRangeProvider
      *
      * @param string $range

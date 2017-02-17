@@ -20,6 +20,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budget
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::__construct
      * @dataProvider dateRangeProvider
      *
      * @param string $range

@@ -24,6 +24,7 @@ class SplitControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
      * Implement testEdit().
      */
     public function testEdit()

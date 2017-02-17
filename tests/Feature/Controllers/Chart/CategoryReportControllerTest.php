@@ -19,6 +19,7 @@ class CategoryReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::accountExpense
+     * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::__construct
      */
     public function testAccountExpense()
     {

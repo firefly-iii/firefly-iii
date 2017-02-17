@@ -64,6 +64,7 @@ class ImportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::index
+     * @covers \FireflyIII\Http\Controllers\ImportController::__construct
      */
     public function testIndex()
     {

@@ -74,6 +74,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CategoryController::index
+     * @covers \FireflyIII\Http\Controllers\CategoryController::__construct
      */
     public function testIndex()
     {

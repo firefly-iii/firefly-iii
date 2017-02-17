@@ -19,6 +19,7 @@ class BillControllerTest extends TestCase
 {
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BillController::frontpage
+     * @covers       \FireflyIII\Http\Controllers\Chart\BillController::__construct
      * @dataProvider dateRangeProvider
      *
      * @param string $range
