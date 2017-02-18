@@ -21,9 +21,6 @@ class TransactionTypeSeeder extends Seeder
 {
     public function run()
     {
-
-        DB::table('transaction_types')->delete();
-
         TransactionType::create(['type' => TransactionType::WITHDRAWAL]);
         TransactionType::create(['type' => TransactionType::DEPOSIT]);
         TransactionType::create(['type' => TransactionType::TRANSFER]);
