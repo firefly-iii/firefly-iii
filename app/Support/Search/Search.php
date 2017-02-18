@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Search;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -34,19 +35,64 @@ class Search implements SearchInterface
 {
     /** @var int */
     private $limit = 100;
+    /** @var Collection */
+    private $modifiers;
     /** @var User */
     private $user;
+    /** @var array */
+    private $validModifiers = [];
+    /** @var  array */
+    private $words = [];
 
     /**
-     * The search will assume that the user does not have so many accounts
-     * that this search should be paginated.
-     *
-     * @param array $words
-     *
+     * Search constructor.
+     */
+    public function __construct()
+    {
+        $this->modifiers      = new Collection;
+        $this->validModifiers = config('firefly.search_modifiers');
+    }
+
+    /**
+     * @return string
+     */
+    public function getWordsAsString(): string
+    {
+        return join(' ', $this->words);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasModifiers(): bool
+    {
+        return $this->modifiers->count() > 0;
+    }
+
+    /**
+     * @param string $query
+     */
+    public function parseQuery(string $query)
+    {
+        $filteredQuery = $query;
+        $pattern       = '/[a-z_]*:[0-9a-z.]*/i';
+        $matches       = [];
+        preg_match_all($pattern, $query, $matches);
+
+        foreach ($matches[0] as $match) {
+            $this->extractModifier($match);
+            $filteredQuery = str_replace($match, '', $filteredQuery);
+        }
+        $filteredQuery = trim(str_replace(['"', "'"], '', $filteredQuery));
+        $this->words   = array_map('trim', explode(' ', $filteredQuery));
+    }
+
+    /**
      * @return Collection
      */
-    public function searchAccounts(array $words): Collection
+    public function searchAccounts(): Collection
     {
+        $words    = $this->words;
         $accounts = $this->user->accounts()
                                ->accountTypeIn([AccountType::DEFAULT, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::BENEFICIARY])
                                ->get(['accounts.*']);
@@ -67,14 +113,13 @@ class Search implements SearchInterface
     }
 
     /**
-     * @param array $words
-     *
      * @return Collection
      */
-    public function searchBudgets(array $words): Collection
+    public function searchBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = auth()->user()->budgets()->get();
+        $set   = auth()->user()->budgets()->get();
+        $words = $this->words;
         /** @var Collection $result */
         $result = $set->filter(
             function (Budget $budget) use ($words) {
@@ -92,14 +137,11 @@ class Search implements SearchInterface
     }
 
     /**
-     * Search assumes the user does not have that many categories. So no paginated search.
-     *
-     * @param array $words
-     *
      * @return Collection
      */
-    public function searchCategories(array $words): Collection
+    public function searchCategories(): Collection
     {
+        $words      = $this->words;
         $categories = $this->user->categories()->get();
         /** @var Collection $result */
         $result = $categories->filter(
@@ -117,15 +159,12 @@ class Search implements SearchInterface
     }
 
     /**
-     *
-     * @param array $words
-     *
      * @return Collection
      */
-    public function searchTags(array $words): Collection
+    public function searchTags(): Collection
     {
-        $tags = $this->user->tags()->get();
-
+        $words = $this->words;
+        $tags  = $this->user->tags()->get();
         /** @var Collection $result */
         $result = $tags->filter(
             function (Tag $tag) use ($words) {
@@ -142,11 +181,9 @@ class Search implements SearchInterface
     }
 
     /**
-     * @param array $words
-     *
      * @return Collection
      */
-    public function searchTransactions(array $words): Collection
+    public function searchTransactions(): Collection
     {
         $pageSize  = 100;
         $processed = 0;
@@ -156,20 +193,17 @@ class Search implements SearchInterface
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
-            $set = $collector->getPaginatedJournals();
+            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
+            $set   = $collector->getPaginatedJournals();
+            $words = $this->words;
+
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(
                 function (Transaction $transaction) use ($words) {
-                    // check descr of journal:
-                    if ($this->strpos_arr(strtolower(strval($transaction->description)), $words)) {
-                        return $transaction;
-                    }
 
-                    // check descr of transaction
-                    if ($this->strpos_arr(strtolower(strval($transaction->transaction_description)), $words)) {
+                    if ($this->matchModifiers($transaction)) {
                         return $transaction;
                     }
 
@@ -201,6 +235,8 @@ class Search implements SearchInterface
         } while (!$reachedEndOfList && !$foundEnough);
 
         $result = $result->slice(0, $this->limit);
+        var_dump($result->toArray());
+        exit;
 
         return $result;
     }
@@ -219,6 +255,79 @@ class Search implements SearchInterface
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param string $string
+     */
+    private function extractModifier(string $string)
+    {
+        $parts = explode(':', $string);
+        if (count($parts) === 2 && strlen(trim(strval($parts[0]))) > 0 && strlen(trim(strval($parts[1])))) {
+            $type  = trim(strval($parts[0]));
+            $value = trim(strval($parts[1]));
+            if (in_array($type, $this->validModifiers)) {
+                // filter for valid type
+                $this->modifiers->push(['type' => $type, 'value' => $value,]);
+            }
+        }
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    private function matchModifiers(Transaction $transaction): bool
+    {
+        Log::debug(sprintf('Now at transaction #%d', $transaction->id));
+        // first "modifier" is always the text of the search:
+        // check descr of journal:
+        if (!$this->strpos_arr(strtolower(strval($transaction->description)), $this->words)
+            && !$this->strpos_arr(strtolower(strval($transaction->transaction_description)), $this->words)
+        ) {
+            Log::debug('Description does not match', $this->words);
+
+            return false;
+        }
+
+
+        // then a for-each and a switch for every possible other thingie.
+        foreach ($this->modifiers as $modifier) {
+            switch ($modifier['type']) {
+                default:
+                    throw new FireflyException(sprintf('Search modifier "%s" is not (yet) supported. Sorry!', $modifier['type']));
+                    break;
+                case 'amount_is':
+                    $res = Modifier::amountIs($transaction, $modifier['value']);
+                    Log::debug(sprintf('Amount is %s? %s', $modifier['value'], var_export($res, true)));
+                    break;
+                case 'amount_less':
+                    $res = Modifier::amountLess($transaction, $modifier['value']);
+                    Log::debug(sprintf('Amount less than %s? %s', $modifier['value'], var_export($res, true)));
+                    break;
+                case 'amount_more':
+                    $res = Modifier::amountMore($transaction, $modifier['value']);
+                    Log::debug(sprintf('Amount more than %s? %s', $modifier['value'], var_export($res, true)));
+                    break;
+                case 'source':
+                    $res = Modifier::source($transaction, $modifier['value']);
+                    Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
+                    break;
+                case 'destination':
+                    $res = Modifier::destination($transaction, $modifier['value']);
+                    Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
+                    break;
+
+            }
+            if ($res === false) {
+                return $res;
+            }
+        }
+
+        return true;
+
     }
 
     /**
