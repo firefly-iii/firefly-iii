@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Search;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use Log;
 use Steam;
@@ -36,59 +37,40 @@ class Modifier
         return $compare === $expected;
     }
 
-    /**
-     * @param Transaction $transaction
-     * @param string      $amount
-     *
-     * @return bool
-     */
-    public static function amountIs(Transaction $transaction, string $amount): bool
+    public static function apply(array $modifier, Transaction $transaction): bool
     {
-        return self::amountCompare($transaction, $amount, 0);
-    }
+        switch ($modifier['type']) {
+            default:
+                throw new FireflyException(sprintf('Search modifier "%s" is not (yet) supported. Sorry!', $modifier['type']));
+                break;
+            case 'amount_is':
+                $res = Modifier::amountCompare($transaction, $modifier['value'], 0);
+                Log::debug(sprintf('Amount is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'amount_less':
+                $res = Modifier::amountCompare($transaction, $modifier['value'], 1);
+                Log::debug(sprintf('Amount less than %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'amount_more':
+                $res = Modifier::amountCompare($transaction, $modifier['value'], -1);
+                Log::debug(sprintf('Amount more than %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'source':
+                $res = Modifier::stringCompare($transaction->account_name, $modifier['value']);
+                Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'destination':
+                $res = Modifier::stringCompare($transaction->opposing_account_name, $modifier['value']);
+                Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'category':
+                $res = Modifier::category($transaction, $modifier['value']);
+                Log::debug(sprintf('Category is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
 
-    /**
-     * @param Transaction $transaction
-     * @param string      $amount
-     *
-     * @return bool
-     */
-    public static function amountLess(Transaction $transaction, string $amount): bool
-    {
-        return self::amountCompare($transaction, $amount, 1);
-    }
+        }
 
-    /**
-     * @param Transaction $transaction
-     * @param string      $amount
-     *
-     * @return bool
-     */
-    public static function amountMore(Transaction $transaction, string $amount): bool
-    {
-        return self::amountCompare($transaction, $amount, -1);
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @param string      $destination
-     *
-     * @return bool
-     */
-    public static function destination(Transaction $transaction, string $destination): bool
-    {
-        return self::stringCompare($transaction->opposing_account_name, $destination);
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @param string      $source
-     *
-     * @return bool
-     */
-    public static function source(Transaction $transaction, string $source): bool
-    {
-        return self::stringCompare($transaction->account_name, $source);
+        return $res;
     }
 
     /**
@@ -104,5 +86,25 @@ class Modifier
 
         return $res;
 
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param string      $search
+     *
+     * @return bool
+     */
+    private static function category(Transaction $transaction, string $search): bool
+    {
+        $journalCategory = '';
+        if (!is_null($transaction->transaction_journal_category_name)) {
+            $journalCategory = Steam::decrypt(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
+        }
+        $transactionCategory = '';
+        if (!is_null($transaction->transaction_category_name)) {
+            $journalCategory = Steam::decrypt(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
+        }
+
+        return self::stringCompare($journalCategory, $search) || self::stringCompare($transactionCategory, $search);
     }
 }

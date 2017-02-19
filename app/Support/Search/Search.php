@@ -193,8 +193,9 @@ class Search implements SearchInterface
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
-            $set   = $collector->getPaginatedJournals();
+            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)
+                ->withOpposingAccount()->withCategoryInformation();
+            $set   = $collector->getPaginatedJournals()->getCollection();
             $words = $this->words;
 
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
@@ -292,35 +293,9 @@ class Search implements SearchInterface
             return false;
         }
 
-
         // then a for-each and a switch for every possible other thingie.
         foreach ($this->modifiers as $modifier) {
-            switch ($modifier['type']) {
-                default:
-                    throw new FireflyException(sprintf('Search modifier "%s" is not (yet) supported. Sorry!', $modifier['type']));
-                    break;
-                case 'amount_is':
-                    $res = Modifier::amountIs($transaction, $modifier['value']);
-                    Log::debug(sprintf('Amount is %s? %s', $modifier['value'], var_export($res, true)));
-                    break;
-                case 'amount_less':
-                    $res = Modifier::amountLess($transaction, $modifier['value']);
-                    Log::debug(sprintf('Amount less than %s? %s', $modifier['value'], var_export($res, true)));
-                    break;
-                case 'amount_more':
-                    $res = Modifier::amountMore($transaction, $modifier['value']);
-                    Log::debug(sprintf('Amount more than %s? %s', $modifier['value'], var_export($res, true)));
-                    break;
-                case 'source':
-                    $res = Modifier::source($transaction, $modifier['value']);
-                    Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
-                    break;
-                case 'destination':
-                    $res = Modifier::destination($transaction, $modifier['value']);
-                    Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
-                    break;
-
-            }
+            $res = Modifier::apply($modifier, $transaction);
             if ($res === false) {
                 return $res;
             }
