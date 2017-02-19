@@ -75,7 +75,7 @@ class Search implements SearchInterface
     public function parseQuery(string $query)
     {
         $filteredQuery = $query;
-        $pattern       = '/[a-z_]*:[0-9a-z.]*/i';
+        $pattern       = '/[a-z_]*:[0-9a-z-.]*/i';
         $matches       = [];
         preg_match_all($pattern, $query, $matches);
 
@@ -84,7 +84,9 @@ class Search implements SearchInterface
             $filteredQuery = str_replace($match, '', $filteredQuery);
         }
         $filteredQuery = trim(str_replace(['"', "'"], '', $filteredQuery));
-        $this->words   = array_map('trim', explode(' ', $filteredQuery));
+        if (strlen($filteredQuery) > 0) {
+            $this->words = array_map('trim', explode(' ', $filteredQuery));
+        }
     }
 
     /**
@@ -194,9 +196,10 @@ class Search implements SearchInterface
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
-            if($this->hasModifiers()) {
+            if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
             }
+            $collector->disableInternalFilter();
             $set   = $collector->getPaginatedJournals()->getCollection();
             $words = $this->words;
 
@@ -287,7 +290,8 @@ class Search implements SearchInterface
         Log::debug(sprintf('Now at transaction #%d', $transaction->id));
         // first "modifier" is always the text of the search:
         // check descr of journal:
-        if (!$this->strpos_arr(strtolower(strval($transaction->description)), $this->words)
+        if (count($this->words) > 0
+            && !$this->strpos_arr(strtolower(strval($transaction->description)), $this->words)
             && !$this->strpos_arr(strtolower(strval($transaction->transaction_description)), $this->words)
         ) {
             Log::debug('Description does not match', $this->words);

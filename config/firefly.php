@@ -209,6 +209,7 @@ return [
     ],
     'default_currency'         => 'EUR',
     'default_language'         => 'en_US',
-    'search_modifiers'         => ['amount_is', 'amount_less', 'amount_more', 'source', 'destination', 'category', 'budget', 'tag', 'bill', 'type', 'date_on',
-                                   'date_before', 'date_after', 'has_attachments', 'notes',],
+    'search_modifiers'         => ['amount_is', 'amount_less', 'amount_more', 'source', 'destination', 'category', 'budget', 'bill', 'type', 'date',
+                                   'date_before', 'date_after'],
+    // tag notes has_attachments
 ];

@@ -12,6 +12,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Search;
 
 
+use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use Log;
@@ -71,10 +73,80 @@ class Modifier
                 $res = Modifier::budget($transaction, $modifier['value']);
                 Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
-
+            case 'bill':
+                $res = Modifier::stringCompare(strval($transaction->bill_name), $modifier['value']);
+                Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'type':
+                $res = Modifier::stringCompare($transaction->transaction_type_type, $modifier['value']);
+                Log::debug(sprintf('Transaction type is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'date':
+                $res = Modifier::sameDate($transaction->date, $modifier['value']);
+                Log::debug(sprintf('Date is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'date_before':
+                $res = Modifier::dateBefore($transaction->date, $modifier['value']);
+                Log::debug(sprintf('Date is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
+            case 'date_after':
+                $res = Modifier::dateAfter($transaction->date, $modifier['value']);
+                Log::debug(sprintf('Date is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
         }
 
         return $res;
+    }
+
+    /**
+     * @param Carbon $date
+     * @param string $compare
+     *
+     * @return bool
+     */
+    public static function dateAfter(Carbon $date, string $compare): bool
+    {
+        try {
+            $compareDate = new Carbon($compare);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return $date->greaterThanOrEqualTo($compareDate);
+    }
+
+    /**
+     * @param Carbon $date
+     * @param string $compare
+     *
+     * @return bool
+     */
+    public static function dateBefore(Carbon $date, string $compare): bool
+    {
+        try {
+            $compareDate = new Carbon($compare);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return $date->lessThanOrEqualTo($compareDate);
+    }
+
+    /**
+     * @param Carbon $date
+     * @param string $compare
+     *
+     * @return bool
+     */
+    public static function sameDate(Carbon $date, string $compare): bool
+    {
+        try {
+            $compareDate = new Carbon($compare);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return $compareDate->isSameDay($date);
     }
 
     /**
