@@ -26,6 +26,8 @@ return [
     'showEverything'                             => 'Pokaż wszystko',
     'never'                                      => 'Nigdy',
     'search_results_for'                         => 'Wyniki wyszukiwania dla ":query"',
+    'advanced_search'                            => 'Advanced search',
+    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
     'bounced_error'                              => 'Wiadomość wysłana na adres :email została odrzucona, więc nie ma dostępu dla Ciebie.',
     'deleted_error'                              => 'Te poświadczenia nie zgadzają się z naszymi danymi.',
     'general_blocked_error'                      => 'Twoje konto zostało zablokowane. Dlatego nie możesz się zalogować.',
