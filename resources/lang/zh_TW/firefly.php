@@ -26,6 +26,8 @@ return [
     'showEverything'                             => '全部顯示',
     'never'                                      => '從來沒有',
     'search_results_for'                         => '":query" 的搜尋結果',
+    'advanced_search'                            => 'Advanced search',
+    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
     'bounced_error'                              => '無法傳送電郵至 :email ，因此無法訪問。',
     'deleted_error'                              => '帳號或密碼錯誤。',
     'general_blocked_error'                      => '您的帳戶已被禁用，所以您不能登錄。',
