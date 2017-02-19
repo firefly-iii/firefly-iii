@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Beta support for Sandstorm.IO
 - Docker support by [@schoentoon](https://github.com/schoentoon), [@elohmeier](https://github.com/elohmeier), [@patrickkostjens](https://github.com/patrickkostjens) and [@crash7](https://github.com/crash7)!
+- Can now use special keywords in the search to search for specic dates, categories, etc.
 
 ### Changed
 - Updated to laravel 5.4!
