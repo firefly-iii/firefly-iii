@@ -45,14 +45,17 @@ class Modifier
             default:
                 throw new FireflyException(sprintf('Search modifier "%s" is not (yet) supported. Sorry!', $modifier['type']));
                 break;
+            case 'amount':
             case 'amount_is':
                 $res = Modifier::amountCompare($transaction, $modifier['value'], 0);
                 Log::debug(sprintf('Amount is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
+            case 'amount_min':
             case 'amount_less':
                 $res = Modifier::amountCompare($transaction, $modifier['value'], 1);
                 Log::debug(sprintf('Amount less than %s? %s', $modifier['value'], var_export($res, true)));
                 break;
+            case 'amount_max':
             case 'amount_more':
                 $res = Modifier::amountCompare($transaction, $modifier['value'], -1);
                 Log::debug(sprintf('Amount more than %s? %s', $modifier['value'], var_export($res, true)));
