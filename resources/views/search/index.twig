@@ -54,7 +54,7 @@
                             <p>
                                 {{ trans('firefly.search_found_transactions', {count: result.transactions|length}) }}
                             </p>
-                            {% include 'search.partials.transactions' with {'transactions' : result.transactions} %}
+                            {% include 'search.partials.transactions-large' with {'journals' : result.transactions} %}
                         </div>
                     </div>
                 </div>
