@@ -19,6 +19,7 @@ use DB;
 use FireflyIII\Models\Transaction;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class JournalExportCollector
@@ -118,7 +119,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                  );
         $set->each(
             function ($obj) {
-                $obj->name = $obj->encrypted === 1 ? Crypt::decrypt($obj->name) : $obj->name;
+                $obj->name = Steam::decrypt(intval($obj->encrypted), $obj->name);
             }
         );
         $array = [];
@@ -159,7 +160,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                  );
         $set->each(
             function ($obj) {
-                $obj->name = $obj->encrypted === 1 ? Crypt::decrypt($obj->name) : $obj->name;
+                $obj->name = Steam::decrypt(intval($obj->encrypted), $obj->name);
             }
         );
         $array = [];
@@ -202,7 +203,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                  );
         $set->each(
             function ($obj) {
-                $obj->name = $obj->encrypted === 1 ? Crypt::decrypt($obj->name) : $obj->name;
+                $obj->name = Steam::decrypt(intval($obj->encrypted), $obj->name);
             }
         );
         $array = [];
@@ -243,7 +244,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                  );
         $set->each(
             function ($obj) {
-                $obj->name = $obj->encrypted === 1 ? Crypt::decrypt($obj->name) : $obj->name;
+                $obj->name = Steam::decrypt(intval($obj->encrypted), $obj->name);
             }
         );
         $array = [];

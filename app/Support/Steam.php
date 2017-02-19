@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -178,6 +179,21 @@ class Steam
         $cache->store($result);
 
         return $result;
+    }
+
+    /**
+     * @param int $isEncrypted
+     * @param     $value
+     *
+     * @return string
+     */
+    public function decrypt(int $isEncrypted, string $value)
+    {
+        if ($isEncrypted === 1) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
     }
 
     /**

@@ -170,10 +170,10 @@ class JournalCollector implements JournalCollectorInterface
         $set->each(
             function (Transaction $transaction) {
                 $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = $transaction->encrypted ? Crypt::decrypt($transaction->description) : $transaction->description;
+                $transaction->description = Steam::decrypt(intval($transaction->encrypted), $transaction->description);
 
                 if (!is_null($transaction->bill_name)) {
-                    $transaction->bill_name = $transaction->bill_name_encrypted ? Crypt::decrypt($transaction->bill_name) : $transaction->bill_name;
+                    $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
 
                 try {
