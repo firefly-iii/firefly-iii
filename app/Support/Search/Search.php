@@ -193,8 +193,10 @@ class Search implements SearchInterface
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)
-                ->withOpposingAccount()->withCategoryInformation();
+            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
+            if($this->hasModifiers()) {
+                $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+            }
             $set   = $collector->getPaginatedJournals()->getCollection();
             $words = $this->words;
 

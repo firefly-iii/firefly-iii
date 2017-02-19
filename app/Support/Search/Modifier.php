@@ -67,6 +67,10 @@ class Modifier
                 $res = Modifier::category($transaction, $modifier['value']);
                 Log::debug(sprintf('Category is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
+            case 'budget':
+                $res = Modifier::budget($transaction, $modifier['value']);
+                Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
+                break;
 
         }
 
@@ -86,6 +90,26 @@ class Modifier
 
         return $res;
 
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param string      $search
+     *
+     * @return bool
+     */
+    private static function budget(Transaction $transaction, string $search): bool
+    {
+        $journalBudget = '';
+        if (!is_null($transaction->transaction_journal_budget_name)) {
+            $journalBudget = Steam::decrypt(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
+        }
+        $transactionBudget = '';
+        if (!is_null($transaction->transaction_budget_name)) {
+            $journalBudget = Steam::decrypt(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
+        }
+
+        return self::stringCompare($journalBudget, $search) || self::stringCompare($transactionBudget, $search);
     }
 
     /**
