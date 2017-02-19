@@ -210,6 +210,6 @@ return [
     'default_currency'         => 'EUR',
     'default_language'         => 'en_US',
     'search_modifiers'         => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
-                                   'budget', 'bill', 'type', 'date', 'date_before', 'date_after'],
+                                   'budget', 'bill', 'type', 'date', 'date_before', 'date_after','on','before','after'],
     // tag notes has_attachments
 ];

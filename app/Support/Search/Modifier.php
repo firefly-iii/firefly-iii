@@ -85,14 +85,17 @@ class Modifier
                 Log::debug(sprintf('Transaction type is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'date':
+            case 'on':
                 $res = Modifier::sameDate($transaction->date, $modifier['value']);
                 Log::debug(sprintf('Date is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'date_before':
+            case 'before':
                 $res = Modifier::dateBefore($transaction->date, $modifier['value']);
                 Log::debug(sprintf('Date is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'date_after':
+            case 'after':
                 $res = Modifier::dateAfter($transaction->date, $modifier['value']);
                 Log::debug(sprintf('Date is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
