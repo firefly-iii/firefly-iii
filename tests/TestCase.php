@@ -1,29 +1,22 @@
 <?php
-/**
- * TestCase.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
+
+namespace Tests;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Log;
+use Mockery;
 
 /**
  * Class TestCase
+ *
+ * @package Tests
  */
-abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
+abstract class TestCase extends BaseTestCase
 {
-    /**
-     * The base URL to use while testing the application.
-     *
-     * @var string
-     */
-    protected $baseUrl = 'http://localhost';
+    use CreatesApplication;
 
     /**
      * @param User   $user
@@ -55,20 +48,6 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
-    public function createApplication()
-    {
-        $app = require __DIR__ . '/../bootstrap/app.php';
-
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
-
-        return $app;
-    }
-
-    /**
      * @return array
      */
     public function dateRangeProvider()
@@ -95,39 +74,6 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
-     * @return array
-     */
-    public function naughtyStringProvider()
-    {
-        /*
-         * If on Travis, return very small set.
-         */
-        if (getenv('TRAVIS') == 'true') {
-            return [['Default value']];
-
-        }
-        $path    = realpath(__DIR__ . '/../resources/tests/blns.base64.json');
-        $content = file_get_contents($path);
-        $array   = json_decode($content);
-        $return  = [];
-        foreach ($array as $entry) {
-            $return[] = [base64_decode($entry)];
-        }
-
-        return $return;
-    }
-
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    public function setUp()
-    {
-        parent::setUp();
-
-    }
-
-    /**
      * @return User
      */
     public function user()
@@ -150,4 +96,5 @@ abstract class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $object;
     }
+
 }

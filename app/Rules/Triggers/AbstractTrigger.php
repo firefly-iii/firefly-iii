@@ -75,7 +75,6 @@ class AbstractTrigger
     }
 
 
-
     /**
      * @param RuleTrigger        $trigger
      * @param TransactionJournal $journal

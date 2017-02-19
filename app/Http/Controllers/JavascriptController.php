@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Http\Request;
 use Navigation;
 use Preferences;
 use Session;
@@ -28,7 +29,7 @@ class JavascriptController extends Controller
     /**
      *
      */
-    public function variables()
+    public function variables(Request $request)
     {
         $picker                    = $this->getDateRangePicker();
         $start                     = Session::get('start');
@@ -52,6 +53,7 @@ class JavascriptController extends Controller
             'localeconv'     => $localeconv,
             'language'       => $lang,
         ];
+        $request->session()->keep(['two-factor-secret']);
 
         return response()
             ->view('javascript.variables', $data, 200)

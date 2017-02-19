@@ -14,7 +14,7 @@
     "financials",
     "financial",
     "budgets",
-    "administration", 
+    "administration",
     "tool",
     "tooling",
     "help",
@@ -48,14 +48,15 @@
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
-    "laravel/framework": "5.3.29",
-    "davejamesmiller/laravel-breadcrumbs": "^3.0",
+    "laravel/framework": "5.4.*",
+    "davejamesmiller/laravel-breadcrumbs": "3.*",
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
     "league/commonmark": "0.15.*",
+    "twig/twig": "1.30.0",
     "rcrowe/twigbridge": "0.9.*",
     "league/csv": "8.*",
-    "laravelcollective/html": "^5.3",
+    "laravelcollective/html": "^5.4",
     "rmccue/requests": "1.*",
     "pragmarx/google2fa": "1.*",
     "bacon/bacon-qr-code": "1.*"
@@ -67,8 +68,7 @@
     "symfony/css-selector": "3.1.*",
     "symfony/dom-crawler": "3.1.*",
     "barryvdh/laravel-debugbar": "2.*",
-    "barryvdh/laravel-ide-helper": "2.*",
-    "johnkary/phpunit-speedtrap": "^1.0"
+    "barryvdh/laravel-ide-helper": "2.*"
   },
   "autoload": {
     "classmap": [
@@ -79,9 +79,9 @@
     }
   },
   "autoload-dev": {
-    "classmap": [
-      "tests/TestCase.php"
-    ]
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   },
   "scripts": {
     "post-root-package-install": [

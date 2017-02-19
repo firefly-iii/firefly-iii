@@ -98,8 +98,8 @@ function setOptionalFromCookies() {
         arr.forEach(function (val) {
             $('#inputCategories').find('option[value="' + val + '"]').prop('selected', true);
         });
-        $('#inputCategories').multiselect(defaultMultiSelect);
     }
+    $('#inputCategories').multiselect(defaultMultiSelect);
 
     // and budgets!
     if ((readCookie('report-budgets') !== null)) {
@@ -107,8 +107,17 @@ function setOptionalFromCookies() {
         arr.forEach(function (val) {
             $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
         });
-        $('#inputBudgets').multiselect(defaultMultiSelect);
     }
+    $('#inputBudgets').multiselect(defaultMultiSelect);
+
+    // and tags!
+    if ((readCookie('report-tags') !== null)) {
+        arr = readCookie('report-tags').split(',');
+        arr.forEach(function (val) {
+            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+    $('#inputTags').multiselect(defaultMultiSelect);
 }
 
 function catchSubmit() {
@@ -117,45 +126,20 @@ function catchSubmit() {
     var picker = $('#inputDateRange').data('daterangepicker');
 
     // all account ids:
-    var count = 0;
-    var accounts = [];
-    $.each($('.account-checkbox'), function (i, v) {
-        var c = $(v);
-        if (c.prop('checked')) {
-            accounts.push(c.val());
-            count++;
-        }
-    });
-
-    // all category ids:
-    var categories = [];
-    $.each($('.category-checkbox'), function (i, v) {
-        var c = $(v);
-        if (c.prop('checked')) {
-            categories.push(c.val());
-        }
-    });
-
-    // all budget ids:
-    var budgets = [];
-    $.each($('.budget-checkbox'), function (i, v) {
-        var c = $(v);
-        if (c.prop('checked')) {
-            budgets.push(c.val());
-        }
-    });
-
+    var accounts = $('#inputAccounts').val();
+    var categories = $('#inputCategories').val();
+    var budgets = $('#inputBudgets').val();
+    var tags = $('#inputTags').val();
 
     // remember all
-    if (count > 0) {
-        // set cookie to remember choices.
-        createCookie('report-type', $('select[name="report_type"]').val(), 365);
-        createCookie('report-accounts', accounts, 365);
-        createCookie('report-categories', categories, 365);
-        createCookie('report-budgets', budgets, 365);
-        createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
-        createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
-    }
+    // set cookie to remember choices.
+    createCookie('report-type', $('select[name="report_type"]').val(), 365);
+    createCookie('report-accounts', accounts, 365);
+    createCookie('report-categories', categories, 365);
+    createCookie('report-budgets', budgets, 365);
+    createCookie('report-tags', tags, 365);
+    createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
+    createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
 
     return true;
 }

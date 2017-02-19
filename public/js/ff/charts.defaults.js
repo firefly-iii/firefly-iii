@@ -11,6 +11,11 @@
 /** global: accounting */
 
 var defaultChartOptions = {
+    elements: {
+        line: {
+            cubicInterpolationMode: 'monotone'
+        }
+    },
     scales: {
         xAxes: [
             {

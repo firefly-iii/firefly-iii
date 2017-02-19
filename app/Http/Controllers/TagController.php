@@ -26,7 +26,6 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Session;
-use URL;
 use View;
 
 /**
@@ -98,7 +97,7 @@ class TagController extends Controller
         }
         // put previous url in session if not redirect from store (not "create another").
         if (session('tags.create.fromStore') !== true) {
-            Session::put('tags.create.url', URL::previous());
+            $this->rememberPreviousUri('tags.create.uri');
         }
         Session::forget('tags.create.fromStore');
         Session::flash('gaEventCategory', 'tags');
@@ -117,7 +116,7 @@ class TagController extends Controller
         $subTitle = trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]);
 
         // put previous url in session
-        Session::put('tags.delete.url', URL::previous());
+        $this->rememberPreviousUri('tags.delete.uri');
         Session::flash('gaEventCategory', 'tags');
         Session::flash('gaEventAction', 'delete');
 
@@ -138,7 +137,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.deleted_tag', ['tag' => e($tagName)])));
         Preferences::mark();
 
-        return redirect(route('tags.index'));
+        return redirect($this->getPreviousUri('tags.delete.uri'));
     }
 
     /**
@@ -174,7 +173,7 @@ class TagController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('tags.edit.fromUpdate') !== true) {
-            Session::put('tags.edit.url', URL::previous());
+            $this->rememberPreviousUri('tags.edit.uri');
         }
         Session::forget('tags.edit.fromUpdate');
         Session::flash('gaEventCategory', 'tags');
@@ -289,8 +288,7 @@ class TagController extends Controller
             return redirect(route('tags.create'))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('tags.create.url'));
+        return redirect($this->getPreviousUri('tags.create.uri'));
 
     }
 
@@ -316,7 +314,7 @@ class TagController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('tags.edit.url'));
+        return redirect($this->getPreviousUri('tags.edit.uri'));
     }
 
     /**

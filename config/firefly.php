@@ -24,7 +24,7 @@ return [
     ],
     'encryption'          => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
     'chart'               => 'chartjs',
-    'version'             => '4.3.4',
+    'version'             => '4.3.5',
     'csv_import_enabled'  => true,
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
@@ -153,6 +153,7 @@ return [
         'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
         'journalList'       => 'FireflyIII\Support\Binder\JournalList',
         'categoryList'      => 'FireflyIII\Support\Binder\CategoryList',
+        'tagList'           => 'FireflyIII\Support\Binder\TagList',
         'start_date'        => 'FireflyIII\Support\Binder\Date',
         'end_date'          => 'FireflyIII\Support\Binder\Date',
     ],
@@ -176,7 +177,7 @@ return [
         'transaction_type'      => 'FireflyIII\Rules\Triggers\TransactionType',
         'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
-        'tag_is'             => 'FireflyIII\Rules\Triggers\TagIs',
+        'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
     ],
     'rule-actions'             => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
@@ -208,4 +209,7 @@ return [
     ],
     'default_currency'         => 'EUR',
     'default_language'         => 'en_US',
+    'search_modifiers'         => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
+                                   'budget', 'bill', 'type', 'date', 'date_before', 'date_after','on','before','after'],
+    // tag notes has_attachments
 ];

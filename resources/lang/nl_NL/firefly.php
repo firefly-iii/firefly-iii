@@ -26,6 +26,8 @@ return [
     'showEverything'                             => 'Laat alles zien',
     'never'                                      => 'Nooit',
     'search_results_for'                         => 'Zoekresultaten voor ":query"',
+    'advanced_search'                            => 'Geavanceerd zoeken',
+    'advanced_search_intro'                      => 'Er zijn een paar parameters die je in je zoekopdracht kan gebruiken om betere resultaten te krijgen. Ze werken <em>alleen</em> op transacties. Klik op het <i class="fa fa-question-circle"></i>-icoontje om hier meer over te lezen.',
     'bounced_error'                              => 'Het emailtje naar :email kwam nooit aan.',
     'deleted_error'                              => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                      => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
@@ -454,7 +456,7 @@ return [
     'deleted_currency'                           => 'Valuta :name verwijderd',
     'created_currency'                           => 'Nieuwe valuta :name opgeslagen',
     'updated_currency'                           => 'Valuta :name bijgewerkt',
-    'ask_site_owner'                             => 'Vraag :site_owner of deze valuta wilt toevoegen, verwijderen of wijzigen.',
+    'ask_site_owner'                             => 'Vraag :owner of deze valuta wilt toevoegen, verwijderen of wijzigen.',
     'currencies_intro'                           => 'Firefly III ondersteunt diverse valuta die je hier kan instellen en bewerken.',
     'make_default_currency'                      => 'maak standaard',
     'default_currency'                           => 'standaard',
@@ -554,6 +556,7 @@ return [
     'select_more_than_one_account'               => 'Selecteer meer dan één rekening',
     'select_more_than_one_category'              => 'Selecteer meer dan één categorie',
     'select_more_than_one_budget'                => 'Selecteer meer dan één budget',
+    'select_more_than_one_tag'                   => 'Selecteer meer dan één tag',
     'from_to'                                    => 'Van :start tot en met :end',
 
     // categories:
@@ -711,6 +714,7 @@ return [
     'report_type_audit'                          => 'Transactiehistorie-overzicht (audit)',
     'report_type_category'                       => 'Categorierapport',
     'report_type_budget'                         => 'Budgetrapport',
+    'report_type_tag'                            => 'Tagrapport',
     'report_type_meta-history'                   => 'Overzicht van categorieën, budgetten en contracten',
     'more_info_help'                             => 'Meer informatie over deze rapporten vind je in de hulppagina\'s. Klik daarvoor op het (?) icoontje rechtsboven.',
     'report_included_accounts'                   => 'Accounts in rapport',
@@ -729,8 +733,9 @@ return [
     'report_has_no_extra_options'                => 'Er zijn geen extra opties voor dit overzicht',
     'reports_submit'                             => 'Bekijk overzicht',
     'end_after_start_date'                       => 'Einddatum moet na begindatum liggen.',
-    'select_category'                            => 'Selecteer minstens één categorie.',
-    'select_budget'                              => 'Selecteer minstens één budget.',
+    'select_category'                            => 'Selecteer categorie(ën)',
+    'select_budget'                              => 'Selecteer budget(ten).',
+    'select_tag'                                 => 'Selecteer tag(s).',
     'income_per_category'                        => 'Inkomen per categorie',
     'expense_per_category'                       => 'Uitgaven per categorie',
     'expense_per_budget'                         => 'Uitgaven per budget',
@@ -959,4 +964,7 @@ return [
     'import_finished_intro'                => 'De import is klaar! Je kan de transacties nu terugvinden in Firefly.',
     'import_finished_text_without_link'    => 'Er is geen tag die al je transacties bevat. Kijk links in het menu onder "Transacties" en zoek daar je nieuwe transacties op.',
     'import_finished_text_with_link'       => 'Je kan je geïmporteerde transacties <a href="tags/show/:tag">op deze pagina</a> terug vinden.',
+
+    // sandstorm.io errors and messages:
+    'sandstorm_not_available'              => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 ];

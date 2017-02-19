@@ -26,17 +26,15 @@ class BasicExporter
 {
     /** @var  ExportJob */
     protected $job;
-    private   $entries;
+    /** @var Collection */
+    private $entries;
 
     /**
      * BasicExporter constructor.
-     *
-     * @param ExportJob $job
      */
-    public function __construct(ExportJob $job)
+    public function __construct()
     {
         $this->entries = new Collection;
-        $this->job     = $job;
     }
 
     /**
@@ -53,6 +51,14 @@ class BasicExporter
     public function setEntries(Collection $entries)
     {
         $this->entries = $entries;
+    }
+
+    /**
+     * @param ExportJob $job
+     */
+    public function setJob(ExportJob $job)
+    {
+        $this->job = $job;
     }
 
 

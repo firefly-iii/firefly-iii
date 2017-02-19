@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  firefly-app:
+    environment:
+      - FF_APP_ENV=production
+    volumes:
+      - firefly-app-storage:/var/www/firefly-iii/storage
+
+volumes:
+  firefly-app-storage:
+    driver: local

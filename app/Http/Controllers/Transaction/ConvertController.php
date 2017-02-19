@@ -145,7 +145,7 @@ class ConvertController extends Controller
         $errors = $repository->convert($journal, $destinationType, $source, $destination);
 
         if ($errors->count() > 0) {
-            return redirect(route('transactions.convert', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
+            return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 
         Session::flash('success', trans('firefly.converted_to_' . $destinationType->type));

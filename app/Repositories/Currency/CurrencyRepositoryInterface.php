@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Currency;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -93,6 +94,11 @@ interface CurrencyRepositoryInterface
      * @return TransactionCurrency
      */
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

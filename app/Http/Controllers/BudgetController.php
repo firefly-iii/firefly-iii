@@ -29,8 +29,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
-use Session;
-use URL;
 use View;
 
 /**
@@ -88,17 +86,19 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
-    public function create()
+    public function create(Request $request)
     {
         // put previous url in session if not redirect from store (not "create another").
         if (session('budgets.create.fromStore') !== true) {
-            Session::put('budgets.create.url', URL::previous());
+            $this->rememberPreviousUri('budgets.create.uri');
         }
-        Session::forget('budgets.create.fromStore');
-        Session::flash('gaEventCategory', 'budgets');
-        Session::flash('gaEventAction', 'create');
+        $request->session()->forget('budgets.create.fromStore');
+        $request->session()->flash('gaEventCategory', 'budgets');
+        $request->session()->flash('gaEventAction', 'create');
         $subTitle = (string)trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
@@ -109,59 +109,52 @@ class BudgetController extends Controller
      *
      * @return View
      */
-    public function delete(Budget $budget)
+    public function delete(Request $request, Budget $budget)
     {
         $subTitle = trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
-        Session::put('budgets.delete.url', URL::previous());
-        Session::flash('gaEventCategory', 'budgets');
-        Session::flash('gaEventAction', 'delete');
+        $this->rememberPreviousUri('budgets.delete.uri');
+        $request->session()->flash('gaEventCategory', 'budgets');
+        $request->session()->flash('gaEventAction', 'delete');
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
 
     /**
-     * @param Budget $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Budget $budget)
+    public function destroy(Request $request, Budget $budget)
     {
 
-        $name     = $budget->name;
-        $budgetId = $budget->id;
+        $name = $budget->name;
         $this->repository->destroy($budget);
-
-
-        Session::flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
+        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
         Preferences::mark();
 
-        $uri = session('budgets.delete.url');
-        if (!(strpos($uri, sprintf('budgets/show/%s', $budgetId)) === false)) {
-            // uri would point back to budget
-            $uri = route('budgets.index');
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('budgets.delete.uri'));
     }
 
     /**
-     * @param Budget $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
      * @return View
      */
-    public function edit(Budget $budget)
+    public function edit(Request $request, Budget $budget)
     {
         $subTitle = trans('firefly.edit_budget', ['name' => $budget->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('budgets.edit.fromUpdate') !== true) {
-            Session::put('budgets.edit.url', URL::previous());
+            $this->rememberPreviousUri('budgets.edit.uri');
         }
-        Session::forget('budgets.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'budgets');
-        Session::flash('gaEventAction', 'edit');
+        $request->session()->forget('budgets.edit.fromUpdate');
+        $request->session()->flash('gaEventCategory', 'budgets');
+        $request->session()->flash('gaEventAction', 'edit');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
 
@@ -212,7 +205,7 @@ class BudgetController extends Controller
 
         // collector
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/list/noBudget');
@@ -253,7 +246,7 @@ class BudgetController extends Controller
         $repetition = null;
         // collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('/budgets/show/' . $budget->id);
@@ -278,9 +271,9 @@ class BudgetController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        $page              = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
-        $pageSize          = intval(Preferences::get('transactionPageSize', 50)->data);
-        $subTitle          = trans(
+        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+        $subTitle = trans(
             'firefly.budget_in_period', [
                                           'name'  => $budget->name,
                                           'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
@@ -290,7 +283,7 @@ class BudgetController extends Controller
 
         // collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
@@ -315,19 +308,17 @@ class BudgetController extends Controller
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('budgets.create.fromStore', true);
+            $request->session()->put('budgets.create.fromStore', true);
 
             return redirect(route('budgets.create'))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('budgets.create.url'));
-
+        return redirect($this->getPreviousUri('budgets.create.uri'));
     }
 
     /**
@@ -341,19 +332,17 @@ class BudgetController extends Controller
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('budgets.edit.fromUpdate', true);
+            $request->session()->put('budgets.edit.fromUpdate', true);
 
             return redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
         }
 
-        // redirect to previous URL.
-        return redirect(session('budgets.edit.url'));
-
+        return redirect($this->getPreviousUri('budgets.edit.uri'));
     }
 
     /**

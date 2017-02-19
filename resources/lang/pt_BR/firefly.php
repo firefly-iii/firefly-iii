@@ -26,6 +26,8 @@ return [
     'showEverything'                             => 'Mostrar tudo',
     'never'                                      => 'Nunca',
     'search_results_for'                         => 'Pesquisar resultados por ":query"',
+    'advanced_search'                            => 'Advanced search',
+    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
     'bounced_error'                              => 'A mensagem enviado para :email ressaltado, não tem acesso para você.',
     'deleted_error'                              => 'Estas credenciais não correspondem aos nossos registros.',
     'general_blocked_error'                      => 'Sua conta foi desativada, você não pode entrar.',
@@ -554,6 +556,7 @@ return [
     'select_more_than_one_account'               => 'Por favor, selecione mais de uma conta',
     'select_more_than_one_category'              => 'Por favor, selecione mais de uma categoria',
     'select_more_than_one_budget'                => 'Please select more than one budget',
+    'select_more_than_one_tag'                   => 'Please select more than one tag',
     'from_to'                                    => 'From :start to :end',
 
     // categories:
@@ -711,6 +714,7 @@ return [
     'report_type_audit'                          => 'Visão geral do histórico de transação (auditoria)',
     'report_type_category'                       => 'Relatório por Categorias',
     'report_type_budget'                         => 'Budget report',
+    'report_type_tag'                            => 'Tag report',
     'report_type_meta-history'                   => 'Visão geral de categorias, orçamentos e faturas',
     'more_info_help'                             => 'Mais informações sobre esses tipos de relatórios podem ser encontradas nas páginas de ajuda. Pressione o ícone (?) no canto superior direito.',
     'report_included_accounts'                   => 'Contas incluídas',
@@ -729,8 +733,9 @@ return [
     'report_has_no_extra_options'                => 'Este relatório não tem mais opções',
     'reports_submit'                             => 'Visualizar relatório',
     'end_after_start_date'                       => 'Data de término do relatório deve ser depois da data de início.',
-    'select_category'                            => 'Selecione uma ou mais categorias.',
-    'select_budget'                              => 'Select one or more budgets.',
+    'select_category'                            => 'Select category(ies)',
+    'select_budget'                              => 'Select budget(s).',
+    'select_tag'                                 => 'Select tag(s).',
     'income_per_category'                        => 'Receitas por categoria',
     'expense_per_category'                       => 'Despesa por categoria',
     'expense_per_budget'                         => 'Expense per budget',
@@ -959,4 +964,7 @@ return [
     'import_finished_intro'                => 'The import has finished! You can now see the new transactions in Firefly.',
     'import_finished_text_without_link'    => 'It seems there is no tag that points to all your imported transactions. Please look for your imported data in the menu on the left, under "Transactions".',
     'import_finished_text_with_link'       => 'You can find a list of your imported transactions on the page of the <a href="tags/show/:tag">tag that was created for this import</a>.',
+
+    // sandstorm.io errors and messages:
+    'sandstorm_not_available'              => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 ];

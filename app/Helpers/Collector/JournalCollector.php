@@ -32,6 +32,7 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use Steam;
 
 /**
  * Maybe this is a good idea after all...
@@ -54,9 +55,7 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.encrypted',
-            //'transaction_journals.transaction_currency_id',
             'transaction_currencies.code as transaction_currency_code',
-            //'transaction_currencies.symbol as transaction_currency_symbol',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
             'bills.name as bill_name',
@@ -95,17 +94,6 @@ class JournalCollector implements JournalCollectorInterface
     private $run = false;
     /** @var User */
     private $user;
-
-    /**
-     * JournalCollector constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user  = $user;
-        $this->query = $this->startQuery();
-    }
 
     /**
      * @return int
@@ -168,7 +156,7 @@ class JournalCollector implements JournalCollectorInterface
     {
         $this->run = true;
         /** @var Collection $set */
-        $set       = $this->query->get(array_values($this->fields));
+        $set = $this->query->get(array_values($this->fields));
         Log::debug(sprintf('Count of set is %d', $set->count()));
         $set = $this->filterTransfers($set);
         Log::debug(sprintf('Count of set after filterTransfers() is %d', $set->count()));
@@ -182,10 +170,10 @@ class JournalCollector implements JournalCollectorInterface
         $set->each(
             function (Transaction $transaction) {
                 $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = $transaction->encrypted ? Crypt::decrypt($transaction->description) : $transaction->description;
+                $transaction->description = Steam::decrypt(intval($transaction->encrypted), $transaction->description);
 
                 if (!is_null($transaction->bill_name)) {
-                    $transaction->bill_name = $transaction->bill_name_encrypted ? Crypt::decrypt($transaction->bill_name) : $transaction->bill_name;
+                    $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
 
                 try {
@@ -244,8 +232,9 @@ class JournalCollector implements JournalCollectorInterface
     public function setAllAssetAccounts(): JournalCollectorInterface
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [$this->user]);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
+        $accounts = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('transactions.account_id', $accountIds);
@@ -457,6 +446,37 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     *
+     */
+    public function startQuery()
+    {
+        /** @var EloquentBuilder $query */
+        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
+                            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+                            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
+                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                            ->whereNull('transactions.deleted_at')
+                            ->whereNull('transaction_journals.deleted_at')
+                            ->where('transaction_journals.user_id', $this->user->id)
+                            ->orderBy('transaction_journals.date', 'DESC')
+                            ->orderBy('transaction_journals.order', 'ASC')
+                            ->orderBy('transaction_journals.id', 'DESC');
+
+        $this->query = $query;
+
+    }
+
+    /**
      * @return JournalCollectorInterface
      */
     public function withBudgetInformation(): JournalCollectorInterface
@@ -483,36 +503,6 @@ class JournalCollector implements JournalCollectorInterface
     public function withOpposingAccount(): JournalCollectorInterface
     {
         $this->joinOpposingTables();
-
-        $accountIds = $this->accountIds;
-        $this->query->where(
-            function (EloquentBuilder $q1) use ($accountIds) {
-                // set 1:
-                // where source is in the set of $accounts
-                // but destination is not.
-                $q1->where(
-                    function (EloquentBuilder $q2) use ($accountIds) {
-                        // transactions.account_id in set
-                        $q2->whereIn('transactions.account_id', $accountIds);
-                        // opposing.account_id not in set
-                        $q2->whereNotIn('opposing.account_id', $accountIds);
-
-                    }
-                );
-                // set 1:
-                // where source is not in the set of $accounts
-                // but destination is.
-                $q1->orWhere(
-                    function (EloquentBuilder $q3) use ($accountIds) {
-                        // transactions.account_id not in set
-                        $q3->whereNotIn('transactions.account_id', $accountIds);
-                        // B in set
-                        // opposing.account_id not in set
-                        $q3->whereIn('opposing.account_id', $accountIds);
-                    }
-                );
-            }
-        );
 
         return $this;
     }
@@ -597,7 +587,7 @@ class JournalCollector implements JournalCollectorInterface
      * account, chances are the set include double entries: transfers get selected
      * on both the source, and then again on the destination account.
      *
-     * This method filters them out.
+     * This method filters them out by removing transfers that have been selected twice.
      *
      * @param Collection $set
      *
@@ -606,36 +596,29 @@ class JournalCollector implements JournalCollectorInterface
     private function filterTransfers(Collection $set): Collection
     {
         if ($this->filterTransfers) {
-            $set = $set->filter(
-                function (Transaction $transaction) {
-                    if (!($transaction->transaction_type_type === TransactionType::TRANSFER && bccomp($transaction->transaction_amount, '0') === -1)) {
-
-                        Log::debug(
-                            sprintf(
-                                'Included journal #%d (transaction #%d) because its a %s with amount %f',
-                                $transaction->transaction_journal_id,
-                                $transaction->id,
-                                $transaction->transaction_type_type,
-                                $transaction->transaction_amount
-                            )
-                        );
-
-                        return $transaction;
-                    }
-
-                    Log::debug(
-                        sprintf(
-                            'Removed journal #%d (transaction #%d) because its a %s with amount %f',
-                            $transaction->transaction_journal_id,
-                            $transaction->id,
-                            $transaction->transaction_type_type,
-                            $transaction->transaction_amount
-                        )
-                    );
-
-                    return false;
+            $count = [];
+            $new   = new Collection;
+            /** @var Transaction $transaction */
+            foreach ($set as $transaction) {
+                if ($transaction->transaction_type_type !== TransactionType::TRANSFER) {
+                    $new->push($transaction);
+                    continue;
                 }
-            );
+                // make property string:
+                $journalId  = $transaction->transaction_journal_id;
+                $amount     = Steam::positive($transaction->transaction_amount);
+                $accountIds = [intval($transaction->account_id), intval($transaction->opposing_account_id)];
+                sort($accountIds);
+                $key = $journalId . '-' . join(',', $accountIds) . '-' . $amount;
+                Log::debug(sprintf('Key is %s', $key));
+                if (!isset($count[$key])) {
+                    // not yet counted? add to new set and count it:
+                    $new->push($transaction);
+                    $count[$key] = 1;
+                }
+            }
+
+            return $new;
         }
 
         return $set;
@@ -728,28 +711,5 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedTag = true;
             $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
         }
-    }
-
-    /**
-     * @return EloquentBuilder
-     */
-    private function startQuery(): EloquentBuilder
-    {
-        /** @var EloquentBuilder $query */
-        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
-                            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-                            ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
-                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                            ->whereNull('transactions.deleted_at')
-                            ->whereNull('transaction_journals.deleted_at')
-                            ->where('transaction_journals.user_id', $this->user->id)
-                            ->orderBy('transaction_journals.date', 'DESC')
-                            ->orderBy('transaction_journals.order', 'ASC')
-                            ->orderBy('transaction_journals.id', 'DESC');
-
-        return $query;
-
     }
 }

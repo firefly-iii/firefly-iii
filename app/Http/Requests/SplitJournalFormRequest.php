@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Http\Requests;
 
+use Steam;
 
 /**
  * Class SplitJournalFormRequest
@@ -101,7 +102,7 @@ class SplitJournalFormRequest extends Request
             $category    = $categories[$index] ?? '';
             $transaction = [
                 'description'              => $description,
-                'amount'                   => $amounts[$index],
+                'amount'                   => Steam::positive($amounts[$index]),
                 'budget_id'                => $budgets[$index] ?? 0,
                 'category'                 => $category,
                 'source_account_id'        => $srcAccountIds[$index] ?? $this->get('journal_source_account_id'),

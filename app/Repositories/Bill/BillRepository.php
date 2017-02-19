@@ -38,16 +38,6 @@ class BillRepository implements BillRepositoryInterface
     private $user;
 
     /**
-     * BillRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @param Bill $bill
      *
      * @return bool
@@ -518,6 +508,14 @@ class BillRepository implements BillRepositoryInterface
 
         return false;
 
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

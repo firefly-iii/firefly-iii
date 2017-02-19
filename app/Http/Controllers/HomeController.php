@@ -17,15 +17,12 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Route;
 use Session;
 use View;
 
@@ -86,30 +83,14 @@ class HomeController extends Controller
     }
 
     /**
-     * @param TagRepositoryInterface $repository
+     * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function flush(TagRepositoryInterface $repository)
+    public function flush(Request $request)
     {
-
         Preferences::mark();
-
-        // get all tags.
-        // update all counts:
-        $tags = $repository->get();
-
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            foreach ($tag->transactionJournals()->get() as $journal) {
-                $count              = $journal->tags()->count();
-                $journal->tag_count = $count;
-                $journal->save();
-            }
-        }
-        Session::forget(['start', 'end', 'viewRange', 'range', 'is_custom_range']);
-
-        Session::clear();
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
         Artisan::call('cache:clear');
 
         return redirect(route('index'));
@@ -160,74 +141,6 @@ class HomeController extends Controller
     }
 
     /**
-     * Display a list of named routes. Excludes some that cannot be "shown". This method
-     * is used to generate help files (down the road).
-     */
-    public function routes()
-    {
-        // these routes are not relevant for the help pages:
-        $ignore = [
-            // login and two-factor routes:
-            'login',
-            'registe',
-            'password.rese',
-            'logout',
-            'two-fac',
-            'lost-two',
-            // test troutes
-            'test-flash',
-            'all-routes',
-            // json routes
-            'json.',
-            // routes that point to modals or that redirect immediately.
-            'piggy-banks.add',
-            'piggy-banks.remove',
-            'rules.rule.up',
-            'attachments.download',
-            'bills.rescan',
-            'rules.rule.down',
-            'rules.rule-group.up',
-            'rules.rule-group.down',
-            'popup.',
-            'error',
-            'flush',
-            //'preferences.',
-            'admin.users.domains.block-',
-            'help.',
-            // ajax routes:
-            'import.json',
-            // charts:
-            'chart.',
-            // report data:
-            'report-data.',
-
-            // others:
-            'debugbar',
-            'attachments.preview',
-            'budgets.income',
-            'currencies.default',
-
-
-        ];
-        $routes = Route::getRoutes();
-        $return = '<pre>';
-
-        /** @var \Illuminate\Routing\Route $route */
-        foreach ($routes as $route) {
-            $name    = $route->getName();
-            $methods = $route->getMethods();
-
-            if (!is_null($name) && strlen($name) > 0 && in_array('GET', $methods) && !$this->startsWithAny($ignore, $name)) {
-                $return .= sprintf('touch %s.md', $name) . "\n";
-
-            }
-        }
-        $return .= '</pre><hr />';
-
-        return $return;
-    }
-
-    /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function testFlash()
@@ -238,23 +151,6 @@ class HomeController extends Controller
         Session::flash('error', 'This is an error!');
 
         return redirect(route('home'));
-    }
-
-    /**
-     * @param array  $array
-     * @param string $needle
-     *
-     * @return bool
-     */
-    private function startsWithAny(array $array, string $needle): bool
-    {
-        foreach ($array as $entry) {
-            if ((substr($needle, 0, strlen($entry)) === $entry)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }

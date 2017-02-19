@@ -10,7 +10,12 @@
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            {{ message |default('General unknown errror') }}
+            <p>{{ message |default('General unknown errror') }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <p><a href="{{ route('index') }}">Follow this link back to the index.</a></p>
         </div>
     </div>
 {% endblock %}

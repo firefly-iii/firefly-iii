@@ -45,7 +45,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function __construct()
     {
         $this->maxUploadSize = intval(config('firefly.maxUploadSize'));
-        $this->allowedMimes  = (array) config('firefly.allowedMimes');
+        $this->allowedMimes  = (array)config('firefly.allowedMimes');
         $this->errors        = new MessageBag;
         $this->messages      = new MessageBag;
         $this->uploadDisk    = Storage::disk('upload');

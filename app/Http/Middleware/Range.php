@@ -17,7 +17,6 @@ use Amount;
 use App;
 use Carbon\Carbon;
 use Closure;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;

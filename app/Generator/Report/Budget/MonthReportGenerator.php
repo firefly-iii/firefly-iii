@@ -132,6 +132,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * @param Collection $tags
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setTags(Collection $tags): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
      * @param Collection $collection
      * @param int        $sortFlag
      *
@@ -185,7 +195,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         }
 
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->setBudgets($this->budgets)->withOpposingAccount()->disableFilter();

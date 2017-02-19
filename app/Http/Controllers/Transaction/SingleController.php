@@ -31,7 +31,6 @@ use Log;
 use Preferences;
 use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -140,8 +139,7 @@ class SingleController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('transactions.create.fromStore') !== true) {
-            $url = URL::previous();
-            Session::put('transactions.create.url', $url);
+            $this->rememberPreviousUri('transactions.create.uri');
         }
         Session::forget('transactions.create.fromStore');
         Session::flash('gaEventCategory', 'transactions');
@@ -172,7 +170,7 @@ class SingleController extends Controller
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
-        Session::put('transactions.delete.url', URL::previous());
+        $this->rememberPreviousUri('transactions.delete.uri');
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'delete-' . $what);
 
@@ -192,21 +190,14 @@ class SingleController extends Controller
         if ($this->isOpeningBalance($transactionJournal)) {
             return $this->redirectToAccount($transactionJournal);
         }
-        $journalId = $transactionJournal->id;
-        $type      = TransactionJournal::transactionTypeStr($transactionJournal);
+        $type = TransactionJournal::transactionTypeStr($transactionJournal);
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
 
         Preferences::mark();
 
-        $uri = session('transactions.delete.url');
-        if (!(strpos($uri, sprintf('transactions/show/%s', $journalId)) === false)) {
-            // uri would point back to transaction
-            $uri = route('transactions.index', [strtolower($type)]);
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('transactions.delete.uri'));
     }
 
     /**
@@ -275,7 +266,7 @@ class SingleController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('transactions.edit.fromUpdate') !== true) {
-            Session::put('transactions.edit.url', URL::previous());
+            $this->rememberPreviousUri('transactions.edit.uri');
         }
         Session::forget('transactions.edit.fromUpdate');
 
@@ -336,7 +327,7 @@ class SingleController extends Controller
 
 
         // redirect to previous URL.
-        return redirect(session('transactions.create.url'));
+        return redirect($this->getPreviousUri('transactions.create.uri'));
 
     }
 
@@ -386,7 +377,6 @@ class SingleController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('transactions.edit.url'));
-
+        return redirect($this->getPreviousUri('transactions.edit.uri'));
     }
 }

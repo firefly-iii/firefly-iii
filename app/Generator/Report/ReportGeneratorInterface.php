@@ -64,4 +64,11 @@ interface ReportGeneratorInterface
      */
     public function setStartDate(Carbon $date): ReportGeneratorInterface;
 
+    /**
+     * @param Collection $tags
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setTags(Collection $tags): ReportGeneratorInterface;
+
 }

@@ -8,7 +8,7 @@ If you are requesting a new feature, please check out the list of [often request
 
 ## Bugs
 
-If you find a bug, include as many log files and details as you think are necessary. 
+If you find a bug, please take the time and see if the [demo site](https://firefly-iii.nder.be/) is also suffering from this bug. Include as many log files and details as you think are necessary. 
 
 ## Installation problems
 
@@ -16,4 +16,4 @@ Take the time to read the [installation guide FAQ](https://firefly-iii.github.io
 
 ## Pull requests
 
-I can only accept pull requests against the `develop` branch, never the `master` branch
+I can only accept pull requests against the `develop` branch, never the `master` branch.

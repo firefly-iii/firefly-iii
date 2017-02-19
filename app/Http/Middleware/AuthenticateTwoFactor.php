@@ -14,8 +14,10 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Log;
 use Preferences;
 use Session;
 
@@ -55,8 +57,13 @@ class AuthenticateTwoFactor
         }
         $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
-        $is2faAuthed  = Session::get('twofactor-authenticated');
+
+        // grab 2auth information from cookie, not from session.
+        $is2faAuthed = Cookie::get('twoFactorAuthenticated') === 'true';
+
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
+            Log::debug('Does not seem to be 2 factor authed, redirect.');
+
             return redirect(route('two-factor.index'));
         }
 

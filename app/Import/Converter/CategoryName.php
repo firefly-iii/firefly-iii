@@ -42,7 +42,8 @@ class CategoryName extends BasicConverter implements ConverterInterface
         }
 
         /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class, [$this->user]);
+        $repository = app(CategoryRepositoryInterface::class);
+        $repository->setUser($this->user);
 
         if (isset($this->mapping[$value])) {
             Log::debug('Found category in mapping. Should exist.', ['value' => $value, 'map' => $this->mapping[$value]]);

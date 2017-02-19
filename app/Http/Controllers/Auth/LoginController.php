@@ -16,6 +16,7 @@ use Config;
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Lang;
@@ -29,13 +30,6 @@ class LoginController extends Controller
 {
 
     use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -78,6 +72,37 @@ class LoginController extends Controller
         }
 
         return $this->sendFailedLoginResponse($request, $errorMessage);
+    }
+
+    /**
+     * @param Request   $request
+     * @param CookieJar $cookieJar
+     *
+     * @return $this
+     */
+    public function logout(Request $request, CookieJar $cookieJar)
+    {
+        if (intval(getenv('SANDSTORM')) === 1) {
+            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
+        }
+
+        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'false');
+
+        $this->guard()->logout();
+
+        $request->session()->flush();
+
+        $request->session()->regenerate();
+
+        return redirect('/')->withCookie($cookie);
+    }
+
+    /**
+     * @return string
+     */
+    public function redirectTo(): string
+    {
+        return route('index');
     }
 
     /**

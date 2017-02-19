@@ -58,7 +58,8 @@ class ImportProcedure implements ImportProcedureInterface
         if ($job->configuration['import-account'] != 0) {
 
             /** @var AccountRepositoryInterface $repository */
-            $repository = app(AccountRepositoryInterface::class, [$job->user]);
+            $repository = app(AccountRepositoryInterface::class);
+            $repository->setUser($job->user);
             $validator->setDefaultImportAccount($repository->find($job->configuration['import-account']));
         }
 

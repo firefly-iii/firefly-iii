@@ -72,16 +72,11 @@ class TransactionController extends Controller
         $end   = session('end', Navigation::endOfPeriod(new Carbon, $range));
 
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
-        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
-        $collector->setRange($start, $end)->withBudgetInformation()->withCategoryInformation();
-
-        // do not filter transfers if $what = transfer.
-        if (!in_array($what, ['transfer', 'transfers'])) {
-            Log::debug('Also get opposing account info.');
-            $collector->withOpposingAccount();
-        }
-
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->withBudgetInformation()
+                  ->withCategoryInformation();
+        $collector->withOpposingAccount();
+        $collector->disableInternalFilter();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what);
 
@@ -122,14 +117,11 @@ class TransactionController extends Controller
         $subTitle     = sprintf('%s (%s)', trans('firefly.title_' . $what), strtolower(trans('firefly.everything')));
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
 
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->withBudgetInformation()->withCategoryInformation();
-
-        // do not filter transfers if $what = transfer.
-        if (!in_array($what, ['transfer', 'transfers'])) {
-            Log::debug('Also get opposing account info.');
-            $collector->withOpposingAccount();
-        }
+        $collector->withOpposingAccount();
+        $collector->disableInternalFilter();
 
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what . '/all');
@@ -161,16 +153,12 @@ class TransactionController extends Controller
         Log::debug(sprintf('Transaction index by date will show between %s and %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
         $collector->setRange($start, $end)->withBudgetInformation()->withCategoryInformation();
-
-        // do not filter transfers if $what = transfer.
-        if (!in_array($what, ['transfer', 'transfers'])) {
-            Log::debug('Also get opposing account info.');
-            $collector->withOpposingAccount();
-        }
-
+        $collector->withOpposingAccount();
+        $collector->disableInternalFilter();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('transactions/' . $what . '/' . $date);
 

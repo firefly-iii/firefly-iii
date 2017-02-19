@@ -56,9 +56,9 @@ class PreferencesController extends Controller
     {
         $domain = $this->getDomain();
         /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $secret = $google2fa->generateSecretKey(16, auth()->user()->id);
+        $secret = $google2fa->generateSecretKey(32, auth()->user()->id);
         Session::flash('two-factor-secret', $secret);
-        $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, null, $secret, 150);
+        $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, auth()->user()->email, $secret, 150);
 
 
         return view('preferences.code', compact('image'));

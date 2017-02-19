@@ -772,7 +772,7 @@ Breadcrumbs::register(
     $breadcrumbs->parent('transactions.show', $journal);
     $breadcrumbs->push(
         trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]),
-        route('transactions.convert', [strtolower($destinationType->type), $journal->id])
+        route('transactions.convert.index', [strtolower($destinationType->type), $journal->id])
     );
 }
 );

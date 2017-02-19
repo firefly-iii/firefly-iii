@@ -25,7 +25,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Session;
-use URL;
 use View;
 
 /**
@@ -63,7 +62,7 @@ class MassController extends Controller
         $subTitle = trans('firefly.mass_delete_journals');
 
         // put previous url in session
-        Session::put('transactions.mass-delete.url', URL::previous());
+        $this->rememberPreviousUri('transactions.mass-delete.uri');
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'mass-delete');
 
@@ -104,7 +103,7 @@ class MassController extends Controller
         Session::flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
-        return redirect(session('transactions.mass-delete.url'));
+        return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
 
     }
 
@@ -150,7 +149,7 @@ class MassController extends Controller
         }
 
         // put previous url in session
-        Session::put('transactions.mass-edit.url', URL::previous());
+        $this->rememberPreviousUri('transactions.mass-edit.uri');
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'mass-edit');
 
@@ -236,7 +235,7 @@ class MassController extends Controller
         Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
-        return redirect(session('transactions.mass-edit.url'));
+        return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
 
     }
 }

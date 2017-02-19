@@ -60,8 +60,9 @@ class SetDestinationAccount implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         $this->journal    = $journal;
-        $this->repository = app(AccountRepositoryInterface::class, [$journal->user]);
-        $count            = $journal->transactions()->count();
+        $this->repository = app(AccountRepositoryInterface::class);
+        $this->repository->setUser($journal->user);
+        $count = $journal->transactions()->count();
         if ($count > 2) {
             Log::error(sprintf('Cannot change destination account of journal #%d because it is a split journal.', $journal->id));
 

@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Route;
+use Steam;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -43,6 +44,7 @@ class General extends Twig_Extension
             $this->balance(),
             $this->formatFilesize(),
             $this->mimeIcon(),
+
         ];
 
     }
@@ -59,6 +61,7 @@ class General extends Twig_Extension
             $this->env(),
             $this->getAmountFromJournal(),
             $this->activeRouteStrict(),
+            $this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
         ];
@@ -284,6 +287,18 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'phpdate', function (string $str): string {
             return date($str);
+        }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function steamPositive()
+    {
+        return new Twig_SimpleFunction(
+            'steam_positive', function (string $str): string {
+            return Steam::positive($str);
         }
         );
     }

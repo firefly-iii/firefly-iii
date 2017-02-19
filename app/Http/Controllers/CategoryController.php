@@ -25,8 +25,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
-use Session;
-use URL;
 use View;
 
 /**
@@ -56,80 +54,78 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
-    public function create()
+    public function create(Request $request)
     {
         if (session('categories.create.fromStore') !== true) {
-            Session::put('categories.create.url', URL::previous());
+            $this->rememberPreviousUri('categories.create.uri');
         }
-        Session::forget('categories.create.fromStore');
-        Session::flash('gaEventCategory', 'categories');
-        Session::flash('gaEventAction', 'create');
+        $request->session()->forget('categories.create.fromStore');
+        $request->session()->flash('gaEventCategory', 'categories');
+        $request->session()->flash('gaEventAction', 'create');
         $subTitle = trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
 
     /**
+     * @param Request  $request
      * @param Category $category
      *
      * @return View
      */
-    public function delete(Category $category)
+    public function delete(Request $request, Category $category)
     {
         $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
-        Session::put('categories.delete.url', URL::previous());
-        Session::flash('gaEventCategory', 'categories');
-        Session::flash('gaEventAction', 'delete');
+        $this->rememberPreviousUri('categories.delete.uri');
+        $request->session()->flash('gaEventCategory', 'categories');
+        $request->session()->flash('gaEventAction', 'delete');
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
 
 
     /**
+     * @param Request                     $request
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(CategoryRepositoryInterface $repository, Category $category)
+    public function destroy(Request $request, CategoryRepositoryInterface $repository, Category $category)
     {
 
-        $name       = $category->name;
-        $categoryId = $category->id;
+        $name = $category->name;
         $repository->destroy($category);
 
-        Session::flash('success', strval(trans('firefly.deleted_category', ['name' => e($name)])));
+        $request->session()->flash('success', strval(trans('firefly.deleted_category', ['name' => e($name)])));
         Preferences::mark();
 
-        $uri = session('categories.delete.url');
-        if (!(strpos($uri, sprintf('categories/show/%s', $categoryId)) === false)) {
-            // uri would point back to category
-            $uri = route('categories.index');
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('categories.delete.uri'));
     }
 
     /**
+     * @param Request  $request
      * @param Category $category
      *
      * @return View
      */
-    public function edit(Category $category)
+    public function edit(Request $request, Category $category)
     {
         $subTitle = trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('categories.edit.fromUpdate') !== true) {
-            Session::put('categories.edit.url', URL::previous());
+            $this->rememberPreviousUri('categories.edit.uri');
         }
-        Session::forget('categories.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'categories');
-        Session::flash('gaEventAction', 'edit');
+        $request->session()->forget('categories.edit.fromUpdate');
+        $request->session()->flash('gaEventCategory', 'categories');
+        $request->session()->flash('gaEventAction', 'edit');
 
         return view('categories.edit', compact('category', 'subTitle'));
 
@@ -165,7 +161,7 @@ class CategoryController extends Controller
 
         // new collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->withoutCategory();//->groupJournals();
         $journals = $collector->getJournals();
         $subTitle = trans(
@@ -277,11 +273,11 @@ class CategoryController extends Controller
         $data     = $request->getCategoryData();
         $category = $repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
-            Session::put('categories.create.fromStore', true);
+            $request->session()->put('categories.create.fromStore', true);
 
             return redirect(route('categories.create'))->withInput();
         }
@@ -302,18 +298,16 @@ class CategoryController extends Controller
         $data = $request->getCategoryData();
         $repository->update($category, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            Session::put('categories.edit.fromUpdate', true);
+            $request->session()->put('categories.edit.fromUpdate', true);
 
             return redirect(route('categories.edit', [$category->id]));
         }
 
-        // redirect to previous URL.
-        return redirect(session('categories.edit.url'));
-
+        return redirect($this->getPreviousUri('categories.edit.uri'));
     }
 
     /**

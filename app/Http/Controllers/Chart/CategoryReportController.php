@@ -80,7 +80,6 @@ class CategoryReportController extends Controller
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setCategories($categories);
-        $helper->setUser(auth()->user());
         $helper->setStart($start);
         $helper->setEnd($end);
         $helper->setCollectOtherObjects(intval($others) === 1);
@@ -105,7 +104,6 @@ class CategoryReportController extends Controller
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setCategories($categories);
-        $helper->setUser(auth()->user());
         $helper->setStart($start);
         $helper->setEnd($end);
         $helper->setCollectOtherObjects(intval($others) === 1);
@@ -130,7 +128,6 @@ class CategoryReportController extends Controller
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setCategories($categories);
-        $helper->setUser(auth()->user());
         $helper->setStart($start);
         $helper->setEnd($end);
         $helper->setCollectOtherObjects(intval($others) === 1);
@@ -156,7 +153,6 @@ class CategoryReportController extends Controller
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setCategories($categories);
-        $helper->setUser(auth()->user());
         $helper->setStart($start);
         $helper->setEnd($end);
         $helper->setCollectOtherObjects(intval($others) === 1);
@@ -284,7 +280,7 @@ class CategoryReportController extends Controller
     private function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();
@@ -305,7 +301,7 @@ class CategoryReportController extends Controller
     private function getIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount();
         $accountIds   = $accounts->pluck('id')->toArray();

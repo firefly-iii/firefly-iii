@@ -31,13 +31,10 @@ class BasicCollector
 
     /**
      * BasicCollector constructor.
-     *
-     * @param ExportJob $job
      */
-    public function __construct(ExportJob $job)
+    public function __construct()
     {
         $this->entries = new Collection;
-        $this->job     = $job;
     }
 
     /**
@@ -54,6 +51,14 @@ class BasicCollector
     public function setEntries(Collection $entries)
     {
         $this->entries = $entries;
+    }
+
+    /**
+     * @param ExportJob $job
+     */
+    public function setJob(ExportJob $job)
+    {
+        $this->job = $job;
     }
 
 

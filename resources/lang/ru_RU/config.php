@@ -10,7 +10,7 @@
  */
 
 return [
-    'locale'          => 'ru, Russian, ru_RU, ru_RU.utf8',
+    'locale'          => 'ru, Russian, ru_RU, ru_RU.utf8, ru_RU.UTF-8',
     'month'           => '%B %Y',
     'month_and_day'   => '%B %e, %Y',
     'date_time'       => '%B %e, %Y, @ %T',

@@ -23,7 +23,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -32,9 +31,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 use Preferences;
-use Session;
 use Steam;
-use URL;
 use View;
 
 /**
@@ -63,11 +60,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param string $what
+     * @param Request $request
+     * @param string  $what
      *
-     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory|View
+     * @return View
      */
-    public function create(string $what = 'asset')
+    public function create(Request $request, string $what = 'asset')
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository      = app(CurrencyRepositoryInterface::class);
@@ -82,27 +80,28 @@ class AccountController extends Controller
 
 
         // pre fill some data
-        Session::flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
+        $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('accounts.create.fromStore') !== true) {
-            Session::put('accounts.create.url', URL::previous());
+            $this->rememberPreviousUri('accounts.create.uri');
         }
-        Session::forget('accounts.create.fromStore');
-        Session::flash('gaEventCategory', 'accounts');
-        Session::flash('gaEventAction', 'create-' . $what);
+        $request->session()->forget('accounts.create.fromStore');
+        $request->session()->flash('gaEventCategory', 'accounts');
+        $request->session()->flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies', 'roles'));
 
     }
 
     /**
-     * @param ARI     $repository
-     * @param Account $account
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return View
      */
-    public function delete(ARI $repository, Account $account)
+    public function delete(Request $request, AccountRepositoryInterface $repository, Account $account)
     {
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
@@ -110,48 +109,42 @@ class AccountController extends Controller
         unset($accountList[$account->id]);
 
         // put previous url in session
-        Session::put('accounts.delete.url', URL::previous());
-        Session::flash('gaEventCategory', 'accounts');
-        Session::flash('gaEventAction', 'delete-' . $typeName);
+        $this->rememberPreviousUri('accounts.delete.uri');
+        $request->session()->flash('gaEventCategory', 'accounts');
+        $request->session()->flash('gaEventAction', 'delete-' . $typeName);
 
         return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
     }
 
     /**
-     * @param Request $request
-     * @param ARI     $repository
-     * @param Account $account
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Request $request, ARI $repository, Account $account)
+    public function destroy(Request $request, AccountRepositoryInterface $repository, Account $account)
     {
-        $type      = $account->accountType->type;
-        $typeName  = config('firefly.shortNamesByFullName.' . $type);
-        $name      = $account->name;
-        $accountId = $account->id;
-        $moveTo    = $repository->find(intval($request->get('move_account_before_delete')));
+        $type     = $account->accountType->type;
+        $typeName = config('firefly.shortNamesByFullName.' . $type);
+        $name     = $account->name;
+        $moveTo   = $repository->find(intval($request->get('move_account_before_delete')));
 
         $repository->destroy($account, $moveTo);
 
-        Session::flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
+        $request->session()->flash('success', strval(trans('firefly.' . $typeName . '_deleted', ['name' => $name])));
         Preferences::mark();
 
-        $uri = session('accounts.delete.url');
-        if (!(strpos($uri, sprintf('accounts/show/%s', $accountId)) === false)) {
-            // uri would point back to account
-            $uri = route('accounts.index', [$typeName]);
-        }
-
-        return redirect($uri);
+        return redirect($this->getPreviousUri('accounts.delete.uri'));
     }
 
     /**
+     * @param Request $request
      * @param Account $account
      *
      * @return View
      */
-    public function edit(Account $account)
+    public function edit(Request $request, Account $account)
     {
 
         $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -168,9 +161,9 @@ class AccountController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('accounts.edit.fromUpdate') !== true) {
-            Session::put('accounts.edit.url', URL::previous());
+            $this->rememberPreviousUri('accounts.edit.uri');
         }
-        Session::forget('accounts.edit.fromUpdate');
+        $request->session()->forget('accounts.edit.fromUpdate');
 
         // pre fill some useful values.
 
@@ -191,20 +184,20 @@ class AccountController extends Controller
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $account->getMeta('currency_id'),
         ];
-        Session::flash('preFilled', $preFilled);
-        Session::flash('gaEventCategory', 'accounts');
-        Session::flash('gaEventAction', 'edit-' . $what);
+        $request->session()->flash('preFilled', $preFilled);
+        $request->session()->flash('gaEventCategory', 'accounts');
+        $request->session()->flash('gaEventAction', 'edit-' . $what);
 
         return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'));
     }
 
     /**
-     * @param ARI    $repository
-     * @param string $what
+     * @param AccountRepositoryInterface $repository
+     * @param string                     $what
      *
      * @return View
      */
-    public function index(ARI $repository, string $what)
+    public function index(AccountRepositoryInterface $repository, string $what)
     {
         $what         = $what ?? 'asset';
         $subTitle     = trans('firefly.' . $what . '_accounts');
@@ -269,9 +262,9 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param ARI     $repository
-     * @param Account $account
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return View
      */
@@ -284,7 +277,8 @@ class AccountController extends Controller
 
         // replace with journal collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/all');
@@ -318,7 +312,7 @@ class AccountController extends Controller
 
         // replace with journal collector:
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('accounts/show/' . $account->id . '/' . $date);
@@ -331,18 +325,18 @@ class AccountController extends Controller
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param ARI                $repository
+     * @param AccountFormRequest         $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      */
-    public function store(AccountFormRequest $request, ARI $repository)
+    public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
         $data    = $request->getAccountData();
         $account = $repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
 
         // update preferences if necessary:
@@ -354,39 +348,39 @@ class AccountController extends Controller
 
         if (intval($request->get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('accounts.create.fromStore', true);
+            $request->session()->put('accounts.create.fromStore', true);
 
             return redirect(route('accounts.create', [$request->input('what')]))->withInput();
         }
 
         // redirect to previous URL.
-        return redirect(session('accounts.create.url'));
+        return redirect($this->getPreviousUri('accounts.create.uri'));
     }
 
     /**
-     * @param AccountFormRequest $request
-     * @param ARI                $repository
-     * @param Account            $account
+     * @param AccountFormRequest         $request
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(AccountFormRequest $request, ARI $repository, Account $account)
+    public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
     {
         $data = $request->getAccountData();
         $repository->update($account, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
+        $request->session()->flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('accounts.edit.fromUpdate', true);
+            $request->session()->put('accounts.edit.fromUpdate', true);
 
             return redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
-        return redirect(session('accounts.edit.url'));
+        return redirect($this->getPreviousUri('accounts.edit.uri'));
 
     }
 
@@ -417,8 +411,8 @@ class AccountController extends Controller
      */
     private function periodEntries(Account $account): Collection
     {
-        /** @var ARI $repository */
-        $repository = app(ARI::class);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
         /** @var AccountTaskerInterface $tasker */
         $tasker = app(AccountTaskerInterface::class);
 

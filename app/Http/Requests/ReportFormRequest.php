@@ -19,6 +19,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -142,12 +143,33 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * @return Collection
+     */
+    public function getTagList(): Collection
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $set        = $this->get('tag');
+        $collection = new Collection;
+        if (is_array($set)) {
+            foreach ($set as $tagTag) {
+                $tag = $repository->findByTag($tagTag);
+                if (!is_null($tag->id)) {
+                    $collection->push($tag);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
      * @return array
      */
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category,budget',
+            'report_type' => 'in:audit,default,category,budget,tag',
         ];
     }
 

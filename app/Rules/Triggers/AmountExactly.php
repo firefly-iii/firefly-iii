@@ -60,7 +60,7 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
     {
         $amount  = $journal->destination_amount ?? TransactionJournal::amountPositive($journal);
         $compare = $this->triggerValue;
-        $result  = bccomp($amount, $compare, 4);
+        $result  = bccomp($amount, $compare);
         if ($result === 0) {
             Log::debug(sprintf('RuleTrigger AmountExactly for journal #%d: %d matches %d exactly, so return true', $journal->id, $amount, $compare));
 

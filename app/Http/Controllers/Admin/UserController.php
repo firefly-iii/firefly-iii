@@ -20,7 +20,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Preferences;
 use Session;
-use URL;
 use View;
 
 /**
@@ -57,7 +56,7 @@ class UserController extends Controller
     {
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('users.edit.fromUpdate') !== true) {
-            Session::put('users.edit.url', URL::previous());
+            $this->rememberPreviousUri('users.edit.uri');
         }
         Session::forget('users.edit.fromUpdate');
 
@@ -156,7 +155,7 @@ class UserController extends Controller
         }
 
         // redirect to previous URL.
-        return redirect(session('users.edit.url'));
+        return redirect($this->getPreviousUri('users.edit.uri'));
 
     }
 

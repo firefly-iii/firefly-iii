@@ -44,16 +44,6 @@ class AccountRepository implements AccountRepositoryInterface
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
 
     /**
-     * AttachmentRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * Moved here from account CRUD
      *
      * @param array $types
@@ -321,6 +311,14 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal->date;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

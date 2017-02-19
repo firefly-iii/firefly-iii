@@ -78,7 +78,8 @@ class TransactionMatcher
         do {
             // Fetch a batch of transactions from the database
             /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class, [auth()->user()]);
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setUser(auth()->user());
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
             $set = $collector->getPaginatedJournals();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));

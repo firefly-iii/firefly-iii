@@ -27,9 +27,9 @@ use FireflyIII\Rules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Validation\Validator;
 use Session;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class FireflyValidator
@@ -40,14 +40,14 @@ class FireflyValidator extends Validator
 {
 
     /**
-     * @param TranslatorInterface $translator
-     * @param array               $data
-     * @param array               $rules
-     * @param array               $messages
-     * @param array               $customAttributes
+     * @param Translator $translator
+     * @param array      $data
+     * @param array      $rules
+     * @param array      $messages
+     * @param array      $customAttributes
      *
      */
-    public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
+    public function __construct(Translator $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
         parent::__construct($translator, $data, $rules, $messages, $customAttributes);
     }
@@ -158,6 +158,7 @@ class FireflyValidator extends Validator
     public function validateMore($attribute, $value, $parameters): bool
     {
         $compare = $parameters[0] ?? '0';
+
         return bccomp($value, $compare) > 0;
     }
 

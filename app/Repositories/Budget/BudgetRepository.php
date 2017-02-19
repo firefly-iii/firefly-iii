@@ -39,16 +39,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     private $user;
 
     /**
-     * BudgetRepository constructor.
-     *
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return bool
      */
     public function cleanupBudgets(): bool
@@ -434,6 +424,14 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param Collection $budgets
      * @param Collection $accounts
      * @param Carbon     $start
@@ -444,7 +442,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setBudgets($budgets);
 
         if ($accounts->count() > 0) {
@@ -470,7 +469,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class, [$this->user]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
 
         if ($accounts->count() > 0) {

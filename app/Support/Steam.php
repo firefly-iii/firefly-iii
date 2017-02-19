@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -25,7 +26,6 @@ use FireflyIII\Models\Transaction;
  */
 class Steam
 {
-
 
     /**
      *
@@ -182,6 +182,21 @@ class Steam
     }
 
     /**
+     * @param int $isEncrypted
+     * @param     $value
+     *
+     * @return string
+     */
+    public function decrypt(int $isEncrypted, string $value)
+    {
+        if ($isEncrypted === 1) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param array $accounts
      *
      * @return array
@@ -201,8 +216,6 @@ class Steam
 
         return $list;
     }
-
-    // parse PHP size:
 
     /**
      * @param $string
@@ -237,6 +250,22 @@ class Steam
         return intval($string);
 
 
+    }
+
+    // parse PHP size:
+
+    /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function positive(string $amount): string
+    {
+        if (bccomp($amount, '0') === -1) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
     }
 
 }

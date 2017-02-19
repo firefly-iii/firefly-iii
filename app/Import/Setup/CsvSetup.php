@@ -181,10 +181,9 @@ class CsvSetup implements SetupInterface
     public function saveImportConfiguration(array $data, FileBag $files): bool
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class, [auth()->user()]);
-
-        $importId = $data['csv_import_account'] ?? 0;
-        $account  = $repository->find(intval($importId));
+        $repository = app(AccountRepositoryInterface::class);
+        $importId   = $data['csv_import_account'] ?? 0;
+        $account    = $repository->find(intval($importId));
 
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
         $config                = $this->job->configuration;
@@ -438,8 +437,9 @@ class CsvSetup implements SetupInterface
         Log::debug('Now in getDataForColumnRoles()');
         $config = $this->job->configuration;
         $data   = [
-            'columns'     => [],
-            'columnCount' => 0,
+            'columns'       => [],
+            'columnCount'   => 0,
+            'columnHeaders' => [],
         ];
 
         // show user column role configuration.
@@ -448,8 +448,13 @@ class CsvSetup implements SetupInterface
         // create CSV reader.
         $reader = Reader::createFromString($content);
         $reader->setDelimiter($config['delimiter']);
-        $start = $config['has-headers'] ? 1 : 0;
-        $end   = $start + config('csv.example_rows');
+        $start  = $config['has-headers'] ? 1 : 0;
+        $end    = $start + config('csv.example_rows');
+        $header = [];
+        if ($config['has-headers']) {
+            $header = $reader->fetchOne(0);
+        }
+
 
         // collect example data in $data['columns']
         Log::debug(sprintf('While %s is smaller than %d', $start, $end));
@@ -467,7 +472,8 @@ class CsvSetup implements SetupInterface
             }
 
             foreach ($row as $index => $value) {
-                $value = trim($value);
+                $value                         = trim($value);
+                $data['columnHeaders'][$index] = $header[$index] ?? '';
                 if (strlen($value) > 0) {
                     $data['columns'][$index][] = $value;
                 }

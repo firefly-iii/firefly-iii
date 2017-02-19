@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Account;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -123,6 +124,11 @@ interface AccountRepositoryInterface
      * @return Carbon
      */
     public function oldestJournalDate(Account $account): Carbon;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param array $data

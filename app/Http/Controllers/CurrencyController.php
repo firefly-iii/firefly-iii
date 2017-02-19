@@ -17,10 +17,9 @@ use Cache;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Illuminate\Http\Request;
 use Log;
 use Preferences;
-use Session;
-use URL;
 use View;
 
 /**
@@ -53,34 +52,35 @@ class CurrencyController extends Controller
     /**
      * @return View
      */
-    public function create()
+    public function create(Request $request)
     {
         $subTitleIcon = 'fa-plus';
         $subTitle     = trans('firefly.create_currency');
 
         // put previous url in session if not redirect from store (not "create another").
         if (session('currencies.create.fromStore') !== true) {
-            Session::put('currencies.create.url', URL::previous());
+            $this->rememberPreviousUri('currencies.create.uri');
         }
-        Session::forget('currencies.create.fromStore');
-        Session::flash('gaEventCategory', 'currency');
-        Session::flash('gaEventAction', 'create');
+        $request->session()->forget('currencies.create.fromStore');
+        $request->session()->flash('gaEventCategory', 'currency');
+        $request->session()->flash('gaEventAction', 'create');
 
         return view('currencies.create', compact('subTitleIcon', 'subTitle'));
     }
 
     /**
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function defaultCurrency(TransactionCurrency $currency)
+    public function defaultCurrency(Request $request, TransactionCurrency $currency)
     {
 
         Preferences::set('currencyPreference', $currency->code);
         Preferences::mark();
 
-        Session::flash('success', trans('firefly.new_default_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', trans('firefly.new_default_currency', ['name' => $currency->name]));
         Cache::forget('FFCURRENCYSYMBOL');
         Cache::forget('FFCURRENCYCODE');
 
@@ -95,19 +95,19 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function delete(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
+    public function delete(Request $request, CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         if (!$repository->canDeleteCurrency($currency)) {
-            Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
+            $request->session()->flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currencies.index'));
         }
 
 
         // put previous url in session
-        Session::put('currencies.delete.url', URL::previous());
-        Session::flash('gaEventCategory', 'currency');
-        Session::flash('gaEventAction', 'delete');
+        $this->rememberPreviousUri('currencies.delete.uri');
+        $request->session()->flash('gaEventCategory', 'currency');
+        $request->session()->flash('gaEventAction', 'delete');
         $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
 
@@ -120,26 +120,27 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
+    public function destroy(Request $request, CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         if (!$repository->canDeleteCurrency($currency)) {
-            Session::flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
+            $request->session()->flash('error', trans('firefly.cannot_delete_currency', ['name' => $currency->name]));
 
             return redirect(route('currencies.index'));
         }
 
         $repository->destroy($currency);
-        Session::flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', trans('firefly.deleted_currency', ['name' => $currency->name]));
 
-        return redirect(session('currencies.delete.url'));
+        return redirect($this->getPreviousUri('currencies.delete.uri'));
     }
 
     /**
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return View
      */
-    public function edit(TransactionCurrency $currency)
+    public function edit(Request $request, TransactionCurrency $currency)
     {
         $subTitleIcon     = 'fa-pencil';
         $subTitle         = trans('breadcrumbs.edit_currency', ['name' => $currency->name]);
@@ -147,29 +148,30 @@ class CurrencyController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('currencies.edit.fromUpdate') !== true) {
-            Session::put('currencies.edit.url', URL::previous());
+            $this->rememberPreviousUri('currencies.edit.uri');
         }
-        Session::forget('currencies.edit.fromUpdate');
-        Session::flash('gaEventCategory', 'currency');
-        Session::flash('gaEventAction', 'edit');
+        $request->session()->forget('currencies.edit.fromUpdate');
+        $request->session()->flash('gaEventCategory', 'currency');
+        $request->session()->flash('gaEventAction', 'edit');
 
         return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
 
     }
 
     /**
+     * @param Request                     $request
      * @param CurrencyRepositoryInterface $repository
      *
      * @return View
      */
-    public function index(CurrencyRepositoryInterface $repository)
+    public function index(Request $request, CurrencyRepositoryInterface $repository)
     {
         $currencies      = $repository->get();
         $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
 
 
         if (!auth()->user()->hasRole('owner')) {
-            Session::flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
         }
 
 
@@ -188,23 +190,20 @@ class CurrencyController extends Controller
         if (!auth()->user()->hasRole('owner')) {
             Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
 
-            return redirect(session('currencies.create.url'));
+            return redirect($this->getPreviousUri('currencies.create.uri'));
         }
 
         $data     = $request->getCurrencyData();
         $currency = $repository->store($data);
-        Session::flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', trans('firefly.created_currency', ['name' => $currency->name]));
 
         if (intval($request->get('create_another')) === 1) {
-            Session::put('currencies.create.fromStore', true);
+            $request->session()->put('currencies.create.fromStore', true);
 
             return redirect(route('currencies.create'))->withInput();
         }
 
-        // redirect to previous URL.
-        return redirect(session('currencies.create.url'));
-
-
+        return redirect($this->getPreviousUri('currencies.create.uri'));
     }
 
     /**
@@ -220,18 +219,16 @@ class CurrencyController extends Controller
         if (auth()->user()->hasRole('owner')) {
             $currency = $repository->update($currency, $data);
         }
-        Session::flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
+        $request->session()->flash('success', trans('firefly.updated_currency', ['name' => $currency->name]));
         Preferences::mark();
 
 
         if (intval($request->get('return_to_edit')) === 1) {
-            Session::put('currencies.edit.fromUpdate', true);
+            $request->session()->put('currencies.edit.fromUpdate', true);
 
             return redirect(route('currencies.edit', [$currency->id]));
         }
 
-        // redirect to previous URL.
-        return redirect(session('currencies.edit.url'));
-
+        return redirect($this->getPreviousUri('currencies.edit.uri'));
     }
 }
