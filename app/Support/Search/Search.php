@@ -241,8 +241,6 @@ class Search implements SearchInterface
         } while (!$reachedEndOfList && !$foundEnough);
 
         $result = $result->slice(0, $this->limit);
-        var_dump($result->toArray());
-        exit;
 
         return $result;
     }
