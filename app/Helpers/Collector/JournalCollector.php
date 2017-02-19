@@ -518,6 +518,7 @@ class JournalCollector implements JournalCollectorInterface
             function (EloquentBuilder $q) {
                 $q->whereNull('budget_transaction.budget_id');
                 $q->whereNull('budget_transaction_journal.budget_id');
+                $q->where('transaction_types.type', '=', TransactionType::WITHDRAWAL);
             }
         );
 
