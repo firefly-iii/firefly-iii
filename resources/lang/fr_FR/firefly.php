@@ -26,6 +26,8 @@ return [
     'showEverything'                             => 'Tout Afficher',
     'never'                                      => 'Jamais',
     'search_results_for'                         => 'Résultats de recherche pour ":query"',
+    'advanced_search'                            => 'Advanced search',
+    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
     'bounced_error'                              => 'Le message envoyé à :email a été rejeté, donc pas d\'accès pour vous.',
     'deleted_error'                              => 'Ces informations d\'identification ne sont pas présentes dans nos données.',
     'general_blocked_error'                      => 'Votre compte a été désactivé, vous ne pouvez plus vous connecter.',

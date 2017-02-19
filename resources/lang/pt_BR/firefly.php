@@ -26,6 +26,8 @@ return [
     'showEverything'                             => 'Mostrar tudo',
     'never'                                      => 'Nunca',
     'search_results_for'                         => 'Pesquisar resultados por ":query"',
+    'advanced_search'                            => 'Advanced search',
+    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
     'bounced_error'                              => 'A mensagem enviado para :email ressaltado, não tem acesso para você.',
     'deleted_error'                              => 'Estas credenciais não correspondem aos nossos registros.',
     'general_blocked_error'                      => 'Sua conta foi desativada, você não pode entrar.',

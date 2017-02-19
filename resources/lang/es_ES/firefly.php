@@ -26,6 +26,8 @@ return [
     'showEverything'                             => 'Show everything',
     'never'                                      => 'Never',
     'search_results_for'                         => 'Search results for ":query"',
+    'advanced_search'                            => 'Advanced search',
+    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
     'bounced_error'                              => 'The message sent to :email bounced, so no access for you.',
     'deleted_error'                              => 'These credentials do not match our records.',
     'general_blocked_error'                      => 'Your account has been disabled, so you cannot login.',
