@@ -21,3 +21,9 @@ install:
 
 script:
   - phpunit
+
+# safelist
+branches:
+  only:
+  - develop
+  - master

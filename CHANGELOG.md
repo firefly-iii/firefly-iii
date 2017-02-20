@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.3.6] - 2017-02-20
+### Fixed
+- #578, reported by [xpfgsyb](https://github.com/xpfgsyb).
+
 ## [4.3.5] - 2017-02-19
 ### Added
 - Beta support for Sandstorm.IO

@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
 
         // force https urls
         if (env('APP_FORCE_SSL', false)) {
-            URL::forceSchema('https');
+            URL::forceScheme('https');
         }
     }
 
