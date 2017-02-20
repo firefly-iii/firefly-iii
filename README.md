@@ -14,7 +14,7 @@ Try out Firefly III on the [demo site](https://firefly-iii.nder.be/).
 
 ## Installation
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/installation-guide/).
+To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
 
 ## More about Firefly III
 
