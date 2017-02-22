@@ -49,7 +49,7 @@ class TagFormRequest extends Request
 
         $data = [
             'tag'         => $this->string('tag'),
-            'date'        => $this->date($date),
+            'date'        => $this->date('date'),
             'description' => $this->string('description'),
             'latitude'    => $latitude,
             'longitude'   => $longitude,
