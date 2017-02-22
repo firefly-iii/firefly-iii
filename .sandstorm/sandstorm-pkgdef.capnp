@@ -16,7 +16,7 @@ const pkgdef :Spk.PackageDefinition = (
   manifest = (
     appTitle = (defaultText = "Firefly III"),
     appVersion = 1,
-    appMarketingVersion = (defaultText = "3.4.3"),
+    appMarketingVersion = (defaultText = "3.4.6"),
     actions = [
       # Define your "new document" handlers here.
       ( nounPhrase = (defaultText = "administration"),
@@ -97,7 +97,7 @@ const pkgdef :Spk.PackageDefinition = (
   # `spk dev` will write a list of all the files your app uses to this file.
   # You should review it later, before shipping your app.
 
-  alwaysInclude = [],
+  alwaysInclude = ["app","bootstrap","config","database","public","resources","routes"],
   # Fill this list with more names of files or directories that should be
   # included in your package, even if not listed in sandstorm-files.list.
   # Use this to force-include stuff that you know you need but which may

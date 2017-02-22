@@ -13,6 +13,8 @@ namespace FireflyIII\Http\Middleware;
 
 use Auth;
 use Closure;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use View;
@@ -45,7 +47,54 @@ class Sandstorm
 
         // we're in sandstorm! is user a guest?
         if (Auth::guard($guard)->guest()) {
-            $userId = strval($request->header('X-Sandstorm-User-Id'));
+            /** @var UserRepositoryInterface $repository */
+            $repository = app(UserRepositoryInterface::class);
+            $userId     = strval($request->header('X-Sandstorm-User-Id'));
+            $count      = $repository->count();
+
+            // if there already is one user in this instance, we assume this is
+            // the "main" user. Firefly's nature does not allow other users to
+            // access the same data so we have no choice but to simply login
+            // the new user to the same account and just forget about Bob and Alice
+            // and any other differences there may be between these users.
+            if ($count === 1 && strlen($userId) > 0) {
+                // login as first user user.
+                $user  = User::first();
+                Auth::guard($guard)->login($user);
+                View::share('SANDSTORM_ANON', false);
+                return $next($request);
+            }
+
+            if ($count === 1 && strlen($userId) === 0) {
+                // login but indicate anonymous
+                $user  = User::first();
+                Auth::guard($guard)->login($user);
+                View::share('SANDSTORM_ANON', true);
+                return $next($request);
+            }
+
+            if ($count === 0 && strlen($userId) > 0) {
+                // create new user.
+                $email = $userId . '@firefly';
+                $user  = User::create(
+                    [
+                        'email'    => $email,
+                        'password' => str_random(16),
+                    ]
+                );
+                Auth::guard($guard)->login($user);
+                return $next($request);
+            }
+
+            if ($count === 0 && strlen($userId) === 0) {
+                throw new FireflyException('The first visit to a new Firefly III administration cannot be by a guest user.');
+            }
+
+            if ($count > 1) {
+                die('Cannot happen.');
+            }
+            exit;
+
             if (strlen($userId) > 0) {
                 // find user?
                 $email = $userId . '@firefly';
