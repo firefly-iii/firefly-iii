@@ -601,7 +601,9 @@ Route::group(
     Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
-    Route::get('show/{tag}/{date?}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('show/{tag}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
+    Route::get('show/{tag}/{date}', ['uses' => 'TagController@showByDate', 'as' => 'show.date']);
+    Route::get('show/{tag}', ['uses' => 'TagController@show', 'as' => 'show']);
 
     Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
     Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);

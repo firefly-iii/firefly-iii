@@ -226,24 +226,71 @@ class TagController extends Controller
      *
      * @return View
      */
-    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag, string $moment = '')
+    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag)
+    {
+        $start        = clone session('start', Carbon::now()->startOfMonth());
+        $end          = clone session('end', Carbon::now()->endOfMonth());
+        $subTitle     = $tag->tag;
+        $subTitleIcon = 'fa-tag';
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $periods      = $this->getPeriodOverview($tag);
+
+        // use collector:
+        $collector->setAllAssetAccounts()
+                  ->setLimit($pageSize)->setPage($page)->setTag($tag)->withOpposingAccount()->disableInternalFilter()
+                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('tags/show/' . $tag->id);
+
+        $sum = $journals->sum(
+            function (Transaction $transaction) {
+                return $transaction->transaction_amount;
+            }
+        );
+
+        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
+    }
+
+    /**
+     * @param Request                   $request
+     * @param JournalCollectorInterface $collector
+     * @param Tag                       $tag
+     *
+     * @return View
+     */
+    public function showAll(Request $request, JournalCollectorInterface $collector, Tag $tag)
+    {
+        $subTitle     = $tag->tag;
+        $subTitleIcon = 'fa-tag';
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)
+            ->withOpposingAccount()->disableInternalFilter()
+            ->withBudgetInformation()->withCategoryInformation();
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath('tags/show/' . $tag->id . '/all');
+
+        $sum = $journals->sum(
+            function (Transaction $transaction) {
+                return $transaction->transaction_amount;
+            }
+        );
+
+        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
+
+    }
+
+    public function showByDate(Request $request, JournalCollectorInterface $collector, Tag $tag, string $date)
     {
         $range = Preferences::get('viewRange', '1M')->data;
-        $start = new Carbon;
-        $end   = new Carbon;
 
-        if (strlen($moment) > 0) {
-            try {
-                $start = new Carbon($moment);
-                $end   = Navigation::endOfPeriod($start, $range);
-            } catch (Exception $e) {
-                $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
-                $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
-            }
-        }
-        if (strlen($moment) === 0) {
-            $start = clone session('start', Carbon::now()->startOfMonth());
-            $end   = clone session('end', Carbon::now()->endOfMonth());
+        try {
+            $start = new Carbon($date);
+            $end   = Navigation::endOfPeriod($start, $range);
+        } catch (Exception $e) {
+            $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
+            $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
         }
 
         $subTitle     = $tag->tag;
@@ -254,7 +301,7 @@ class TagController extends Controller
 
         // use collector:
         $collector->setAllAssetAccounts()
-                  ->setLimit($pageSize)->setPage($page)->setTag($tag)
+                  ->setLimit($pageSize)->setPage($page)->setTag($tag)->withOpposingAccount()->disableInternalFilter()
                   ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('tags/show/' . $tag->id);
