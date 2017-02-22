@@ -40,7 +40,8 @@ class AccountControllerTest extends TestCase
     public function testDelete()
     {
         $this->be($this->user());
-        $response = $this->get(route('accounts.delete', [1]));
+        $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.delete', [$account->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -53,12 +54,13 @@ class AccountControllerTest extends TestCase
     {
         $this->session(['accounts.delete.url' => 'http://localhost/accounts/show/1']);
 
+        $account    = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->withArgs([0])->once()->andReturn(new Account);
         $repository->shouldReceive('destroy')->andReturn(true);
 
         $this->be($this->user());
-        $response = $this->post(route('accounts.destroy', [1]));
+        $response = $this->post(route('accounts.destroy', [$account->id]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
@@ -69,7 +71,8 @@ class AccountControllerTest extends TestCase
     public function testEdit()
     {
         $this->be($this->user());
-        $response = $this->get(route('accounts.edit', [1]));
+        $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.edit', [$account->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -91,6 +94,37 @@ class AccountControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\AccountController::show
+     * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
+     */
+    public function testShowInitial()
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $this->be($this->user());
+        $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id','DESC')->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.show', [$account->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\AccountController::show
+     * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
+     * @expectedExceptionMessage Expected a transaction
+     */
+    public function testShowBrokenInitial()
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $this->be($this->user());
+        $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id','ASC')->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.show', [$account->id]));
+        $response->assertStatus(500);
     }
 
     /**
