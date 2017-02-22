@@ -967,4 +967,19 @@ return [
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'              => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
+
+    // empty lists? instructions:
+    'empty_accounts_title_asset'           => 'Let\'s create an asset account!',
+    'empty_accounts_intro_asset'           => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
+    'empty_accounts_imperative_asset'      => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
+    'empty_accounts_create_asset'          => 'Create an asset account',
+    'empty_accounts_title_expense'         => 'Let\'s create an expense account!',
+    'empty_accounts_intro_expense'         => '',
+    'empty_accounts_imperative_expense'    => '',
+    'empty_accounts_create_expense'        => '',
+    'empty_accounts_title_revenue'         => 'Let\'s create a revenue account!',
+    'empty_accounts_intro_revenue'         => '',
+    'empty_accounts_imperative_revenue'    => '',
+    'empty_accounts_create_revenue'        => '',
+
 ];
