@@ -45,7 +45,6 @@ class TagFormRequest extends Request
             $longitude = null;
             $zoomLevel = null;
         }
-        $date = $this->get('date') ?? '';
 
         $data = [
             'tag'         => $this->string('tag'),
