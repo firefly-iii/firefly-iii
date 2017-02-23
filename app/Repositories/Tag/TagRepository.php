@@ -69,6 +69,14 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->user->tags()->count();
+    }
+
+    /**
      * @param Tag $tag
      *
      * @return bool
@@ -161,6 +169,16 @@ class TagRepository implements TagRepositoryInterface
         );
 
         return $tags;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Collection
+     */
+    public function getByType(string $type): Collection
+    {
+        return $this->user->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
     }
 
     /**

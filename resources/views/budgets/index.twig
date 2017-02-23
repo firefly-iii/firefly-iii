@@ -85,7 +85,7 @@
         </div>
     </div>
     {% if budgets.count == 0 and inactive.count == 0 %}
-        {% include 'empty.budgets' %}
+        {% include 'partials.empty' with {what: 'default', type: 'budgets',route: route('budgets.create')} %}
     {% endif %}
     <div class="row">
     {% for budget in budgets %}

@@ -183,20 +183,23 @@ class TagController extends Controller
     }
 
     /**
+     * @param TagRepositoryInterface $repository
      *
+     * @return View
      */
-    public function index()
+    public function index(TagRepositoryInterface $repository)
     {
         $title         = 'Tags';
         $mainTitleIcon = 'fa-tags';
         $types         = ['nothing', 'balancingAct', 'advancePayment'];
+        $count         = $repository->count();
 
         // loop each types and get the tags, group them by year.
         $collection = [];
         foreach ($types as $type) {
 
             /** @var Collection $tags */
-            $tags = auth()->user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
+            $tags = $repository->getByType($type);
             $tags = $tags->sortBy(
                 function (Tag $tag) {
                     $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
@@ -216,7 +219,7 @@ class TagController extends Controller
             }
         }
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection'));
+        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection','count'));
     }
 
     /**
@@ -266,8 +269,8 @@ class TagController extends Controller
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)
-            ->withOpposingAccount()->disableInternalFilter()
-            ->withBudgetInformation()->withCategoryInformation();
+                  ->withOpposingAccount()->disableInternalFilter()
+                  ->withBudgetInformation()->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath('tags/show/' . $tag->id . '/all');
 

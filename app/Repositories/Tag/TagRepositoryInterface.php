@@ -38,6 +38,11 @@ interface TagRepositoryInterface
     public function connect(TransactionJournal $journal, Tag $tag): bool;
 
     /**
+     * @return int
+     */
+    public function count(): int;
+
+    /**
      * This method destroys a tag.
      *
      * @param Tag $tag
@@ -82,6 +87,13 @@ interface TagRepositoryInterface
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @param string $type
+     *
+     * @return Collection
+     */
+    public function getByType(string $type): Collection;
 
     /**
      * @param Tag $tag
