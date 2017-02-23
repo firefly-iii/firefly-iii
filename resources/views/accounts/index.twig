@@ -35,7 +35,7 @@
             </div>
         </div>
     {% else %}
-        {% include 'empty.accounts' with {what: what} %}
+        {% include 'partials.empty' with {what: what, type: 'accounts',route: route('accounts.create', [what])} %}
     {% endif %}
 {% endblock %}
 

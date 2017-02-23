@@ -71,7 +71,7 @@
                     </p>
                 </div>
             </div>
-
+            {% if budgets.count > 0 and inactive.count > 0 %}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
@@ -80,9 +80,13 @@
                     <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
                 </div>
             </div>
+            {% endif %}
 
         </div>
     </div>
+    {% if budgets.count == 0 and inactive.count == 0 %}
+        {% include 'empty.budgets' %}
+    {% endif %}
     <div class="row">
     {% for budget in budgets %}
         <div class="col-lg-4 col-sm-6 col-md-6">

@@ -974,12 +974,12 @@ return [
     'empty_accounts_imperative_asset'      => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
     'empty_accounts_create_asset'          => 'Create an asset account',
     'empty_accounts_title_expense'         => 'Let\'s create an expense account!',
-    'empty_accounts_intro_expense'         => '',
-    'empty_accounts_imperative_expense'    => '',
-    'empty_accounts_create_expense'        => '',
+    'empty_accounts_intro_expense'         => 'You have no expense accounts yet. Expense accounts are the places where you spend money, such as shops and supermarkets.',
+    'empty_accounts_imperative_expense'    => 'Expense accounts are created automatically when you create transactions, but you can create one manually too, if you want.',
+    'empty_accounts_create_expense'        => 'Create an expense account',
     'empty_accounts_title_revenue'         => 'Let\'s create a revenue account!',
-    'empty_accounts_intro_revenue'         => '',
-    'empty_accounts_imperative_revenue'    => '',
-    'empty_accounts_create_revenue'        => '',
+    'empty_accounts_intro_revenue'         => 'You have no revenue accounts yet. Revenue accounts are the places where you receive money from, such as your employer.',
+    'empty_accounts_imperative_revenue'    => 'Expense accounts are created automatically when you create transactions, but you can create one manually too, if you want.',
+    'empty_accounts_create_revenue'        => 'Create a revenue account',
 
 ];
