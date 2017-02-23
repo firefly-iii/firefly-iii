@@ -1006,6 +1006,14 @@ return [
     'no_transactions_intro_transfers'       => 'You have no transfers yet. When you move money between asset accounts, it is recorded as a transfer.',
     'no_transactions_imperative_transfers'  => 'Have you moved some money around? Then you should write it down:',
     'no_transactions_create_transfers'      => 'Create a new transfer',
+    'no_piggies_title_default'              => 'Let\'s create a piggy bank',
+    'no_piggies_intro_default'              => 'You have no piggy banks yet. You can create piggy banks to divide your savings and keep track of what you\'re saving up for.',
+    'no_piggies_imperative_default'         => 'Do you have things you\'re saving money for? Create a piggy bank and keep track:',
+    'no_piggies_create_default'             => 'Create a new piggy bank',
+    'no_bills_title_default'                => 'Let\'s create a bill',
+    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent of insurance.',
+    'no_bills_imperative_default'           => 'Do you have such regular bills? Create a bill and keep track of your payments:',
+    'no_bills_create_default'               => 'Create a new bill',
 
 
 ];
