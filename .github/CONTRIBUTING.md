@@ -17,3 +17,7 @@ Take the time to read the [installation guide FAQ](https://firefly-iii.github.io
 ## Pull requests
 
 I can only accept pull requests against the `develop` branch, never the `master` branch.
+
+## Translations :us: :fr: :de:
+
+If you see a spelling error, grammatical error or a weird translation in your language, please join [our CrowdIn](https://crowdin.com/project/firefly-iii) project. There, you can submit your translations and fixes. The GitHub repository will download these automatically and they will be included in the next release. 
