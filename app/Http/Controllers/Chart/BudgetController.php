@@ -386,9 +386,14 @@ class BudgetController extends Controller
                         ]
                     );
             }
+            /*
+             * amount: amount of budget limit
+             * left: amount of budget limit min spent, or 0 when < 0.
+             * spent: spent, or amount of budget limit when > amount
+             */
             $amount        = $budgetLimit->amount;
             $left          = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent         = $expenses;
+            $spent         = bccomp($expenses, $amount) === 1 ? $expenses : bcmul($amount, '-1');
             $overspent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
             $return[$name] = [
                 'left'      => $left,
