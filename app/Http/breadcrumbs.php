@@ -557,6 +557,19 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'reports.report.tag', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $tagTags, Carbon $start, Carbon $end) {
+    $breadcrumbs->parent('reports.index');
+
+    $monthFormat = (string)trans('config.month_and_day');
+    $startString = $start->formatLocalized($monthFormat);
+    $endString   = $end->formatLocalized($monthFormat);
+    $title       = (string)trans('firefly.report_tag', ['start' => $startString, 'end' => $endString]);
+
+    $breadcrumbs->push($title, route('reports.report.tag', [$accountIds, $tagTags, $start->format('Ymd'), $end->format('Ymd')]));
+}
+);
+
+Breadcrumbs::register(
     'reports.report.category', function (BreadCrumbGenerator $breadcrumbs, string $accountIds, string $categoryIds, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('reports.index');
 

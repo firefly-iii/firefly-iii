@@ -331,22 +331,4 @@ class CategoryReportController extends Controller
 
         return $grouped;
     }
-
-    /**
-     * @param Collection $set
-     *
-     * @return array
-     */
-    private function groupByOpposingAccount(Collection $set): array
-    {
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $accountId           = $transaction->opposing_account_id;
-            $grouped[$accountId] = $grouped[$accountId] ?? '0';
-            $grouped[$accountId] = bcadd($transaction->transaction_amount, $grouped[$accountId]);
-        }
-
-        return $grouped;
-    }
 }

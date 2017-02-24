@@ -667,6 +667,7 @@ return [
     'report_audit'                               => 'Transaction history overview between :start and :end',
     'report_category'                            => 'Category report between :start and :end',
     'report_budget'                              => 'Budget report between :start and :end',
+    'report_tag'                                 => 'Tag report between :start and :end',
     'quick_link_reports'                         => 'Quick links',
     'quick_link_default_report'                  => 'Default financial report',
     'quick_link_audit_report'                    => 'Transaction history overview',

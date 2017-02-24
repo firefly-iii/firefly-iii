@@ -1,23 +1,22 @@
 <?php
 /**
  * MonthReportGenerator.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
  *
  * See the LICENSE file for details.
  */
 
 declare(strict_types = 1);
 
-namespace FireflyIII\Generator\Report\Budget;
+namespace FireflyIII\Generator\Report\Tag;
 
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -26,14 +25,13 @@ use Log;
 /**
  * Class MonthReportGenerator
  *
- * @package FireflyIII\Generator\Report\Budget
+ * @package FireflyIII\Generator\Report\Tag
  */
 class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
-    /** @var  Collection */
+
+    /** @var Collection */
     private $accounts;
-    /** @var  Collection */
-    private $budgets;
     /** @var  Carbon */
     private $end;
     /** @var Collection */
@@ -42,14 +40,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     private $income;
     /** @var  Carbon */
     private $start;
+    /** @var Collection */
+    private $tags;
 
     /**
      * MonthReportGenerator constructor.
      */
     public function __construct()
     {
-        $this->income   = new Collection;
         $this->expenses = new Collection;
+        $this->income   = new Collection;
     }
 
     /**
@@ -58,19 +58,25 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     public function generate(): string
     {
         $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
-        $budgetIds       = join(',', $this->budgets->pluck('id')->toArray());
+        $tagTags         = join(',', $this->tags->pluck('tag')->toArray());
+        $reportType      = 'tag';
         $expenses        = $this->getExpenses();
-        $accountSummary  = $this->summarizeByAccount($expenses);
-        $budgetSummary   = $this->summarizeByBudget($expenses);
+        $income          = $this->getIncome();
+        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
+        $tagSummary      = $this->getObjectSummary($this->summarizeByTag($expenses), $this->summarizeByTag($income));
         $averageExpenses = $this->getAverages($expenses, SORT_ASC);
+        $averageIncome   = $this->getAverages($income, SORT_DESC);
         $topExpenses     = $this->getTopExpenses();
+        $topIncome       = $this->getTopIncome();
+
 
         // render!
-        return view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
-            ->with('start', $this->start)->with('end', $this->end)
-            ->with('budgets', $this->budgets)
-            ->with('accounts', $this->accounts)
-            ->render();
+        return view(
+            'reports.tag.month', compact(
+                                   'accountIds', 'tagTags', 'reportType', 'accountSummary', 'tagSummary', 'averageExpenses', 'averageIncome', 'topIncome',
+                                   'topExpenses'
+                               )
+        )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
     }
 
     /**
@@ -92,8 +98,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
-        $this->budgets = $budgets;
-
         return $this;
     }
 
@@ -138,6 +142,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
+        $this->tags = $tags;
+
         return $this;
     }
 
@@ -155,8 +161,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setBudgets($this->budgets)->withOpposingAccount()->disableFilter();
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->setTags($this->tags)->withOpposingAccount()->disableFilter();
 
         $accountIds     = $this->accounts->pluck('id')->toArray();
         $transactions   = $collector->getJournals();
@@ -167,20 +173,45 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
+     * @return Collection
+     */
+    protected function getIncome(): Collection
+    {
+        if ($this->income->count() > 0) {
+            return $this->income;
+        }
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->setTags($this->tags)->withOpposingAccount();
+        $accountIds   = $this->accounts->pluck('id')->toArray();
+        $transactions = $collector->getJournals();
+        $transactions = self::filterIncome($transactions, $accountIds);
+        $this->income = $transactions;
+
+        return $transactions;
+    }
+
+    /**
      * @param Collection $collection
      *
      * @return array
      */
-    private function summarizeByBudget(Collection $collection): array
+    protected function summarizeByTag(Collection $collection): array
     {
         $result = [];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
-            $jrnlBudId         = intval($transaction->transaction_journal_budget_id);
-            $transBudId        = intval($transaction->transaction_budget_id);
-            $budgetId          = max($jrnlBudId, $transBudId);
-            $result[$budgetId] = $result[$budgetId] ?? '0';
-            $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
+            $journal     = $transaction->transactionJournal;
+            $journalTags = $journal->tags;
+            /** @var Tag $journalTag */
+            foreach ($journalTags as $journalTag) {
+                $journalTagId          = $journalTag->id;
+                $result[$journalTagId] = $result[$journalTagId] ?? '0';
+                $result[$journalTagId] = bcadd($transaction->transaction_amount, $result[$journalTagId]);
+            }
         }
 
         return $result;

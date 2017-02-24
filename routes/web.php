@@ -311,6 +311,47 @@ Route::group(
 );
 
 /**
+ * Chart\Tag Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/tag', 'as' => 'chart.tag.'], function () {
+
+    // these charts are used in reports (tag reports):
+    Route::get(
+        'tag/income/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@tagIncome', 'as' => 'tag-income']
+    );
+    Route::get(
+        'tag/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@tagExpense', 'as' => 'tag-expense']
+    );
+    Route::get(
+        'account/income/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@accountIncome', 'as' => 'account-income']
+    );
+    Route::get(
+        'account/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@accountExpense', 'as' => 'account-expense']
+    );
+    Route::get(
+        'budget/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+        ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']
+    );
+    Route::get(
+        'category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+        ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
+    );
+
+
+    Route::get(
+        'operations/{accountList}/{tagList}/{start_date}/{end_date}',
+        ['uses' => 'TagReportController@mainChart', 'as' => 'main']
+    );
+
+}
+);
+
+/**
  * Chart\PiggyBank Controller
  */
 Route::group(
