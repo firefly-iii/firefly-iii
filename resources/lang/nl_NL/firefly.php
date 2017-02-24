@@ -793,7 +793,7 @@ return [
     // piggy banks:
     'add_money_to_piggy'                         => 'Stop geld in spaarpotje ":name"',
     'piggy_bank'                                 => 'Spaarpotje',
-    'new_piggy_bank'                             => 'New piggy bank',
+    'new_piggy_bank'                             => 'Nieuw spaarpotje',
     'store_piggy_bank'                           => 'Sla spaarpotje op',
     'stored_piggy_bank'                          => 'Nieuw spaarpotje ":name" opgeslagen',
     'account_status'                             => 'Rekeningoverzicht',
