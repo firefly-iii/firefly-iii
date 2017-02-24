@@ -68,6 +68,18 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\Controller::redirectToAccount
+     * @covers \FireflyIII\Http\Controllers\TransactionController::show
+     */
+    public function testShowOpeningBalance()
+    {
+        $this->be($this->user());
+        $journal = $this->user()->transactionJournals()->where('transaction_type_id',4)->first();
+        $response = $this->get(route('transactions.show', [$journal->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::show
      */
     public function testShow()

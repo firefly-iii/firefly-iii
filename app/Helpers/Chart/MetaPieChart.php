@@ -68,6 +68,7 @@ class MetaPieChart implements MetaPieChartInterface
         $this->accounts   = new Collection;
         $this->budgets    = new Collection;
         $this->categories = new Collection;
+        $this->tags       = new Collection;
     }
 
     /**
