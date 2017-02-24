@@ -333,13 +333,15 @@ Route::group(
         'account/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
         ['uses' => 'TagReportController@accountExpense', 'as' => 'account-expense']
     );
+
+    // new routes
     Route::get(
         'budget/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']
     );
-    Route::get(
-        'category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+    Route::get('category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
+
     );
 
 

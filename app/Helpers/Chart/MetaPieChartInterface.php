@@ -73,6 +73,13 @@ interface MetaPieChartInterface
     public function setStart(Carbon $start): MetaPieChartInterface;
 
     /**
+     * @param Collection $tags
+     *
+     * @return MetaPieChartInterface
+     */
+    public function setTags(Collection $tags): MetaPieChartInterface;
+
+    /**
      * @param User $user
      *
      * @return MetaPieChartInterface

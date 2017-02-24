@@ -7,9 +7,6 @@
 {% block content %}
 
 
-    {% if journals.count == 0 %}
-        {% include 'partials.empty' with {what: what, type: 'transactions',route: route('transactions.create', [what])} %}
-    {% else %}
         <div class="row">
             <div class="col-lg-10 col-md-10 col-sm-12">
                 <div class="box">
@@ -44,7 +41,6 @@
             </div>
 
         </div>
-    {% endif %}
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="js/ff/transactions/list.js"></script>

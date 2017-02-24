@@ -47,7 +47,6 @@ class MetaPieChart implements MetaPieChartInterface
             'budget'   => ['transaction_journal_budget_id', 'transaction_budget_id'],
             'category' => ['transaction_journal_category_id', 'transaction_category_id'],
         ];
-
     /** @var array */
     protected $repositories
         = [
@@ -55,10 +54,10 @@ class MetaPieChart implements MetaPieChartInterface
             'budget'   => BudgetRepositoryInterface::class,
             'category' => CategoryRepositoryInterface::class,
         ];
-
-
     /** @var  Carbon */
     protected $start;
+    /** @var  Collection */
+    protected $tags;
     /** @var  string */
     protected $total = '0';
     /** @var  User */
@@ -87,7 +86,6 @@ class MetaPieChart implements MetaPieChartInterface
         if ($this->collectOtherObjects && $direction === 'expense') {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -183,6 +181,18 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @param Collection $tags
+     *
+     * @return MetaPieChartInterface
+     */
+    public function setTags(Collection $tags): MetaPieChartInterface
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
      * @param User $user
      *
      * @return MetaPieChartInterface
@@ -218,6 +228,11 @@ class MetaPieChart implements MetaPieChartInterface
         }
         if ($this->categories->count() > 0) {
             $collector->setCategories($this->categories);
+        }
+        if ($this->tags->count() > 0) {
+            $collector->setTags($this->tags);
+            $collector->withCategoryInformation();
+            $collector->withBudgetInformation();
         }
 
         $accountIds   = $this->accounts->pluck('id')->toArray();
