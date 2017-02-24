@@ -747,6 +747,8 @@ return [
     'include_expense_not_in_category'            => 'Included expenses not in the selected category(ies)',
     'include_income_not_in_category'             => 'Included income not in the selected category(ies)',
     'include_income_not_in_account'              => 'Included income not in the selected account(s)',
+    'include_income_not_in_tags'                 => 'Included income not in the selected tag(s)',
+    'include_expense_not_in_tags'                => 'Included expenses not in the selected tag(s)',
     'everything_else'                            => 'Everything else',
     'income_and_expenses'                        => 'Income and expenses',
     'spent_average'                              => 'Spent (average)',

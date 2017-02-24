@@ -246,6 +246,55 @@ class TagReportController extends Controller
      * @param Collection $tags
      * @param Carbon     $start
      * @param Carbon     $end
+     * @param string     $others
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tagExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
+    {
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setTags($tags);
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('expense', 'tag');
+        $data      = $this->generator->pieChart($chartData);
+
+        return Response::json($data);
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param string     $others
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tagIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
+    {
+
+        /** @var MetaPieChartInterface $helper */
+        $helper = app(MetaPieChartInterface::class);
+        $helper->setAccounts($accounts);
+        $helper->setTags($tags);
+        $helper->setStart($start);
+        $helper->setEnd($end);
+        $helper->setCollectOtherObjects(intval($others) === 1);
+        $chartData = $helper->generate('income', 'tag');
+        $data      = $this->generator->pieChart($chartData);
+
+        return Response::json($data);
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Collection
      */
