@@ -258,7 +258,8 @@ class AccountController extends Controller
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $subTitle = $account->name . ' (' . strval(trans('firefly.from_to_breadcrumb', ['start' => 'x', 'end' => 'x'])) . ')';
+            $subTitle = $account->name . ' (' . strval(trans('firefly.from_to_breadcrumb',
+                        ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)])) . ')';
             $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
             $periods  = $this->periodEntries($account);
         }
