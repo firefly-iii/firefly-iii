@@ -806,6 +806,7 @@ return [
     'sum_of_piggy_banks'                         => 'Somme des tirelires',
     'saved_so_far'                               => 'Saved so far',
     'left_to_save'                               => 'Left to save',
+    'suggested_amount'                           => 'Suggested monthly amount to save',
     'add_money_to_piggy_title'                   => 'Add money to piggy bank ":name"',
     'remove_money_from_piggy_title'              => 'Remove money from piggy bank ":name"',
     'add'                                        => 'Add',
