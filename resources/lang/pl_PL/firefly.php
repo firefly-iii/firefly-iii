@@ -806,6 +806,7 @@ return [
     'sum_of_piggy_banks'                         => 'Sum of piggy banks',
     'saved_so_far'                               => 'Zaoszczędzono do tej pory',
     'left_to_save'                               => 'Pozostało do zaoszczędzenia',
+    'suggested_amount'                           => 'Suggested monthly amount to save',
     'add_money_to_piggy_title'                   => 'Dodaj pieniądze do skarbonki ":name"',
     'remove_money_from_piggy_title'              => 'Usuń pieniądze ze skarbonki ":name"',
     'add'                                        => 'Dodaj',
