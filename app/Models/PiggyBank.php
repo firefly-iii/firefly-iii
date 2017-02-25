@@ -129,6 +129,17 @@ class PiggyBank extends Model
 
     }
 
+    public function getSuggestedMonthlyAmount()
+    {
+        if ($this->targetdate && $this->currentRelevantRep()->currentamount < $this->targetamount) {
+            $thisMonth = Carbon::now()->month;
+            $targetMonth = $this->targetdate->month;
+            $remainingAmount = $this->targetamount - $this->currentRelevantRep()->currentamount;
+            return $thisMonth < $targetMonth ? $remainingAmount / ($targetMonth - $thisMonth) : $remainingAmount ;
+        }
+        return 0;
+    }
+
     /**
      * Get all of the piggy bank's notes.
      */
