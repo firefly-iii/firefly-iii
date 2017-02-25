@@ -329,7 +329,9 @@ class JsonController extends Controller
     }
 
     /**
+     * @param JournalRepositoryInterface $repository
      *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function transactionTypes(JournalRepositoryInterface $repository)
     {

@@ -203,6 +203,7 @@ class BudgetReportController extends Controller
      * Returns the budget limits belonging to the given budget and valid on the given day.
      *
      * @param Collection $budgetLimits
+     * @param Budget     $budget
      * @param Carbon     $start
      * @param Carbon     $end
      *
@@ -268,21 +269,4 @@ class BudgetReportController extends Controller
         return $grouped;
     }
 
-    /**
-     * @param Collection $set
-     *
-     * @return array
-     */
-    private function groupByOpposingAccount(Collection $set): array
-    {
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $accountId           = $transaction->opposing_account_id;
-            $grouped[$accountId] = $grouped[$accountId] ?? '0';
-            $grouped[$accountId] = bcadd($transaction->transaction_amount, $grouped[$accountId]);
-        }
-
-        return $grouped;
-    }
 }

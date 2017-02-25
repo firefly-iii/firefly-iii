@@ -193,6 +193,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function store(array $data): TransactionCurrency
     {
+        /** @var TransactionCurrency $currency */
         $currency = TransactionCurrency::create(
             [
                 'name'           => $data['name'],

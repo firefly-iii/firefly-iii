@@ -27,7 +27,9 @@ class JavascriptController extends Controller
 {
 
     /**
+     * @param Request $request
      *
+     * @return $this
      */
     public function variables(Request $request)
     {

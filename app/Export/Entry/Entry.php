@@ -13,7 +13,6 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Export\Entry;
 
-use Crypt;
 use Steam;
 
 /**

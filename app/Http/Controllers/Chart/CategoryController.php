@@ -20,7 +20,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface as CRI;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -50,13 +50,13 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      *
-     * @param CRI                        $repository
-     * @param AccountRepositoryInterface $accountRepository
-     * @param Category                   $category
+     * @param CategoryRepositoryInterface $repository
+     * @param AccountRepositoryInterface  $accountRepository
+     * @param Category                    $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(CRI $repository, AccountRepositoryInterface $accountRepository, Category $category)
+    public function all(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Category $category)
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.category.all');
@@ -106,12 +106,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI      $repository
-     * @param Category $category
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function currentPeriod(CRI $repository, Category $category)
+    public function currentPeriod(CategoryRepositoryInterface $repository, Category $category)
     {
         $start = clone session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -121,12 +121,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                        $repository
-     * @param AccountRepositoryInterface $accountRepository
+     * @param CategoryRepositoryInterface $repository
+     * @param AccountRepositoryInterface  $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function frontpage(CRI $repository, AccountRepositoryInterface $accountRepository)
+    public function frontpage(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -161,15 +161,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI        $repository
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     * @param Collection                  $accounts
+     * @param Carbon                      $start
+     * @param Carbon                      $end
      *
      * @return \Illuminate\Http\JsonResponse|mixed
      */
-    public function reportPeriod(CRI $repository, Category $category, Collection $accounts, Carbon $start, Carbon $end)
+    public function reportPeriod(CategoryRepositoryInterface $repository, Category $category, Collection $accounts, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -210,14 +210,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI        $repository
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param CategoryRepositoryInterface $repository
+     * @param Collection                  $accounts
+     * @param Carbon                      $start
+     * @param Carbon                      $end
      *
      * @return \Illuminate\Http\JsonResponse|mixed
      */
-    public function reportPeriodNoCategory(CRI $repository, Collection $accounts, Carbon $start, Carbon $end)
+    public function reportPeriodNoCategory(CategoryRepositoryInterface $repository, Collection $accounts, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -257,14 +257,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param CRI                         $repository
+     * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
      *
      * @param                             $date
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function specificPeriod(CRI $repository, Category $category, $date)
+    public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, $date)
     {
         $carbon = new Carbon($date);
         $range  = Preferences::get('viewRange', '1M')->data;
@@ -277,14 +277,14 @@ class CategoryController extends Controller
 
 
     /**
-     * @param CRI      $repository
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     * @param Carbon                      $start
+     * @param Carbon                      $end
      *
      * @return array
      */
-    private function makePeriodChart(CRI $repository, Category $category, Carbon $start, Carbon $end)
+    private function makePeriodChart(CategoryRepositoryInterface $repository, Category $category, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);

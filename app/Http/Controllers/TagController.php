@@ -219,7 +219,7 @@ class TagController extends Controller
             }
         }
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection','count'));
+        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection', 'count'));
     }
 
     /**

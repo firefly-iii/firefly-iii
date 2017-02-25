@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Export\Collector;
 
 use Carbon\Carbon;
-use Crypt;
 use DB;
 use FireflyIII\Models\Transaction;
 use Illuminate\Database\Query\JoinClause;

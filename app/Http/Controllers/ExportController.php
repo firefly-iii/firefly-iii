@@ -55,9 +55,10 @@ class ExportController extends Controller
     }
 
     /**
+     * @param EJRI      $repository
      * @param ExportJob $job
      *
-     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      * @throws FireflyException
      */
     public function download(ExportJobRepositoryInterface $repository, ExportJob $job)

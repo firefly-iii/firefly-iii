@@ -81,6 +81,26 @@ class Support
     }
 
     /**
+     * @return Collection
+     */
+    public function getTopExpenses(): Collection
+    {
+        $transactions = $this->getExpenses()->sortBy('transaction_amount');
+
+        return $transactions;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTopIncome(): Collection
+    {
+        $transactions = $this->getIncome()->sortByDesc('transaction_amount');
+
+        return $transactions;
+    }
+
+    /**
      * @param Collection $collection
      * @param int        $sortFlag
      *
@@ -160,26 +180,6 @@ class Support
 
 
         return $return;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTopExpenses(): Collection
-    {
-        $transactions = $this->getExpenses()->sortBy('transaction_amount');
-
-        return $transactions;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTopIncome(): Collection
-    {
-        $transactions = $this->getIncome()->sortByDesc('transaction_amount');
-
-        return $transactions;
     }
 
     /**

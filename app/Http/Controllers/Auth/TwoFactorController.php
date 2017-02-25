@@ -79,9 +79,11 @@ class TwoFactorController extends Controller
 
     /**
      * @param TokenFormRequest $request
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     * @param CookieJar        $cookieJar
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     *
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {

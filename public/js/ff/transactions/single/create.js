@@ -35,8 +35,7 @@ $(document).ready(function () {
 
 function updateDescription() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
-        $('input[name="description"]').typeahead('destroy');
-        $('input[name="description"]').typeahead({source: data});
+        $('input[name="description"]').typeahead('destroy').typeahead({source: data});
     });
 }
 

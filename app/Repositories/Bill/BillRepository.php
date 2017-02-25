@@ -525,8 +525,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function store(array $data): Bill
     {
-
-
+        /** @var Bill $bill */
         $bill = Bill::create(
             [
                 'name'        => $data['name'],

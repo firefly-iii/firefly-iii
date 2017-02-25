@@ -35,6 +35,7 @@ class Sandstorm
      * @param  string|null              $guard
      *
      * @return mixed
+     * @throws FireflyException
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
@@ -59,30 +60,34 @@ class Sandstorm
             // and any other differences there may be between these users.
             if ($count === 1 && strlen($userId) > 0) {
                 // login as first user user.
-                $user  = User::first();
+                $user = User::first();
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', false);
+
                 return $next($request);
             }
 
             if ($count === 1 && strlen($userId) === 0) {
                 // login but indicate anonymous
-                $user  = User::first();
+                $user = User::first();
                 Auth::guard($guard)->login($user);
                 View::share('SANDSTORM_ANON', true);
+
                 return $next($request);
             }
 
             if ($count === 0 && strlen($userId) > 0) {
                 // create new user.
                 $email = $userId . '@firefly';
-                $user  = User::create(
+                /** @var User $user */
+                $user = User::create(
                     [
                         'email'    => $email,
                         'password' => str_random(16),
                     ]
                 );
                 Auth::guard($guard)->login($user);
+
                 return $next($request);
             }
 
@@ -91,30 +96,7 @@ class Sandstorm
             }
 
             if ($count > 1) {
-                die('Cannot happen.');
-            }
-            exit;
-
-            if (strlen($userId) > 0) {
-                // find user?
-                $email = $userId . '@firefly';
-                $user  = User::whereEmail($email)->first();
-                if (is_null($user)) {
-                    $user = User::create(
-                        [
-                            'email'    => $email,
-                            'password' => str_random(16),
-                        ]
-                    );
-
-                }
-
-
-                // login user:
-                Auth::guard($guard)->login($user);
-            } else {
-                echo 'user id no length, guest?';
-                exit;
+                throw new FireflyException('Your Firefly III installation has more than one user, which is weird.');
             }
 
         }

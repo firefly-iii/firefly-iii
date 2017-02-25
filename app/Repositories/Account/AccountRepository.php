@@ -457,7 +457,8 @@ class AccountRepository implements AccountRepositoryInterface
         $name            = $data['name'];
         $opposing        = $this->storeOpposingAccount($name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
-        $journal         = TransactionJournal::create(
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
