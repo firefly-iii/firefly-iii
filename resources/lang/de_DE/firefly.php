@@ -559,6 +559,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'select_more_than_one_budget'                => 'Bitte mehr als ein Budget wählen',
     'select_more_than_one_tag'                   => 'Please select more than one tag',
     'from_to'                                    => 'Von :start bis :end',
+    'from_to_breadcrumb'                         => 'from :start to :end',
 
     // categories:
     'new_category'                               => 'Neue Kategorie',
