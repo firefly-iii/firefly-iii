@@ -48,6 +48,10 @@
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
+    "ext-bcmath": "*",
+    "ext-mbstring": "*",
+    "ext-curl": "*",
+    "ext-zip": "*",
     "laravel/framework": "5.4.*",
     "davejamesmiller/laravel-breadcrumbs": "3.*",
     "watson/validating": "3.*",
