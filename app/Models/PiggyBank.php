@@ -108,17 +108,29 @@ class PiggyBank extends Model
         return $value;
     }
 
-    public function getSuggestedMonthlyAmount()
+    /**
+     * @return string
+     */
+    public function getSuggestedMonthlyAmount(): string
     {
+        $savePerMonth = '0';
         if ($this->targetdate && $this->currentRelevantRep()->currentamount < $this->targetamount) {
-            $thisMonth       = Carbon::now()->month;
-            $targetMonth     = $this->targetdate->month;
-            $remainingAmount = $this->targetamount - $this->currentRelevantRep()->currentamount;
+            $now             = Carbon::now();
+            $diffInMonths    = $now->diffInMonths($this->targetdate, false);
+            $remainingAmount = bcsub($this->targetamount, $this->currentRelevantRep()->currentamount);
 
-            return $thisMonth < $targetMonth ? $remainingAmount / ($targetMonth - $thisMonth) : $remainingAmount;
+            // more than 1 month to go and still need money to save:
+            if ($diffInMonths > 0 && bccomp($remainingAmount, '0') === 1) {
+                $savePerMonth = bcdiv($remainingAmount, strval($diffInMonths));
+            }
+
+            // less than 1 month to go but still need money to save:
+            if ($diffInMonths === 0 && bccomp($remainingAmount, '0') === 1) {
+                $savePerMonth = $remainingAmount;
+            }
         }
 
-        return 0;
+        return $savePerMonth;
     }
 
     /**
