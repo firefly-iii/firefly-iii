@@ -558,6 +558,7 @@ return [
     'select_more_than_one_budget'                => 'Selecteer meer dan één budget',
     'select_more_than_one_tag'                   => 'Selecteer meer dan één tag',
     'from_to'                                    => 'Van :start tot en met :end',
+    'from_to_breadcrumb'                         => 'from :start to :end',
 
     // categories:
     'new_category'                               => 'Nieuwe categorie',
