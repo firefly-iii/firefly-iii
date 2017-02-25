@@ -44,7 +44,7 @@ interface AttachmentHelperInterface
     /**
      * @param Model $model
      *
-     * @param array $files
+     * @param null|array $files
      *
      * @return bool
      */

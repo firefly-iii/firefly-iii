@@ -29,7 +29,7 @@ class JavascriptController extends Controller
     /**
      * @param Request $request
      *
-     * @return $this
+     * @return \Illuminate\Http\Response
      */
     public function variables(Request $request)
     {
