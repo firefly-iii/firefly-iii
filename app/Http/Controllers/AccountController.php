@@ -258,8 +258,12 @@ class AccountController extends Controller
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $subTitle = $account->name . ' (' . strval(trans('firefly.from_to_breadcrumb',
-                        ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)])) . ')';
+            $subTitle = $account->name . ' (' . strval(
+                    trans(
+                        'firefly.from_to_breadcrumb',
+                        ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                    )
+                ) . ')';
             $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
             $periods  = $this->periodEntries($account);
         }
@@ -273,10 +277,13 @@ class AccountController extends Controller
 
         $accountType = $account->accountType->type;
         $count       = 0;
+        $loop        = 0;
         // grab journals, but be prepared to jump a period back to get the right ones:
-        while ($count === 0) {
+        Log::info('Now at loop start.');
+        while ($count === 0 && $loop < 3) {
+            $loop++;
             $collector = app(JournalCollectorInterface::class);
-            Log::debug('Count is zero, search for journals.');
+            Log::info('Count is zero, search for journals.');
             $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
             if (!is_null($start)) {
                 $collector->setRange($start, $end);
@@ -288,7 +295,7 @@ class AccountController extends Controller
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);
-                Log::debug(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
+                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
             }
         }
 

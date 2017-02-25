@@ -175,7 +175,7 @@ class AccountControllerTest extends TestCase
     {
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show.all', [1]));
+        $response = $this->get(route('accounts.show', [1, 'all']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
