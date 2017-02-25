@@ -227,102 +227,170 @@ class AccountController extends Controller
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
 
-    /**
-     * @param Request                   $request
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     */
-    public function show(Request $request, JournalCollectorInterface $collector, Account $account)
-    {
-        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
-            return $this->redirectToOriginalAccount($account);
-        }
-        // show journals from current period only:
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $subTitle     = $account->name;
-        $range        = Preferences::get('viewRange', '1M')->data;
-        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
-        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri     = route('chart.account.single', [$account->id]);
-        $accountType  = $account->accountType->type;
-
-        // grab those journals:
-        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('accounts/show/' . $account->id);
-
-        // generate entries for each period (and cache those)
-        $entries = $this->periodEntries($account);
-
-        return view('accounts.show', compact('account', 'accountType', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
-    }
-
-    /**
-     * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
-     *
-     * @return View
-     */
-    public function showAll(Request $request, AccountRepositoryInterface $repository, Account $account)
-    {
-        $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
-        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri = route('chart.account.all', [$account->id]);
-
-        // replace with journal collector:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('accounts/show/' . $account->id . '/all');
-
-        // get oldest and newest journal for account:
-        $start = $repository->oldestJournalDate($account);
-        $end   = $repository->newestJournalDate($account);
-
-        // same call, except "entries".
-        return view('accounts.show', compact('account', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
-    }
 
     /**
      * @param Request $request
      * @param Account $account
-     * @param string  $date
-     *
-     * @return View
+     * @param string  $moment
      */
-    public function showByDate(Request $request, Account $account, string $date)
+    public function show(Request $request, Account $account, string $moment = '')
     {
-        $carbon      = new Carbon($date);
-        $range       = Preferences::get('viewRange', '1M')->data;
-        $start       = Navigation::startOfPeriod($carbon, $range);
-        $end         = Navigation::endOfPeriod($carbon, $range);
-        $subTitle    = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
-        $page        = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize    = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri    = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
+        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
+            return $this->redirectToOriginalAccount($account);
+        }
+        $subTitle     = $account->name;
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri     = route('chart.account.single', [$account->id]);
+        $start        = null;
+        $end          = null;
+        $periods      = new Collection;
+
+        // prep for "all" view.
+        if ($moment === 'all') {
+            $subTitle = $account->name . ' (' . strtolower(strval(trans('firefly.everything'))) . ')';
+            $chartUri = route('chart.account.all', [$account->id]);
+        }
+
+        // prep for "specific date" view.
+        if (strlen($moment) > 0 && $moment !== 'all') {
+            $start    = new Carbon($moment);
+            $end      = Navigation::endOfPeriod($start, $range);
+            $subTitle = $account->name . ' (' . strval(trans('firefly.from_to_breadcrumb', ['start' => 'x', 'end' => 'x'])) . ')';
+            $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
+            $periods  = $this->periodEntries($account);
+        }
+
+        // prep for current period
+        if (strlen($moment) === 0) {
+            $start   = session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end     = session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $periods = $this->periodEntries($account);
+        }
+
         $accountType = $account->accountType->type;
+        $count       = 0;
+        // grab journals, but be prepared to jump a period back to get the right ones:
+        while ($count === 0) {
+            $collector = app(JournalCollectorInterface::class);
+            Log::debug('Count is zero, search for journals.');
+            $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+            if (!is_null($start)) {
+                $collector->setRange($start, $end);
+            }
+            $journals = $collector->getPaginatedJournals();
+            $journals->setPath('accounts/show/' . $account->id);
+            $count = $journals->getCollection()->count();
+            if ($count === 0) {
+                $start->subDay();
+                $start = Navigation::startOfPeriod($start, $range);
+                $end   = Navigation::endOfPeriod($start, $range);
+                Log::debug(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
+            }
+        }
 
-        // replace with journal collector:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('accounts/show/' . $account->id . '/' . $date);
 
-        // generate entries for each period (and cache those)
-        $entries = $this->periodEntries($account);
-
-        // same call, except "entries".
-        return view('accounts.show', compact('account', 'accountType', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+        return view('accounts.show', compact('account', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
     }
+
+    //    /**
+    //     * @param Request                   $request
+    //     * @param JournalCollectorInterface $collector
+    //     * @param Account                   $account
+    //     *
+    //     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+    //     */
+    //    public function show(Request $request, JournalCollectorInterface $collector, Account $account)
+    //    {
+    //        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
+    //            return $this->redirectToOriginalAccount($account);
+    //        }
+    //        // show journals from current period only:
+    //        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+    //        $subTitle     = $account->name;
+    //        $range        = Preferences::get('viewRange', '1M')->data;
+    //        $start        = session('start', Navigation::startOfPeriod(new Carbon, $range));
+    //        $end          = session('end', Navigation::endOfPeriod(new Carbon, $range));
+    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+    //        $chartUri     = route('chart.account.single', [$account->id]);
+    //        $accountType  = $account->accountType->type;
+    //
+    //        // grab those journals:
+    //        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
+    //        $journals = $collector->getPaginatedJournals();
+    //        $journals->setPath('accounts/show/' . $account->id);
+    //
+    //        // generate entries for each period (and cache those)
+    //        $entries = $this->periodEntries($account);
+    //
+    //        return view('accounts.show', compact('account', 'accountType', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+    //    }
+    //
+    //    /**
+    //     * @param Request                    $request
+    //     * @param AccountRepositoryInterface $repository
+    //     * @param Account                    $account
+    //     *
+    //     * @return View
+    //     */
+    //    public function showAll(Request $request, AccountRepositoryInterface $repository, Account $account)
+    //    {
+    //        $subTitle = sprintf('%s (%s)', $account->name, strtolower(trans('firefly.everything')));
+    //        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+    //        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
+    //        $chartUri = route('chart.account.all', [$account->id]);
+    //
+    //        // replace with journal collector:
+    //        /** @var JournalCollectorInterface $collector */
+    //        $collector = app(JournalCollectorInterface::class);
+    //        $collector->setUser(auth()->user());
+    //        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+    //        $journals = $collector->getPaginatedJournals();
+    //        $journals->setPath('accounts/show/' . $account->id . '/all');
+    //
+    //        // get oldest and newest journal for account:
+    //        $start = $repository->oldestJournalDate($account);
+    //        $end   = $repository->newestJournalDate($account);
+    //
+    //        // same call, except "entries".
+    //        return view('accounts.show', compact('account', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+    //    }
+    //
+    //    /**
+    //     * @param Request $request
+    //     * @param Account $account
+    //     * @param string  $date
+    //     *
+    //     * @return View
+    //     */
+    //    public function showByDate(Request $request, Account $account, string $date)
+    //    {
+    //        $carbon      = new Carbon($date);
+    //        $range       = Preferences::get('viewRange', '1M')->data;
+    //        $start       = Navigation::startOfPeriod($carbon, $range);
+    //        $end         = Navigation::endOfPeriod($carbon, $range);
+    //        $subTitle    = $account->name . ' (' . Navigation::periodShow($start, $range) . ')';
+    //        $page        = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+    //        $pageSize    = intval(Preferences::get('transactionPageSize', 50)->data);
+    //        $chartUri    = route('chart.account.period', [$account->id, $carbon->format('Y-m-d')]);
+    //        $accountType = $account->accountType->type;
+    //
+    //        // replace with journal collector:
+    //        /** @var JournalCollectorInterface $collector */
+    //        $collector = app(JournalCollectorInterface::class);
+    //        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit($pageSize)->setPage($page);
+    //        $journals = $collector->getPaginatedJournals();
+    //        $journals->setPath('accounts/show/' . $account->id . '/' . $date);
+    //
+    //        // generate entries for each period (and cache those)
+    //        $entries = $this->periodEntries($account);
+    //
+    //        // same call, except "entries".
+    //        return view('accounts.show', compact('account', 'accountType', 'entries', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+    //    }
 
     /**
      * @param AccountFormRequest         $request

@@ -76,29 +76,25 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $start, Carbon $end) {
+    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null) {
 
-    $startString = $start->formatLocalized(strval(trans('config.month_and_day')));
-    $endString   = $end->formatLocalized(strval(trans('config.month_and_day')));
-    $title       = sprintf('%s (%s)', $account->name, trans('firefly.from_to', ['start' => $startString, 'end' => $endString]));
-
-    $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push($title, route('accounts.show.date', [$account->id, $start->format('Y-m-d')]));
-}
-);
-
-Breadcrumbs::register(
-    'accounts.show.all', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $start, Carbon $end) {
-
-    $startString = $start->formatLocalized(strval(trans('config.month_and_day')));
-    $endString   = $end->formatLocalized(strval(trans('config.month_and_day')));
-    $title       = sprintf('%s (%s)', $account->name, trans('firefly.from_to', ['start' => $startString, 'end' => $endString]));
+    $title = '';
+    $route = '';
+    if (!is_null($start) && !is_null($end)) {
+        $startString = $start->formatLocalized(strval(trans('config.month_and_day')));
+        $endString   = $end->formatLocalized(strval(trans('config.month_and_day')));
+        $title       = sprintf('%s (%s)', $account->name, trans('firefly.from_to_breadcrumb', ['start' => $startString, 'end' => $endString]));
+        $route       = route('accounts.show.date', [$account->id, $start->format('Y-m-d')]);
+    }
+    if (is_null($start) && is_null($end)) {
+        $title = $title = $account->name . ' (' . strtolower(strval(trans('firefly.everything'))) . ')';
+        $route = route('accounts.show.date', [$account->id, 'all']);
+    }
 
     $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push($title, route('accounts.show.all', [$account->id, $start->format('Y-m-d')]));
+    $breadcrumbs->push($title, $route);
 }
 );
-
 
 Breadcrumbs::register(
     'accounts.delete', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
