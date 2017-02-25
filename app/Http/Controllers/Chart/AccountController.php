@@ -139,14 +139,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseBudget(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function expenseBudget(Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -156,10 +155,8 @@ class AccountController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get());
         }
-        $collector->setAccounts(new Collection([$account]))
-                  ->setRange($start, $end)
-                  ->withBudgetInformation()
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
         $transactions = $collector->getJournals();
         $chartData    = [];
         $result       = [];
@@ -185,14 +182,27 @@ class AccountController extends Controller
     }
 
     /**
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $start = $repository->oldestJournalDate($account);
+        $end   = Carbon::now();
+
+        return $this->expenseBudget($account, $start, $end);
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseCategory(Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -203,6 +213,7 @@ class AccountController extends Controller
             return Response::json($cache->get());
         }
 
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::WITHDRAWAL]);
         $transactions = $collector->getJournals();
         $result       = [];
@@ -226,6 +237,20 @@ class AccountController extends Controller
 
         return Response::json($data);
 
+    }
+
+    /**
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $start = $repository->oldestJournalDate($account);
+        $end   = Carbon::now();
+
+        return $this->expenseCategory($account, $start, $end);
     }
 
     /**
@@ -254,14 +279,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function incomeCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function incomeCategory(Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -273,6 +297,7 @@ class AccountController extends Controller
         }
 
         // grab all journals:
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::DEPOSIT]);
         $transactions = $collector->getJournals();
         $result       = [];
@@ -295,6 +320,20 @@ class AccountController extends Controller
 
         return Response::json($data);
 
+    }
+
+    /**
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $start = $repository->oldestJournalDate($account);
+        $end   = Carbon::now();
+
+        return $this->incomeCategory($account, $start, $end);
     }
 
     /**
