@@ -72,7 +72,7 @@
                         </tr>
                         {% if piggyBank.targetdate %}
                         <tr>
-                            <td>Suggested monthly amount to save</td>
+                            <td>{{ 'suggested_amount'|_ }}</td>
                             <td>
                                 {{ suggestedMonthlyAmount(piggyBank)|formatAmount }}
                             </td>
