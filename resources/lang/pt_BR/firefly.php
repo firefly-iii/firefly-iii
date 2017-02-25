@@ -806,6 +806,7 @@ return [
     'sum_of_piggy_banks'                         => 'Soma dos cofrinhos',
     'saved_so_far'                               => 'Salvo até agora',
     'left_to_save'                               => 'Esquerda para salvar',
+    'suggested_amount'                           => 'Suggested monthly amount to save',
     'add_money_to_piggy_title'                   => 'Adicionar dinheiro ao cofrinho ":name"',
     'remove_money_from_piggy_title'              => 'Retire o dinheiro do cofrinho ":name"',
     'add'                                        => 'Adicionar',
