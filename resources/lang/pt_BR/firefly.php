@@ -558,6 +558,7 @@ return [
     'select_more_than_one_budget'                => 'Please select more than one budget',
     'select_more_than_one_tag'                   => 'Please select more than one tag',
     'from_to'                                    => 'From :start to :end',
+    'from_to_breadcrumb'                         => 'from :start to :end',
 
     // categories:
     'new_category'                               => 'Nova categoria',
