@@ -742,6 +742,8 @@ return [
     'expense_per_budget'                         => 'Wydatek wg budżetu',
     'income_per_account'                         => 'Dochód wg konta',
     'expense_per_account'                        => 'Wydatek wg konta',
+    'expense_per_tag'                            => 'Expense per tag',
+    'income_per_tag'                             => 'Income per tag',
     'include_expense_not_in_budget'              => 'Included expenses not in the selected budget(s)',
     'include_expense_not_in_account'             => 'Included expenses not in the selected account(s)',
     'include_expense_not_in_category'            => 'Included expenses not in the selected category(ies)',
