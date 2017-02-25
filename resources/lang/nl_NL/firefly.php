@@ -742,6 +742,8 @@ return [
     'expense_per_budget'                         => 'Uitgaven per budget',
     'income_per_account'                         => 'Inkomen per rekening',
     'expense_per_account'                        => 'Uitgaven per rekening',
+    'expense_per_tag'                            => 'Expense per tag',
+    'income_per_tag'                             => 'Income per tag',
     'include_expense_not_in_budget'              => 'Inclusief uitgaven niet in deze budget(ten)',
     'include_expense_not_in_account'             => 'Inclusief uitgaven niet vanaf deze rekening(en)',
     'include_expense_not_in_category'            => 'Inclusief uitgaven niet in deze categorie(ën)',
