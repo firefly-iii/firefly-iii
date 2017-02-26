@@ -63,7 +63,7 @@ return [
     'description'                    => 'Descrição',
     'expense_account'                => 'Conta de Despesa',
     'revenue_account'                => 'Conta de Receita',
-    'decimal_places'                 => 'Decimal places',
+    'decimal_places'                 => 'Casas décimais',
 
     'revenue_account_source'      => 'Conta de receita (fonte)',
     'source_account_asset'        => 'Conta de origem (conta de ativo)',
@@ -151,10 +151,10 @@ return [
     'category_keep_transactions' => 'A única transação ligada a esta categoria não será excluída.|Todos :count transações ligadas a esta categoria não serão excluídos.',
     'tag_keep_transactions'      => 'A única transação ligada a essa marca não será excluída.|Todos :count transações ligadas a essa marca não serão excluídos.',
 
-    'email'                 => 'Email address',
-    'password'              => 'Password',
-    'password_confirmation' => 'Password (again)',
-    'blocked'               => 'Is blocked?',
+    'email'                 => 'E-mail',
+    'password'              => 'Senha',
+    'password_confirmation' => 'Senha(Confirmar)',
+    'blocked'               => 'Está bloqueado?',
     'blocked_code'          => 'Reason for block',
 
 
