@@ -59,6 +59,9 @@ class Import extends Command
         Log::debug('Start start-import command');
         $jobKey = $this->argument('key');
         $job    = ImportJob::whereKey($jobKey)->first();
+        if (is_null($job)) {
+            $this->error(sprintf('No job found with key "%s"', $jobKey));
+        }
         if (!$this->isValid($job)) {
             Log::error('Job is not valid for some reason. Exit.');
 

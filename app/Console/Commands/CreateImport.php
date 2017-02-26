@@ -84,7 +84,7 @@ class CreateImport extends Command
         $job = $jobRepository->create($type);
         $this->line(sprintf('Created job "%s"...', $job->key));
 
-        Artisan::call('firefly:encrypt', ['file' => $file, 'key' => $job->key]);
+        Artisan::call('firefly:encrypt-file', ['file' => $file, 'key' => $job->key]);
         $this->line('Stored import data...');
 
         $job->configuration = $configurationData;
