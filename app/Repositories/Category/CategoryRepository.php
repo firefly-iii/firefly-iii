@@ -109,29 +109,27 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function firstUseDate(Category $category): Carbon
     {
-        $first = null;
+        $first = new Carbon;
 
         /** @var TransactionJournal $firstJournal */
         $firstJournal = $category->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.date']);
 
-        if ($firstJournal) {
+        // if transaction journal exists and date is before $first, then
+        // new date:
+        if (!is_null($firstJournal) && $firstJournal->date->lessThanOrEqualTo($first)) {
             $first = $firstJournal->date;
         }
+
         // check transactions:
         $firstTransaction = $category->transactions()
                                      ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                      ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
 
 
-        // both exist, the one that is earliest "wins".
-        if (!is_null($firstTransaction) && !is_null($first) && Carbon::parse($firstTransaction->date)->lt($first)) {
-            $first = $firstTransaction->date;
+        // transaction exists, and date is before $first, this date becomes first.
+        if (!is_null($firstTransaction) && Carbon::parse($firstTransaction->date)->lessThanOrEqualTo($first)) {
+            $first = new Carbon($firstTransaction->date);
         }
-
-        if (is_null($first)) {
-            return new Carbon('1900-01-01');
-        }
-
 
         return $first;
     }
