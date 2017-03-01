@@ -57,9 +57,15 @@ class StoredJournalEventHandler
         /*
          * Get relevant data:
          */
-        $piggyBank                 = $journal->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
-        $repetition                = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
-        $amount                    = $this->getExactAmount($journal, $piggyBank, $repetition);
+        $piggyBank  = $journal->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
+        $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
+        $amount     = $this->getExactAmount($journal, $piggyBank, $repetition);
+        if (bccomp($amount, '0') === 0) {
+            Log::debug('Amount is zero, will not create event.');
+
+            return true;
+        }
+
         $repetition->currentamount = bcadd($repetition->currentamount, $amount);
         $repetition->save();
 
