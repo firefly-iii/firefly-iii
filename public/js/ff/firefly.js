@@ -102,7 +102,7 @@ function currencySelect(e) {
     $('#' + spanId).text(symbol);
 
     // close the menu (hack hack)
-    $('#' + menuID).click();
+    $('#' + menuID).dropdown('toggle');
 
 
     return false;

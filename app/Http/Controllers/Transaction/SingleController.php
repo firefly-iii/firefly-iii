@@ -162,9 +162,12 @@ class SingleController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
+        // Covered by another controller's tests
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
@@ -187,9 +190,11 @@ class SingleController extends Controller
      */
     public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($transactionJournal)) {
             return $this->redirectToAccount($transactionJournal);
         }
+        // @codeCoverageIgnoreEnd
         $type = TransactionJournal::transactionTypeStr($transactionJournal);
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
@@ -207,9 +212,11 @@ class SingleController extends Controller
      */
     public function edit(TransactionJournal $journal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $count = $journal->transactions()->count();
 
@@ -313,22 +320,20 @@ class SingleController extends Controller
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();
 
+        // @codeCoverageIgnoreStart
         if ($createAnother === true) {
-            // set value so create routine will not overwrite URL:
             Session::put('transactions.create.fromStore', true);
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
 
         if ($doSplit === true) {
-            // redirect to edit screen:
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
+        // @codeCoverageIgnoreEnd
 
-        // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.create.uri'));
-
     }
 
     /**
@@ -340,9 +345,11 @@ class SingleController extends Controller
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
@@ -350,14 +357,14 @@ class SingleController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
-        // flash errors
+        // @codeCoverageIgnoreStart
         if (count($this->attachments->getErrors()->get('attachments')) > 0) {
             Session::flash('error', $this->attachments->getErrors()->get('attachments'));
         }
-        // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
+        // @codeCoverageIgnoreEnd
 
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
@@ -366,15 +373,13 @@ class SingleController extends Controller
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['description'])])));
         Preferences::mark();
 
-        // if wishes to split:
-
-
+        // @codeCoverageIgnoreStart
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit.fromUpdate', true);
 
             return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
+        // @codeCoverageIgnoreEnd
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));

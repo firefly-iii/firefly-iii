@@ -141,25 +141,27 @@ class SplitController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal, $files);
-
         event(new UpdatedTransactionJournal($journal));
-        // update, get events by date and sort DESC
 
         // flash messages
+        // @codeCoverageIgnoreStart
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
+        // @codeCoverageIgnoreEnd
 
         $type = strtolower(TransactionJournal::transactionTypeStr($journal));
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));
         Preferences::mark();
 
+        // @codeCoverageIgnoreStart
         if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
             return redirect(route('transactions.split.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
+        // @codeCoverageIgnoreEnd
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit-split.uri'));

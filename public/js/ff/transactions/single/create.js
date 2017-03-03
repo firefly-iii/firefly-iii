@@ -6,19 +6,16 @@
  * See the LICENSE file for details.
  */
 
-/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, doSwitch, middleCrumbUrl */
+/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl */
 
 $(document).ready(function () {
     "use strict";
 
-    // respond to switch buttons when
-    // creating stuff:
-    if (doSwitch == true) {
-        updateButtons();
-        updateForm();
-        updateLayout();
-        updateDescription();
-    }
+    // respond to switch buttons
+    updateButtons();
+    updateForm();
+    updateLayout();
+    updateDescription();
 
     if (!Modernizr.inputtypes.date) {
         $('input[type="date"]').datepicker(
@@ -28,10 +25,26 @@ $(document).ready(function () {
         );
     }
 
+    // update currency
+    $('select[name="source_account_id"]').on('change', updateCurrency)
+
     // get JSON things:
     getJSONautocomplete();
-
 });
+
+
+function updateCurrency() {
+    // get value:
+    var accountId = $('select[name="source_account_id"]').val();
+    console.log('account id is ' + accountId);
+    var currencyPreference = accountInfo[accountId].preferredCurrency;
+    console.log('currency pref is ' + currencyPreference);
+
+    $('.currency-option[data-id="' + currencyPreference + '"]').click();
+    $('[data-toggle="dropdown"]').parent().removeClass('open');
+    $('select[name="source_account_id"]').focus();
+
+}
 
 function updateDescription() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
