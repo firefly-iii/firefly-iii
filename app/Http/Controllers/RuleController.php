@@ -530,6 +530,7 @@ class RuleController extends Controller
         ];
         if (is_array($data['rule-triggers'])) {
             foreach ($data['rule-triggers'] as $index => $triggerType) {
+                $data['rule-trigger-stop'][$index] = $data['rule-trigger-stop'][$index] ?? 0;
                 $triggers[] = [
                     'type'           => $triggerType,
                     'value'          => $data['rule-trigger-values'][$index],
