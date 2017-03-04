@@ -11,10 +11,13 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support\Models;
 
-use FireflyIII\Models\Tag;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
+ *
+ * @property Collection $transactionjournals
+ * @property string $tagMode
+ *
  * Class TagSupport
  *
  * @package FireflyIII\Support\Models

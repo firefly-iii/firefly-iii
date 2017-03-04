@@ -24,11 +24,14 @@ use Illuminate\Support\Collection;
 /**
  * Class TransactionJournalTrait
  *
+ * @property int $id
+ * @method Collection transactions()
+ * @method bool isWithdrawal()
+ *
  * @package FireflyIII\Support\Models
  */
 trait TransactionJournalTrait
 {
-
     /**
      * @return string
      * @throws FireflyException
@@ -40,7 +43,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('amount');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         // saves on queries:
@@ -65,7 +68,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         // saves on queries:
@@ -147,7 +150,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('destination-account-list');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $transactions = $this->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
         $list         = new Collection;
@@ -170,7 +173,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('destination-transaction-list');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $list = $this->transactions()->where('amount', '>', 0)->with('account')->get();
         $cache->store($list);
@@ -221,7 +224,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('source-account-list');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $transactions = $this->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
         $list         = new Collection;
@@ -244,7 +247,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('source-transaction-list');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $list = $this->transactions()->where('amount', '<', 0)->with('account')->get();
         $cache->store($list);
@@ -262,7 +265,7 @@ trait TransactionJournalTrait
         $cache->addProperty('transaction-journal');
         $cache->addProperty('type-string');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $typeStr = $this->transaction_type_type ?? $this->transactionType->type;

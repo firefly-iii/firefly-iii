@@ -32,3 +32,13 @@ $factory->define(
     ];
 }
 );
+
+$factory->define(
+    FireflyIII\Models\Transaction::class, function (Faker\Generator $faker) {
+    return [
+        'transaction_amount'    => strval($faker->randomFloat(2, -100, 100)),
+        'opposing_account_id'   => $faker->numberBetween(1, 10),
+        'opposing_account_name' => $faker->words(3),
+    ];
+}
+);
