@@ -14,10 +14,14 @@ namespace Tests\Feature\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Steam;
 use Tests\TestCase;
 
 class AccountControllerTest extends TestCase
@@ -27,6 +31,11 @@ class AccountControllerTest extends TestCase
      */
     public function testCreate()
     {
+        // mock stuff
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('get')->andReturn(new Collection);
+
         $this->be($this->user());
         $response = $this->get(route('accounts.create', ['asset']));
         $response->assertStatus(200);
@@ -39,6 +48,12 @@ class AccountControllerTest extends TestCase
      */
     public function testDelete()
     {
+        // mock stuff
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
+
+
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
         $response = $this->get(route('accounts.delete', [$account->id]));
@@ -52,12 +67,14 @@ class AccountControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $this->session(['accounts.delete.url' => 'http://localhost/accounts/show/1']);
-
-        $account    = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
+        // mock stuff
+        $collector  = $this->mock(JournalCollectorInterface::class);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->withArgs([0])->once()->andReturn(new Account);
         $repository->shouldReceive('destroy')->andReturn(true);
+
+        $this->session(['accounts.delete.url' => 'http://localhost/accounts/show/1']);
+        $account = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
 
         $this->be($this->user());
         $response = $this->post(route('accounts.destroy', [$account->id]));
@@ -70,6 +87,11 @@ class AccountControllerTest extends TestCase
      */
     public function testEdit()
     {
+        // mock stuff
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('get')->andReturn(new Collection);
+
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
         $response = $this->get(route('accounts.edit', [$account->id]));
@@ -88,43 +110,19 @@ class AccountControllerTest extends TestCase
      */
     public function testIndex(string $range)
     {
+        // mock stuff
+        $account    = factory(Account::class)->make();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
+        Steam::shouldReceive('balancesById')->andReturn([]);
+        Steam::shouldReceive('getLastActivities')->andReturn([]);
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('accounts.index', ['asset']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
-     */
-    public function testShowInitial()
-    {
-        $date = new Carbon;
-        $this->session(['start' => $date, 'end' => clone $date]);
-
-        $this->be($this->user());
-        $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id','DESC')->whereNull('deleted_at')->first();
-        $response = $this->get(route('accounts.show', [$account->id]));
-        $response->assertStatus(302);
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
-     * @expectedExceptionMessage Expected a transaction
-     */
-    public function testShowBrokenInitial()
-    {
-        $date = new Carbon;
-        $this->session(['start' => $date, 'end' => clone $date]);
-
-        $this->be($this->user());
-        $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id','ASC')->whereNull('deleted_at')->first();
-        $response = $this->get(route('accounts.show', [$account->id]));
-        $response->assertStatus(500);
     }
 
     /**
@@ -139,22 +137,22 @@ class AccountControllerTest extends TestCase
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 
+        // mock stuff:
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
-        // mock repository:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date);
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
-
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $transaction = factory(Transaction::class)->make();
+        $collector   = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
 
         $this->be($this->user());
@@ -173,9 +171,75 @@ class AccountControllerTest extends TestCase
      */
     public function testShowAll(string $range)
     {
+        // mock stuff
+        $transaction = factory(Transaction::class)->make();
+        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
+
+
+        $tasker = $this->mock(AccountTaskerInterface::class);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
+        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('accounts.show', [1, 'all']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\AccountController::show
+     * @covers                   \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
+     * @expectedExceptionMessage Expected a transaction
+     */
+    public function testShowBrokenInitial()
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $this->be($this->user());
+        $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id', 'ASC')->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.show', [$account->id]));
+        $response->assertStatus(500);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\AccountController::show
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testShowByDate(string $range)
+    {
+        // mock stuff
+        $transaction = factory(Transaction::class)->make();
+        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
+
+        $tasker     = $this->mock(AccountTaskerInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
+        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('accounts.show.date', [1, '2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -187,8 +251,23 @@ class AccountControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowByDate(string $range)
+    public function testShowByDateEmpty(string $range)
     {
+        // mock stuff
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $tasker     = $this->mock(AccountTaskerInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
+        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('accounts.show.date', [1, '2016-01-01']));
@@ -198,10 +277,29 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * @covers       \FireflyIII\Http\Controllers\AccountController::show
+     * @covers       \FireflyIII\Http\Controllers\AccountController::redirectToOriginalAccount
+     */
+    public function testShowInitial()
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $this->be($this->user());
+        $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id', 'DESC')->whereNull('deleted_at')->first();
+        $response = $this->get(route('accounts.show', [$account->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\AccountController::store
      */
     public function testStore()
     {
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->andReturn(new Account)->once();
+        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+
         $this->session(['accounts.create.url' => 'http://localhost']);
         $this->be($this->user());
         $data = [
@@ -212,13 +310,6 @@ class AccountControllerTest extends TestCase
         $response = $this->post(route('accounts.store', ['asset']), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-
-        // list should have this new account.
-        $response = $this->get(route('accounts.index', ['asset']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee($data['name']);
     }
 
     /**
@@ -226,6 +317,10 @@ class AccountControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->andReturn(new Account)->once();
+        $repository->shouldReceive('update')->once();
+
         $this->session(['accounts.edit.url' => 'http://localhost']);
         $this->be($this->user());
         $data = [
@@ -237,12 +332,5 @@ class AccountControllerTest extends TestCase
         $response = $this->post(route('accounts.update', [1]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-
-        // list should have this new account.
-        $response = $this->get(route('accounts.index', ['asset']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee($data['name']);
     }
 }

@@ -270,8 +270,8 @@ class AccountController extends Controller
 
         // prep for current period
         if (strlen($moment) === 0) {
-            $start   = session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end     = session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $start   = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end     = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods = $this->periodEntries($account);
         }
 
