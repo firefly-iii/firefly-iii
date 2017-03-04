@@ -158,6 +158,7 @@ trait TransactionJournalTrait
         foreach ($transactions as $t) {
             $list->push($t->account);
         }
+        $list = $list->unique('id');
         $cache->store($list);
 
         return $list;
@@ -232,6 +233,7 @@ trait TransactionJournalTrait
         foreach ($transactions as $t) {
             $list->push($t->account);
         }
+        $list = $list->unique('id');
         $cache->store($list);
 
         return $list;

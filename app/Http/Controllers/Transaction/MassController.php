@@ -144,7 +144,7 @@ class MassController extends Controller
             $filtered->push($journal);
         }
 
-        if (count($messages)) {
+        if (count($messages) > 0) {
             Session::flash('info', $messages);
         }
 

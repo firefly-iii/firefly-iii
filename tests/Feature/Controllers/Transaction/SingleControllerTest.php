@@ -86,12 +86,13 @@ class SingleControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $this->session(['transactions.delete.url' => 'http://localhost']);
-        $this->be($this->user());
-
+        // mock
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('delete')->once();
+
+        $this->session(['transactions.delete.url' => 'http://localhost']);
+        $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
         $response   = $this->post(route('transactions.destroy', [$withdrawal->id]));
         $response->assertStatus(302);
@@ -108,7 +109,6 @@ class SingleControllerTest extends TestCase
 
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
-
 
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();

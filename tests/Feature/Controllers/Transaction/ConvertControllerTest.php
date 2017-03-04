@@ -13,10 +13,12 @@ namespace Tests\Feature\Controllers\Transaction;
 
 
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Twig\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Tests\TestCase;
@@ -174,6 +176,9 @@ class ConvertControllerTest extends TestCase
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('find')->andReturn(new Account);
+
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $data    = ['source_account_asset' => 1];
         $this->be($this->user());
@@ -193,6 +198,9 @@ class ConvertControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('store')->andReturn(new Account);
 
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $data    = ['destination_account_expense' => 'New expense name.',];
@@ -288,6 +296,9 @@ class ConvertControllerTest extends TestCase
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('store')->andReturn(new Account);
+
         $transfer = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->first();
         $data     = ['source_account_revenue' => 'New rev'];
         $this->be($this->user());
@@ -308,6 +319,9 @@ class ConvertControllerTest extends TestCase
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('store')->andReturn(new Account);
+
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $data       = ['source_account_revenue' => 'New revenue name.',];
         $this->be($this->user());
@@ -327,6 +341,9 @@ class ConvertControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('find')->andReturn(new Account);
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $data       = [
