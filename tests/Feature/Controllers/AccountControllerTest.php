@@ -166,7 +166,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::showAll
+     * @covers       \FireflyIII\Http\Controllers\AccountController::show
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -182,7 +182,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\AccountController::showByDate
+     * @covers       \FireflyIII\Http\Controllers\AccountController::show
      * @dataProvider dateRangeProvider
      *
      * @param string $range

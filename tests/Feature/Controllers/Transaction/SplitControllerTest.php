@@ -12,7 +12,12 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Transaction;
 
 
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -25,10 +30,22 @@ class SplitControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * Implement testEdit().
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
      */
     public function testEdit()
     {
+
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+
+        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
+        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
+                          ->andReturn(new Collection)->once();
+        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+
+
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -38,8 +55,20 @@ class SplitControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
+     */
+    public function testEditOpeningBalance()
+    {
+        $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
+        $this->be($this->user());
+        $response = $this->get(route('transactions.split.edit', [$opening->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
-     * Implement testUpdate().
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromInput
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromRequest
      */
     public function testUpdate()
     {
@@ -74,6 +103,22 @@ class SplitControllerTest extends TestCase
         $response->assertSee('Updated salary');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     */
+    public function testUpdateOpeningBalance()
+    {
+        $this->session(['transactions.edit-split.url' => 'http://localhost']);
+        $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
+        $data    = [
+            'id' => $opening->id,
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('transactions.split.update', [$opening->id]), $data);
+        $response->assertStatus(302);
+        $response->assertSessionMissing('success');
     }
 
 }
