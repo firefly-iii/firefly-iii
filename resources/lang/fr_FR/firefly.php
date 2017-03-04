@@ -559,6 +559,7 @@ return [
     'select_more_than_one_tag'                   => 'Please select more than one tag',
     'from_to'                                    => 'From :start to :end',
     'from_to_breadcrumb'                         => 'from :start to :end',
+    'account_default_currency'                   => 'If you select another currency, new transactions from this account will have this currency pre-selected.',
 
     // categories:
     'new_category'                               => 'Nouvelle catégorie',
