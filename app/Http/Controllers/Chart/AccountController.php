@@ -67,7 +67,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             Log::debug('Return chart.account.all from cache.');
 
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.all from scratch.');
 
@@ -112,7 +112,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $start->subDay();
 
@@ -153,7 +153,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
@@ -210,7 +210,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $collector = app(JournalCollectorInterface::class);
@@ -293,7 +293,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.income-category');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // grab all journals:
@@ -359,7 +359,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.period');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format    = (string)trans('config.month_and_day');
@@ -414,7 +414,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
 
@@ -460,7 +460,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.single');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format    = (string)trans('config.month_and_day');
@@ -502,7 +502,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             Log::debug('Return chart.account.account-balance-chart from cache.');
 
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
 

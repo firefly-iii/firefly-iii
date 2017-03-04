@@ -62,7 +62,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $start = $repository->firstUseDate($category);
@@ -136,7 +136,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $chartData  = [];
         $categories = $repository->getCategories();
@@ -178,7 +178,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $expenses  = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
         $income    = $repository->periodIncome(new Collection([$category]), $accounts, $start, $end);
@@ -225,7 +225,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $expenses  = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $income    = $repository->periodIncomeNoCategory($accounts, $start, $end);
@@ -297,7 +297,7 @@ class CategoryController extends Controller
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         // chart data

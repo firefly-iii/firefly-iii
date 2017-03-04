@@ -411,7 +411,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             Log::debug('Entries are cached, return cache.');
 
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         // only include asset accounts when this account is an asset:

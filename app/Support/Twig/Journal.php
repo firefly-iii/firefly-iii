@@ -44,7 +44,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('destination-account-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
             $list  = $journal->destinationAccountList();
@@ -116,7 +116,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('source-account-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
             $list  = $journal->sourceAccountList();
@@ -152,7 +152,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('budget-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
 
@@ -189,7 +189,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('category-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
             $categories = [];
             // get all categories for the journal itself (easy):

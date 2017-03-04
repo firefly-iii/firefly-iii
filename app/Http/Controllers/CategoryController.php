@@ -339,7 +339,7 @@ class CategoryController extends Controller
         $cache->addProperty($category->id);
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         while ($end >= $first) {
             $end        = Navigation::startOfPeriod($end, $range);

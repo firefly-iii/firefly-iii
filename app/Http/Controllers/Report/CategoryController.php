@@ -47,7 +47,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             Log::debug('Return report from cache');
 
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -81,7 +81,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             Log::debug('Return report from cache');
 
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -114,7 +114,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var CategoryRepositoryInterface $repository */

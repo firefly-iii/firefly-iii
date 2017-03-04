@@ -80,7 +80,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;
@@ -133,7 +133,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id);
 
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries          = [];
@@ -170,7 +170,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
@@ -227,7 +227,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $periods  = Navigation::listOfPeriods($start, $end);
         $entries  = $this->repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
@@ -268,7 +268,7 @@ class BudgetController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // the expenses:

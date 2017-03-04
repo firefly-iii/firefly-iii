@@ -386,7 +386,7 @@ class TagController extends Controller
         $cache->addProperty($tag->id);
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $collection = new Collection;

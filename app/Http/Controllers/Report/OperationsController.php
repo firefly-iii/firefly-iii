@@ -46,7 +46,7 @@ class OperationsController extends Controller
         $cache->addProperty('expense-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $entries = $this->getExpenseReport($start, $end, $accounts);
         $type    = 'expense-entry';
@@ -73,7 +73,7 @@ class OperationsController extends Controller
         $cache->addProperty('income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $entries = $this->getIncomeReport($start, $end, $accounts);
         $type    = 'income-entry';
@@ -101,7 +101,7 @@ class OperationsController extends Controller
         $cache->addProperty('inc-exp-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $incomes   = $this->getIncomeReport($start, $end, $accounts);

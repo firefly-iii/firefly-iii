@@ -131,7 +131,7 @@ class BudgetReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         /** @var BudgetRepositoryInterface $repository */
         $repository   = app(BudgetRepositoryInterface::class);

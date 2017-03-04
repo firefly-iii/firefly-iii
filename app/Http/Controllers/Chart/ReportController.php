@@ -64,7 +64,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $ids       = $accounts->pluck('id')->toArray();
         $current   = clone $start;
@@ -103,7 +103,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $source    = $this->getChartData($accounts, $start, $end);
@@ -161,7 +161,7 @@ class ReportController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $source  = $this->getChartData($accounts, $start, $end);
         $numbers = [
@@ -246,7 +246,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
 

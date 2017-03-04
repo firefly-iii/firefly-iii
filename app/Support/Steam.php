@@ -43,7 +43,7 @@ class Steam
         $cache->addProperty('balance');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balance = strval(
@@ -74,7 +74,7 @@ class Steam
         $cache->addProperty('balance-no-virtual');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balance = strval(
@@ -108,7 +108,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balances = [];
@@ -158,7 +158,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balances = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')

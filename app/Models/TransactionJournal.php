@@ -170,7 +170,7 @@ class TransactionJournal extends Model
         $cache->addProperty($name);
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         Log::debug(sprintf('Looking for journal #%d meta field "%s".', $this->id, $name));

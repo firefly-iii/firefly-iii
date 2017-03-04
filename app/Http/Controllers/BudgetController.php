@@ -423,7 +423,7 @@ class BudgetController extends Controller
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var AccountRepositoryInterface $accountRepository */

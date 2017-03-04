@@ -119,20 +119,20 @@ class ConvertController extends Controller
      */
     public function postIndex(Request $request, JournalRepositoryInterface $repository, TransactionType $destinationType, TransactionJournal $journal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $data = $request->all();
 
-        // cannot convert to its own type.
         if ($journal->transactionType->type === $destinationType->type) {
             Session::flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
-        // cannot convert split.
         if ($journal->transactions()->count() > 2) {
             Session::flash('error', trans('firefly.cannot_convert_split_journl'));
 
@@ -173,7 +173,8 @@ class ConvertController extends Controller
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {
             default:
-                throw new FireflyException('Cannot handle ' . $joined);
+
+                throw new FireflyException('Cannot handle ' . $joined); // @codeCoverageIgnore
             case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT: // one
                 $destination = $sourceAccount;
                 break;
@@ -218,7 +219,7 @@ class ConvertController extends Controller
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {
             default:
-                throw new FireflyException('Cannot handle ' . $joined);
+                throw new FireflyException('Cannot handle ' . $joined); // @codeCoverageIgnore
             case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT: // one
             case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT: // six
                 $data   = [
