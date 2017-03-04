@@ -195,7 +195,7 @@ class MassController extends Controller
                 $journal = $repository->find(intval($journalId));
                 if ($journal) {
                     // get optional fields:
-                    $what              = strtolower(TransactionJournal::transactionTypeStr($journal));
+                    $what              = strtolower($journal->transactionTypeStr());
                     $sourceAccountId   = $request->get('source_account_id')[$journal->id] ??  0;
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
                     $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;

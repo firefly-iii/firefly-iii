@@ -239,7 +239,7 @@ class ReportController extends Controller
         $journals = $journals->filter(
             function (Transaction $transaction) use ($report) {
                 // get the destinations:
-                $sources = TransactionJournal::sourceAccountList($transaction->transactionJournal)->pluck('id')->toArray();
+                $sources = $transaction->transactionJournal->sourceAccountList()->pluck('id')->toArray();
 
                 // do these intersect with the current list?
                 return !empty(array_intersect($report, $sources));
@@ -275,7 +275,7 @@ class ReportController extends Controller
         $journals = $journals->filter(
             function (Transaction $transaction) use ($report) {
                 // get the destinations:
-                $destinations = $transaction->transactionJournal->destinationAccountList()->pluck('id')->toArray();
+                $destinations = $transaction->destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
 
                 // do these intersect with the current list?
                 return !empty(array_intersect($report, $destinations));
