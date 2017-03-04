@@ -209,18 +209,18 @@ class SplitController extends Controller
      */
     private function arrayFromJournal(Request $request, TransactionJournal $journal): array
     {
-        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
-        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $sourceAccounts      = $journal->sourceAccountList();
+        $destinationAccounts = $journal->destinationAccountList();
         $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
-            'journal_amount'                 => TransactionJournal::amountPositive($journal),
+            'journal_amount'                 => $journal->amountPositive(),
             'sourceAccounts'                 => $sourceAccounts,
             'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
             'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
             'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
             'currency_id'                    => $request->old('currency_id', $journal->transaction_currency_id),
             'destinationAccounts'            => $destinationAccounts,
-            'what'                           => strtolower(TransactionJournal::transactionTypeStr($journal)),
+            'what'                           => strtolower($journal->transactionTypeStr()),
             'date'                           => $request->old('date', $journal->date),
             'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
 
@@ -265,8 +265,8 @@ class SplitController extends Controller
 
             // set initial category and/or budget:
             if (count($transactions) === 1 && $index === 0) {
-                $set['budget_id'] = TransactionJournal::budgetId($journal);
-                $set['category']  = TransactionJournal::categoryAsString($journal);
+                $set['budget_id'] = $journal->budgetId();
+                $set['category']  = $journal->categoryAsString();
             }
 
             $return[] = $set;

@@ -275,7 +275,7 @@ class ReportController extends Controller
         $journals = $journals->filter(
             function (Transaction $transaction) use ($report) {
                 // get the destinations:
-                $destinations = TransactionJournal::destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
+                $destinations = $transaction->transactionJournal->destinationAccountList()->pluck('id')->toArray();
 
                 // do these intersect with the current list?
                 return !empty(array_intersect($report, $destinations));

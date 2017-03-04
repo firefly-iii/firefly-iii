@@ -14,7 +14,8 @@ declare(strict_types = 1);
 namespace FireflyIII\Models;
 
 use Crypt;
-use FireflyIII\Support\Models\TagSupport;
+use FireflyIII\Support\Models\TagTrait;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
@@ -24,8 +25,10 @@ use Watson\Validating\ValidatingTrait;
  *
  * @package FireflyIII\Models
  */
-class Tag extends TagSupport
+class Tag extends Model
 {
+    use ValidatingTrait, SoftDeletes, TagTrait;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -44,7 +47,6 @@ class Tag extends TagSupport
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
     protected $rules    = ['tag' => 'required|between:1,200',];
 
-    use ValidatingTrait, SoftDeletes;
 
     /**
      * @param array $fields
@@ -103,7 +105,7 @@ class Tag extends TagSupport
         $sum = '0';
         /** @var TransactionJournal $journal */
         foreach ($tag->transactionjournals as $journal) {
-            bcadd($sum, TransactionJournal::amount($journal));
+            bcadd($sum, $journal->amount());
         }
 
         return $sum;

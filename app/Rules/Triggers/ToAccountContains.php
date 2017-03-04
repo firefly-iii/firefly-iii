@@ -66,7 +66,7 @@ final class ToAccountContains extends AbstractTrigger implements TriggerInterfac
         $toAccountName = '';
 
         /** @var Account $account */
-        foreach (TransactionJournal::destinationAccountList($journal) as $account) {
+        foreach ($journal->destinationAccountList() as $account) {
             $toAccountName .= strtolower($account->name);
         }
 

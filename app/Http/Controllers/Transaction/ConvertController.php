@@ -64,11 +64,13 @@ class ConvertController extends Controller
      */
     public function index(TransactionType $destinationType, TransactionJournal $journal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
-        $positiveAmount = TransactionJournal::amountPositive($journal);
+        $positiveAmount = $journal->amountPositive();
         $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $sourceType     = $journal->transactionType;
         $subTitle       = trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
@@ -89,8 +91,8 @@ class ConvertController extends Controller
         }
 
         // get source and destination account:
-        $sourceAccount      = TransactionJournal::sourceAccountList($journal)->first();
-        $destinationAccount = TransactionJournal::destinationAccountList($journal)->first();
+        $sourceAccount      = $journal->sourceAccountList()->first();
+        $destinationAccount = $journal->destinationAccountList()->first();
 
         return view(
             'transactions.convert',
@@ -165,8 +167,8 @@ class ConvertController extends Controller
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository  = app(AccountRepositoryInterface::class);
-        $sourceAccount      = TransactionJournal::sourceAccountList($journal)->first();
-        $destinationAccount = TransactionJournal::destinationAccountList($journal)->first();
+        $sourceAccount      = $journal->sourceAccountList()->first();
+        $destinationAccount = $journal->destinationAccountList()->first();
         $sourceType         = $journal->transactionType;
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {
@@ -210,8 +212,8 @@ class ConvertController extends Controller
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository  = app(AccountRepositoryInterface::class);
-        $sourceAccount      = TransactionJournal::sourceAccountList($journal)->first();
-        $destinationAccount = TransactionJournal::destinationAccountList($journal)->first();
+        $sourceAccount      = $journal->sourceAccountList()->first();
+        $destinationAccount = $journal->destinationAccountList()->first();
         $sourceType         = $journal->transactionType;
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {

@@ -12,7 +12,10 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Transaction;
 
 
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -28,9 +31,12 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexDepositTransfer()
     {
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        // mock stuff:
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once()->andReturn(new Collection);
 
         $this->be($this->user());
+        $deposit  = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $response = $this->get(route('transactions.convert.index', ['transfer', $deposit->id]));
         $response->assertStatus(200);
         $response->assertSee('Convert a deposit into a transfer');
@@ -77,7 +83,7 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexWithdrawalDeposit()
     {
-        $withdrawal= TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
+        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
         $response = $this->get(route('transactions.convert.index', ['deposit', $withdrawal->id]));
         $response->assertStatus(200);
@@ -89,7 +95,7 @@ class ConvertControllerTest extends TestCase
      */
     public function testIndexWithdrawalTransfer()
     {
-        $withdrawal= TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
+        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
         $response = $this->get(route('transactions.convert.index', ['transfer', $withdrawal->id]));
         $response->assertStatus(200);
@@ -98,10 +104,12 @@ class ConvertControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
     public function testPostIndex()
     {
-        $withdrawal= TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
+        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         // convert a withdrawal to a transfer. Requires the ID of another asset account.
         $data = [
             'destination_account_asset' => 2,

@@ -1,10 +1,8 @@
 <?php
 /**
- * TagSupport.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * TagTrait.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
  *
  * See the LICENSE file for details.
  */
@@ -17,28 +15,26 @@ use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * FireflyIII\Support\Models\TagSupport
+ * Class TagSupport
  *
- * @mixin \Eloquent
+ * @package FireflyIII\Support\Models
  */
-class TagSupport extends Model
+trait TagTrait
 {
     /**
      * Can a tag become an advance payment?
      *
-     * @param Tag $tag
-     *
      * @return bool
      */
-    public static function tagAllowAdvance(Tag $tag): bool
+    public function tagAllowAdvance(): bool
     {
         /*
          * If this tag is a balancing act, and it contains transfers, it cannot be
          * changes to an advancePayment.
          */
 
-        if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
-            foreach ($tag->transactionjournals as $journal) {
+        if ($this->tagMode == 'balancingAct' || $this->tagMode == 'nothing') {
+            foreach ($this->transactionjournals as $journal) {
                 if ($journal->isTransfer()) {
                     return false;
                 }
@@ -49,7 +45,7 @@ class TagSupport extends Model
          * If this tag contains more than one expenses, it cannot become an advance payment.
          */
         $count = 0;
-        foreach ($tag->transactionjournals as $journal) {
+        foreach ($this->transactionjournals as $journal) {
             if ($journal->isWithdrawal()) {
                 $count++;
             }
@@ -64,23 +60,21 @@ class TagSupport extends Model
     /**
      * Can a tag become a balancing act?
      *
-     * @param Tag $tag
-     *
      * @return bool
      */
-    public static function tagAllowBalancing(Tag $tag): bool
+    public function tagAllowBalancing(): bool
     {
         /*
          * If has more than two transactions already, cannot become a balancing act:
          */
-        if ($tag->transactionjournals->count() > 2) {
+        if ($this->transactionjournals->count() > 2) {
             return false;
         }
 
         /*
          * If any transaction is a deposit, cannot become a balancing act.
          */
-        foreach ($tag->transactionjournals as $journal) {
+        foreach ($this->transactionjournals as $journal) {
             if ($journal->isDeposit()) {
                 return false;
             }

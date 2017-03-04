@@ -47,7 +47,7 @@ class Journal extends Twig_Extension
                 return $cache->get();
             }
 
-            $list  = TransactionJournal::destinationAccountList($journal);
+            $list  = $journal->destinationAccountList();
             $array = [];
             /** @var Account $entry */
             foreach ($list as $entry) {

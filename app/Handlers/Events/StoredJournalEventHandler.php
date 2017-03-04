@@ -140,7 +140,7 @@ class StoredJournalEventHandler
      */
     private function getExactAmount(TransactionJournal $journal, PiggyBank $piggyBank, PiggyBankRepetition $repetition): string
     {
-        $amount  = TransactionJournal::amountPositive($journal);
+        $amount  = $journal->amountPositive();
         $sources = TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray();
         $room    = bcsub(strval($piggyBank->targetamount), strval($repetition->currentamount));
         $compare = bcmul($repetition->currentamount, '-1');

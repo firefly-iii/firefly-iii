@@ -187,7 +187,7 @@ class Amount
     {
         $currency = $journal->transactionCurrency;
 
-        return $this->formatAnything($currency, TransactionJournal::amount($journal), $coloured);
+        return $this->formatAnything($currency, $journal->amount(), $coloured);
     }
 
     /**

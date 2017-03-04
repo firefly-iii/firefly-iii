@@ -159,8 +159,8 @@ class TagController extends Controller
         /*
          * Can this tag become another type?
          */
-        $allowAdvance        = Tag::tagAllowAdvance($tag);
-        $allowToBalancingAct = Tag::tagAllowBalancing($tag);
+        $allowAdvance        = $tag->tagAllowAdvance();
+        $allowToBalancingAct = $tag->tagAllowBalancing();
 
         // edit tag options:
         if ($allowAdvance === false) {
