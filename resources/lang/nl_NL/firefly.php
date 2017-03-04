@@ -559,6 +559,7 @@ return [
     'select_more_than_one_tag'                   => 'Selecteer meer dan één tag',
     'from_to'                                    => 'Van :start tot en met :end',
     'from_to_breadcrumb'                         => 'van :start tot en met :end',
+    'account_default_currency'                   => 'If you select another currency, new transactions from this account will have this currency pre-selected.',
 
     // categories:
     'new_category'                               => 'Nieuwe categorie',
