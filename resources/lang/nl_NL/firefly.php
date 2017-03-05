@@ -239,6 +239,7 @@ return [
     'rule_trigger_to_account_is'                 => 'Doelrekeningnaam is ":trigger_value"',
     'rule_trigger_to_account_contains'           => 'Doelrekeningnaam bevat ":trigger_value"',
     'rule_trigger_transaction_type'              => 'Transactiesoort is ":trigger_value" (Engels)',
+    'rule_trigger_category_is'                   => 'Category is ":trigger_value"',
     'rule_trigger_amount_less'                   => 'Bedrag is minder dan :trigger_value',
     'rule_trigger_amount_exactly'                => 'Bedrag is :trigger_value',
     'rule_trigger_amount_more'                   => 'Bedrag is meer dan :trigger_value',
