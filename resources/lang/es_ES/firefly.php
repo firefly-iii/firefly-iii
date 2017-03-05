@@ -239,6 +239,7 @@ return [
     'rule_trigger_to_account_is'                 => 'Destination account is ":trigger_value"',
     'rule_trigger_to_account_contains'           => 'Destination account contains ":trigger_value"',
     'rule_trigger_transaction_type'              => 'Transaction is of type ":trigger_value"',
+    'rule_trigger_category_is'                   => 'Category is ":trigger_value"',
     'rule_trigger_amount_less'                   => 'Amount is less than :trigger_value',
     'rule_trigger_amount_exactly'                => 'Amount is :trigger_value',
     'rule_trigger_amount_more'                   => 'Amount is more than :trigger_value',
