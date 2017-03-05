@@ -290,7 +290,7 @@ class PiggyBankController extends Controller
             $repository->createEvent($piggyBank, $amount);
 
             Session::flash(
-                'success', strval(trans('firefly.added_amount_to_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)]))
+                'success', strval(trans('firefly.added_amount_to_piggy', ['amount' => Amount::format($amount, false), 'name' => $piggyBank->name]))
             );
             Preferences::mark();
 
