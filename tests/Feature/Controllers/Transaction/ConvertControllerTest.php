@@ -18,7 +18,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Twig\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Tests\TestCase;

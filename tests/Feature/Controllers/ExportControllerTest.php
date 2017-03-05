@@ -70,7 +70,7 @@ class ExportControllerTest extends TestCase
         );
 
 
-        $data      = [
+        $data = [
 
             'export_start_range' => '2015-01-01',
             'export_end_range'   => '2015-01-21',

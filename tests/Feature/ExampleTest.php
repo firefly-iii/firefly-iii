@@ -19,11 +19,11 @@ class ExampleTest extends TestCase
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testAnotherBasicTest()
     {
-        $response = $this->get('/login');
+        $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     /**
@@ -31,10 +31,10 @@ class ExampleTest extends TestCase
      *
      * @return void
      */
-    public function testAnotherBasicTest()
+    public function testBasicTest()
     {
-        $response = $this->get('/');
+        $response = $this->get('/login');
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
     }
 }

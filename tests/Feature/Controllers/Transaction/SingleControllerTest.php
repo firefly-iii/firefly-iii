@@ -188,54 +188,6 @@ class SingleControllerTest extends TestCase
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
      */
-    public function testStoreSuccess()
-    {
-        // mock results:
-        $repository           = $this->mock(JournalRepositoryInterface::class);
-        $journal              = new TransactionJournal();
-        $journal->id          = 1000;
-        $journal->description = 'New journal';
-        $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $this->expectsEvents(StoredTransactionJournal::class);
-
-        $errors = new MessageBag;
-        $errors->add('attachments','Fake error');
-
-        $messages = new MessageBag;
-        $messages->add('attachments','Fake error');
-
-        // mock attachment helper, trigger an error AND and info thing.
-        $attachmentRepo = $this->mock(AttachmentHelperInterface::class);
-        $attachmentRepo->shouldReceive('saveAttachmentsForModel');
-        $attachmentRepo->shouldReceive('getErrors')->andReturn($errors);
-        $attachmentRepo->shouldReceive('getMessages')->andReturn($messages);
-
-
-
-
-        $this->session(['transactions.create.url' => 'http://localhost']);
-        $this->be($this->user());
-
-        $data     = [
-            'what'                      => 'withdrawal',
-            'amount'                    => '10',
-            'amount_currency_id_amount' => 1,
-            'source_account_id'         => 1,
-            'destination_account_name'  => 'Some destination',
-            'date'                      => '2016-01-01',
-            'description'               => 'Test descr',
-        ];
-        $response = $this->post(route('transactions.store', ['withdrawal']), $data);
-        $response->assertStatus(302);
-        $response->assertSessionHas('success');
-        $response->assertSessionHas('error');
-        $response->assertSessionHas('info');
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     */
     public function testStoreError()
     {
         // mock results:
@@ -262,6 +214,52 @@ class SingleControllerTest extends TestCase
     }
 
     /**
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     */
+    public function testStoreSuccess()
+    {
+        // mock results:
+        $repository           = $this->mock(JournalRepositoryInterface::class);
+        $journal              = new TransactionJournal();
+        $journal->id          = 1000;
+        $journal->description = 'New journal';
+        $repository->shouldReceive('store')->andReturn($journal);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $this->expectsEvents(StoredTransactionJournal::class);
+
+        $errors = new MessageBag;
+        $errors->add('attachments', 'Fake error');
+
+        $messages = new MessageBag;
+        $messages->add('attachments', 'Fake error');
+
+        // mock attachment helper, trigger an error AND and info thing.
+        $attachmentRepo = $this->mock(AttachmentHelperInterface::class);
+        $attachmentRepo->shouldReceive('saveAttachmentsForModel');
+        $attachmentRepo->shouldReceive('getErrors')->andReturn($errors);
+        $attachmentRepo->shouldReceive('getMessages')->andReturn($messages);
+
+
+        $this->session(['transactions.create.url' => 'http://localhost']);
+        $this->be($this->user());
+
+        $data     = [
+            'what'                      => 'withdrawal',
+            'amount'                    => '10',
+            'amount_currency_id_amount' => 1,
+            'source_account_id'         => 1,
+            'destination_account_name'  => 'Some destination',
+            'date'                      => '2016-01-01',
+            'description'               => 'Test descr',
+        ];
+        $response = $this->post(route('transactions.store', ['withdrawal']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+        $response->assertSessionHas('error');
+        $response->assertSessionHas('info');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
      */
     public function testUpdate()
@@ -272,9 +270,9 @@ class SingleControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $journal    = new TransactionJournal();
 
-        $type                     = TransactionType::find(1);
-        $journal->id              = 1000;
-        $journal->description     = 'New journal';
+        $type                 = TransactionType::find(1);
+        $journal->id          = 1000;
+        $journal->description = 'New journal';
         $journal->transactionType()->associate($type);
 
 

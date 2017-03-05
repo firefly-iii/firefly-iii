@@ -202,7 +202,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -238,7 +238,7 @@ class BudgetControllerTest extends TestCase
     public function testShowByBudgetLimit(string $range)
     {
         // mock stuff
-        $journalRepos      = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         // mock account repository
@@ -276,7 +276,7 @@ class BudgetControllerTest extends TestCase
     public function testStore()
     {
         // mock stuff
-        $budget = factory(Budget::class)->make();
+        $budget       = factory(Budget::class)->make();
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -299,7 +299,7 @@ class BudgetControllerTest extends TestCase
     public function testUpdate()
     {
         // mock stuff
-        $budget = factory(Budget::class)->make();
+        $budget       = factory(Budget::class)->make();
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);

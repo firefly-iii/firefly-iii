@@ -27,7 +27,7 @@ class OperationsControllerTest extends TestCase
     public function testExpenses()
     {
         $transactions = factory(Transaction::class, 10)->make();
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
@@ -48,7 +48,7 @@ class OperationsControllerTest extends TestCase
     public function testIncome()
     {
         $transactions = factory(Transaction::class, 10)->make();
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();

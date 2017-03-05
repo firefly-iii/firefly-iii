@@ -147,8 +147,8 @@ class RuleGroupControllerTest extends TestCase
     public function testUpdate()
     {
         $data = [
-            'title'              => 'C',
-            'description'            => 'XX',
+            'title'       => 'C',
+            'description' => 'XX',
         ];
         $this->session(['rule-groups.edit.url' => 'http://localhost']);
 

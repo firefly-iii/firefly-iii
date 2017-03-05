@@ -90,7 +90,7 @@ class MassControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
      */
-    public function testEditMultipleNothingLeft()
+    public function testEditMultiple()
     {
         Log::debug('Edit multiple.');
         // mock stuff:
@@ -98,7 +98,19 @@ class MassControllerTest extends TestCase
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
         // default transactions
-        $collection = new Collection;
+        $collection = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
+
+        // add deposit (with multiple sources)
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 2)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+
+        // add withdrawal (with multiple destinations)
         $collection->push(
             TransactionJournal::where('transaction_type_id', 1)
                               ->whereNull('transaction_journals.deleted_at')
@@ -121,7 +133,7 @@ class MassControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
      */
-    public function testEditMultiple()
+    public function testEditMultipleNothingLeft()
     {
         Log::debug('Edit multiple.');
         // mock stuff:
@@ -129,19 +141,7 @@ class MassControllerTest extends TestCase
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
         // default transactions
-        $collection = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
-
-        // add deposit (with multiple sources)
-        $collection->push(
-            TransactionJournal::where('transaction_type_id', 2)
-                              ->whereNull('transaction_journals.deleted_at')
-                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                              ->groupBy('transaction_journals.id')
-                              ->orderBy('ct', 'DESC')
-                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
-        );
-
-        // add withdrawal (with multiple destinations)
+        $collection = new Collection;
         $collection->push(
             TransactionJournal::where('transaction_type_id', 1)
                               ->whereNull('transaction_journals.deleted_at')

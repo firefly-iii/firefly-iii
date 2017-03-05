@@ -13,8 +13,8 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Import\Setup\CsvSetup;
-use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
 
 class ImportControllerTest extends TestCase
 {
@@ -160,8 +160,8 @@ class ImportControllerTest extends TestCase
      */
     public function testUpload()
     {
-        $path = resource_path('stubs/csv.csv');
-        $file = new UploadedFile($path, 'upload.csv', filesize($path), 'text/csv', null, true);
+        $path     = resource_path('stubs/csv.csv');
+        $file     = new UploadedFile($path, 'upload.csv', filesize($path), 'text/csv', null, true);
         $response = $this->post(route('import.upload'), [], [], ['import_file' => $file], ['Accept' => 'application/json']);
         $response->assertStatus(302);
     }

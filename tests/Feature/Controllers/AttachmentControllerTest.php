@@ -40,7 +40,7 @@ class AttachmentControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -58,7 +58,7 @@ class AttachmentControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -104,7 +104,7 @@ class AttachmentControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 

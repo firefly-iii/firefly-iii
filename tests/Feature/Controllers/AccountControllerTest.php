@@ -223,7 +223,7 @@ class AccountControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $date         = new Carbon;
+        $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 
         $this->be($this->user());
@@ -244,7 +244,7 @@ class AccountControllerTest extends TestCase
         $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -307,7 +307,7 @@ class AccountControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $date         = new Carbon;
+        $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 
         $this->be($this->user());
