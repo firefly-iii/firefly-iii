@@ -204,7 +204,6 @@ class TagController extends Controller
                 function (Tag $tag) {
                     $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
 
-
                     return strtolower($date . $tag->tag);
                 }
             );

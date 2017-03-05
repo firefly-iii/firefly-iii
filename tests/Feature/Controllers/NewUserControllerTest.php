@@ -11,8 +11,16 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Tests\TestCase;
 
+/**
+ * Class NewUserControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class NewUserControllerTest extends TestCase
 {
 
@@ -22,6 +30,13 @@ class NewUserControllerTest extends TestCase
      */
     public function testIndex()
     {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('count')->andReturn(0);
+
+
         $this->be($this->emptyUser());
         $response = $this->get(route('new-user.index'));
         $response->assertStatus(200);
@@ -33,9 +48,39 @@ class NewUserControllerTest extends TestCase
      */
     public function testSubmit()
     {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('store')->times(3);
+
+
+        $data = [
+            'bank_name'         => 'New bank',
+            'savings_balance'   => '1000',
+            'bank_balance'      => '100',
+            'credit_card_limit' => '1000',
+        ];
+        $this->be($this->emptyUser());
+        $response = $this->post(route('new-user.submit'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\NewUserController::submit
+     */
+    public function testSubmitSingle()
+    {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('store')->once();
+
         $data = [
             'bank_name'    => 'New bank',
-            'bank_balance' => 100,
+            'bank_balance' => '100',
         ];
         $this->be($this->emptyUser());
         $response = $this->post(route('new-user.submit'), $data);

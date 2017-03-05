@@ -154,7 +154,6 @@ class TransactionController extends Controller
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
         $collector->setTypes($types)->setLimit($pageSize)->setPage($page)->setAllAssetAccounts();
         $collector->setRange($start, $end)->withBudgetInformation()->withCategoryInformation();
         $collector->withOpposingAccount();

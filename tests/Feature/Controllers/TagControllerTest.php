@@ -11,10 +11,22 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+
+/**
+ * Class TagControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class TagControllerTest extends TestCase
 {
 
@@ -23,6 +35,10 @@ class TagControllerTest extends TestCase
      */
     public function testCreate()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('tags.create'));
         $response->assertStatus(200);
@@ -34,6 +50,10 @@ class TagControllerTest extends TestCase
      */
     public function testDelete()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('tags.delete', [1]));
         $response->assertStatus(200);
@@ -45,7 +65,10 @@ class TagControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $repository = $this->mock(TagRepositoryInterface::class);
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
         $this->be($this->user());
@@ -59,6 +82,10 @@ class TagControllerTest extends TestCase
      */
     public function testEdit()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('tags.edit', [1]));
         $response->assertStatus(200);
@@ -71,6 +98,15 @@ class TagControllerTest extends TestCase
      */
     public function testIndex()
     {
+        // mock stuff
+        $tag          = factory(Tag::class)->make();
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('count')->andReturn(0);
+        $repository->shouldReceive('getByType')->andReturn(new Collection([$tag]));
+
+
         $this->be($this->user());
         $response = $this->get(route('tags.index'));
         $response->assertStatus(200);
@@ -79,9 +115,33 @@ class TagControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::show
+     * @covers \FireflyIII\Http\Controllers\TagController::getPeriodOverview
      */
     public function testShow()
     {
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);
+        $repository->shouldReceive('lastUseDate')->andReturn(new Carbon);
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1');
+        $repository->shouldReceive('find')->andReturn(new Tag);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTag')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1]));
         $response->assertStatus(200);
@@ -93,6 +153,13 @@ class TagControllerTest extends TestCase
      */
     public function testStore()
     {
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('find')->andReturn(new Tag);
+        $repository->shouldReceive('store')->andReturn(new Tag);
+
         $this->session(['tags.create.url' => 'http://localhost']);
         $data = [
             'tag'     => 'Hello new tag' . rand(999, 10000),
@@ -109,12 +176,18 @@ class TagControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
         $this->session(['tags.edit.url' => 'http://localhost']);
-        $data       = [
+        $data = [
             'tag'     => 'Hello updated tag' . rand(999, 10000),
             'tagMode' => 'nothing',
         ];
-        $repository = $this->mock(TagRepositoryInterface::class);
+
         $repository->shouldReceive('update');
         $repository->shouldReceive('find')->andReturn(new Tag);
 

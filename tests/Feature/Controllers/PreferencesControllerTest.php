@@ -11,8 +11,19 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Support\Collection;
+use PragmaRX\Google2FA\Contracts\Google2FA;
 use Tests\TestCase;
 
+/**
+ * Class PreferencesControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class PreferencesControllerTest extends TestCase
 {
 
@@ -21,6 +32,12 @@ class PreferencesControllerTest extends TestCase
      */
     public function testCode()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $google       = $this->mock(Google2FA::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $google->shouldReceive('generateSecretKey')->andReturn('secret');
+        $google->shouldReceive('getQRCodeInline')->andReturn('long-data-url');
         $this->be($this->user());
         $response = $this->get(route('preferences.code'));
         $response->assertStatus(200);
@@ -32,6 +49,10 @@ class PreferencesControllerTest extends TestCase
      */
     public function testDeleteCode()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('preferences.delete-code'));
         $response->assertStatus(302);
@@ -46,6 +67,12 @@ class PreferencesControllerTest extends TestCase
      */
     public function testIndex()
     {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
+
         $this->be($this->user());
         $response = $this->get(route('preferences.index'));
         $response->assertStatus(200);
@@ -57,6 +84,10 @@ class PreferencesControllerTest extends TestCase
      */
     public function testPostIndex()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $data = [
             'fiscalYearStart'       => '2016-01-01',
             'frontPageAccounts'     => [],
