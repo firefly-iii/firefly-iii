@@ -47,7 +47,7 @@
                         {# ALWAYS SHOW AMOUNT #}
                         {{ ExpandedForm.amount('amount') }}
 
-                        <!-- ALWAYS SHOW DATE -->
+                        {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}
                     </div>
                     <div class="box-footer">
@@ -63,26 +63,26 @@
                         <h3 class="box-title">{{ 'optional_field_meta_data'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
+                        {# BUDGET ONLY WHEN CREATING A WITHDRAWAL #}
                         {% if budgets|length > 1 %}
                             {{ ExpandedForm.select('budget_id', budgets, null) }}
                         {% else %}
                             {{ ExpandedForm.select('budget_id', budgets, null, {helpText: trans('firefly.no_budget_pointer')}) }}
                         {% endif %}
 
-                        <!-- CATEGORY ALWAYS -->
+                        {# CATEGORY ALWAYS #}
                         {{ ExpandedForm.text('category') }}
 
-                        <!-- TAGS -->
+                        {# TAGS #}
                         {{ ExpandedForm.text('tags') }}
 
-                        <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
+                        {# RELATE THIS TRANSFER TO A PIGGY BANK #}
                         {{ ExpandedForm.select('piggy_bank_id', piggies, '0') }}
 
                     </div>
                 </div>
 
-                <!-- explain if necessary -->
+                {# explain if necessary #}
                 {% if
                 not optionalFields.interest_date or
                 not optionalFields.book_date or
@@ -97,7 +97,7 @@
                         <em>{{ trans('firefly.hidden_fields_preferences', {link: route('preferences.index')})|raw }}</em></p>
                 {% endif %}
 
-                <!-- box for dates -->
+                {# box for dates #}
                 {% if
                 optionalFields.interest_date or optionalFields.book_date or optionalFields.process_date
                 or optionalFields.due_date or optionalFields.payment_date
@@ -141,7 +141,7 @@
                     </div>
                 {% endif %}
 
-                <!-- box for business fields -->
+                {# box for business fields #}
                 {% if optionalFields.internal_reference or optionalFields.notes %}
                     <div class="box">
                         <div class="box-header with-border">
@@ -163,7 +163,7 @@
                     </div>
                 {% endif %}
 
-                <!-- box for attachments -->
+                {# box for attachments #}
                 {% if optionalFields.attachments %}
                     <div class="box">
                         <div class="box-header with-border">
@@ -178,7 +178,7 @@
                     </div>
                 {% endif %}
 
-                <!-- panel for options -->
+                {# panel for options #}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
@@ -201,7 +201,6 @@
     <script type="text/javascript">
         var what = "{{ what }}";
         var piggiesLength = {{ piggies|length }};
-        var doSwitch = true;
 
         // some titles and names:
         var txt = [];
@@ -225,6 +224,7 @@
     <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>
     <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="javascript/accounts?ext=.js"></script>
     <script type="text/javascript" src="js/ff/transactions/single/create.js"></script>
 {% endblock %}
 
