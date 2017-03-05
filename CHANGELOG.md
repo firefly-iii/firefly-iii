@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Extended contribution guidelines.
 - First version of financial report filtered on tags.
 - Suggested monthly savings for piggy banks, by [Zsub](https://github.com/Zsub)
+- Better test coverage.
 
 ### Changed
 - Slightly changed tag overview.
@@ -25,6 +26,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Issue #602 and #607, as reported by [skibbipl](https://github.com/skibbipl) and [dzaikos](https://github.com/dzaikos).
 - Issue #605, as reported by [Zsub](https://github.com/Zsub).
 - Issue #599, as reported by [leander091](https://github.com/leander091).
+- Issue #610, as reported by [skibbipl](https://github.com/skibbipl).
+- Issue #611, as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
+- Issue #612, as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
 - Various other bug fixes.
 
 ## [4.3.6] - 2017-02-20
