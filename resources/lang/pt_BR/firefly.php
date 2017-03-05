@@ -239,6 +239,7 @@ return [
     'rule_trigger_to_account_is'                 => 'Conta de destino é ":trigger_value"',
     'rule_trigger_to_account_contains'           => 'Conta de destino contém ":trigger_value"',
     'rule_trigger_transaction_type'              => 'Transação é do tipo ":trigger_value"',
+    'rule_trigger_category_is'                   => 'Category is ":trigger_value"',
     'rule_trigger_amount_less'                   => 'Quantia é inferior :trigger_value',
     'rule_trigger_amount_exactly'                => 'Quantia é: trigger_value',
     'rule_trigger_amount_more'                   => 'Quantia é mais de :trigger_value',
