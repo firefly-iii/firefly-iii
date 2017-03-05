@@ -409,8 +409,6 @@ class AccountController extends Controller
         $cache->addProperty($account->id);
 
         if ($cache->has()) {
-            Log::debug('Entries are cached, return cache.');
-
             return $cache->get(); // @codeCoverageIgnore
         }
 
