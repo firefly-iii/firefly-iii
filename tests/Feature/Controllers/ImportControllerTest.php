@@ -13,16 +13,28 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Import\Setup\CsvSetup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
+/**
+ * Class ImportControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class ImportControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::complete
+     * @covers \FireflyIII\Http\Controllers\ImportController::jobInCorrectStep
+     * @covers \FireflyIII\Http\Controllers\ImportController::redirectToCorrectStep
      */
     public function testComplete()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('import.complete', ['complete']));
         $response->assertStatus(200);
@@ -31,9 +43,18 @@ class ImportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::configure
+     * @covers \FireflyIII\Http\Controllers\ImportController::makeImporter
      */
     public function testConfigure()
     {
+        $setup        = $this->mock(CsvSetup::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $setup->shouldReceive('setJob')->once();
+        $setup->shouldReceive('configure')->once();
+        $setup->shouldReceive('getConfigurationData')->andReturn(['specifics' => [], 'delimiters' => [], 'accounts' => []])->once();
+
         $this->be($this->user());
         $response = $this->get(route('import.configure', ['configure']));
         $response->assertStatus(200);
@@ -45,10 +66,19 @@ class ImportControllerTest extends TestCase
      */
     public function testDownload()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('import.download', ['configure']));
         $response->assertStatus(200);
-        $response->assertSee('[]');
+        $response->assertJson(
+            [
+                'delimiter'               => 'tab',
+                'column-roles-complete'   => false,
+                'column-mapping-complete' => false,
+            ]
+        );
     }
 
     /**
@@ -56,6 +86,9 @@ class ImportControllerTest extends TestCase
      */
     public function testFinished()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('import.finished', ['finished']));
         $response->assertStatus(200);
@@ -68,6 +101,9 @@ class ImportControllerTest extends TestCase
      */
     public function testIndex()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('import.index'));
         $response->assertStatus(200);
@@ -78,6 +114,9 @@ class ImportControllerTest extends TestCase
      */
     public function testJson()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('import.json', ['configure']));
         $response->assertStatus(200);
@@ -88,6 +127,9 @@ class ImportControllerTest extends TestCase
      */
     public function testPostConfigure()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $importer = $this->mock(CsvSetup::class);
         $importer->shouldReceive('setJob')->once();
         $importer->shouldReceive('saveImportConfiguration')->once();
@@ -104,6 +146,9 @@ class ImportControllerTest extends TestCase
      */
     public function testPostSettings()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $importer = $this->mock(CsvSetup::class);
         $importer->shouldReceive('setJob')->once();
         $importer->shouldReceive('storeSettings')->once();
@@ -119,6 +164,9 @@ class ImportControllerTest extends TestCase
      */
     public function testSettings()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $importer = $this->mock(CsvSetup::class);
         $importer->shouldReceive('setJob')->once();
         $importer->shouldReceive('requireUserSettings')->once()->andReturn(false);
@@ -133,6 +181,9 @@ class ImportControllerTest extends TestCase
      */
     public function testStart()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         /** @var ImportProcedureInterface $procedure */
         $procedure = $this->mock(ImportProcedureInterface::class);
 
@@ -149,6 +200,9 @@ class ImportControllerTest extends TestCase
      */
     public function testStatus()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         // complete
         $this->be($this->user());
         $response = $this->get(route('import.status', ['complete']));
@@ -160,6 +214,9 @@ class ImportControllerTest extends TestCase
      */
     public function testUpload()
     {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
         $path     = resource_path('stubs/csv.csv');
         $file     = new UploadedFile($path, 'upload.csv', filesize($path), 'text/csv', null, true);
         $response = $this->post(route('import.upload'), [], [], ['import_file' => $file], ['Accept' => 'application/json']);

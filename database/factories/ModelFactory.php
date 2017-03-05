@@ -34,6 +34,24 @@ $factory->define(
 );
 
 $factory->define(
+    FireflyIII\Models\Tag::class, function (Faker\Generator $faker) {
+    return [
+        'id'   => $faker->numberBetween(1, 10),
+        'tag' => $faker->words(1, true),
+    ];
+}
+);
+
+$factory->define(
+    FireflyIII\Models\Category::class, function (Faker\Generator $faker) {
+    return [
+        'id'   => $faker->numberBetween(1, 10),
+        'name' => $faker->words(3, true),
+    ];
+}
+);
+
+$factory->define(
     FireflyIII\Models\Budget::class, function (Faker\Generator $faker) {
     return [
         'id'   => $faker->numberBetween(1, 10),

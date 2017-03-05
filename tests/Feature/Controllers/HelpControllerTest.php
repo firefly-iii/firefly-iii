@@ -14,6 +14,11 @@ namespace Tests\Feature\Controllers;
 use FireflyIII\Helpers\Help\HelpInterface;
 use Tests\TestCase;
 
+/**
+ * Class HelpControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class HelpControllerTest extends TestCase
 {
 
