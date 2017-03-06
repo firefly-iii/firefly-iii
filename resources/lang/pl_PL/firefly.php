@@ -239,6 +239,7 @@ return [
     'rule_trigger_to_account_is'                 => 'Kontem docelowym jest ":trigger_value"',
     'rule_trigger_to_account_contains'           => 'Konto docelowe zawiera ":trigger_value"',
     'rule_trigger_transaction_type'              => 'Transakcja jest typu ":trigger_value"',
+    'rule_trigger_category_is'                   => 'Category is ":trigger_value"',
     'rule_trigger_amount_less'                   => 'Kwota jest mniejsza niż :trigger_value',
     'rule_trigger_amount_exactly'                => 'Kwota jest równa :trigger_value',
     'rule_trigger_amount_more'                   => 'Kwota jest większa niż :trigger_value',
@@ -559,6 +560,7 @@ return [
     'select_more_than_one_tag'                   => 'Please select more than one tag',
     'from_to'                                    => 'Od :start do :end',
     'from_to_breadcrumb'                         => 'from :start to :end',
+    'account_default_currency'                   => 'If you select another currency, new transactions from this account will have this currency pre-selected.',
 
     // categories:
     'new_category'                               => 'Nowa kategoria',
