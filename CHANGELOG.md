@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [4.3.7] - 2017-03-05
+## [4.3.7] - 2017-03-06
 ### Added
 - Nice user friendly views for empty lists.
 - Extended contribution guidelines.
@@ -29,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Issue #610, as reported by [skibbipl](https://github.com/skibbipl).
 - Issue #611, as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
 - Issue #612, as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
+- Issue #614, as reported by [worldworm](https://github.com/worldworm).
 - Various other bug fixes.
 
 ## [4.3.6] - 2017-02-20
