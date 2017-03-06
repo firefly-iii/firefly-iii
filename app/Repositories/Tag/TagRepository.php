@@ -387,8 +387,8 @@ class TagRepository implements TagRepositoryInterface
             Log::debug(sprintf('Now existingcomparing new journal #%d to existing journal #%d', $journal->id, $existing->id));
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            $existingSources      = join(',', array_unique($journal->sourceAccountList()->pluck('id')->toArray()));
-            $existingDestinations = join(',', array_unique($journal->destinationAccountList()->pluck('id')->toArray()));
+            $existingSources      = join(',', array_unique($existing->sourceAccountList()->pluck('id')->toArray()));
+            $existingDestinations = join(',', array_unique($existing->destinationAccountList()->pluck('id')->toArray()));
 
             if ($existing->isWithdrawal() && $existingSources !== $journalDestinations) {
                 /*
