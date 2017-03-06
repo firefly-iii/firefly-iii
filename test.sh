@@ -10,11 +10,11 @@ TESTINGENV=./.env.testing
 resetTestFlag=''
 testflag=''
 coverageflag=''
-acceptancetestclass=''
+featuretestclass=''
 verbalflag=''
 testsuite=''
 
-while getopts 'vcrta:s:' flag; do
+while getopts 'vcrtf:s:' flag; do
   case "${flag}" in
     r)
         resetTestFlag='true'
@@ -29,9 +29,9 @@ while getopts 'vcrta:s:' flag; do
         verbalflag=' -v --debug'
         echo "Will be verbal about it"
     ;;
-    a)
-        acceptancetestclass=./tests/acceptance/$OPTARG
-        echo "Will only run acceptance test $OPTARG"
+    f)
+        featuretestclass=./tests/Feature/$OPTARG
+        echo "Will only run Feature test $OPTARG"
     ;;
     s)
         testsuite="--testsuite $OPTARG"
@@ -99,12 +99,12 @@ else
     if [[ $coverageflag == "" ]]
     then
         echo "Must run PHPUnit without coverage:"
-        echo "phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite"
-        phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite
+        echo "phpunit --stop-on-error $verbalflag $featuretestclass $testsuite"
+        phpunit --stop-on-error $verbalflag $featuretestclass $testsuite
     else
         echo "Must run PHPUnit with coverage"
-        echo "phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite"
-        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite
+        echo "phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $featuretestclass $testsuite"
+        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $featuretestclass $testsuite
     fi
 fi
 

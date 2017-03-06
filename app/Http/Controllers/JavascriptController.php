@@ -13,6 +13,10 @@ namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 use Navigation;
 use Preferences;
@@ -28,6 +32,35 @@ class JavascriptController extends Controller
 
     /**
      *
+     */
+    public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
+    {
+        $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $default    = $currencyRepository->findByCode($preference->data);
+
+        $data = ['accounts' => [],];
+
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountId                    = $account->id;
+            $currency                     = intval($account->getMeta('currency_id'));
+            $currency                     = $currency === 0 ? $default->id : $currency;
+            $entry                        = ['preferredCurrency' => $currency];
+            $data['accounts'][$accountId] = $entry;
+        }
+
+
+        return response()
+            ->view('javascript.accounts', $data, 200)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
      */
     public function variables(Request $request)
     {

@@ -67,7 +67,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             Log::debug('Return chart.account.all from cache.');
 
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.all from scratch.');
 
@@ -112,7 +112,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $start->subDay();
 
@@ -139,14 +139,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseBudget(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function expenseBudget(Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -154,12 +153,10 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $collector->setAccounts(new Collection([$account]))
-                  ->setRange($start, $end)
-                  ->withBudgetInformation()
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
         $transactions = $collector->getJournals();
         $chartData    = [];
         $result       = [];
@@ -185,14 +182,27 @@ class AccountController extends Controller
     }
 
     /**
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $start = $repository->oldestJournalDate($account);
+        $end   = Carbon::now();
+
+        return $this->expenseBudget($account, $start, $end);
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseCategory(Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -200,9 +210,10 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::WITHDRAWAL]);
         $transactions = $collector->getJournals();
         $result       = [];
@@ -226,6 +237,20 @@ class AccountController extends Controller
 
         return Response::json($data);
 
+    }
+
+    /**
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $start = $repository->oldestJournalDate($account);
+        $end   = Carbon::now();
+
+        return $this->expenseCategory($account, $start, $end);
     }
 
     /**
@@ -254,14 +279,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param JournalCollectorInterface $collector
-     * @param Account                   $account
-     * @param Carbon                    $start
-     * @param Carbon                    $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function incomeCategory(JournalCollectorInterface $collector, Account $account, Carbon $start, Carbon $end)
+    public function incomeCategory(Account $account, Carbon $start, Carbon $end)
     {
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -269,10 +293,11 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.income-category');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // grab all journals:
+        $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::DEPOSIT]);
         $transactions = $collector->getJournals();
         $result       = [];
@@ -298,6 +323,20 @@ class AccountController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account)
+    {
+        $start = $repository->oldestJournalDate($account);
+        $end   = Carbon::now();
+
+        return $this->incomeCategory($account, $start, $end);
+    }
+
+    /**
      * @param Account $account
      * @param string  $date
      *
@@ -320,7 +359,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.period');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format    = (string)trans('config.month_and_day');
@@ -375,7 +414,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
 
@@ -421,7 +460,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.single');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format    = (string)trans('config.month_and_day');
@@ -463,7 +502,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             Log::debug('Return chart.account.account-balance-chart from cache.');
 
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
 

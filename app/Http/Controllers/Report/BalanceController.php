@@ -47,7 +47,7 @@ class BalanceController extends Controller
         $cache->addProperty('balance-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balance = $helper->getBalanceReport($accounts, $start, $end);

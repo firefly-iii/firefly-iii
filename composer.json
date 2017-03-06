@@ -48,6 +48,10 @@
   "require": {
     "php": ">=7.0.0",
     "ext-intl": "*",
+    "ext-bcmath": "*",
+    "ext-mbstring": "*",
+    "ext-curl": "*",
+    "ext-zip": "*",
     "laravel/framework": "5.4.*",
     "davejamesmiller/laravel-breadcrumbs": "3.*",
     "watson/validating": "3.*",
@@ -88,7 +92,7 @@
       "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "post-create-project-cmd": [
-      "php artisan key:generate"
+      "php artisan key:generate --force"
     ],
     "post-install-cmd": [
       "Illuminate\\Foundation\\ComposerScripts::postInstall",

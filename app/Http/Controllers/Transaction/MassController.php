@@ -130,8 +130,8 @@ class MassController extends Controller
          * @var TransactionJournal $journal
          */
         foreach ($journals as $index => $journal) {
-            $sources      = TransactionJournal::sourceAccountList($journal);
-            $destinations = TransactionJournal::destinationAccountList($journal);
+            $sources      = $journal->sourceAccountList($journal);
+            $destinations = $journal->destinationAccountList($journal);
             if ($sources->count() > 1) {
                 $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
@@ -144,7 +144,7 @@ class MassController extends Controller
             $filtered->push($journal);
         }
 
-        if (count($messages)) {
+        if (count($messages) > 0) {
             Session::flash('info', $messages);
         }
 
@@ -156,9 +156,9 @@ class MassController extends Controller
         // set some values to be used in the edit routine:
         $filtered->each(
             function (TransactionJournal $journal) {
-                $journal->amount            = TransactionJournal::amountPositive($journal);
-                $sources                    = TransactionJournal::sourceAccountList($journal);
-                $destinations               = TransactionJournal::destinationAccountList($journal);
+                $journal->amount            = $journal->amountPositive();
+                $sources                    = $journal->sourceAccountList();
+                $destinations               = $journal->destinationAccountList();
                 $journal->transaction_count = $journal->transactions()->count();
                 if (!is_null($sources->first())) {
                     $journal->source_account_id   = $sources->first()->id;
@@ -195,7 +195,7 @@ class MassController extends Controller
                 $journal = $repository->find(intval($journalId));
                 if ($journal) {
                     // get optional fields:
-                    $what              = strtolower(TransactionJournal::transactionTypeStr($journal));
+                    $what              = strtolower($journal->transactionTypeStr());
                     $sourceAccountId   = $request->get('source_account_id')[$journal->id] ??  0;
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
                     $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;

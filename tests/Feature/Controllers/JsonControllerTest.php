@@ -11,8 +11,26 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use Amount;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class JsonControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class JsonControllerTest extends TestCase
 {
 
@@ -21,6 +39,10 @@ class JsonControllerTest extends TestCase
      */
     public function testAction()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('json.action'));
         $response->assertStatus(200);
@@ -31,9 +53,16 @@ class JsonControllerTest extends TestCase
      */
     public function testBoxBillsPaid()
     {
+        // mock stuff
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $billRepos->shouldReceive('getBillsUnpaidInRange')->andReturn('100');
+
         $this->be($this->user());
         $response = $this->get(route('json.box.paid'));
         $response->assertStatus(200);
+        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'bills-unpaid']);
     }
 
     /**
@@ -41,9 +70,17 @@ class JsonControllerTest extends TestCase
      */
     public function testBoxBillsUnpaid()
     {
+        // mock stuff
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $billRepos->shouldReceive('getBillsPaidInRange')->andReturn('-100');
+
+
         $this->be($this->user());
         $response = $this->get(route('json.box.unpaid'));
         $response->assertStatus(200);
+        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'bills-paid']);
     }
 
     /**
@@ -51,9 +88,21 @@ class JsonControllerTest extends TestCase
      */
     public function testBoxIn()
     {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH])])->once()->andReturn(
+            new Collection
+        );
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET])])->once()->andReturn(new Collection);
+        $tasker->shouldReceive('amountInInPeriod')->andReturn('100');
+
         $this->be($this->user());
         $response = $this->get(route('json.box.in'));
         $response->assertStatus(200);
+        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'in']);
     }
 
     /**
@@ -61,9 +110,21 @@ class JsonControllerTest extends TestCase
      */
     public function testBoxOut()
     {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH])])->once()->andReturn(
+            new Collection
+        );
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET])])->once()->andReturn(new Collection);
+        $tasker->shouldReceive('amountOutInPeriod')->andReturn('100');
+
         $this->be($this->user());
         $response = $this->get(route('json.box.out'));
         $response->assertStatus(200);
+        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'out']);
     }
 
     /**
@@ -71,9 +132,16 @@ class JsonControllerTest extends TestCase
      */
     public function testCategories()
     {
+        // mock stuff
+        $category      = factory(Category::class)->make();
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $this->be($this->user());
         $response = $this->get(route('json.categories'));
         $response->assertStatus(200);
+        $response->assertExactJson([$category->name]);
     }
 
     /**
@@ -81,9 +149,14 @@ class JsonControllerTest extends TestCase
      */
     public function testEndTour()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->post(route('json.end-tour'));
         $response->assertStatus(200);
+        $response->assertExactJson(['true']);
     }
 
     /**
@@ -91,9 +164,19 @@ class JsonControllerTest extends TestCase
      */
     public function testExpenseAccounts()
     {
+        // mock stuff
+        $account      = factory(Category::class)->make();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->once()->andReturn(
+            new Collection([$account])
+        );
+
         $this->be($this->user());
         $response = $this->get(route('json.expense-accounts'));
         $response->assertStatus(200);
+        $response->assertExactJson([$account->name]);
     }
 
     /**
@@ -101,9 +184,19 @@ class JsonControllerTest extends TestCase
      */
     public function testRevenueAccounts()
     {
+        // mock stuff
+        $account      = factory(Category::class)->make();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn(
+            new Collection([$account])
+        );
+
         $this->be($this->user());
         $response = $this->get(route('json.revenue-accounts'));
         $response->assertStatus(200);
+        $response->assertExactJson([$account->name]);
     }
 
     /**
@@ -111,9 +204,17 @@ class JsonControllerTest extends TestCase
      */
     public function testTags()
     {
+        // mock stuff
+        $tag          = factory(Tag::class)->make();
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]))->once();
+
         $this->be($this->user());
         $response = $this->get(route('json.tags'));
         $response->assertStatus(200);
+        $response->assertExactJson([$tag->tag]);
     }
 
     /**
@@ -121,6 +222,10 @@ class JsonControllerTest extends TestCase
      */
     public function testTour()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('json.tour'));
         $response->assertStatus(200);
@@ -131,9 +236,19 @@ class JsonControllerTest extends TestCase
      */
     public function testTransactionJournals()
     {
+        // mock stuff
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
         $this->be($this->user());
         $response = $this->get(route('json.transaction-journals', ['deposit']));
         $response->assertStatus(200);
+        $response->assertExactJson([]);
     }
 
     /**
@@ -141,6 +256,10 @@ class JsonControllerTest extends TestCase
      */
     public function testTrigger()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('json.trigger'));
         $response->assertStatus(200);

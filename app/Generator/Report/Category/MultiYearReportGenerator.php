@@ -17,7 +17,7 @@ namespace FireflyIII\Generator\Report\Category;
 /**
  * Class MultiYearReportGenerator
  *
- * @package FireflyIII\Generator\Report\Audit
+ * @package FireflyIII\Generator\Report\Category
  */
 class MultiYearReportGenerator extends MonthReportGenerator
 {

@@ -11,9 +11,16 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Tests\TestCase;
 
+/**
+ * Class ProfileControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class ProfileControllerTest extends TestCase
 {
 
@@ -22,6 +29,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testChangePassword()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('profile.change-password'));
         $response->assertStatus(200);
@@ -33,6 +44,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testDeleteAccount()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('profile.delete-account'));
         $response->assertStatus(200);
@@ -45,6 +60,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testIndex()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('profile.index'));
         $response->assertStatus(200);
@@ -56,6 +75,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangePassword()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
 
@@ -75,6 +97,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostDeleteAccount()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('destroy');
         $data = [

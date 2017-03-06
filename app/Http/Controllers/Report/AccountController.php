@@ -44,7 +44,7 @@ class AccountController extends Controller
         $cache->addProperty('account-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var AccountTaskerInterface $accountTasker */

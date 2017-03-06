@@ -15,6 +15,11 @@ use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class SearchControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class SearchControllerTest extends TestCase
 {
 

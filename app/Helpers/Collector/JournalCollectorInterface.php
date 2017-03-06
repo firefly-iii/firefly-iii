@@ -142,6 +142,13 @@ interface JournalCollectorInterface
     public function setTag(Tag $tag): JournalCollectorInterface;
 
     /**
+     * @param Collection $tags
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setTags(Collection $tags): JournalCollectorInterface;
+
+    /**
      * @param array $types
      *
      * @return JournalCollectorInterface

@@ -310,7 +310,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'getAmount', function (TransactionJournal $journal): string {
-            return TransactionJournal::amount($journal);
+            return $journal->amount();
         }
         );
     }

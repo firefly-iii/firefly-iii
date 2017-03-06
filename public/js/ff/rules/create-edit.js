@@ -300,7 +300,7 @@ function testRuleTriggers() {
         }
 
         // Show the modal dialog
-        $("#testTriggerModal").modal();
+        modal.modal();
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
     });

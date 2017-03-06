@@ -204,9 +204,11 @@ function stackedColumnChart(URI, container) {
     "use strict";
 
     var colorData = true;
-    var options = defaultChartOptions;
+    var options = $.extend(true, {}, defaultChartOptions);
+
     options.stacked = true;
     options.scales.xAxes[0].stacked = true;
+    options.scales.yAxes[0].stacked = true;
 
     var chartType = 'bar';
 

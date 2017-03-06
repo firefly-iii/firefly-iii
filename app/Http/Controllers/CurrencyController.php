@@ -50,6 +50,8 @@ class CurrencyController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
     public function create(Request $request)
@@ -90,6 +92,7 @@ class CurrencyController extends Controller
 
 
     /**
+     * @param Request                     $request
      * @param CurrencyRepositoryInterface $repository
      * @param TransactionCurrency         $currency
      *
@@ -115,6 +118,7 @@ class CurrencyController extends Controller
     }
 
     /**
+     * @param Request                     $request
      * @param CurrencyRepositoryInterface $repository
      * @param TransactionCurrency         $currency
      *

@@ -155,7 +155,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-in');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
         $assets   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
@@ -183,7 +183,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-out');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
@@ -329,7 +329,9 @@ class JsonController extends Controller
     }
 
     /**
+     * @param JournalRepositoryInterface $repository
      *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function transactionTypes(JournalRepositoryInterface $repository)
     {

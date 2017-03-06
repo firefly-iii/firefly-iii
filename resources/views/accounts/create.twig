@@ -19,7 +19,7 @@
                         {{ ExpandedForm.text('name') }}
                         {% if what == 'asset' %}
                             {# Not really mandatory but OK #}
-                            {{ ExpandedForm.select('currency_id', currencies) }}
+                            {{ ExpandedForm.select('currency_id', currencies, null, {helpText:'account_default_currency'|_}) }}
                         {% endif %}
                     </div>
                 </div>

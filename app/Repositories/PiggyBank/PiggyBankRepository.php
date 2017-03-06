@@ -40,6 +40,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
     {
+        /** @var PiggyBankEvent $event */
         $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
 
         return $event;
@@ -173,7 +174,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function store(array $data): PiggyBank
     {
         $data['order'] = $this->getMaxOrder() + 1;
-        $piggyBank     = PiggyBank::create($data);
+        /** @var PiggyBank $piggyBank */
+        $piggyBank = PiggyBank::create($data);
 
         $this->updateNote($piggyBank, $data['note']);
 

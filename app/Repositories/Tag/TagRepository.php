@@ -69,6 +69,14 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->user->tags()->count();
+    }
+
+    /**
      * @param Tag $tag
      *
      * @return bool
@@ -161,6 +169,16 @@ class TagRepository implements TagRepositoryInterface
         );
 
         return $tags;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Collection
+     */
+    public function getByType(string $type): Collection
+    {
+        return $this->user->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
     }
 
     /**
@@ -357,8 +375,8 @@ class TagRepository implements TagRepositoryInterface
      */
     private function matchAll(TransactionJournal $journal, Tag $tag): bool
     {
-        $journalSources      = join(',', array_unique(TransactionJournal::sourceAccountList($journal)->pluck('id')->toArray()));
-        $journalDestinations = join(',', array_unique(TransactionJournal::destinationAccountList($journal)->pluck('id')->toArray()));
+        $journalSources      = join(',', array_unique($journal->sourceAccountList()->pluck('id')->toArray()));
+        $journalDestinations = join(',', array_unique($journal->destinationAccountList()->pluck('id')->toArray()));
         $match               = true;
         $journals            = $tag->transactionJournals()->get(['transaction_journals.*']);
 
@@ -369,8 +387,8 @@ class TagRepository implements TagRepositoryInterface
             Log::debug(sprintf('Now existingcomparing new journal #%d to existing journal #%d', $journal->id, $existing->id));
             // $checkAccount is the source_account for a withdrawal
             // $checkAccount is the destination_account for a deposit
-            $existingSources      = join(',', array_unique(TransactionJournal::sourceAccountList($existing)->pluck('id')->toArray()));
-            $existingDestinations = join(',', array_unique(TransactionJournal::destinationAccountList($existing)->pluck('id')->toArray()));
+            $existingSources      = join(',', array_unique($existing->sourceAccountList()->pluck('id')->toArray()));
+            $existingDestinations = join(',', array_unique($existing->destinationAccountList()->pluck('id')->toArray()));
 
             if ($existing->isWithdrawal() && $existingSources !== $journalDestinations) {
                 /*

@@ -431,6 +431,20 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $tags
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setTags(Collection $tags): JournalCollectorInterface
+    {
+        $this->joinTagTables();
+        $tagIds = $tags->pluck('id')->toArray();
+        $this->query->whereIn('tag_transaction_journal.tag_id', $tagIds);
+
+        return $this;
+    }
+
+    /**
      * @param array $types
      *
      * @return JournalCollectorInterface

@@ -80,7 +80,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;
@@ -133,7 +133,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id);
 
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries          = [];
@@ -170,7 +170,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
@@ -227,7 +227,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $periods  = Navigation::listOfPeriods($start, $end);
         $entries  = $this->repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
@@ -268,7 +268,7 @@ class BudgetController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // the expenses:
@@ -386,9 +386,14 @@ class BudgetController extends Controller
                         ]
                     );
             }
+            /*
+             * amount: amount of budget limit
+             * left: amount of budget limit min spent, or 0 when < 0.
+             * spent: spent, or amount of budget limit when > amount
+             */
             $amount        = $budgetLimit->amount;
             $left          = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent         = $expenses;
+            $spent         = bccomp($expenses, $amount) === 1 ? $expenses : bcmul($amount, '-1');
             $overspent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
             $return[$name] = [
                 'left'      => $left,

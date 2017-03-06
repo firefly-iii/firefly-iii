@@ -12,7 +12,13 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers;
 
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -23,6 +29,10 @@ class BillControllerTest extends TestCase
      */
     public function testCreate()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('bills.create'));
         $response->assertStatus(200);
@@ -35,6 +45,10 @@ class BillControllerTest extends TestCase
      */
     public function testDelete()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('bills.delete', [1]));
         $response->assertStatus(200);
@@ -47,8 +61,11 @@ class BillControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $repository = $this->mock(BillRepositoryInterface::class);
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->session(['bills.delete.url' => 'http://localhost']);
         $this->be($this->user());
@@ -62,6 +79,10 @@ class BillControllerTest extends TestCase
      */
     public function testEdit()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('bills.edit', [1]));
         $response->assertStatus(200);
@@ -75,6 +96,12 @@ class BillControllerTest extends TestCase
      */
     public function testIndex()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
+        $repository->shouldReceive('getBills')->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('bills.index'));
         $response->assertStatus(200);
@@ -87,8 +114,12 @@ class BillControllerTest extends TestCase
      */
     public function testRescan()
     {
-        $repository = $this->mock(BillRepositoryInterface::class);
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
         $repository->shouldReceive('getPossiblyRelatedJournals')->once()->andReturn(new Collection);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('bills.rescan', [1]));
         $response->assertStatus(302);
@@ -100,6 +131,23 @@ class BillControllerTest extends TestCase
      */
     public function testShow()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
+        $repository->shouldReceive('getYearAverage')->andReturn('0');
+        $repository->shouldReceive('getOverallAverage')->andReturn('0');
+        $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setBills')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
         $this->be($this->user());
         $response = $this->get(route('bills.show', [1]));
         $response->assertStatus(200);
@@ -112,6 +160,12 @@ class BillControllerTest extends TestCase
      */
     public function testStore()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('store')->andReturn(new Bill);
+
         $data = [
             'name'                          => 'New Bill ' . rand(1000, 9999),
             'match'                         => 'some words',
@@ -128,13 +182,6 @@ class BillControllerTest extends TestCase
         $response = $this->post(route('bills.store'), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-
-        // list must be updated
-        $this->be($this->user());
-        $response = $this->get(route('bills.index'));
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee($data['name']);
     }
 
     /**
@@ -142,6 +189,12 @@ class BillControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('update')->andReturn(new Bill);
+
         $data = [
             'name'                          => 'Updated Bill ' . rand(1000, 9999),
             'match'                         => 'some more words',
@@ -159,12 +212,6 @@ class BillControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
 
-        // list must be updated
-        $this->be($this->user());
-        $response = $this->get(route('bills.index'));
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee($data['name']);
     }
 
 }

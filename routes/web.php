@@ -88,8 +88,7 @@ Route::group(
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
 
     Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
-    Route::get('show/{account}/all', ['uses' => 'AccountController@showAll', 'as' => 'show.all']);
-    Route::get('show/{account}/{date}', ['uses' => 'AccountController@showByDate', 'as' => 'show.date']);
+    Route::get('show/{account}/{date}', ['uses' => 'AccountController@show', 'as' => 'show.date']);
 
     Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
     Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
@@ -222,11 +221,13 @@ Route::group(
     Route::get('single/{account}', ['uses' => 'AccountController@single', 'as' => 'single']);
     Route::get('period/{account}/{date}', ['uses' => 'AccountController@period', 'as' => 'period']);
 
+    Route::get('income-category/{account}/all/all', ['uses' => 'AccountController@incomeCategoryAll', 'as' => 'income-category-all']);
+    Route::get('expense-category/{account}/all/all', ['uses' => 'AccountController@expenseCategoryAll', 'as' => 'expense-category-all']);
+    Route::get('expense-budget/{account}/all/all', ['uses' => 'AccountController@expenseBudgetAll', 'as' => 'expense-budget-all']);
 
     Route::get('income-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeCategory', 'as' => 'income-category']);
     Route::get('expense-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseCategory', 'as' => 'expense-category']);
     Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget']);
-
 }
 );
 
@@ -311,6 +312,49 @@ Route::group(
 );
 
 /**
+ * Chart\Tag Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/tag', 'as' => 'chart.tag.'], function () {
+
+    // these charts are used in reports (tag reports):
+    Route::get(
+        'tag/income/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@tagIncome', 'as' => 'tag-income']
+    );
+    Route::get(
+        'tag/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@tagExpense', 'as' => 'tag-expense']
+    );
+    Route::get(
+        'account/income/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@accountIncome', 'as' => 'account-income']
+    );
+    Route::get(
+        'account/expense/{accountList}/{tagList}/{start_date}/{end_date}/{others}',
+        ['uses' => 'TagReportController@accountExpense', 'as' => 'account-expense']
+    );
+
+    // new routes
+    Route::get(
+        'budget/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+        ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']
+    );
+    Route::get('category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+        ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
+
+    );
+
+
+    Route::get(
+        'operations/{accountList}/{tagList}/{start_date}/{end_date}',
+        ['uses' => 'TagReportController@mainChart', 'as' => 'main']
+    );
+
+}
+);
+
+/**
  * Chart\PiggyBank Controller
  */
 Route::group(
@@ -370,6 +414,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
     Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
+    Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
 }
 );
 
@@ -601,7 +646,9 @@ Route::group(
     Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
-    Route::get('show/{tag}/{date?}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('show/{tag}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
+    Route::get('show/{tag}/{date}', ['uses' => 'TagController@showByDate', 'as' => 'show.date']);
+    Route::get('show/{tag}', ['uses' => 'TagController@show', 'as' => 'show']);
 
     Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
     Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);

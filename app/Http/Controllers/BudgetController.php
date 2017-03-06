@@ -105,7 +105,8 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
      * @return View
      */
@@ -214,6 +215,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param BudgetIncomeRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postUpdateIncome(BudgetIncomeRequest $request)
@@ -420,7 +423,7 @@ class BudgetController extends Controller
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var AccountRepositoryInterface $accountRepository */

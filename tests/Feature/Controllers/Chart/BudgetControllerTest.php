@@ -15,6 +15,7 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Tests\TestCase;
+
 class BudgetControllerTest extends TestCase
 {
 
@@ -51,7 +52,7 @@ class BudgetControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('chart.budget.budget-limit', [1,1]));
+        $response = $this->get(route('chart.budget.budget-limit', [1, 1]));
         $response->assertStatus(200);
     }
 
@@ -75,7 +76,7 @@ class BudgetControllerTest extends TestCase
     public function testPeriod()
     {
         $this->be($this->user());
-        $response = $this->get(route('chart.budget.period', [1,'1','20120101','20120131']));
+        $response = $this->get(route('chart.budget.period', [1, '1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
 
@@ -85,7 +86,7 @@ class BudgetControllerTest extends TestCase
     public function testPeriodNoBudget()
     {
         $this->be($this->user());
-        $response = $this->get(route('chart.budget.period.no-budget', ['1','20120101','20120131']));
+        $response = $this->get(route('chart.budget.period.no-budget', ['1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
 

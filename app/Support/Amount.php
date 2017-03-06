@@ -187,7 +187,7 @@ class Amount
     {
         $currency = $journal->transactionCurrency;
 
-        return $this->formatAnything($currency, TransactionJournal::amount($journal), $coloured);
+        return $this->formatAnything($currency, $journal->amount(), $coloured);
     }
 
     /**
@@ -220,7 +220,7 @@ class Amount
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         } else {
             $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
@@ -245,7 +245,7 @@ class Amount
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencySymbol');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         } else {
             $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
             $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
@@ -264,7 +264,7 @@ class Amount
         $cache = new CacheProperties;
         $cache->addProperty('getDefaultCurrency');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();

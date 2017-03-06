@@ -118,9 +118,13 @@ class Preferences
      */
     public function lastActivity(): string
     {
-        $preference = $this->get('lastActivity', microtime())->data;
+        $lastActivity = microtime();
+        $preference   = $this->get('lastActivity', microtime());
+        if (!is_null($preference)) {
+            $lastActivity = $preference->data;
+        }
 
-        return md5($preference);
+        return md5($lastActivity);
     }
 
     /**

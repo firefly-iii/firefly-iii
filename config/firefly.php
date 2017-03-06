@@ -23,15 +23,10 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'          => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'chart'               => 'chartjs',
-    'version'             => '4.3.6',
-    'csv_import_enabled'  => true,
+    'version'             => '4.3.7',
     'maxUploadSize'       => 5242880,
     'allowedMimes'        => ['image/png', 'image/jpeg', 'application/pdf'],
-    'resend_confirmation' => 3600,
-    'confirmation_age'    => 14400, // four hours
     'list_length'         => 10,
-
     'export_formats'           => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],

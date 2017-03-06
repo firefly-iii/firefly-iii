@@ -10,8 +10,12 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ account.name }}
-                        ({{ trans('firefly.from_to', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }})</h3>
-
+                        {% if start and end %}
+                            ({{ trans('firefly.from_to_breadcrumb', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }})
+                        {% else %}
+                            ({{ trans('firefly.everything')|lower }})
+                        {% endif %}
+                    </h3>
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -67,26 +71,26 @@
             </div>
         </div>
     </div>
-{% if entries %}
-    <div class="row">
-        <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-            <p class="small text-center"><a href="{{ route('accounts.show.all',[account.id]) }}">{{ 'showEverything'|_ }}</a></p>
+    {% if periods.count > 0 %}
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('accounts.show.date',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
     <div class="row">
-        <div class="{% if entries %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="{% if periods.count > 0 %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     {% include 'list.journals-tasker' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true} %}
-                    {% if entries %}
+                    {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('accounts.show.all', [account.id]) }}">
+                            <a href="{{ route('accounts.show.date', [account.id, 'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
@@ -101,10 +105,9 @@
                 </div>
             </div>
         </div>
-        {% if entries %}
+        {% if periods.count > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-
-                {% for entry in entries %}
+                {% for entry in periods %}
                     {% if (entry[2] != 0 or entry[3] != 0) or (accountType == 'Asset account') %}
                         <div class="box {% if entry[4] == start %}box-solid box-primary{% endif %}">
                             <div class="box-header with-border">
@@ -130,7 +133,7 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-                <p class="small text-center"><a href="{{ route('accounts.show.all',[account.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('accounts.show.date',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         {% endif %}
     </div>
@@ -144,9 +147,15 @@
         var accountID = {{ account.id }};
         // uri's for charts:
         var chartUri = '{{ chartUri }}';
-        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        {% if start and end %}
+            var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+            var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+            var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        {% else %}
+            var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, 'all', 'all']) }}';
+            var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, 'all', 'all']) }}';
+            var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, 'all', 'all']) }}';
+        {% endif %}
 
     </script>
 

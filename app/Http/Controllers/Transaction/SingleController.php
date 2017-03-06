@@ -83,8 +83,8 @@ class SingleController extends Controller
 
     public function cloneTransaction(TransactionJournal $journal)
     {
-        $source       = TransactionJournal::sourceAccountList($journal)->first();
-        $destination  = TransactionJournal::destinationAccountList($journal)->first();
+        $source       = $journal->sourceAccountList()->first();
+        $destination  = $journal->destinationAccountList()->first();
         $budget       = $journal->budgets()->first();
         $budgetId     = is_null($budget) ? 0 : $budget->id;
         $category     = $journal->categories()->first();
@@ -98,7 +98,7 @@ class SingleController extends Controller
             'source_account_name'      => $source->name,
             'destination_account_id'   => $destination->id,
             'destination_account_name' => $destination->name,
-            'amount'                   => TransactionJournal::amountPositive($journal),
+            'amount'                   => $journal->amountPositive(),
             'date'                     => $journal->date->format('Y-m-d'),
             'budget_id'                => $budgetId,
             'category'                 => $categoryName,
@@ -162,9 +162,12 @@ class SingleController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
+        // Covered by another controller's tests
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
@@ -187,10 +190,12 @@ class SingleController extends Controller
      */
     public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($transactionJournal)) {
             return $this->redirectToAccount($transactionJournal);
         }
-        $type = TransactionJournal::transactionTypeStr($transactionJournal);
+        // @codeCoverageIgnoreEnd
+        $type = $transactionJournal->transactionTypeStr();
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
         $repository->delete($transactionJournal);
@@ -207,9 +212,11 @@ class SingleController extends Controller
      */
     public function edit(TransactionJournal $journal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $count = $journal->transactions()->count();
 
@@ -217,7 +224,7 @@ class SingleController extends Controller
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
-        $what          = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $what          = strtolower($journal->transactionTypeStr());
         $assetAccounts = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
         $budgetList    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
 
@@ -226,27 +233,27 @@ class SingleController extends Controller
 
 
         // journal related code
-        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
-        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $sourceAccounts      = $journal->sourceAccountList();
+        $destinationAccounts = $journal->destinationAccountList();
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $preFilled           = [
-            'date'                     => TransactionJournal::dateAsString($journal),
-            'interest_date'            => TransactionJournal::dateAsString($journal, 'interest_date'),
-            'book_date'                => TransactionJournal::dateAsString($journal, 'book_date'),
-            'process_date'             => TransactionJournal::dateAsString($journal, 'process_date'),
-            'category'                 => TransactionJournal::categoryAsString($journal),
-            'budget_id'                => TransactionJournal::budgetId($journal),
+            'date'                     => $journal->dateAsString(),
+            'interest_date'            => $journal->dateAsString( 'interest_date'),
+            'book_date'                => $journal->dateAsString('book_date'),
+            'process_date'             => $journal->dateAsString('process_date'),
+            'category'                 => $journal->categoryAsString(),
+            'budget_id'                => $journal->budgetId(),
             'tags'                     => join(',', $journal->tags->pluck('tag')->toArray()),
             'source_account_id'        => $sourceAccounts->first()->id,
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
-            'amount'                   => TransactionJournal::amountPositive($journal),
+            'amount'                   => $journal->amountPositive(),
 
             // new custom fields:
-            'due_date'                 => TransactionJournal::dateAsString($journal, 'due_date'),
-            'payment_date'             => TransactionJournal::dateAsString($journal, 'payment_date'),
-            'invoice_date'             => TransactionJournal::dateAsString($journal, 'invoice_date'),
+            'due_date'                 => $journal->dateAsString('due_date'),
+            'payment_date'             => $journal->dateAsString('payment_date'),
+            'invoice_date'             => $journal->dateAsString('invoice_date'),
             'interal_reference'        => $journal->getMeta('internal_reference'),
             'notes'                    => $journal->getMeta('notes'),
         ];
@@ -313,22 +320,20 @@ class SingleController extends Controller
         Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
         Preferences::mark();
 
+        // @codeCoverageIgnoreStart
         if ($createAnother === true) {
-            // set value so create routine will not overwrite URL:
             Session::put('transactions.create.fromStore', true);
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
 
         if ($doSplit === true) {
-            // redirect to edit screen:
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
+        // @codeCoverageIgnoreEnd
 
-        // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.create.uri'));
-
     }
 
     /**
@@ -340,9 +345,11 @@ class SingleController extends Controller
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
+        // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        // @codeCoverageIgnoreEnd
 
         $data    = $request->getJournalData();
         $journal = $repository->update($journal, $data);
@@ -350,31 +357,29 @@ class SingleController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
-        // flash errors
+        // @codeCoverageIgnoreStart
         if (count($this->attachments->getErrors()->get('attachments')) > 0) {
             Session::flash('error', $this->attachments->getErrors()->get('attachments'));
         }
-        // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
+        // @codeCoverageIgnoreEnd
 
         event(new UpdatedTransactionJournal($journal));
         // update, get events by date and sort DESC
 
-        $type = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $type = strtolower($journal->transactionTypeStr());
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['description'])])));
         Preferences::mark();
 
-        // if wishes to split:
-
-
+        // @codeCoverageIgnoreStart
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit.fromUpdate', true);
 
             return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
+        // @codeCoverageIgnoreEnd
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));

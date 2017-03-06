@@ -29,10 +29,10 @@ $(function () {
             {
                 locale: {
                     format: 'YYYY-MM-DD',
-                    firstDay: 1,
+                    firstDay: 1
                 },
                 minDate: minDate,
-                drops: 'up',
+                drops: 'up'
             }
         );
 

@@ -12,7 +12,11 @@
     {% for id, info in report %}
         <tr>
             <td>
-                <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                {% if id != 0 %}
+                    <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                {% else %}
+                    <a class="btn btn-default btn-xs" href="{{ route('budgets.no-budget') }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                {% endif %}
             </td>
             <td data-value="{{ info.name }}">
                 <a title="{{ info.name }}" href="#" data-budget="{{ id }}" class="budget-chart-activate">{{ info.name }}</a>

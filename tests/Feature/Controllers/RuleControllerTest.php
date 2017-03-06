@@ -12,17 +12,33 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class RuleControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class RuleControllerTest extends TestCase
 {
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::create
+     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
      */
     public function testCreate()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('rules.create', [1]));
         $response->assertStatus(200);
@@ -34,6 +50,10 @@ class RuleControllerTest extends TestCase
      */
     public function testDelete()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('rules.delete', [1]));
         $response->assertStatus(200);
@@ -45,7 +65,10 @@ class RuleControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $repository = $this->mock(RuleRepositoryInterface::class);
+        // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
         $this->session(['rules.delete.url' => 'http://localhost']);
@@ -61,6 +84,12 @@ class RuleControllerTest extends TestCase
      */
     public function testDown()
     {
+        // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('moveDown');
+
         $this->be($this->user());
         $response = $this->get(route('rules.down', [1]));
         $response->assertStatus(302);
@@ -72,6 +101,12 @@ class RuleControllerTest extends TestCase
      */
     public function testEdit()
     {
+        // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
+
         $this->be($this->user());
         $response = $this->get(route('rules.edit', [1]));
         $response->assertStatus(200);
@@ -84,6 +119,20 @@ class RuleControllerTest extends TestCase
      */
     public function testIndex()
     {
+        // mock stuff
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $ruleGroupRepos->shouldReceive('count')->andReturn(0);
+        $ruleGroupRepos->shouldReceive('store');
+        $repository->shouldReceive('getFirstRuleGroup')->andReturn(new RuleGroup);
+        $ruleGroupRepos->shouldReceive('getRuleGroupsWithRules')->andReturn(new Collection);
+
+        $repository->shouldReceive('count')->andReturn(0);
+        $repository->shouldReceive('store');
+
+
         $this->be($this->user());
         $response = $this->get(route('rules.index'));
         $response->assertStatus(200);
@@ -95,6 +144,10 @@ class RuleControllerTest extends TestCase
      */
     public function testReorderRuleActions()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $data = [
             'triggers' => [1, 2, 3],
         ];
@@ -112,6 +165,10 @@ class RuleControllerTest extends TestCase
      */
     public function testReorderRuleTriggers()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $data = [
             'triggers' => [1, 2, 3],
         ];
@@ -129,6 +186,12 @@ class RuleControllerTest extends TestCase
      */
     public function testStore()
     {
+        // mock stuff
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+
         $this->session(['rules.create.url' => 'http://localhost']);
         $data = [
             'rule_group_id'      => 1,
@@ -166,6 +229,10 @@ class RuleControllerTest extends TestCase
      */
     public function testTestTriggers()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('rules.test-triggers', [1]));
         $response->assertStatus(200);
@@ -176,6 +243,12 @@ class RuleControllerTest extends TestCase
      */
     public function testUp()
     {
+        // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('moveUp');
+
         $this->be($this->user());
         $response = $this->get(route('rules.up', [1]));
         $response->assertStatus(302);
@@ -187,6 +260,12 @@ class RuleControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        // mock stuff
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+
         $data = [
             'rule_group_id'      => 1,
             'title'              => 'Your first default rule',

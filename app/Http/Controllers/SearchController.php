@@ -56,7 +56,7 @@ class SearchController extends Controller
         $limit        = 20;
 
         // ui stuff:
-        $subTitle     = '';
+        $subTitle = '';
 
         // query stuff
         $query        = null;

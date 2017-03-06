@@ -70,6 +70,14 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        {% if piggyBank.targetdate %}
+                        <tr>
+                            <td>{{ 'suggested_amount'|_ }}</td>
+                            <td>
+                                {{ suggestedMonthlyAmount(piggyBank)|formatAmount }}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </table>
                 </div>
             </div>

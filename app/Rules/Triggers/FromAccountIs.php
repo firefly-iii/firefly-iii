@@ -61,7 +61,7 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
         $name = '';
 
         /** @var Account $account */
-        foreach (TransactionJournal::sourceAccountList($journal) as $account) {
+        foreach ($journal->sourceAccountList() as $account) {
             $name .= strtolower($account->name);
         }
 

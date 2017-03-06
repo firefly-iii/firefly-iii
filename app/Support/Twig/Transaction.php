@@ -14,7 +14,6 @@ declare(strict_types = 1);
 namespace FireflyIII\Support\Twig;
 
 use Amount;
-use Crypt;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
@@ -205,7 +204,7 @@ class Transaction extends Twig_Extension
 
                 $name = $transaction->opposing_account_name;
                 $id   = intval($transaction->opposing_account_id);
-                $type = intval($transaction->opposing_account_type);
+                $type = $transaction->opposing_account_type;
             }
 
             // Find the opposing account and use that one:
@@ -279,7 +278,7 @@ class Transaction extends Twig_Extension
 
                 $name = $transaction->opposing_account_name;
                 $id   = intval($transaction->opposing_account_id);
-                $type = intval($transaction->opposing_account_type);
+                $type = $transaction->opposing_account_type;
             }
             // Find the opposing account and use that one:
             if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
