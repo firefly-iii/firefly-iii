@@ -191,10 +191,11 @@ class BudgetController extends Controller
 
     /**
      * @param Request $request
+     * @param string  $moment
      *
      * @return View
      */
-    public function noBudget(Request $request, string $moment = '')
+    public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = '')
     {
         // default values:
         $range   = Preferences::get('viewRange', '1M')->data;
@@ -205,6 +206,9 @@ class BudgetController extends Controller
         // prep for "all" view.
         if ($moment === 'all') {
             $subTitle = trans('firefly.all_journals_without_budget');
+            $first    = $repository->first();
+            $start    = $first->date ?? new Carbon;
+            $end      = new Carbon;
         }
 
         // prep for "specific date" view.
