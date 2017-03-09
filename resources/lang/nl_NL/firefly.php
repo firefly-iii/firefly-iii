@@ -115,6 +115,7 @@ return [
     'multi_select_no_selection'                  => 'Niets geselecteerd',
     'multi_select_all_selected'                  => 'Alles geselecteerd',
     'multi_select_filter_placeholder'            => 'Vinden..',
+    'all_journals_without_budget'                => 'All transactions without a budget',
 
 
     // repeat frequencies:
