@@ -24,9 +24,12 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
+use Navigation;
 use Preferences;
 use Response;
 use View;
@@ -191,27 +194,66 @@ class BudgetController extends Controller
      *
      * @return View
      */
-    public function noBudget(Request $request)
+    public function noBudget(Request $request, string $moment = '')
     {
-        /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->endOfMonth());
+        // default values:
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $start   = null;
+        $end     = null;
+        $periods = new Collection;
+
+        // prep for "all" view.
+        if ($moment === 'all') {
+            $subTitle = trans('firefly.all_journals_without_budget');
+        }
+
+        // prep for "specific date" view.
+        if (strlen($moment) > 0 && $moment !== 'all') {
+            $start    = new Carbon($moment);
+            $end      = Navigation::endOfPeriod($start, $range);
+            $subTitle = trans(
+                'firefly.without_budget_between',
+                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+            $periods  = $this->noBudgetPeriodEntries();
+        }
+
+        // prep for current period
+        if (strlen($moment) === 0) {
+            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $periods  = $this->noBudgetPeriodEntries();
+            $subTitle = trans(
+                'firefly.without_budget_between',
+                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+        }
+
         $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
-        $subTitle = trans(
-            'firefly.without_budget_between',
-            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-        );
 
-        // collector
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/budgets/list/noBudget');
+        $count = 0;
+        $loop  = 0;
+        // grab journals, but be prepared to jump a period back to get the right ones:
+        Log::info('Now at no-budget loop start.');
+        while ($count === 0 && $loop < 3) {
+            $loop++;
+            Log::info('Count is zero, search for journals.');
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
+            $journals = $collector->getPaginatedJournals();
+            $journals->setPath('/budgets/list/no-budget');
+            $count = $journals->getCollection()->count();
+            if ($count === 0) {
+                $start->subDay();
+                $start = Navigation::startOfPeriod($start, $range);
+                $end   = Navigation::endOfPeriod($start, $range);
+                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
+            }
+        }
 
-        return view('budgets.no-budget', compact('journals', 'subTitle'));
+        return view('budgets.no-budget', compact('journals', 'subTitle', 'periods', 'start', 'end'));
     }
 
     /**
@@ -405,7 +447,6 @@ class BudgetController extends Controller
         return $return;
     }
 
-
     /**
      * @param Budget $budget
      * @param Carbon $start
@@ -440,6 +481,49 @@ class BudgetController extends Controller
         $cache->store($limits);
 
         return $set;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function noBudgetPeriodEntries(): Collection
+    {
+        $repository = app(JournalRepositoryInterface::class);
+        $first      = $repository->first();
+        $start      = $first->date ?? new Carbon;
+        $range      = Preferences::get('viewRange', '1M')->data;
+        $start      = Navigation::startOfPeriod($start, $range);
+        $end        = Navigation::endOfX(new Carbon, $range);
+        $entries    = new Collection;
+
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('no-budget-period-entries');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        Log::debug('Going to get period expenses and incomes.');
+        while ($end >= $start) {
+            $end        = Navigation::startOfPeriod($end, $range);
+            $currentEnd = Navigation::endOfPeriod($end, $range);
+
+            // count journals without budget in this period:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget();
+            $journals = $collector->getJournals()->count();
+            $dateStr  = $end->format('Y-m-d');
+            $dateName = Navigation::periodShow($end, $range);
+            $entries->push([$dateStr, $dateName, $journals, clone $end]);
+            $end = Navigation::subtractPeriod($end, $range, 1);
+        }
+        $cache->store($entries);
+
+        return $entries;
     }
 
 }
