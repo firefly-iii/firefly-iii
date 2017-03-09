@@ -14,13 +14,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -118,8 +118,13 @@ class MassController extends Controller
         $subTitle = trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $repository */
-        $repository  = app(AccountRepositoryInterface::class);
-        $accountList = ExpandedForm::makeSelectList($repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
+        $repository = app(AccountRepositoryInterface::class);
+        $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
+        // get budgets
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+        $budgets          = $budgetRepository->getBudgets();
 
         // skip transactions that have multiple destinations
         // or multiple sources:
@@ -177,7 +182,7 @@ class MassController extends Controller
 
         $journals = $filtered;
 
-        return view('transactions.mass.edit', compact('journals', 'subTitle', 'accountList'));
+        return view('transactions.mass.edit', compact('journals', 'subTitle', 'accounts', 'budgets'));
     }
 
     /**
@@ -200,7 +205,7 @@ class MassController extends Controller
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
                     $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;
                     $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
-                    $budgetId          = $journal->budgets->first() ? $journal->budgets->first()->id : 0;
+                    $budgetId          = $request->get('budget_id')[$journal->id] ??  0;
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();
 
@@ -214,12 +219,12 @@ class MassController extends Controller
                         'destination_account_id'   => intval($destAccountId),
                         'destination_account_name' => $destAccountName,
                         'amount'                   => round($request->get('amount')[$journal->id], 12),
-                        'currency_id'              => intval($request->get('amount_currency_id_amount_' . $journal->id)),
+                        'currency_id'              => $journal->transaction_currency_id,
                         'date'                     => new Carbon($request->get('date')[$journal->id]),
                         'interest_date'            => $journal->interest_date,
                         'book_date'                => $journal->book_date,
                         'process_date'             => $journal->process_date,
-                        'budget_id'                => $budgetId,
+                        'budget_id'                => intval($budgetId),
                         'category'                 => $category,
                         'tags'                     => $tags,
 
