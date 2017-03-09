@@ -115,6 +115,7 @@ return [
     'multi_select_no_selection'                  => 'None selected',
     'multi_select_all_selected'                  => 'All selected',
     'multi_select_filter_placeholder'            => 'Find..',
+    'all_journals_without_budget'                => 'All transactions without a budget',
 
 
     // repeat frequencies:
