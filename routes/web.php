@@ -87,8 +87,7 @@ Route::group(
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
 
-    Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
-    Route::get('show/{account}/{date}', ['uses' => 'AccountController@show', 'as' => 'show.date']);
+    Route::get('show/{account}/{moment?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
     Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
     Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);

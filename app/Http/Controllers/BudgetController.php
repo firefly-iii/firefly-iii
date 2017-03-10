@@ -215,10 +215,7 @@ class BudgetController extends Controller
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.without_budget_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
+            $subTitle = trans('firefly.without_budget_between', ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]);
             $periods  = $this->noBudgetPeriodEntries();
         }
 
@@ -257,7 +254,12 @@ class BudgetController extends Controller
             }
         }
 
-        return view('budgets.no-budget', compact('journals', 'subTitle', 'periods', 'start', 'end'));
+        // fix title:
+        if ((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) {
+            $subTitle = trans('firefly.without_budget_between', ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]);
+        }
+
+        return view('budgets.no-budget', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }
 
     /**
