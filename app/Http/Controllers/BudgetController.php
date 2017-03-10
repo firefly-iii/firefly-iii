@@ -260,7 +260,7 @@ class BudgetController extends Controller
         }
 
         // fix title:
-        if ((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) {
+        if (((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) && $count > 0) {
             $subTitle = trans(
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
