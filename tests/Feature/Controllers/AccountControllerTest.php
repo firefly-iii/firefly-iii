@@ -158,8 +158,8 @@ class AccountControllerTest extends TestCase
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
         $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date);
-        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
+        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection)->once();
 
         $transaction = factory(Transaction::class)->make();
         $collector   = $this->mock(JournalCollectorInterface::class);
@@ -190,7 +190,7 @@ class AccountControllerTest extends TestCase
         $transaction  = factory(Transaction::class)->make();
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -201,10 +201,6 @@ class AccountControllerTest extends TestCase
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
-
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
-        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -253,14 +249,14 @@ class AccountControllerTest extends TestCase
 
         $tasker     = $this->mock(AccountTaskerInterface::class);
         $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show.date', [1, '2016-01-01']));
+        $response = $this->get(route('accounts.show', [1, '2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -293,7 +289,7 @@ class AccountControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show.date', [1, '2016-01-01']));
+        $response = $this->get(route('accounts.show', [1, '2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');

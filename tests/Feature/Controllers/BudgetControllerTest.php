@@ -159,7 +159,9 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
@@ -190,8 +192,11 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
@@ -226,6 +231,8 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));

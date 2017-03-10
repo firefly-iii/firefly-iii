@@ -91,7 +91,7 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.delete', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-    $breadcrumbs->parent('accounts.show', $account);
+    $breadcrumbs->parent('accounts.show', $account, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('firefly.delete_account', ['name' => e($account->name)]), route('accounts.delete', [$account->id]));
 }
 );
@@ -99,7 +99,7 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.edit', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-    $breadcrumbs->parent('accounts.show', $account);
+    $breadcrumbs->parent('accounts.show', $account, '', new Carbon, new Carbon);
     $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
     $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));

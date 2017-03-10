@@ -22,6 +22,7 @@ use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -215,7 +216,10 @@ class BudgetController extends Controller
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $subTitle = trans('firefly.without_budget_between', ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]);
+            $subTitle = trans(
+                'firefly.without_budget_between',
+                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
             $periods  = $this->noBudgetPeriodEntries();
         }
 
@@ -242,7 +246,8 @@ class BudgetController extends Controller
             Log::info('Count is zero, search for journals.');
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget()->withOpposingAccount();
+            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
+                      ->withoutBudget()->withOpposingAccount();
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/budgets/list/no-budget');
             $count = $journals->getCollection()->count();
@@ -256,7 +261,10 @@ class BudgetController extends Controller
 
         // fix title:
         if ((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) {
-            $subTitle = trans('firefly.without_budget_between', ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]);
+            $subTitle = trans(
+                'firefly.without_budget_between',
+                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
         }
 
         return view('budgets.no-budget', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
@@ -520,11 +528,21 @@ class BudgetController extends Controller
             // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount();
-            $journals = $collector->getJournals()->count();
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL]);
+            $set      = $collector->getJournals();
+            $sum      = $set->sum('transaction_amount');
+            $journals = $set->count();
             $dateStr  = $end->format('Y-m-d');
             $dateName = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $journals, clone $end]);
+            $entries->push(
+                [
+                    'string' => $dateStr,
+                    'name'   => $dateName,
+                    'count'  => $journals,
+                    'sum'    => $sum,
+                    'date'   => clone $end,
+                ]
+            );
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
         $cache->store($entries);
