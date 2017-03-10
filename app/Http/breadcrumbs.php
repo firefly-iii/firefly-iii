@@ -354,11 +354,26 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'categories.no-category', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
+    'categories.no-category', function (BreadCrumbGenerator $breadcrumbs, string $moment, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push($subTitle, route('categories.no-category'));
+    $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
+
+    // push when is all:
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.all_journals_without_category'), route('categories.no-category', ['all']));
+    }
+    // when is specific period:
+    if (strlen($moment) > 0 && $moment !== 'all') {
+        $title = trans('firefly.without_category_between', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                          'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('categories.no-category', [$moment]));
+    }
+
+
 }
 );
+
 
 /**
  * CURRENCIES

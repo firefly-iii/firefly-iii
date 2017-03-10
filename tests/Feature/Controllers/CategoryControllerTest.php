@@ -123,16 +123,90 @@ class CategoryControllerTest extends TestCase
         // mock stuff
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withoutCategory')->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('categories.no-category'));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testNoCategoryAll(string $range)
+    {
+        // mock stuff
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withoutCategory')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('categories.no-category', ['all']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testNoCategoryDate(string $range)
+    {
+        // mock stuff
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withoutCategory')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('categories.no-category', ['2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');

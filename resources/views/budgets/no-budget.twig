@@ -22,7 +22,7 @@
                     <h3 class="box-title">{{ subTitle }}</h3>
                 </div>
                 <div class="box-body ">
-                    {% include 'list.journals-tasker' with {'journals': journals} %}
+                    {% include 'list.journals-tasker' with {'journals': journals,'hideBudgets': true} %}
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -53,7 +53,7 @@
                                     <td style="text-align: right;">{{ entry.count }}</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:33%;">{{ 'sum'|_ }}</td>
+                                    <td style="width:33%;">{{ 'spent'|_ }}</td>
                                     <td style="text-align: right;">{{ entry.sum|formatAmount }}</td>
                                 </tr>
                             </table>

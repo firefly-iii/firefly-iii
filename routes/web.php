@@ -165,7 +165,7 @@ Route::group(
     Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
     Route::get('show/{category}/all', ['uses' => 'CategoryController@showAll', 'as' => 'show.all']);
     Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showByDate', 'as' => 'show.date']);
-    Route::get('list/no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+    Route::get('list/no-category/{moment?}', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
     Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
     Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
