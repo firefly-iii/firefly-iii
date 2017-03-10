@@ -116,9 +116,12 @@ return [
     'multi_select_all_selected'                  => 'All selected',
     'multi_select_filter_placeholder'            => 'Find..',
     'all_journals_without_budget'                => 'All transactions without a budget',
+    'all_journals_without_category'              => 'All transactions without a category',
     'journals_without_budget'                    => 'Transactions without a budget',
-    'all_journals_for_account' => 'All transactions for account :name',
-    'journals_in_period_for_account' => 'All transactions for account :name between :start and :end',
+    'journals_without_category'                  => 'Transactions without a category',
+    'all_journals_for_account'                   => 'All transactions for account :name',
+    'journals_in_period_for_account'             => 'All transactions for account :name between :start and :end',
+    'transferred'                                => 'Transferred',
 
 
     // repeat frequencies:
