@@ -245,7 +245,7 @@ class BudgetController extends Controller
             Log::info('Count is zero, search for journals.');
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget();
+            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutBudget()->withOpposingAccount();
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/budgets/list/no-budget');
             $count = $journals->getCollection()->count();
