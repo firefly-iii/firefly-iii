@@ -12,6 +12,10 @@ declare(strict_types = 1);
 
 namespace Tests\Feature\Controllers\Admin;
 
+use FireflyIII\Models\Preference;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -21,6 +25,8 @@ class UserControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $repository = $this->mock(UserRepositoryInterface::class);
+
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
         $response->assertStatus(200);
@@ -34,7 +40,11 @@ class UserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $this->be($this->user());
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $user       = $this->user();
+        $repository->shouldReceive('all')->andReturn(new Collection([$user]));
+
+        $this->be($user);
         $response = $this->get(route('admin.users'));
         $response->assertStatus(200);
         // has bread crumb
@@ -46,6 +56,9 @@ class UserControllerTest extends TestCase
      */
     public function testShow()
     {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('getUserData')->andReturn([]);
+
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
         $response->assertStatus(200);
