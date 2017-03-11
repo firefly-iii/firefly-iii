@@ -115,13 +115,22 @@ return [
     'multi_select_no_selection'                  => 'None selected',
     'multi_select_all_selected'                  => 'All selected',
     'multi_select_filter_placeholder'            => 'Find..',
+    'between_dates_breadcrumb'                   => 'Between :start and :end',
     'all_journals_without_budget'                => 'All transactions without a budget',
-    'all_journals_without_category'              => 'All transactions without a category',
     'journals_without_budget'                    => 'Transactions without a budget',
+    'all_journals_without_category'              => 'All transactions without a category',
     'journals_without_category'                  => 'Transactions without a category',
     'all_journals_for_account'                   => 'All transactions for account :name',
     'journals_in_period_for_account'             => 'All transactions for account :name between :start and :end',
     'transferred'                                => 'Transferred',
+    'all_withdrawal'                             => 'All expenses',
+    'title_withdrawal_between'                   => 'All expenses between :start and :end',
+    'all_deposit'                                => 'All revenue',
+    'title_deposit_between'                      => 'All revenue between :start and :end',
+    'all_transfers'                              => 'All transfers',
+    'title_transfers_between'                    => 'All transfers between :start and :end',
+    'all_transfer'                               => 'All transfers',
+    'title_transfer_between'                     => 'All transfers between :start and :end',
 
 
     // repeat frequencies:
