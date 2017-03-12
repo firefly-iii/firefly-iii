@@ -217,6 +217,7 @@ class AccountControllerTest extends TestCase
      */
     public function testShowBrokenInitial()
     {
+        // mock
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
@@ -301,6 +302,7 @@ class AccountControllerTest extends TestCase
      */
     public function testShowInitial()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
@@ -317,6 +319,7 @@ class AccountControllerTest extends TestCase
      */
     public function testStore()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->andReturn(new Account)->once();
@@ -340,6 +343,7 @@ class AccountControllerTest extends TestCase
      */
     public function testUpdate()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->andReturn(new Account)->once();

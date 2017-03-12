@@ -19,7 +19,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 use Tests\TestCase;
 
 /**
@@ -97,7 +96,6 @@ class MassControllerTest extends TestCase
      */
     public function testEditMultiple()
     {
-        Log::debug('Edit multiple.');
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
@@ -125,7 +123,6 @@ class MassControllerTest extends TestCase
                               ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
         );
         $allIds = $collection->pluck('id')->toArray();
-        Log::debug('Ids', $allIds);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
@@ -140,7 +137,6 @@ class MassControllerTest extends TestCase
      */
     public function testEditMultipleNothingLeft()
     {
-        Log::debug('Edit multiple.');
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
@@ -156,7 +152,6 @@ class MassControllerTest extends TestCase
                               ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
         );
         $allIds = $collection->pluck('id')->toArray();
-        Log::debug('Ids', $allIds);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));

@@ -17,6 +17,11 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Tests\TestCase;
 
+/**
+ * Class OperationsControllerTest
+ *
+ * @package Tests\Feature\Controllers\Report
+ */
 class OperationsControllerTest extends TestCase
 {
     /**
@@ -28,6 +33,7 @@ class OperationsControllerTest extends TestCase
     {
         $transactions = factory(Transaction::class, 10)->make();
         $collector    = $this->mock(JournalCollectorInterface::class);
+
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
@@ -49,6 +55,7 @@ class OperationsControllerTest extends TestCase
     {
         $transactions = factory(Transaction::class, 10)->make();
         $collector    = $this->mock(JournalCollectorInterface::class);
+
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
@@ -66,6 +73,17 @@ class OperationsControllerTest extends TestCase
      */
     public function testOperations()
     {
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $transactions = factory(Transaction::class, 10)->make();
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('enableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn($transactions);
+
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.operations', ['1', '20160101', '20160131']));
         $response->assertStatus(200);

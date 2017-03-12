@@ -142,6 +142,46 @@ class ReportControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\ReportController::options
+     * @covers \FireflyIII\Http\Controllers\ReportController::budgetReportOptions
+     */
+    public function testOptionsBudget()
+    {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('reports.options', ['budget']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ReportController::options
+     */
+    public function testOptionsCategory()
+    {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('reports.options', ['default']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ReportController::options
+     */
+    public function testOptionsTag()
+    {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('reports.options', ['default']));
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\ReportController::postIndex
      */
     public function testPostIndex()

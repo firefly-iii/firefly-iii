@@ -24,6 +24,7 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDelete()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());

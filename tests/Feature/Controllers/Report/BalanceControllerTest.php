@@ -12,8 +12,15 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Report;
 
 
+use FireflyIII\Helpers\Collection\Balance;
+use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use Tests\TestCase;
 
+/**
+ * Class BalanceControllerTest
+ *
+ * @package Tests\Feature\Controllers\Report
+ */
 class BalanceControllerTest extends TestCase
 {
     /**
@@ -21,6 +28,9 @@ class BalanceControllerTest extends TestCase
      */
     public function testGeneral()
     {
+        $balance = $this->mock(BalanceReportHelperInterface::class);
+        $balance->shouldReceive('getBalanceReport')->andReturn(new Balance);
+
         $this->be($this->user());
         $response = $this->get(route('report-data.balance.general', ['1', '20120101', '20120131']));
         $response->assertStatus(200);
