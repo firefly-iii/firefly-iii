@@ -22,6 +22,11 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class BudgetControllerTest
+ *
+ * @package Tests\Feature\Controllers\Chart
+ */
 class BudgetControllerTest extends TestCase
 {
 

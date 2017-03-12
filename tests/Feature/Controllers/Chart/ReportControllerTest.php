@@ -12,17 +12,31 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Chart;
 
 
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use Steam;
 use Tests\TestCase;
 
+/**
+ * Class ReportControllerTest
+ *
+ * @package Tests\Feature\Controllers\Chart
+ */
 class ReportControllerTest extends TestCase
 {
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::netWorth
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::arraySum
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::__construct
      */
     public function testNetWorth()
     {
+        $generator = $this->mock(GeneratorInterface::class);
+
+        Steam::shouldReceive('balancesById')->andReturn(['5', '10']);
+        $generator->shouldReceive('singleSet')->andReturn([]);
+
         $this->be($this->user());
         $response = $this->get(route('chart.report.net-worth', [1, '20120101', '20120131']));
         $response->assertStatus(200);
@@ -30,9 +44,17 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::operations
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::getChartData
      */
     public function testOperations()
     {
+        $generator = $this->mock(GeneratorInterface::class);
+        $tasker    = $this->mock(AccountTaskerInterface::class);
+
+        $tasker->shouldReceive('amountOutInPeriod')->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->andReturn('1');
+        $generator->shouldReceive('multiSet')->andReturn([]);
+
         $this->be($this->user());
         $response = $this->get(route('chart.report.operations', [1, '20120101', '20120131']));
         $response->assertStatus(200);
@@ -40,9 +62,17 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\ReportController::sum
+     * @covers \FireflyIII\Http\Controllers\Chart\ReportController::getChartData
      */
     public function testSum()
     {
+        $generator = $this->mock(GeneratorInterface::class);
+        $tasker    = $this->mock(AccountTaskerInterface::class);
+
+        $tasker->shouldReceive('amountOutInPeriod')->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->andReturn('1');
+        $generator->shouldReceive('multiSet')->andReturn([]);
+
         $this->be($this->user());
         $response = $this->get(route('chart.report.sum', [1, '20120101', '20120131']));
         $response->assertStatus(200);

@@ -24,6 +24,11 @@ use Illuminate\Support\Collection;
 use Steam;
 use Tests\TestCase;
 
+/**
+ * Class AccountControllerTest
+ *
+ * @package Tests\Feature\Controllers\Chart
+ */
 class AccountControllerTest extends TestCase
 {
     /**

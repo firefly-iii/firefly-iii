@@ -78,11 +78,8 @@ class CategoryReportController extends Controller
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts);
-        $helper->setCategories($categories);
-        $helper->setStart($start);
-        $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setAccounts($accounts)->setCategories($categories)->setStart($start)->setEnd($end)->setCollectOtherObjects(intval($others) === 1);
+
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 

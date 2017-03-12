@@ -13,6 +13,11 @@ namespace Tests\Feature\Controllers\Admin;
 
 use Tests\TestCase;
 
+/**
+ * Class HomeControllerTest
+ *
+ * @package Tests\Feature\Controllers\Admin
+ */
 class HomeControllerTest extends TestCase
 {
 

@@ -61,6 +61,18 @@ $factory->define(
 );
 
 $factory->define(
+    FireflyIII\Models\PiggyBankEvent::class, function (Faker\Generator $faker) {
+    return [
+        'id'                     => $faker->numberBetween(1, 10),
+        'piggy_bank_id'          => $faker->numberBetween(1, 10),
+        'transaction_journal_id' => $faker->numberBetween(1, 10),
+        'date'                   => $faker->date('Y-m-d'),
+        'amount'                 => '100',
+    ];
+}
+);
+
+$factory->define(
     FireflyIII\Models\BudgetLimit::class, function (Faker\Generator $faker) {
     return [
         'id'         => $faker->numberBetween(1, 10),

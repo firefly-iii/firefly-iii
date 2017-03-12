@@ -18,6 +18,11 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class BillControllerTest
+ *
+ * @package Tests\Feature\Controllers\Chart
+ */
 class BillControllerTest extends TestCase
 {
     /**

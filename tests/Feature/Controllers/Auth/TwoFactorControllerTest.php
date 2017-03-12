@@ -16,6 +16,11 @@ use FireflyIII\Models\Preference;
 use Preferences;
 use Tests\TestCase;
 
+/**
+ * Class TwoFactorControllerTest
+ *
+ * @package Tests\Feature\Controllers\Auth
+ */
 class TwoFactorControllerTest extends TestCase
 {
     /**

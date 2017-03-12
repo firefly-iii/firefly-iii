@@ -18,6 +18,11 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class UserControllerTest
+ *
+ * @package Tests\Feature\Controllers\Admin
+ */
 class UserControllerTest extends TestCase
 {
     /**
@@ -25,8 +30,6 @@ class UserControllerTest extends TestCase
      */
     public function testEdit()
     {
-        $repository = $this->mock(UserRepositoryInterface::class);
-
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
         $response->assertStatus(200);
