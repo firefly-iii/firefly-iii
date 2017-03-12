@@ -36,7 +36,7 @@ $factory->define(
 $factory->define(
     FireflyIII\Models\Tag::class, function (Faker\Generator $faker) {
     return [
-        'id'   => $faker->numberBetween(1, 10),
+        'id'  => $faker->numberBetween(1, 10),
         'tag' => $faker->words(1, true),
     ];
 }
@@ -56,6 +56,19 @@ $factory->define(
     return [
         'id'   => $faker->numberBetween(1, 10),
         'name' => $faker->words(3, true),
+    ];
+}
+);
+
+$factory->define(
+    FireflyIII\Models\BudgetLimit::class, function (Faker\Generator $faker) {
+    return [
+        'id'         => $faker->numberBetween(1, 10),
+        'start_date' => '2017-01-01',
+        'end_date'   => '2017-01-31',
+        'amount'     => '300',
+        'budget_id'  => $faker->numberBetween(1, 6),
+
     ];
 }
 );

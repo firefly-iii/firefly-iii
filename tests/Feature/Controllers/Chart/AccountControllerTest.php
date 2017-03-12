@@ -58,9 +58,9 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudget(string $range)
     {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(JournalCollectorInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $collector   = $this->mock(JournalCollectorInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -114,8 +114,8 @@ class AccountControllerTest extends TestCase
      */
     public function testFrontpage(string $range)
     {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
@@ -162,8 +162,8 @@ class AccountControllerTest extends TestCase
      */
     public function testPeriod(string $range)
     {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
@@ -181,7 +181,7 @@ class AccountControllerTest extends TestCase
      */
     public function testReport()
     {
-        $generator     = $this->mock(GeneratorInterface::class);
+        $generator = $this->mock(GeneratorInterface::class);
         $generator->shouldReceive('multiSet')->andreturn([]);
 
         $this->be($this->user());
@@ -197,8 +197,8 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueAccounts(string $range)
     {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->andReturn(new Collection);
         $generator->shouldReceive('singleSet')->andReturn([]);
@@ -218,7 +218,7 @@ class AccountControllerTest extends TestCase
      */
     public function testSingle(string $range)
     {
-        $generator     = $this->mock(GeneratorInterface::class);
+        $generator = $this->mock(GeneratorInterface::class);
 
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
         $generator->shouldReceive('singleSet')->andReturn([]);
