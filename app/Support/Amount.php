@@ -13,6 +13,7 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -171,7 +172,7 @@ class Amount
      */
     public function formatByCode(string $currencyCode, string $amount, bool $coloured = true): string
     {
-        $currency = TransactionCurrency::whereCode($currencyCode)->first();
+        $currency = TransactionCurrency::where('code', $currencyCode)->first();
 
         return $this->formatAnything($currency, $amount, $coloured);
     }
@@ -224,7 +225,7 @@ class Amount
         } else {
             $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
-            $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
+            $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
             if ($currency) {
 
                 $cache->store($currency->code);
@@ -248,7 +249,7 @@ class Amount
             return $cache->get(); // @codeCoverageIgnore
         } else {
             $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+            $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
 
             $cache->store($currency->symbol);
 
@@ -267,7 +268,12 @@ class Amount
             return $cache->get(); // @codeCoverageIgnore
         }
         $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+
+        if (is_null($currency)) {
+            throw new FireflyException(sprintf('No currency found with code "%s"', $currencyPreference->data));
+        }
+
         $cache->store($currency);
 
         return $currency;
