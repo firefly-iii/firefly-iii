@@ -113,7 +113,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findByCode(string $currencyCode): TransactionCurrency
     {
-        $currency = TransactionCurrency::whereCode($currencyCode)->first();
+        $currency = TransactionCurrency::where('code', $currencyCode)->first();
         if (is_null($currency)) {
             $currency = new TransactionCurrency;
         }
@@ -170,7 +170,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency
     {
-        $preferred = TransactionCurrency::whereCode($preference->data)->first();
+        $preferred = TransactionCurrency::where('code', $preference->data)->first();
         if (is_null($preferred)) {
             $preferred = TransactionCurrency::first();
         }

@@ -12,6 +12,7 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -30,11 +31,14 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::create
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
      */
     public function testCreate()
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -51,6 +55,7 @@ class RuleGroupControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('get')->andReturn(new Collection);
 
@@ -67,8 +72,9 @@ class RuleGroupControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository = $this->mock(RuleGroupRepositoryInterface::class);
         $repository->shouldReceive('destroy');
 
         $this->session(['rule-groups.delete.url' => 'http://localhost']);
@@ -87,6 +93,7 @@ class RuleGroupControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveDown');
 
@@ -103,7 +110,10 @@ class RuleGroupControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
 
         $this->be($this->user());
         $response = $this->get(route('rule-groups.edit', [1]));
@@ -117,10 +127,13 @@ class RuleGroupControllerTest extends TestCase
     public function testExecute()
     {
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
+
+        $this->expectsJobs(ExecuteRuleGroupOnExistingTransactions::class);
 
         $this->session(['first' => new Carbon('2010-01-01')]);
         $data = [
@@ -142,8 +155,9 @@ class RuleGroupControllerTest extends TestCase
     public function testSelectTransactions()
     {
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
@@ -161,16 +175,18 @@ class RuleGroupControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->session(['rule-groups.create.url' => 'http://localhost']);
+        $repository->shouldReceive('store')->andReturn(new RuleGroup);
+        $repository->shouldReceive('find')->andReturn(new RuleGroup);
         $data = [
             'title'       => 'A',
             'description' => '',
         ];
 
-        $repository->shouldReceive('store')->andReturn(new RuleGroup);
-        $repository->shouldReceive('find')->andReturn(new RuleGroup);
+
 
         $this->be($this->user());
         $response = $this->post(route('rule-groups.store', [1]), $data);
@@ -186,6 +202,7 @@ class RuleGroupControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveUp');
 
@@ -203,6 +220,7 @@ class RuleGroupControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $data = [

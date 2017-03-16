@@ -38,6 +38,7 @@ class PreferencesControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $google->shouldReceive('generateSecretKey')->andReturn('secret');
         $google->shouldReceive('getQRCodeInline')->andReturn('long-data-url');
+
         $this->be($this->user());
         $response = $this->get(route('preferences.code'));
         $response->assertStatus(200);

@@ -54,6 +54,8 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariables(string $range)
     {
+
+
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('javascript.variables'));

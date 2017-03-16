@@ -19,9 +19,15 @@ use FireflyIII\Generator\Report\Standard\YearReportGenerator as SYRG;
 use FireflyIII\Generator\Report\Tag\YearReportGenerator as TYRG;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -130,6 +136,7 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::options
+     * @covers \FireflyIII\Http\Controllers\ReportController::noReportOptions
      */
     public function testOptions()
     {
@@ -149,35 +156,48 @@ class ReportControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budget      = factory(Budget::class)->make();
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]));
+
 
         $this->be($this->user());
         $response = $this->get(route('reports.options', ['budget']));
         $response->assertStatus(200);
+        $response->assertSee($budget->name);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::options
+     * @covers \FireflyIII\Http\Controllers\ReportController::categoryReportOptions
      */
     public function testOptionsCategory()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $category      = factory(Category::class)->make();
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
 
         $this->be($this->user());
-        $response = $this->get(route('reports.options', ['default']));
+        $response = $this->get(route('reports.options', ['category']));
         $response->assertStatus(200);
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::options
+     * @covers \FireflyIII\Http\Controllers\ReportController::tagReportOptions
      */
     public function testOptionsTag()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $tag      = factory(Tag::class)->make();
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $this->be($this->user());
-        $response = $this->get(route('reports.options', ['default']));
+        $response = $this->get(route('reports.options', ['tag']));
         $response->assertStatus(200);
     }
 
@@ -195,7 +215,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::categoryReport
+     * @covers \FireflyIII\Http\Controllers\ReportController::tagReport
      */
     public function testTagReport()
     {

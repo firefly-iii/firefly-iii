@@ -36,7 +36,7 @@ class RuleControllerTest extends TestCase
     public function testCreate()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -51,7 +51,7 @@ class RuleControllerTest extends TestCase
     public function testDelete()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -66,8 +66,8 @@ class RuleControllerTest extends TestCase
     public function testDestroy()
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
@@ -85,8 +85,8 @@ class RuleControllerTest extends TestCase
     public function testDown()
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveDown');
 
@@ -102,8 +102,8 @@ class RuleControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
 
@@ -128,10 +128,8 @@ class RuleControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('store');
         $repository->shouldReceive('getFirstRuleGroup')->andReturn(new RuleGroup);
         $ruleGroupRepos->shouldReceive('getRuleGroupsWithRules')->andReturn(new Collection);
-
         $repository->shouldReceive('count')->andReturn(0);
         $repository->shouldReceive('store');
-
 
         $this->be($this->user());
         $response = $this->get(route('rules.index'));
@@ -145,14 +143,11 @@ class RuleControllerTest extends TestCase
     public function testReorderRuleActions()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $data = [
-            'triggers' => [1, 2, 3],
-        ];
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
+        $data = ['triggers' => [1, 2, 3],];
         $repository->shouldReceive('reorderRuleActions');
 
         $this->be($this->user());
@@ -166,14 +161,11 @@ class RuleControllerTest extends TestCase
     public function testReorderRuleTriggers()
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
-        $data = [
-            'triggers' => [1, 2, 3],
-        ];
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
+        $data = ['triggers' => [1, 2, 3],];
         $repository->shouldReceive('reorderRuleTriggers');
 
         $this->be($this->user());
@@ -187,10 +179,13 @@ class RuleControllerTest extends TestCase
     public function testStore()
     {
         // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+        $repository->shouldReceive('store')->andReturn(new Rule);
 
         $this->session(['rules.create.url' => 'http://localhost']);
         $data = [
@@ -212,10 +207,6 @@ class RuleControllerTest extends TestCase
                 1 => 'C',
             ],
         ];
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
-        $repository->shouldReceive('store')->andReturn(new Rule);
-
         $this->be($this->user());
         $response = $this->post(route('rules.store', [1]), $data);
         $response->assertStatus(302);
@@ -261,10 +252,13 @@ class RuleControllerTest extends TestCase
     public function testUpdate()
     {
         // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+        $repository->shouldReceive('update');
 
         $data = [
             'rule_group_id'      => 1,
@@ -286,10 +280,6 @@ class RuleControllerTest extends TestCase
             ],
         ];
         $this->session(['rules.edit.url' => 'http://localhost']);
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
-        $repository->shouldReceive('update');
-
         $this->be($this->user());
         $response = $this->post(route('rules.update', [1]), $data);
         $response->assertStatus(302);
