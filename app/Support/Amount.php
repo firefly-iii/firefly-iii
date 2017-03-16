@@ -138,7 +138,7 @@ class Amount
         $info      = localeconv();
         Log::debug('Localeconv is', $info);
         Log::debug(sprintf('Now calling number_format(%f, %d, "%s", "%s")', $float, $format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']));
-        Log::debug('Decimal places raw: %s', var_export($format->decimal_places, true));
+        Log::debug(sprintf('Decimal places raw: %s', var_export($format->decimal_places, true)));
 
         $formatted = number_format($float, intval($format->decimal_places), $info['mon_decimal_point'], $info['mon_thousands_sep']);
 
