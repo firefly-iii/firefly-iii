@@ -19,6 +19,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
+use Steam;
 use Tests\TestCase;
 
 /**
@@ -141,8 +142,11 @@ class PiggyBankControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $piggyBank    = factory(PiggyBank::class)->make();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection);
+        $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$piggyBank]));
+
+        Steam::shouldReceive('balanceIgnoreVirtual')->twice()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.index'));

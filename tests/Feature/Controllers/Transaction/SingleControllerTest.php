@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Steam;
 use Tests\TestCase;
 
 /**
@@ -53,6 +54,7 @@ class SingleControllerTest extends TestCase
      */
     public function testCreate()
     {
+        Steam::shouldReceive('phpBytes')->andReturn(2048);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);

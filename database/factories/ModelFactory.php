@@ -34,6 +34,21 @@ $factory->define(
 );
 
 $factory->define(
+    FireflyIII\Models\PiggyBank::class, function (Faker\Generator $faker) {
+    return [
+        'id'            => $faker->numberBetween(1, 10),
+        'account_id'    => $faker->numberBetween(1, 10),
+        'name'          => $faker->words(3, true),
+        'target_amount' => '1000.00',
+        'startdate'     => '2017-01-01',
+        'order'         => 1,
+        'active'        => 1,
+        'encrypted'     => 0,
+    ];
+}
+);
+
+$factory->define(
     FireflyIII\Models\Tag::class, function (Faker\Generator $faker) {
     return [
         'id'  => $faker->numberBetween(1, 10),

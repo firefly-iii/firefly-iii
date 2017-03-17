@@ -212,11 +212,12 @@ class TransactionController extends Controller
         $cache->addProperty('transaction-list-entries');
 
         if ($cache->has()) {
-             return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
-        Log::debug('Going to get period expenses and incomes.');
+        Log::debug(sprintf('Going to get period expenses and incomes between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         while ($end >= $start) {
+            Log::debug('Loop start!');
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
 
@@ -238,6 +239,7 @@ class TransactionController extends Controller
                 'transferred' => 0,
                 'date'        => clone $end,
             ];
+            Log::debug(sprintf('What is %s', $what));
             switch ($what) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle "%s"', $what));
@@ -249,6 +251,7 @@ class TransactionController extends Controller
                     break;
                 case 'transfers':
                 case 'transfer':
+                    Log::debug('HERE');
                     $array['transferred'] = Steam::positive($sum);
                     break;
 
@@ -256,6 +259,7 @@ class TransactionController extends Controller
             $entries->push($array);
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
+        Log::debug('End of loop');
         $cache->store($entries);
 
         return $entries;

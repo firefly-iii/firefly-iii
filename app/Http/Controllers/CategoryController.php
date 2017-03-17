@@ -438,8 +438,9 @@ class CategoryController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        Log::debug('Going to get period expenses and incomes.');
+        Log::debug(sprintf('Going to get period expenses and incomes between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
         while ($end >= $start) {
+            Log::debug('Loop!');
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
 
@@ -483,6 +484,7 @@ class CategoryController extends Controller
             );
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
+        Log::debug('End of loops');
         $cache->store($entries);
 
         return $entries;

@@ -17,6 +17,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Steam;
 use Tests\TestCase;
 
 class TransactionControllerTest extends TestCase
@@ -44,6 +45,8 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['transfer']));
@@ -103,6 +106,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
 
+        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['transfer', '2016-01-01']));

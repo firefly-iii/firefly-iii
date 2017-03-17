@@ -31,6 +31,24 @@ use Tests\TestCase;
  */
 class AccountControllerTest extends TestCase
 {
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
+     */
+    public function testAll()
+    {
+        $generator    = $this->mock(GeneratorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('oldestJournalDate')->once()->andReturn(Carbon::now()->subMonth());
+        Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
+        $generator->shouldReceive('singleSet')->andReturn([]);
+
+        $this->be($this->user());
+        $response = $this->get(route('chart.account.all', [1]));
+        $response->assertStatus(200);
+    }
+
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseAccounts
      * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface::singleSet
@@ -188,6 +206,7 @@ class AccountControllerTest extends TestCase
     {
         $generator = $this->mock(GeneratorInterface::class);
         $generator->shouldReceive('multiSet')->andreturn([]);
+        Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
 
         $this->be($this->user());
         $response = $this->get(route('chart.account.report', ['1', '20120101', '20120131']));

@@ -20,6 +20,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Steam;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
@@ -114,6 +115,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategoryPeriodEntries
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -137,6 +139,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
 
+        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -148,6 +151,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategoryPeriodEntries
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -181,6 +185,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategoryPeriodEntries
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -203,6 +208,8 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
+
+        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
