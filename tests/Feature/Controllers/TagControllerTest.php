@@ -160,7 +160,7 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturn(new Tag);
         $repository->shouldReceive('store')->andReturn(new Tag);
 
-        $this->session(['tags.create.url' => 'http://localhost']);
+        $this->session(['tags.create.uri' => 'http://localhost']);
         $data = [
             'tag'     => 'Hello new tag' . rand(999, 10000),
             'tagMode' => 'nothing',
@@ -182,7 +182,7 @@ class TagControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
 
-        $this->session(['tags.edit.url' => 'http://localhost']);
+        $this->session(['tags.edit.uri' => 'http://localhost']);
         $data = [
             'tag'     => 'Hello updated tag' . rand(999, 10000),
             'tagMode' => 'nothing',

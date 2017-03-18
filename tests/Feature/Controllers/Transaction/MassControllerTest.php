@@ -57,7 +57,7 @@ class MassControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
         $repository->shouldReceive('delete')->times(2);
 
-        $this->session(['transactions.mass-delete.url' => 'http://localhost']);
+        $this->session(['transactions.mass-delete.uri' => 'http://localhost']);
 
         $data = [
             'confirm_mass_delete' => $depositIds,
@@ -176,7 +176,7 @@ class MassControllerTest extends TestCase
         $repository->shouldReceive('find')->once()->andReturn($deposit);
 
 
-        $this->session(['transactions.mass-edit.url' => 'http://localhost']);
+        $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 
         $data = [
             'journals'                                  => [$deposit->id],

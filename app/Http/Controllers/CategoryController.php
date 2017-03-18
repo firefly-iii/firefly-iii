@@ -265,8 +265,8 @@ class CategoryController extends Controller
             $end      = Navigation::endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
-                ['name' => $category->name,
-                    'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                ['name'  => $category->name,
+                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
             $periods  = $this->getPeriodOverview($category);
         }
@@ -278,7 +278,8 @@ class CategoryController extends Controller
             $periods  = $this->getPeriodOverview($category);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
-                ['name' => $category->name,'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                 'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
         // grab journals, but be prepared to jump a period back to get the right ones:
@@ -304,7 +305,8 @@ class CategoryController extends Controller
         if ($moment != 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
-                ['name' => $category->name,'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                 'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
 
@@ -327,9 +329,11 @@ class CategoryController extends Controller
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
+            // @codeCoverageIgnoreStart
             $request->session()->put('categories.create.fromStore', true);
 
             return redirect(route('categories.create'))->withInput();
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect(route('categories.index'));
@@ -352,9 +356,11 @@ class CategoryController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
+            // @codeCoverageIgnoreStart
             $request->session()->put('categories.edit.fromUpdate', true);
 
             return redirect(route('categories.edit', [$category->id]));
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('categories.edit.uri'));

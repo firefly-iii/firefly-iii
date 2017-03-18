@@ -77,7 +77,7 @@ class RuleGroupControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
-        $this->session(['rule-groups.delete.url' => 'http://localhost']);
+        $this->session(['rule-groups.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('rule-groups.destroy', [1]));
         $response->assertStatus(302);
@@ -178,7 +178,7 @@ class RuleGroupControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['rule-groups.create.url' => 'http://localhost']);
+        $this->session(['rule-groups.create.uri' => 'http://localhost']);
         $repository->shouldReceive('store')->andReturn(new RuleGroup);
         $repository->shouldReceive('find')->andReturn(new RuleGroup);
         $data = [
@@ -227,7 +227,7 @@ class RuleGroupControllerTest extends TestCase
             'title'       => 'C',
             'description' => 'XX',
         ];
-        $this->session(['rule-groups.edit.url' => 'http://localhost']);
+        $this->session(['rule-groups.edit.uri' => 'http://localhost']);
 
         $repository->shouldReceive('update');
         $repository->shouldReceive('find')->andReturn(new RuleGroup);

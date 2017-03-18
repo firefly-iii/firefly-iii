@@ -111,7 +111,7 @@ class SplitControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $this->session(['transactions.edit-split.url' => 'http://localhost']);
+        $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $data    = [
             'id'                             => $deposit->id,
@@ -158,7 +158,7 @@ class SplitControllerTest extends TestCase
      */
     public function testUpdateOpeningBalance()
     {
-        $this->session(['transactions.edit-split.url' => 'http://localhost']);
+        $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $data    = [
             'id' => $opening->id,

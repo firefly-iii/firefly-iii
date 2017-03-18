@@ -71,7 +71,7 @@ class RuleControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
-        $this->session(['rules.delete.url' => 'http://localhost']);
+        $this->session(['rules.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('rules.destroy', [1]));
         $response->assertStatus(302);
@@ -187,7 +187,7 @@ class RuleControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
         $repository->shouldReceive('store')->andReturn(new Rule);
 
-        $this->session(['rules.create.url' => 'http://localhost']);
+        $this->session(['rules.create.uri' => 'http://localhost']);
         $data = [
             'rule_group_id'      => 1,
             'active'             => 1,
@@ -279,7 +279,7 @@ class RuleControllerTest extends TestCase
                 1 => 'Bla bla',
             ],
         ];
-        $this->session(['rules.edit.url' => 'http://localhost']);
+        $this->session(['rules.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('rules.update', [1]), $data);
         $response->assertStatus(302);

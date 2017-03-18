@@ -291,7 +291,7 @@ class TagController extends Controller
                 Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
             }
         }
-        
+
         if ($moment != 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',

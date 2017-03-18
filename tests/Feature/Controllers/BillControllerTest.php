@@ -67,7 +67,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['bills.delete.url' => 'http://localhost']);
+        $this->session(['bills.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('bills.destroy', [1]));
         $response->assertStatus(302);
@@ -199,7 +199,7 @@ class BillControllerTest extends TestCase
             'date'                          => '2016-01-01',
             'repeat_freq'                   => 'monthly',
         ];
-        $this->session(['bills.create.url' => 'http://localhost']);
+        $this->session(['bills.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('bills.store'), $data);
         $response->assertStatus(302);
@@ -228,7 +228,7 @@ class BillControllerTest extends TestCase
             'date'                          => '2016-01-01',
             'repeat_freq'                   => 'monthly',
         ];
-        $this->session(['bills.edit.url' => 'http://localhost']);
+        $this->session(['bills.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('bills.update', [1]), $data);
         $response->assertStatus(302);

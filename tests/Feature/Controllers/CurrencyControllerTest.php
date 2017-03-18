@@ -89,7 +89,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
 
-        $this->session(['currencies.delete.url' => 'http://localhost']);
+        $this->session(['currencies.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('currencies.destroy', [1]));
         $response->assertStatus(302);
@@ -143,7 +143,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn(new TransactionCurrency);
 
-        $this->session(['currencies.create.url' => 'http://localhost']);
+        $this->session(['currencies.create.uri' => 'http://localhost']);
         $data = [
             'name'           => 'XX',
             'code'           => 'XXX',
@@ -167,7 +167,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->andReturn(new TransactionCurrency);
 
-        $this->session(['currencies.edit.url' => 'http://localhost']);
+        $this->session(['currencies.edit.uri' => 'http://localhost']);
         $data = [
             'name'           => 'XA',
             'code'           => 'XAX',

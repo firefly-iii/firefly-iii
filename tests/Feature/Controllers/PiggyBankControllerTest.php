@@ -106,7 +106,7 @@ class PiggyBankControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
 
 
-        $this->session(['piggy-banks.delete.url' => 'http://localhost']);
+        $this->session(['piggy-banks.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.destroy', [2]));
         $response->assertStatus(302);
@@ -294,7 +294,7 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn(new PiggyBank);
 
-        $this->session(['piggy-banks.create.url' => 'http://localhost']);
+        $this->session(['piggy-banks.create.uri' => 'http://localhost']);
         $data = [
             'name'                            => 'Piggy ' . rand(999, 10000),
             'targetamount'                    => '100.123',
@@ -320,7 +320,7 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->andReturn(new PiggyBank);
 
-        $this->session(['piggy-banks.edit.url' => 'http://localhost']);
+        $this->session(['piggy-banks.edit.uri' => 'http://localhost']);
         $data = [
             'name'                            => 'Updated Piggy ' . rand(999, 10000),
             'targetamount'                    => '100.123',

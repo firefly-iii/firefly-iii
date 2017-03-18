@@ -134,6 +134,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::show
+     * @covers \FireflyIII\Http\Controllers\Controller::isOpeningBalance
      */
     public function testShow()
     {

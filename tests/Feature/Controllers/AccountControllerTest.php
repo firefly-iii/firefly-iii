@@ -53,6 +53,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::delete
+     * @covers \FireflyIII\Http\Controllers\Controller::rememberPreviousUri
      */
     public function testDelete()
     {
@@ -73,6 +74,8 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::destroy
+     * @covers \FireflyIII\Http\Controllers\Controller::__construct
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testDestroy()
     {
@@ -83,7 +86,7 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.delete.url' => 'http://localhost/accounts/show/1']);
+        $this->session(['accounts.delete.uri' => 'http://localhost/accounts/show/1']);
         $account = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
 
         $this->be($this->user());
@@ -316,6 +319,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::store
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testStore()
     {
@@ -326,7 +330,7 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.create.url' => 'http://localhost']);
+        $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
             'name' => 'new account ' . rand(1000, 9999),
@@ -340,6 +344,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::store
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testStoreAnother()
     {
@@ -350,7 +355,7 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.create.url' => 'http://localhost']);
+        $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
             'name'           => 'new account ' . rand(1000, 9999),
@@ -365,6 +370,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::update
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testUpdate()
     {
@@ -375,7 +381,7 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.edit.url' => 'http://localhost']);
+        $this->session(['accounts.edit.uri' => 'http://localhost/javascript/account']);
         $this->be($this->user());
         $data = [
             'name'   => 'updated account ' . rand(1000, 9999),
@@ -390,6 +396,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::update
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testUpdateAgain()
     {
@@ -400,7 +407,7 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.edit.url' => 'http://localhost']);
+        $this->session(['accounts.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
             'name'           => 'updated account ' . rand(1000, 9999),

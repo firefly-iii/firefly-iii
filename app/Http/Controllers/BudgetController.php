@@ -370,10 +370,11 @@ class BudgetController extends Controller
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
-            // set value so create routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             $request->session()->put('budgets.create.fromStore', true);
 
             return redirect(route('budgets.create'))->withInput();
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('budgets.create.uri'));
@@ -394,10 +395,11 @@ class BudgetController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             $request->session()->put('budgets.edit.fromUpdate', true);
 
             return redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('budgets.edit.uri'));

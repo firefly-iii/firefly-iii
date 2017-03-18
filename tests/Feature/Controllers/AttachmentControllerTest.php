@@ -45,7 +45,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['attachments.delete.url' => 'http://localhost']);
+        $this->session(['attachments.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('attachments.destroy', [1]));
         $response->assertStatus(302);
@@ -127,7 +127,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['attachments.edit.url' => 'http://localhost']);
+        $this->session(['attachments.edit.uri' => 'http://localhost']);
         $data = [
             'title'       => 'Some updated title ' . rand(1000, 9999),
             'notes'       => '',
