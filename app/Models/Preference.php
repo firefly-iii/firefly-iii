@@ -13,10 +13,10 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Models;
 
-use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
+use Crypt;
 use Log;
 
 /**
