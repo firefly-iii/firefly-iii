@@ -219,8 +219,7 @@ class CategoryController extends Controller
             }
         }
 
-        // fix title:
-        if (((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) && $count > 0) {
+        if ($moment != 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -302,8 +301,7 @@ class CategoryController extends Controller
             }
         }
 
-        // fix title:
-        if (((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) && $count > 0) {
+        if ($moment != 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name' => $category->name,'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -313,66 +311,6 @@ class CategoryController extends Controller
         return view('categories.show', compact('category', 'moment', 'journals', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
-    //    /**
-    //     * @param Request                     $request
-    //     * @param CategoryRepositoryInterface $repository
-    //     * @param Category                    $category
-    //     *
-    //     * @return View
-    //     */
-    //    public function showAll(Request $request, CategoryRepositoryInterface $repository, Category $category)
-    //    {
-    //        $range = Preferences::get('viewRange', '1M')->data;
-    //        $start = $repository->firstUseDate($category);
-    //        if ($start->year == 1900) {
-    //            $start = new Carbon;
-    //        }
-    //        $end          = Navigation::endOfPeriod(new Carbon, $range);
-    //        $subTitle     = $category->name;
-    //        $subTitleIcon = 'fa-bar-chart';
-    //        $hideCategory = true; // used in list.
-    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-    //        $method       = 'all';
-    //
-    //        /** @var JournalCollectorInterface $collector */
-    //        $collector = app(JournalCollectorInterface::class);
-    //        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setCategory($category)->withBudgetInformation();
-    //        $journals = $collector->getPaginatedJournals();
-    //        $journals->setPath('categories/show/' . $category->id . '/all');
-    //
-    //        return view('categories.show', compact('category', 'method', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
-    //    }
-    //
-    //    /**
-    //     * @param Request  $request
-    //     * @param Category $category
-    //     * @param string   $date
-    //     *
-    //     * @return View
-    //     */
-    //    public function showByDate(Request $request, Category $category, string $date)
-    //    {
-    //        $carbon       = new Carbon($date);
-    //        $range        = Preferences::get('viewRange', '1M')->data;
-    //        $start        = Navigation::startOfPeriod($carbon, $range);
-    //        $end          = Navigation::endOfPeriod($carbon, $range);
-    //        $subTitle     = $category->name;
-    //        $subTitleIcon = 'fa-bar-chart';
-    //        $hideCategory = true; // used in list.
-    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-    //        $entries      = $this->getGroupedEntries($category);
-    //        $method       = 'date';
-    //
-    //        /** @var JournalCollectorInterface $collector */
-    //        $collector = app(JournalCollectorInterface::class);
-    //        $collector->setLimit($pageSize)->setPage($page)->setAllAssetAccounts()->setRange($start, $end)->setCategory($category)->withBudgetInformation();
-    //        $journals = $collector->getPaginatedJournals();
-    //        $journals->setPath('categories/show/' . $category->id . '/' . $date);
-    //
-    //        return view('categories.show', compact('category', 'method', 'entries', 'journals', 'hideCategory', 'subTitle', 'subTitleIcon', 'start', 'end'));
-    //    }
 
     /**
      * @param CategoryFormRequest         $request

@@ -221,9 +221,10 @@ class TagController extends Controller
     }
 
     /**
-     * @param Request                   $request
-     * @param JournalCollectorInterface $collector
-     * @param Tag                       $tag
+     * @param Request                $request
+     * @param TagRepositoryInterface $repository
+     * @param Tag                    $tag
+     * @param string                 $moment
      *
      * @return View
      */
@@ -290,9 +291,8 @@ class TagController extends Controller
                 Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
             }
         }
-
-        // fix title:
-        if (((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) && $count > 0) {
+        
+        if ($moment != 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
                 ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -303,68 +303,6 @@ class TagController extends Controller
         return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
 
-    //    /**
-    //     * @param Request                   $request
-    //     * @param JournalCollectorInterface $collector
-    //     * @param Tag                       $tag
-    //     *
-    //     * @return View
-    //     */
-    //    public function showAll(Request $request, JournalCollectorInterface $collector, Tag $tag)
-    //    {
-    //        $subTitle     = $tag->tag;
-    //        $subTitleIcon = 'fa-tag';
-    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-    //        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)
-    //                  ->withOpposingAccount()->disableInternalFilter()
-    //                  ->withBudgetInformation()->withCategoryInformation();
-    //        $journals = $collector->getPaginatedJournals();
-    //        $journals->setPath('tags/show/' . $tag->id . '/all');
-    //
-    //        $sum = $journals->sum(
-    //            function (Transaction $transaction) {
-    //                return $transaction->transaction_amount;
-    //            }
-    //        );
-    //
-    //        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
-    //
-    //    }
-    //
-    //    public function showByDate(Request $request, JournalCollectorInterface $collector, Tag $tag, string $date)
-    //    {
-    //        $range = Preferences::get('viewRange', '1M')->data;
-    //
-    //        try {
-    //            $start = new Carbon($date);
-    //            $end   = Navigation::endOfPeriod($start, $range);
-    //        } catch (Exception $e) {
-    //            $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
-    //            $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
-    //        }
-    //
-    //        $subTitle     = $tag->tag;
-    //        $subTitleIcon = 'fa-tag';
-    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-    //        $periods      = $this->getPeriodOverview($tag);
-    //
-    //        // use collector:
-    //        $collector->setAllAssetAccounts()
-    //                  ->setLimit($pageSize)->setPage($page)->setTag($tag)->withOpposingAccount()->disableInternalFilter()
-    //                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
-    //        $journals = $collector->getPaginatedJournals();
-    //        $journals->setPath('tags/show/' . $tag->id);
-    //
-    //        $sum = $journals->sum(
-    //            function (Transaction $transaction) {
-    //                return $transaction->transaction_amount;
-    //            }
-    //        );
-    //
-    //        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
-    //    }
 
     /**
      * @param TagFormRequest $request

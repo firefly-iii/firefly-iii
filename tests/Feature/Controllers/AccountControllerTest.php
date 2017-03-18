@@ -15,7 +15,6 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -24,7 +23,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Preferences;
 use Steam;
 use Tests\TestCase;
 
@@ -129,7 +127,7 @@ class AccountControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        Steam::shouldReceive('balancesById')->andReturn([]);
+        Steam::shouldReceive('balancesById')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
         $this->be($this->user());
@@ -322,8 +320,8 @@ class AccountControllerTest extends TestCase
     public function testStore()
     {
         // mock stuff
-        $journalRepos    = $this->mock(JournalRepositoryInterface::class);
-        $repository      = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -333,6 +331,31 @@ class AccountControllerTest extends TestCase
         $data = [
             'name' => 'new account ' . rand(1000, 9999),
             'what' => 'asset',
+        ];
+
+        $response = $this->post(route('accounts.store', ['asset']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\AccountController::store
+     */
+    public function testStoreAnother()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->andReturn(new Account)->once();
+        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->session(['accounts.create.url' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name'           => 'new account ' . rand(1000, 9999),
+            'what'           => 'asset',
+            'create_another' => 1,
         ];
 
         $response = $this->post(route('accounts.store', ['asset']), $data);
@@ -358,6 +381,32 @@ class AccountControllerTest extends TestCase
             'name'   => 'updated account ' . rand(1000, 9999),
             'active' => 1,
             'what'   => 'asset',
+        ];
+
+        $response = $this->post(route('accounts.update', [1]), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\AccountController::update
+     */
+    public function testUpdateAgain()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->andReturn(new Account)->once();
+        $repository->shouldReceive('update')->once();
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->session(['accounts.edit.url' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name'           => 'updated account ' . rand(1000, 9999),
+            'active'         => 1,
+            'what'           => 'asset',
+            'return_to_edit' => '1',
         ];
 
         $response = $this->post(route('accounts.update', [1]), $data);

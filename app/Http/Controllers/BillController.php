@@ -240,10 +240,11 @@ class BillController extends Controller
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
-            // set value so create routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             $request->session()->put('bills.create.fromStore', true);
 
             return redirect(route('bills.create'))->withInput();
+            // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.
@@ -267,10 +268,11 @@ class BillController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             $request->session()->put('bills.edit.fromUpdate', true);
 
             return redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('bills.edit.uri'));

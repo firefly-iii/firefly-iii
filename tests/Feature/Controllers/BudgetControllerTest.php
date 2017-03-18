@@ -43,6 +43,23 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\BudgetController::amount
+     */
+    public function testAmountZero()
+    {
+        // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
+
+        $data = ['amount' => 0,];
+        $this->be($this->user());
+        $response = $this->post(route('budgets.amount', [1]), $data);
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::create
      */
     public function testCreate()

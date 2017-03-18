@@ -72,6 +72,24 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
+     * @covers                   \FireflyIII\Http\Controllers\AttachmentController::download
+     * @expectedExceptionMessage Could not find the indicated attachment
+     */
+    public function testDownloadFail()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('exists')->once()->andReturn(false);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('attachments.download', [1]));
+        $response->assertStatus(500);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::edit
      */
     public function testEdit()
@@ -94,7 +112,7 @@ class AttachmentControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.preview', [1]));
+        $response = $this->get(route('attachments.preview', [3]));
         $response->assertStatus(200);
     }
 

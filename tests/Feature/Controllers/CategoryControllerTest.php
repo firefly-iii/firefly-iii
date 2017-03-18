@@ -222,7 +222,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::show
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::getGroupedEntries
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::getPeriodOverview
      *
      * @dataProvider dateRangeProvider
      *
@@ -263,7 +263,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::showAll
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::show
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -298,8 +298,8 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::showByDate
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::getGroupedEntries
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::show
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::getPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range

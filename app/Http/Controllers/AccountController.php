@@ -307,8 +307,7 @@ class AccountController extends Controller
             }
         }
 
-        // fix title:
-        if ((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) {
+        if ($moment != 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                            'end'  => $end->formatLocalized($this->monthAndDayFormat)]
@@ -478,7 +477,7 @@ class AccountController extends Controller
         $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
 
         if (is_null($opposingTransaction)) {
-            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.');
+            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
         }
 
         return redirect(route('accounts.show', [$opposingTransaction->account_id]));

@@ -176,10 +176,11 @@ class AttachmentController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             $request->session()->put('attachments.edit.fromUpdate', true);
 
             return redirect(route('attachments.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.

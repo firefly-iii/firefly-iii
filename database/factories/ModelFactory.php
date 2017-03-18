@@ -33,6 +33,47 @@ $factory->define(
 }
 );
 
+
+$factory->define(
+    FireflyIII\Models\TransactionJournal::class, function (Faker\Generator $faker) {
+    return [
+        'id'                      => $faker->numberBetween(1, 10),
+        'user_id'                 => 1,
+        'transaction_type_id'     => 1,
+        'bill_id'                 => null,
+        'transaction_currency_id' => 1,
+        'description'             => $faker->words(3, true),
+        'date'                    => '2017-01-01',
+        'interest_date'           => null,
+        'book_date'               => null,
+        'process_date'            => null,
+        'order'                   => 0,
+        'tag_count'               => 0,
+        'encrypted'               => 0,
+        'completed'               => 1,
+    ];
+}
+);
+
+$factory->define(
+    FireflyIII\Models\Bill::class, function (Faker\Generator $faker) {
+    return [
+        'id'              => $faker->numberBetween(1, 10),
+        'user_id'         => 1,
+        'name'            => $faker->words(3, true),
+        'match'           => $faker->words(3, true),
+        'amount_min'      => '100.00',
+        'amount_max'      => '100.00',
+        'date'            => '2017-01-01',
+        'repeat_freq'     => 'monthly',
+        'skip'            => 0,
+        'automatch'       => 1,
+        'name_encrypted'  => 0,
+        'match_encrypted' => 0,
+    ];
+}
+);
+
 $factory->define(
     FireflyIII\Models\PiggyBank::class, function (Faker\Generator $faker) {
     return [
