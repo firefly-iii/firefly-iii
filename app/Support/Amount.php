@@ -18,7 +18,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences as Prefs;
 
 /**
@@ -98,7 +97,6 @@ class Amount
             // alternative is currency before amount
             $format = $pos_a . $pos_b . '%s' . $pos_c . $space . $pos_d . '%v' . $pos_e;
         }
-        Log::debug(sprintf('Final format: "%s"', $format));
 
         return $format;
     }
@@ -111,8 +109,6 @@ class Amount
      */
     public function format(string $amount, bool $coloured = true): string
     {
-        Log::debug(sprintf('Now in format("%s", %s).', $amount, var_export($coloured, true)));
-
         return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
     }
 
@@ -128,18 +124,11 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
     {
-        Log::debug(sprintf('Now in formatAnything($format, "%s",%s)', $amount, var_export($coloured, true)));
-        Log::debug('Currency $format: ', $format->toArray());
         $locale = explode(',', trans('config.locale'));
         $locale = array_map('trim', $locale);
-        Log::debug('Locale is ', $locale);
         setlocale(LC_MONETARY, $locale);
         $float     = round($amount, 12);
         $info      = localeconv();
-        Log::debug('Localeconv is', $info);
-        Log::debug(sprintf('Now calling number_format(%f, %d, "%s", "%s")', $float, $format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']));
-        Log::debug(sprintf('Decimal places raw: %s', var_export($format->decimal_places, true)));
-
         $formatted = number_format($float, intval($format->decimal_places), $info['mon_decimal_point'], $info['mon_thousands_sep']);
 
         // some complicated switches to format the amount correctly:
@@ -267,32 +256,22 @@ class Amount
     }
 
     /**
-     * @return \FireflyIII\Models\TransactionCurrency
+     * @return TransactionCurrency
+     * @throws FireflyException
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
-        Log::debug('Now in getDefaultCurrency()');
         $cache = new CacheProperties;
         $cache->addProperty('getDefaultCurrency');
         if ($cache->has()) {
-            Log::debug('Return cache value: ', $cache->get()->toArray());
-
             return $cache->get(); // @codeCoverageIgnore
         }
-        Log::debug('getDefaultCurrency() is not in cache.');
         $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        Log::debug('currencyPreference is', $currencyPreference->toArray());
-        $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
-
+        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
         if (is_null($currency)) {
-            Log::debug('Currency is NULL!');
             throw new FireflyException(sprintf('No currency found with code "%s"', $currencyPreference->data));
         }
-        Log::debug('Currency is ', $currency->toArray());
-
         $cache->store($currency);
-
-        Log::debug('Return $currency');
 
         return $currency;
     }
