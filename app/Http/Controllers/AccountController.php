@@ -269,7 +269,7 @@ class AccountController extends Controller
                                                            'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
             $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
-            $periods  = $this->periodEntries($account);
+            $periods  = $this->getPeriodOverview($account);
         }
 
         // prep for current period
@@ -280,7 +280,7 @@ class AccountController extends Controller
                 'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                            'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
-            $periods  = $this->periodEntries($account);
+            $periods  = $this->getPeriodOverview($account);
         }
 
         $accountType = $account->accountType->type;
@@ -316,7 +316,9 @@ class AccountController extends Controller
         }
 
 
-        return view('accounts.show', compact('account','moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+        return view(
+            'accounts.show', compact('account', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+        );
     }
 
     /**
@@ -404,7 +406,7 @@ class AccountController extends Controller
      *
      * @return Collection
      */
-    private function periodEntries(Account $account): Collection
+    private function getPeriodOverview(Account $account): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -441,7 +443,14 @@ class AccountController extends Controller
             $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned, clone $end]);
+            $entries->push(
+                [
+                    'string' => $dateStr,
+                    'name'   => $dateName,
+                    'spent'  => $spent,
+                    'earned' => $earned,
+                    'date'   => clone $end]
+            );
             $end = Navigation::subtractPeriod($end, $range, 1);
 
         }

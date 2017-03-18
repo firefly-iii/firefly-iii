@@ -92,14 +92,14 @@ class TransactionController extends Controller
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
-            $periods  = $this->getPeriodEntries($what);
+            $periods  = $this->getPeriodOverview($what);
         }
 
         // prep for current period
         if (strlen($moment) === 0) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-            $periods  = $this->getPeriodEntries($what);
+            $periods  = $this->getPeriodOverview($what);
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -193,7 +193,7 @@ class TransactionController extends Controller
      * @return Collection
      * @throws FireflyException
      */
-    private function getPeriodEntries(string $what): Collection
+    private function getPeriodOverview(string $what): Collection
     {
         $repository = app(JournalRepositoryInterface::class);
         $first      = $repository->first();

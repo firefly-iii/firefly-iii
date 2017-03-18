@@ -142,7 +142,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @covers       \FireflyIII\Http\Controllers\AccountController::periodEntries
+     * @covers       \FireflyIII\Http\Controllers\AccountController::getPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range

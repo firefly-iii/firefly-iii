@@ -14,15 +14,14 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Preferences;
 use Session;
@@ -228,94 +227,144 @@ class TagController extends Controller
      *
      * @return View
      */
-    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag)
+    public function show(Request $request, TagRepositoryInterface $repository, Tag $tag, string $moment = '')
     {
-        $start        = clone session('start', Carbon::now()->startOfMonth());
-        $end          = clone session('end', Carbon::now()->endOfMonth());
+        // default values:
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $periods      = $this->getPeriodOverview($tag);
+        $count        = 0;
+        $loop         = 0;
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = null;
+        $end          = null;
+        $periods      = new Collection;
 
-        // use collector:
-        $collector->setAllAssetAccounts()
-                  ->setLimit($pageSize)->setPage($page)->setTag($tag)->withOpposingAccount()->disableInternalFilter()
-                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('tags/show/' . $tag->id);
 
-        $sum = $journals->sum(
-            function (Transaction $transaction) {
-                return $transaction->transaction_amount;
-            }
-        );
-
-        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
-    }
-
-    /**
-     * @param Request                   $request
-     * @param JournalCollectorInterface $collector
-     * @param Tag                       $tag
-     *
-     * @return View
-     */
-    public function showAll(Request $request, JournalCollectorInterface $collector, Tag $tag)
-    {
-        $subTitle     = $tag->tag;
-        $subTitleIcon = 'fa-tag';
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)
-                  ->withOpposingAccount()->disableInternalFilter()
-                  ->withBudgetInformation()->withCategoryInformation();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('tags/show/' . $tag->id . '/all');
-
-        $sum = $journals->sum(
-            function (Transaction $transaction) {
-                return $transaction->transaction_amount;
-            }
-        );
-
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
-
-    }
-
-    public function showByDate(Request $request, JournalCollectorInterface $collector, Tag $tag, string $date)
-    {
-        $range = Preferences::get('viewRange', '1M')->data;
-
-        try {
-            $start = new Carbon($date);
-            $end   = Navigation::endOfPeriod($start, $range);
-        } catch (Exception $e) {
-            $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
-            $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
+        // prep for "all" view.
+        if ($moment === 'all') {
+            $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $start    = $repository->firstUseDate($tag);
+            $end      = new Carbon;
         }
 
-        $subTitle     = $tag->tag;
-        $subTitleIcon = 'fa-tag';
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $periods      = $this->getPeriodOverview($tag);
+        // prep for "specific date" view.
+        if (strlen($moment) > 0 && $moment !== 'all') {
+            $start    = new Carbon($moment);
+            $end      = Navigation::endOfPeriod($start, $range);
+            $subTitle = trans(
+                'firefly.journals_in_period_for_tag',
+                ['tag'   => $tag->tag,
+                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+            $periods  = $this->getPeriodOverview($tag);
+        }
 
-        // use collector:
-        $collector->setAllAssetAccounts()
-                  ->setLimit($pageSize)->setPage($page)->setTag($tag)->withOpposingAccount()->disableInternalFilter()
-                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('tags/show/' . $tag->id);
-
-        $sum = $journals->sum(
-            function (Transaction $transaction) {
-                return $transaction->transaction_amount;
+        // prep for current period
+        if (strlen($moment) === 0) {
+            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $periods  = $this->getPeriodOverview($tag);
+            $subTitle = trans(
+                'firefly.journals_in_period_for_tag',
+                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+        }
+        // grab journals, but be prepared to jump a period back to get the right ones:
+        Log::info('Now at tag loop start.');
+        while ($count === 0 && $loop < 3) {
+            $loop++;
+            Log::info('Count is zero, search for journals.');
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+                      ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+            $journals = $collector->getPaginatedJournals();
+            $journals->setPath('tags/show/' . $tag->id);
+            $count = $journals->getCollection()->count();
+            if ($count === 0) {
+                $start->subDay();
+                $start = Navigation::startOfPeriod($start, $range);
+                $end   = Navigation::endOfPeriod($start, $range);
+                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
             }
-        );
+        }
 
-        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
+        // fix title:
+        if (((strlen($moment) > 0 && $moment !== 'all') || strlen($moment) === 0) && $count > 0) {
+            $subTitle = trans(
+                'firefly.journals_in_period_for_tag',
+                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+        }
+        $sum = '0';
+
+        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
+
+    //    /**
+    //     * @param Request                   $request
+    //     * @param JournalCollectorInterface $collector
+    //     * @param Tag                       $tag
+    //     *
+    //     * @return View
+    //     */
+    //    public function showAll(Request $request, JournalCollectorInterface $collector, Tag $tag)
+    //    {
+    //        $subTitle     = $tag->tag;
+    //        $subTitleIcon = 'fa-tag';
+    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+    //        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTag($tag)
+    //                  ->withOpposingAccount()->disableInternalFilter()
+    //                  ->withBudgetInformation()->withCategoryInformation();
+    //        $journals = $collector->getPaginatedJournals();
+    //        $journals->setPath('tags/show/' . $tag->id . '/all');
+    //
+    //        $sum = $journals->sum(
+    //            function (Transaction $transaction) {
+    //                return $transaction->transaction_amount;
+    //            }
+    //        );
+    //
+    //        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
+    //
+    //    }
+    //
+    //    public function showByDate(Request $request, JournalCollectorInterface $collector, Tag $tag, string $date)
+    //    {
+    //        $range = Preferences::get('viewRange', '1M')->data;
+    //
+    //        try {
+    //            $start = new Carbon($date);
+    //            $end   = Navigation::endOfPeriod($start, $range);
+    //        } catch (Exception $e) {
+    //            $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
+    //            $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
+    //        }
+    //
+    //        $subTitle     = $tag->tag;
+    //        $subTitleIcon = 'fa-tag';
+    //        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+    //        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
+    //        $periods      = $this->getPeriodOverview($tag);
+    //
+    //        // use collector:
+    //        $collector->setAllAssetAccounts()
+    //                  ->setLimit($pageSize)->setPage($page)->setTag($tag)->withOpposingAccount()->disableInternalFilter()
+    //                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
+    //        $journals = $collector->getPaginatedJournals();
+    //        $journals->setPath('tags/show/' . $tag->id);
+    //
+    //        $sum = $journals->sum(
+    //            function (Transaction $transaction) {
+    //                return $transaction->transaction_amount;
+    //            }
+    //        );
+    //
+    //        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
+    //    }
 
     /**
      * @param TagFormRequest $request
@@ -396,11 +445,11 @@ class TagController extends Controller
 
             // get expenses and what-not in this period and this tag.
             $arr = [
-                'date_string' => $end->format('Y-m-d'),
-                'date_name'   => Navigation::periodShow($end, $range),
-                'date'        => $end,
-                'spent'       => $this->repository->spentInperiod($tag, $end, $currentEnd),
-                'earned'      => $this->repository->earnedInperiod($tag, $end, $currentEnd),
+                'string' => $end->format('Y-m-d'),
+                'name'   => Navigation::periodShow($end, $range),
+                'date'   => clone $end,
+                'spent'  => $this->repository->spentInperiod($tag, $end, $currentEnd),
+                'earned' => $this->repository->earnedInperiod($tag, $end, $currentEnd),
             ];
             $collection->push($arr);
 

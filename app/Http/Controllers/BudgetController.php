@@ -220,14 +220,14 @@ class BudgetController extends Controller
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
-            $periods  = $this->noBudgetPeriodEntries();
+            $periods  = $this->getPeriodOverview();
         }
 
         // prep for current period
         if (strlen($moment) === 0) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-            $periods  = $this->noBudgetPeriodEntries();
+            $periods  = $this->getPeriodOverview();
             $subTitle = trans(
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -500,7 +500,7 @@ class BudgetController extends Controller
     /**
      * @return Collection
      */
-    private function noBudgetPeriodEntries(): Collection
+    private function getPeriodOverview(): Collection
     {
         $repository = app(JournalRepositoryInterface::class);
         $first      = $repository->first();

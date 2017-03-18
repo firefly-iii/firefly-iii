@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag, moment, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -75,15 +75,15 @@
             </div>
         </div>
     </div>
-    {% if periods %}
+    {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('tags.show.all',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
     <div class="row">
-        <div class="{% if periods %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
+        <div class="{% if periods.count > 0 %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -106,7 +106,7 @@
                     {% if periods %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('tags.show.all', [tag.id]) }}">
+                            <a href="{{ route('tags.show', [tag.id,'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
@@ -124,7 +124,7 @@
                     {% if periods %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('tags.show.all', [tag.id]) }}">
+                            <a href="{{ route('tags.show', [tag.id,'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
@@ -145,7 +145,7 @@
                     {% if period.spent != 0 or period.earned != 0 %}
                         <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('tags.show.date',[tag.id, period.date_string]) }}">{{ period.date_name }}</a>
+                                <h3 class="box-title"><a href="{{ route('tags.show',[tag.id, period.string]) }}">{{ period.name }}</a>
                                 </h3>
                             </div>
                             <div class="box-body no-padding">
@@ -174,7 +174,7 @@
     {% if periods %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('tags.show.all',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}

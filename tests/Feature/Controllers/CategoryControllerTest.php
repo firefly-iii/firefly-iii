@@ -116,7 +116,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategoryPeriodEntries
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::getNoCategoryPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -152,7 +152,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategoryPeriodEntries
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::getNoCategoryPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -186,7 +186,7 @@ class CategoryControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategory
-     * @covers       \FireflyIII\Http\Controllers\CategoryController::noCategoryPeriodEntries
+     * @covers       \FireflyIII\Http\Controllers\CategoryController::getNoCategoryPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range

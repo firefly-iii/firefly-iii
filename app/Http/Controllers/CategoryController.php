@@ -180,14 +180,14 @@ class CategoryController extends Controller
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
-            $periods  = $this->noCategoryPeriodEntries();
+            $periods  = $this->getNoCategoryPeriodOverview();
         }
 
         // prep for current period
         if (strlen($moment) === 0) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-            $periods  = $this->noCategoryPeriodEntries();
+            $periods  = $this->getNoCategoryPeriodOverview();
             $subTitle = trans(
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -231,18 +231,16 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Request                   $request
-     * @param JournalCollectorInterface $collector
-     * @param Category                  $category
-     * @param string                    $moment
+     * @param Request                     $request
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     * @param string                      $moment
      *
      * @return View
      */
-    public function show(Request $request, JournalCollectorInterface $collector, Category $category, string $moment = '')
+    public function show(Request $request, CategoryRepositoryInterface $repository, Category $category, string $moment = '')
     {
         // default values:
-        /** @var CategoryRepositoryInterface $repository */
-        $repository   = app(CategoryRepositoryInterface::class);
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
         $page         = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
@@ -271,21 +269,21 @@ class CategoryController extends Controller
                 ['name' => $category->name,
                     'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
-            $periods  = $this->periodEntries($category);
+            $periods  = $this->getPeriodOverview($category);
         }
 
         // prep for current period
         if (strlen($moment) === 0) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-            $periods  = $this->periodEntries($category);
+            $periods  = $this->getPeriodOverview($category);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name' => $category->name,'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
         // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at transaction loop start.');
+        Log::info('Now at category loop start.');
         while ($count === 0 && $loop < 3) {
             $loop++;
             Log::info('Count is zero, search for journals.');
@@ -427,7 +425,7 @@ class CategoryController extends Controller
     /**
      * @return Collection
      */
-    private function noCategoryPeriodEntries(): Collection
+    private function getNoCategoryPeriodOverview(): Collection
     {
         $repository = app(JournalRepositoryInterface::class);
         $first      = $repository->first();
@@ -504,7 +502,7 @@ class CategoryController extends Controller
      *
      * @return Collection
      */
-    private function periodEntries(Category $category): Collection
+    private function getPeriodOverview(Category $category): Collection
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
