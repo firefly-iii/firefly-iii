@@ -124,6 +124,7 @@ return [
     'journals_in_period_for_account'             => 'All transactions for account :name between :start and :end',
     'transferred'                                => 'Transferred',
     'all_withdrawal'                             => 'All expenses',
+    'all_transactions'                             => 'All transactions',
     'title_withdrawal_between'                   => 'All expenses between :start and :end',
     'all_deposit'                                => 'All revenue',
     'title_deposit_between'                      => 'All revenue between :start and :end',
@@ -131,6 +132,8 @@ return [
     'title_transfers_between'                    => 'All transfers between :start and :end',
     'all_transfer'                               => 'All transfers',
     'title_transfer_between'                     => 'All transfers between :start and :end',
+    'all_journals_for_category'                  => 'All transactions for category :name',
+    'journals_in_period_for_category'            => 'All transactions for category :name between :start and :end',
 
 
     // repeat frequencies:

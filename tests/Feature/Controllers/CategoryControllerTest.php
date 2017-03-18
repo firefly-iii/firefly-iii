@@ -14,6 +14,7 @@ namespace Tests\Feature\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -229,6 +230,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testShow(string $range)
     {
+        $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -247,8 +249,11 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -266,22 +271,28 @@ class CategoryControllerTest extends TestCase
     public function testShowAll(string $range)
     {
         // mock stuff
+        $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
+
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('categories.show.all', [1]));
+        $response = $this->get(route('categories.show', [1, 'all']));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
@@ -296,6 +307,7 @@ class CategoryControllerTest extends TestCase
     public function testShowByDate(string $range)
     {
         // mock stuff
+        $transaction  = factory(Transaction::class)->make();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -309,8 +321,10 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $repository->shouldReceive('firstUseDate')->once()->andReturn(new Carbon);
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
@@ -319,7 +333,7 @@ class CategoryControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('categories.show.date', [1, '2015-01-01']));
+        $response = $this->get(route('categories.show', [1, '2015-01-01']));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
