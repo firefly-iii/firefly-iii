@@ -9,11 +9,9 @@ cache:
         - $HOME/.composer/cache
 
 install:
-  - if [[ "$(php -v | grep 'PHP 7')" ]]; then phpenv config-rm xdebug.ini; fi
   - rm composer.lock
   - composer update --no-scripts
   - cp .env.testing .env
-  - if [[ "$(php -v | grep 'PHP 7')" ]]; then phpenv config-add xdebug.ini; fi
   - php artisan clear-compiled
   - php artisan optimize
   - php artisan env
