@@ -17,6 +17,7 @@ install:
   - php artisan env
   - cp .env.testing .env
   - mv storage/database/databasecopy.sqlite storage/database/database.sqlite
+  - mkdir -p build/logs
 
 script:
   - phpunit -c phpunit.coverage.xml
