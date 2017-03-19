@@ -147,4 +147,15 @@ class UserRepository implements UserRepositoryInterface
 
         return $return;
     }
+
+    /**
+     * @param User   $user
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(User $user, string $role): bool
+    {
+        return $user->hasRole($role);
+    }
 }

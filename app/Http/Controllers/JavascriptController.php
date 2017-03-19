@@ -128,7 +128,7 @@ class JavascriptController extends Controller
 
         switch ($viewRange) {
             default:
-                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
+                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".'); // @codeCoverageIgnore
             case '1D':
             case 'custom':
                 $format = (string)trans('config.month_and_day');

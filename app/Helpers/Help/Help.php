@@ -43,12 +43,12 @@ class Help implements HelpInterface
     }
 
     /**
-     * @param string $language
      * @param string $route
+     * @param string $language
      *
      * @return string
      */
-    public function getFromGithub(string $language, string $route): string
+    public function getFromGithub(string $route, string $language): string
     {
 
         $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);

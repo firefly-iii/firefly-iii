@@ -20,7 +20,10 @@ install:
   - mv storage/database/databasecopy.sqlite storage/database/database.sqlite
 
 script:
-  - phpunit
+  - phpunit -c phpunit.coverage.xml
+
+after_success:
+  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
 
 # safelist
 branches:

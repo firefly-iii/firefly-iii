@@ -79,4 +79,12 @@ interface UserRepositoryInterface
      * @return array
      */
     public function getUserData(User $user): array;
+
+    /**
+     * @param User   $user
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(User $user, string $role): bool;
 }

@@ -52,6 +52,30 @@ class HomeControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\HomeController::dateRange
+     * @covers \FireflyIII\Http\Controllers\HomeController::__construct
+     */
+    public function testDateRangeCustom()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
+        $this->be($this->user());
+
+        $args = [
+            'start' => '2012-01-01',
+            'end'   => '2012-04-01',
+            'label' => 'Custom range',
+        ];
+
+        $response = $this->post(route('daterange'), $args);
+        $response->assertStatus(200);
+        $response->assertSessionHas('warning', '91 days of data may take a while to load.');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\HomeController::displayError
      */
     public function testDisplayError()

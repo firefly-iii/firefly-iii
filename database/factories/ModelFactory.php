@@ -35,6 +35,27 @@ $factory->define(
 
 
 $factory->define(
+    FireflyIII\Models\ImportJob::class, function (Faker\Generator $faker) {
+    return [
+        'id'              => $faker->numberBetween(1, 10),
+        'user_id'         => 1,
+        'key'             => $faker->words(1, true),
+        'file_type'       => 'csv',
+        'status'          => 'import_status_never_started',
+        'configuration'   => null,
+        'extended_status' => [
+            'total_steps'  => 0,
+            'steps_done'   => 0,
+            'import_count' => 0,
+            'importTag'    => 0,
+            'errors'       => [],
+        ],
+    ];
+}
+);
+
+
+$factory->define(
     FireflyIII\Models\TransactionJournal::class, function (Faker\Generator $faker) {
     return [
         'id'                      => $faker->numberBetween(1, 10),
