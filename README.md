@@ -35,4 +35,4 @@ If you like Firefly and if it helps you save lots of money, why not send me [a d
 
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
 
-[![Build Status](https://travis-ci.org/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.org/firefly-iii/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/?branch=master)
+[![Build Status](https://travis-ci.org/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.org/firefly-iii/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/firefly-iii/firefly-iii/badge.svg?branch=master)](https://coveralls.io/github/firefly-iii/firefly-iii?branch=master)
