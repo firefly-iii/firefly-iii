@@ -8,7 +8,7 @@
  */
 
 return [
-    'no_demo_text'                   => 'Désolé, il n’y a aucun texte supplémentaire démo-explication pour <abbr title=":route"> cette page</abbr>.',
+    'no_demo_text'                   => 'Désolé, il n’y a aucun texte supplémentaire de démonstration ou d\'explication pour <abbr title=":route"> cette page</abbr>.',
     'see_help_icon'                  => 'Cependant, l\'icône <i class="fa fa-question-circle"></i>- dans le coin supérieur droit peut vous en dire plus.',
     'index'                          => 'Bienvenue chez <strong>Firefly III</strong> ! Sur cette page, vous obtenez un aperçu rapide de vos finances. Pour plus d’informations, consultez comptes &rarr; <a href=":asset"> Comptes d’actif</a> et, bien sûr, les pages des <a href=":budgets"> Budgets</a> et des <a href=":reports"> rapports</a>. Ou juste jetez un coup d’œil et voyez où vous vous retrouvez.',
     'accounts-index'                 => 'Asset accounts are your personal bank accounts. Expense accounts are the accounts you spend money at, such as stores and friends. Revenue accounts are accounts you receive money from, such as your job, the government or other sources of income. On this page you can edit or remove them.',
