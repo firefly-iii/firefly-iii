@@ -44,7 +44,29 @@ class NewUserControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\NewUserController::index
+     * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
+     */
+    public function testIndexExisting()
+    {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('count')->andReturn(1);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('new-user.index'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::submit
+     * @covers \FireflyIII\Http\Controllers\NewUserController::createAssetAccount
+     * @covers \FireflyIII\Http\Controllers\NewUserController::createSavingsAccount
+     * @covers \FireflyIII\Http\Controllers\NewUserController::storeCreditCard
      */
     public function testSubmit()
     {
