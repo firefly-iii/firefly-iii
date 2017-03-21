@@ -297,7 +297,7 @@ class AccountController extends Controller
                 $collector->setRange($start, $end);
             }
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('accounts/show/' . $account->id);
+            $journals->setPath('accounts/show/' . $moment . '/' . $account->id);
             $count = $journals->getCollection()->count();
             if ($count === 0) {
                 $start->subDay();
