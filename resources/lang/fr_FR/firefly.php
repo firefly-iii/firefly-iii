@@ -84,7 +84,7 @@ return [
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Compte(s) source',
     'destination_accounts'                       => 'Compte(s) de destination',
-    'user_id_is'                                 => 'Your user id is <strong>:user</strong>',
+    'user_id_is'                                 => 'Votre identifiant d’utilisateur est <strong>:user</strong>',
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/firefly-iii/firefly-iii/issues">open a ticket on Github</a>.',
     'nothing_to_display'                         => 'There are no transactions to show you',
