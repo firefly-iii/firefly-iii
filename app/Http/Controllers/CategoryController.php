@@ -290,7 +290,7 @@ class CategoryController extends Controller
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                      ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
+                      ->setCategory($category)->withBudgetInformation()->withCategoryInformation()->disableInternalFilter();
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('categories/show/' . $category->id);
             $count = $journals->getCollection()->count();
@@ -479,13 +479,22 @@ class CategoryController extends Controller
             $earned     = $repository->earnedInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
+
+            // amount transferred
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->setCategory($category)
+                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER])->disableInternalFilter();
+            $transferred = Steam::positive($collector->getJournals()->sum('transaction_amount'));
+
             $entries->push(
                 [
-                    'string' => $dateStr,
-                    'name'   => $dateName,
-                    'spent'  => $spent,
-                    'earned' => $earned,
-                    'date'   => clone $end,
+                    'string'      => $dateStr,
+                    'name'        => $dateName,
+                    'spent'       => $spent,
+                    'earned'      => $earned,
+                    'transferred' => $transferred,
+                    'date'        => clone $end,
                 ]
             );
             $end = Navigation::subtractPeriod($end, $range, 1);

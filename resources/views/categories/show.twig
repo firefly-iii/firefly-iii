@@ -109,6 +109,10 @@
                                     <td style="width:33%;">{{ 'earned'|_ }}</td>
                                     <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
                                 </tr>
+                                <tr>
+                                    <td style="width:33%;">{{ 'transferred'|_ }}</td>
+                                    <td style="text-align: right;" class="text-info">{{ period.transferred|formatAmountPlain }}</td>
+                                </tr>
                             </table>
                         </div>
                     </div>
