@@ -29,6 +29,7 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::code
+     * @covers \FireflyIII\Http\Controllers\PreferencesController::getDomain
      */
     public function testCode()
     {

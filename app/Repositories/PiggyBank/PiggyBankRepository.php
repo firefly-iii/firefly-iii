@@ -36,6 +36,54 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
+     * @return bool
+     */
+    public function addAmount(PiggyBank $piggyBank, string $amount): bool
+    {
+        $repetition                = $piggyBank->currentRelevantRep();
+        $currentAmount             = $repetition->currentamount ?? '0';
+        $repetition->currentamount = bcadd($currentAmount, $amount);
+        $repetition->save();
+
+        // create event
+        $this->createEvent($piggyBank, $amount);
+
+        return true;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
+    {
+        $leftOnAccount = $piggyBank->leftOnAccount(new Carbon);
+        $savedSoFar    = strval($piggyBank->currentRelevantRep()->currentamount);
+        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
+        $maxAmount     = strval(min(round($leftOnAccount, 12), round($leftToSave, 12)));
+
+        return bccomp($amount, $maxAmount) <= 0;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool
+    {
+        $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
+
+        return bccomp($amount, $savedSoFar) <= 0;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
      * @return PiggyBankEvent
      */
     public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
@@ -117,6 +165,24 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return $set;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function removeAmount(PiggyBank $piggyBank, string $amount): bool
+    {
+        $repetition                = $piggyBank->currentRelevantRep();
+        $repetition->currentamount = bcsub($repetition->currentamount, $amount);
+        $repetition->save();
+
+        // create event
+        $this->createEvent($piggyBank, bcmul($amount, '-1'));
+
+        return true;
     }
 
     /**

@@ -79,6 +79,25 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController::create
+     */
+    public function testCreateEmpty()
+    {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection())->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('piggy-banks.create'));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('new-user.index'));
+        $response->assertSessionHas('error');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::delete
      */
     public function testDelete()
@@ -180,7 +199,8 @@ class PiggyBankControllerTest extends TestCase
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('createEvent')->once();
+        $repository->shouldReceive('canAddAmount')->once()->andReturn(true);
+        $repository->shouldReceive('addAmount')->once()->andReturn(true);
 
         $data = ['amount' => '1.123'];
         $this->be($this->user());
@@ -191,30 +211,25 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * Add the exact amount to fill a piggy bank
+     * Add way too much
      *
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::postAdd
      */
-    public function testPostAddExact()
+    public function testPostAddTooMuch()
     {
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('createEvent')->once();
-
-        // find a piggy with current amount = 0.
-        $piggy = PiggyBank::leftJoin('piggy_bank_repetitions', 'piggy_bank_repetitions.piggy_bank_id', '=', 'piggy_banks.id')
-                          ->where('currentamount', 0)
-                          ->first(['piggy_banks.id', 'targetamount']);
+        $repository->shouldReceive('canAddAmount')->once()->andReturn(false);
 
 
-        $data = ['amount' => strval($piggy->targetamount)];
+        $data = ['amount' => '1000'];
         $this->be($this->user());
-        $response = $this->post(route('piggy-banks.add', [$piggy->id]), $data);
+        $response = $this->post(route('piggy-banks.add', [1]), $data);
         $response->assertStatus(302);
         $response->assertRedirect(route('piggy-banks.index'));
-        $response->assertSessionHas('success');
+        $response->assertSessionHas('error');
     }
 
     /**
@@ -226,7 +241,8 @@ class PiggyBankControllerTest extends TestCase
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('createEvent')->once();
+        $repository->shouldReceive('canRemoveAmount')->once()->andReturn(true);
+        $repository->shouldReceive('removeAmount')->once()->andReturn(true);
 
         $data = ['amount' => '1.123'];
         $this->be($this->user());
@@ -234,6 +250,25 @@ class PiggyBankControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('piggy-banks.index'));
         $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\PiggyBankController::postRemove
+     */
+    public function testPostRemoveTooMuch()
+    {
+        // mock stuff
+        $repository   = $this->mock(PiggyBankRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('canRemoveAmount')->once()->andReturn(false);
+
+        $data = ['amount' => '1.123'];
+        $this->be($this->user());
+        $response = $this->post(route('piggy-banks.remove', [1]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('piggy-banks.index'));
+        $response->assertSessionHas('error');
     }
 
     /**

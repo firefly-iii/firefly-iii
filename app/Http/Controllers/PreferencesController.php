@@ -160,11 +160,10 @@ class PreferencesController extends Controller
         Preferences::set('showDepositsFrontpage', $showDepositsFrontpage);
 
         // save page size:
+        Preferences::set('transactionPageSize', 50);
         $transactionPageSize = intval($request->get('transactionPageSize'));
         if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
             Preferences::set('transactionPageSize', $transactionPageSize);
-        } else {
-            Preferences::set('transactionPageSize', 50);
         }
 
         $twoFactorAuthEnabled   = false;

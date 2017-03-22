@@ -27,6 +27,30 @@ interface PiggyBankRepositoryInterface
 {
 
     /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function addAmount(PiggyBank $piggyBank, string $amount): bool;
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function canAddAmount(PiggyBank $piggyBank, string $amount): bool;
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
+
+    /**
      * Create a new event.
      *
      * @param PiggyBank $piggyBank
@@ -81,6 +105,14 @@ interface PiggyBankRepositoryInterface
      * @return Collection
      */
     public function getPiggyBanksWithAmount(): Collection;
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return bool
+     */
+    public function removeAmount(PiggyBank $piggyBank, string $amount): bool;
 
     /**
      * Set all piggy banks to order 0.
