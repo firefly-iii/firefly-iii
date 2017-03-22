@@ -247,13 +247,16 @@ class CategoryControllerTest extends TestCase
         $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->twice();
+        $collector->shouldReceive('setRange')->andReturnSelf()->twice();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->twice();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->twice();
 
-        $collector->shouldReceive('setCategory')->andReturnSelf()->once();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection)->once();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->twice();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $this->be($this->user());
@@ -284,6 +287,8 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->once();
+
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
@@ -319,12 +324,15 @@ class CategoryControllerTest extends TestCase
 
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->twice();
+        $collector->shouldReceive('setRange')->andReturnSelf()->twice();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->twice();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('setCategory')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->twice();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->twice();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection)->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $repository->shouldReceive('firstUseDate')->once()->andReturn(new Carbon('1900-01-01'));
@@ -364,13 +372,16 @@ class CategoryControllerTest extends TestCase
         $collector = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
         $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(4);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(4);
+        $collector->shouldReceive('setTypes')->andReturnSelf()->times(1);
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->times(4);
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(4);
+        $collector->shouldReceive('setCategory')->andReturnSelf()->times(4);
 
-        $collector->shouldReceive('setCategory')->andReturnSelf()->times(3);
+        $collector->shouldReceive('getJournals')->andReturn(new Collection)->times(1);
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
 
         $this->be($this->user());
