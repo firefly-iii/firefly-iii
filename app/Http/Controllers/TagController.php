@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -144,7 +144,7 @@ class TagController extends Controller
      *
      * @return View
      */
-    public function edit(Tag $tag)
+    public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
@@ -158,8 +158,8 @@ class TagController extends Controller
         /*
          * Can this tag become another type?
          */
-        $allowAdvance        = $tag->tagAllowAdvance();
-        $allowToBalancingAct = $tag->tagAllowBalancing();
+        $allowAdvance        = $repository->tagAllowAdvance($tag);
+        $allowToBalancingAct = $repository->tagAllowBalancing($tag);
 
         // edit tag options:
         if ($allowAdvance === false) {
@@ -318,10 +318,11 @@ class TagController extends Controller
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
-            // set value so create routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('tags.create.fromStore', true);
 
             return redirect(route('tags.create'))->withInput();
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('tags.create.uri'));
@@ -343,10 +344,11 @@ class TagController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('tags.edit.fromUpdate', true);
 
             return redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.

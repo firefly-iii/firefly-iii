@@ -22,6 +22,8 @@ use Illuminate\Http\Request;
 use Lang;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class LoginController
  *
  * @package FireflyIII\Http\Controllers\Auth

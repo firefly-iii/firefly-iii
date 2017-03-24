@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
@@ -66,6 +66,14 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getTransactionTypes(): Collection;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param int                $order
+     *
+     * @return bool
+     */
+    public function setOrder(TransactionJournal $journal, int $order): bool;
 
     /**
      * @param User $user

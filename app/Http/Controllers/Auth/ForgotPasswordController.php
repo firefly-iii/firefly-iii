@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Password;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class ForgotPasswordController
  *
  * @package FireflyIII\Http\Controllers\Auth

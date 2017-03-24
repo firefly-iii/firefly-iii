@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -36,6 +36,7 @@ class TagControllerTest extends TestCase
     public function testCreate()
     {
         // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -51,6 +52,7 @@ class TagControllerTest extends TestCase
     public function testDelete()
     {
         // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -83,8 +85,11 @@ class TagControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('tagAllowAdvance')->once()->andReturn(false);
+        $repository->shouldReceive('tagAllowBalancing')->once()->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('tags.edit', [1]));
@@ -124,26 +129,85 @@ class TagControllerTest extends TestCase
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);
-        $repository->shouldReceive('lastUseDate')->andReturn(new Carbon);
-        $repository->shouldReceive('earnedInPeriod')->andReturn('1');
-        $repository->shouldReceive('find')->andReturn(new Tag);
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1')->once();
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
+        $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('setTag')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
 
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1]));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TagController::show
+     */
+    public function testShowDate()
+    {
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1')->once();
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
+        $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
+        $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('tags.show', [1, '2016-01-01']));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TagController::show
+     */
+    public function testShowAll()
+    {
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('tags.show', [1, 'all']));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }

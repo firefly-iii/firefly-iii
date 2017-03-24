@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -151,10 +151,9 @@ class TransactionController extends Controller
             $ids   = array_unique($ids);
             foreach ($ids as $id) {
                 $journal = $repository->find(intval($id));
-                if ($journal && $journal->date->format('Y-m-d') == $date->format('Y-m-d')) {
-                    $journal->order = $order;
+                if ($journal && $journal->date->isSameDay($date)) {
+                    $repository->setOrder($journal, $order);
                     $order++;
-                    $journal->save();
                 }
             }
         }
@@ -240,8 +239,6 @@ class TransactionController extends Controller
             ];
             Log::debug(sprintf('What is %s', $what));
             switch ($what) {
-                default:
-                    throw new FireflyException(sprintf('Cannot handle "%s"', $what));
                 case 'withdrawal':
                     $array['spent'] = $sum;
                     break;
@@ -250,7 +247,6 @@ class TransactionController extends Controller
                     break;
                 case 'transfers':
                 case 'transfer':
-                    Log::debug('HERE');
                     $array['transferred'] = Steam::positive($sum);
                     break;
 

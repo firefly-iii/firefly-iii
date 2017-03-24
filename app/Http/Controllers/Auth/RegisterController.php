@@ -24,6 +24,8 @@ use Session;
 use Validator;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class RegisterController
  *
  * @package FireflyIII\Http\Controllers\Auth

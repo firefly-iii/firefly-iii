@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Password;
 
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class PasswordController
  *
  * @package FireflyIII\Http\Controllers\Auth

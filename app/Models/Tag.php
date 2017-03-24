@@ -9,12 +9,11 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
 use Crypt;
-use FireflyIII\Support\Models\TagTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,7 +26,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class Tag extends Model
 {
-    use ValidatingTrait, SoftDeletes, TagTrait;
+    use ValidatingTrait, SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
