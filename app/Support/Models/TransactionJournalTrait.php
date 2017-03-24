@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
 
@@ -15,10 +15,8 @@ namespace FireflyIII\Support\Models;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
@@ -107,7 +105,7 @@ trait TransactionJournalTrait
     }
 
     /**
-     * @param string             $dateField
+     * @param string $dateField
      *
      * @return string
      */
@@ -118,7 +116,7 @@ trait TransactionJournalTrait
         }
         if (!is_null($this->$dateField) && $this->$dateField instanceof Carbon) {
             // make field NULL
-            $carbon              = clone $this->$dateField;
+            $carbon           = clone $this->$dateField;
             $this->$dateField = null;
             $this->save();
 

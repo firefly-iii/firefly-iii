@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbGenerator;
 use FireflyIII\Exceptions\FireflyException;
@@ -79,8 +79,9 @@ Breadcrumbs::register(
     }
     // when is specific period:
     if (strlen($moment) > 0 && $moment !== 'all') {
-        $title = trans('firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                                                            'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
         );
         $breadcrumbs->push($title, route('accounts.show', [$account->id, $moment]));
     }
@@ -333,8 +334,9 @@ Breadcrumbs::register(
     }
     // when is specific period:
     if (strlen($moment) > 0 && $moment !== 'all') {
-        $title = trans('firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                                                            'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
         );
         $breadcrumbs->push($title, route('categories.show', [$category->id, $moment]));
     }
@@ -742,8 +744,9 @@ Breadcrumbs::register(
 
     // when is specific period:
     if (strlen($moment) > 0 && $moment !== 'all') {
-        $title = trans('firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                                                            'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
         );
         $breadcrumbs->push($title, route('transactions.index', [$what, $moment]));
     }

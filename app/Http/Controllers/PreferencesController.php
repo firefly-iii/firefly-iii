@@ -18,7 +18,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
-use Log;
 use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
 use Session;

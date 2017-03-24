@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
@@ -71,8 +71,8 @@ class ImportJob extends Model
      */
     public function addStepsDone(int $count)
     {
-        $status = $this->extended_status;
-        $status['steps_done'] += $count;
+        $status                = $this->extended_status;
+        $status['steps_done']  += $count;
         $this->extended_status = $status;
         $this->save();
 
@@ -83,7 +83,7 @@ class ImportJob extends Model
      */
     public function addTotalSteps(int $count)
     {
-        $status = $this->extended_status;
+        $status                = $this->extended_status;
         $status['total_steps'] += $count;
         $this->extended_status = $status;
         $this->save();

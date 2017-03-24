@@ -8,7 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -347,7 +347,7 @@ class ImportController extends Controller
      *
      * @param ImportUploadRequest          $request
      * @param ImportJobRepositoryInterface $repository
-     * @param UserRepositoryInterface $userRepository
+     * @param UserRepositoryInterface      $userRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -368,7 +368,7 @@ class ImportController extends Controller
         $disk             = Storage::disk('upload');
 
         // user is demo user, replace upload with prepared file.
-        if ($userRepository->hasRole(auth()->user(),'demo')) {
+        if ($userRepository->hasRole(auth()->user(), 'demo')) {
             $stubsDisk        = Storage::disk('stubs');
             $content          = $stubsDisk->get('demo-import.csv');
             $contentEncrypted = Crypt::encrypt($content);
@@ -376,14 +376,14 @@ class ImportController extends Controller
             Log::debug('Replaced upload with demo file.');
 
             // also set up prepared configuration.
-            $configuration      = json_decode($stubsDisk->get('demo-configuration.json'), true);
+            $configuration = json_decode($stubsDisk->get('demo-configuration.json'), true);
             $repository->setConfiguration($job, $configuration);
             Log::debug('Set configuration for demo user', $configuration);
 
             // also flash info
             Session::flash('info', trans('demo.import-configure-security'));
         }
-        if (!$userRepository->hasRole(auth()->user(),'demo')) {
+        if (!$userRepository->hasRole(auth()->user(), 'demo')) {
             // user is not demo, process original upload:
             $disk->put($newName, $contentEncrypted);
             Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
@@ -410,6 +410,7 @@ class ImportController extends Controller
             }
             // @codeCoverageIgnoreEnd
         }
+
         return redirect(route('import.configure', [$job->key]));
     }
 
@@ -429,6 +430,7 @@ class ImportController extends Controller
             case 'settings':
             case 'store-settings':
                 Log::debug(sprintf('Job %d with key %s has status %s', $job->id, $job->key, $job->status));
+
                 return $job->status === 'import_configuration_saved';
             case 'finished':
                 return $job->status === 'import_complete';

@@ -475,7 +475,7 @@ class RuleController extends Controller
             $actions[] = view(
                 'rules.partials.action',
                 [
-                    'oldAction' => $entry,
+                    'oldAction'  => $entry,
                     'oldValue'   => $request->old('rule-action-value')[$index],
                     'oldChecked' => $checked,
                     'count'      => $count,

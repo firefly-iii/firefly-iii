@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -58,7 +58,7 @@ class BillFormRequest extends Request
         $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name';
         $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match';
         if (intval($this->get('id')) > 0) {
-            $nameRule .= ',' . intval($this->get('id'));
+            $nameRule  .= ',' . intval($this->get('id'));
             $matchRule .= ',' . intval($this->get('id'));
         }
 

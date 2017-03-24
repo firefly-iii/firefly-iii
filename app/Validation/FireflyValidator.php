@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
@@ -29,7 +29,6 @@ use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Validation\Validator;
-use Log;
 use Session;
 
 /**

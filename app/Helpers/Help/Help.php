@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Helpers\Help;
 
 use Cache;
@@ -123,6 +124,7 @@ class Help implements HelpInterface
         if (strlen($content) > 0) {
             Log::debug(sprintf('Will store entry in cache: %s', $key));
             Cache::put($key, $content, 10080); // a week.
+
             return;
         }
         Log::info(sprintf('Will not cache %s because content is empty.', $key));

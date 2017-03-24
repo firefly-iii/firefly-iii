@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Helpers\Attachments;
 
 use FireflyIII\Models\Attachment;
@@ -42,7 +43,7 @@ interface AttachmentHelperInterface
     public function getMessages(): MessageBag;
 
     /**
-     * @param Model $model
+     * @param Model      $model
      *
      * @param null|array $files
      *
