@@ -29,6 +29,7 @@ use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Validation\Validator;
+use Log;
 use Session;
 
 /**

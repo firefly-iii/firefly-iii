@@ -9,13 +9,16 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
 use Session;
@@ -131,7 +134,7 @@ class PreferencesController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postIndex(Request $request)
+    public function postIndex(Request $request, UserRepositoryInterface $repository)
     {
         // front page accounts
         $frontPageAccounts = [];
@@ -168,7 +171,7 @@ class PreferencesController extends Controller
 
         $twoFactorAuthEnabled   = false;
         $hasTwoFactorAuthSecret = false;
-        if (!auth()->user()->hasRole('demo')) {
+        if (!$repository->hasRole(auth()->user(), 'demo')) {
             // two factor auth
             $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
             $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));

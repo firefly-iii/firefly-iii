@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Response;
 use Session;
@@ -73,7 +74,7 @@ class ReportController extends Controller
     public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));
+            return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
         if ($start < session('first')) {
             $start = session('first');
@@ -109,7 +110,7 @@ class ReportController extends Controller
     public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));
+            return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
         if ($start < session('first')) {
             $start = session('first');
@@ -145,7 +146,7 @@ class ReportController extends Controller
     public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));
+            return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
         if ($start < session('first')) {
             $start = session('first');
@@ -251,10 +252,9 @@ class ReportController extends Controller
     /**
      * @param ReportFormRequest $request
      *
-     * @return RedirectResponse
-     * @throws FireflyException
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postIndex(ReportFormRequest $request): RedirectResponse
+    public function postIndex(ReportFormRequest $request)
     {
         // report type:
         $reportType = $request->get('report_type');
@@ -266,6 +266,7 @@ class ReportController extends Controller
         $tags       = join(',', $request->getTagList()->pluck('tag')->toArray());
 
         if ($request->getAccountList()->count() === 0) {
+            Log::debug('Account count is zero');
             Session::flash('error', trans('firefly.select_more_than_one_account'));
 
             return redirect(route('reports.index'));
@@ -293,14 +294,7 @@ class ReportController extends Controller
             return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
 
-        // lower threshold
-        if ($start < session('first')) {
-            $start = session('first');
-        }
-
         switch ($reportType) {
-            default:
-                throw new FireflyException(sprintf('Firefly does not support the "%s"-report yet.', $reportType));
             case 'category':
                 $uri = route('reports.report.category', [$accounts, $categories, $start, $end]);
                 break;
@@ -332,7 +326,7 @@ class ReportController extends Controller
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return view('error')->with('message', trans('firefly.end_after_start_date'));
+            return view('error')->with('message', trans('firefly.end_after_start_date')); // @codeCoverageIgnore
         }
         if ($start < session('first')) {
             $start = session('first');

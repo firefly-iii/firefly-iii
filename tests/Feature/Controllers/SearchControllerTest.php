@@ -25,7 +25,7 @@ class SearchControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController::index
-     * Implement testIndex().
+     * @covers \FireflyIII\Http\Controllers\SearchController::__construct
      */
     public function testIndex()
     {
