@@ -62,7 +62,7 @@ class Search implements SearchInterface
     {
         $string = join(' ', $this->words);
         if (strlen($string) === 0) {
-            return $this->originalQuery;
+            return is_string($this->originalQuery) ? $this->originalQuery : '';
         }
     }
 
