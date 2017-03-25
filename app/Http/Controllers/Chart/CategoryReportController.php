@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -23,8 +23,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -41,10 +39,6 @@ use Response;
 class CategoryReportController extends Controller
 {
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
     /** @var  GeneratorInterface */
     private $generator;
 
@@ -56,9 +50,7 @@ class CategoryReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->generator          = app(GeneratorInterface::class);
-                $this->categoryRepository = app(CategoryRepositoryInterface::class);
-                $this->accountRepository  = app(AccountRepositoryInterface::class);
+                $this->generator = app(GeneratorInterface::class);
 
                 return $next($request);
             }

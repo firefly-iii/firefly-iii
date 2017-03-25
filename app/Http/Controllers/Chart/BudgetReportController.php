@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -24,7 +24,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -41,8 +40,6 @@ use Response;
 class BudgetReportController extends Controller
 {
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
     /** @var BudgetRepositoryInterface */
     private $budgetRepository;
     /** @var  GeneratorInterface */
@@ -56,9 +53,8 @@ class BudgetReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->generator         = app(GeneratorInterface::class);
-                $this->budgetRepository  = app(BudgetRepositoryInterface::class);
-                $this->accountRepository = app(AccountRepositoryInterface::class);
+                $this->generator        = app(GeneratorInterface::class);
+                $this->budgetRepository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -133,8 +129,6 @@ class BudgetReportController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        /** @var BudgetRepositoryInterface $repository */
-        $repository   = app(BudgetRepositoryInterface::class);
         $format       = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $function     = Navigation::preferredEndOfPeriod($start, $end);
         $chartData    = [];
@@ -163,7 +157,7 @@ class BudgetReportController extends Controller
                 'entries' => [],
             ];
         }
-        $allBudgetLimits = $repository->getAllBudgetLimits($start, $end);
+        $allBudgetLimits = $this->budgetRepository->getAllBudgetLimits($start, $end);
         $sumOfExpenses   = [];
         $leftOfLimits    = [];
         while ($currentStart < $end) {

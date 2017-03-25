@@ -13,14 +13,13 @@ declare(strict_types = 1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Password;
 
 /**
- * @codeCoverageIgnore
- *
  * Class ForgotPasswordController
  *
  * @package FireflyIII\Http\Controllers\Auth
@@ -46,21 +45,18 @@ class ForgotPasswordController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
         $this->validate($request, ['email' => 'required|email']);
 
         // verify if the user is not a demo user. If so, we give him back an error.
         $user = User::where('email', $request->get('email'))->first();
-        if (!is_null($user) && $user->hasRole('demo')) {
-            return back()->withErrors(
-                ['email' => trans('firefly.cannot_reset_demo_user')]
-            );
+
+        if (!is_null($user) && $repository->hasRole($user, 'demo')) {
+            return back()->withErrors(['email' => trans('firefly.cannot_reset_demo_user')]);
         }
 
-        $response = $this->broker()->sendResetLink(
-            $request->only('email')
-        );
+        $response = $this->broker()->sendResetLink($request->only('email'));
 
         if ($response === Password::RESET_LINK_SENT) {
             return back()->with('status', trans($response));
@@ -69,8 +65,6 @@ class ForgotPasswordController extends Controller
         // If an error was returned by the password broker, we will get this message
         // translated so we can notify a user of the problem. We'll redirect back
         // to where the users came from so they can attempt this process again.
-        return back()->withErrors(
-            ['email' => trans($response)]
-        );
+        return back()->withErrors(['email' => trans($response)]); // @codeCoverageIgnore
     }
 }

@@ -497,8 +497,6 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            Log::debug('Return chart.account.account-balance-chart from cache.');
-
             return $cache->get(); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');

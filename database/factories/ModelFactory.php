@@ -8,7 +8,10 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
+
+use Carbon\Carbon;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -182,6 +185,7 @@ $factory->define(
         'description'               => $faker->words(3, true),
         'source_account_name'       => $faker->words(3, true),
         'destination_account_id'    => $faker->numberBetween(1, 10),
+        'date'                      => new Carbon,
         'destination_account_name'  => $faker->words(3, true),
         'amount'                    => strval($faker->randomFloat(2, -100, 100)),
         'budget_id'                 => 0,

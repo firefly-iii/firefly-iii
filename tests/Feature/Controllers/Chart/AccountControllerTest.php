@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
@@ -15,12 +15,16 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
+use Preferences;
 use Steam;
 use Tests\TestCase;
 
@@ -58,10 +62,11 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseAccounts(string $range)
     {
+        $account      = factory(Account::class)->make();
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn(new Collection);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn(new Collection([$account]));
         $generator->shouldReceive('singleSet')->andReturn([]);
         Steam::shouldReceive('balancesById')->twice()->andReturn([]);
 
@@ -84,12 +89,13 @@ class AccountControllerTest extends TestCase
         $generator   = $this->mock(GeneratorInterface::class);
         $collector   = $this->mock(JournalCollectorInterface::class);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $transaction = factory(Transaction::class)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('pieChart')->andReturn([]);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
 
@@ -101,13 +107,47 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseBudgetAll
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getBudgetNames
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testExpenseBudgetAll(string $range)
+    {
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transaction  = factory(Transaction::class)->make();
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $generator->shouldReceive('pieChart')->andReturn([]);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
+
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('chart.account.expense-budget-all', [1]));
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategory
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getCategoryNames
      * @dataProvider dateRangeProvider
      *
      * @param string $range
      */
     public function testExpenseCategory(string $range)
     {
+        $transaction   = factory(Transaction::class)->make();
+        $category      = factory(Category::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
         $collector     = $this->mock(JournalCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -116,13 +156,44 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('pieChart')->andReturn([]);
-        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection);
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('chart.account.expense-category', [1, '20120101', '20120131']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::expenseCategoryAll
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::getCategoryNames
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testExpenseCategoryAll(string $range)
+    {
+        $transaction   = factory(Transaction::class)->make();
+        $category      = factory(Category::class)->make();
+        $generator     = $this->mock(GeneratorInterface::class);
+        $collector     = $this->mock(JournalCollectorInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $generator->shouldReceive('pieChart')->andReturn([]);
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
+        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('chart.account.expense-category-all', [1]));
         $response->assertStatus(200);
     }
 
@@ -139,6 +210,9 @@ class AccountControllerTest extends TestCase
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        // change the preference:
+        Preferences::setForUser($this->user(), 'frontPageAccounts', []);
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
@@ -159,6 +233,8 @@ class AccountControllerTest extends TestCase
      */
     public function testIncomeCategory(string $range)
     {
+        $transaction   = factory(Transaction::class)->make();
+        $account       = factory(Account::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
         $collector     = $this->mock(JournalCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
@@ -167,13 +243,43 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('pieChart')->andReturn([]);
-        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection);
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('chart.account.income-category', [1, '20120101', '20120131']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::incomeCategoryAll
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testIncomeCategoryAll(string $range)
+    {
+        $transaction   = factory(Transaction::class)->make();
+        $account       = factory(Account::class)->make();
+        $generator     = $this->mock(GeneratorInterface::class);
+        $collector     = $this->mock(JournalCollectorInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $generator->shouldReceive('pieChart')->andReturn([]);
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('chart.account.income-category-all', [1]));
         $response->assertStatus(200);
     }
 
@@ -199,6 +305,17 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * @covers                   \FireflyIII\Http\Controllers\Chart\AccountController::period
+     * @expectedExceptionMessage YYYY-MM-DD
+     */
+    public function testPeriodBadDate()
+    {
+        $this->be($this->user());
+        $response = $this->get(route('chart.account.period', [1, 'bcdefed']));
+        $response->assertStatus(500);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::report
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::accountBalanceChart
      */
@@ -221,10 +338,11 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueAccounts(string $range)
     {
+        $account = factory(Account::class)->make();
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->andReturn(new Collection);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->andReturn(new Collection([$account]));
         $generator->shouldReceive('singleSet')->andReturn([]);
         Steam::shouldReceive('balancesById')->twice()->andReturn([]);
 
