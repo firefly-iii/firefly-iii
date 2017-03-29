@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
@@ -15,6 +15,8 @@ namespace Tests\Feature\Controllers\Chart;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -114,11 +116,18 @@ class TagReportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::mainChart()
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::getExpenses
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::getIncome
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::groupByTag
      */
     public function testMainChart()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $collector   = $this->mock(JournalCollectorInterface::class);
+        $transaction = factory(Transaction::class)->make();
+        $tag         = factory(Tag::class)->make();
+        $transaction->transactionJournal->tags()->save($tag);
+
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -127,7 +136,7 @@ class TagReportControllerTest extends TestCase
         $collector->shouldReceive('disableFilter')->andReturnSelf();
         $collector->shouldReceive('setTags')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
@@ -157,7 +166,7 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::tagIncome()
+     * @covers \FireflyIII\Http\Controllers\Chart\TagReportController::tagIncome
      */
     public function testTagIncome()
     {

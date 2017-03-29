@@ -48,14 +48,13 @@ class ReportController extends Controller
     {
         parent::__construct();
 
+        $this->helper = app(ReportHelperInterface::class);
 
         $this->middleware(
             function ($request, $next) {
                 View::share('title', trans('firefly.reports'));
                 View::share('mainTitleIcon', 'fa-line-chart');
                 View::share('subTitleIcon', 'fa-calendar');
-
-                $this->helper = app(ReportHelperInterface::class);
 
                 return $next($request);
             }

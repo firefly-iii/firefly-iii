@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
@@ -29,6 +29,8 @@ use FireflyIII\Helpers\Report\BalanceReportHelper;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelper;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
+use FireflyIII\Helpers\Report\PopupReport;
+use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Import\ImportProcedure;
@@ -127,6 +129,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
+        // more generators:
+        $this->app->bind(PopupReportInterface::class, PopupReport::class);
         $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);

@@ -116,8 +116,10 @@ $factory->define(
 $factory->define(
     FireflyIII\Models\Tag::class, function (Faker\Generator $faker) {
     return [
-        'id'  => $faker->numberBetween(1, 10),
-        'tag' => $faker->words(1, true),
+        'id'      => $faker->numberBetween(100, 150),
+        'user_id' => 1,
+        'tagMode' => 'nothing',
+        'tag'     => $faker->words(1, true),
     ];
 }
 );

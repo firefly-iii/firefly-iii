@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
@@ -15,6 +15,7 @@ namespace Tests\Feature\Controllers\Chart;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
@@ -120,8 +121,9 @@ class CategoryReportControllerTest extends TestCase
      */
     public function testMainChart()
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $collector   = $this->mock(JournalCollectorInterface::class);
+        $transaction = factory(Transaction::class)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -130,7 +132,7 @@ class CategoryReportControllerTest extends TestCase
         $collector->shouldReceive('disableFilter')->andReturnSelf();
         $collector->shouldReceive('setCategories')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
