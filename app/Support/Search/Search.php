@@ -64,6 +64,7 @@ class Search implements SearchInterface
         if (strlen($string) === 0) {
             return is_string($this->originalQuery) ? $this->originalQuery : '';
         }
+        return $string;
     }
 
     /**
