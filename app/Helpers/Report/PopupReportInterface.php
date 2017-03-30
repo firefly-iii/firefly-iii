@@ -25,13 +25,29 @@ interface PopupReportInterface
 {
 
     /**
+     * @param $account
+     * @param $attributes
+     *
+     * @return Collection
+     */
+    public function balanceDifference($account, $attributes): Collection;
+
+    /**
      * @param Budget  $budget
      * @param Account $account
-     * @param array $attributes
+     * @param array   $attributes
      *
      * @return Collection
      */
     public function balanceForBudget(Budget $budget, Account $account, array $attributes): Collection;
+
+    /**
+     * @param Account $account
+     * @param array   $attributes
+     *
+     * @return Collection
+     */
+    public function balanceForNoBudget(Account $account, array $attributes): Collection;
 
     /**
      * @param Budget $budget

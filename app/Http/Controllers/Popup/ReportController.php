@@ -17,17 +17,14 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Response;
 use View;
@@ -128,7 +125,6 @@ class ReportController extends Controller
         $role    = intval($attributes['role']);
         $budget  = $this->budgetRepository->find(intval($attributes['budgetId']));
         $account = $this->accountRepository->find(intval($attributes['accountId']));
-        $types   = [TransactionType::WITHDRAWAL];
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
@@ -137,39 +133,12 @@ class ReportController extends Controller
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
                 // normal row without a budget:
-                $journals = $this->popupHelper->balanceForNoBudget($account, $attributes);
+                $journals     = $this->popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = strval(trans('firefly.no_budget'));
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollectorInterface::class);
-                $collector
-                    ->setAccounts(new Collection([$account]))
-                    ->setTypes($types)
-                    ->setRange($attributes['startDate'], $attributes['endDate'])
-                    ->withoutBudget();
-                $journals = $collector->getJournals();
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
-                // row that displays difference
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollectorInterface::class);
-                $collector
-                    ->setAccounts(new Collection([$account]))
-                    ->setTypes($types)
-                    ->setRange($attributes['startDate'], $attributes['endDate'])
-                    ->withoutBudget();
-                $journals = $collector->getJournals();
-
+                $journals     = $this->popupHelper->balanceDifference($account, $attributes);
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
-                $journals     = $journals->filter(
-                    function (Transaction $transaction) {
-                        $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
-                        if ($tags === 0) {
-                            return true;
-                        }
-
-                        return false;
-                    }
-                );
                 break;
             case ($role === BalanceLine::ROLE_TAGROLE):
                 // row with tag info.
