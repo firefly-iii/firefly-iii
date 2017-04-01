@@ -114,8 +114,10 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showLoginForm(Request $request)
+    public function showLoginForm(Request $request, CookieJar $cookieJar)
     {
+        // forget 2fa cookie:
+        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'false');
         // is allowed to?
         $singleUserMode    = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
@@ -127,7 +129,7 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        return view('auth.login', compact('allowRegistration', 'email', 'remember'));
+        return view('auth.login', compact('allowRegistration', 'email', 'remember'))->withCookie($cookie);
     }
 
     /**
