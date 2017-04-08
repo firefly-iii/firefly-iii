@@ -41,7 +41,6 @@ class Kernel extends ConsoleKernel
         = [
             'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
             'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            //'FireflyIII\Bootstrap\ConfigureLogging',
             'Illuminate\Foundation\Bootstrap\HandleExceptions',
             'Illuminate\Foundation\Bootstrap\RegisterFacades',
             'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
