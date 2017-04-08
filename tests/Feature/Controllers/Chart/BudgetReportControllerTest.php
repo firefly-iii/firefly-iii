@@ -21,6 +21,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 class BudgetReportControllerTest extends TestCase
@@ -85,14 +86,19 @@ class BudgetReportControllerTest extends TestCase
         $collector   = $this->mock(JournalCollectorInterface::class);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
 
-        $one                             = factory(BudgetLimit::class)->make();
-        $one->budget_id                  = 1;
-        $two                             = factory(BudgetLimit::class)->make();
-        $two->budget_id                  = 1;
-        $two->start_date                 = new Carbon('2012-01-01');
-        $two->end_date                   = new Carbon('2012-01-31');
-        $transaction                     = factory(Transaction::class)->make();
-        $transaction->transaction_amount = '-100';
+        $one                              = factory(BudgetLimit::class)->make();
+        $one->budget_id                   = 1;
+        $two                              = factory(BudgetLimit::class)->make();
+        $two->budget_id                   = 1;
+        $two->start_date                  = new Carbon('2012-01-01');
+        $two->end_date                    = new Carbon('2012-01-31');
+        $transaction                      = factory(Transaction::class)->make();
+        $transaction->transaction_amount  = '-100';
+        $transaction->destination_amount  = '-100';
+        $transaction->amount              = '-100';
+        $transaction->opposing_account_id = 8;
+
+        Log::debug('Transaction', $transaction->toArray());
 
         $budgetRepos->shouldReceive('getAllBudgetLimits')->andReturn(new Collection([$one, $two]))->once();
 

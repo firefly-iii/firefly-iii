@@ -16,7 +16,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Report\Category\MonthReportGenerator;
+use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -237,7 +237,7 @@ class BudgetReportController extends Controller
                   ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
         $accountIds   = $accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
+        $set          = Support::filterExpenses($transactions, $accountIds);
 
         return $set;
     }
