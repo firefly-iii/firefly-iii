@@ -132,9 +132,9 @@ return [
     'title_transfers_between'                    => 'Alle overschrijvingen tussen :start en :end',
     'all_transfer'                               => 'Alle overschrijvingen',
     'title_transfer_between'                     => 'Alle overschrijvingen tussen :start en :end',
-    'all_journals_for_category'                  => 'All transactions for category :name',
-    'journals_in_period_for_category'            => 'All transactions for category :name between :start and :end',
-    'not_available_demo_user'                    => 'The feature you try to access is not available to demo users.',
+    'all_journals_for_category'                  => 'Alle transacties in categorie :name',
+    'journals_in_period_for_category'            => 'Alle transacties in categorie :name tussen :start en :end',
+    'not_available_demo_user'                    => 'De functie die je probeert te gebruiken is niet beschikbaar voor gebruikers van de demo.',
 
 
     // repeat frequencies:
