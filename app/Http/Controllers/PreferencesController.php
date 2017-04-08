@@ -56,9 +56,12 @@ class PreferencesController extends Controller
      */
     public function code(Google2FA $google2fa)
     {
-        $domain = $this->getDomain();
+        $domain    = $this->getDomain();
+        $secretKey = 'FIREFLYIII';
+        $secretKey = str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), 'X');
+
         /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $secret = $google2fa->generateSecretKey(16  ,'FIREFLYIII');
+        $secret = $google2fa->generateSecretKey(16, $secretKey);
         Session::flash('two-factor-secret', $secret);
         $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, auth()->user()->email, $secret, 150);
 
