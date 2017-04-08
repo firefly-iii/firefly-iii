@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -86,15 +86,23 @@ class CategoryController extends Controller
                 'entries' => [],
                 'type'    => 'bar',
             ],
+            [
+                'label'   => strval(trans('firefly.sum')),
+                'entries' => [],
+                'type'    => 'line',
+                'fill'    => false,
+            ],
         ];
 
         while ($start <= $end) {
             $currentEnd                      = Navigation::endOfPeriod($start, $range);
             $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
             $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
+            $sum                             = bcadd($spent, $earned);
             $label                           = Navigation::periodShow($start, $range);
             $chartData[0]['entries'][$label] = bcmul($spent, '-1');
             $chartData[1]['entries'][$label] = $earned;
+            $chartData[2]['entries'][$label] = $sum;
             $start                           = Navigation::addPeriod($start, $range, 0);
         }
 
@@ -194,13 +202,22 @@ class CategoryController extends Controller
                 'entries' => [],
                 'type'    => 'bar',
             ],
+            [
+                'label'   => strval(trans('firefly.sum')),
+                'entries' => [],
+                'type'    => 'line',
+                'fill'    => false,
+            ],
         ];
 
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];
             $spent                           = $expenses[$category->id]['entries'][$period] ?? '0';
+            $earned                          = $income[$category->id]['entries'][$period] ?? '0';
+            $sum                             = bcadd($spent, $earned);
             $chartData[0]['entries'][$label] = bcmul($spent, '-1');
-            $chartData[1]['entries'][$label] = $income[$category->id]['entries'][$period] ?? '0';
+            $chartData[1]['entries'][$label] = $earned;
+            $chartData[2]['entries'][$label] = $sum;
         }
 
         $data = $this->generator->multiSet($chartData);
@@ -241,13 +258,22 @@ class CategoryController extends Controller
                 'entries' => [],
                 'type'    => 'bar',
             ],
+            [
+                'label'   => strval(trans('firefly.sum')),
+                'entries' => [],
+                'type'    => 'line',
+                'fill'    => false,
+            ],
         ];
 
         foreach (array_keys($periods) as $period) {
             $label                           = $periods[$period];
             $spent                           = $expenses['entries'][$period] ?? '0';
+            $earned                          = $income['entries'][$period] ?? '0';
+            $sum                             = bcadd($spent, $earned);
             $chartData[0]['entries'][$label] = bcmul($spent, '-1');
-            $chartData[1]['entries'][$label] = $income['entries'][$period] ?? '0';
+            $chartData[1]['entries'][$label] = $earned;
+            $chartData[2]['entries'][$label] = $sum;
 
         }
         $data = $this->generator->multiSet($chartData);
@@ -312,15 +338,23 @@ class CategoryController extends Controller
                 'entries' => [],
                 'type'    => 'bar',
             ],
+            [
+                'label'   => strval(trans('firefly.sum')),
+                'entries' => [],
+                'type'    => 'line',
+                'fill'    => false,
+            ],
         ];
 
         while ($start <= $end) {
             $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
             $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
+            $sum    = bcadd($spent, $earned);
             $label  = Navigation::periodShow($start, '1D');
 
             $chartData[0]['entries'][$label] = bcmul($spent, '-1');
             $chartData[1]['entries'][$label] = $earned;
+            $chartData[2]['entries'][$label] = $sum;
 
 
             $start->addDay();
