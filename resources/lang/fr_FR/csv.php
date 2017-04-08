@@ -15,7 +15,7 @@ return [
 
     'import_configure_title' => 'Configurer l\'import',
     'import_configure_intro' => 'Il y a des options pour l\'import CSV. Veuillez indiquer si votre fichier CSV contient les en-têtes dans la première colonne, et quel est le format des dates de vos champs date. Cela peut nécessiter quelques essais. Le délimiteur de champ est généralement un « , », mais pourrait également être un « ; ». Cochez cette case avec soin.',
-    'import_configure_form'  => 'Basic CSV import options',
+    'import_configure_form'  => 'Options d’importation CSV basique',
     'header_help'            => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes',
     'date_help'              => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser les formats comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">cette page</a>. La valeur par défaut va analyser les dates ressemblant à ceci: :dateExample.',
     'delimiter_help'         => 'Choisissez le délimiteur de champ qui est utilisé dans votre fichier d’entrée. Si vous n’êtes pas certain, la virgule est l’option la plus sûre.',
