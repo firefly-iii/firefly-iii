@@ -58,7 +58,7 @@ class PreferencesController extends Controller
     {
         $domain    = $this->getDomain();
         $secretKey = 'FIREFLYIII';
-        $secretKey = str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), 'X');
+        $secretKey = str_pad($secretKey, intval(pow(2, ceil(log(strlen($secretKey), 2)))), 'X');
 
         /** @noinspection PhpMethodParametersCountMismatchInspection */
         $secret = $google2fa->generateSecretKey(16, $secretKey);
