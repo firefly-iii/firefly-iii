@@ -41,11 +41,12 @@ class TwoFactorController extends Controller
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
-        $secret = Preferences::get('twoFactorAuthSecret', null)->data;
+        $secretPreference = Preferences::get('twoFactorAuthSecret', null);
+        $secret = is_null($secretPreference) ? null : $secretPreference->data;
         $title  = strval(trans('firefly.two_factor_title'));
 
         // make sure the user has two factor configured:
-        $has2FA = Preferences::get('twoFactorAuthEnabled', null)->data;
+        $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;
         if (is_null($has2FA) || $has2FA === false) {
             return redirect(route('index'));
         }

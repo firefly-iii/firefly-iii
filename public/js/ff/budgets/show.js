@@ -8,11 +8,15 @@
  * See the LICENSE file for details.
  */
 
-/** global: budgetChartUri */
+/** global: budgetChartUri,budgetLimitID */
 
 $(function () {
     "use strict";
-
-    columnChart(budgetChartUri, 'budgetOverview');
+    if (budgetLimitID > 0) {
+        lineChart(budgetChartUri, 'budgetOverview');
+    }
+    if (budgetLimitID == 0) {
+        columnChart(budgetChartUri, 'budgetOverview');
+    }
 
 });

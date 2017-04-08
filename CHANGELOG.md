@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+
+## [4.3.8] - 2017-04-08
+
+### Added
+- Better overview / show pages.
+- #628, as reported by [xzaz](https://github.com/xzaz).
+- Greatly expanded test coverage
+
+### Fixed
+- #619, as reported by [dfiel](https://github.com/dfiel).
+- #620, as reported by [forcaeluz](https://github.com/forcaeluz).
+- Attempt to fix #624, as reported by [TheSerenin](https://github.com/TheSerenin).
+- Favicon link is relative now, fixed by [welbert](https://github.com/welbert).
+- Some search bugs
+
 ## [4.3.7] - 2017-03-06
 ### Added
 - Nice user friendly views for empty lists.

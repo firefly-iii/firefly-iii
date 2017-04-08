@@ -287,7 +287,7 @@ class JsonController extends Controller
     {
         $pref = Preferences::get('tour', true);
         if (!$pref) {
-            throw new FireflyException('Cannot find preference for tour. Exit.');
+            throw new FireflyException('Cannot find preference for tour. Exit.'); // @codeCoverageIgnore
         }
         $headers = ['main-content', 'sidebar-toggle', 'account-menu', 'budget-menu', 'report-menu', 'transaction-menu', 'option-menu', 'main-content-end'];
         $steps   = [];

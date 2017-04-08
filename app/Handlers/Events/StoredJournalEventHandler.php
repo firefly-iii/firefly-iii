@@ -20,6 +20,7 @@ use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 use Log;
@@ -44,6 +45,16 @@ class StoredJournalEventHandler
         $journal     = $event->journal;
         $piggyBankId = $event->piggyBankId;
         Log::debug(sprintf('Trying to connect journal %d to piggy bank %d.', $journal->id, $piggyBankId));
+
+        /*
+         * Will only continue when journal is a transfer.
+         */
+        Log::debug(sprintf('Journal transaction type is %s', $journal->transactionType->type));
+        if ($journal->transactionType->type !== TransactionType::TRANSFER) {
+            Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
+
+            return true;
+        }
 
         /*
          * Verify existence of piggy bank:

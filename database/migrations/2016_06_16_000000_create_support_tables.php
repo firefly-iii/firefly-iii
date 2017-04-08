@@ -8,7 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -76,6 +76,23 @@ class CreateSupportTables extends Migration
         }
     }
 
+    private function createConfigurationTable()
+    {
+        if (!Schema::hasTable('configuration')) {
+            Schema::create(
+                'configuration', function (Blueprint $table) {
+
+                $table->increments('id');
+                $table->timestamps();
+                $table->softDeletes();
+                $table->string('name', 50);
+                $table->text('data');
+                $table->unique(['name']);
+            }
+            );
+        }
+    }
+
     /**
      *
      */
@@ -94,23 +111,6 @@ class CreateSupportTables extends Migration
                 // code must be unique.
                 $table->unique(['code']);
 
-            }
-            );
-        }
-    }
-
-    private function createConfigurationTable()
-    {
-        if (!Schema::hasTable('configuration')) {
-            Schema::create(
-                'configuration', function (Blueprint $table) {
-
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->string('name', 50);
-                $table->text('data');
-                $table->unique(['name']);
             }
             );
         }

@@ -72,7 +72,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
+    public function endOfPeriod(\Carbon\Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd = clone $end;
 

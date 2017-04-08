@@ -28,7 +28,7 @@ Route::group(
 
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail','as' => 'password.email']);
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
@@ -50,7 +50,6 @@ Route::group(
 /**
  * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
  *
- * @deprecated
  */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'Auth'], function () {
@@ -86,9 +85,7 @@ Route::group(
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
-
-    Route::get('show/{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
-    Route::get('show/{account}/{date}', ['uses' => 'AccountController@show', 'as' => 'show.date']);
+    Route::get('show/{account}/{moment?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
     Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
     Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
@@ -144,7 +141,7 @@ Route::group(
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
     Route::get('show/{budget}/{budgetlimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
-    Route::get('list/no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
+    Route::get('list/no-budget/{moment?}', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
 
     Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'income.post']);
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
@@ -164,10 +161,8 @@ Route::group(
     Route::get('edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'edit']);
     Route::get('delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
 
-    Route::get('show/{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
-    Route::get('show/{category}/all', ['uses' => 'CategoryController@showAll', 'as' => 'show.all']);
-    Route::get('show/{category}/{date}', ['uses' => 'CategoryController@showByDate', 'as' => 'show.date']);
-    Route::get('list/no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+    Route::get('show/{category}/{moment?}', ['uses' => 'CategoryController@show', 'as' => 'show']);
+    Route::get('list/no-category/{moment?}', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
     Route::post('store', ['uses' => 'CategoryController@store', 'as' => 'store']);
     Route::post('update/{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
@@ -432,8 +427,8 @@ Route::group(
     Route::get('tour', ['uses' => 'JsonController@tour', 'as' => 'tour']);
     Route::get('box/in', ['uses' => 'JsonController@boxIn', 'as' => 'box.in']);
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
-    Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.paid']);
-    Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.unpaid']);
+    Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.unpaid']);
+    Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.paid']);
     Route::get('transaction-journals/all', ['uses' => 'JsonController@allTransactionJournals', 'as' => 'all-transaction-journals']);
     Route::get('transaction-journals/{what}', ['uses' => 'JsonController@transactionJournals', 'as' => 'transaction-journals']);
     Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
@@ -646,9 +641,7 @@ Route::group(
     Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
-    Route::get('show/{tag}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
-    Route::get('show/{tag}/{date}', ['uses' => 'TagController@showByDate', 'as' => 'show.date']);
-    Route::get('show/{tag}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('show/{tag}/{moment?}', ['uses' => 'TagController@show', 'as' => 'show']);
 
     Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
     Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);
@@ -664,11 +657,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
-    Route::get('{what}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
-    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
-    Route::get('{what}/{date}', ['uses' => 'TransactionController@indexByDate', 'as' => 'index.date'])->where(
-        ['what' => 'withdrawal|deposit|transfers|transfer']
-    );
+    Route::get('{what}/{moment?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
 }

@@ -61,15 +61,12 @@ class AccountController extends Controller
      */
     public function all(Account $account)
     {
-        $cache = new CacheProperties();
+        $cache = new CacheProperties;
         $cache->addProperty('chart.account.all');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            Log::debug('Return chart.account.all from cache.');
-
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        Log::debug('Regenerate chart.account.all from scratch.');
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -500,8 +497,6 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            Log::debug('Return chart.account.account-balance-chart from cache.');
-
             return $cache->get(); // @codeCoverageIgnore
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');

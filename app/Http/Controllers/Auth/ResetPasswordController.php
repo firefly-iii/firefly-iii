@@ -16,6 +16,8 @@ use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class ResetPasswordController
  *
  * @package FireflyIII\Http\Controllers\Auth

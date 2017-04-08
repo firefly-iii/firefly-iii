@@ -43,6 +43,23 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\BudgetController::amount
+     */
+    public function testAmountZero()
+    {
+        // mock stuff
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
+
+        $data = ['amount' => 0,];
+        $this->be($this->user());
+        $response = $this->post(route('budgets.amount', [1]), $data);
+        $response->assertStatus(200);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\BudgetController::create
      */
     public function testCreate()
@@ -86,7 +103,7 @@ class BudgetControllerTest extends TestCase
 
         $repository->shouldReceive('destroy')->andReturn(true);
 
-        $this->session(['budgets.delete.url' => 'http://localhost']);
+        $this->session(['budgets.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('budgets.destroy', [1]));
         $response->assertStatus(302);
@@ -120,6 +137,13 @@ class BudgetControllerTest extends TestCase
     public function testIndex(string $range)
     {
         // mock stuff
+        $budget      = factory(Budget::class)->make();
+        $budgetLimit = factory(BudgetLimit::class)->make();
+
+        // set budget limit to current month:
+        $budgetLimit->start_date = Carbon::now()->startOfMonth();
+        $budgetLimit->end_date   = Carbon::now()->endOfMonth();
+
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -127,9 +151,11 @@ class BudgetControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $repository->shouldReceive('cleanupBudgets');
-        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
         $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
 
 
         $this->be($this->user());
@@ -142,6 +168,7 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::getPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -151,13 +178,16 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
@@ -167,6 +197,78 @@ class BudgetControllerTest extends TestCase
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('budgets.no-budget'));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testNoBudgetAll(string $range)
+    {
+        // mock stuff
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withoutBudget')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $date = new Carbon();
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('budgets.no-budget', ['all']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::noBudget
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::getPeriodOverview
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testNoBudgetDate(string $range)
+    {
+        // mock stuff
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('withoutBudget')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+
+        $date = new Carbon();
+        $this->session(['start' => $date, 'end' => clone $date]);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('budgets.no-budget', ['2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -199,6 +301,9 @@ class BudgetControllerTest extends TestCase
     public function testShow(string $range)
     {
         // mock stuff
+
+        $budgetLimit = factory(BudgetLimit::class)->make();
+
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
 
@@ -215,8 +320,8 @@ class BudgetControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $repository = $this->mock(BudgetRepositoryInterface::class);
-        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
-        $repository->shouldReceive('spentInPeriod')->andReturn('1');
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
 
         $date = new Carbon();
         $date->subDay();
@@ -227,6 +332,22 @@ class BudgetControllerTest extends TestCase
         $response = $this->get(route('budgets.show', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers                   \FireflyIII\Http\Controllers\BudgetController::showByBudgetLimit
+     * @expectedExceptionMessage This budget limit is not part of
+     *
+     */
+    public function testShowByBadBudgetLimit()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('budgets.show.limit', [1, 8]));
+        $response->assertStatus(500);
     }
 
     /**
@@ -282,7 +403,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('find')->andReturn($budget);
         $repository->shouldReceive('store')->andReturn($budget);
-        $this->session(['budgets.create.url' => 'http://localhost']);
+        $this->session(['budgets.create.uri' => 'http://localhost']);
 
         $data = [
             'name' => 'New Budget ' . rand(1000, 9999),
@@ -306,7 +427,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturn($budget);
         $repository->shouldReceive('update');
 
-        $this->session(['budgets.edit.url' => 'http://localhost']);
+        $this->session(['budgets.edit.uri' => 'http://localhost']);
 
         $data = [
             'name'   => 'Updated Budget ' . rand(1000, 9999),

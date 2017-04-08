@@ -49,6 +49,24 @@ class ExportControllerTest extends TestCase
     }
 
     /**
+     * @covers                   \FireflyIII\Http\Controllers\ExportController::download
+     * @expectedExceptionMessage Against all expectations
+     */
+    public function testDownloadFailed()
+    {
+        // mock stuff
+        $repository   = $this->mock(ExportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $repository->shouldReceive('exists')->once()->andReturn(false);
+
+        $this->be($this->user());
+        $response = $this->get(route('export.download', ['testExport']));
+        $response->assertStatus(500);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\ExportController::getStatus
      */
     public function testGetStatus()
@@ -103,11 +121,13 @@ class ExportControllerTest extends TestCase
 
 
         $data = [
-            'export_start_range' => '2015-01-01',
-            'export_end_range'   => '2015-01-21',
-            'exportFormat'       => 'csv',
-            'accounts'           => [1],
-            'job'                => 'testExport',
+            'export_start_range'  => '2015-01-01',
+            'export_end_range'    => '2015-01-21',
+            'exportFormat'        => 'csv',
+            'accounts'            => [1],
+            'include_attachments' => '1',
+            'include_old_uploads' => '1',
+            'job'                 => 'testExport',
         ];
 
         $accountRepos->shouldReceive('getAccountsById')->withArgs([$data['accounts']])->andReturn(new Collection);
@@ -117,6 +137,8 @@ class ExportControllerTest extends TestCase
         $processor->shouldReceive('convertJournals')->once();
         $processor->shouldReceive('exportJournals')->once();
         $processor->shouldReceive('createZipFile')->once();
+        $processor->shouldReceive('collectOldUploads')->once();
+        $processor->shouldReceive('collectAttachments')->once();
 
         $repository->shouldReceive('changeStatus')->andReturn(true);
         $repository->shouldReceive('findByKey')->andReturn(new ExportJob);

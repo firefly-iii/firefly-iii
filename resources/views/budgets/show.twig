@@ -43,7 +43,7 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals-tasker' %}
+                    {% include 'list.journals-tasker' with {hideBudgets:true, hideBills:true} %}
                 </div>
             </div>
         </div>
@@ -101,8 +101,9 @@
 {% block scripts %}
     <script type="text/javascript">
         var budgetID = {{ budget.id }};
+        var budgetLimitID = 0;
         {% if budgetLimit.id %}
-        var budgetLimitID = {{ budgetLimit.id }};
+        budgetLimitID = {{ budgetLimit.id }};
         var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
         {% else %}
         var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';

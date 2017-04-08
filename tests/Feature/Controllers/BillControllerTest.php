@@ -67,7 +67,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['bills.delete.url' => 'http://localhost']);
+        $this->session(['bills.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('bills.destroy', [1]));
         $response->assertStatus(302);
@@ -97,10 +97,14 @@ class BillControllerTest extends TestCase
     public function testIndex()
     {
         // mock stuff
+        $bill         = factory(Bill::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $repository->shouldReceive('getBills')->andReturn(new Collection);
+        $repository->shouldReceive('getBills')->andReturn(new Collection([$bill]));
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('getPaidDatesInRange')->once()->andReturn(new Collection([1, 2, 3]));
+        $repository->shouldReceive('getPayDatesInRange')->once()->andReturn(new Collection([1, 2]));
+        $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
 
         $this->be($this->user());
         $response = $this->get(route('bills.index'));
@@ -115,15 +119,33 @@ class BillControllerTest extends TestCase
     public function testRescan()
     {
         // mock stuff
+        $journal      = factory(TransactionJournal::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
-        $repository->shouldReceive('getPossiblyRelatedJournals')->once()->andReturn(new Collection);
+        $repository->shouldReceive('getPossiblyRelatedJournals')->once()->andReturn(new Collection([$journal]));
+        $repository->shouldReceive('scan')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('bills.rescan', [1]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\BillController::rescan
+     */
+    public function testRescanInactive()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('bills.rescan', [3]));
+        $response->assertStatus(302);
+        $response->assertSessionHas('warning');
     }
 
     /**
@@ -177,7 +199,7 @@ class BillControllerTest extends TestCase
             'date'                          => '2016-01-01',
             'repeat_freq'                   => 'monthly',
         ];
-        $this->session(['bills.create.url' => 'http://localhost']);
+        $this->session(['bills.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('bills.store'), $data);
         $response->assertStatus(302);
@@ -206,7 +228,7 @@ class BillControllerTest extends TestCase
             'date'                          => '2016-01-01',
             'repeat_freq'                   => 'monthly',
         ];
-        $this->session(['bills.edit.url' => 'http://localhost']);
+        $this->session(['bills.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('bills.update', [1]), $data);
         $response->assertStatus(302);

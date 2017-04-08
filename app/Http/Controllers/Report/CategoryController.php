@@ -45,8 +45,6 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-expenses-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            Log::debug('Return report from cache');
-
             return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */
@@ -79,8 +77,6 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            Log::debug('Return report from cache');
-
             return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */

@@ -13,11 +13,11 @@ declare(strict_types = 1);
 
 namespace FireflyIII\Support;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences as Prefs;
 
 /**
@@ -97,7 +97,6 @@ class Amount
             // alternative is currency before amount
             $format = $pos_a . $pos_b . '%s' . $pos_c . $space . $pos_d . '%v' . $pos_e;
         }
-        Log::debug(sprintf('Final format: "%s"', $format));
 
         return $format;
     }
@@ -130,7 +129,7 @@ class Amount
         setlocale(LC_MONETARY, $locale);
         $float     = round($amount, 12);
         $info      = localeconv();
-        $formatted = number_format($float, $format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
+        $formatted = number_format($float, intval($format->decimal_places), $info['mon_decimal_point'], $info['mon_thousands_sep']);
 
         // some complicated switches to format the amount correctly:
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
@@ -171,7 +170,7 @@ class Amount
      */
     public function formatByCode(string $currencyCode, string $amount, bool $coloured = true): string
     {
-        $currency = TransactionCurrency::whereCode($currencyCode)->first();
+        $currency = TransactionCurrency::where('code', $currencyCode)->first();
 
         return $this->formatAnything($currency, $amount, $coloured);
     }
@@ -224,7 +223,7 @@ class Amount
         } else {
             $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
-            $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
+            $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
             if ($currency) {
 
                 $cache->store($currency->code);
@@ -248,7 +247,7 @@ class Amount
             return $cache->get(); // @codeCoverageIgnore
         } else {
             $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-            $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+            $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
 
             $cache->store($currency->symbol);
 
@@ -257,7 +256,8 @@ class Amount
     }
 
     /**
-     * @return \FireflyIII\Models\TransactionCurrency
+     * @return TransactionCurrency
+     * @throws FireflyException
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
@@ -267,7 +267,10 @@ class Amount
             return $cache->get(); // @codeCoverageIgnore
         }
         $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+        if (is_null($currency)) {
+            throw new FireflyException(sprintf('No currency found with code "%s"', $currencyPreference->data));
+        }
         $cache->store($currency);
 
         return $currency;

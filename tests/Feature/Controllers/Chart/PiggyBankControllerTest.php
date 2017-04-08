@@ -12,8 +12,17 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Chart;
 
 
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class PiggyBankControllerTest
+ *
+ * @package Tests\Feature\Controllers\Chart
+ */
 class PiggyBankControllerTest extends TestCase
 {
     /**
@@ -22,6 +31,13 @@ class PiggyBankControllerTest extends TestCase
      */
     public function testHistory()
     {
+        $generator  = $this->mock(GeneratorInterface::class);
+        $repository = $this->mock(PiggyBankRepositoryInterface::class);
+        $event      = factory(PiggyBankEvent::class)->make();
+
+        $repository->shouldReceive('getEvents')->andReturn(new Collection([$event]));
+        $generator->shouldReceive('singleSet')->once()->andReturn([]);
+
         $this->be($this->user());
         $response = $this->get(route('chart.piggy-bank.history', [1]));
         $response->assertStatus(200);

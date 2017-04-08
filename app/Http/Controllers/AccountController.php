@@ -25,6 +25,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -229,16 +230,18 @@ class AccountController extends Controller
 
 
     /**
-     * @param Request $request
-     * @param Account $account
-     * @param string  $moment
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param Account                    $account
+     * @param string                     $moment
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function show(Request $request, Account $account, string $moment = '')
+    public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
     {
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
         }
-        $subTitle     = $account->name;
         $range        = Preferences::get('viewRange', '1M')->data;
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
@@ -250,29 +253,34 @@ class AccountController extends Controller
 
         // prep for "all" view.
         if ($moment === 'all') {
-            $subTitle = $account->name . ' (' . strtolower(strval(trans('firefly.everything'))) . ')';
+            $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
             $chartUri = route('chart.account.all', [$account->id]);
+            $first    = $repository->first();
+            $start    = $first->date ?? new Carbon;
+            $end      = new Carbon;
         }
 
         // prep for "specific date" view.
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $subTitle = $account->name . ' (' . strval(
-                    trans(
-                        'firefly.from_to_breadcrumb',
-                        ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-                    )
-                ) . ')';
+            $subTitle = trans(
+                'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                                                           'end'  => $end->formatLocalized($this->monthAndDayFormat)]
+            );
             $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
-            $periods  = $this->periodEntries($account);
+            $periods  = $this->getPeriodOverview($account);
         }
 
         // prep for current period
         if (strlen($moment) === 0) {
-            $start   = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-            $end     = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-            $periods = $this->periodEntries($account);
+            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $subTitle = trans(
+                'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                                                           'end'  => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+            $periods  = $this->getPeriodOverview($account);
         }
 
         $accountType = $account->accountType->type;
@@ -289,7 +297,7 @@ class AccountController extends Controller
                 $collector->setRange($start, $end);
             }
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('accounts/show/' . $account->id);
+            $journals->setPath('accounts/show/' . $account->id . '/' . $moment);
             $count = $journals->getCollection()->count();
             if ($count === 0) {
                 $start->subDay();
@@ -299,8 +307,17 @@ class AccountController extends Controller
             }
         }
 
+        if ($moment != 'all' && $loop > 1) {
+            $subTitle = trans(
+                'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                                                           'end'  => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+        }
 
-        return view('accounts.show', compact('account', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri'));
+
+        return view(
+            'accounts.show', compact('account', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+        );
     }
 
     /**
@@ -388,7 +405,7 @@ class AccountController extends Controller
      *
      * @return Collection
      */
-    private function periodEntries(Account $account): Collection
+    private function getPeriodOverview(Account $account): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -425,7 +442,14 @@ class AccountController extends Controller
             $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
             $dateStr    = $end->format('Y-m-d');
             $dateName   = Navigation::periodShow($end, $range);
-            $entries->push([$dateStr, $dateName, $spent, $earned, clone $end]);
+            $entries->push(
+                [
+                    'string' => $dateStr,
+                    'name'   => $dateName,
+                    'spent'  => $spent,
+                    'earned' => $earned,
+                    'date'   => clone $end]
+            );
             $end = Navigation::subtractPeriod($end, $range, 1);
 
         }
@@ -453,7 +477,7 @@ class AccountController extends Controller
         $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
 
         if (is_null($opposingTransaction)) {
-            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.');
+            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
         }
 
         return redirect(route('accounts.show', [$opposingTransaction->account_id]));

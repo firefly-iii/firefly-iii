@@ -26,6 +26,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Steam;
 use Tests\TestCase;
 
 /**
@@ -53,6 +54,7 @@ class SingleControllerTest extends TestCase
      */
     public function testCreate()
     {
+        Steam::shouldReceive('phpBytes')->andReturn(2048);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getActiveAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
@@ -91,7 +93,7 @@ class SingleControllerTest extends TestCase
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('delete')->once();
 
-        $this->session(['transactions.delete.url' => 'http://localhost']);
+        $this->session(['transactions.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->whereNull('deleted_at')->where('user_id', $this->user()->id)->first();
         $response   = $this->post(route('transactions.destroy', [$withdrawal->id]));
@@ -196,7 +198,7 @@ class SingleControllerTest extends TestCase
         $journal->description = 'New journal';
         $repository->shouldReceive('store')->andReturn($journal);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $this->session(['transactions.create.url' => 'http://localhost']);
+        $this->session(['transactions.create.uri' => 'http://localhost']);
         $this->be($this->user());
 
         $data     = [
@@ -240,7 +242,7 @@ class SingleControllerTest extends TestCase
         $attachmentRepo->shouldReceive('getMessages')->andReturn($messages);
 
 
-        $this->session(['transactions.create.url' => 'http://localhost']);
+        $this->session(['transactions.create.uri' => 'http://localhost']);
         $this->be($this->user());
 
         $data     = [
@@ -279,7 +281,7 @@ class SingleControllerTest extends TestCase
         $repository->shouldReceive('update')->andReturn($journal);
         $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
 
-        $this->session(['transactions.edit.url' => 'http://localhost']);
+        $this->session(['transactions.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
             'id'                        => 123,

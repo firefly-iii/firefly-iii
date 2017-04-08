@@ -7,16 +7,18 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Rules\TransactionMatcher;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -30,11 +32,37 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::create
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
      */
     public function testCreate()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.create', [1]));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController::create
+     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
+     */
+    public function testCreatePreviousInput()
+    {
+        $old = [
+            'rule-trigger'       => ['description_is'],
+            'rule-trigger-stop'  => ['1'],
+            'rule-trigger-value' => ['X'],
+            'rule-action'        => ['set_category'],
+            'rule-action-stop'   => ['1'],
+            'rule-action-value'  => ['x'],
+        ];
+        $this->session(['_old_input' => $old]);
+
+
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -71,7 +99,7 @@ class RuleControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
 
-        $this->session(['rules.delete.url' => 'http://localhost']);
+        $this->session(['rules.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('rules.destroy', [1]));
         $response->assertStatus(302);
@@ -98,6 +126,8 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::edit
+     * @covers \FireflyIII\Http\Controllers\RuleController::getCurrentActions
+     * @covers \FireflyIII\Http\Controllers\RuleController::getCurrentTriggers
      */
     public function testEdit()
     {
@@ -114,8 +144,39 @@ class RuleControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\RuleController::edit
+     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousActions
+     * @covers \FireflyIII\Http\Controllers\RuleController::getPreviousTriggers
+     */
+    public function testEditPreviousInput()
+    {
+        $old = [
+            'rule-trigger'       => ['description_is'],
+            'rule-trigger-stop'  => ['1'],
+            'rule-trigger-value' => ['X'],
+            'rule-action'        => ['set_category'],
+            'rule-action-stop'   => ['1'],
+            'rule-action-value'  => ['x'],
+        ];
+        $this->session(['_old_input' => $old]);
+
+        // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.edit', [1]));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\RuleController::index
      * @covers \FireflyIII\Http\Controllers\RuleController::__construct
+     * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRule
+     * @covers \FireflyIII\Http\Controllers\RuleController::createDefaultRuleGroup
      */
     public function testIndex()
     {
@@ -128,10 +189,8 @@ class RuleControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('store');
         $repository->shouldReceive('getFirstRuleGroup')->andReturn(new RuleGroup);
         $ruleGroupRepos->shouldReceive('getRuleGroupsWithRules')->andReturn(new Collection);
-
         $repository->shouldReceive('count')->andReturn(0);
         $repository->shouldReceive('store');
-
 
         $this->be($this->user());
         $response = $this->get(route('rules.index'));
@@ -145,15 +204,12 @@ class RuleControllerTest extends TestCase
     public function testReorderRuleActions()
     {
         // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $data = [
-            'triggers' => [1, 2, 3],
-        ];
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
-        $repository->shouldReceive('reorderRuleActions');
+        $data = ['actions' => [1, 2, 3],];
+        $repository->shouldReceive('reorderRuleActions')->once();
 
         $this->be($this->user());
         $response = $this->post(route('rules.reorder-actions', [1]), $data);
@@ -166,15 +222,12 @@ class RuleControllerTest extends TestCase
     public function testReorderRuleTriggers()
     {
         // mock stuff
+        $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
-        $data = [
-            'triggers' => [1, 2, 3],
-        ];
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
-        $repository->shouldReceive('reorderRuleTriggers');
+        $data = ['triggers' => [1, 2, 3],];
+        $repository->shouldReceive('reorderRuleTriggers')->once();
 
         $this->be($this->user());
         $response = $this->post(route('rules.reorder-triggers', [1]), $data);
@@ -187,12 +240,15 @@ class RuleControllerTest extends TestCase
     public function testStore()
     {
         // mock stuff
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+        $repository->shouldReceive('store')->andReturn(new Rule);
 
-        $this->session(['rules.create.url' => 'http://localhost']);
+        $this->session(['rules.create.uri' => 'http://localhost']);
         $data = [
             'rule_group_id'      => 1,
             'active'             => 1,
@@ -212,10 +268,6 @@ class RuleControllerTest extends TestCase
                 1 => 'C',
             ],
         ];
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
-        $repository->shouldReceive('store')->andReturn(new Rule);
-
         $this->be($this->user());
         $response = $this->post(route('rules.store', [1]), $data);
         $response->assertStatus(302);
@@ -226,15 +278,73 @@ class RuleControllerTest extends TestCase
      * This actually hits an error and not the actually code but OK.
      *
      * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
      */
-    public function testTestTriggers()
+    public function testTestTriggersError()
     {
-        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
-        $response = $this->get(route('rules.test-triggers', [1]));
+        $uri = route('rules.test-triggers');
+        $response = $this->get($uri);
+        $response->assertStatus(200);
+    }
+    /**
+     *
+     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     */
+    public function testTestTriggers()
+    {
+        $data = [
+            'rule-trigger'       => ['description_is'],
+            'rule-trigger-value' => ['Bla bla'],
+            'rule-trigger-stop'  => ['1'],
+        ];
+
+        // mock stuff
+        $matcher      = $this->mock(TransactionMatcher::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
+        $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
+        $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
+        $matcher->shouldReceive('findMatchingTransactions')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $uri = route('rules.test-triggers') . '?' . http_build_query($data);
+        $response = $this->get($uri);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     */
+    public function testTestTriggersMax()
+    {
+        $data = [
+            'rule-trigger'       => ['description_is'],
+            'rule-trigger-value' => ['Bla bla'],
+            'rule-trigger-stop'  => ['1'],
+        ];
+        $set = factory(Transaction::class, 10)->make();
+
+        // mock stuff
+        $matcher      = $this->mock(TransactionMatcher::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
+        $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
+        $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
+        $matcher->shouldReceive('findMatchingTransactions')->andReturn($set);
+
+        $this->be($this->user());
+        $uri = route('rules.test-triggers') . '?' . http_build_query($data);
+        $response = $this->get($uri);
         $response->assertStatus(200);
     }
 
@@ -261,10 +371,13 @@ class RuleControllerTest extends TestCase
     public function testUpdate()
     {
         // mock stuff
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+        $repository->shouldReceive('update');
 
         $data = [
             'rule_group_id'      => 1,
@@ -285,11 +398,7 @@ class RuleControllerTest extends TestCase
                 1 => 'Bla bla',
             ],
         ];
-        $this->session(['rules.edit.url' => 'http://localhost']);
-
-        $repository = $this->mock(RuleRepositoryInterface::class);
-        $repository->shouldReceive('update');
-
+        $this->session(['rules.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('rules.update', [1]), $data);
         $response->assertStatus(302);

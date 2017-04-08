@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -72,6 +72,7 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
     public function testPostChangePassword()
     {
@@ -93,6 +94,52 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
+     */
+    public function testPostChangePasswordNotCorrect()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('changePassword');
+
+        $data = [
+            'current_password'          => 'james3',
+            'new_password'              => 'james2',
+            'new_password_confirmation' => 'james2',
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('profile.change-password.post'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('error');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
+     */
+    public function testPostChangePasswordSameNew()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('changePassword');
+
+        $data = [
+            'current_password'          => 'james',
+            'new_password'              => 'james',
+            'new_password_confirmation' => 'james',
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('profile.change-password.post'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('error');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
      */
     public function testPostDeleteAccount()
@@ -101,7 +148,7 @@ class ProfileControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('destroy');
+        $repository->shouldReceive('destroy')->once();
         $data = [
             'password' => 'james',
         ];
@@ -109,6 +156,25 @@ class ProfileControllerTest extends TestCase
         $response = $this->post(route('profile.delete-account.post'), $data);
         $response->assertStatus(302);
         $response->assertRedirect(route('index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
+     */
+    public function testPostDeleteAccountWrong()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $data       = [
+            'password' => 'james2',
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('profile.delete-account.post'), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('profile.delete-account'));
+        $response->assertSessionHas('error');
     }
 
 }

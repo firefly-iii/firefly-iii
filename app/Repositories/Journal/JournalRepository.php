@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
@@ -133,6 +133,20 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactionTypes(): Collection
     {
         return TransactionType::orderBy('type', 'ASC')->get();
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param int                $order
+     *
+     * @return bool
+     */
+    public function setOrder(TransactionJournal $journal, int $order): bool
+    {
+        $journal->order = $order;
+        $journal->save();
+
+        return true;
     }
 
     /**

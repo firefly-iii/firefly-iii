@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -17,8 +17,10 @@ namespace FireflyIII\Console\Commands;
 use DB;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Log;
@@ -60,6 +62,7 @@ class UpgradeDatabase extends Command
     {
         $this->setTransactionIdentifier();
         $this->migrateRepetitions();
+        $this->repairPiggyBanks();
     }
 
     private function migrateRepetitions()
@@ -69,7 +72,9 @@ class UpgradeDatabase extends Command
         }
         // get all budget limits with end_date NULL
         $set = BudgetLimit::whereNull('end_date')->get();
-        $this->line(sprintf('Found %d budget limit(s) to update', $set->count()));
+        if ($set->count() > 0) {
+            $this->line(sprintf('Found %d budget limit(s) to update', $set->count()));
+        }
         /** @var BudgetLimit $budgetLimit */
         foreach ($set as $budgetLimit) {
             // get limit repetition (should be just one):
@@ -80,6 +85,35 @@ class UpgradeDatabase extends Command
                 $budgetLimit->save();
                 $this->line(sprintf('Updated budget limit #%d', $budgetLimit->id));
                 $repetition->delete();
+            }
+        }
+    }
+
+    /**
+     * Make sure there are only transfers linked to piggy bank events.
+     */
+    private function repairPiggyBanks()
+    {
+        // if table does not exist, return false
+        if (!Schema::hasTable('piggy_bank_events')) {
+            return;
+        }
+        $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
+        /** @var PiggyBankEvent $event */
+        foreach ($set as $event) {
+
+            if (!is_null($event->transaction_journal_id)) {
+                $type = $event->transactionJournal->transactionType->type;
+                if ($type !== TransactionType::TRANSFER) {
+                    $event->transaction_journal_id = null;
+                    $event->save();
+                    $this->line(
+                        sprintf('Piggy bank #%d ("%s") was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id,
+                        $event->piggyBank->name
+                    ));
+                }
+
+
             }
         }
     }
@@ -151,7 +185,6 @@ class UpgradeDatabase extends Command
                 $opposing->save();
                 $processed[] = $transaction->id;
                 $processed[] = $opposing->id;
-                $this->line(sprintf('Database upgrade for journal #%d, transactions #%d and #%d', $journalId, $transaction->id, $opposing->id));
             }
             $identifier++;
         }

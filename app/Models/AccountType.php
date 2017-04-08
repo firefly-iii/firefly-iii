@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
@@ -48,6 +48,7 @@ class AccountType extends Model
     protected $dates = ['created_at', 'updated_at'];
 
     //
+
     /**
      * @return HasMany
      */

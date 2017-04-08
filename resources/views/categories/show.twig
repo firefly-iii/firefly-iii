@@ -1,12 +1,12 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category, start, end) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category, moment, start, end) }}
 {% endblock %}
 
 {% block content %}
     <div class="row">
-        {% if method == 'default' %}
+        {% if moment != 'all' and moment != '' %}
             {# both charts #}
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="box">
@@ -14,7 +14,7 @@
                         <h3 class="box-title">{{ 'overview'|_ }} ({{ 'per_period'|_|lower }})</h3>
                     </div>
                     <div class="box-body">
-                        <canvas id="period" style="width:100%" height="350"></canvas>
+                        <canvas id="period-specific-period" style="width:100%" height="350"></canvas>
                     </div>
                 </div>
             </div>
@@ -29,20 +29,20 @@
                 </div>
             </div>
         {% endif %}
-        {% if method == 'date' %}
+        {% if moment == '' %}
             {# single chart #}
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'overview'|_ }} ({{ 'current_period'|_|lower }})</h3>
+                        <h3 class="box-title">{{ subTitle }}</h3>
                     </div>
                     <div class="box-body">
-                        <canvas id="period-specific-period" style="width:100%;height:350px;" height="350"></canvas>
+                        <canvas id="period" style="width:100%;height:350px;" height="350"></canvas>
                     </div>
                 </div>
             </div>
         {% endif %}
-        {% if method == 'all' %}
+        {% if moment == 'all' %}
             {# all chart #}
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">
@@ -56,16 +56,16 @@
             </div>
         {% endif %}
     </div>
-    {% if entries %}
+    {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('categories.show.all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('categories.show',[category.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
 
     <div class="row">
-        <div class="{% if entries %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
+        <div class="{% if periods.count > 0 %}col-lg-10 col-md-8 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
 
             <div class="box">
                 <div class="box-header with-border">
@@ -76,7 +76,7 @@
                     {% if entries %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('categories.show.all', [category.id]) }}">
+                            <a href="{{ route('categories.show', [category.id,'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
@@ -91,34 +91,37 @@
                 </div>
             </div>
         </div>
-        {% if entries %}
+        {% if periods.count > 0 %}
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                {% for entry in entries %}
-                    {% if entry[2] != 0 or entry[3] != 0 %}
-                        <div class="box {% if entry[4] == start %}box-solid box-primary{% endif %}">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('categories.show.date',[category.id,entry[0]]) }}">{{ entry[1] }}</a>
-                                </h3>
-                            </div>
-                            <div class="box-body no-padding">
-                                <table class="table table-hover">
-                                    {% if entry[2] != 0 %}
-                                        <tr>
-                                            <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                            <td style="text-align: right;">{{ entry[2]|formatAmount }}</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if entry[3] != 0 %}
-                                        <tr>
-                                            <td style="width:33%;">{{ 'earned'|_ }}</td>
-                                            <td style="text-align: right;">{{ entry[3]|formatAmount }}</td>
-                                        </tr>
-                                    {% endif %}
-                                </table>
-                            </div>
+                {% for period in periods %}
+                    <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a href="{{ route('categories.show',[category.id,period.string]) }}">{{ period.name }}</a>
+                            </h3>
                         </div>
-                    {% endif %}
-
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
+                                <tr>
+                                    <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                    <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:33%;">{{ 'earned'|_ }}</td>
+                                    <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
+                                </tr>
+                                {% if period.earned != 0 and period.spent != 0 %}
+                                <tr>
+                                    <td style="width:33%;">{{ 'sum'|_ }}</td>
+                                    <td style="text-align: right;">{{ period.sum|formatAmount }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td style="width:33%;">{{ 'transferred'|_ }}</td>
+                                    <td style="text-align: right;" class="text-info">{{ period.transferred|formatAmountPlain }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}

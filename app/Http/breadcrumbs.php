@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbGenerator;
 use FireflyIII\Exceptions\FireflyException;
@@ -67,38 +67,31 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
+    'accounts.show', function (BreadCrumbGenerator $breadcrumbs, Account $account, string $moment, Carbon $start, Carbon $end) {
     $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push($account->name, route('accounts.show', [$account->id]));
-}
-);
 
-Breadcrumbs::register(
-    'accounts.show.date', function (BreadCrumbGenerator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null) {
-
-    $title = '';
-    $route = '';
-    if (!is_null($start) && !is_null($end)) {
-        $startString = $start->formatLocalized(strval(trans('config.month_and_day')));
-        $endString   = $end->formatLocalized(strval(trans('config.month_and_day')));
-        $title       = sprintf('%s (%s)', $account->name, trans('firefly.from_to_breadcrumb', ['start' => $startString, 'end' => $endString]));
-        $route       = route('accounts.show.date', [$account->id, $start->format('Y-m-d')]);
+    // push when is all:
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.everything'), route('accounts.show', [$account->id, 'all']));
     }
-    if (is_null($start) && is_null($end)) {
-        $title = $title = $account->name . ' (' . strtolower(strval(trans('firefly.everything'))) . ')';
-        $route = route('accounts.show.date', [$account->id, 'all']);
+    // when is specific period:
+    if (strlen($moment) > 0 && $moment !== 'all') {
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('accounts.show', [$account->id, $moment]));
     }
 
-    $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push($title, $route);
 }
 );
 
 Breadcrumbs::register(
     'accounts.delete', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-    $breadcrumbs->parent('accounts.show', $account);
+    $breadcrumbs->parent('accounts.show', $account, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('firefly.delete_account', ['name' => e($account->name)]), route('accounts.delete', [$account->id]));
 }
 );
@@ -106,7 +99,7 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.edit', function (BreadCrumbGenerator $breadcrumbs, Account $account) {
-    $breadcrumbs->parent('accounts.show', $account);
+    $breadcrumbs->parent('accounts.show', $account, '', new Carbon, new Carbon);
     $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
     $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));
@@ -256,9 +249,24 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'budgets.no-budget', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
+    'budgets.no-budget', function (BreadCrumbGenerator $breadcrumbs, string $moment, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('budgets.index');
-    $breadcrumbs->push($subTitle, route('budgets.no-budget'));
+    $breadcrumbs->push(trans('firefly.journals_without_budget'), route('budgets.no-budget'));
+
+    // push when is all:
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.everything'), route('budgets.no-budget', ['all']));
+    }
+    // when is specific period:
+    if (strlen($moment) > 0 && $moment !== 'all') {
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('budgets.no-budget', [$moment]));
+    }
+
+
 }
 );
 
@@ -275,11 +283,8 @@ Breadcrumbs::register(
     $breadcrumbs->push(e($budget->name), route('budgets.show', [$budget->id]));
 
     $title = trans(
-        'firefly.budget_in_period_breadcrumb', [
-                                                 'name'  => $budget->name,
-                                                 'start' => $budgetLimit->start_date->formatLocalized(strval(trans('config.month_and_day'))),
-                                                 'end'   => $budgetLimit->end_date->formatLocalized(strval(trans('config.month_and_day'))),
-                                             ]
+        'firefly.between_dates_breadcrumb', ['start' => $budgetLimit->start_date->formatLocalized(strval(trans('config.month_and_day'))),
+                                             'end'   => $budgetLimit->end_date->formatLocalized(strval(trans('config.month_and_day'))),]
     );
 
     $breadcrumbs->push(
@@ -306,52 +311,61 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'categories.edit', function (BreadCrumbGenerator $breadcrumbs, Category $category) {
-    $breadcrumbs->parent('categories.show', $category);
+    $breadcrumbs->parent('categories.show', $category, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('firefly.edit_category', ['name' => e($category->name)]), route('categories.edit', [$category->id]));
 }
 );
 Breadcrumbs::register(
     'categories.delete', function (BreadCrumbGenerator $breadcrumbs, Category $category) {
-    $breadcrumbs->parent('categories.show', $category);
+    $breadcrumbs->parent('categories.show', $category, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('firefly.delete_category', ['name' => e($category->name)]), route('categories.delete', [$category->id]));
 }
 );
 
 Breadcrumbs::register(
-    'categories.show', function (BreadCrumbGenerator $breadcrumbs, Category $category) {
-    $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push(e($category->name), route('categories.show', [$category->id]));
+    'categories.show', function (BreadCrumbGenerator $breadcrumbs, Category $category, string $moment, Carbon $start, Carbon $end) {
 
+    $breadcrumbs->parent('categories.index');
+    $breadcrumbs->push($category->name, route('categories.show', [$category->id]));
+
+    // push when is all:
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.everything'), route('categories.show', [$category->id, 'all']));
+    }
+    // when is specific period:
+    if (strlen($moment) > 0 && $moment !== 'all') {
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('categories.show', [$category->id, $moment]));
+    }
 }
 );
+
 
 Breadcrumbs::register(
-    'categories.show.all', function (BreadCrumbGenerator $breadcrumbs, Category $category) {
+    'categories.no-category', function (BreadCrumbGenerator $breadcrumbs, string $moment, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push(e($category->name) . '(' . strtolower(trans('firefly.all_periods')) . ')', route('categories.show.all', [$category->id]));
+    $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
+
+    // push when is all:
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.everything'), route('categories.no-category', ['all']));
+    }
+    // when is specific period:
+    if (strlen($moment) > 0 && $moment !== 'all') {
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('categories.no-category', [$moment]));
+    }
+
 
 }
 );
 
-Breadcrumbs::register(
-    'categories.show.date', function (BreadCrumbGenerator $breadcrumbs, Category $category, Carbon $date) {
-
-    // get current period preference.
-    $range = Preferences::get('viewRange', '1M')->data;
-
-    $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push(e($category->name), route('categories.show', [$category->id]));
-    $breadcrumbs->push(Navigation::periodShow($date, $range), route('categories.show.date', [$category->id, $date->format('Y-m-d')]));
-
-}
-);
-
-Breadcrumbs::register(
-    'categories.no-category', function (BreadCrumbGenerator $breadcrumbs, $subTitle) {
-    $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push($subTitle, route('categories.no-category'));
-}
-);
 
 /**
  * CURRENCIES
@@ -719,36 +733,30 @@ Breadcrumbs::register(
  * TRANSACTIONS
  */
 Breadcrumbs::register(
-    'transactions.index', function (BreadCrumbGenerator $breadcrumbs, string $what) {
+    'transactions.index', function (BreadCrumbGenerator $breadcrumbs, string $what, string $moment = '', Carbon $start, Carbon $end) {
+
+
     $breadcrumbs->parent('home');
     $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
-}
-);
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.everything'), route('transactions.index', [$what, 'all']));
+    }
 
-Breadcrumbs::register(
-    'transactions.index.all', function (BreadCrumbGenerator $breadcrumbs, string $what) {
-    $breadcrumbs->parent('transactions.index', $what);
+    // when is specific period:
+    if (strlen($moment) > 0 && $moment !== 'all') {
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('transactions.index', [$what, $moment]));
+    }
 
-    $title = sprintf('%s (%s)', trans('breadcrumbs.' . $what . '_list'), strtolower(trans('firefly.everything')));
-
-    $breadcrumbs->push($title, route('transactions.index.all', [$what]));
-}
-);
-
-Breadcrumbs::register(
-    'transactions.index.date', function (BreadCrumbGenerator $breadcrumbs, string $what, Carbon $date) {
-    $breadcrumbs->parent('transactions.index', $what);
-
-    $range = Preferences::get('viewRange', '1M')->data;
-    $title = trans('breadcrumbs.' . $what . '_list') . ' (' . Navigation::periodShow($date, $range) . ')';
-
-    $breadcrumbs->push($title, route('transactions.index.date', [$what, $date->format('Y-m-d')]));
 }
 );
 
 Breadcrumbs::register(
     'transactions.create', function (BreadCrumbGenerator $breadcrumbs, string $what) {
-    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->parent('transactions.index', $what, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
 }
 );
@@ -770,7 +778,7 @@ Breadcrumbs::register(
     'transactions.show', function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
 
     $what = strtolower($journal->transactionType->type);
-    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->parent('transactions.index', $what, '', new Carbon, new Carbon);
     $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
 }
 );
@@ -792,15 +800,16 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.mass.edit', function (BreadCrumbGenerator $breadcrumbs, Collection $journals) {
 
-        if($journals->count() > 0) {
-            $journalIds = $journals->pluck('id')->toArray();
-            $what       = strtolower($journals->first()->transactionType->type);
-            $breadcrumbs->parent('transactions.index', $what);
-            $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
-            return;
-        }
+    if ($journals->count() > 0) {
+        $journalIds = $journals->pluck('id')->toArray();
+        $what       = strtolower($journals->first()->transactionType->type);
+        $breadcrumbs->parent('transactions.index', $what, '', new Carbon, new Carbon);
+        $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', $journalIds));
 
-        $breadcrumbs->parent('index');
+        return;
+    }
+
+    $breadcrumbs->parent('index');
 }
 );
 
@@ -809,7 +818,7 @@ Breadcrumbs::register(
 
     $journalIds = $journals->pluck('id')->toArray();
     $what       = strtolower($journals->first()->transactionType->type);
-    $breadcrumbs->parent('transactions.index', $what);
+    $breadcrumbs->parent('transactions.index', $what, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', $journalIds));
 }
 );

@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, account, start, end) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, account, moment, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -9,12 +9,8 @@
         <div class="col-lg-12 col-md-10 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ account.name }}
-                        {% if start and end %}
-                            ({{ trans('firefly.from_to_breadcrumb', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }})
-                        {% else %}
-                            ({{ trans('firefly.everything')|lower }})
-                        {% endif %}
+                    <h3 class="box-title">
+                        {{ subTitle }}
                     </h3>
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
@@ -74,7 +70,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('accounts.show.date',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('accounts.show',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -90,7 +86,7 @@
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('accounts.show.date', [account.id, 'all']) }}">
+                            <a href="{{ route('accounts.show', [account.id, 'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
@@ -107,25 +103,25 @@
         </div>
         {% if periods.count > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% for entry in periods %}
-                    {% if (entry[2] != 0 or entry[3] != 0) or (accountType == 'Asset account') %}
-                        <div class="box {% if entry[4] == start %}box-solid box-primary{% endif %}">
+                {% for period in periods %}
+                    {% if (period.spent != 0 or period.earned != 0) or (accountType == 'Asset account') %}
+                        <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('accounts.show.date',[account.id,entry[0]]) }}">{{ entry[1] }}</a>
+                                <h3 class="box-title"><a href="{{ route('accounts.show',[account.id,period.string]) }}">{{ period.name }}</a>
                                 </h3>
                             </div>
                             <div class="box-body no-padding">
                                 <table class="table table-hover">
-                                    {% if entry[2] != 0 or (accountType == 'Asset account') %}
+                                    {% if period.spent != 0 or (accountType == 'Asset account') %}
                                         <tr>
                                             <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                            <td style="text-align: right;">{{ entry[2]|formatAmount }}</td>
+                                            <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
                                         </tr>
                                     {% endif %}
-                                    {% if entry[3] != 0 or (accountType == 'Asset account') %}
+                                    {% if period.earned != 0 or (accountType == 'Asset account') %}
                                         <tr>
                                             <td style="width: 33%;">{{ 'earned'|_ }}</td>
-                                            <td style="text-align: right;">{{ entry[3]|formatAmount }}</td>
+                                            <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
                                         </tr>
                                     {% endif %}
                                 </table>
@@ -133,7 +129,7 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-                <p class="small text-center"><a href="{{ route('accounts.show.date',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('accounts.show',[account.id, 'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         {% endif %}
     </div>

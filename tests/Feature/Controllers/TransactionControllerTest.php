@@ -7,24 +7,28 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Steam;
 use Tests\TestCase;
 
 class TransactionControllerTest extends TestCase
 {
 
+
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
+     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
      */
     public function testIndex()
     {
@@ -43,6 +47,9 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['transfer']));
@@ -52,14 +59,14 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::indexAll
+     * @covers \FireflyIII\Http\Controllers\TransactionController::index
      */
     public function testIndexAll()
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -71,23 +78,25 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.index.all', ['transfer']));
+        $response = $this->get(route('transactions.index', ['transfer', 'all']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TransactionController::indexByDate
+     * @covers \FireflyIII\Http\Controllers\TransactionController::index
+     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
      */
     public function testIndexByDate()
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(JournalCollectorInterface::class);
-        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -99,9 +108,74 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.index.date', ['transfer', '2016-01-01']));
+        $response = $this->get(route('transactions.index', ['transfer', '2016-01-01']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TransactionController::index
+     * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
+     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
+     */
+    public function testIndexDeposit()
+    {
+        // mock stuff
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.index', ['deposit']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TransactionController::index
+     * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
+     * @covers \FireflyIII\Http\Controllers\TransactionController::getPeriodOverview
+     */
+    public function testIndexWithdrawal()
+    {
+        // mock stuff
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $collector  = $this->mock(JournalCollectorInterface::class);
+        $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
+
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.index', ['withdrawal']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -113,11 +187,16 @@ class TransactionControllerTest extends TestCase
     public function testReorder()
     {
         // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $journal       = factory(TransactionJournal::class)->make();
+        $journal->date = new Carbon('2016-01-01');
+        $repository    = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('find')->once()->andReturn($journal);
+        $repository->shouldReceive('setOrder')->once()->andReturn(true);
 
         $data = [
-            'items' => [],
+            'date'  => '2016-01-01',
+            'items' => [1],
         ];
         $this->be($this->user());
         $response = $this->post(route('transactions.reorder'), $data);
@@ -126,6 +205,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::show
+     * @covers \FireflyIII\Http\Controllers\Controller::isOpeningBalance
      */
     public function testShow()
     {

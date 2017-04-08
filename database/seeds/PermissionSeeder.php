@@ -9,8 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
-
+declare(strict_types=1);
 
 
 use FireflyIII\Models\Role;
@@ -29,10 +28,10 @@ class PermissionSeeder extends Seeder
         $owner->description  = 'User runs this instance of FF3'; // optional
         $owner->save();
 
-        $demo = new Role;
-        $demo->name ='demo';
+        $demo               = new Role;
+        $demo->name         = 'demo';
         $demo->display_name = 'Demo User';
-        $demo->description = 'User is a demo user';
+        $demo->description  = 'User is a demo user';
         $demo->save();
 
     }

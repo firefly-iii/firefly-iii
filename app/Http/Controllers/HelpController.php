@@ -58,7 +58,7 @@ class HelpController extends Controller
             return Response::json($content);
         }
 
-        $content         = $help->getFromGithub($language, $route);
+        $content         = $help->getFromGithub($route, $language);
         $notYourLanguage = '<p><em>' . strval(trans('firefly.help_may_not_be_your_language')) . '</em></p>';
 
         // get backup language content (try English):
@@ -66,10 +66,10 @@ class HelpController extends Controller
             $language = 'en_US';
             if ($help->inCache($route, $language)) {
                 Log::debug(sprintf('Help text %s was in cache.', $language));
-                $content = $help->getFromCache($route, $language);
+                $content = $notYourLanguage . $help->getFromCache($route, $language);
             }
             if (!$help->inCache($route, $language)) {
-                $content = trim($notYourLanguage . $help->getFromGithub($language, $route));
+                $content = trim($notYourLanguage . $help->getFromGithub($route, $language));
             }
         }
 

@@ -53,6 +53,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::delete
+     * @covers \FireflyIII\Http\Controllers\Controller::rememberPreviousUri
      */
     public function testDelete()
     {
@@ -73,6 +74,8 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::destroy
+     * @covers \FireflyIII\Http\Controllers\Controller::__construct
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testDestroy()
     {
@@ -83,7 +86,7 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.delete.url' => 'http://localhost/accounts/show/1']);
+        $this->session(['accounts.delete.uri' => 'http://localhost/accounts/show/1']);
         $account = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
 
         $this->be($this->user());
@@ -127,7 +130,7 @@ class AccountControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        Steam::shouldReceive('balancesById')->andReturn([]);
+        Steam::shouldReceive('balancesById')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
         $this->be($this->user());
@@ -140,7 +143,7 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\AccountController::show
-     * @covers       \FireflyIII\Http\Controllers\AccountController::periodEntries
+     * @covers       \FireflyIII\Http\Controllers\AccountController::getPeriodOverview
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -158,8 +161,8 @@ class AccountControllerTest extends TestCase
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
         $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date);
-        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
+        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection)->once();
 
         $transaction = factory(Transaction::class)->make();
         $collector   = $this->mock(JournalCollectorInterface::class);
@@ -190,7 +193,7 @@ class AccountControllerTest extends TestCase
         $transaction  = factory(Transaction::class)->make();
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('first')->twice()->andReturn(new TransactionJournal);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
@@ -201,10 +204,6 @@ class AccountControllerTest extends TestCase
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
-
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
-        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -221,6 +220,7 @@ class AccountControllerTest extends TestCase
      */
     public function testShowBrokenInitial()
     {
+        // mock
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
@@ -253,14 +253,14 @@ class AccountControllerTest extends TestCase
 
         $tasker     = $this->mock(AccountTaskerInterface::class);
         $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
+        $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
         $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show.date', [1, '2016-01-01']));
+        $response = $this->get(route('accounts.show', [1, '2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -293,7 +293,7 @@ class AccountControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show.date', [1, '2016-01-01']));
+        $response = $this->get(route('accounts.show', [1, '2016-01-01']));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -305,6 +305,7 @@ class AccountControllerTest extends TestCase
      */
     public function testShowInitial()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
@@ -318,16 +319,18 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\AccountController::store
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testStore()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.create.url' => 'http://localhost']);
+        $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
             'name' => 'new account ' . rand(1000, 9999),
@@ -340,22 +343,77 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\AccountController::store
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
+     */
+    public function testStoreAnother()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->andReturn(new Account)->once();
+        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->session(['accounts.create.uri' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name'           => 'new account ' . rand(1000, 9999),
+            'what'           => 'asset',
+            'create_another' => 1,
+        ];
+
+        $response = $this->post(route('accounts.store', ['asset']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\AccountController::update
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
      */
     public function testUpdate()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['accounts.edit.url' => 'http://localhost']);
+        $this->session(['accounts.edit.uri' => 'http://localhost/javascript/account']);
         $this->be($this->user());
         $data = [
             'name'   => 'updated account ' . rand(1000, 9999),
             'active' => 1,
             'what'   => 'asset',
+        ];
+
+        $response = $this->post(route('accounts.update', [1]), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\AccountController::update
+     * @covers \FireflyIII\Http\Controllers\Controller::getPreviousUri
+     */
+    public function testUpdateAgain()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('find')->andReturn(new Account)->once();
+        $repository->shouldReceive('update')->once();
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->session(['accounts.edit.uri' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name'           => 'updated account ' . rand(1000, 9999),
+            'active'         => 1,
+            'what'           => 'asset',
+            'return_to_edit' => '1',
         ];
 
         $response = $this->post(route('accounts.update', [1]), $data);

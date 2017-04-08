@@ -16,6 +16,11 @@ use FireflyConfig;
 use FireflyIII\Models\Configuration;
 use Tests\TestCase;
 
+/**
+ * Class ConfigurationControllerTest
+ *
+ * @package Tests\Feature\Controllers\Admin
+ */
 class ConfigurationControllerTest extends TestCase
 {
 

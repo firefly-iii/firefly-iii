@@ -32,7 +32,7 @@
                 </div>
             </td>
             <td>
-                <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.name }}">{{ piggyBank.name }}</a>
+                <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.account.name }}">{{ piggyBank.name }}</a>
             </td>
             <td style="text-align: right;">
                 <span title="Saved so far" style="text-align:right;">{{ piggyBank.savedSoFar|formatAmount }}</span>

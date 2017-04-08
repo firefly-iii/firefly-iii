@@ -120,9 +120,11 @@ class Controller extends BaseController
             }
 
         }
+        // @codeCoverageIgnoreStart
         Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
 
         return redirect(route('index'));
+        // @codeCoverageIgnoreEnd
     }
 
     /**

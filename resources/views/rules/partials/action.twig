@@ -10,11 +10,7 @@
 
         <select name="rule-action[{{ count }}]" class="form-control">
             {% for key,name in allRuleActions() %}
-                <option value="{{ key }}" label="{{ name }}"
-                        {% if key == oldTrigger %}
-                            selected
-                        {% endif %}
-                >{{ name }}</option>
+                <option value="{{ key }}" label="{{ name }}" {% if key == oldAction %} selected{% endif %}>{{ name }}</option>
             {% endfor %}
         </select>
     </td>

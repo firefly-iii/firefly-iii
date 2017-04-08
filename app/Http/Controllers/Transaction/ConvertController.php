@@ -173,7 +173,6 @@ class ConvertController extends Controller
         $joined             = $sourceType->type . '-' . $destinationType->type;
         switch ($joined) {
             default:
-
                 throw new FireflyException('Cannot handle ' . $joined); // @codeCoverageIgnore
             case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT: // one
                 $destination = $sourceAccount;

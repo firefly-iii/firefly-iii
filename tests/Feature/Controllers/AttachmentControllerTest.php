@@ -24,6 +24,7 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDelete()
     {
+        // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
@@ -44,7 +45,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['attachments.delete.url' => 'http://localhost']);
+        $this->session(['attachments.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('attachments.destroy', [1]));
         $response->assertStatus(302);
@@ -71,6 +72,24 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
+     * @covers                   \FireflyIII\Http\Controllers\AttachmentController::download
+     * @expectedExceptionMessage Could not find the indicated attachment
+     */
+    public function testDownloadFail()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository->shouldReceive('exists')->once()->andReturn(false);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('attachments.download', [1]));
+        $response->assertStatus(500);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\AttachmentController::edit
      */
     public function testEdit()
@@ -93,7 +112,7 @@ class AttachmentControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $this->be($this->user());
-        $response = $this->get(route('attachments.preview', [1]));
+        $response = $this->get(route('attachments.preview', [3]));
         $response->assertStatus(200);
     }
 
@@ -108,7 +127,7 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $this->session(['attachments.edit.url' => 'http://localhost']);
+        $this->session(['attachments.edit.uri' => 'http://localhost']);
         $data = [
             'title'       => 'Some updated title ' . rand(1000, 9999),
             'notes'       => '',

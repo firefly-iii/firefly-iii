@@ -97,6 +97,7 @@ class Handler extends ExceptionHandler
                 'file'         => $exception->getFile(),
                 'line'         => $exception->getLine(),
                 'code'         => $exception->getCode(),
+                'version'      => config('firefly.version'),
             ];
 
             // create job that will mail.
