@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -493,6 +493,7 @@ class CategoryController extends Controller
                     'name'        => $dateName,
                     'spent'       => $spent,
                     'earned'      => $earned,
+                    'sum'         => bcadd($earned, $spent),
                     'transferred' => $transferred,
                     'date'        => clone $end,
                 ]
