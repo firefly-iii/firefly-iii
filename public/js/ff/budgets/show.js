@@ -15,7 +15,7 @@ $(function () {
     if (budgetLimitID > 0) {
         lineChart(budgetChartUri, 'budgetOverview');
     }
-    if (budgetLimitID == 0) {
+    if (budgetLimitID === 0) {
         columnChart(budgetChartUri, 'budgetOverview');
     }
 

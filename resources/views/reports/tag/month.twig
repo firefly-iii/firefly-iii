@@ -107,7 +107,8 @@
                                     <a href="{{ route('tags.show', tag.id) }}" title="{{ tag.tag }}">{{ tag.tag }}</a>
                                 </td>
                                 {% if tagSummary[tag.id] %}
-                                    <td data-value="{{ tagSummary[tag.id].earned }}" style="text-align: right;">{{ tagSummary[tag.id].earned|formatAmount }}</td>
+                                    <td data-value="{{ tagSummary[tag.id].earned }}"
+                                        style="text-align: right;">{{ tagSummary[tag.id].earned|formatAmount }}</td>
                                 {% else %}
                                     <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}

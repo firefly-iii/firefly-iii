@@ -110,10 +110,10 @@
                                     <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
                                 </tr>
                                 {% if period.earned != 0 and period.spent != 0 %}
-                                <tr>
-                                    <td style="width:33%;">{{ 'sum'|_ }}</td>
-                                    <td style="text-align: right;">{{ period.sum|formatAmount }}</td>
-                                </tr>
+                                    <tr>
+                                        <td style="width:33%;">{{ 'sum'|_ }}</td>
+                                        <td style="text-align: right;">{{ period.sum|formatAmount }}</td>
+                                    </tr>
                                 {% endif %}
                                 <tr>
                                     <td style="width:33%;">{{ 'transferred'|_ }}</td>

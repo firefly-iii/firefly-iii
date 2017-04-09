@@ -274,10 +274,10 @@ class ImportController extends Controller
      * Step 5. Depending on the importer, this will show the user settings to
      * fill in.
      *
-     * @param ImportJob $job
+     * @param ImportJobRepositoryInterface $repository
+     * @param ImportJob                    $job
      *
      * @return View
-     * @throws FireflyException
      */
     public function settings(ImportJobRepositoryInterface $repository, ImportJob $job)
     {

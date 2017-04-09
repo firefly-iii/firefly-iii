@@ -71,12 +71,12 @@
                             </td>
                         </tr>
                         {% if piggyBank.targetdate %}
-                        <tr>
-                            <td>{{ 'suggested_amount'|_ }}</td>
-                            <td>
-                                {{ suggestedMonthlyAmount(piggyBank)|formatAmount }}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{ 'suggested_amount'|_ }}</td>
+                                <td>
+                                    {{ suggestedMonthlyAmount(piggyBank)|formatAmount }}
+                                </td>
+                            </tr>
                         {% endif %}
                     </table>
                 </div>
@@ -100,7 +100,7 @@
                         <h3 class="box-title">{{ trans('form.notes') }}</h3>
                     </div>
                     <div class="box-body">
-                            {{ note.markdown|raw }}
+                        {{ note.markdown|raw }}
                     </div>
                 </div>
 

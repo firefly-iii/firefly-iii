@@ -60,6 +60,8 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param string                     $what
      *
+     * @param string                     $moment
+     *
      * @return View
      */
     public function index(Request $request, JournalRepositoryInterface $repository, string $what, string $moment = '')

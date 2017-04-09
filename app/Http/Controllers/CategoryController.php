@@ -154,6 +154,10 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param string                     $moment
+     *
      * @return View
      */
     public function noCategory(Request $request, JournalRepositoryInterface $repository, string $moment = '')

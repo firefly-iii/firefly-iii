@@ -36,7 +36,6 @@ class TagControllerTest extends TestCase
     public function testCreate()
     {
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -52,7 +51,6 @@ class TagControllerTest extends TestCase
     public function testDelete()
     {
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 

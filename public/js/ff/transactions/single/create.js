@@ -26,7 +26,7 @@ $(document).ready(function () {
     }
 
     // update currency
-    $('select[name="source_account_id"]').on('change', updateCurrency)
+    $('select[name="source_account_id"]').on('change', updateCurrency);
 
     // get JSON things:
     getJSONautocomplete();
@@ -178,7 +178,7 @@ function updateButtons() {
         // new click event:
         button.bind('click', clickButton);
 
-        if (button.data('what') == what) {
+        if (button.data('what') === what) {
             button.removeClass('btn-default').addClass('btn-info').html('<i class="fa fa-fw fa-check"></i> ' + txt[button.data('what')]);
         } else {
             button.removeClass('btn-info').addClass('btn-default').text(txt[button.data('what')]);
@@ -190,7 +190,7 @@ function clickButton(e) {
     "use strict";
     var button = $(e.target);
     var newWhat = button.data('what');
-    if (newWhat != what) {
+    if (newWhat !== what) {
         what = newWhat;
         updateButtons();
         updateForm();

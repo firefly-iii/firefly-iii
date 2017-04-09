@@ -12,5 +12,5 @@
 
 $(function () {
     "use strict";
-        columnChart(specific, 'period-specific-period');
+    columnChart(specific, 'period-specific-period');
 });

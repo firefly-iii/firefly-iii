@@ -10,32 +10,32 @@
  */
 
 return [
-    'defaults' => [
-        'guard' => 'web',
+    'defaults'  => [
+        'guard'     => 'web',
         'passwords' => 'users',
     ],
-    'guards' => [
+    'guards'    => [
         'web' => [
-            'driver' => 'session',
+            'driver'   => 'session',
             'provider' => 'users',
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver'   => 'token',
             'provider' => 'users',
         ],
     ],
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => FireflyIII\User::class,
+            'model'  => FireflyIII\User::class,
         ],
     ],
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 120,
+            'table'    => 'password_resets',
+            'expire'   => 120,
         ],
     ],
 

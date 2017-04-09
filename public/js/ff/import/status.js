@@ -62,7 +62,7 @@ function updateBar(data) {
 
 function reportErrors(data) {
     "use strict";
-    if (data.errors.length == 1) {
+    if (data.errors.length === 1) {
         $('#import-status-error-intro').text(langImportSingleError);
         //'An error has occured during the import. The import can continue, however.'
     }
@@ -93,7 +93,7 @@ function kickStartJob() {
 
 function updateTimeout(data) {
     "use strict";
-    if (data.stepsDone != stepCount) {
+    if (data.stepsDone !== stepCount) {
         stepCount = data.stepsDone;
         currentLimit = 0;
         return;

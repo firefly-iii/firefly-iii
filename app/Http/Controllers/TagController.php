@@ -140,7 +140,9 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag                    $tag
+     *
+     * @param TagRepositoryInterface $repository
      *
      * @return View
      */

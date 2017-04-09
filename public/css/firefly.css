@@ -25,11 +25,6 @@ body.waiting * {
     cursor: progress;
 }
 
-.ui-sortable-placeholder {
-    display: inline-block;
-    height: 1px;
-}
-
 .preferences-box {
     border: 1px #ddd solid;
     border-radius: 4px 4px 0 0;
@@ -46,12 +41,6 @@ body.waiting * {
 .ff-error-page {
     width: 1000px;
     margin: 20px auto 0 auto;
-}
-
-.ff-error-page > .headline {
-    float: left;
-    font-size: 100px;
-    font-weight: 300;
 }
 
 .ff-error-page > .error-content {

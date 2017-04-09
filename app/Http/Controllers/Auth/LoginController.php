@@ -110,7 +110,9 @@ class LoginController extends Controller
     /**
      * Show the application login form.
      *
-     * @param Request $request
+     * @param Request   $request
+     *
+     * @param CookieJar $cookieJar
      *
      * @return \Illuminate\Http\Response
      */

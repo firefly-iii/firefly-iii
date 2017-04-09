@@ -125,8 +125,10 @@ class UserController extends Controller
     }
 
     /**
-     * @param UserFormRequest $request
-     * @param User            $user
+     * @param UserFormRequest         $request
+     * @param User                    $user
+     *
+     * @param UserRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

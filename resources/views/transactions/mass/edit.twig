@@ -69,7 +69,8 @@
                                                 </select>
                                             {% else %}
                                                 {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
-                                                <input class="form-control input-sm" placeholder="{{ journal.source_account_name }}" name="source_account_name[{{ journal.id }}]" type="text" value="{{ journal.source_account_name }}">
+                                                <input class="form-control input-sm" placeholder="{{ journal.source_account_name }}"
+                                                       name="source_account_name[{{ journal.id }}]" type="text" value="{{ journal.source_account_name }}">
                                             {% endif %}
                                         </td>
                                         <td>
@@ -83,20 +84,24 @@
                                                 </select>
                                             {% else %}
                                                 {# DESTINATION ACCOUNT NAME FOR EXPENSE #}
-                                                <input class="form-control input-sm" placeholder="{{ journal.destination_account_name }}" name="destination_account_name[{{ journal.id }}]" type="text" value="{{ journal.destination_account_name }}">
+                                                <input class="form-control input-sm" placeholder="{{ journal.destination_account_name }}"
+                                                       name="destination_account_name[{{ journal.id }}]" type="text"
+                                                       value="{{ journal.destination_account_name }}">
                                             {% endif %}
                                         </td>
                                         {# category #}
                                         <td>
-                                            <input class="form-control input-sm" placeholder="{{ journal.categories[0].name }}" name="category[{{ journal.id }}]" type="text" value="{{ journal.categories[0].name }}">
+                                            <input class="form-control input-sm" placeholder="{{ journal.categories[0].name }}"
+                                                   name="category[{{ journal.id }}]" type="text" value="{{ journal.categories[0].name }}">
                                         </td>
                                         {# budget #}
                                         <td>
                                             {% if journal.transaction_type_type == 'Withdrawal' %}
                                                 <select class="form-control input-sm" name="budget_id[{{ journal.id }}]">
                                                     <option value="0" label="(none)"
-                                                    {% if journal.budgets.count == 0 %}selected="selected"{% endif %}
-                                                    >(none)</option>
+                                                            {% if journal.budgets.count == 0 %}selected="selected"{% endif %}
+                                                    >(none)
+                                                    </option>
                                                     {% for budget in budgets %}
                                                         <option value="{{ budget.id }}"{% if budget.id==journal.budgets[0].id %} selected="selected"{% endif %}
                                                                 label="{{ budget.name }}">{{ budget.name }}</option>

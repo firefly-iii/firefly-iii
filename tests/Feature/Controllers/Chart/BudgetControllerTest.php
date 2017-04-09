@@ -81,9 +81,6 @@ class BudgetControllerTest extends TestCase
      */
     public function testBudgetLimitWrongLimit()
     {
-        $repository = $this->mock(BudgetRepositoryInterface::class);
-        $generator  = $this->mock(GeneratorInterface::class);
-
         $this->be($this->user());
         $response = $this->get(route('chart.budget.budget-limit', [1, 8]));
         $response->assertStatus(500);

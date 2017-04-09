@@ -14,7 +14,7 @@ $(function () {
     "use strict";
     // do chart JS stuff.
     drawChart();
-    if (showTour == true) {
+    if (showTour === true) {
         $.getJSON('json/tour').done(function (data) {
             var tour = new Tour(
                 {

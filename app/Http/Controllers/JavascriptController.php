@@ -31,7 +31,10 @@ class JavascriptController extends Controller
 {
 
     /**
+     * @param AccountRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $currencyRepository
      *
+     * @return $this
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {

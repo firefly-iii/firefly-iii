@@ -120,7 +120,6 @@ class ReportControllerTest extends TestCase
      */
     public function testDefaultReportBadDate()
     {
-        $generator    = $this->mock(SYRG::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 

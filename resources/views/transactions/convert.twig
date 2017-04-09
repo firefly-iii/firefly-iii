@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8" class="form-horizontal" id="store"
+    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8"
+          class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
@@ -47,8 +48,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
                             <p><em>
@@ -69,8 +69,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em></p>
 
                             <p>
@@ -95,8 +94,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
                             <p>
@@ -121,8 +119,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
                             <p>
@@ -147,8 +144,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
 
@@ -175,8 +171,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
 

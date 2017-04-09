@@ -40,7 +40,6 @@ class ImportControllerTest extends TestCase
     public function testComplete()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -57,7 +56,6 @@ class ImportControllerTest extends TestCase
     public function testCompleteWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -75,7 +73,6 @@ class ImportControllerTest extends TestCase
     {
         $setup        = $this->mock(CsvSetup::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $setup->shouldReceive('setJob')->once();
@@ -97,7 +94,6 @@ class ImportControllerTest extends TestCase
     public function testConfigureWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -112,7 +108,6 @@ class ImportControllerTest extends TestCase
     public function testDownload()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -135,7 +130,6 @@ class ImportControllerTest extends TestCase
     public function testFinished()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -152,7 +146,6 @@ class ImportControllerTest extends TestCase
     public function testFinishedWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -168,7 +161,6 @@ class ImportControllerTest extends TestCase
     public function testIndex()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -182,7 +174,6 @@ class ImportControllerTest extends TestCase
     public function testJson()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -197,7 +188,6 @@ class ImportControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $tag          = factory(Tag::class)->make();
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -214,7 +204,6 @@ class ImportControllerTest extends TestCase
     public function testJsonRunning()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -253,7 +242,6 @@ class ImportControllerTest extends TestCase
     public function testPostConfigureWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $data = [];
@@ -271,7 +259,6 @@ class ImportControllerTest extends TestCase
     public function testPostSettings()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $importer = $this->mock(CsvSetup::class);
@@ -293,7 +280,6 @@ class ImportControllerTest extends TestCase
     public function testPostSettingsWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $data = [];
@@ -333,7 +319,6 @@ class ImportControllerTest extends TestCase
     public function testSettingsUserSettings()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $importer = $this->mock(CsvSetup::class);
@@ -356,7 +341,6 @@ class ImportControllerTest extends TestCase
     public function testSettingsWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -373,7 +357,6 @@ class ImportControllerTest extends TestCase
     public function testSettingsWrongJobAgain()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -388,7 +371,6 @@ class ImportControllerTest extends TestCase
     public function testStart()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         /** @var ImportProcedureInterface $procedure */
@@ -409,7 +391,6 @@ class ImportControllerTest extends TestCase
     public function testStatus()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         // complete
@@ -426,7 +407,6 @@ class ImportControllerTest extends TestCase
     public function testStatusWrongJob()
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         // complete

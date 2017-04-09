@@ -243,12 +243,12 @@
                             </p>
                         {% endif %}
                         {% if transactions|length == 1 %}
-                        <p>
-                            <i class="fa fa-copy" aria-hidden="true"></i>
-                            <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                            </a>
-                        </p>
+                            <p>
+                                <i class="fa fa-copy" aria-hidden="true"></i>
+                                <a href="{{ route('transactions.clone', [journal.id]) }}">
+                                    {{ ('clone_'~journal.transactionType.type|lower)|_ }}
+                                </a>
+                            </p>
                         {% endif %}
 
                     </div>

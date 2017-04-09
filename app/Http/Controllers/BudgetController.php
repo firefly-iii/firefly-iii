@@ -191,8 +191,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $moment
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param string                     $moment
      *
      * @return View
      */

@@ -41,7 +41,9 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param  Request $request
+     * @param  Request                $request
+     *
+     * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
