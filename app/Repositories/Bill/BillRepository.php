@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Bill;
 
@@ -482,8 +482,8 @@ class BillRepository implements BillRepositoryInterface
         $sourceAccounts      = $journal->sourceAccountList();
         $matches             = explode(',', $bill->match);
         $description         = strtolower($journal->description) . ' ';
-        $description .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
-        $description .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
+        $description         .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
+        $description         .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
 
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($journal->amountPositive(), $bill->amount_min, $bill->amount_max);

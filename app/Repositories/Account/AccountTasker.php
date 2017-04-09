@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
 
@@ -126,7 +126,7 @@ class AccountTasker implements AccountTaskerInterface
             ];
 
             // get first journal date:
-            $first = $repository->oldestJournal($account);
+            $first                  = $repository->oldestJournal($account);
             $entry['start_balance'] = $startSet[$account->id] ?? '0';
             $entry['end_balance']   = $endSet[$account->id] ?? '0';
 

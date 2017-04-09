@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
@@ -238,7 +238,7 @@ class SingleController extends Controller
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $preFilled           = [
             'date'                     => $journal->dateAsString(),
-            'interest_date'            => $journal->dateAsString( 'interest_date'),
+            'interest_date'            => $journal->dateAsString('interest_date'),
             'book_date'                => $journal->dateAsString('book_date'),
             'process_date'             => $journal->dateAsString('process_date'),
             'category'                 => $journal->categoryAsString(),

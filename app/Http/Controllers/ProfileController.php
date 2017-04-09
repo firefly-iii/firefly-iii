@@ -140,18 +140,18 @@ class ProfileController extends Controller
         return redirect(route('index'));
     }
 
+
     /**
      * @param User   $user
      * @param string $current
      * @param string $new
-     * @param string $newConfirmation
      *
      * @return bool
      * @throws ValidationException
      */
     protected function validatePassword(User $user, string $current, string $new): bool
     {
-        if (!Hash::check($current, auth()->user()->password)) {
+        if (!Hash::check($current, $user->password)) {
             throw new ValidationException(strval(trans('firefly.invalid_current_password')));
         }
 
