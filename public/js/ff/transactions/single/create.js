@@ -36,9 +36,7 @@ $(document).ready(function () {
 function updateCurrency() {
     // get value:
     var accountId = $('select[name="source_account_id"]').val();
-    console.log('account id is ' + accountId);
     var currencyPreference = accountInfo[accountId].preferredCurrency;
-    console.log('currency pref is ' + currencyPreference);
 
     $('.currency-option[data-id="' + currencyPreference + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
