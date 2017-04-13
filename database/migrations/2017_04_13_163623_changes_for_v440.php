@@ -46,6 +46,13 @@ class ChangesForV440 extends Migration
             }
             );
         }
+        //
+        Schema::table(
+            'transactions', function (Blueprint $table) {
+            $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
+            $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+        }
+        );
 
     }
 }
