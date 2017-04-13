@@ -414,7 +414,7 @@ Route::group(
 );
 
 /**
- * JSON Controller
+ * JSON Controller(s)
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'json.'], function () {
@@ -436,6 +436,9 @@ Route::group(
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
     Route::post('end-tour', ['uses' => 'JsonController@endTour', 'as' => 'end-tour']);
+
+    // currency conversion:
+    Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
 }
 );
