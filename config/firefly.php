@@ -211,7 +211,6 @@ return [
     // tag notes has_attachments
     'currency_exchange_services' => [
         'fixerio'           => 'FireflyIII\Services\Currency\FixerIO',
-        'openexchangerates' => 'FireflyIII\Services\Currency\OpenExchangeRates',
     ],
     'preferred_exchange_service' => 'fixerio',
 

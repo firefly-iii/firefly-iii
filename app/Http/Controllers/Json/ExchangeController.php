@@ -32,6 +32,8 @@ class ExchangeController extends Controller
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency
      * @param Carbon              $date
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getRate(Request $request, TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date)
     {
@@ -51,7 +53,7 @@ class ExchangeController extends Controller
         $return['amount'] = null;
         if (!is_null($request->get('amount'))) {
             // assume amount is in "from" currency:
-            $return['amount'] = bcmul($request->get('amount'), $rate->rate);
+            $return['amount'] = bcmul($request->get('amount'), strval($rate->rate));
         }
 
         return Response::json($return);
