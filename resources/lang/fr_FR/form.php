@@ -64,6 +64,8 @@ return [
     'expense_account'                => 'Compte de dépenses',
     'revenue_account'                => 'Compte de recettes',
     'decimal_places'                 => 'Decimal places',
+    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchanged_amount'               => 'Exchanged amount',
 
     'revenue_account_source'      => 'Revenue account (source)',
     'source_account_asset'        => 'Source account (asset account)',
