@@ -778,29 +778,38 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var TransactionType $transactionType */
         $transactionType     = TransactionType::where('type', ucfirst($data['what']))->first();
         $submittedCurrencyId = $data['currency_id'];
-        $amount              = strval($data['amount']);
 
         // which account to check for what the native currency is?
         $check = 'source';
         if ($transactionType->type === TransactionType::DEPOSIT) {
             $check = 'destination';
         }
-        if ($transactionType->type === TransactionType::TRANSFER) {
-            throw new FireflyException('Cannot handle transfers in verifyNativeAmount()');
-        }
+        switch ($transactionType->type) {
+            case TransactionType::DEPOSIT:
+            case TransactionType::WITHDRAWAL:
+                // continue:
+                $nativeCurrencyId = intval($accounts[$check]->getMeta('currency_id'));
 
-        // continue:
-        $nativeCurrencyId = intval($accounts[$check]->getMeta('currency_id'));
+                // does not match? Then user has submitted amount in a foreign currency:
+                if ($nativeCurrencyId !== $submittedCurrencyId) {
+                    // store amount and submitted currency in "foreign currency" fields:
+                    $data['foreign_amount']      = $data['amount'];
+                    $data['foreign_currency_id'] = $submittedCurrencyId;
 
-        // does not match? Then user has submitted amount in a foreign currency:
-        if ($nativeCurrencyId !== $submittedCurrencyId) {
-            // store amount and submitted currency in "foreign currency" fields:
-            $data['foreign_amount']      = $data['amount'];
-            $data['foreign_currency_id'] = $submittedCurrencyId;
-
-            // overrule the amount and currency ID fields to be the original again:
-            $data['amount']      = strval($data['native_amount']);
-            $data['currency_id'] = $nativeCurrencyId;
+                    // overrule the amount and currency ID fields to be the original again:
+                    $data['amount']      = strval($data['native_amount']);
+                    $data['currency_id'] = $nativeCurrencyId;
+                }
+                break;
+            case TransactionType::TRANSFER:
+                // source gets the original amount.
+                $data['amount']              = strval($data['source_amount']);
+                $data['currency_id']         = intval($accounts['source']->getMeta('currency_id'));
+                $data['foreign_amount']      = strval($data['destination_amount']);
+                $data['foreign_currency_id'] = intval($accounts['destination']->getMeta('currency_id'));
+                break;
+            default:
+                throw new FireflyException(sprintf('Cannot handle %s in verifyNativeAmount()', $transactionType->type));
         }
 
         return $data;

@@ -67,8 +67,10 @@ class JournalFormRequest extends Request
             'destination_account_name' => $this->string('destination_account_name'),
             'piggy_bank_id'            => $this->integer('piggy_bank_id'),
 
-            // native amount
+            // native amount and stuff like that:
             'native_amount'            => $this->float('native_amount'),
+            'source_amount'            => $this->float('source_amount'),
+            'destination_amount'       => $this->float('destination_amount'),
 
         ];
 
@@ -105,8 +107,10 @@ class JournalFormRequest extends Request
             'destination_account_name' => 'between:1,255',
             'piggy_bank_id'            => 'between:1,255',
 
-            // exchange rate data:
-            'native_amount'         => 'numeric|more:0',
+            // foreign currency amounts
+            'native_amount'            => 'numeric|more:0',
+            'source_amount'            => 'numeric|more:0',
+            'destination_amount'       => 'numeric|more:0',
         ];
 
         // some rules get an upgrade depending on the type of data:

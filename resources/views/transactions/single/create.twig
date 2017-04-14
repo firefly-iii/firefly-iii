@@ -52,6 +52,10 @@
 
                         {{ ExpandedForm.nonSelectableAmount('native_amount') }}
 
+                        {{ ExpandedForm.nonSelectableAmount('source_amount') }}
+
+                        {{ ExpandedForm.nonSelectableAmount('destination_amount') }}
+
                         {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}
                     </div>
@@ -215,6 +219,8 @@
         var middleCrumbUrl = [];
         var button = [];
         var exchangeRateInstructions = "{{ 'exchange_rate_instructions'|_|escape('js') }}";
+        var transferInstructions = "{{ 'transfer_exchange_rate_instructions'|_|escape('js') }}";
+
         {% for type in {0:'withdrawal',1:'deposit',2:'transfer'} %}
 
         txt['{{ type }}'] = '{{ type|_ }}';

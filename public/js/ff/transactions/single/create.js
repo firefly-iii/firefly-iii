@@ -11,26 +11,67 @@
 $(document).ready(function () {
     "use strict";
 
+    // hide ALL exchange things and AMOUNT things
+    $('#exchange_rate_instruction_holder').hide();
+    $('#native_amount_holder').hide();
+    $('#amount_holder').hide();
+    $('#source_amount_holder').hide();
+    $('#destination_amount_holder').hide();
+
     // respond to switch buttons (first time always triggers)
     updateButtons();
     updateForm();
     updateLayout();
     updateDescription();
-    updateNativeCurrency(); // verify native currency by first account (may be different).
+    updateNativeCurrency();
 
-    // hide ALL exchange things
-    $('#exchange_rate_instruction_holder').hide();
-    $('#native_amount_holder').hide();
 
-    // when user changes source account, native currency may be different.
+
+    // when user changes source account or destination, native currency may be different.
     $('select[name="source_account_id"]').on('change', updateNativeCurrency);
+    $('select[name="destination_account_id"]').on('change', updateNativeCurrency);
 
-    // convert foreign currency to native currency.
+    // convert foreign currency to native currency (when input changes, exchange rate)
     $('#ffInput_amount').on('change', convertForeignToNative);
+
+    // convert source currency to destination currency (slightly different routine for transfers)
+    $('#ffInput_source_amount').on('change', convertSourceToDestination);
 
     // when user selects different currency,
     $('.currency-option').on('click', selectsForeignCurrency);
 });
+
+/**
+ * Convert from source amount currency to destination currency for transfers.
+ *
+ */
+function convertSourceToDestination() {
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    var destAccount = $('select[name="destination_account_id"]').val();
+
+    var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
+    var destinationCurrency = accountInfo[destAccount].preferredCurrency;
+
+    var sourceCurrencyCode = currencyInfo[sourceCurrency].code;
+    var destinationCurrencyCode = currencyInfo[destinationCurrency].code;
+
+    var date = $('#ffInput_date').val();
+    var amount = $('#ffInput_source_amount').val();
+    $('#ffInput_amount').val(amount);
+    var uri = 'json/rate/' + sourceCurrencyCode + '/' + destinationCurrencyCode + '/' + date + '?amount=' + amount;
+    console.log('Will grab ' + uri);
+    $.get(uri).done(updateDestinationAmount);
+}
+
+/**
+ * Once the data has been grabbed will update the field (for transfers)
+ * @param data
+ */
+function updateDestinationAmount(data) {
+    console.log('Returned data:');
+    console.log(data);
+    $('#ffInput_destination_amount').val(data.amount);
+}
 
 /**
  * This function generates a small helper text to explain the user
@@ -48,7 +89,21 @@ function getExchangeInstructions() {
     return text;
 }
 
+/**
+ * Same as above but for transfers
+ */
+function getTransferExchangeInstructions() {
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    var destAccount = $('select[name="destination_account_id"]').val();
 
+    var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
+    var destinationCurrency = accountInfo[destAccount].preferredCurrency;
+
+    return transferInstructions.replace('@source_name', accountInfo[sourceAccount].name)
+        .replace('@dest_name', accountInfo[destAccount].name)
+        .replace(/@source_currency/g, currencyInfo[sourceCurrency].name)
+        .replace(/@dest_currency/g, currencyInfo[destinationCurrency].name);
+}
 
 /**
  * There is an input that shows the currency symbol that is native to the selected
@@ -63,6 +118,41 @@ function updateNativeCurrency() {
     $('.currency-option[data-id="' + nativeCurrencyId + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     $('select[name="source_account_id"]').focus();
+
+    validateCurrencyForTransfer();
+}
+
+/**
+ * When the transaction to create is a transfer some more checks are necessary.
+ */
+function validateCurrencyForTransfer() {
+    if (what !== "transfer") {
+        return;
+    }
+    $('#source_amount_holder').show();
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    var destAccount = $('select[name="destination_account_id"]').val();
+    var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
+    var sourceSymbol = currencyInfo[sourceCurrency].symbol;
+    var destinationCurrency = accountInfo[destAccount].preferredCurrency;
+    var destinationSymbol = currencyInfo[destinationCurrency].symbol;
+
+    $('#source_amount_holder').show().find('.non-selectable-currency-symbol').text(sourceSymbol);
+
+    if (sourceCurrency === destinationCurrency) {
+        console.log('Both accounts accept ' + sourceCurrency);
+        $('#destination_amount_holder').hide();
+        $('#amount_holder').hide();
+        return;
+    }
+    console.log('Source accepts #' + sourceCurrency + ', destination #' + destinationCurrency);
+    $('#ffInput_exchange_rate_instruction').text(getTransferExchangeInstructions());
+    $('#exchange_rate_instruction_holder').show();
+    $('input[name="source_amount"]').val($('input[name="amount"]').val());
+    convertSourceToDestination();
+
+    $('#destination_amount_holder').show().find('.non-selectable-currency-symbol').text(destinationSymbol);
+    $('#amount_holder').hide();
 }
 
 /**
@@ -94,7 +184,7 @@ function updateForm() {
     $('input[name="what"]').val(what);
     switch (what) {
         case 'withdrawal':
-            // show source_id and dest_name:
+            // show source_id and dest_name
             $('#source_account_id_holder').show();
             $('#destination_account_name_holder').show();
 
@@ -102,7 +192,7 @@ function updateForm() {
             $('#source_account_name_holder').hide();
             $('#destination_account_id_holder').hide();
 
-            // show budget:
+            //
             $('#budget_id_holder').show();
 
             // hide piggy bank:
@@ -113,6 +203,17 @@ function updateForm() {
             if ($('#ffInput_destination_account_name').val().length > 0) {
                 $('#ffInput_source_account_name').val($('#ffInput_destination_account_name').val());
             }
+
+            // exchange / foreign currencies:
+            // hide explanation, hide source and destination amounts:
+            $('#exchange_rate_instruction_holder').hide();
+            $('#source_amount_holder').hide();
+            $('#destination_amount_holder').hide();
+            // show normal amount:
+            $('#amount_holder').show();
+
+            // update the amount thing:
+            updateNativeCurrency();
 
             break;
         case 'deposit':
@@ -134,6 +235,17 @@ function updateForm() {
                 $('#ffInput_destination_account_name').val($('#ffInput_source_account_name').val());
             }
 
+            // exchange / foreign currencies:
+            // hide explanation, hide source and destination amounts:
+            $('#exchange_rate_instruction_holder').hide();
+            $('#source_amount_holder').hide();
+            $('#destination_amount_holder').hide();
+            // show normal amount:
+            $('#amount_holder').show();
+
+            // update the amount thing:
+            updateNativeCurrency();
+
             break;
         case 'transfer':
             // show source_id and dest_id:
@@ -144,7 +256,6 @@ function updateForm() {
             $('#source_account_name_holder').hide();
             $('#destination_account_name_holder').hide();
 
-
             // hide budget
             $('#budget_id_holder').hide();
             if (piggiesLength === 0) {
@@ -152,6 +263,10 @@ function updateForm() {
             } else {
                 $('#piggy_bank_id_holder').show();
             }
+
+            // update the amount thing:
+            updateNativeCurrency();
+
             break;
         default:
             // no action.
@@ -206,8 +321,7 @@ function getAccountId() {
     if (what === "withdrawal") {
         return $('select[name="source_account_id"]').val();
     }
-    if (what === "deposit") {
+    if (what === "deposit" || what === "transfer") {
         return $('select[name="destination_account_id"]').val();
     }
-    alert('Cannot handle ' + what);
 }
