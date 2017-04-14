@@ -57,12 +57,12 @@
                         {% endif %}
 
                         {# ALWAYS SHOW AMOUNT #}
-                        {{ ExpandedForm.amount('amount',data.amount,{'currency' : data.currency}) }}
+                        {{ ExpandedForm.amount('amount',data.amount, {'currency' : data.currency}) }}
 
                         {# INSTRUCTIONS FOR EXCHANGE RATES #}
                         {{ ExpandedForm.staticText('exchange_rate_instruction','(here be text)') }}
 
-                        {{ ExpandedForm.nonSelectableAmount('exchanged_amount') }}
+                        {{ ExpandedForm.nonSelectableAmount('native_amount', data.native_amount, {'currency' : data.native_currency}) }}
 
                         {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date',data['date']) }}

@@ -182,15 +182,15 @@ class TransactionController extends Controller
         $transactions     = $tasker->getTransactionsOverview($journal);
         $what             = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle         = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
-        $originalCurrency = null;
+        $foreignCurrency = null;
 
-        if ($journal->hasMeta('original_currency_id')) {
+        if ($journal->hasMeta('foreign_currency_id')) {
             /** @var CurrencyRepositoryInterface $repository */
-            $repository       = app(CurrencyRepositoryInterface::class);
-            $originalCurrency = $repository->find(intval($journal->getMeta('original_currency_id')));
+            $repository      = app(CurrencyRepositoryInterface::class);
+            $foreignCurrency = $repository->find(intval($journal->getMeta('foreign_currency_id')));
         }
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'originalCurrency'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'foreignCurrency'));
 
 
     }

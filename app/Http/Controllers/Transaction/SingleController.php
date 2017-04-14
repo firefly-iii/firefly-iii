@@ -250,8 +250,8 @@ class SingleController extends Controller
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
-            'amount'                   => $journal->amountPositive(),
-            'currency'                 => $journal->transactionCurrency,
+            'amount'            => $journal->amountPositive(),
+            'currency'          => $journal->transactionCurrency,
 
             // new custom fields:
             'due_date'                 => $journal->dateAsString('due_date'),
@@ -261,16 +261,16 @@ class SingleController extends Controller
             'notes'                    => $journal->getMeta('notes'),
 
             // exchange rate fields
-            'exchanged_amount'         => $journal->amountPositive(),
-            'exchanged_currency'       => $journal->transactionCurrency,
+            'native_amount'         => $journal->amountPositive(),
+            'native_currency'       => $journal->transactionCurrency,
         ];
 
-        // catch possibly exchanged currencies and what-not.
-        $originalCurrencyId = intval($journal->getMeta('original_currency_id'));
-        if ($originalCurrencyId > 0) {
+        // if user has entered a foreign currency, update some fields
+        $foreignCurrencyId = intval($journal->getMeta('foreign_currency_id'));
+        if ($foreignCurrencyId > 0) {
             // update some fields in pre-filled.
-            $preFilled['amount']   = $journal->getMeta('original_amount');
-            $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('original_currency_id')));
+            $preFilled['amount']   = $journal->getMeta('foreign_amount');
+            $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('foreign_currency_id')));
         }
 
         if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {

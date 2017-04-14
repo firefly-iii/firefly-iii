@@ -37,11 +37,11 @@
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>{{ journal|formatJournal }}
-                                {% if journal.hasMeta('original_amount') %}
+                                {% if journal.hasMeta('foreign_amount') %}
                                     {% if journal.transactiontype.type == 'Withdrawal' %}
-                                        ({{ formatAnything(originalCurrency, journal.getMeta('original_amount')*-1) }})
+                                        ({{ formatAnything(foreignCurrency, journal.getMeta('foreign_amount')*-1) }})
                                     {% else %}
-                                        ({{ formatAnything(originalCurrency, journal.getMeta('original_amount')) }})
+                                        ({{ formatAnything(foreignCurrency, journal.getMeta('foreign_amount')) }})
                                     {% endif %}
                                 {% endif %}
                             </td>

@@ -12,7 +12,115 @@
 
 $(document).ready(function () {
     "use strict";
-    // give date a datepicker if not natively supported.
+    runModernizer();
+    setAutocompletes();
+    updateInitialPage();
+
+
+    // respond to user input:
+    $('.currency-option').on('click', selectsForeignCurrency);
+    $('#ffInput_amount').on('change', convertForeignToNative);
+});
+
+/**
+ * Set some initial values for the user to see.
+ */
+function updateInitialPage() {
+
+    console.log('Native currency is #' + journalData.native_currency.id + ' and (foreign) currency id is #' + journalData.currency.id);
+    if (journalData.native_currency.id === journalData.currency.id) {
+        $('#exchange_rate_instruction_holder').hide();
+        $('#native_amount_holder').hide();
+    }
+
+    if (journalData.native_currency.id !== journalData.currency.id) {
+        $('#ffInput_exchange_rate_instruction').text(getExchangeInstructions());
+    }
+}
+
+/**
+ * When the user changes the currency in the amount drop down, it may jump from being
+ * the native currency to a foreign currency. This triggers the display of several
+ * information things that make sure that the user always supplies the amount in the native currency.
+ *
+ * @returns {boolean}
+ */
+function selectsForeignCurrency() {
+    var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    var selectedAccountId = getAccountId();
+    var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
+
+    if (foreignCurrencyId !== nativeCurrencyId) {
+        console.log('User has selected currency #' + foreignCurrencyId + ' and this is different from native currency #' + nativeCurrencyId);
+
+        // the input where the native amount is entered gets the symbol for the native currency:
+        $('.non-selectable-currency-symbol').text(currencyInfo[nativeCurrencyId].symbol);
+
+        // the instructions get updated:
+        $('#ffInput_exchange_rate_instruction').text(getExchangeInstructions());
+
+        // both holders are shown to the user:
+        $('#exchange_rate_instruction_holder').show();
+        $('#native_amount_holder').show();
+
+        // if possible the amount is already exchanged for the foreign currency
+        convertForeignToNative();
+
+    }
+    if (foreignCurrencyId === nativeCurrencyId) {
+        console.log('User has selected currency #' + foreignCurrencyId + ' and this is equal to native currency #' + nativeCurrencyId + ' (phew).');
+        $('#exchange_rate_instruction_holder').hide();
+        $('#native_amount_holder').hide();
+    }
+
+    return false;
+}
+
+/**
+ * Converts any foreign amount to the native currency.
+ */
+function convertForeignToNative() {
+    var accountId = getAccountId();
+    var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    var nativeCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
+    var foreignCurrencyCode = currencyInfo[foreignCurrencyId].code;
+    var nativeCurrencyCode = currencyInfo[nativeCurrencyId].code;
+    var date = $('#ffInput_date').val();
+    var amount = $('#ffInput_amount').val();
+    var uri = 'json/rate/' + foreignCurrencyCode + '/' + nativeCurrencyCode + '/' + date + '?amount=' + amount;
+    console.log('Will grab ' + uri);
+    $.get(uri).done(updateNativeAmount);
+}
+
+/**
+ * Once the data has been grabbed will update the field in the form.
+ * @param data
+ */
+function updateNativeAmount(data) {
+    console.log('Returned data:');
+    console.log(data);
+    $('#ffInput_native_amount').val(data.amount);
+}
+
+/**
+ * Get accountID based on some meta info.
+ */
+function getAccountId() {
+    if (journal.transaction_type.type === "Withdrawal") {
+        return $('select[name="source_account_id"]').val();
+    }
+    if (journal.transaction_type.type === "Deposit") {
+        return $('select[name="destination_account_id"]').val();
+    }
+
+    alert('Cannot handle ' + journal.transaction_type.type);
+}
+
+
+/**
+ * Give date a datepicker if not natively supported.
+ */
+function runModernizer() {
     if (!Modernizr.inputtypes.date) {
         $('input[type="date"]').datepicker(
             {
@@ -20,8 +128,12 @@ $(document).ready(function () {
             }
         );
     }
+}
 
-    // the destination account name is always an expense account name.
+/**
+ * Set the auto-complete JSON things.
+ */
+function setAutocompletes() {
     if ($('input[name="destination_account_name"]').length > 0) {
         $.getJSON('json/expense-accounts').done(function (data) {
             $('input[name="destination_account_name"]').typeahead({source: data});
@@ -29,7 +141,6 @@ $(document).ready(function () {
     }
 
     $.getJSON('json/tags').done(function (data) {
-
         var opt = {
             typeahead: {
                 source: data,
@@ -43,7 +154,6 @@ $(document).ready(function () {
         );
     });
 
-    // the source account name is always a revenue account name.
     if ($('input[name="source_account_name"]').length > 0) {
         $.getJSON('json/revenue-accounts').done(function (data) {
             $('input[name="source_account_name"]').typeahead({source: data});
@@ -58,87 +168,20 @@ $(document).ready(function () {
     $.getJSON('json/categories').done(function (data) {
         $('input[name="category"]').typeahead({source: data});
     });
-
-    $('.currency-option').on('click', triggerCurrencyChange);
-    $('#ffInput_amount').on('change', getExchangeRate);
-
-    // always update the exchanged_amount to match the correct currency
-    var journalCurrency = currencyInfo[journal.transaction_currency_id].symbol;
-    $('.non-selectable-currency-symbol').text(journalCurrency);
-
-    // hide the exchange amount / foreign things:
-    if (journal.transaction_currency_id === journalData.currency.id) {
-        $('#exchange_rate_instruction_holder').hide();
-        $('#exchanged_amount_holder').hide();
-    }
-
-    // or update the related text.
-    if (journal.transaction_currency_id !== journalData.currency.id) {
-        // update info text:
-        var accountId = getAccountId();
-        var text = exchangeRateInstructions.replace('@name', accountInfo[accountId].name);
-        text = text.replace(/@account_currency/g, currencyInfo[journal.transaction_currency_id].name);
-        text = text.replace(/@transaction_currency/g, currencyInfo[journalData.currency.id].name);
-        $('#ffInput_exchange_rate_instruction').text(text);
-    }
-});
-
-function triggerCurrencyChange() {
-    var selectedCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
-    var accountId = getAccountId();
-    var accountCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
-    console.log('Selected currency is ' + selectedCurrencyId);
-    console.log('Account prefers ' + accountCurrencyId);
-    if (selectedCurrencyId !== accountCurrencyId) {
-        var text = exchangeRateInstructions.replace('@name', accountInfo[accountId].name);
-        text = text.replace(/@account_currency/g, currencyInfo[accountCurrencyId].name);
-        text = text.replace(/@transaction_currency/g, currencyInfo[selectedCurrencyId].name);
-        $('.non-selectable-currency-symbol').text(currencyInfo[accountCurrencyId].symbol);
-        getExchangeRate();
-
-        $('#ffInput_exchange_rate_instruction').text(text);
-        $('#exchange_rate_instruction_holder').show();
-        $('#exchanged_amount_holder').show();
-    }
-    if (selectedCurrencyId === accountCurrencyId) {
-        $('#exchange_rate_instruction_holder').hide();
-        $('#exchanged_amount_holder').hide();
-    }
-
-    // if the value of the selected currency does not match the account's currency
-    // show the exchange rate thing!
-    return false;
-}
-
-function getExchangeRate() {
-    var accountId = getAccountId();
-    var selectedCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
-    var accountCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
-    var selectedCurrencyCode = currencyInfo[selectedCurrencyId].code;
-    var accountCurrencyCode = currencyInfo[accountCurrencyId].code;
-    var date = $('#ffInput_date').val();
-    var amount = $('#ffInput_amount').val();
-    var uri = 'json/rate/' + selectedCurrencyCode + '/' + accountCurrencyCode + '/' + date + '?amount=' + amount;
-    console.log('Will grab ' + uri);
-    $.get(uri).done(updateExchangedAmount);
-}
-
-function updateExchangedAmount(data) {
-    console.log('Returned data:');
-    console.log(data);
-    $('#ffInput_exchanged_amount').val(data.amount);
 }
 
 /**
- * Get accountID based on some meta info.
+ * This function generates a small helper text to explain the user
+ * that they have selected a foreign currency.
+ * @returns {XML|string|void}
  */
-function getAccountId() {
-    if(journal.transaction_type.type === "Withdrawal") {
-        return $('select[name="source_account_id"]').val();
-    }
-    if(journal.transaction_type.type === "Deposit") {
-        return $('select[name="destination_account_id"]').val();
-    }
+function getExchangeInstructions() {
+    var selectedAccountId = getAccountId();
+    var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
 
-    alert('Cannot handle ' + journal.transaction_type.type);
+    var text = exchangeRateInstructions.replace('@name', accountInfo[selectedAccountId].name);
+    text = text.replace(/@native_currency/g, currencyInfo[nativeCurrencyId].name);
+    text = text.replace(/@foreign_currency/g, currencyInfo[foreignCurrencyId].name);
+    return text;
 }

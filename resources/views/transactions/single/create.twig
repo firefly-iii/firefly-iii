@@ -50,7 +50,7 @@
                         {# INSTRUCTIONS FOR EXCHANGE RATES #}
                         {{ ExpandedForm.staticText('exchange_rate_instruction','(here be text)') }}
 
-                        {{ ExpandedForm.nonSelectableAmount('exchanged_amount') }}
+                        {{ ExpandedForm.nonSelectableAmount('native_amount') }}
 
                         {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}

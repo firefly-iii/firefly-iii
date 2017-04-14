@@ -42,8 +42,8 @@ class JournalRepository implements JournalRepositoryInterface
 
     /** @var array */
     private $validMetaFields
-        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes', 'original_amount',
-           'original_currency_id',
+        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes', 'foreign_amount',
+           'foreign_currency_id',
         ];
 
     /**
@@ -171,36 +171,10 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var TransactionType $transactionType */
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
         $accounts        = $this->storeAccounts($transactionType, $data);
+        $data            = $this->verifyNativeAmount($data, $accounts);
         $currencyId      = $data['currency_id'];
         $amount          = strval($data['amount']);
-        // switch type to find what account to verify for currency stuff
-        switch ($transactionType->type) {
-            case TransactionType::WITHDRAWAL:
-                /*
-                 * Overrule the currency selection and the amount:
-                 */
-                $accountCurrencyId = intval($accounts['source']->getMeta('currency_id'));
-                if ($accountCurrencyId !== $currencyId) {
-                    $data['original_amount']      = $data['amount'];
-                    $data['original_currency_id'] = $currencyId;
-                    $currencyId                   = $accountCurrencyId;
-                    $amount                       = strval($data['exchanged_amount']);
-                }
-                break;
-            case TransactionType::DEPOSIT:
-                $accountCurrencyId = intval($accounts['destination']->getMeta('currency_id'));
-                if ($accountCurrencyId !== $currencyId) {
-                    $data['original_amount']      = $data['amount'];
-                    $data['original_currency_id'] = $currencyId;
-                    $currencyId                   = $accountCurrencyId;
-                    $amount                       = strval($data['exchanged_amount']);
-                }
-                break;
-            default:
-                throw new FireflyException(sprintf('Currency exchange routine cannot handle %s', $transactionType->type));
-        }
-
-        $journal = new TransactionJournal(
+        $journal         = new TransactionJournal(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
@@ -787,5 +761,48 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * This method checks the data array and the given accounts to verify that the native amount, currency
+     * and possible the foreign currency and amount are properly saved.
+     *
+     * @param array $data
+     * @param array $accounts
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function verifyNativeAmount(array $data, array $accounts): array
+    {
+        /** @var TransactionType $transactionType */
+        $transactionType     = TransactionType::where('type', ucfirst($data['what']))->first();
+        $submittedCurrencyId = $data['currency_id'];
+        $amount              = strval($data['amount']);
+
+        // which account to check for what the native currency is?
+        $check = 'source';
+        if ($transactionType->type === TransactionType::DEPOSIT) {
+            $check = 'destination';
+        }
+        if ($transactionType->type === TransactionType::TRANSFER) {
+            throw new FireflyException('Cannot handle transfers in verifyNativeAmount()');
+        }
+
+        // continue:
+        $nativeCurrencyId = intval($accounts[$check]->getMeta('currency_id'));
+
+        // does not match? Then user has submitted amount in a foreign currency:
+        if ($nativeCurrencyId !== $submittedCurrencyId) {
+            // store amount and submitted currency in "foreign currency" fields:
+            $data['foreign_amount']      = $data['amount'];
+            $data['foreign_currency_id'] = $submittedCurrencyId;
+
+            // overrule the amount and currency ID fields to be the original again:
+            $data['amount']      = strval($data['native_amount']);
+            $data['currency_id'] = $nativeCurrencyId;
+        }
+
+        return $data;
     }
 }

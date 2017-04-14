@@ -67,8 +67,8 @@ class JournalFormRequest extends Request
             'destination_account_name' => $this->string('destination_account_name'),
             'piggy_bank_id'            => $this->integer('piggy_bank_id'),
 
-            // amount for exchanged data:
-            'exchanged_amount'         => $this->float('exchanged_amount'),
+            // native amount
+            'native_amount'            => $this->float('native_amount'),
 
         ];
 
@@ -106,7 +106,7 @@ class JournalFormRequest extends Request
             'piggy_bank_id'            => 'between:1,255',
 
             // exchange rate data:
-            'exchanged_amount'         => 'numeric|required|more:0',
+            'native_amount'         => 'numeric|more:0',
         ];
 
         // some rules get an upgrade depending on the type of data:
