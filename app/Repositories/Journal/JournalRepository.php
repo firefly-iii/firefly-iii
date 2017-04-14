@@ -181,10 +181,10 @@ class JournalRepository implements JournalRepositoryInterface
                  */
                 $accountCurrencyId = intval($accounts['source']->getMeta('currency_id'));
                 if ($accountCurrencyId !== $currencyId) {
-                    $currencyId                   = $accountCurrencyId;
-                    $amount                       = strval($data['exchanged_amount']);
                     $data['original_amount']      = $data['amount'];
                     $data['original_currency_id'] = $currencyId;
+                    $currencyId                   = $accountCurrencyId;
+                    $amount                       = strval($data['exchanged_amount']);
                 }
                 break;
             default:
@@ -261,10 +261,22 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
+
         // update actual journal:
-        $journal->transaction_currency_id = $data['currency_id'];
-        $journal->description             = $data['description'];
-        $journal->date                    = $data['date'];
+        $journal->description = $data['description'];
+        $journal->date        = $data['date'];
+        $accounts             = $this->storeAccounts($journal->transactionType, $data);
+        $amount               = strval($data['amount']);
+
+        if ($data['currency_id'] !== $journal->transaction_currency_id) {
+            // user has entered amount in foreign currency.
+            // amount in "our" currency is $data['exchanged_amount']:
+            $amount = strval($data['exchanged_amount']);
+            // other values must be stored as well:
+            $data['original_amount']      = $data['amount'];
+            $data['original_currency_id'] = $data['currency_id'];
+
+        }
 
         // unlink all categories, recreate them:
         $journal->categories()->detach();
@@ -272,12 +284,9 @@ class JournalRepository implements JournalRepositoryInterface
 
         $this->storeCategoryWithJournal($journal, $data['category']);
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
-        $accounts = $this->storeAccounts($journal->transactionType, $data);
 
-        $sourceAmount = bcmul(strval($data['amount']), '-1');
-        $this->updateSourceTransaction($journal, $accounts['source'], $sourceAmount); // negative because source loses money.
 
-        $amount = strval($data['amount']);
+        $this->updateSourceTransaction($journal, $accounts['source'], bcmul($amount, '-1')); // negative because source loses money.
         $this->updateDestinationTransaction($journal, $accounts['destination'], $amount); // positive because destination gets money.
 
         $journal->save();

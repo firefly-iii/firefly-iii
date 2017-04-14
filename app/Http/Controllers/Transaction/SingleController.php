@@ -25,6 +25,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
@@ -48,7 +49,8 @@ class SingleController extends Controller
 
     /** @var  BudgetRepositoryInterface */
     private $budgets;
-
+    /** @var  CurrencyRepositoryInterface */
+    private $currency;
     /** @var  PiggyBankRepositoryInterface */
     private $piggyBanks;
 
@@ -71,6 +73,7 @@ class SingleController extends Controller
                 $this->budgets     = app(BudgetRepositoryInterface::class);
                 $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
+                $this->currency    = app(CurrencyRepositoryInterface::class);
 
                 View::share('title', trans('firefly.transactions'));
                 View::share('mainTitleIcon', 'fa-repeat');
@@ -231,7 +234,6 @@ class SingleController extends Controller
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
-
         // journal related code
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
@@ -249,6 +251,7 @@ class SingleController extends Controller
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
             'amount'                   => $journal->amountPositive(),
+            'currency'                 => $journal->transactionCurrency,
 
             // new custom fields:
             'due_date'                 => $journal->dateAsString('due_date'),
@@ -256,7 +259,19 @@ class SingleController extends Controller
             'invoice_date'             => $journal->dateAsString('invoice_date'),
             'interal_reference'        => $journal->getMeta('internal_reference'),
             'notes'                    => $journal->getMeta('notes'),
+
+            // exchange rate fields
+            'exchanged_amount'         => $journal->amountPositive(),
+            'exchanged_currency'       => $journal->transactionCurrency,
         ];
+
+        // catch possibly exchanged currencies and what-not.
+        $originalCurrencyId = intval($journal->getMeta('original_currency_id'));
+        if ($originalCurrencyId > 0) {
+            // update some fields in pre-filled.
+            $preFilled['amount']   = $journal->getMeta('original_amount');
+            $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('original_currency_id')));
+        }
 
         if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
             $preFilled['destination_account_name'] = '';

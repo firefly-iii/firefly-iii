@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -177,12 +178,19 @@ class TransactionController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $events       = $tasker->getPiggyBankEvents($journal);
-        $transactions = $tasker->getTransactionsOverview($journal);
-        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+        $events           = $tasker->getPiggyBankEvents($journal);
+        $transactions     = $tasker->getTransactionsOverview($journal);
+        $what             = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle         = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+        $originalCurrency = null;
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
+        if ($journal->hasMeta('original_currency_id')) {
+            /** @var CurrencyRepositoryInterface $repository */
+            $repository       = app(CurrencyRepositoryInterface::class);
+            $originalCurrency = $repository->find(intval($journal->hasMeta('original_currency_id')));
+        }
+
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'originalCurrency'));
 
 
     }

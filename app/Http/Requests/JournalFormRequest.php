@@ -104,6 +104,9 @@ class JournalFormRequest extends Request
             'destination_account_id'   => 'numeric|belongsToUser:accounts,id',
             'destination_account_name' => 'between:1,255',
             'piggy_bank_id'            => 'between:1,255',
+
+            // exchange rate data:
+            'exchanged_amount'         => 'numeric|required|more:0',
         ];
 
         // some rules get an upgrade depending on the type of data:

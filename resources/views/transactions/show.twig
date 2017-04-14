@@ -36,7 +36,15 @@
                         <!-- total amount -->
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
-                            <td>{{ journal|formatJournal }}</td>
+                            <td>{{ journal|formatJournal }}
+                                {% if journal.hasMeta('original_amount') %}
+                                    {% if journal.transactiontype.type == 'Withdrawal' %}
+                                        ({{ formatAnything(originalCurrency, journal.getMeta('original_amount')*-1) }})
+                                    {% else %}
+                                        ({{ formatAnything(originalCurrency, journal.getMeta('original_amount')) }})
+                                    {% endif %}
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>

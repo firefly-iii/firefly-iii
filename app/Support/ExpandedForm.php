@@ -40,6 +40,8 @@ class ExpandedForm
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
+        $options['min'] = '0.01';
+
         return $this->currencyField($name, 'amount', $value, $options);
     }
 
@@ -52,6 +54,8 @@ class ExpandedForm
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
+        $options['min'] = '0.01';
+
         return $this->currencyField($name, 'amount-small', $value, $options);
     }
 

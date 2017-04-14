@@ -43,7 +43,7 @@ $(document).ready(function () {
 });
 
 function getExchangeRate() {
-    var accountId = $('select[name="source_account_id"]').val();
+    var accountId = getAccountId();
     var selectedCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
     var accountCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
     var selectedCurrencyCode = currencyInfo[selectedCurrencyId].code;
@@ -53,7 +53,6 @@ function getExchangeRate() {
     var uri = 'json/rate/' + selectedCurrencyCode + '/' + accountCurrencyCode + '/' + date + '?amount=' + amount;
     console.log('Will grab ' + uri);
     $.get(uri).done(updateExchangedAmount);
-
 }
 
 function updateExchangedAmount(data) {
@@ -65,7 +64,7 @@ function updateExchangedAmount(data) {
 
 function triggerCurrencyChange() {
     var selectedCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
-    var accountId = $('select[name="source_account_id"]').val();
+    var accountId = getAccountId();
     var accountCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
     console.log('Selected currency is ' + selectedCurrencyId);
     console.log('Account prefers ' + accountCurrencyId);
@@ -93,7 +92,7 @@ function triggerCurrencyChange() {
 
 function updateCurrency() {
     // get value:
-    var accountId = $('select[name="source_account_id"]').val();
+    var accountId = getAccountId();
     var currencyPreference = accountInfo[accountId].preferredCurrency;
 
     $('.currency-option[data-id="' + currencyPreference + '"]').click();
@@ -253,4 +252,14 @@ function clickButton(e) {
         updateDescription();
     }
     return false;
+}
+
+/**
+ * Get accountID based on some meta info.
+ */
+function getAccountId() {
+    if(what === "withdrawal") {
+        return $('select[name="source_account_id"]').val();
+    }
+    alert('Cannot handle ' + what);
 }
