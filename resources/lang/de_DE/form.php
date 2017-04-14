@@ -64,6 +64,8 @@ return [
     'expense_account'                => 'Debitor (Ausgabe)',
     'revenue_account'                => 'Kreditor (Einnahme)',
     'decimal_places'                 => 'Decimal places',
+    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchanged_amount'               => 'Exchanged amount',
 
     'revenue_account_source'      => 'Ertragskonto (Quelle)',
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
