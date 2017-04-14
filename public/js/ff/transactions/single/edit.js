@@ -15,10 +15,16 @@ $(document).ready(function () {
     setAutocompletes();
     updateInitialPage();
 
-
     // respond to user input:
     $('.currency-option').on('click', selectsForeignCurrency);
     $('#ffInput_amount').on('change', convertForeignToNative);
+
+    // respond to transfer changes:
+    $('#ffInput_source_account_id').on('change',validateCurrencyForTransfer);
+    $('#ffInput_destination_account_id').on('change',validateCurrencyForTransfer);
+
+    // convert source currency to destination currency (slightly different routine for transfers)
+    $('#ffInput_source_amount').on('change', convertSourceToDestination);
 });
 
 /**
@@ -27,6 +33,24 @@ $(document).ready(function () {
 function updateInitialPage() {
 
     console.log('Native currency is #' + journalData.native_currency.id + ' and (foreign) currency id is #' + journalData.currency.id);
+
+    if (journal.transaction_type.type === "Transfer") {
+        $('#native_amount_holder').hide();
+        $('#amount_holder').hide();
+
+        if (journalData.native_currency.id === journalData.currency.id) {
+            $('#exchange_rate_instruction_holder').hide();
+            $('#destination_amount_holder').hide();
+        }
+        if (journalData.native_currency.id !== journalData.currency.id) {
+            $('#exchange_rate_instruction_holder').show().find('p').text(getTransferExchangeInstructions());
+
+        }
+
+        return;
+    }
+
+
     if (journalData.native_currency.id === journalData.currency.id) {
         $('#exchange_rate_instruction_holder').hide();
         $('#native_amount_holder').hide();
@@ -35,6 +59,7 @@ function updateInitialPage() {
     if (journalData.native_currency.id !== journalData.currency.id) {
         $('#ffInput_exchange_rate_instruction').text(getExchangeInstructions());
     }
+
 }
 
 

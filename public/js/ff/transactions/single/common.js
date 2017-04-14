@@ -123,3 +123,84 @@ function updateNativeAmount(data) {
     console.log(data);
     $('#ffInput_native_amount').val(data.amount);
 }
+
+/**
+ * Instructions for transfers
+ */
+function getTransferExchangeInstructions() {
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    var destAccount = $('select[name="destination_account_id"]').val();
+
+    var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
+    var destinationCurrency = accountInfo[destAccount].preferredCurrency;
+
+    return transferInstructions.replace('@source_name', accountInfo[sourceAccount].name)
+        .replace('@dest_name', accountInfo[destAccount].name)
+        .replace(/@source_currency/g, currencyInfo[sourceCurrency].name)
+        .replace(/@dest_currency/g, currencyInfo[destinationCurrency].name);
+}
+
+/**
+ * When the transaction to create is a transfer some more checks are necessary.
+ */
+function validateCurrencyForTransfer() {
+    if (what !== "transfer") {
+        return;
+    }
+    $('#source_amount_holder').show();
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    var destAccount = $('select[name="destination_account_id"]').val();
+    var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
+    var sourceSymbol = currencyInfo[sourceCurrency].symbol;
+    var destinationCurrency = accountInfo[destAccount].preferredCurrency;
+    var destinationSymbol = currencyInfo[destinationCurrency].symbol;
+
+    $('#source_amount_holder').show().find('.non-selectable-currency-symbol').text(sourceSymbol);
+
+    if (sourceCurrency === destinationCurrency) {
+        console.log('Both accounts accept ' + sourceCurrency);
+        $('#destination_amount_holder').hide();
+        $('#amount_holder').hide();
+        return;
+    }
+    console.log('Source accepts #' + sourceCurrency + ', destination #' + destinationCurrency);
+    $('#ffInput_exchange_rate_instruction').text(getTransferExchangeInstructions());
+    $('#exchange_rate_instruction_holder').show();
+    $('input[name="source_amount"]').val($('input[name="amount"]').val());
+    convertSourceToDestination();
+
+    $('#destination_amount_holder').show().find('.non-selectable-currency-symbol').text(destinationSymbol);
+    $('#amount_holder').hide();
+}
+
+/**
+ * Convert from source amount currency to destination currency for transfers.
+ *
+ */
+function convertSourceToDestination() {
+    var sourceAccount = $('select[name="source_account_id"]').val();
+    var destAccount = $('select[name="destination_account_id"]').val();
+
+    var sourceCurrency = accountInfo[sourceAccount].preferredCurrency;
+    var destinationCurrency = accountInfo[destAccount].preferredCurrency;
+
+    var sourceCurrencyCode = currencyInfo[sourceCurrency].code;
+    var destinationCurrencyCode = currencyInfo[destinationCurrency].code;
+
+    var date = $('#ffInput_date').val();
+    var amount = $('#ffInput_source_amount').val();
+    $('#ffInput_amount').val(amount);
+    var uri = 'json/rate/' + sourceCurrencyCode + '/' + destinationCurrencyCode + '/' + date + '?amount=' + amount;
+    console.log('Will grab ' + uri);
+    $.get(uri).done(updateDestinationAmount);
+}
+
+/**
+ * Once the data has been grabbed will update the field (for transfers)
+ * @param data
+ */
+function updateDestinationAmount(data) {
+    console.log('Returned data:');
+    console.log(data);
+    $('#ffInput_destination_amount').val(data.amount);
+}

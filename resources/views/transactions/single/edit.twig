@@ -62,7 +62,11 @@
                         {# INSTRUCTIONS FOR EXCHANGE RATES #}
                         {{ ExpandedForm.staticText('exchange_rate_instruction','(here be text)') }}
 
-                        {{ ExpandedForm.nonSelectableAmount('native_amount', data.native_amount, {'currency' : data.native_currency}) }}
+                        {{ ExpandedForm.nonSelectableAmount('native_amount', data.native_amount, {currency: data.native_currency}) }}
+
+                        {{ ExpandedForm.nonSelectableAmount('source_amount', data.native_amount, {currency: data.native_currency }) }}
+
+                        {{ ExpandedForm.nonSelectableAmount('destination_amount', data.amount, {currency: data.currency }) }}
 
                         {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date',data['date']) }}
@@ -245,6 +249,7 @@
         var journal = {{ journal.toArray()|json_encode|raw }};
         var journalData = {{ data|json_encode|raw }};
         var exchangeRateInstructions = "{{ 'exchange_rate_instructions'|_|escape('js') }}";
+        var transferInstructions = "{{ 'transfer_exchange_rate_instructions'|_|escape('js') }}";
     </script>
     <script type="text/javascript" src="js/ff/transactions/single/common.js"></script>
     <script type="text/javascript" src="js/ff/transactions/single/edit.js"></script>
