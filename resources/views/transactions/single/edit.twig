@@ -246,6 +246,7 @@
         var journalData = {{ data|json_encode|raw }};
         var exchangeRateInstructions = "{{ 'exchange_rate_instructions'|_|escape('js') }}";
     </script>
+    <script type="text/javascript" src="js/ff/transactions/single/common.js"></script>
     <script type="text/javascript" src="js/ff/transactions/single/edit.js"></script>
 
 {% endblock %}

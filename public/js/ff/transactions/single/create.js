@@ -16,7 +16,6 @@ $(document).ready(function () {
     updateForm();
     updateLayout();
     updateDescription();
-    runModernizer();
     updateNativeCurrency(); // verify native currency by first account (may be different).
 
     // hide ALL exchange things
@@ -31,36 +30,7 @@ $(document).ready(function () {
 
     // when user selects different currency,
     $('.currency-option').on('click', selectsForeignCurrency);
-
-    // get JSON things:
-    getJSONautocomplete();
 });
-
-/**
- * Converts any foreign amount to the native currency.
- */
-function convertForeignToNative() {
-    var accountId = getAccountId();
-    var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
-    var nativeCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
-    var foreignCurrencyCode = currencyInfo[foreignCurrencyId].code;
-    var nativeCurrencyCode = currencyInfo[nativeCurrencyId].code;
-    var date = $('#ffInput_date').val();
-    var amount = $('#ffInput_amount').val();
-    var uri = 'json/rate/' + foreignCurrencyCode + '/' + nativeCurrencyCode + '/' + date + '?amount=' + amount;
-    console.log('Will grab ' + uri);
-    $.get(uri).done(updateNativeAmount);
-}
-
-/**
- * Once the data has been grabbed will update the field in the form.
- * @param data
- */
-function updateNativeAmount(data) {
-    console.log('Returned data:');
-    console.log(data);
-    $('#ffInput_native_amount').val(data.amount);
-}
 
 /**
  * This function generates a small helper text to explain the user
@@ -78,45 +48,7 @@ function getExchangeInstructions() {
     return text;
 }
 
-/**
- * When the user changes the currency in the amount drop down, it may jump from being
- * the native currency to a foreign currency. This triggers the display of several
- * information things that make sure that the user always supplies the amount in the native currency.
- *
- * @returns {boolean}
- */
-function selectsForeignCurrency() {
-    var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
-    var selectedAccountId = getAccountId();
-    var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
 
-    if (foreignCurrencyId !== nativeCurrencyId) {
-        console.log('User has selected currency #' + foreignCurrencyId + ' and this is different from native currency #' + nativeCurrencyId);
-
-        // the input where the native amount is entered gets the symbol for the native currency:
-        $('.non-selectable-currency-symbol').text(currencyInfo[nativeCurrencyId].symbol);
-
-        // the instructions get updated:
-        $('#ffInput_exchange_rate_instruction').text(getExchangeInstructions());
-
-        // both holders are shown to the user:
-        $('#exchange_rate_instruction_holder').show();
-        $('#native_amount_holder').show();
-
-        // if possible the amount is already exchanged for the foreign currency
-        convertForeignToNative();
-
-    }
-    if (foreignCurrencyId === nativeCurrencyId) {
-        console.log('User has selected currency #' + foreignCurrencyId + ' and this is equal to native currency #' + nativeCurrencyId + ' (phew).');
-        $('#exchange_rate_instruction_holder').hide();
-        $('#native_amount_holder').hide();
-    }
-
-    // if the value of the selected currency does not match the account's currency
-    // show the exchange rate thing!
-    return false;
-}
 
 /**
  * There is an input that shows the currency symbol that is native to the selected
@@ -140,45 +72,6 @@ function updateDescription() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
         $('input[name="description"]').typeahead('destroy').typeahead({source: data});
     });
-}
-
-/**
- *
- */
-function getJSONautocomplete() {
-
-    // for withdrawals
-    $.getJSON('json/expense-accounts').done(function (data) {
-        $('input[name="destination_account_name"]').typeahead({source: data});
-    });
-
-    // for tags:
-    if ($('input[name="tags"]').length > 0) {
-        $.getJSON('json/tags').done(function (data) {
-
-            var opt = {
-                typeahead: {
-                    source: data,
-                    afterSelect: function () {
-                        this.$element.val("");
-                    }
-                }
-            };
-            $('input[name="tags"]').tagsinput(
-                opt
-            );
-        });
-    }
-
-    // for deposits
-    $.getJSON('json/revenue-accounts').done(function (data) {
-        $('input[name="source_account_name"]').typeahead({source: data});
-    });
-
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data});
-    });
-
 }
 
 /**
@@ -288,7 +181,7 @@ function updateButtons() {
 }
 
 /**
- * 
+ *
  * @param e
  * @returns {boolean}
  */
@@ -317,17 +210,4 @@ function getAccountId() {
         return $('select[name="destination_account_id"]').val();
     }
     alert('Cannot handle ' + what);
-}
-
-/**
- *
- */
-function runModernizer() {
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
-    }
 }
