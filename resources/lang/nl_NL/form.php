@@ -66,6 +66,8 @@ return [
     'decimal_places'                 => 'Aantal decimalen',
     'exchange_rate_instruction'      => 'Foreign currencies',
     'exchanged_amount'               => 'Exchanged amount',
+    'source_amount'                  => 'Amount (source)',
+    'destination_amount'             => 'Amount (destination)',
 
     'revenue_account_source'      => 'Debiteur (bron)',
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
