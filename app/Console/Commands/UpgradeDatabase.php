@@ -125,12 +125,7 @@ class UpgradeDatabase extends Command
             if ($type !== TransactionType::TRANSFER) {
                 $event->transaction_journal_id = null;
                 $event->save();
-                $this->line(
-                    sprintf(
-                        'Piggy bank #%d ("%s") was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id,
-                        $event->piggyBank->name
-                    )
-                );
+                $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
             }
         }
     }
