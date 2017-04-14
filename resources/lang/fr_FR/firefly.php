@@ -135,7 +135,7 @@ return [
     'all_journals_for_category'                  => 'All transactions for category :name',
     'journals_in_period_for_category'            => 'All transactions for category :name between :start and :end',
     'not_available_demo_user'                    => 'The feature you try to access is not available to demo users.',
-    'exchange_rate_instructions'                 => 'Asset account "@name" only accepts transactions in @account_currency. If you wish to use @transaction_currency instead, make sure that the amount in @account_currency is known as well:',
+    'exchange_rate_instructions'                 => 'Asset account "@name" only accepts transactions in @native_currency. If you wish to use @foreign_currency instead, make sure that the amount in @native_currency is known as well:',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
