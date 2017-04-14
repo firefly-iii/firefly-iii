@@ -530,12 +530,10 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // opening balance data? update it!
         if (!is_null($openingBalance->id)) {
-            $date   = $data['openingBalanceDate'];
-            $amount = $data['openingBalance'];
 
             Log::debug('Opening balance journal found, update journal.');
 
-            $this->updateOpeningBalanceJournal($account, $openingBalance, $date, $amount);
+            $this->updateOpeningBalanceJournal($account, $openingBalance, $data);
 
             return true;
         }
@@ -589,15 +587,19 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account            $account
      * @param TransactionJournal $journal
-     * @param Carbon             $date
-     * @param float              $amount
+     * @param array              $data
      *
      * @return bool
      */
-    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
+        $date       = $data['openingBalanceDate'];
+        $amount     = $data['openingBalance'];
+        $currencyId = intval($data['currency_id']);
+
         // update date:
-        $journal->date = $date;
+        $journal->date                    = $date;
+        $journal->transaction_currency_id = $currencyId;
         $journal->save();
         // update transactions:
         /** @var Transaction $transaction */

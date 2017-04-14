@@ -147,14 +147,14 @@ class AccountController extends Controller
      */
     public function edit(Request $request, Account $account)
     {
-
-        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $currencies = ExpandedForm::makeSelectList($repository->get());
-        $roles      = [];
+        $repository         = app(CurrencyRepositoryInterface::class);
+        $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
+        $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
+        $allCurrencies      = $repository->get();
+        $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
+        $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = strval(trans('firefly.account_role_' . $role));
         }
@@ -173,6 +173,7 @@ class AccountController extends Controller
         $openingBalanceAmount = $account->getOpeningBalanceAmount() === '0' ? '' : $openingBalanceAmount;
         $openingBalanceDate   = $account->getOpeningBalanceDate();
         $openingBalanceDate   = $openingBalanceDate->year === 1900 ? null : $openingBalanceDate->format('Y-m-d');
+        $currency             = $repository->find(intval($account->getMeta('currency_id')));
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
@@ -183,13 +184,18 @@ class AccountController extends Controller
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
-            'currency_id'          => $account->getMeta('currency_id'),
+            'currency_id'          => $currency->id,
+
         ];
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->flash('gaEventCategory', 'accounts');
         $request->session()->flash('gaEventAction', 'edit-' . $what);
 
-        return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'));
+        return view(
+            'accounts.edit', compact(
+            'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'
+        )
+        );
     }
 
     /**

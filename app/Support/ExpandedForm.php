@@ -262,6 +262,36 @@ class ExpandedForm
     }
 
     /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function nonSelectableBalance(string $name, $value = null, array $options = []): string
+    {
+
+        $label            = $this->label($name, $options);
+        $options          = $this->expandOptionArray($name, $label, $options);
+        $classes          = $this->getHolderClasses($name);
+        $value            = $this->fillFieldValue($name, $value);
+        $options['step']  = 'any';
+        $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        unset($options['currency']);
+        unset($options['placeholder']);
+
+        // make sure value is formatted nicely:
+        if (!is_null($value) && $value !== '') {
+            $value = round($value, $selectedCurrency->decimal_places);
+        }
+
+
+        $html = view('form.non-selectable-balance', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
+    /**
      * @param $type
      * @param $name
      *

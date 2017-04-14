@@ -137,4 +137,12 @@ interface AccountRepositoryInterface
      */
     public function store(array $data): Account;
 
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return Account
+     */
+    public function update(Account $account, array $data): Account;
+
 }

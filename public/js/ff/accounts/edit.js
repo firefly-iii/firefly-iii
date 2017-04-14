@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: Modernizr */
+/** global: Modernizr, currencies */
 
 $(document).ready(function () {
     "use strict";
@@ -17,4 +17,14 @@ $(document).ready(function () {
             }
         );
     }
+
+    // on change currency drop down list:
+    $('#ffInput_currency_id').change(updateCurrencyItems);
+
 });
+
+function updateCurrencyItems() {
+    var value = $('#ffInput_currency_id').val();
+    var symbol = currencies[value];
+    $('.non-selectable-currency-symbol').text(symbol);
+}
