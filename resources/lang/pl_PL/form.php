@@ -64,6 +64,8 @@ return [
     'expense_account'                => 'Konto wydatków',
     'revenue_account'                => 'Konto przychodów',
     'decimal_places'                 => 'Miejsca dziesiętne',
+    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchanged_amount'               => 'Exchanged amount',
 
     'revenue_account_source'      => 'Konto przychodów (źródło)',
     'source_account_asset'        => 'Konto źródłowe (konto aktywów)',
