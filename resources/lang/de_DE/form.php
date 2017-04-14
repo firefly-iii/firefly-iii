@@ -66,6 +66,8 @@ return [
     'decimal_places'                 => 'Decimal places',
     'exchange_rate_instruction'      => 'Foreign currencies',
     'exchanged_amount'               => 'Exchanged amount',
+    'source_amount'                  => 'Amount (source)',
+    'destination_amount'             => 'Amount (destination)',
 
     'revenue_account_source'      => 'Ertragskonto (Quelle)',
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
