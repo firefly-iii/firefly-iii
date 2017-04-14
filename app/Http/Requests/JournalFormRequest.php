@@ -67,6 +67,9 @@ class JournalFormRequest extends Request
             'destination_account_name' => $this->string('destination_account_name'),
             'piggy_bank_id'            => $this->integer('piggy_bank_id'),
 
+            // amount for exchanged data:
+            'exchanged_amount'         => $this->float('exchanged_amount'),
+
         ];
 
         return $data;

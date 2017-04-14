@@ -275,7 +275,7 @@ class ExpandedForm
         $classes          = $this->getHolderClasses($name);
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
-        $options['min']  = '0.01';
+        $options['min']   = '0.01';
         $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         unset($options['currency']);
         unset($options['placeholder']);
@@ -312,7 +312,8 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (!is_null($value) && $value !== '') {
-            $value = round($value, $selectedCurrency->decimal_places);
+            $decimals = $selectedCurrency->decimal_places ?? 2;
+            $value    = round($value, $decimals);
         }
 
 

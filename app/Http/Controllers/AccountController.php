@@ -92,7 +92,7 @@ class AccountController extends Controller
         $request->session()->flash('gaEventCategory', 'accounts');
         $request->session()->flash('gaEventAction', 'create-' . $what);
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList','allCurrencies', 'roles'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
 
     }
 

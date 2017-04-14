@@ -41,7 +41,10 @@ class JournalRepository implements JournalRepositoryInterface
     private $user;
 
     /** @var array */
-    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
+    private $validMetaFields
+        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes', 'original_amount',
+           'original_currency_id',
+        ];
 
     /**
      * @param TransactionJournal $journal
@@ -165,12 +168,34 @@ class JournalRepository implements JournalRepositoryInterface
     public function store(array $data): TransactionJournal
     {
         // find transaction type.
+        /** @var TransactionType $transactionType */
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
-        $journal         = new TransactionJournal(
+        $accounts        = $this->storeAccounts($transactionType, $data);
+        $currencyId      = $data['currency_id'];
+        $amount          = strval($data['amount']);
+        // switch type to find what account to verify for currency stuff
+        switch ($transactionType->type) {
+            case TransactionType::WITHDRAWAL:
+                /*
+                 * Overrule the currency selection and the amount:
+                 */
+                $accountCurrencyId = intval($accounts['source']->getMeta('currency_id'));
+                if ($accountCurrencyId !== $currencyId) {
+                    $currencyId                   = $accountCurrencyId;
+                    $amount                       = strval($data['exchanged_amount']);
+                    $data['original_amount']      = $data['amount'];
+                    $data['original_currency_id'] = $currencyId;
+                }
+                break;
+            default:
+                throw new FireflyException(sprintf('Currency exchange routine cannot handle %s', $transactionType->type));
+        }
+
+        $journal = new TransactionJournal(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['currency_id'],
+                'transaction_currency_id' => $currencyId,
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
@@ -181,13 +206,13 @@ class JournalRepository implements JournalRepositoryInterface
         // store stuff:
         $this->storeCategoryWithJournal($journal, $data['category']);
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
-        $accounts = $this->storeAccounts($transactionType, $data);
+
 
         // store two transactions:
         $one = [
             'journal'     => $journal,
             'account'     => $accounts['source'],
-            'amount'      => bcmul(strval($data['amount']), '-1'),
+            'amount'      => bcmul($amount, '-1'),
             'description' => null,
             'category'    => null,
             'budget'      => null,
@@ -198,7 +223,7 @@ class JournalRepository implements JournalRepositoryInterface
         $two = [
             'journal'     => $journal,
             'account'     => $accounts['destination'],
-            'amount'      => $data['amount'],
+            'amount'      => $amount,
             'description' => null,
             'category'    => null,
             'budget'      => null,
