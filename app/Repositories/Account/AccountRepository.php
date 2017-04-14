@@ -455,6 +455,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $amount          = $data['openingBalance'];
         $name            = $data['name'];
+        $currencyId      = $data['currency_id'];
         $opposing        = $this->storeOpposingAccount($name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         /** @var TransactionJournal $journal */
@@ -462,7 +463,7 @@ class AccountRepository implements AccountRepositoryInterface
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['openingBalanceCurrency'],
+                'transaction_currency_id' => $currencyId,
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
@@ -530,9 +531,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // opening balance data? update it!
         if (!is_null($openingBalance->id)) {
-
             Log::debug('Opening balance journal found, update journal.');
-
             $this->updateOpeningBalanceJournal($account, $openingBalance, $data);
 
             return true;

@@ -69,12 +69,13 @@ class AccountController extends Controller
     public function create(Request $request, string $what = 'asset')
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository      = app(CurrencyRepositoryInterface::class);
-        $currencies      = ExpandedForm::makeSelectList($repository->get());
-        $defaultCurrency = Amount::getDefaultCurrency();
-        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle        = trans('firefly.make_new_' . $what . '_account');
-        $roles           = [];
+        $repository         = app(CurrencyRepositoryInterface::class);
+        $allCurrencies      = $repository->get();
+        $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
+        $defaultCurrency    = Amount::getDefaultCurrency();
+        $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
+        $subTitle           = trans('firefly.make_new_' . $what . '_account');
+        $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = strval(trans('firefly.account_role_' . $role));
         }
@@ -91,7 +92,7 @@ class AccountController extends Controller
         $request->session()->flash('gaEventCategory', 'accounts');
         $request->session()->flash('gaEventAction', 'create-' . $what);
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies', 'roles'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList','allCurrencies', 'roles'));
 
     }
 
@@ -193,8 +194,8 @@ class AccountController extends Controller
 
         return view(
             'accounts.edit', compact(
-            'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'
-        )
+                               'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'
+                           )
         );
     }
 
@@ -337,7 +338,6 @@ class AccountController extends Controller
     {
         $data    = $request->getAccountData();
         $account = $repository->store($data);
-
         $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
 
