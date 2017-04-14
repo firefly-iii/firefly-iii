@@ -64,6 +64,8 @@ return [
     'expense_account'                => '支出帳戶',
     'revenue_account'                => '收入帳戶',
     'decimal_places'                 => 'Decimal places',
+    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchanged_amount'               => 'Exchanged amount',
 
     'revenue_account_source'      => '收入帳戶 （源頭）',
     'source_account_asset'        => '來源帳戶 （資產帳戶）',
