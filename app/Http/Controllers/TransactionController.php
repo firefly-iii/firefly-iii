@@ -187,7 +187,7 @@ class TransactionController extends Controller
         if ($journal->hasMeta('original_currency_id')) {
             /** @var CurrencyRepositoryInterface $repository */
             $repository       = app(CurrencyRepositoryInterface::class);
-            $originalCurrency = $repository->find(intval($journal->hasMeta('original_currency_id')));
+            $originalCurrency = $repository->find(intval($journal->getMeta('original_currency_id')));
         }
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'originalCurrency'));

@@ -187,6 +187,15 @@ class JournalRepository implements JournalRepositoryInterface
                     $amount                       = strval($data['exchanged_amount']);
                 }
                 break;
+            case TransactionType::DEPOSIT:
+                $accountCurrencyId = intval($accounts['destination']->getMeta('currency_id'));
+                if ($accountCurrencyId !== $currencyId) {
+                    $data['original_amount']      = $data['amount'];
+                    $data['original_currency_id'] = $currencyId;
+                    $currencyId                   = $accountCurrencyId;
+                    $amount                       = strval($data['exchanged_amount']);
+                }
+                break;
             default:
                 throw new FireflyException(sprintf('Currency exchange routine cannot handle %s', $transactionType->type));
         }

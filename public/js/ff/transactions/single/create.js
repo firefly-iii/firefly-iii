@@ -261,5 +261,8 @@ function getAccountId() {
     if(what === "withdrawal") {
         return $('select[name="source_account_id"]').val();
     }
+    if(what === "deposit") {
+        return $('select[name="destination_account_id"]').val();
+    }
     alert('Cannot handle ' + what);
 }

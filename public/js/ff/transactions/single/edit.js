@@ -60,6 +60,7 @@ $(document).ready(function () {
     });
 
     $('.currency-option').on('click', triggerCurrencyChange);
+    $('#ffInput_amount').on('change', getExchangeRate);
 
     // always update the exchanged_amount to match the correct currency
     var journalCurrency = currencyInfo[journal.transaction_currency_id].symbol;
@@ -135,5 +136,9 @@ function getAccountId() {
     if(journal.transaction_type.type === "Withdrawal") {
         return $('select[name="source_account_id"]').val();
     }
+    if(journal.transaction_type.type === "Deposit") {
+        return $('select[name="destination_account_id"]').val();
+    }
+
     alert('Cannot handle ' + journal.transaction_type.type);
 }
