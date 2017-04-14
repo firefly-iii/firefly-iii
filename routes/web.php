@@ -410,6 +410,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
     Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
     Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
+    Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
 }
 );
 

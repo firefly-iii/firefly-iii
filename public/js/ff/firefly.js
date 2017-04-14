@@ -20,7 +20,7 @@ $(function () {
                 });
 
     // when you click on a currency, this happens:
-    $('.currency-option').click(currencySelect);
+    $('.currency-option').on('click', currencySelect);
 
     var ranges = {};
     ranges[dateRangeConfig.currentPeriod] = [moment(dateRangeConfig.ranges.current[0]), moment(dateRangeConfig.ranges.current[1])];

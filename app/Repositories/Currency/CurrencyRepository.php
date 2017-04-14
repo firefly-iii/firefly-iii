@@ -20,6 +20,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 
 /**
@@ -189,11 +190,21 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {
+        if ($fromCurrency->id === $toCurrency->id) {
+            $rate       = new CurrencyExchangeRate;
+            $rate->rate = 1;
+            $rate->id   = 0;
+
+            return $rate;
+        }
+
         $rate = $this->user->currencyExchangeRates()
                            ->where('from_currency_id', $fromCurrency->id)
                            ->where('to_currency_id', $toCurrency->id)
                            ->where('date', $date->format('Y-m-d'))->first();
         if (!is_null($rate)) {
+            Log::debug(sprintf('Found cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
+
             return $rate;
         }
 

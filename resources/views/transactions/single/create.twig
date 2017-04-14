@@ -47,6 +47,11 @@
                         {# ALWAYS SHOW AMOUNT #}
                         {{ ExpandedForm.amount('amount') }}
 
+                        {# INSTRUCTIONS FOR EXCHANGE RATES #}
+                        {{ ExpandedForm.staticText('exchange_rate_instruction','(here be text)') }}
+
+                        {{ ExpandedForm.nonSelectableAmount('exchanged_amount') }}
+
                         {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date', preFilled.date|default(phpdate('Y-m-d'))) }}
                     </div>
@@ -209,6 +214,7 @@
         var middleCrumbName = [];
         var middleCrumbUrl = [];
         var button = [];
+        var exchangeRateInstructions = "{{ 'exchange_rate_instructions'|_|escape('js') }}";
         {% for type in {0:'withdrawal',1:'deposit',2:'transfer'} %}
 
         txt['{{ type }}'] = '{{ type|_ }}';
@@ -225,6 +231,7 @@
     <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
     <script type="text/javascript" src="javascript/accounts?ext=.js"></script>
+    <script type="text/javascript" src="javascript/currencies?ext=.js"></script>
     <script type="text/javascript" src="js/ff/transactions/single/create.js"></script>
 {% endblock %}
 

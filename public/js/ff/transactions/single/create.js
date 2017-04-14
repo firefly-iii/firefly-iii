@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl */
+/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions */
 
 $(document).ready(function () {
     "use strict";
@@ -16,6 +16,10 @@ $(document).ready(function () {
     updateForm();
     updateLayout();
     updateDescription();
+
+    // hide exchange rate instructions:
+    $('#exchange_rate_instruction_holder').hide();
+    $('#exchanged_amount_holder').hide();
 
     if (!Modernizr.inputtypes.date) {
         $('input[type="date"]').datepicker(
@@ -27,10 +31,64 @@ $(document).ready(function () {
 
     // update currency
     $('select[name="source_account_id"]').on('change', updateCurrency);
+    updateCurrency();
+    $('#ffInput_amount').on('change', getExchangeRate);
+
+    // respond to changes to the hidden input,
+    // so we can show the "exchange rate" thing if necessary:
+    $('.currency-option').on('click', triggerCurrencyChange);
 
     // get JSON things:
     getJSONautocomplete();
 });
+
+function getExchangeRate() {
+    var accountId = $('select[name="source_account_id"]').val();
+    var selectedCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    var accountCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
+    var selectedCurrencyCode = currencyInfo[selectedCurrencyId].code;
+    var accountCurrencyCode = currencyInfo[accountCurrencyId].code;
+    var date = $('#ffInput_date').val();
+    var amount = $('#ffInput_amount').val();
+    var uri = 'json/rate/' + selectedCurrencyCode + '/' + accountCurrencyCode + '/' + date + '?amount=' + amount;
+    console.log('Will grab ' + uri);
+    $.get(uri).done(updateExchangedAmount);
+
+}
+
+function updateExchangedAmount(data) {
+    console.log('Returned data:');
+    console.log(data);
+    $('#ffInput_exchanged_amount').val(data.amount);
+}
+
+
+function triggerCurrencyChange() {
+    var selectedCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    var accountId = $('select[name="source_account_id"]').val();
+    var accountCurrencyId = parseInt(accountInfo[accountId].preferredCurrency);
+    console.log('Selected currency is ' + selectedCurrencyId);
+    console.log('Account prefers ' + accountCurrencyId);
+    if (selectedCurrencyId !== accountCurrencyId) {
+        var text = exchangeRateInstructions.replace('@name', accountInfo[accountId].name);
+        text = text.replace(/@account_currency/g, currencyInfo[accountCurrencyId].name);
+        text = text.replace(/@transaction_currency/g, currencyInfo[selectedCurrencyId].name);
+        $('.non-selectable-currency-symbol').text(currencyInfo[accountCurrencyId].symbol);
+        getExchangeRate();
+
+        $('#ffInput_exchange_rate_instruction').text(text);
+        $('#exchange_rate_instruction_holder').show();
+        $('#exchanged_amount_holder').show();
+    }
+    if (selectedCurrencyId === accountCurrencyId) {
+        $('#exchange_rate_instruction_holder').hide();
+        $('#exchanged_amount_holder').hide();
+    }
+
+    // if the value of the selected currency does not match the account's currency
+    // show the exchange rate thing!
+    return false;
+}
 
 
 function updateCurrency() {
@@ -41,7 +99,6 @@ function updateCurrency() {
     $('.currency-option[data-id="' + currencyPreference + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     $('select[name="source_account_id"]').focus();
-
 }
 
 function updateDescription() {

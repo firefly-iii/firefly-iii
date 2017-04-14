@@ -15,6 +15,7 @@ use Amount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
@@ -29,7 +30,6 @@ use Session;
  */
 class JavascriptController extends Controller
 {
-
     /**
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
@@ -50,13 +50,34 @@ class JavascriptController extends Controller
             $accountId                    = $account->id;
             $currency                     = intval($account->getMeta('currency_id'));
             $currency                     = $currency === 0 ? $default->id : $currency;
-            $entry                        = ['preferredCurrency' => $currency];
+            $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
         }
 
 
         return response()
             ->view('javascript.accounts', $data, 200)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
+     * @param CurrencyRepositoryInterface $repository
+     *
+     * @return $this
+     */
+    public function currencies(CurrencyRepositoryInterface $repository)
+    {
+        $currencies = $repository->get();
+        $data       = ['currencies' => [],];
+        /** @var TransactionCurrency $currency */
+        foreach ($currencies as $currency) {
+            $currencyId                    = $currency->id;
+            $entry                         = ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol];
+            $data['currencies'][$currencyId] = $entry;
+        }
+
+        return response()
+            ->view('javascript.currencies', $data, 200)
             ->header('Content-Type', 'text/javascript');
     }
 

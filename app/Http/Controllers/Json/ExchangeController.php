@@ -14,10 +14,12 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use Illuminate\Http\Request;
+use Log;
 use Response;
 
 /**
@@ -42,6 +44,7 @@ class ExchangeController extends Controller
         $rate       = $repository->getExchangeRate($fromCurrency, $toCurrency, $date);
         $amount     = null;
         if (is_null($rate->id)) {
+            Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
             $preferred = env('EXCHANGE_RATE_SERVICE', config('firefly.preferred_exchange_service'));
             $class     = config('firefly.currency_exchange_services.' . $preferred);
             /** @var ExchangeRateInterface $object */
@@ -53,7 +56,9 @@ class ExchangeController extends Controller
         $return['amount'] = null;
         if (!is_null($request->get('amount'))) {
             // assume amount is in "from" currency:
-            $return['amount'] = bcmul($request->get('amount'), strval($rate->rate));
+            $return['amount'] = bcmul($request->get('amount'), strval($rate->rate), 12);
+            // round to toCurrency decimal places:
+            $return['amount'] = round($return['amount'], $toCurrency->decimal_places);
         }
 
         return Response::json($return);

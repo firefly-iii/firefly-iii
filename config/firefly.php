@@ -153,6 +153,7 @@ return [
         'tagList'           => 'FireflyIII\Support\Binder\TagList',
         'start_date'        => 'FireflyIII\Support\Binder\Date',
         'end_date'          => 'FireflyIII\Support\Binder\Date',
+        'date'              => 'FireflyIII\Support\Binder\Date',
     ],
     'rule-triggers'              => [
         'user_action'           => 'FireflyIII\Rules\Triggers\UserAction',
@@ -210,7 +211,7 @@ return [
                                      'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after'],
     // tag notes has_attachments
     'currency_exchange_services' => [
-        'fixerio'           => 'FireflyIII\Services\Currency\FixerIO',
+        'fixerio' => 'FireflyIII\Services\Currency\FixerIO',
     ],
     'preferred_exchange_service' => 'fixerio',
 
