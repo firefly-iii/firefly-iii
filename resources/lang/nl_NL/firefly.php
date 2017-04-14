@@ -135,7 +135,7 @@ return [
     'all_journals_for_category'                  => 'Alle transacties in categorie :name',
     'journals_in_period_for_category'            => 'Alle transacties in categorie :name tussen :start en :end',
     'not_available_demo_user'                    => 'De functie die je probeert te gebruiken is niet beschikbaar voor gebruikers van de demo.',
-
+    'exchange_rate_instructions'                 => 'Asset account "@name" only accepts transactions in @account_currency. If you wish to use @transaction_currency instead, make sure that the amount in @account_currency is known as well:',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
