@@ -64,6 +64,8 @@ return [
     'expense_account'                => 'Expense account',
     'revenue_account'                => 'Revenue account',
     'decimal_places'                 => 'Decimal places',
+    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchanged_amount'               => 'Exchanged amount',
 
     'revenue_account_source'      => 'Revenue account (source)',
     'source_account_asset'        => 'Source account (asset account)',
