@@ -176,6 +176,7 @@ return [
         'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
         'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
+        'has_attachments'        => 'FireflyIII\Rules\Triggers\HasAttachment',
     ],
     'rule-actions'               => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
