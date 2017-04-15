@@ -287,6 +287,8 @@ return [
     'rule_trigger_category_is_choice'            => 'Kategorie ist..',
     'rule_trigger_budget_is_choice'              => 'Budget ist..',
     'rule_trigger_tag_is_choice'                 => '(A) Tag ist..',
+    'rule_trigger_has_attachments_choice'        => 'Has at least this many attachments',
+    'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
     'rule_trigger_store_journal'                 => 'Wenn eine Transaktion erstellt wird',
     'rule_trigger_update_journal'                => 'Wenn eine Transaktion aktualisiert wird',
     'rule_action_set_category'                   => 'Kategorie zu ":action_value" festlegen',
