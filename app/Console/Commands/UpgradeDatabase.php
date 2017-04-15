@@ -262,41 +262,75 @@ class UpgradeDatabase extends Command
      */
     private function updateJournalCurrencies()
     {
-        $types      = [
+        $types        = [
             TransactionType::WITHDRAWAL => '<',
             TransactionType::DEPOSIT    => '>',
         ];
-        $repository = app(CurrencyRepositoryInterface::class);
+        $repository   = app(CurrencyRepositoryInterface::class);
+        $notification = '%s #%d uses %s but should use %s. It has been updated. Please verify this in Firefly III.';
+        $transfer     = 'Transfer #%d has been updated to use the correct currencies. Please verify this in Firefly III.';
 
         foreach ($types as $type => $operator) {
-            $set = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')->leftJoin(
-                'transactions', function (JoinClause $join) use ($operator) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', $operator, '0');
-            }
-            )
-                                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                     ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                                     ->where('transaction_types.type', $type)
-                                     ->where('account_meta.name', 'currency_id')
-                                     ->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'))
-                                     ->get(
-                                         ['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']
-                                     );
+            $set = TransactionJournal
+                ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')->leftJoin(
+                    'transactions', function (JoinClause $join) use ($operator) {
+                    $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', $operator, '0');
+                }
+                )
+                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                ->where('transaction_types.type', $type)
+                ->where('account_meta.name', 'currency_id')
+                ->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'))
+                ->get(['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']);
             /** @var TransactionJournal $journal */
             foreach ($set as $journal) {
                 $expectedCurrency = $repository->find(intval($journal->expected_currency_id));
-                $this->line(
-                    sprintf(
-                        '%s #%d uses %s but should use %s. It has been updated to do so, please verify the amounts.', $type, $journal->id,
-                        $journal->transactionCurrency->code, $expectedCurrency->code
-                    )
-                );
+                $line             = sprintf($notification, $type, $journal->id, $journal->transactionCurrency->code, $expectedCurrency->code);
 
                 $journal->setMeta('foreign_amount', $journal->transaction_amount);
                 $journal->setMeta('foreign_currency_id', $journal->transaction_currency_id);
                 $journal->transaction_currency_id = $expectedCurrency->id;
                 $journal->save();
+                $this->line($line);
+            }
+        }
+        /*
+         * For transfers it's slightly different. Both source and destination
+         * must match the respective currency preference. So we must verify ALL
+         * transactions.
+         */
+        $set = TransactionJournal
+            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->where('transaction_types.type', TransactionType::TRANSFER)
+            ->get(['transaction_journals.*']);
+        /** @var TransactionJournal $journal */
+        foreach ($set as $journal) {
+            $updated = false;
+            /** @var Transaction $sourceTransaction */
+            $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+            $sourceCurrency    = $repository->find(intval($sourceTransaction->account->getMeta('currency_id')));
 
+            if ($sourceCurrency->id !== $journal->transaction_currency_id) {
+                $updated                          = true;
+                $journal->transaction_currency_id = $sourceCurrency->id;
+                $journal->save();
+            }
+
+            // destination
+            $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+            $destinationCurrency    = $repository->find(intval($destinationTransaction->account->getMeta('currency_id')));
+
+            if ($destinationCurrency->id !== $journal->transaction_currency_id) {
+                $updated = true;
+                $journal->deleteMeta('foreign_amount');
+                $journal->deleteMeta('foreign_currency_id');
+                $journal->setMeta('foreign_amount', $destinationTransaction->amount);
+                $journal->setMeta('foreign_currency_id', $destinationCurrency->id);
+            }
+            if ($updated) {
+                $line = sprintf($transfer, $journal->id);
+                $this->line($line);
             }
         }
     }
