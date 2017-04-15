@@ -249,14 +249,17 @@ class AccountController extends Controller
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
         }
-        $range        = Preferences::get('viewRange', '1M')->data;
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri     = route('chart.account.single', [$account->id]);
-        $start        = null;
-        $end          = null;
-        $periods      = new Collection;
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $range         = Preferences::get('viewRange', '1M')->data;
+        $subTitleIcon  = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $page          = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri      = route('chart.account.single', [$account->id]);
+        $start         = null;
+        $end           = null;
+        $periods       = new Collection;
+        $currency      = $currencyRepos->find(intval($account->getMeta('currency_id')));
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -323,7 +326,7 @@ class AccountController extends Controller
 
 
         return view(
-            'accounts.show', compact('account', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+            'accounts.show', compact('account','currency', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 

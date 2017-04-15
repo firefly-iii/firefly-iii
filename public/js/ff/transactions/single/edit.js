@@ -49,6 +49,8 @@ function updateInitialPage() {
 
         return;
     }
+    $('#source_amount_holder').hide();
+    $('#destination_amount_holder').hide();
 
 
     if (journalData.native_currency.id === journalData.currency.id) {

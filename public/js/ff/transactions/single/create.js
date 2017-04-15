@@ -26,7 +26,6 @@ $(document).ready(function () {
     updateNativeCurrency();
 
 
-
     // when user changes source account or destination, native currency may be different.
     $('select[name="source_account_id"]').on('change', updateNativeCurrency);
     $('select[name="destination_account_id"]').on('change', updateNativeCurrency);
@@ -101,85 +100,83 @@ function updateForm() {
     "use strict";
 
     $('input[name="what"]').val(what);
+
+    var destName = $('#ffInput_destination_account_name');
+    var srcName = $('#ffInput_source_account_name');
+
     switch (what) {
         case 'withdrawal':
             // show source_id and dest_name
-            $('#source_account_id_holder').show();
-            $('#destination_account_name_holder').show();
+            document.getElementById('source_account_id_holder').style.display = 'block';
+            document.getElementById('destination_account_name_holder').style.display = 'block';
 
             // hide others:
-            $('#source_account_name_holder').hide();
-            $('#destination_account_id_holder').hide();
-
-            //
-            $('#budget_id_holder').show();
+            document.getElementById('source_account_name_holder').style.display = 'none';
+            document.getElementById('destination_account_id_holder').style.display = 'none';
+            document.getElementById('budget_id_holder').style.display = 'block';
 
             // hide piggy bank:
-            $('#piggy_bank_id_holder').hide();
+            document.getElementById('piggy_bank_id_holder').style.display = 'none';
 
-            // copy destination account name to
-            // source account name:
-            if ($('#ffInput_destination_account_name').val().length > 0) {
-                $('#ffInput_source_account_name').val($('#ffInput_destination_account_name').val());
+            // copy destination account name to source account name:
+            if (destName.val().length > 0) {
+                srcName.val(destName.val());
             }
 
             // exchange / foreign currencies:
-            // hide explanation, hide source and destination amounts:
-            $('#exchange_rate_instruction_holder').hide();
-            $('#source_amount_holder').hide();
-            $('#destination_amount_holder').hide();
-            // show normal amount:
-            $('#amount_holder').show();
+            // hide explanation, hide source and destination amounts, show normal amount
+            document.getElementById('exchange_rate_instruction_holder').style.display = 'none';
+            document.getElementById('source_amount_holder').style.display = 'none';
+            document.getElementById('destination_amount_holder').style.display = 'none';
+            document.getElementById('amount_holder').style.display = 'block';
             break;
         case 'deposit':
             // show source_name and dest_id:
-            $('#source_account_name_holder').show();
-            $('#destination_account_id_holder').show();
+            document.getElementById('source_account_name_holder').style.display = 'block';
+            document.getElementById('destination_account_id_holder').style.display = 'block';
 
             // hide others:
-            $('#source_account_id_holder').hide();
-            $('#destination_account_name_holder').hide();
+            document.getElementById('source_account_id_holder').style.display = 'none';
+            document.getElementById('destination_account_name_holder').style.display = 'none';
 
             // hide budget
-            $('#budget_id_holder').hide();
+            document.getElementById('budget_id_holder').style.display = 'none';
 
             // hide piggy bank
-            $('#piggy_bank_id_holder').hide();
+            document.getElementById('piggy_bank_id_holder').style.display = 'none';
 
-            if ($('#ffInput_source_account_name').val().length > 0) {
-                $('#ffInput_destination_account_name').val($('#ffInput_source_account_name').val());
+            // copy name
+            if (srcName.val().length > 0) {
+                destName.val(srcName.val());
             }
 
             // exchange / foreign currencies:
-            // hide explanation, hide source and destination amounts:
-            $('#exchange_rate_instruction_holder').hide();
-            $('#source_amount_holder').hide();
-            $('#destination_amount_holder').hide();
-            // show normal amount:
-            $('#amount_holder').show();
+            // hide explanation, hide source and destination amounts, show amount
+            document.getElementById('exchange_rate_instruction_holder').style.display = 'none';
+            document.getElementById('source_amount_holder').style.display = 'none';
+            document.getElementById('destination_amount_holder').style.display = 'none';
+            document.getElementById('amount_holder').style.display = 'block';
             break;
         case 'transfer':
             // show source_id and dest_id:
-            $('#source_account_id_holder').show();
-            $('#destination_account_id_holder').show();
+            document.getElementById('source_account_id_holder').style.display = 'block';
+            document.getElementById('destination_account_id_holder').style.display = 'block';
 
             // hide others:
-            $('#source_account_name_holder').hide();
-            $('#destination_account_name_holder').hide();
+            document.getElementById('source_account_name_holder').style.display = 'none';
+            document.getElementById('destination_account_name_holder').style.display = 'none';
 
             // hide budget
-            $('#budget_id_holder').hide();
+            document.getElementById('budget_id_holder').style.display = 'none';
+
+            // optional piggies
+            var showPiggies = 'block';
             if (piggiesLength === 0) {
-                $('#piggy_bank_id_holder').hide();
-            } else {
-                $('#piggy_bank_id_holder').show();
+                showPiggies = 'none';
             }
-            break;
-        default:
-            // no action.
+            document.getElementById('piggy_bank_id_holder').style.display = showPiggies;
             break;
     }
-    // update the amount thing:
     updateNativeCurrency();
 }
 

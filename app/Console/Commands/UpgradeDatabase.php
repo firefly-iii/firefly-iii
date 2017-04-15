@@ -25,7 +25,9 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Console\Command;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\QueryException;
 use Log;
 use Preferences;
@@ -69,6 +71,7 @@ class UpgradeDatabase extends Command
         $this->migrateRepetitions();
         $this->repairPiggyBanks();
         $this->updateAccountCurrencies();
+        $this->updateJournalCurrencies();
         $this->info('Firefly III database is up to date.');
     }
 
@@ -250,6 +253,51 @@ class UpgradeDatabase extends Command
                 $processed[] = $opposing->id;
             }
             $identifier++;
+        }
+    }
+
+    /**
+     * Makes sure that withdrawals, deposits and transfers have
+     * a currency setting matching their respective accounts
+     */
+    private function updateJournalCurrencies()
+    {
+        $types      = [
+            TransactionType::WITHDRAWAL => '<',
+            TransactionType::DEPOSIT    => '>',
+        ];
+        $repository = app(CurrencyRepositoryInterface::class);
+
+        foreach ($types as $type => $operator) {
+            $set = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')->leftJoin(
+                'transactions', function (JoinClause $join) use ($operator) {
+                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', $operator, '0');
+            }
+            )
+                                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                     ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                                     ->where('transaction_types.type', $type)
+                                     ->where('account_meta.name', 'currency_id')
+                                     ->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'))
+                                     ->get(
+                                         ['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']
+                                     );
+            /** @var TransactionJournal $journal */
+            foreach ($set as $journal) {
+                $expectedCurrency = $repository->find(intval($journal->expected_currency_id));
+                $this->line(
+                    sprintf(
+                        '%s #%d uses %s but should use %s. It has been updated to do so, please verify the amounts.', $type, $journal->id,
+                        $journal->transactionCurrency->code, $expectedCurrency->code
+                    )
+                );
+
+                $journal->setMeta('foreign_amount', $journal->transaction_amount);
+                $journal->setMeta('foreign_currency_id', $journal->transaction_currency_id);
+                $journal->transaction_currency_id = $expectedCurrency->id;
+                $journal->save();
+
+            }
         }
     }
 }
