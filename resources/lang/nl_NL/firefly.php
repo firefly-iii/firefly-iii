@@ -135,8 +135,8 @@ return [
     'all_journals_for_category'                  => 'Alle transacties in categorie :name',
     'journals_in_period_for_category'            => 'Alle transacties in categorie :name tussen :start en :end',
     'not_available_demo_user'                    => 'De functie die je probeert te gebruiken is niet beschikbaar voor gebruikers van de demo.',
-    'exchange_rate_instructions'                 => 'Asset account "@name" only accepts transactions in @native_currency. If you wish to use @foreign_currency instead, make sure that the amount in @native_currency is known as well:',
-    'transfer_exchange_rate_instructions'        => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
+    'exchange_rate_instructions'                 => 'Betaalrekening "@naam" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
+    'transfer_exchange_rate_instructions'        => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name: accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -287,6 +287,8 @@ return [
     'rule_trigger_category_is_choice'            => 'Categorie is..',
     'rule_trigger_budget_is_choice'              => 'Budget is..',
     'rule_trigger_tag_is_choice'                 => '(Een) tag is..',
+    'rule_trigger_has_attachments_choice'        => 'Has at least this many attachments',
+    'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
     'rule_trigger_store_journal'                 => 'Als een transactie wordt gemaakt',
     'rule_trigger_update_journal'                => 'Als een transactie wordt bijgewerkt',
     'rule_action_set_category'                   => 'Verander categorie naar ":action_value"',
