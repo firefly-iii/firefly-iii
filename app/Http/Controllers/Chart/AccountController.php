@@ -26,6 +26,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -501,11 +502,16 @@ class AccountController extends Controller
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
 
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+
         $chartData = [];
         foreach ($accounts as $account) {
+            $currency     = $repository->find(intval($account->getMeta('currency_id')));
             $currentSet   = [
-                'label'   => $account->name,
-                'entries' => [],
+                'label'           => $account->name,
+                'currency_symbol' => $currency->symbol,
+                'entries'         => [],
             ];
             $currentStart = clone $start;
             $range        = Steam::balanceInRange($account, $start, clone $end);
