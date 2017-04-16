@@ -44,6 +44,14 @@
                 </div>
                 <div class="box-body">
                     {% include 'list.journals-tasker' with {hideBudgets:true, hideBills:true} %}
+                    {% if budgetLimit %}
+                    <p>
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <a href="{{ route('budgets.show', [budget.id]) }}">
+                            {{ 'show_all_no_filter'|_ }}
+                        </a>
+                    </p>
+                    {% endif %}
                 </div>
             </div>
         </div>

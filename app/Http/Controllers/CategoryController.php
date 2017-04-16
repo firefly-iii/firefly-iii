@@ -402,7 +402,7 @@ class CategoryController extends Controller
             // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()->withOpposingAccount();
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()->withOpposingAccount()->disableInternalFilter();
             $count = $collector->getJournals()->count();
 
             // amount transferred
