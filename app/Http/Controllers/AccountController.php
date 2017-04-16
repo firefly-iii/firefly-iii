@@ -22,8 +22,8 @@ use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -326,7 +326,8 @@ class AccountController extends Controller
 
 
         return view(
-            'accounts.show', compact('account','currency', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+            'accounts.show',
+            compact('account', 'currency', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 
@@ -418,14 +419,11 @@ class AccountController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        /** @var AccountTaskerInterface $tasker */
-        $tasker = app(AccountTaskerInterface::class);
-
-        $start   = $repository->oldestJournalDate($account);
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = Navigation::startOfPeriod($start, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
-        $entries = new Collection;
+        $start      = $repository->oldestJournalDate($account);
+        $range      = Preferences::get('viewRange', '1M')->data;
+        $start      = Navigation::startOfPeriod($start, $range);
+        $end        = Navigation::endOfX(new Carbon, $range);
+        $entries    = new Collection;
 
         // properties for cache
         $cache = new CacheProperties;
@@ -438,19 +436,28 @@ class AccountController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        // only include asset accounts when this account is an asset:
-        $assets = new Collection;
-        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
-            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        }
         Log::debug('Going to get period expenses and incomes.');
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $tasker->amountOutInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
+
+            // try a collector for income:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)
+                      ->setTypes([TransactionType::DEPOSIT])
+                      ->withOpposingAccount();
+            $earned = strval($collector->getJournals()->sum('transaction_amount'));
+
+            // try a collector for expenses:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)
+                      ->setTypes([TransactionType::WITHDRAWAL])
+                      ->withOpposingAccount();
+            $spent    = strval($collector->getJournals()->sum('transaction_amount'));
+            $dateStr  = $end->format('Y-m-d');
+            $dateName = Navigation::periodShow($end, $range);
             $entries->push(
                 [
                     'string' => $dateStr,

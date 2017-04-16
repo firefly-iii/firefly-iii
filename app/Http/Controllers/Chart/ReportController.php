@@ -16,10 +16,12 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Response;
 use Steam;
@@ -103,8 +105,9 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
+        Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
@@ -249,16 +252,31 @@ class ReportController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-
-        $tasker       = app(AccountTaskerInterface::class);
         $currentStart = clone $start;
         $spentArray   = [];
         $earnedArray  = [];
         while ($currentStart <= $end) {
-            $currentEnd          = Navigation::endOfPeriod($currentStart, '1M');
+
+            $currentEnd = Navigation::endOfPeriod($currentStart, '1M');
+
+            // try a collector for income:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts($accounts)->setRange($currentStart, $currentEnd)
+                      ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                      ->withOpposingAccount();
+            $earned = strval($collector->getJournals()->sum('transaction_amount'));
+
+            // try a collector for expenses:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts($accounts)->setRange($currentStart, $currentEnd)
+                      ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                      ->withOpposingAccount();
+            $spent = strval($collector->getJournals()->sum('transaction_amount'));
+
+
             $label               = $currentStart->format('Y-m') . '-01';
-            $spent               = $tasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $earned              = $tasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
             $spentArray[$label]  = bcmul($spent, '-1');
             $earnedArray[$label] = $earned;
             $currentStart        = Navigation::addPeriod($currentStart, '1M', 0);
