@@ -14,9 +14,10 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 use Steam;
@@ -90,6 +91,92 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        // get all expenses for the given accounts in the given period!
+        // also transfers!
+        // get all transactions:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->withOpposingAccount()
+                  ->enableInternalFilter();
+        $transactions = $collector->getJournals();
+        $transactions = $transactions->filter(
+            function (Transaction $transaction) {
+                // return negative amounts only.
+                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                    return $transaction;
+                }
+
+                return false;
+            }
+        );
+        $expenses     = $this->groupByOpposing($transactions);
+
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($expenses as $accountId => $row) {
+            $sum[$accountId] = floatval($row['sum']);
+        }
+
+        array_multisort($sum, SORT_ASC, $expenses);
+
+        return $expenses;
+    }
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        // get all expenses for the given accounts in the given period!
+        // also transfers!
+        // get all transactions:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts($accounts)->setRange($start, $end);
+        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->withOpposingAccount()
+                  ->enableInternalFilter();
+        $transactions = $collector->getJournals();
+        $transactions = $transactions->filter(
+            function (Transaction $transaction) {
+                // return positive amounts only.
+                if (bccomp($transaction->transaction_amount, '0') === 1) {
+                    return $transaction;
+                }
+
+                return false;
+            }
+        );
+        $income       = $this->groupByOpposing($transactions);
+
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($income as $accountId => $row) {
+            $sum[$accountId] = floatval($row['sum']);
+        }
+
+        array_multisort($sum, SORT_DESC, $income);
+
+        return $income;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -97,4 +184,38 @@ class AccountTasker implements AccountTaskerInterface
         $this->user = $user;
     }
 
+    /**
+     * @param Collection $transactions
+     *
+     * @return array
+     */
+    private function groupByOpposing(Collection $transactions): array
+    {
+        $expenses = [];
+        // join the result together:
+        foreach ($transactions as $transaction) {
+            $opposingId = $transaction->opposing_account_id;
+            $name       = $transaction->opposing_account_name;
+            if (!isset($expenses[$opposingId])) {
+                $expenses[$opposingId] = [
+                    'id'      => $opposingId,
+                    'name'    => $name,
+                    'sum'     => '0',
+                    'average' => '0',
+                    'count'   => 0,
+                ];
+            }
+            $expenses[$opposingId]['sum'] = bcadd($expenses[$opposingId]['sum'], $transaction->transaction_amount);
+            $expenses[$opposingId]['count']++;
+        }
+        // do averages:
+        foreach ($expenses as $key => $entry) {
+            if ($expenses[$key]['count'] > 1) {
+                $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], strval($expenses[$key]['count']));
+            }
+        }
+
+
+        return $expenses;
+    }
 }

@@ -34,6 +34,24 @@ interface AccountTaskerInterface
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
