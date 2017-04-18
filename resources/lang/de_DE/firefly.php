@@ -115,7 +115,7 @@ return [
     'multi_select_no_selection'                  => 'Nichts ausgewählt',
     'multi_select_all_selected'                  => 'Alle ausgewählt',
     'multi_select_filter_placeholder'            => 'Suche..',
-    'between_dates_breadcrumb'                   => 'Between :start and :end',
+    'between_dates_breadcrumb'                   => 'Zwischen :start und :end',
     'all_journals_without_budget'                => 'All transactions without a budget',
     'journals_without_budget'                    => 'Transactions without a budget',
     'all_journals_without_category'              => 'All transactions without a category',
