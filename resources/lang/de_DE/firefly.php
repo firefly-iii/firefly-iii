@@ -138,7 +138,7 @@ return [
     'journals_in_period_for_tag'                 => 'Alle Transaktionen für Tag :tag zwischen :start und :end',
     'not_available_demo_user'                    => 'Die Funktionen, auf welche sie zugreifen wollen, steht Demo-Benutzer nicht zur Verfügung.',
     'exchange_rate_instructions'                 => 'Das Girokonto "@name" akzeptiert nur Transaktionen in @native_currency. Wenn Sie stattdessen @foreign_currency verwenden wollen, sollten Sie sicherstellen, dass der Betrag auch in @native_currency angengeben ist:',
-    'transfer_exchange_rate_instructions'        => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
+    'transfer_exchange_rate_instructions'        => 'Das Quellkonto "@source_name" akzeptiert nur Transaktionen in @source_currency. Das Zielkonto "@dest_name" akzeptiert nur Transaktionen in @dest_currency. Sie müssen den Betrag in beiden Währungen korrenkt angeben.',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',
@@ -262,7 +262,7 @@ return [
     'rule_trigger_to_account_is'                 => 'Das Zielkonto ist ":trigger_value"',
     'rule_trigger_to_account_contains'           => 'Zielkonto enthält ":trigger_value"',
     'rule_trigger_transaction_type'              => 'Transaktion ist vom Typ ": Trigger_value"',
-    'rule_trigger_category_is'                   => 'Category is ":trigger_value"',
+    'rule_trigger_category_is'                   => 'Kategorie ist ":trigger_value"',
     'rule_trigger_amount_less'                   => 'Betrag ist kleiner als :trigger_value',
     'rule_trigger_amount_exactly'                => 'Betrag ist :trigger_value',
     'rule_trigger_amount_more'                   => 'Betrag ist größer als :trigger_value',
@@ -289,8 +289,8 @@ return [
     'rule_trigger_category_is_choice'            => 'Kategorie ist..',
     'rule_trigger_budget_is_choice'              => 'Budget ist..',
     'rule_trigger_tag_is_choice'                 => '(A) Tag ist..',
-    'rule_trigger_has_attachments_choice'        => 'Has at least this many attachments',
-    'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
+    'rule_trigger_has_attachments_choice'        => 'Hat zumindest so viele Anhänge',
+    'rule_trigger_has_attachments'               => 'Hat zumindest :trigger_value Anhäng(e)',
     'rule_trigger_store_journal'                 => 'Wenn eine Transaktion erstellt wird',
     'rule_trigger_update_journal'                => 'Wenn eine Transaktion aktualisiert wird',
     'rule_action_set_category'                   => 'Kategorie zu ":action_value" festlegen',
