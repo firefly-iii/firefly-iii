@@ -710,14 +710,14 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'tags.edit', function (BreadCrumbGenerator $breadcrumbs, Tag $tag) {
-    $breadcrumbs->parent('tags.show', $tag);
+    $breadcrumbs->parent('tags.show', $tag, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('breadcrumbs.edit_tag', ['tag' => e($tag->tag)]), route('tags.edit', [$tag->id]));
 }
 );
 
 Breadcrumbs::register(
     'tags.delete', function (BreadCrumbGenerator $breadcrumbs, Tag $tag) {
-    $breadcrumbs->parent('tags.show', $tag);
+    $breadcrumbs->parent('tags.show', $tag, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]), route('tags.delete', [$tag->id]));
 }
 );
@@ -730,7 +730,7 @@ Breadcrumbs::register(
     if ($moment === 'all') {
         $breadcrumbs->push(trans('firefly.everything'), route('tags.show', [$tag->id], $moment));
     }
-    if($moment !== '') {
+    if ($moment !== '') {
         $title = trans(
             'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
                                                  'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
