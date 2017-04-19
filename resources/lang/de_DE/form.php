@@ -65,7 +65,7 @@ return [
     'revenue_account'                => 'Kreditor (Einnahme)',
     'decimal_places'                 => 'Nachkommastellen',
     'exchange_rate_instruction'      => 'Ausländische Währungen',
-    'exchanged_amount'               => 'Exchanged amount',
+    'exchanged_amount'               => 'Ausgetauschter Betrag',
     'source_amount'                  => 'Betrag (Quelle)',
     'destination_amount'             => 'Betrag (Ziel)',
     'native_amount'                  => 'Native amount',
@@ -158,9 +158,9 @@ return [
 
     'email'                 => 'Email-Addresse',
     'password'              => 'Passwort',
-    'password_confirmation' => 'Password (again)',
-    'blocked'               => 'Is blocked?',
-    'blocked_code'          => 'Reason for block',
+    'password_confirmation' => 'Passwort (nochmal)',
+    'blocked'               => 'Ist blockiert?',
+    'blocked_code'          => 'Grund für Block',
 
 
     // admin
