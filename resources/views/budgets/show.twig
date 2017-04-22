@@ -9,7 +9,13 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }}</h3>
+                    <h3 class="box-title">
+                        {% if budgetLimit %}
+                            XXXX
+                        {% else %}
+                            {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
+                        {% endif %}
+                    </h3>
 
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
@@ -24,6 +30,45 @@
                 </div>
                 <div class="box-body">
                     <canvas id="budgetOverview" style="width:100%;" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:60%;margin:0 auto;">
+                        <canvas id="budget-cat-out" style="margin:0 auto;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_asset_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:60%;margin:0 auto;">
+                        <canvas id="budget-asset-out" style="margin:0 auto;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_expense_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:60%;margin:0 auto;">
+                        <canvas id="budget-expense-out" style="margin:0 auto;"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,12 +90,12 @@
                 <div class="box-body">
                     {% include 'list.journals-tasker' with {hideBudgets:true, hideBills:true} %}
                     {% if budgetLimit %}
-                    <p>
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                        <a href="{{ route('budgets.show', [budget.id]) }}">
-                            {{ 'show_all_no_filter'|_ }}
-                        </a>
-                    </p>
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('budgets.show', [budget.id]) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        </p>
                     {% endif %}
                 </div>
             </div>
@@ -111,12 +156,19 @@
         var budgetID = {{ budget.id }};
         var budgetLimitID = 0;
         {% if budgetLimit.id %}
-        budgetLimitID = {{ budgetLimit.id }};
-        var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
-        {% else %}
-        var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
-        {% endif %}
+            budgetLimitID = {{ budgetLimit.id }};
+            var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
 
+            var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
+            var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
+            var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
+        {% else %}
+            var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
+
+        var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id]) }}';
+        var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
+        var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
+        {% endif %}
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>

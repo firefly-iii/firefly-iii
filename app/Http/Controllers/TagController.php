@@ -243,6 +243,8 @@ class TagController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
+        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
+        $sum = '0';
 
 
         // prep for "all" view.
@@ -250,6 +252,7 @@ class TagController extends Controller
             $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
+            $sum = $repository->sumOfTag($tag);
         }
 
         // prep for "specific date" view.
@@ -300,9 +303,8 @@ class TagController extends Controller
                 ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
-        $sum = '0';
 
-        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
+        return view('tags.show', compact('apiKey','tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
 
 

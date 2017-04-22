@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 
 /**
@@ -28,7 +28,7 @@ Route::group(
 
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
-    Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail','as' => 'password.email']);
+    Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
@@ -249,6 +249,10 @@ Route::group(
     Route::get('budget/{budget}/{budgetlimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
     Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
+    // these charts are used in budget/show:
+    Route::get('expense-category/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
+    Route::get('expense-asset/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
+    Route::get('expense-expense/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
 
     // these charts are used in reports (category reports):
     Route::get(
@@ -335,7 +339,8 @@ Route::group(
         'budget/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']
     );
-    Route::get('category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+    Route::get(
+        'category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
 
     );

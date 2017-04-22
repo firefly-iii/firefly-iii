@@ -311,7 +311,7 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id);
 
 
-        $subTitle = e($budget->name);
+        $subTitle = trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }

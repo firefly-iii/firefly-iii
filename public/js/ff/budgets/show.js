@@ -19,4 +19,12 @@ $(function () {
         columnChart(budgetChartUri, 'budgetOverview');
     }
 
+    // other three charts:
+    pieChart(expenseCategoryUri, 'budget-cat-out');
+    pieChart(expenseAssetUri, 'budget-asset-out');
+    pieChart(expenseExpenseUri, 'budget-expense-out');
+
+
+
+
 });

@@ -247,6 +247,28 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return string
+     */
+    public function sumOfTag(Tag $tag, Carbon $start = null, Carbon $end = null): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+
+        if (!is_null($start) && !is_null($end)) {
+            $collector->setRange($start, $end);
+        }
+
+        $collector->setAllAssetAccounts()->setTag($tag);
+        $sum = $collector->getJournals()->sum('transaction_amount');
+
+        return strval($sum);
+    }
+
+    /**
      * Can a tag become an advance payment?
      *
      * @param Tag $tag

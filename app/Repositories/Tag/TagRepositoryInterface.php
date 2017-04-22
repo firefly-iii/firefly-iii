@@ -127,6 +127,15 @@ interface TagRepositoryInterface
     public function store(array $data): Tag;
 
     /**
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return string
+     */
+    public function sumOfTag(Tag $tag, Carbon $start = null, Carbon $end = null): string;
+
+    /**
      * @param Tag $tag
      *
      * @return bool
