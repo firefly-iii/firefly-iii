@@ -336,19 +336,13 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
-     * @param string  $date
+     * @param Carbon $start
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException
      */
-    public function period(Account $account, string $date)
+    public function period(Account $account, Carbon $start)
     {
-        try {
-            $start = new Carbon($date);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException('"' . e($date) . '" does not seem to be a valid date. Should be in the format YYYY-MM-DD');
-        }
         $range = Preferences::get('viewRange', '1M')->data;
         $end   = Navigation::endOfPeriod($start, $range);
         $cache = new CacheProperties();

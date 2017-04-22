@@ -108,6 +108,10 @@ class ChartJsGenerator implements GeneratorInterface
             ],
             'labels'   => [],
         ];
+
+        // sort by value, keep keys.
+        asort($data);
+
         $index     = 0;
         foreach ($data as $key => $value) {
 
