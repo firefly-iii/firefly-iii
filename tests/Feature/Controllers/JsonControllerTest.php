@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -17,7 +17,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -123,13 +125,18 @@ class JsonControllerTest extends TestCase
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tasker       = $this->mock(AccountTaskerInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH])])->once()->andReturn(
-            new Collection
-        );
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET])])->once()->andReturn(new Collection);
-        $tasker->shouldReceive('amountInInPeriod')->andReturn('100');
+        $transaction                     = factory(Transaction::class)->make();
+        $transaction->transaction_amount = '100.00';
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]))->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+
 
         $this->be($this->user());
         $response = $this->get(route('json.box.in'));
@@ -145,13 +152,17 @@ class JsonControllerTest extends TestCase
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tasker       = $this->mock(AccountTaskerInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH])])->once()->andReturn(
-            new Collection
-        );
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([([AccountType::DEFAULT, AccountType::ASSET])])->once()->andReturn(new Collection);
-        $tasker->shouldReceive('amountOutInPeriod')->andReturn('100');
+        $transaction                     = factory(Transaction::class)->make();
+        $transaction->transaction_amount = '100.00';
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]))->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
 
         $this->be($this->user());
         $response = $this->get(route('json.box.out'));
@@ -165,7 +176,7 @@ class JsonControllerTest extends TestCase
     public function testBudgets()
     {
         // mock stuff
-        $budget = factory(Budget::class)->make();
+        $budget        = factory(Budget::class)->make();
         $categoryRepos = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -281,22 +292,6 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::transactionTypes
-     */
-    public function testTransactionTypes()
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('getTransactionTypes')->once()->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.transaction-types', ['deposit']));
-        $response->assertStatus(200);
-        $response->assertExactJson([]);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\JsonController::transactionJournals
      */
     public function testTransactionJournals()
@@ -312,6 +307,22 @@ class JsonControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('json.transaction-journals', ['deposit']));
+        $response->assertStatus(200);
+        $response->assertExactJson([]);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\JsonController::transactionTypes
+     */
+    public function testTransactionTypes()
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getTransactionTypes')->once()->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.transaction-types', ['deposit']));
         $response->assertStatus(200);
         $response->assertExactJson([]);
     }

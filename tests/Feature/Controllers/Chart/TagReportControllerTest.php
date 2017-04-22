@@ -122,11 +122,17 @@ class TagReportControllerTest extends TestCase
      */
     public function testMainChart()
     {
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(JournalCollectorInterface::class);
-        $transaction = factory(Transaction::class)->make();
-        $tag         = factory(Tag::class)->make();
-        $transaction->transactionJournal->tags()->save($tag);
+        $generator = $this->mock(GeneratorInterface::class);
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $set       = new Collection;
+        for ($i = 0; $i < 10; $i++) {
+
+
+            $transaction = factory(Transaction::class)->make();
+            $tag         = factory(Tag::class)->make();
+            $transaction->transactionJournal->tags()->save($tag);
+            $set->push($transaction);
+        }
 
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
@@ -136,7 +142,7 @@ class TagReportControllerTest extends TestCase
         $collector->shouldReceive('disableFilter')->andReturnSelf();
         $collector->shouldReceive('setTags')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getJournals')->andReturn($set);
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

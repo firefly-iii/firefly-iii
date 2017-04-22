@@ -26,8 +26,6 @@ class OperationsControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::expenses
-     * @covers \FireflyIII\Http\Controllers\Report\OperationsController::getExpenseReport
-     * @covers \FireflyIII\Http\Controllers\Report\OperationsController::groupByOpposing
      */
     public function testExpenses()
     {
@@ -49,7 +47,6 @@ class OperationsControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Report\OperationsController::income
-     * @covers \FireflyIII\Http\Controllers\Report\OperationsController::getIncomeReport
      */
     public function testIncome()
     {

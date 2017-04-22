@@ -233,7 +233,7 @@ class TagReportController extends Controller
             }
         }
         if (count($newSet) === 0) {
-            $newSet = $chartData;
+            $newSet = $chartData; // @codeCoverageIgnore
         }
         $data = $this->generator->multiSet($newSet);
         $cache->store($data);

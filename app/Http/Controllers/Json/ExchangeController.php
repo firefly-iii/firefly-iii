@@ -14,7 +14,6 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;

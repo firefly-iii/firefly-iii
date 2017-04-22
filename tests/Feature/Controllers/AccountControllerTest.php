@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -16,6 +16,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
@@ -105,6 +106,7 @@ class AccountControllerTest extends TestCase
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('find')->once()->andReturn(new TransactionCurrency());
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -162,14 +164,16 @@ class AccountControllerTest extends TestCase
 
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
-        $repository->shouldReceive('getAccountsByType')->andReturn(new Collection)->once();
 
         $transaction = factory(Transaction::class)->make();
         $collector   = $this->mock(JournalCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
 
@@ -198,6 +202,9 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
 
@@ -249,14 +256,14 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
-        $tasker     = $this->mock(AccountTaskerInterface::class);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon)->once();
-        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
-        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
-        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -284,12 +291,12 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
-        $tasker     = $this->mock(AccountTaskerInterface::class);
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
-        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->once()->andReturn(new Collection);
-        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
-        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

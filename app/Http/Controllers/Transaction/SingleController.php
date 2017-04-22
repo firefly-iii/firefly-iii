@@ -269,8 +269,10 @@ class SingleController extends Controller
         $foreignCurrencyId = intval($journal->getMeta('foreign_currency_id'));
         if ($foreignCurrencyId > 0) {
             // update some fields in pre-filled.
+            // @codeCoverageIgnoreStart
             $preFilled['amount']   = $journal->getMeta('foreign_amount');
             $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('foreign_currency_id')));
+            // @codeCoverageIgnoreEnd
         }
 
         if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
