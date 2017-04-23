@@ -63,7 +63,12 @@ return [
     'description'                    => 'Beschreibung',
     'expense_account'                => 'Debitor (Ausgabe)',
     'revenue_account'                => 'Kreditor (Einnahme)',
-    'decimal_places'                 => 'Decimal places',
+    'decimal_places'                 => 'Nachkommastellen',
+    'exchange_rate_instruction'      => 'Ausländische Währungen',
+    'exchanged_amount'               => 'Ausgetauschter Betrag',
+    'source_amount'                  => 'Betrag (Quelle)',
+    'destination_amount'             => 'Betrag (Ziel)',
+    'native_amount'                  => 'Native amount',
 
     'revenue_account_source'      => 'Ertragskonto (Quelle)',
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
@@ -151,11 +156,11 @@ return [
     'category_keep_transactions' => 'Die eine Überweisungen, die mit dieser Kategorie verknüpft ist, wird nicht gelöscht. | Keine der :count Kategorien, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'tag_keep_transactions'      => 'Die einzige Überweisung, die mit diesem Tag verknüpft ist, wird nicht gelöscht. | Keiner der :count Tags, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
 
-    'email'                 => 'Email address',
-    'password'              => 'Password',
-    'password_confirmation' => 'Password (again)',
-    'blocked'               => 'Is blocked?',
-    'blocked_code'          => 'Reason for block',
+    'email'                 => 'Email-Addresse',
+    'password'              => 'Passwort',
+    'password_confirmation' => 'Passwort (nochmal)',
+    'blocked'               => 'Ist blockiert?',
+    'blocked_code'          => 'Grund für Block',
 
 
     // admin

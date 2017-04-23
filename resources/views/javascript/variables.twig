@@ -1,20 +1,20 @@
 // date range picker configuration:
 var dateRangeConfig = {
-    startDate: moment("{{ picker.start }}"),
-    endDate: moment("{{ picker.end }}"),
-    linkTitle: "{{ linkTitle }}",
-    URL: "{{ route('daterange') }}",
-    firstDate: moment("{{ firstDate }}"),
-    currentPeriod: "{{ picker.current }}",
-    previousPeriod: "{{ picker.previous }}",
-    nextPeriod: "{{ picker.next }}",
-    everything: '{{ 'everything'|_|escape }}',
-    customRangeLabel: '{{ 'customRange'|_|escape }}',
-    applyLabel: '{{ 'apply'|_|escape }}',
-    cancelLabel: '{{ 'cancel'|_|escape }}',
-    fromLabel: '{{ 'from'|_|escape }}',
-    toLabel: '{{ 'to'|_|escape }}',
-    ranges: {{ picker.ranges|json_encode|raw }}
+startDate: moment("{{ picker.start }}"),
+endDate: moment("{{ picker.end }}"),
+linkTitle: "{{ linkTitle }}",
+URL: "{{ route('daterange') }}",
+firstDate: moment("{{ firstDate }}"),
+currentPeriod: "{{ picker.current }}",
+previousPeriod: "{{ picker.previous }}",
+nextPeriod: "{{ picker.next }}",
+everything: '{{ 'everything'|_|escape }}',
+customRangeLabel: '{{ 'customRange'|_|escape }}',
+applyLabel: '{{ 'apply'|_|escape }}',
+cancelLabel: '{{ 'cancel'|_|escape }}',
+fromLabel: '{{ 'from'|_|escape }}',
+toLabel: '{{ 'to'|_|escape }}',
+ranges: {{ picker.ranges|json_encode|raw }}
 };
 
 var language = "{{ language|escape }}";

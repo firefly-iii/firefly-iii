@@ -262,6 +262,7 @@ class ReportController extends Controller
         $categories = join(',', $request->getCategoryList()->pluck('id')->toArray());
         $budgets    = join(',', $request->getBudgetList()->pluck('id')->toArray());
         $tags       = join(',', $request->getTagList()->pluck('tag')->toArray());
+        $uri        = route('reports.index');
 
         if ($request->getAccountList()->count() === 0) {
             Log::debug('Account count is zero');

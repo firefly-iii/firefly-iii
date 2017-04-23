@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 
 namespace FireflyIII\Repositories\Account;
@@ -455,6 +455,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $amount          = $data['openingBalance'];
         $name            = $data['name'];
+        $currencyId      = $data['currency_id'];
         $opposing        = $this->storeOpposingAccount($name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
         /** @var TransactionJournal $journal */
@@ -462,7 +463,7 @@ class AccountRepository implements AccountRepositoryInterface
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['openingBalanceCurrency'],
+                'transaction_currency_id' => $currencyId,
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
@@ -530,12 +531,8 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // opening balance data? update it!
         if (!is_null($openingBalance->id)) {
-            $date   = $data['openingBalanceDate'];
-            $amount = $data['openingBalance'];
-
             Log::debug('Opening balance journal found, update journal.');
-
-            $this->updateOpeningBalanceJournal($account, $openingBalance, $date, $amount);
+            $this->updateOpeningBalanceJournal($account, $openingBalance, $data);
 
             return true;
         }
@@ -589,15 +586,19 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account            $account
      * @param TransactionJournal $journal
-     * @param Carbon             $date
-     * @param float              $amount
+     * @param array              $data
      *
      * @return bool
      */
-    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
+        $date       = $data['openingBalanceDate'];
+        $amount     = $data['openingBalance'];
+        $currencyId = intval($data['currency_id']);
+
         // update date:
-        $journal->date = $date;
+        $journal->date                    = $date;
+        $journal->transaction_currency_id = $currencyId;
         $journal->save();
         // update transactions:
         /** @var Transaction $transaction */

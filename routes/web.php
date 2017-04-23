@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 
 /**
@@ -28,7 +28,7 @@ Route::group(
 
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
-    Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail','as' => 'password.email']);
+    Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
@@ -249,6 +249,10 @@ Route::group(
     Route::get('budget/{budget}/{budgetlimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
     Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
+    // these charts are used in budget/show:
+    Route::get('expense-category/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
+    Route::get('expense-asset/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
+    Route::get('expense-expense/{budget}/{budgetlimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
 
     // these charts are used in reports (category reports):
     Route::get(
@@ -335,7 +339,8 @@ Route::group(
         'budget/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']
     );
-    Route::get('category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
+    Route::get(
+        'category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
         ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
 
     );
@@ -410,11 +415,12 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
     Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
     Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
+    Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
 }
 );
 
 /**
- * JSON Controller
+ * JSON Controller(s)
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'json.'], function () {
@@ -436,6 +442,9 @@ Route::group(
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
     Route::post('end-tour', ['uses' => 'JsonController@endTour', 'as' => 'end-tour']);
+
+    // currency conversion:
+    Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
 }
 );

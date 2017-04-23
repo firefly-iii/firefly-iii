@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
@@ -25,6 +25,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
@@ -48,7 +49,8 @@ class SingleController extends Controller
 
     /** @var  BudgetRepositoryInterface */
     private $budgets;
-
+    /** @var  CurrencyRepositoryInterface */
+    private $currency;
     /** @var  PiggyBankRepositoryInterface */
     private $piggyBanks;
 
@@ -71,6 +73,7 @@ class SingleController extends Controller
                 $this->budgets     = app(BudgetRepositoryInterface::class);
                 $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
+                $this->currency    = app(CurrencyRepositoryInterface::class);
 
                 View::share('title', trans('firefly.transactions'));
                 View::share('mainTitleIcon', 'fa-repeat');
@@ -231,14 +234,13 @@ class SingleController extends Controller
         // view related code
         $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
-
         // journal related code
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $preFilled           = [
             'date'                     => $journal->dateAsString(),
-            'interest_date'            => $journal->dateAsString( 'interest_date'),
+            'interest_date'            => $journal->dateAsString('interest_date'),
             'book_date'                => $journal->dateAsString('book_date'),
             'process_date'             => $journal->dateAsString('process_date'),
             'category'                 => $journal->categoryAsString(),
@@ -248,7 +250,8 @@ class SingleController extends Controller
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
-            'amount'                   => $journal->amountPositive(),
+            'amount'            => $journal->amountPositive(),
+            'currency'          => $journal->transactionCurrency,
 
             // new custom fields:
             'due_date'                 => $journal->dateAsString('due_date'),
@@ -256,7 +259,21 @@ class SingleController extends Controller
             'invoice_date'             => $journal->dateAsString('invoice_date'),
             'interal_reference'        => $journal->getMeta('internal_reference'),
             'notes'                    => $journal->getMeta('notes'),
+
+            // exchange rate fields
+            'native_amount'         => $journal->amountPositive(),
+            'native_currency'       => $journal->transactionCurrency,
         ];
+
+        // if user has entered a foreign currency, update some fields
+        $foreignCurrencyId = intval($journal->getMeta('foreign_currency_id'));
+        if ($foreignCurrencyId > 0) {
+            // update some fields in pre-filled.
+            // @codeCoverageIgnoreStart
+            $preFilled['amount']   = $journal->getMeta('foreign_amount');
+            $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('foreign_currency_id')));
+            // @codeCoverageIgnoreEnd
+        }
 
         if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
             $preFilled['destination_account_name'] = '';

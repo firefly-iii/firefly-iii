@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers;
 
 use Amount;
@@ -209,10 +210,11 @@ class PiggyBankController extends Controller
         $end = session('end', Carbon::now()->endOfMonth());
 
         $accounts = [];
+        Log::debug('Looping piggues');
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
-            $piggyBank->savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
-            $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
+            $piggyBank->savedSoFar = $piggyBank->currentRelevantRep()->currentamount ?? '0';
+            $piggyBank->percentage = bccomp('0', $piggyBank->savedSoFar) !== 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = bcsub($piggyBank->targetamount, strval($piggyBank->savedSoFar));
             $piggyBank->percentage = $piggyBank->percentage > 100 ? 100 : $piggyBank->percentage;
 
@@ -220,7 +222,9 @@ class PiggyBankController extends Controller
              * Fill account information:
              */
             $account = $piggyBank->account;
+            $new     = false;
             if (!isset($accounts[$account->id])) {
+                $new                    = true;
                 $accounts[$account->id] = [
                     'name'              => $account->name,
                     'balance'           => Steam::balanceIgnoreVirtual($account, $end),
@@ -230,7 +234,7 @@ class PiggyBankController extends Controller
                     'leftToSave'        => $piggyBank->leftToSave,
                 ];
             }
-            if (isset($accounts[$account->id])) {
+            if (isset($accounts[$account->id]) && $new === false) {
                 $accounts[$account->id]['sumOfSaved']   = bcadd($accounts[$account->id]['sumOfSaved'], strval($piggyBank->savedSoFar));
                 $accounts[$account->id]['sumOfTargets'] = bcadd($accounts[$account->id]['sumOfTargets'], $piggyBank->targetamount);
                 $accounts[$account->id]['leftToSave']   = bcadd($accounts[$account->id]['leftToSave'], $piggyBank->leftToSave);
@@ -308,12 +312,7 @@ class PiggyBankController extends Controller
             return redirect(route('piggy-banks.index'));
         }
 
-
-        $amount     = strval(round($request->get('amount'), 12));
-        $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
-
-        if (bccomp($amount, $savedSoFar) <= 0) {
-        }
+        $amount = strval(round($request->get('amount'), 12));
 
         Session::flash('error', strval(trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)])));
 

@@ -166,7 +166,6 @@ class ProfileControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository = $this->mock(UserRepositoryInterface::class);
         $data       = [
             'password' => 'james2',
         ];

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
@@ -42,8 +42,8 @@ class TwoFactorController extends Controller
 
         // to make sure the validator in the next step gets the secret, we push it in session
         $secretPreference = Preferences::get('twoFactorAuthSecret', null);
-        $secret = is_null($secretPreference) ? null : $secretPreference->data;
-        $title  = strval(trans('firefly.two_factor_title'));
+        $secret           = is_null($secretPreference) ? null : $secretPreference->data;
+        $title            = strval(trans('firefly.two_factor_title'));
 
         // make sure the user has two factor configured:
         $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;

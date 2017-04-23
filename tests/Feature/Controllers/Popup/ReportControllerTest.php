@@ -91,7 +91,6 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountDefaultNoBudget()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
@@ -126,7 +125,6 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountDefaultRole()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
@@ -162,7 +160,6 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountDiffRole()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
@@ -170,11 +167,6 @@ class ReportControllerTest extends TestCase
 
         $budget       = factory(Budget::class)->make();
         $account      = factory(Account::class)->make();
-        $one          = factory(Transaction::class)->make();
-        $two          = factory(Transaction::class)->make();
-        $tag          = factory(Tag::class)->make();
-        $tag->tagMode = 'balancingAct';
-        $two->transactionJournal->tags()->save($tag);
 
         $budgetRepos->shouldReceive('find')->andReturn($budget)->once()->withArgs([1]);
         $accountRepos->shouldReceive('find')->andReturn($account)->once()->withArgs([1]);
@@ -206,10 +198,8 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountTagRole()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $popupHelper  = $this->mock(PopupReportInterface::class);
         $budget       = factory(Budget::class)->make();
         $account      = factory(Account::class)->make();
 
@@ -243,7 +233,6 @@ class ReportControllerTest extends TestCase
      */
     public function testBudgetSpentAmount()
     {
-        $collector   = $this->mock(JournalCollectorInterface::class);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper = $this->mock(PopupReportInterface::class);
         $budget      = factory(Budget::class)->make();
@@ -275,7 +264,6 @@ class ReportControllerTest extends TestCase
      */
     public function testCategoryEntry()
     {
-        $collector     = $this->mock(JournalCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $category      = factory(Category::class)->make();
@@ -307,7 +295,6 @@ class ReportControllerTest extends TestCase
      */
     public function testExpenseEntry()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $account      = factory(Account::class)->make();
@@ -339,7 +326,6 @@ class ReportControllerTest extends TestCase
      */
     public function testIncomeEntry()
     {
-        $collector    = $this->mock(JournalCollectorInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $account      = factory(Account::class)->make();
@@ -371,7 +357,6 @@ class ReportControllerTest extends TestCase
      */
     public function testWrongLocation()
     {
-        $popupHelper = $this->mock(PopupReportInterface::class);
         $this->be($this->user());
         $arguments = [
             'attributes' => [

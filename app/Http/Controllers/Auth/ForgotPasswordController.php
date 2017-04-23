@@ -8,7 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
@@ -41,7 +41,9 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param  Request $request
+     * @param  Request                $request
+     *
+     * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */

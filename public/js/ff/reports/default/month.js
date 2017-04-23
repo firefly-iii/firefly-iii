@@ -16,7 +16,7 @@ $(function () {
 
     loadAjaxPartial('categoryReport', categoryReportUri);
     loadAjaxPartial('budgetReport', budgetReportUri);
-    loadAjaxPartial('balanceReport',balanceReportUri);
+    loadAjaxPartial('balanceReport', balanceReportUri);
 });
 
 function drawChart() {

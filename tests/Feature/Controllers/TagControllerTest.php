@@ -36,7 +36,6 @@ class TagControllerTest extends TestCase
     public function testCreate()
     {
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -52,7 +51,6 @@ class TagControllerTest extends TestCase
     public function testDelete()
     {
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
@@ -165,6 +163,7 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
+        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
         $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
@@ -195,6 +194,7 @@ class TagControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
 
+        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
         $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
         $collector->shouldReceive('setPage')->andReturnSelf()->times(3);

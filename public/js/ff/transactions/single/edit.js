@@ -12,51 +12,95 @@
 
 $(document).ready(function () {
     "use strict";
-    // give date a datepicker if not natively supported.
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
+    setAutocompletes();
+    updateInitialPage();
+
+    // respond to user input:
+    $('.currency-option').on('click', selectsForeignCurrency);
+    $('#ffInput_amount').on('change', convertForeignToNative);
+
+    // respond to transfer changes:
+    $('#ffInput_source_account_id').on('change',validateCurrencyForTransfer);
+    $('#ffInput_destination_account_id').on('change',validateCurrencyForTransfer);
+
+    // convert source currency to destination currency (slightly different routine for transfers)
+    $('#ffInput_source_amount').on('change', convertSourceToDestination);
+});
+
+/**
+ * Set some initial values for the user to see.
+ */
+function updateInitialPage() {
+
+    console.log('Native currency is #' + journalData.native_currency.id + ' and (foreign) currency id is #' + journalData.currency.id);
+
+    if (journal.transaction_type.type === "Transfer") {
+        $('#native_amount_holder').hide();
+        $('#amount_holder').hide();
+
+        if (journalData.native_currency.id === journalData.currency.id) {
+            $('#exchange_rate_instruction_holder').hide();
+            $('#destination_amount_holder').hide();
+        }
+        if (journalData.native_currency.id !== journalData.currency.id) {
+            $('#exchange_rate_instruction_holder').show().find('p').text(getTransferExchangeInstructions());
+
+        }
+
+        return;
+    }
+    $('#source_amount_holder').hide();
+    $('#destination_amount_holder').hide();
+
+
+    if (journalData.native_currency.id === journalData.currency.id) {
+        $('#exchange_rate_instruction_holder').hide();
+        $('#native_amount_holder').hide();
     }
 
-    // the destination account name is always an expense account name.
-    if ($('input[name="destination_account_name"]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_account_name"]').typeahead({source: data});
-        });
+    if (journalData.native_currency.id !== journalData.currency.id) {
+        $('#ffInput_exchange_rate_instruction').text(getExchangeInstructions());
     }
 
-    $.getJSON('json/tags').done(function (data) {
+}
 
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                }
-            }
-        };
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
 
-    // the source account name is always a revenue account name.
-    if ($('input[name="source_account_name"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_account_name"]').typeahead({source: data});
-        });
+
+/**
+ * Get accountID based on some meta info.
+ */
+function getAccountId() {
+    if (journal.transaction_type.type === "Withdrawal") {
+        return $('select[name="source_account_id"]').val();
+    }
+    if (journal.transaction_type.type === "Deposit") {
+        return $('select[name="destination_account_id"]').val();
     }
 
+    alert('Cannot handle ' + journal.transaction_type.type);
+}
+
+/**
+ * Set the auto-complete JSON things.
+ */
+function setAutocompletes() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
         $('input[name="description"]').typeahead({source: data});
     });
+}
 
+/**
+ * This function generates a small helper text to explain the user
+ * that they have selected a foreign currency.
+ * @returns {XML|string|void}
+ */
+function getExchangeInstructions() {
+    var selectedAccountId = getAccountId();
+    var foreignCurrencyId = parseInt($('input[name="amount_currency_id_amount"]').val());
+    var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
 
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data});
-    });
-
-});
+    var text = exchangeRateInstructions.replace('@name', accountInfo[selectedAccountId].name);
+    text = text.replace(/@native_currency/g, currencyInfo[nativeCurrencyId].name);
+    text = text.replace(/@foreign_currency/g, currencyInfo[foreignCurrencyId].name);
+    return text;
+}

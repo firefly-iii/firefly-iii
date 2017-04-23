@@ -36,11 +36,35 @@ $factory->define(
 }
 );
 
+$factory->define(
+    FireflyIII\Models\CurrencyExchangeRate::class, function (Faker\Generator $faker) {
+
+    return [
+        'user_id'          => 1,
+        'from_currency_id' => 1,
+        'to_currency_id'   => 2,
+        'date'             => '2017-01-01',
+        'rate'             => '1.5',
+        'user_rate'        => null,
+    ];
+}
+);
+
+$factory->define(
+    FireflyIII\Models\TransactionCurrency::class, function (Faker\Generator $faker) {
+
+    return [
+        'name'   => $faker->words(1, true),
+        'code'   => 'ABC',
+        'symbol' => 'x',
+    ];
+}
+);
 
 $factory->define(
     FireflyIII\Models\ImportJob::class, function (Faker\Generator $faker) {
     return [
-        'id'              => $faker->numberBetween(1, 10),
+        'id'              => $faker->numberBetween(1, 100),
         'user_id'         => 1,
         'key'             => $faker->words(1, true),
         'file_type'       => 'csv',
@@ -101,7 +125,7 @@ $factory->define(
 $factory->define(
     FireflyIII\Models\PiggyBank::class, function (Faker\Generator $faker) {
     return [
-        'id'            => $faker->numberBetween(1, 10),
+        'id'            => $faker->unique()->numberBetween(100, 10000),
         'account_id'    => $faker->numberBetween(1, 10),
         'name'          => $faker->words(3, true),
         'target_amount' => '1000.00',
@@ -116,7 +140,7 @@ $factory->define(
 $factory->define(
     FireflyIII\Models\Tag::class, function (Faker\Generator $faker) {
     return [
-        'id'      => $faker->numberBetween(100, 150),
+        'id'      => $faker->unique()->numberBetween(200, 10000),
         'user_id' => 1,
         'tagMode' => 'nothing',
         'tag'     => $faker->words(1, true),

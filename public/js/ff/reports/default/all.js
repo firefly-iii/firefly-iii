@@ -99,9 +99,9 @@ function displayAjaxPartial(data, holder) {
 
 function failAjaxPartial(uri, holder) {
     "use strict";
-    var holder = $('#' + holder);
-    holder.parent().find('.overlay').remove();
-    holder.addClass('general-chart-error');
+    var holderObject = $('#' + holder);
+    holderObject.parent().find('.overlay').remove();
+    holderObject.addClass('general-chart-error');
 
 }
 

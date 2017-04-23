@@ -64,6 +64,11 @@ return [
     'expense_account'                => 'Crediteur',
     'revenue_account'                => 'Debiteur',
     'decimal_places'                 => 'Aantal decimalen',
+    'exchange_rate_instruction'      => 'Vreemde valuta',
+    'exchanged_amount'               => 'Uitgewisseld bedrag',
+    'source_amount'                  => 'Bronbedrag',
+    'destination_amount'             => 'Doelbedrag',
+    'native_amount'                  => 'Origineel bedrag',
 
     'revenue_account_source'      => 'Debiteur (bron)',
     'source_account_asset'        => 'Bronrekening (betaalrekening)',

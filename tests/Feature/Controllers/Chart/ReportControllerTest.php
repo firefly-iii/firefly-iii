@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
@@ -33,6 +33,7 @@ class ReportControllerTest extends TestCase
     public function testNetWorth()
     {
         $generator = $this->mock(GeneratorInterface::class);
+        $tasker    = $this->mock(AccountTaskerInterface::class);
 
         Steam::shouldReceive('balancesById')->andReturn(['5', '10']);
         $generator->shouldReceive('singleSet')->andReturn([]);
@@ -50,9 +51,10 @@ class ReportControllerTest extends TestCase
     {
         $generator = $this->mock(GeneratorInterface::class);
         $tasker    = $this->mock(AccountTaskerInterface::class);
-
-        $tasker->shouldReceive('amountOutInPeriod')->andReturn('-1');
-        $tasker->shouldReceive('amountInInPeriod')->andReturn('1');
+        $income    = [1 => ['sum' => '100']];
+        $expense   = [2 => ['sum' => '-100']];
+        $tasker->shouldReceive('getIncomeReport')->once()->andReturn($income);
+        $tasker->shouldReceive('getExpenseReport')->once()->andReturn($expense);
         $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
@@ -69,8 +71,11 @@ class ReportControllerTest extends TestCase
         $generator = $this->mock(GeneratorInterface::class);
         $tasker    = $this->mock(AccountTaskerInterface::class);
 
-        $tasker->shouldReceive('amountOutInPeriod')->andReturn('-1');
-        $tasker->shouldReceive('amountInInPeriod')->andReturn('1');
+        $income  = [];
+        $expense = [];
+        $tasker->shouldReceive('getIncomeReport')->andReturn($income)->times(1);
+        $tasker->shouldReceive('getExpenseReport')->andReturn($expense)->times(1);
+
         $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());

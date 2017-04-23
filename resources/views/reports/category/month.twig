@@ -28,12 +28,14 @@
                                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
                                 </td>
                                 {% if accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id].earned }}" style="text-align: right;">{{ accountSummary[account.id].earned|formatAmount }}</td>
+                                    <td data-value="{{ accountSummary[account.id].earned }}"
+                                        style="text-align: right;">{{ accountSummary[account.id].earned|formatAmount }}</td>
                                 {% else %}
                                     <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                                 {% if accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id].spent }}" style="text-align: right;">{{ accountSummary[account.id].spent|formatAmount }}</td>
+                                    <td data-value="{{ accountSummary[account.id].spent }}"
+                                        style="text-align: right;">{{ accountSummary[account.id].spent|formatAmount }}</td>
                                 {% else %}
                                     <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
@@ -64,12 +66,14 @@
                                     <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
                                 </td>
                                 {% if categorySummary[category.id] %}
-                                    <td data-value="{{ categorySummary[category.id].earned }}" style="text-align: right;">{{ categorySummary[category.id].earned|formatAmount }}</td>
+                                    <td data-value="{{ categorySummary[category.id].earned }}"
+                                        style="text-align: right;">{{ categorySummary[category.id].earned|formatAmount }}</td>
                                 {% else %}
                                     <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
                                 {% if categorySummary[category.id] %}
-                                    <td data-value="{{ categorySummary[category.id].spent }}" style="text-align: right;">{{ categorySummary[category.id].spent|formatAmount }}</td>
+                                    <td data-value="{{ categorySummary[category.id].spent }}"
+                                        style="text-align: right;">{{ categorySummary[category.id].spent|formatAmount }}</td>
                                 {% else %}
                                     <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}

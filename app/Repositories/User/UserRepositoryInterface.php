@@ -51,7 +51,7 @@ interface UserRepositoryInterface
     public function changePassword(User $user, string $password);
 
     /**
-     * @param User $user
+     * @param User   $user
      * @param bool   $isBlocked
      * @param string $code
      *

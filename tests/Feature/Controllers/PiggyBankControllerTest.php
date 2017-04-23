@@ -161,9 +161,11 @@ class PiggyBankControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(PiggyBankRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $piggyBank    = factory(PiggyBank::class)->make();
+        $one = factory(PiggyBank::class)->make();
+        $two = factory(PiggyBank::class)->make();
+        $two->account_id = $one->account_id;
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$piggyBank]));
+        $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));
 
         Steam::shouldReceive('balanceIgnoreVirtual')->twice()->andReturn('1');
 

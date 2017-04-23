@@ -100,9 +100,9 @@ class CategoryController extends Controller
             $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
             $sum                             = bcadd($spent, $earned);
             $label                           = Navigation::periodShow($start, $range);
-            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
-            $chartData[1]['entries'][$label] = $earned;
-            $chartData[2]['entries'][$label] = $sum;
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
+            $chartData[1]['entries'][$label] = round($earned, 12);
+            $chartData[2]['entries'][$label] = round($sum, 12);
             $start                           = Navigation::addPeriod($start, $range, 0);
         }
 
@@ -111,21 +111,6 @@ class CategoryController extends Controller
 
         return Response::json($data);
 
-    }
-
-    /**
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function currentPeriod(CategoryRepositoryInterface $repository, Category $category)
-    {
-        $start = clone session('start', Carbon::now()->startOfMonth());
-        $end   = session('end', Carbon::now()->endOfMonth());
-        $data  = $this->makePeriodChart($repository, $category, $start, $end);
-
-        return Response::json($data);
     }
 
     /**
@@ -215,9 +200,9 @@ class CategoryController extends Controller
             $spent                           = $expenses[$category->id]['entries'][$period] ?? '0';
             $earned                          = $income[$category->id]['entries'][$period] ?? '0';
             $sum                             = bcadd($spent, $earned);
-            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
-            $chartData[1]['entries'][$label] = $earned;
-            $chartData[2]['entries'][$label] = $sum;
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
+            $chartData[1]['entries'][$label] = round($earned, 12);
+            $chartData[2]['entries'][$label] = round($sum, 12);
         }
 
         $data = $this->generator->multiSet($chartData);
@@ -290,12 +275,11 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, $date)
+    public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, Carbon $date)
     {
-        $carbon = new Carbon($date);
         $range  = Preferences::get('viewRange', '1M')->data;
-        $start  = Navigation::startOfPeriod($carbon, $range);
-        $end    = Navigation::endOfPeriod($carbon, $range);
+        $start  = Navigation::startOfPeriod($date, $range);
+        $end    = Navigation::endOfPeriod($date, $range);
         $data   = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
@@ -350,11 +334,11 @@ class CategoryController extends Controller
             $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
             $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
             $sum    = bcadd($spent, $earned);
-            $label  = Navigation::periodShow($start, '1D');
+            $label  = trim(Navigation::periodShow($start, '1D'));
 
-            $chartData[0]['entries'][$label] = bcmul($spent, '-1');
-            $chartData[1]['entries'][$label] = $earned;
-            $chartData[2]['entries'][$label] = $sum;
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'),12);
+            $chartData[1]['entries'][$label] = round($earned,12);
+            $chartData[2]['entries'][$label] = round($sum,12);
 
 
             $start->addDay();

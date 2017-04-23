@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -233,7 +233,7 @@ class TagReportController extends Controller
             }
         }
         if (count($newSet) === 0) {
-            $newSet = $chartData;
+            $newSet = $chartData; // @codeCoverageIgnore
         }
         $data = $this->generator->multiSet($newSet);
         $cache->store($data);

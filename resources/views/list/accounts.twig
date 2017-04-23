@@ -36,7 +36,7 @@
             <td class="hidden-sm hidden-xs">{{ account.iban }}</td>
             <td data-value="{{ account.endBalance }}" style="text-align: right;">
                 <span style="margin-right:5px;">
-                {{ account.endBalance|formatAmount }}
+                {{ formatAmountByAccount(account, account.endBalance) }}
                 </span>
             </td>
             <td class="hidden-sm hidden-xs" data-value="{{ account.active }}">
@@ -57,7 +57,7 @@
             {% endif %}
             <td class="hidden-sm hidden-xs" data-value="{{ account.difference }}" style="text-align: right;">
                 <span style="margin-right:5px;">
-                {{ (account.difference)|formatAmount }}
+                    {{ formatAmountByAccount(account, account.difference) }}
                 </span>
             </td>
 

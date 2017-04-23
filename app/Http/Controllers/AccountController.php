@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -22,8 +22,8 @@ use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -69,12 +69,13 @@ class AccountController extends Controller
     public function create(Request $request, string $what = 'asset')
     {
         /** @var CurrencyRepositoryInterface $repository */
-        $repository      = app(CurrencyRepositoryInterface::class);
-        $currencies      = ExpandedForm::makeSelectList($repository->get());
-        $defaultCurrency = Amount::getDefaultCurrency();
-        $subTitleIcon    = config('firefly.subIconsByIdentifier.' . $what);
-        $subTitle        = trans('firefly.make_new_' . $what . '_account');
-        $roles           = [];
+        $repository         = app(CurrencyRepositoryInterface::class);
+        $allCurrencies      = $repository->get();
+        $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
+        $defaultCurrency    = Amount::getDefaultCurrency();
+        $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
+        $subTitle           = trans('firefly.make_new_' . $what . '_account');
+        $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = strval(trans('firefly.account_role_' . $role));
         }
@@ -91,7 +92,7 @@ class AccountController extends Controller
         $request->session()->flash('gaEventCategory', 'accounts');
         $request->session()->flash('gaEventAction', 'create-' . $what);
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencies', 'roles'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
 
     }
 
@@ -147,14 +148,14 @@ class AccountController extends Controller
      */
     public function edit(Request $request, Account $account)
     {
-
-        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle     = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $currencies = ExpandedForm::makeSelectList($repository->get());
-        $roles      = [];
+        $repository         = app(CurrencyRepositoryInterface::class);
+        $what               = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle           = trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
+        $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
+        $allCurrencies      = $repository->get();
+        $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
+        $roles              = [];
         foreach (config('firefly.accountRoles') as $role) {
             $roles[$role] = strval(trans('firefly.account_role_' . $role));
         }
@@ -173,6 +174,7 @@ class AccountController extends Controller
         $openingBalanceAmount = $account->getOpeningBalanceAmount() === '0' ? '' : $openingBalanceAmount;
         $openingBalanceDate   = $account->getOpeningBalanceDate();
         $openingBalanceDate   = $openingBalanceDate->year === 1900 ? null : $openingBalanceDate->format('Y-m-d');
+        $currency             = $repository->find(intval($account->getMeta('currency_id')));
 
         $preFilled = [
             'accountNumber'        => $account->getMeta('accountNumber'),
@@ -183,13 +185,18 @@ class AccountController extends Controller
             'openingBalanceDate'   => $openingBalanceDate,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
-            'currency_id'          => $account->getMeta('currency_id'),
+            'currency_id'          => $currency->id,
+
         ];
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->flash('gaEventCategory', 'accounts');
         $request->session()->flash('gaEventAction', 'edit-' . $what);
 
-        return view('accounts.edit', compact('currencies', 'account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'));
+        return view(
+            'accounts.edit', compact(
+                               'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'openingBalance', 'what', 'roles'
+                           )
+        );
     }
 
     /**
@@ -242,14 +249,17 @@ class AccountController extends Controller
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
         }
-        $range        = Preferences::get('viewRange', '1M')->data;
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
-        $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $chartUri     = route('chart.account.single', [$account->id]);
-        $start        = null;
-        $end          = null;
-        $periods      = new Collection;
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $range         = Preferences::get('viewRange', '1M')->data;
+        $subTitleIcon  = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $page          = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
+        $chartUri      = route('chart.account.single', [$account->id]);
+        $start         = null;
+        $end           = null;
+        $periods       = new Collection;
+        $currency      = $currencyRepos->find(intval($account->getMeta('currency_id')));
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -283,7 +293,6 @@ class AccountController extends Controller
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $accountType = $account->accountType->type;
         $count       = 0;
         $loop        = 0;
         // grab journals, but be prepared to jump a period back to get the right ones:
@@ -316,7 +325,8 @@ class AccountController extends Controller
 
 
         return view(
-            'accounts.show', compact('account', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+            'accounts.show',
+            compact('account', 'currency', 'moment', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 
@@ -331,7 +341,6 @@ class AccountController extends Controller
     {
         $data    = $request->getAccountData();
         $account = $repository->store($data);
-
         $request->session()->flash('success', strval(trans('firefly.stored_new_account', ['name' => $account->name])));
         Preferences::mark();
 
@@ -409,14 +418,11 @@ class AccountController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        /** @var AccountTaskerInterface $tasker */
-        $tasker = app(AccountTaskerInterface::class);
-
-        $start   = $repository->oldestJournalDate($account);
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = Navigation::startOfPeriod($start, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
-        $entries = new Collection;
+        $start      = $repository->oldestJournalDate($account);
+        $range      = Preferences::get('viewRange', '1M')->data;
+        $start      = Navigation::startOfPeriod($start, $range);
+        $end        = Navigation::endOfX(new Carbon, $range);
+        $entries    = new Collection;
 
         // properties for cache
         $cache = new CacheProperties;
@@ -429,19 +435,28 @@ class AccountController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        // only include asset accounts when this account is an asset:
-        $assets = new Collection;
-        if (in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEFAULT])) {
-            $assets = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        }
         Log::debug('Going to get period expenses and incomes.');
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-            $spent      = $tasker->amountOutInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $earned     = $tasker->amountInInPeriod(new Collection([$account]), $assets, $end, $currentEnd);
-            $dateStr    = $end->format('Y-m-d');
-            $dateName   = Navigation::periodShow($end, $range);
+
+            // try a collector for income:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)
+                      ->setTypes([TransactionType::DEPOSIT])
+                      ->withOpposingAccount();
+            $earned = strval($collector->getJournals()->sum('transaction_amount'));
+
+            // try a collector for expenses:
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)
+                      ->setTypes([TransactionType::WITHDRAWAL])
+                      ->withOpposingAccount();
+            $spent    = strval($collector->getJournals()->sum('transaction_amount'));
+            $dateStr  = $end->format('Y-m-d');
+            $dateName = Navigation::periodShow($end, $range);
             $entries->push(
                 [
                     'string' => $dateStr,

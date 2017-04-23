@@ -77,13 +77,13 @@ Breadcrumbs::register(
     if ($moment === 'all') {
         $breadcrumbs->push(trans('firefly.everything'), route('accounts.show', [$account->id, 'all']));
     }
-    // when is specific period:
-    if (strlen($moment) > 0 && $moment !== 'all') {
+    // when is specific period or when empty:
+    if ($moment !== 'all') {
         $title = trans(
             'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
-                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+                                                     'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
         );
-        $breadcrumbs->push($title, route('accounts.show', [$account->id, $moment]));
+        $breadcrumbs->push($title, route('accounts.show', [$account->id, $moment, $start, $end]));
     }
 
 }
@@ -258,7 +258,7 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('firefly.everything'), route('budgets.no-budget', ['all']));
     }
     // when is specific period:
-    if (strlen($moment) > 0 && $moment !== 'all') {
+    if ($moment !== 'all') {
         $title = trans(
             'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
                                                  'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
@@ -274,6 +274,7 @@ Breadcrumbs::register(
     'budgets.show', function (BreadCrumbGenerator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.index');
     $breadcrumbs->push(e($budget->name), route('budgets.show', [$budget->id]));
+    $breadcrumbs->push(trans('firefly.everything'), route('budgets.show', [$budget->id]));
 }
 );
 
@@ -333,7 +334,7 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('firefly.everything'), route('categories.show', [$category->id, 'all']));
     }
     // when is specific period:
-    if (strlen($moment) > 0 && $moment !== 'all') {
+    if ($moment !== 'all') {
         $title = trans(
             'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
                                                  'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
@@ -354,7 +355,7 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('firefly.everything'), route('categories.no-category', ['all']));
     }
     // when is specific period:
-    if (strlen($moment) > 0 && $moment !== 'all') {
+    if ($moment !== 'all') {
         $title = trans(
             'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
                                                  'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
@@ -709,23 +710,33 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'tags.edit', function (BreadCrumbGenerator $breadcrumbs, Tag $tag) {
-    $breadcrumbs->parent('tags.show', $tag);
+    $breadcrumbs->parent('tags.show', $tag, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('breadcrumbs.edit_tag', ['tag' => e($tag->tag)]), route('tags.edit', [$tag->id]));
 }
 );
 
 Breadcrumbs::register(
     'tags.delete', function (BreadCrumbGenerator $breadcrumbs, Tag $tag) {
-    $breadcrumbs->parent('tags.show', $tag);
+    $breadcrumbs->parent('tags.show', $tag, '', new Carbon, new Carbon);
     $breadcrumbs->push(trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]), route('tags.delete', [$tag->id]));
 }
 );
 
 
 Breadcrumbs::register(
-    'tags.show', function (BreadCrumbGenerator $breadcrumbs, Tag $tag) {
+    'tags.show', function (BreadCrumbGenerator $breadcrumbs, Tag $tag, string $moment, Carbon $start, Carbon $end) {
     $breadcrumbs->parent('tags.index');
-    $breadcrumbs->push(e($tag->tag), route('tags.show', [$tag->id]));
+    $breadcrumbs->push(e($tag->tag), route('tags.show', [$tag->id], $moment));
+    if ($moment === 'all') {
+        $breadcrumbs->push(trans('firefly.everything'), route('tags.show', [$tag->id], $moment));
+    }
+    if ($moment !== 'all') {
+        $title = trans(
+            'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
+                                                 'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]
+        );
+        $breadcrumbs->push($title, route('tags.show', [$tag->id], $moment));
+    }
 }
 );
 
@@ -743,7 +754,7 @@ Breadcrumbs::register(
     }
 
     // when is specific period:
-    if (strlen($moment) > 0 && $moment !== 'all') {
+    if ($moment !== 'all') {
         $title = trans(
             'firefly.between_dates_breadcrumb', ['start' => $start->formatLocalized(strval(trans('config.month_and_day'))),
                                                  'end'   => $end->formatLocalized(strval(trans('config.month_and_day')))]

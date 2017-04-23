@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -59,6 +60,8 @@ class TransactionController extends Controller
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      * @param string                     $what
+     *
+     * @param string                     $moment
      *
      * @return View
      */
@@ -175,12 +178,21 @@ class TransactionController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $events       = $tasker->getPiggyBankEvents($journal);
-        $transactions = $tasker->getTransactionsOverview($journal);
-        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+        $events           = $tasker->getPiggyBankEvents($journal);
+        $transactions     = $tasker->getTransactionsOverview($journal);
+        $what             = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle         = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+        $foreignCurrency = null;
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
+        if ($journal->hasMeta('foreign_currency_id')) {
+            // @codeCoverageIgnoreStart
+            /** @var CurrencyRepositoryInterface $repository */
+            $repository      = app(CurrencyRepositoryInterface::class);
+            $foreignCurrency = $repository->find(intval($journal->getMeta('foreign_currency_id')));
+            // @codeCoverageIgnoreEnd
+        }
+
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'foreignCurrency'));
 
 
     }

@@ -15,13 +15,13 @@
                         {{ 'import_finished_intro'|_ }}
                     </p>
                     {% if tagId > 0 %}
-                    <p>
-                        {{ trans('firefly.import_finished_text_with_link', {tag: tagId})|raw }}
-                    </p>
+                        <p>
+                            {{ trans('firefly.import_finished_text_with_link', {tag: tagId})|raw }}
+                        </p>
                     {% else %}
-                    <p>
-                        {{ 'import_finished_text_without_link'|_ }}
-                    </p>
+                        <p>
+                            {{ 'import_finished_text_without_link'|_ }}
+                        </p>
                     {% endif %}
 
                     <p>

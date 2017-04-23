@@ -57,32 +57,6 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::currentPeriod
-     * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::makePeriodChart
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testCurrentPeriod(string $range)
-    {
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $generator    = $this->mock(GeneratorInterface::class);
-        $account      = factory(Account::class)->make();
-
-
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('earnedInPeriod')->andReturn('0');
-        $generator->shouldReceive('multiSet')->andReturn([])->once();
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('chart.category.current', [1]));
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
      * @dataProvider dateRangeProvider
      *

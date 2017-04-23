@@ -305,17 +305,6 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Chart\AccountController::period
-     * @expectedExceptionMessage YYYY-MM-DD
-     */
-    public function testPeriodBadDate()
-    {
-        $this->be($this->user());
-        $response = $this->get(route('chart.account.period', [1, 'bcdefed']));
-        $response->assertStatus(500);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::report
      * @covers \FireflyIII\Http\Controllers\Chart\AccountController::accountBalanceChart
      */

@@ -19,7 +19,7 @@
                     {{ ExpandedForm.text('name') }}
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
                         {# Not really mandatory but OK #}
-                        {{ ExpandedForm.select('currency_id', currencies) }}
+                        {{ ExpandedForm.select('currency_id', currencySelectList) }}
                     {% endif %}
                 </div>
             </div>
@@ -36,10 +36,12 @@
                     {{ ExpandedForm.text('accountNumber') }}
 
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
-                        {{ ExpandedForm.balance('openingBalance',null, {'currency' : openingBalance ? openingBalance.transactionCurrency : null}) }}
+
+                        {# get opening balance entry for this thing! #}
+                        {{ ExpandedForm.nonSelectableBalance('openingBalance',null, {'currency' : currency }) }}
                         {{ ExpandedForm.date('openingBalanceDate') }}
                         {{ ExpandedForm.select('accountRole', roles) }}
-                        {{ ExpandedForm.balance('virtualBalance',null) }}
+                        {{ ExpandedForm.nonSelectableBalance('virtualBalance',null, {'currency' : currency }) }}
 
                     {% endif %}
                     {{ ExpandedForm.checkbox('active','1') }}
@@ -80,6 +82,15 @@
 {% block scripts %}
     <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
+
+    {# JS currency list for update thing #}
+    <script type="text/javascript">
+        var currencies = [];
+        {% for currency in allCurrencies %}
+            currencies[{{ currency.id }}] = "{{ currency.symbol }}";
+        {% endfor %}
+    </script>
+
     <script type="text/javascript" src="js/ff/accounts/edit.js"></script>
 {% endblock %}
 

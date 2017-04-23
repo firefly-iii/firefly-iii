@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -191,8 +191,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $moment
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param string                     $moment
      *
      * @return View
      */
@@ -310,7 +311,7 @@ class BudgetController extends Controller
         $journals->setPath('/budgets/show/' . $budget->id);
 
 
-        $subTitle = e($budget->name);
+        $subTitle = trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }

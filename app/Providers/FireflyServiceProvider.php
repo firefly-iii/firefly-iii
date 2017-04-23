@@ -43,6 +43,7 @@ use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
+use FireflyIII\Support\Twig\Account;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
@@ -77,6 +78,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Translation);
         Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
+        Twig::addExtension(new Account);
     }
 
     /**

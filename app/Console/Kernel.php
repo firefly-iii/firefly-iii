@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Console;
 
@@ -41,7 +41,6 @@ class Kernel extends ConsoleKernel
         = [
             'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
             'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            //'FireflyIII\Bootstrap\ConfigureLogging',
             'Illuminate\Foundation\Bootstrap\HandleExceptions',
             'Illuminate\Foundation\Bootstrap\RegisterFacades',
             'Illuminate\Foundation\Bootstrap\SetRequestForConsole',

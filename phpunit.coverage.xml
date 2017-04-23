@@ -32,7 +32,7 @@
         </blacklist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="./storage/build/clover.xml" charset="UTF-8"/>
+        <log type="coverage-clover" target="./storage/build/clover-all.xml" charset="UTF-8"/>
     </logging>
     <php>
         <env name="APP_ENV" value="testing"/>

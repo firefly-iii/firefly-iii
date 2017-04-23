@@ -51,28 +51,28 @@ function clearLocation() {
 function initialize() {
     "use strict";
     /*
-    Create new map:
+     Create new map:
      */
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     /*
-    Respond to click event.
+     Respond to click event.
      */
     google.maps.event.addListener(map, 'rightclick', function (event) {
         placeMarker(event);
     });
 
     /*
-    Respond to zoom event.
+     Respond to zoom event.
      */
     google.maps.event.addListener(map, 'zoom_changed', function () {
         saveZoomLevel();
     });
     /*
-    Maybe place marker?
+     Maybe place marker?
      */
-    if(doPlaceMarker == true) {
-        var myLatlng = new google.maps.LatLng(latitude,longitude);
+    if (doPlaceMarker === true) {
+        var myLatlng = new google.maps.LatLng(latitude, longitude);
         var fakeEvent = {};
         fakeEvent.latLng = myLatlng;
         placeMarker(fakeEvent);

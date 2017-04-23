@@ -29,6 +29,37 @@ class PopupReport implements PopupReportInterface
 
 
     /**
+     * @param $account
+     * @param $attributes
+     *
+     * @return Collection
+     */
+    public function balanceDifference($account, $attributes): Collection
+    {
+        // row that displays difference
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector
+            ->setAccounts(new Collection([$account]))
+            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setRange($attributes['startDate'], $attributes['endDate'])
+            ->withoutBudget();
+        $journals = $collector->getJournals();
+
+
+        return $journals->filter(
+            function (Transaction $transaction) {
+                $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
+                if ($tags === 0) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+    }
+
+    /**
      * @param Budget  $budget
      * @param Account $account
      * @param array   $attributes
@@ -164,36 +195,5 @@ class PopupReport implements PopupReportInterface
         );
 
         return $journals;
-    }
-
-    /**
-     * @param $account
-     * @param $attributes
-     *
-     * @return Collection
-     */
-    public function balanceDifference($account, $attributes): Collection
-    {
-        // row that displays difference
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector
-            ->setAccounts(new Collection([$account]))
-            ->setTypes([TransactionType::WITHDRAWAL])
-            ->setRange($attributes['startDate'], $attributes['endDate'])
-            ->withoutBudget();
-        $journals = $collector->getJournals();
-
-
-        return $journals->filter(
-            function (Transaction $transaction) {
-                $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
-                if ($tags === 0) {
-                    return true;
-                }
-
-                return false;
-            }
-        );
     }
 }

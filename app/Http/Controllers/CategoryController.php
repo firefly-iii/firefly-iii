@@ -154,6 +154,10 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     * @param string                     $moment
+     *
      * @return View
      */
     public function noCategory(Request $request, JournalRepositoryInterface $repository, string $moment = '')
@@ -398,7 +402,7 @@ class CategoryController extends Controller
             // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()->withOpposingAccount();
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()->withOpposingAccount()->disableInternalFilter();
             $count = $collector->getJournals()->count();
 
             // amount transferred

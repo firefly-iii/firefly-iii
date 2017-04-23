@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -26,6 +26,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -335,19 +336,13 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
-     * @param string  $date
+     * @param Carbon $start
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException
      */
-    public function period(Account $account, string $date)
+    public function period(Account $account, Carbon $start)
     {
-        try {
-            $start = new Carbon($date);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException('"' . e($date) . '" does not seem to be a valid date. Should be in the format YYYY-MM-DD');
-        }
         $range = Preferences::get('viewRange', '1M')->data;
         $end   = Navigation::endOfPeriod($start, $range);
         $cache = new CacheProperties();
@@ -501,11 +496,16 @@ class AccountController extends Controller
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
 
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+
         $chartData = [];
         foreach ($accounts as $account) {
+            $currency     = $repository->find(intval($account->getMeta('currency_id')));
             $currentSet   = [
-                'label'   => $account->name,
-                'entries' => [],
+                'label'           => $account->name,
+                'currency_symbol' => $currency->symbol,
+                'entries'         => [],
             ];
             $currentStart = clone $start;
             $range        = Steam::balanceInRange($account, $start, clone $end);

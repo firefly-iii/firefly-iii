@@ -42,7 +42,8 @@ var defaultChartOptions = {
         callbacks: {
             label: function (tooltipItem, data) {
                 "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' + accounting.formatMoney(tooltipItem.yLabel);
+                return data.datasets[tooltipItem.datasetIndex].label + ': ' +
+                       accounting.formatMoney(tooltipItem.yLabel, data.datasets[tooltipItem.datasetIndex].currency_symbol);
             }
         }
     }

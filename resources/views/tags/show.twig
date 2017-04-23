@@ -37,10 +37,15 @@
                     {% if tag.date %}
                         <p>{{ 'date'|_ }}: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
                     {% endif %}
-
-                    <p>
-                        {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
-                    </p>
+                    {% if moment == 'all' %}
+                        <p>
+                            {{ 'total_sum'|_ }}: {{ sum|formatAmount }}<br/>
+                        </p>
+                    {% else %}
+                        <p>
+                            {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
+                        </p>
+                    {% endif %}
 
                 </div>
             </div>
@@ -65,9 +70,7 @@
                 </div>
                 <div class="box-body">
                     {% if tag.latitude and tag.longitude and tag.zoomLevel %}
-                        <p>
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ tag.latitude }},{{ tag.longitude }}&zoom={{ tag.zoomLevel }}&size=600x300">
-                        </p>
+                        <div id="map-canvas" style="width:100%;height:300px;"></div>
                     {% else %}
                         <p>{{ 'no_location_set'|_ }}</p>
                     {% endif %}
@@ -102,23 +105,6 @@
                     </div>
                 </div>
                 <div class="box-body">
-
-                    {% if periods %}
-                        <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('tags.show', [tag.id,'all']) }}">
-                                {{ 'show_all_no_filter'|_ }}
-                            </a>
-                        </p>
-                    {% else %}
-                        <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <a href="{{ route('tags.show', [tag.id]) }}">
-                                {{ 'show_the_current_period_and_overview'|_ }}
-                            </a>
-                        </p>
-                    {% endif %}
-
                     {% include 'list/journals-tasker' %}
 
                     {% if periods %}
@@ -181,4 +167,19 @@
 
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript">
+        var latitude = {{ tag.latitude|default("52.3167") }};
+        var longitude = {{ tag.longitude|default("5.5500") }};
+        var zoomLevel = {{ tag.zoomLevel|default("6") }};
+
+        {% if tag.latitude and tag.longitude and tag.zoomLevel %}
+        var doPlaceMarker = true;
+        {% else %}
+        var doPlaceMarker = false;
+        {% endif %}
+
+        var apiKey = "{{ apiKey }}";
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
+    <script src="js/ff/tags/show.js"></script>
 {% endblock %}

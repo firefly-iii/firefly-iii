@@ -2,7 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.0] - 2017-04-23
+### Added
+- Firefly III can now handle foreign currencies better, including some code to get the exchange rate live from the web.
+- Can now make rules for attachments, see #608, as suggested by dzaikos.
 
+### Fixed
+- Fixed #629, reported by forcaeluz
+- Fixed #630, reported by welbert
+- And more various bug fixes.
 
 ## [4.3.8] - 2017-04-08
 
@@ -203,13 +211,6 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Updated all email messages.
 - Made some fonts local
 
-
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - Issue #408
 - Various issues with split journals
@@ -217,11 +218,6 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Issue #419, thx [schwalberich](https://github.com/schwalberich) 
 - Issue #422, thx [xzaz](https://github.com/xzaz)
 - Various import bugs, such as #416 ([zjean](https://github.com/zjean))
-
-
-### Security
-- Initial release.
-
 
 ## [4.1.7] - 2016-11-19
 ### Added
@@ -345,27 +341,12 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - New Presidents Choice specific to fix #307
 - Added some trimming (#335)
 
-### Changed
-- Initial release.
-
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - Fixed a bug where incoming transactions would not be properly filtered in several reports.
 - #334 by [cyberkov](https://github.com/cyberkov)
 - #337
 - #336
 - #338 found by [roberthorlings](https://github.com/roberthorlings)
-
-### Security
-- Initial release.
-
-
-
 
 ## [4.0.0] - 2015-09-26
 ### Added

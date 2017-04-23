@@ -123,7 +123,7 @@ class CategoryReportControllerTest extends TestCase
     {
         $generator   = $this->mock(GeneratorInterface::class);
         $collector   = $this->mock(JournalCollectorInterface::class);
-        $transaction = factory(Transaction::class)->make();
+        $transactions = factory(Transaction::class, 10)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -132,7 +132,7 @@ class CategoryReportControllerTest extends TestCase
         $collector->shouldReceive('disableFilter')->andReturnSelf();
         $collector->shouldReceive('setCategories')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getJournals')->andReturn($transactions);
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

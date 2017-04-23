@@ -132,7 +132,9 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                 $request
+     *
+     * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

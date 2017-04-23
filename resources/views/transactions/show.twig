@@ -36,7 +36,15 @@
                         <!-- total amount -->
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
-                            <td>{{ journal|formatJournal }}</td>
+                            <td>{{ journal|formatJournal }}
+                                {% if journal.hasMeta('foreign_amount') %}
+                                    {% if journal.transactiontype.type == 'Withdrawal' %}
+                                        ({{ formatAnything(foreignCurrency, journal.getMeta('foreign_amount')*-1) }})
+                                    {% else %}
+                                        ({{ formatAnything(foreignCurrency, journal.getMeta('foreign_amount')) }})
+                                    {% endif %}
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>
@@ -243,12 +251,12 @@
                             </p>
                         {% endif %}
                         {% if transactions|length == 1 %}
-                        <p>
-                            <i class="fa fa-copy" aria-hidden="true"></i>
-                            <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                            </a>
-                        </p>
+                            <p>
+                                <i class="fa fa-copy" aria-hidden="true"></i>
+                                <a href="{{ route('transactions.clone', [journal.id]) }}">
+                                    {{ ('clone_'~journal.transactionType.type|lower)|_ }}
+                                </a>
+                            </p>
                         {% endif %}
 
                     </div>
