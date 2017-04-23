@@ -169,7 +169,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id ?? 0);
         $cache->addProperty('chart.budget.expense-asset');
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var JournalCollectorInterface $collector */
@@ -214,7 +214,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id ?? 0);
         $cache->addProperty('chart.budget.expense-category');
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var JournalCollectorInterface $collector */
@@ -261,7 +261,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id ?? 0);
         $cache->addProperty('chart.budget.expense-expense');
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         /** @var JournalCollectorInterface $collector */
@@ -283,7 +283,8 @@ class BudgetController extends Controller
 
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $opposingId => $amount) {
-            $chartData[$names[$opposingId]] = $amount;
+            $name             = $names[$opposingId] ?? 'no name';
+            $chartData[$name] = $amount;
         }
 
         $data = $this->generator->pieChart($chartData);
@@ -445,6 +446,7 @@ class BudgetController extends Controller
                 $return[$accountId] = $grouped[$accountId][0]['name'];
             }
         }
+        $return[0] = '(no name)';
 
         return $return;
     }

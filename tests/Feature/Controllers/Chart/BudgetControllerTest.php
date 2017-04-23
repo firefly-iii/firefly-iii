@@ -15,11 +15,15 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -84,6 +88,114 @@ class BudgetControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('chart.budget.budget-limit', [1, 8]));
         $response->assertStatus(500);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::expenseAsset
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getAccountNames
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testExpenseAsset(string $range)
+    {
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transactions = factory(Transaction::class, 10)->make();
+        $accounts     = factory(Account::class, 10)->make();
+
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn($transactions);
+
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn($accounts)->once();
+
+        $generator->shouldReceive('pieChart')->once()->andReturn([]);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('chart.budget.expense-asset', [1, 1]));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::expenseCategory
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getCategoryNames
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testExpenseCategory(string $range)
+    {
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $transactions = factory(Transaction::class, 10)->make();
+        $categories = factory(Category::class, 10)->make();
+
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn($transactions);
+
+        $catRepos->shouldReceive('getCategories')->andReturn($categories)->once();
+
+        $generator->shouldReceive('pieChart')->once()->andReturn([]);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('chart.budget.expense-category', [1, 1]));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::expenseExpense
+     * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::getAccountNames
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testExpenseExpense(string $range)
+    {
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transactions = factory(Transaction::class, 10)->make();
+        $accounts     = factory(Account::class, 10)->make();
+
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn($transactions);
+
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn($accounts)->once();
+
+        $generator->shouldReceive('pieChart')->once()->andReturn([]);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('chart.budget.expense-expense', [1, 1]));
+        $response->assertStatus(200);
     }
 
     /**
@@ -237,5 +349,4 @@ class BudgetControllerTest extends TestCase
         $response = $this->get(route('chart.budget.period.no-budget', ['1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
-
 }
