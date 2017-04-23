@@ -64,10 +64,10 @@ return [
     'expense_account'                => 'Compte de dépenses',
     'revenue_account'                => 'Compte de recettes',
     'decimal_places'                 => 'Decimal places',
-    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchange_rate_instruction'      => 'Devises étrangères',
     'exchanged_amount'               => 'Exchanged amount',
-    'source_amount'                  => 'Amount (source)',
-    'destination_amount'             => 'Amount (destination)',
+    'source_amount'                  => 'Montant (source)',
+    'destination_amount'             => 'Montant (destination)',
     'native_amount'                  => 'Native amount',
 
     'revenue_account_source'      => 'Revenue account (source)',
@@ -84,7 +84,7 @@ return [
     'amount'                     => 'Montant',
     'date'                       => 'Date',
     'interest_date'              => 'Interest date',
-    'book_date'                  => 'Book date',
+    'book_date'                  => 'Date de réservation',
     'process_date'               => 'Date de traitement',
     'category'                   => 'Catégorie',
     'tags'                       => 'Mots-clés',
@@ -182,7 +182,7 @@ return [
     'csv_config'            => 'Configuration d\'importation CSV',
 
 
-    'due_date'           => 'Due date',
+    'due_date'           => 'Échéance',
     'payment_date'       => 'Date de paiement',
     'invoice_date'       => 'Date de facturation',
     'internal_reference' => 'Référence interne',
