@@ -293,7 +293,6 @@ class AccountController extends Controller
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $accountType = $account->accountType->type;
         $count       = 0;
         $loop        = 0;
         // grab journals, but be prepared to jump a period back to get the right ones:
@@ -327,7 +326,7 @@ class AccountController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'currency', 'moment', 'accountType', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'currency', 'moment', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 

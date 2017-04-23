@@ -186,7 +186,7 @@ function doubleYNonStackedChart(URI, container) {
  */
 function columnChart(URI, container) {
     "use strict";
-
+    console.log('Going to draw column chart for ' + URI + ' in ' + container);
     var colorData = true;
     var options = defaultChartOptions;
     var chartType = 'bar';

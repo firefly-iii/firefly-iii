@@ -11,7 +11,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         {% if budgetLimit %}
-                            XXXX
+                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.formatLocalized(monthAndDayFormat), end: budgetLimit.end_date.formatLocalized(monthAndDayFormat) }) }}
                         {% else %}
                             {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
                         {% endif %}

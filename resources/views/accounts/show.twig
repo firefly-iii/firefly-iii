@@ -13,7 +13,7 @@
                         {% if moment == 'all' %}
                             {{ trans('firefly.chart_all_journals_for_account', {name:account.name}) }}
                         {% else %}
-                            xxx
+                            {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
                         {% endif %}
                     </h3>
                     <!-- ACTIONS MENU -->
@@ -116,13 +116,13 @@
                             </div>
                             <div class="box-body no-padding">
                                 <table class="table table-hover">
-                                    {% if period.spent != 0 or (accountType == 'Asset account') %}
+                                    {% if period.spent != 0 %}
                                         <tr>
                                             <td style="width:33%;">{{ 'spent'|_ }}</td>
                                             <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
                                         </tr>
                                     {% endif %}
-                                    {% if period.earned != 0 or (accountType == 'Asset account') %}
+                                    {% if period.earned != 0 %}
                                         <tr>
                                             <td style="width: 33%;">{{ 'earned'|_ }}</td>
                                             <td style="text-align: right;">{{ period.earned|formatAmount }}</td>

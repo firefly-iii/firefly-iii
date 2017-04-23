@@ -8,11 +8,15 @@
  * See the LICENSE file for details.
  */
 
-/** global: all, current, specific */
+/** global: everything, current, specific */
 
 $(function () {
     "use strict";
-    columnChart(all, 'all');
-    columnChart(current, 'period');
-    columnChart(specific, 'period-specific-period');
+
+    console.log('Getting charts');
+    columnChart(everything, 'category-everything');
+
+    console.log('Specific: ' + specific);
+    columnChart(specific, 'specific-period');
+
 });
