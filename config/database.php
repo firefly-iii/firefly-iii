@@ -12,7 +12,7 @@
 return [
 
     'fetch'       => PDO::FETCH_OBJ,
-    'default'     => env('DB_CONNECTION', 'mysql'),
+    'default'     => env('DB_CONNECTION', 'sqlite'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',

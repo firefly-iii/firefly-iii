@@ -106,6 +106,11 @@
       "php artisan firefly:verify",
       "php artisan firefly:instructions update",
       "php artisan optimize"
+    ],
+    "compile": [
+      "cp .env.heroku .env",
+      "touch storage/database/database.sqlite",
+      "php artisan migrate:refresh --seed"
     ]
   },
   "config": {
