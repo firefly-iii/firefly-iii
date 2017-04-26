@@ -106,6 +106,9 @@
       "php artisan firefly:verify",
       "php artisan firefly:instructions update",
       "php artisan optimize"
+    ],
+    "compile": [
+      "heroku config:set APP_KEY=$(php artisan --no-ansi key:generate --show)"
     ]
   },
   "config": {
