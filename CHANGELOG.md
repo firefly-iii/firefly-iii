@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.2] - 2017-04-27
+### Fixed
+Fixed a bug where the opening balance could not be stored.
+
 ## [4.4.1] - 2017-04-27
 
 ### Added
