@@ -52,7 +52,7 @@
   ],
   "env": {
     "APP_KEY": {
-      "description": "A secret key for verifying the integrity of signed cookies.",
+      "description": "This key is used to encrypt your data.",
       "value": "base64:If1gJN4pyycXTq+WS5TjneDympKuu+8SKvTl6RZnhJg="
     }
   }
