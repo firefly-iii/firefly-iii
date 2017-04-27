@@ -27,7 +27,7 @@ if (!($databaseUrl === false)) {
 return [
 
     'fetch'       => PDO::FETCH_OBJ,
-    'default'     => env('DB_CONNECTION', 'sqlite'),
+    'default'     => env('DB_CONNECTION', 'pgsql'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
