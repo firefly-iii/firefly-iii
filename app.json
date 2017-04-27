@@ -41,5 +41,8 @@
     {
       "plan": "heroku-postgresql"
     }
-  ]
+  ],
+  "scripts": {
+    "postdeploy": "export APP_KEY=$(php artisan --no-ansi key:generate --show)"
+  }
 }
