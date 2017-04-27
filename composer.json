@@ -108,8 +108,6 @@
       "php artisan optimize"
     ],
     "compile": [
-      "cp .env.heroku .env",
-      "touch storage/database/database.sqlite",
       "php artisan migrate:refresh --seed --force"
     ]
   },
