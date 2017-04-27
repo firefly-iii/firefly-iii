@@ -44,5 +44,16 @@
   ],
   "scripts": {
     "postdeploy": "export APP_KEY=$(php artisan --no-ansi key:generate --show)"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/php"
+    }
+  ],
+  "env": {
+    "APP_KEY": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "value": "base64:If1gJN4pyycXTq+WS5TjneDympKuu+8SKvTl6RZnhJg="
+    }
   }
 }
