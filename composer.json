@@ -106,6 +106,9 @@
       "php artisan firefly:verify",
       "php artisan firefly:instructions update",
       "php artisan optimize"
+    ],
+    "compile": [
+      "php artisan migrate:refresh --seed --force"
     ]
   },
   "config": {

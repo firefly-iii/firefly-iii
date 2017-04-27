@@ -36,7 +36,6 @@ class NewUserControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('count')->andReturn(0);
 
-
         $this->be($this->emptyUser());
         $response = $this->get(route('new-user.index'));
         $response->assertStatus(200);

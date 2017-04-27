@@ -10,7 +10,7 @@
 
 ## Try it out!
 
-Try out Firefly III on the [demo site](https://firefly-iii.nder.be/).
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
 ## Installation
 
