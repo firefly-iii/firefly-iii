@@ -15,6 +15,7 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Mail\Message;
 use Log;
@@ -99,13 +100,12 @@ class UserEventHandler
         $email     = $event->user->email;
         $address   = route('index');
         $ipAddress = $event->ipAddress;
+
         // send email.
         try {
-            Mail::send(
-                ['emails.registered-html', 'emails.registered-text'], ['address' => $address, 'ip' => $ipAddress], function (Message $message) use ($email) {
-                $message->to($email, $email)->subject('Welcome to Firefly III!');
-            }
-            );
+
+            Mail::to($email)
+                ->send(new RegisteredUserMail($address, $ipAddress));
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
         }
