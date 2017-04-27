@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.1] - 2017-04-27
+
+### Added
+- Support for deployment on Heroku
+
+### Fixed
+- Bug in new-user routine.
+
 ## [4.4.0] - 2017-04-23
 ### Added
 - Firefly III can now handle foreign currencies better, including some code to get the exchange rate live from the web.
