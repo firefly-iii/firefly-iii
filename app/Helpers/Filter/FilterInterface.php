@@ -18,10 +18,9 @@ interface FilterInterface
 {
     /**
      * @param Collection $set
-     * @param null       $parameters
      *
      * @return Collection
      */
-    public function filter(Collection $set, $parameters = null): Collection;
+    public function filter(Collection $set): Collection;
 
 }

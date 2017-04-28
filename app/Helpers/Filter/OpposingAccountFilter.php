@@ -26,21 +26,32 @@ use Log;
  */
 class OpposingAccountFilter implements FilterInterface
 {
+    /** @var array */
+    private $accounts = [];
+
+    /**
+     * InternalTransferFilter constructor.
+     *
+     * @param array $accounts
+     */
+    public function __construct(array $accounts)
+    {
+        $this->accounts = $accounts;
+    }
 
     /**
      * @param Collection $set
-     * @param null       $parameters
      *
      * @return Collection
      */
-    public function filter(Collection $set, $parameters = null): Collection
+    public function filter(Collection $set): Collection
     {
         return $set->filter(
-            function (Transaction $transaction) use ($parameters) {
+            function (Transaction $transaction) {
                 $opposing = $transaction->opposing_account_id;
                 // remove internal transfer
-                if (in_array($opposing, $parameters)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id), $parameters);
+                if (in_array($opposing, $this->accounts)) {
+                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id), $this->accounts);
 
                     return null;
                 }

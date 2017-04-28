@@ -24,13 +24,11 @@ class EmptyFilter implements FilterInterface
 
     /**
      * @param Collection $set
-     * @param null       $parameters
      *
      * @return Collection
      */
-    public function filter(Collection $set, $parameters = null): Collection
+    public function filter(Collection $set): Collection
     {
-        // TODO: Implement filter() method.
-        throw new NotImplementedException;
+        return $set;
     }
 }

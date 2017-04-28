@@ -25,19 +25,25 @@ use Log;
  */
 class AmountFilter implements FilterInterface
 {
+    /** @var int */
+    private $modifier = 0;
+
+    public function __construct(int $modifier)
+    {
+        $this->modifier = $modifier;
+    }
 
     /**
      * @param Collection $set
-     * @param null       $parameters
      *
      * @return Collection
      */
-    public function filter(Collection $set, $parameters = null): Collection
+    public function filter(Collection $set): Collection
     {
         return $set->filter(
-            function (Transaction $transaction) use ($parameters) {
+            function (Transaction $transaction) {
                 // remove by amount
-                if (bccomp($transaction->transaction_amount, '0') === $parameters) {
+                if (bccomp($transaction->transaction_amount, '0') === $this->modifier) {
                     Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
 
                     return null;

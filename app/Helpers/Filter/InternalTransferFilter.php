@@ -26,27 +26,38 @@ use Log;
  */
 class InternalTransferFilter implements FilterInterface
 {
+    /** @var array  */
+    private $accounts = [];
+
+    /**
+     * InternalTransferFilter constructor.
+     *
+     * @param array $accounts
+     */
+    public function __construct(array $accounts)
+    {
+        $this->accounts = $accounts;
+    }
 
     /**
      * @param Collection $set
-     * @param null       $parameters
      *
      * @return Collection
      */
-    public function filter(Collection $set, $parameters = null): Collection
+    public function filter(Collection $set): Collection
     {
         return $set->filter(
-            function (Transaction $transaction) use ($parameters) {
+            function (Transaction $transaction) {
                 if (is_null($transaction->opposing_account_id)) {
                     return $transaction;
                 }
                 // both id's in $parameters?
-                if (in_array($transaction->account_id, $parameters) && in_array($transaction->opposing_account_id, $parameters)) {
+                if (in_array($transaction->account_id, $this->accounts) && in_array($transaction->opposing_account_id, $this->accounts)) {
                     Log::debug(
                         sprintf(
                             'Transaction #%d has #%d and #%d in set, so removed',
                             $transaction->id, $transaction->account_id, $transaction->opposing_account_id
-                        ), $parameters
+                        ), $this->accounts
                     );
 
                     return false;
