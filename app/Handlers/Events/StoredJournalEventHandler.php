@@ -18,7 +18,6 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 use Log;
@@ -35,18 +34,13 @@ class StoredJournalEventHandler
     /** @var  PiggyBankRepositoryInterface */
     public $repository;
 
-    public $ruleGroupRepos;
-
     /**
      * StoredJournalEventHandler constructor.
      */
-    public function __construct(
-        PiggyBankRepositoryInterface $repository, JournalRepositoryInterface $journalRepository, RuleGroupRepositoryInterface $ruleGroupRepository
-    ) {
+    public function __construct(PiggyBankRepositoryInterface $repository, JournalRepositoryInterface $journalRepository)
+    {
         $this->repository        = $repository;
         $this->journalRepository = $journalRepository;
-        $this->ruleGroupRepos    = $ruleGroupRepository;
-
     }
 
     /**
