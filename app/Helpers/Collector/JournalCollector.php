@@ -464,7 +464,9 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setUser(User $user)
     {
+        Log::debug(sprintf('Journal collector now collecting for user #%d', $user->id));
         $this->user = $user;
+        $this->startQuery();
     }
 
     /**
@@ -472,6 +474,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function startQuery()
     {
+        Log::debug('journalCollector::startQuery');
         /** @var EloquentBuilder $query */
         $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
