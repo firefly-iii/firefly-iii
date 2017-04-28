@@ -14,13 +14,11 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 use Log;
@@ -32,8 +30,29 @@ use Log;
  */
 class StoredJournalEventHandler
 {
+    /** @var  JournalRepositoryInterface */
+    public $journalRepository;
+    /** @var  PiggyBankRepositoryInterface */
+    public $repository;
+
+    public $ruleGroupRepos;
+
+    /**
+     * StoredJournalEventHandler constructor.
+     */
+    public function __construct(
+        PiggyBankRepositoryInterface $repository, JournalRepositoryInterface $journalRepository, RuleGroupRepositoryInterface $ruleGroupRepository
+    ) {
+        $this->repository        = $repository;
+        $this->journalRepository = $journalRepository;
+        $this->ruleGroupRepos    = $ruleGroupRepository;
+
+    }
+
     /**
      * This method connects a new transfer to a piggy bank.
+     *
+     * @codeCoverageIgnore
      *
      * @param StoredTransactionJournal $event
      *
@@ -41,49 +60,44 @@ class StoredJournalEventHandler
      */
     public function connectToPiggyBank(StoredTransactionJournal $event): bool
     {
-        /** @var TransactionJournal $journal */
         $journal     = $event->journal;
         $piggyBankId = $event->piggyBankId;
-        Log::debug(sprintf('Trying to connect journal %d to piggy bank %d.', $journal->id, $piggyBankId));
+        $piggyBank   = $this->repository->find($piggyBankId);
 
-        /*
-         * Will only continue when journal is a transfer.
-         */
-        Log::debug(sprintf('Journal transaction type is %s', $journal->transactionType->type));
-        if ($journal->transactionType->type !== TransactionType::TRANSFER) {
+        // is a transfer?
+        if (!$this->journalRepository->isTransfer($journal)) {
             Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
 
             return true;
         }
 
-        /*
-         * Verify existence of piggy bank:
-         */
-        if (!$this->verifyExistence($event)) {
-            Log::error(sprintf('No such piggy bank or no repetition on %s', $journal->date->format('Y-m-d')));
+        // piggy exists?
+        if (is_null($piggyBank->id)) {
+            Log::error(sprintf('There is no piggy bank with ID #%d', $piggyBankId));
 
             return true;
         }
 
-        /*
-         * Get relevant data:
-         */
-        $piggyBank  = $journal->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
-        $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
-        $amount     = $this->getExactAmount($journal, $piggyBank, $repetition);
+        // repetition exists?
+        $repetition = $this->repository->getRepetition($piggyBank, $journal->date);
+        if (is_null($repetition->id)) {
+            Log::error(sprintf('No piggy bank repetition on %s!', $journal->date->format('Y-m-d')));
+
+            return true;
+        }
+
+        // get the amount
+        $amount = $this->repository->getExactAmount($piggyBank, $repetition, $journal);
         if (bccomp($amount, '0') === 0) {
             Log::debug('Amount is zero, will not create event.');
 
             return true;
         }
 
-        $repetition->currentamount = bcadd($repetition->currentamount, $amount);
-        $repetition->save();
+        // update amount
+        $this->repository->addAmountToRepetition($repetition, $amount);
+        $event = $this->repository->createEventWithJournal($piggyBank, $amount, $journal);
 
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(
-            ['piggy_bank_id' => $piggyBank->id, 'transaction_journal_id' => $journal->id, 'date' => $journal->date, 'amount' => $amount]
-        );
         Log::debug(sprintf('Created piggy bank event #%d', $event->id));
 
         return true;
@@ -137,83 +151,6 @@ class StoredJournalEventHandler
     {
         $journal = $storedJournalEvent->journal;
         BillScanner::scan($journal);
-
-        return true;
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 6 but I can live with it.
-     * @param TransactionJournal  $journal
-     * @param PiggyBank           $piggyBank
-     * @param PiggyBankRepetition $repetition
-     *
-     * @return string
-     */
-    private function getExactAmount(TransactionJournal $journal, PiggyBank $piggyBank, PiggyBankRepetition $repetition): string
-    {
-        $amount  = $journal->amountPositive();
-        $sources = $journal->sourceAccountList()->pluck('id')->toArray();
-        $room    = bcsub(strval($piggyBank->targetamount), strval($repetition->currentamount));
-        $compare = bcmul($repetition->currentamount, '-1');
-
-        Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
-
-        // if piggy account matches source account, the amount is positive
-        if (in_array($piggyBank->account_id, $sources)) {
-            $amount = bcmul($amount, '-1');
-            Log::debug(sprintf('Account #%d is the source, so will remove amount from piggy bank.', $piggyBank->account_id));
-        }
-
-
-        // if the amount is positive, make sure it fits in piggy bank:
-        if (bccomp($amount, '0') === 1 && bccomp($room, $amount) === -1) {
-            // amount is positive and $room is smaller than $amount
-            Log::debug(sprintf('Room in piggy bank for extra money is %f', $room));
-            Log::debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
-            Log::debug(sprintf('New amount is %f', $room));
-
-            return $room;
-        }
-
-        // amount is negative and $currentamount is smaller than $amount
-        if (bccomp($amount, '0') === -1 && bccomp($compare, $amount) === 1) {
-            Log::debug(sprintf('Max amount to remove is %f', $repetition->currentamount));
-            Log::debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
-            Log::debug(sprintf('New amount is %f', $compare));
-
-            return $compare;
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param StoredTransactionJournal $event
-     *
-     * @return bool
-     */
-    private function verifyExistence(StoredTransactionJournal $event): bool
-    {
-        /** @var TransactionJournal $journal */
-        $journal     = $event->journal;
-        $piggyBankId = $event->piggyBankId;
-
-        /** @var PiggyBank $piggyBank */
-        $piggyBank = $journal->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
-
-        if (is_null($piggyBank)) {
-            Log::error('No such piggy bank!');
-
-            return false;
-        }
-        Log::debug(sprintf('Found piggy bank #%d: "%s"', $piggyBank->id, $piggyBank->name));
-        // update piggy bank rep for date of transaction journal.
-        $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
-        if (is_null($repetition)) {
-            Log::error(sprintf('No piggy bank repetition on %s!', $journal->date->format('Y-m-d')));
-
-            return false;
-        }
 
         return true;
     }

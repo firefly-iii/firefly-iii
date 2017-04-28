@@ -85,7 +85,7 @@ $factory->define(
 $factory->define(
     FireflyIII\Models\TransactionJournal::class, function (Faker\Generator $faker) {
     return [
-        'id'                      => $faker->numberBetween(1, 10),
+        'id'                      => $faker->unique()->numberBetween(1000, 10000),
         'user_id'                 => 1,
         'transaction_type_id'     => 1,
         'bill_id'                 => null,
@@ -118,6 +118,18 @@ $factory->define(
         'automatch'       => 1,
         'name_encrypted'  => 0,
         'match_encrypted' => 0,
+    ];
+}
+);
+
+$factory->define(
+    FireflyIII\Models\PiggyBankRepetition::class, function (Faker\Generator $faker) {
+    return [
+        'id'            => $faker->unique()->numberBetween(100, 10000),
+        'piggy_bank_id' => $faker->numberBetween(1, 10),
+        'startdate'     => '2017-01-01',
+        'targetdate'    => '2020-01-01',
+        'currentamount' => 10,
     ];
 }
 );
@@ -194,8 +206,9 @@ $factory->define(
 $factory->define(
     FireflyIII\Models\Account::class, function (Faker\Generator $faker) {
     return [
-        'id'   => $faker->numberBetween(1, 10),
-        'name' => $faker->words(3, true),
+        'id'              => $faker->unique()->numberBetween(1000, 10000),
+        'name'            => $faker->words(3, true),
+        'account_type_id' => 1,
     ];
 }
 );

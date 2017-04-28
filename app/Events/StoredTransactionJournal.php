@@ -26,7 +26,9 @@ class StoredTransactionJournal extends Event
 
     use SerializesModels;
 
+    /** @var TransactionJournal  */
     public $journal;
+    /** @var int  */
     public $piggyBankId;
 
     /**
