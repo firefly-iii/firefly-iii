@@ -49,6 +49,13 @@ class Support
     }
 
     /**
+     * This method removes transactions from the collection based on the amount and the opposing account. Usually
+     * this is used to filter double entries (both sides of a journal get included)
+     *
+     * - Opposing account is in $accounts. This usually indicates a transfer and should not be included.
+     * - Amount is less or more than zero. If the modifier is -1, only the positive amount remains, emphasising
+     *   deposits. If the modifier is +1, only the negative ones remain, emphasising withdrawals.
+     *
      * @param Collection $collection
      * @param array      $accounts
      * @param int        $modifier
