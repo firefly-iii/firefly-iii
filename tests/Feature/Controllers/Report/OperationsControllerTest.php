@@ -13,6 +13,7 @@ namespace Tests\Feature\Controllers\Report;
 
 
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Tests\TestCase;
@@ -36,7 +37,7 @@ class OperationsControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('enableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transactions);
 
 
@@ -57,7 +58,7 @@ class OperationsControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('enableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transactions);
 
         $this->be($this->user());
@@ -78,7 +79,7 @@ class OperationsControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('enableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transactions);
 
         $this->be($this->user());

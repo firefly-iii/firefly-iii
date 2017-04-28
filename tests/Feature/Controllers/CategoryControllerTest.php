@@ -13,6 +13,7 @@ namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -138,7 +139,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
 
         Steam::shouldReceive('positive')->once()->andReturn('1');
@@ -174,7 +175,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
 
         $this->be($this->user());
@@ -208,7 +209,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
 
         Steam::shouldReceive('positive')->once()->andReturn('1');
@@ -249,7 +250,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->twice();
         $collector->shouldReceive('setRange')->andReturnSelf()->twice();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->twice();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->twice();
         $collector->shouldReceive('setTypes')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
@@ -287,7 +288,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->once();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->once();
 
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
@@ -326,7 +327,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->twice();
         $collector->shouldReceive('setRange')->andReturnSelf()->twice();
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->twice();
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->twice();
         $collector->shouldReceive('setTypes')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
@@ -375,7 +376,7 @@ class CategoryControllerTest extends TestCase
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(4);
         $collector->shouldReceive('setRange')->andReturnSelf()->times(4);
         $collector->shouldReceive('setTypes')->andReturnSelf()->times(1);
-        $collector->shouldReceive('disableInternalFilter')->andReturnSelf()->times(4);
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->times(4);
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(4);
