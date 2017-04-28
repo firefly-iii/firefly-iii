@@ -16,37 +16,44 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface as JRI;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface as PRI;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface as RGRI;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 use Log;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class StoredJournalEventHandler
  *
  * @package FireflyIII\Handlers\Events
  */
 class StoredJournalEventHandler
 {
-    /** @var  JournalRepositoryInterface */
+    /** @var  JRI */
     public $journalRepository;
-    /** @var  PiggyBankRepositoryInterface */
+    /** @var  PRI */
     public $repository;
+
+    /** @var  RGRI */
+    public $ruleGroupRepository;
 
     /**
      * StoredJournalEventHandler constructor.
      */
-    public function __construct(PiggyBankRepositoryInterface $repository, JournalRepositoryInterface $journalRepository)
+    public function __construct(PRI $repository, JRI $journalRepository, RGRI $ruleGroupRepository)
     {
-        $this->repository        = $repository;
-        $this->journalRepository = $journalRepository;
+        $this->repository          = $repository;
+        $this->journalRepository   = $journalRepository;
+        $this->ruleGroupRepository = $ruleGroupRepository;
     }
 
     /**
      * This method connects a new transfer to a piggy bank.
      *
-     * @codeCoverageIgnore
+     *
      *
      * @param StoredTransactionJournal $event
      *
@@ -108,16 +115,11 @@ class StoredJournalEventHandler
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         $journal = $storedJournalEvent->journal;
-        $groups  = $journal->user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get();
-        //
+        $groups  = $this->ruleGroupRepository->getActiveGroups($journal->user);
+
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
-            $rules = $group->rules()
-                           ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                           ->where('rule_triggers.trigger_type', 'user_action')
-                           ->where('rule_triggers.trigger_value', 'store-journal')
-                           ->where('rules.active', 1)
-                           ->get(['rules.*']);
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
 
@@ -125,9 +127,8 @@ class StoredJournalEventHandler
                 $processor->handleTransactionJournal($journal);
 
                 if ($rule->stop_processing) {
-                    return true;
+                    break;
                 }
-
             }
         }
 
