@@ -106,8 +106,7 @@ class AccountTasker implements AccountTaskerInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->withOpposingAccount()
-                  ->enableInternalFilter();
+                  ->withOpposingAccount();
         $transactions = $collector->getJournals();
         $transactions = $transactions->filter(
             function (Transaction $transaction) {
@@ -149,8 +148,7 @@ class AccountTasker implements AccountTaskerInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->withOpposingAccount()
-                  ->enableInternalFilter();
+                  ->withOpposingAccount();
         $transactions = $collector->getJournals();
         $transactions = $transactions->filter(
             function (Transaction $transaction) {

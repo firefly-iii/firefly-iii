@@ -17,6 +17,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Tag\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
@@ -303,7 +304,8 @@ class TagReportController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($tags)->withOpposingAccount()->disableFilter();
+                  ->setTags($tags)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
         $accountIds   = $accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);

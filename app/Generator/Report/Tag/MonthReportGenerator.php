@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -162,7 +163,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($this->tags)->withOpposingAccount()->disableFilter();
+                  ->setTags($this->tags)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
         $accountIds     = $this->accounts->pluck('id')->toArray();
         $transactions   = $collector->getJournals();

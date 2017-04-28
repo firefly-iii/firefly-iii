@@ -19,6 +19,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -234,7 +235,8 @@ class BudgetReportController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
+                  ->setBudgets($budgets)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
         $accountIds   = $accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $set          = Support::filterExpenses($transactions, $accountIds);

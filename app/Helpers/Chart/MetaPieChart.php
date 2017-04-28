@@ -14,6 +14,7 @@ namespace FireflyIII\Helpers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -250,7 +251,7 @@ class MetaPieChart implements MetaPieChartInterface
         $collector->withOpposingAccount();
 
         if ($direction === 'income') {
-            $collector->disableFilter();
+            $collector->removeFilter(TransferFilter::class);
         }
 
         if ($this->budgets->count() > 0) {

@@ -271,7 +271,8 @@ class CategoryReportController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount()->disableFilter();
+                  ->setCategories($categories)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
         $accountIds   = $accounts->pluck('id')->toArray();
         $transactions = $collector->getJournals();
         $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);

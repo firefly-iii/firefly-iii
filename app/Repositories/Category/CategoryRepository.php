@@ -228,8 +228,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setCategories($categories)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->withOpposingAccount()
-                  ->enableInternalFilter();
+                  ->withOpposingAccount();
         $transactions = $collector->getJournals();
 
         // loop transactions:
@@ -260,7 +259,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->withOpposingAccount();
-        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])->enableInternalFilter();
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
         $collector->withoutCategory();
         $transactions = $collector->getJournals();
         $result       = [
@@ -312,8 +311,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setCategories($categories)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->withOpposingAccount()
-                  ->enableInternalFilter();
+                  ->withOpposingAccount();
         $transactions = $collector->getJournals();
 
         // loop transactions:
@@ -345,7 +343,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->withOpposingAccount();
-        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])->enableInternalFilter();
+        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->withoutCategory();
         $transactions = $collector->getJournals();
         $result       = [

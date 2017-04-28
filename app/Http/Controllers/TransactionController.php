@@ -16,6 +16,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -115,8 +116,8 @@ class TransactionController extends Controller
             Log::info('Count is zero, search for journals.');
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                      ->disableInternalFilter();
+            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
+            $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/budgets/list/no-budget');
             $count = $journals->getCollection()->count();
@@ -234,7 +235,8 @@ class TransactionController extends Controller
             // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withOpposingAccount()->setTypes($types)->disableInternalFilter();
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withOpposingAccount()->setTypes($types);
+            $collector->removeFilter(InternalTransferFilter::class);
             $set      = $collector->getJournals();
             $sum      = $set->sum('transaction_amount');
             $journals = $set->count();
