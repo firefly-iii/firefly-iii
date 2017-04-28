@@ -12,6 +12,10 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
+Firefly III can be run on Heroku. Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
+
+There is also a [demo site](https://firefly-iii.nder.be) with an example financial administration already present. 
+
 ## Installation
 
 To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
