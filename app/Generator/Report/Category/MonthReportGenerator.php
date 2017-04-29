@@ -16,6 +16,7 @@ namespace FireflyIII\Generator\Report\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
+use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
@@ -31,7 +32,7 @@ use Log;
  *
  * @package FireflyIII\Generator\Report\Category
  */
-class MonthReportGenerator implements ReportGeneratorInterface
+class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
     /** @var  Collection */
     private $accounts;
