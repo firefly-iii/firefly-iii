@@ -16,8 +16,10 @@ namespace FireflyIII\Generator\Report\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -29,7 +31,7 @@ use Log;
  *
  * @package FireflyIII\Generator\Report\Category
  */
-class MonthReportGenerator extends Support implements ReportGeneratorInterface
+class MonthReportGenerator implements ReportGeneratorInterface
 {
     /** @var  Collection */
     private $accounts;
@@ -170,9 +172,10 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
                   ->setCategories($this->categories)->withOpposingAccount();
         $collector->removeFilter(TransferFilter::class);
 
-        $accountIds     = $this->accounts->pluck('id')->toArray();
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
         $transactions   = $collector->getJournals();
-        $transactions   = self::filterExpenses($transactions, $accountIds);
         $this->expenses = $transactions;
 
         return $transactions;
@@ -192,9 +195,11 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($this->categories)->withOpposingAccount();
-        $accountIds   = $this->accounts->pluck('id')->toArray();
+
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(NegativeAmountFilter::class);
+
         $transactions = $collector->getJournals();
-        $transactions = self::filterIncome($transactions, $accountIds);
         $this->income = $transactions;
 
         return $transactions;

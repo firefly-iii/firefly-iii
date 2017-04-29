@@ -20,7 +20,9 @@ use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Filter\FilterInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -575,6 +577,8 @@ class JournalCollector implements JournalCollectorInterface
             InternalTransferFilter::class => new InternalTransferFilter($this->accountIds),
             OpposingAccountFilter::class  => new OpposingAccountFilter($this->accountIds),
             TransferFilter::class         => new TransferFilter,
+            PositiveAmountFilter::class   => new PositiveAmountFilter,
+            NegativeAmountFilter::class   => new NegativeAmountFilter,
         ];
         Log::debug(sprintf('Will run %d filters on the set.', count($this->filters)));
         foreach ($this->filters as $enabled) {

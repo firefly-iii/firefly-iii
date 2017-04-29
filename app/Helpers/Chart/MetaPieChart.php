@@ -12,8 +12,10 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
@@ -24,7 +26,6 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 use Steam;
 
 /**
@@ -236,19 +237,22 @@ class MetaPieChart implements MetaPieChartInterface
      */
     protected function getTransactions(string $direction): Collection
     {
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $modifier = -1;
-        if ($direction === 'expense') {
-            $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-            $modifier = 1;
-        }
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
+        $types     = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $collector->addFilter(NegativeAmountFilter::class);
+        if ($direction === 'expense') {
+            $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+            $collector->addFilter(PositiveAmountFilter::class);
+            $collector->removeFilter(NegativeAmountFilter::class);
+        }
+
         $collector->setUser($this->user);
         $collector->setAccounts($this->accounts);
         $collector->setRange($this->start, $this->end);
         $collector->setTypes($types);
         $collector->withOpposingAccount();
+        $collector->addFilter(OpposingAccountFilter::class);
 
         if ($direction === 'income') {
             $collector->removeFilter(TransferFilter::class);
@@ -266,23 +270,7 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->withBudgetInformation();
         }
 
-        $accountIds   = $this->accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        Log::debug(sprintf('Modifier is %d', $modifier));
-        foreach ($transactions as $transaction) {
-            Log::debug(
-                sprintf(
-                    'Included %s #%d (part of #%d) ("%s") amount %f',
-                    $transaction->transaction_type_type, $transaction->id,
-                    $transaction->journal_id
-                    , $transaction->description, $transaction->transaction_amount
-                )
-            );
-        }
-
-        $set = Support::filterTransactions($transactions, $accountIds, $modifier);
-
-        return $set;
+        return $collector->getJournals();
     }
 
     /**

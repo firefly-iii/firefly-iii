@@ -14,9 +14,11 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Report\Tag\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Tag;
@@ -306,11 +308,13 @@ class TagReportController extends Controller
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setTags($tags)->withOpposingAccount();
         $collector->removeFilter(TransferFilter::class);
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**
@@ -327,11 +331,13 @@ class TagReportController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setTags($tags)->withOpposingAccount();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterIncome($transactions, $accountIds);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(NegativeAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**

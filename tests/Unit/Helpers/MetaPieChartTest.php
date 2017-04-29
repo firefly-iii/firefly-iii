@@ -14,6 +14,8 @@ namespace Tests\Unit\Helpers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Chart\MetaPieChart;
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class MetaPieChartTest extends TestCase
@@ -29,6 +31,12 @@ class MetaPieChartTest extends TestCase
     {
         $som = (new Carbon())->startOfMonth();
         $eom = (new Carbon())->endOfMonth();
+        $collection = new Collection;
+
+        // mock collector so the correct set of journals is returned:
+        // then verify the results.
+        $collector = $this->mock(JournalCollectorInterface::class);
+
 
         $helper = new MetaPieChart();
         $helper->setUser($this->user());
