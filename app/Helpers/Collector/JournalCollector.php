@@ -202,7 +202,7 @@ class JournalCollector implements JournalCollectorInterface
     {
         $key = array_search($filter, $this->filters, true);
         if (!($key === false)) {
-            Log::debug('Removed filter %s', $filter);
+            Log::debug(sprintf('Removed filter %s', $filter));
             unset($this->filters[$key]);
         }
 
