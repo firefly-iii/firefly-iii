@@ -105,7 +105,8 @@ return [
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish ', 'complete' => false],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
-        'ru-RU' => ['name_locale' => 'Russian', 'name_english' => 'Russian', 'complete' => false],
+        'ru-RU' => ['name_locale' => 'ру́сский', 'name_english' => 'Russian', 'complete' => false],
+        'sl-SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian', 'complete' => false],
         'zh-HK' => ['name_locale' => '繁體中文（香港）', 'name_english' => 'Chinese Traditional, Hong Kong', 'complete' => false],
         'zh-TW' => ['name_locale' => '正體中文', 'name_english' => 'Chinese Traditional', 'complete' => false],
     ],
@@ -176,7 +177,7 @@ return [
         'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
         'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
-        'has_attachments'        => 'FireflyIII\Rules\Triggers\HasAttachment',
+        'has_attachments'       => 'FireflyIII\Rules\Triggers\HasAttachment',
     ],
     'rule-actions'               => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',

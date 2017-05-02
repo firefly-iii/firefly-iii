@@ -2,9 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.3] - 2017-05-02
+### Added
+- Support for Slovenian
+
+### Changed
+- The journal collector, an internal piece of code to collect transactions, now uses a slightly different method of collecting journals. This may cause problems.
+
+### Fixed
+- Issue #638 as reported by [worldworm](https://github.com/worldworm).
+
 ## [4.4.2] - 2017-04-27
 ### Fixed
-Fixed a bug where the opening balance could not be stored.
+- Fixed a bug where the opening balance could not be stored.
 
 ## [4.4.1] - 2017-04-27
 
