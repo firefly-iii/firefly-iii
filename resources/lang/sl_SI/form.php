@@ -61,7 +61,7 @@ return [
     'returnHereExplanation'          => 'After storing, return here to create another one.',
     'returnHereUpdateExplanation'    => 'After updating, return here.',
     'description'                    => 'Description',
-    'expense_account'                => 'Expense account',
+    'expense_account'                => 'konto stroškov',
     'revenue_account'                => 'Revenue account',
     'decimal_places'                 => 'Decimal places',
     'exchange_rate_instruction'      => 'Foreign currencies',
@@ -72,7 +72,7 @@ return [
 
     'revenue_account_source'      => 'Revenue account (source)',
     'source_account_asset'        => 'vir (premoženjski račun)',
-    'destination_account_expense' => 'Destination account (expense account)',
+    'destination_account_expense' => 'ciljni konto (stroški)',
     'destination_account_asset'   => 'ciljni račun (premoženjski račun)',
     'source_account_revenue'      => 'Source account (revenue account)',
     'type'                        => 'Type',
