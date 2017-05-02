@@ -11,14 +11,14 @@
  */
 
 return [
-    'home'              => 'Home',
-    'edit_currency'     => 'Edit currency ":name"',
-    'delete_currency'   => 'Delete currency ":name"',
-    'newPiggyBank'      => 'Create a new piggy bank',
-    'edit_piggyBank'    => 'Edit piggy bank ":name"',
-    'preferences'       => 'Preferences',
-    'profile'           => 'Profile',
-    'changePassword'    => 'Change your password',
+    'home'              => 'Domov',
+    'edit_currency'     => 'uredi valuto ":name"',
+    'delete_currency'   => 'izbriši valuto ":name"',
+    'newPiggyBank'      => 'ustvari novega pujska',
+    'edit_piggyBank'    => 'uredi pujska za ":name"',
+    'preferences'       => 'nastavitve',
+    'profile'           => 'profil',
+    'changePassword'    => 'spremeni geslo',
     'bills'             => 'Bills',
     'newBill'           => 'New bill',
     'edit_bill'         => 'Edit bill ":name"',
