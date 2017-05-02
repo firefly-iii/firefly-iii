@@ -1047,7 +1047,7 @@ return [
     'no_transactions_imperative_deposit'    => 'Have you received some money? Then you should write it down:',
     'no_transactions_create_deposit'        => 'Create a deposit',
     'no_transactions_title_transfers'       => 'Let\'s create a transfer!',
-    'no_transactions_intro_transfers'       => 'You have no transfers yet. When you move money between asset accounts, it is recorded as a transfer.',
+    'no_transactions_intro_transfers'       => 'Nimate še nobenih prenosov. Če prenašate denar med svojimi premoženjskimi računi, se to zabeleži kot prenos.',
     'no_transactions_imperative_transfers'  => 'Have you moved some money around? Then you should write it down:',
     'no_transactions_create_transfers'      => 'Create a transfer',
     'no_piggies_title_default'              => 'Let\'s create a piggy bank!',
