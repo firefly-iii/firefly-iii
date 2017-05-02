@@ -25,7 +25,7 @@ return [
     'delete_bill'       => 'Delete bill ":name"',
     'reports'           => 'Reports',
     'searchResult'      => 'Search for ":query"',
-    'withdrawal_list'   => 'Expenses',
+    'withdrawal_list'   => 'stroški',
     'deposit_list'      => 'Revenue, income and deposits',
     'transfer_list'     => 'Transfers',
     'transfers_list'    => 'Transfers',
