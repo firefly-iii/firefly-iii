@@ -19,7 +19,7 @@ return [
     'header_help'            => 'Check this if the first row of your CSV file are the column titles',
     'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'import_account_help'    => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'import_account_help'    => 'Če vaša CSV datoteka ne vsebuje informacij o vaših premoženjskih računih, uporabite ta seznam, da izberete kateremu računu pripadajo transakcije v CSV datoteki.',
     'upload_not_writeable'   => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
 
     // roles
@@ -44,9 +44,9 @@ return [
 
 
     'column__ignore'                => '(ignore this column)',
-    'column_account-iban'           => 'Asset account (IBAN)',
-    'column_account-id'             => 'Asset account  ID (matching Firefly)',
-    'column_account-name'           => 'Asset account (name)',
+    'column_account-iban'           => 'premoženjski račun (IBAN)',
+    'column_account-id'             => 'ID premoženjskega računa (ujemajoč z Firefly-jem)',
+    'column_account-name'           => 'premoženjski račun (ime)',
     'column_amount'                 => 'Amount',
     'column_amount-comma-separated' => 'Amount (comma as decimal separator)',
     'column_bill-id'                => 'Bill ID (matching Firefly)',
@@ -75,6 +75,6 @@ return [
     'column_sepa-db'                => 'SEPA Direct Debet',
     'column_tags-comma'             => 'Tags (comma separated)',
     'column_tags-space'             => 'Tags (space separated)',
-    'column_account-number'         => 'Asset account (account number)',
+    'column_account-number'         => 'premoženjski račun (številka računa)',
     'column_opposing-number'        => 'Opposing account (account number)',
 ];
