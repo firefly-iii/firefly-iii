@@ -40,7 +40,7 @@ return [
     'new_withdrawal'                             => 'New withdrawal',
     'new_deposit'                                => 'New deposit',
     'new_transfer'                               => 'New transfer',
-    'new_asset_account'                          => 'New asset account',
+    'new_asset_account'                          => 'nov premoženjski račun',
     'new_expense_account'                        => 'New expense account',
     'new_revenue_account'                        => 'New revenue account',
     'new_budget'                                 => 'New budget',
