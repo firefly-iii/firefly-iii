@@ -801,7 +801,7 @@ return [
     'sum_of_period'                              => 'Sum of period',
     'average_in_period'                          => 'Average in period',
     'account_role_defaultAsset'                  => 'privzeti premoženjski račun',
-    'account_role_sharedAsset'                   => 'Shared asset account',
+    'account_role_sharedAsset'                   => 'deljen premoženjski račun',
     'account_role_savingAsset'                   => 'Savings account',
     'account_role_ccAsset'                       => 'Credit card',
 
@@ -1014,10 +1014,10 @@ return [
 
     // empty lists? no objects? instructions:
     'no_transactions_in_period'             => 'There are no transactions in this period.',
-    'no_accounts_title_asset'               => 'Let\'s create an asset account!',
-    'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
-    'no_accounts_imperative_asset'          => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
-    'no_accounts_create_asset'              => 'Create an asset account',
+    'no_accounts_title_asset'               => 'Ustvarite premoženjski račun!',
+    'no_accounts_intro_asset'               => 'Še nobenega premoženjskega računa nimate. Premoženjski računi so vaši glavni računi sredstev: tekoči računi, skupni računi, varčevalni računi in celo računi kreditnih kartic.',
+    'no_accounts_imperative_asset'          => 'Da začnete uporabljati Firefly III, morate ustvariti vsaj en premoženjski račun:',
+    'no_accounts_create_asset'              => 'ustvarite premoženjski račun',
     'no_accounts_title_expense'             => 'Let\'s create an expense account!',
     'no_accounts_intro_expense'             => 'You have no expense accounts yet. Expense accounts are the places where you spend money, such as shops and supermarkets.',
     'no_accounts_imperative_expense'        => 'Expense accounts are created automatically when you create transactions, but you can create one manually too, if you want. Let\'s create one now:',
