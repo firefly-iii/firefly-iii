@@ -73,7 +73,7 @@ return [
     'revenue_account_source'      => 'Revenue account (source)',
     'source_account_asset'        => 'vir (premoženjski račun)',
     'destination_account_expense' => 'Destination account (expense account)',
-    'destination_account_asset'   => 'Destination account (asset account)',
+    'destination_account_asset'   => 'ciljni račun (premoženjski račun)',
     'source_account_revenue'      => 'Source account (revenue account)',
     'type'                        => 'Type',
     'convert_Withdrawal'          => 'Convert withdrawal',
