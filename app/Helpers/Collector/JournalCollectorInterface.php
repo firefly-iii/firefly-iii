@@ -29,24 +29,16 @@ use Illuminate\Support\Collection;
 interface JournalCollectorInterface
 {
     /**
+     * @param string $filter
+     *
+     * @return JournalCollectorInterface
+     */
+    public function addFilter(string $filter): JournalCollectorInterface;
+
+    /**
      * @return int
      */
     public function count(): int;
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function disableFilter(): JournalCollectorInterface;
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function disableInternalFilter(): JournalCollectorInterface;
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function enableInternalFilter(): JournalCollectorInterface;
 
     /**
      * @return Collection
@@ -57,6 +49,13 @@ interface JournalCollectorInterface
      * @return LengthAwarePaginator
      */
     public function getPaginatedJournals(): LengthAwarePaginator;
+
+    /**
+     * @param string $filter
+     *
+     * @return JournalCollectorInterface
+     */
+    public function removeFilter(string $filter): JournalCollectorInterface;
 
     /**
      * @param Collection $accounts

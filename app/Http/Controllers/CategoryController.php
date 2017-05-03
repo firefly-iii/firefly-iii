@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
@@ -211,7 +212,7 @@ class CategoryController extends Controller
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount();
-            $collector->disableInternalFilter();
+            $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/categories/list/no-category');
             $count = $journals->getCollection()->count();
@@ -294,7 +295,8 @@ class CategoryController extends Controller
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                      ->setCategory($category)->withBudgetInformation()->withCategoryInformation()->disableInternalFilter();
+                      ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
+            $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('categories/show/' . $category->id);
             $count = $journals->getCollection()->count();
@@ -402,14 +404,17 @@ class CategoryController extends Controller
             // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()->withOpposingAccount()->disableInternalFilter();
+            $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()
+                      ->withOpposingAccount();
+            $collector->removeFilter(InternalTransferFilter::class);
             $count = $collector->getJournals()->count();
 
             // amount transferred
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER])->disableInternalFilter();
+                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
+            $collector->removeFilter(InternalTransferFilter::class);
             $transferred = Steam::positive($collector->getJournals()->sum('transaction_amount'));
 
             // amount spent
@@ -488,7 +493,8 @@ class CategoryController extends Controller
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->setCategory($category)
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER])->disableInternalFilter();
+                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
+            $collector->removeFilter(InternalTransferFilter::class);
             $transferred = Steam::positive($collector->getJournals()->sum('transaction_amount'));
 
             $entries->push(

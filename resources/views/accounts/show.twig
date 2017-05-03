@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="overview-chart" style="width:100%;" height="400"></canvas>
+                    <canvas id="overview-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -40,8 +40,8 @@
                     <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:60%;margin:0 auto;">
-                        <canvas id="account-cat-out" style="margin:0 auto;"></canvas>
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="account-cat-out" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -52,8 +52,8 @@
                     <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:60%;margin:0 auto;">
-                        <canvas id="account-budget-out" style="margin:0 auto;"></canvas>
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="account-budget-out" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -64,8 +64,8 @@
                     <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:60%;margin:0 auto;">
-                        <canvas id="account-cat-in" style="margin:0 auto;"></canvas>
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="account-cat-in" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -149,13 +149,13 @@
         // uri's for charts:
         var chartUri = '{{ chartUri }}';
         {% if start and end %}
-            var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-            var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-            var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         {% else %}
-            var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, 'all', 'all']) }}';
-            var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, 'all', 'all']) }}';
-            var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, 'all', 'all']) }}';
+        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, 'all', 'all']) }}';
+        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, 'all', 'all']) }}';
+        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, 'all', 'all']) }}';
         {% endif %}
 
     </script>

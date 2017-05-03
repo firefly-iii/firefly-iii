@@ -20,10 +20,10 @@ install:
   - mkdir -p build/logs
 
 script:
-  - phpunit -c phpunit.coverage.xml
+  - phpunit -c phpunit.xml
 
-after_success:
-  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
+#after_success:
+#  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
 
 # safelist
 branches:

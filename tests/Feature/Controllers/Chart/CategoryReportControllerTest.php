@@ -15,9 +15,12 @@ namespace Tests\Feature\Controllers\Chart;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -121,15 +124,18 @@ class CategoryReportControllerTest extends TestCase
      */
     public function testMainChart()
     {
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(JournalCollectorInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
         $transactions = factory(Transaction::class, 10)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf();
-        $collector->shouldReceive('disableFilter')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->withArgs([TransferFilter::class])->andReturnSelf();
+        $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf();
+        $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf();
+        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf();
         $collector->shouldReceive('setCategories')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transactions);

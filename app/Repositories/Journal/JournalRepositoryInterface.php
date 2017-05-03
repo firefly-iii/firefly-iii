@@ -27,6 +27,7 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -66,6 +67,13 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getTransactionTypes(): Collection;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function isTransfer(TransactionJournal $journal): bool;
 
     /**
      * @param TransactionJournal $journal

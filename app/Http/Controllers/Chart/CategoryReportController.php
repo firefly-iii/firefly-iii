@@ -19,6 +19,10 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
@@ -271,12 +275,15 @@ class CategoryReportController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount()->disableFilter();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
+                  ->setCategories($categories)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**
@@ -293,11 +300,13 @@ class CategoryReportController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterIncome($transactions, $accountIds);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(NegativeAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**

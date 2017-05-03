@@ -17,16 +17,29 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 
 /**
+ * @codeCoverageIgnore
+ * 
  * Class UpdatedJournalEventHandler
  *
  * @package FireflyIII\Handlers\Events
  */
 class UpdatedJournalEventHandler
 {
+    /** @var  RuleGroupRepositoryInterface */
+    public $repository;
+
+    /**
+     * StoredJournalEventHandler constructor.
+     */
+    public function __construct(RuleGroupRepositoryInterface $ruleGroupRepository)
+    {
+        $this->repository = $ruleGroupRepository;
+    }
 
     /**
      * This method will check all the rules when a journal is updated.
@@ -39,16 +52,11 @@ class UpdatedJournalEventHandler
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         $journal = $updatedJournalEvent->journal;
-        $groups  = $journal->user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get();
-        //
+        $groups = $this->repository->getActiveGroups($journal->user);
+
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
-            $rules = $group->rules()
-                           ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                           ->where('rule_triggers.trigger_type', 'user_action')
-                           ->where('rule_triggers.trigger_value', 'update-journal')
-                           ->where('rules.active', 1)
-                           ->get(['rules.*']);
+            $rules = $this->repository->getActiveUpdateRules($group);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
                 $processor = Processor::make($rule);

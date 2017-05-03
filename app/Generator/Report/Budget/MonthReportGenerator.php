@@ -18,6 +18,9 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -156,11 +159,13 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setBudgets($this->budgets)->withOpposingAccount()->disableFilter();
+                  ->setBudgets($this->budgets)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
-        $accountIds     = $this->accounts->pluck('id')->toArray();
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
         $transactions   = $collector->getJournals();
-        $transactions   = self::filterExpenses($transactions, $accountIds);
         $this->expenses = $transactions;
 
         return $transactions;

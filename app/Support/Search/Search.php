@@ -16,6 +16,7 @@ namespace FireflyIII\Support\Search;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -207,7 +208,7 @@ class Search implements SearchInterface
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
             }
-            $collector->disableInternalFilter();
+            $collector->removeFilter(InternalTransferFilter::class);
             $set   = $collector->getPaginatedJournals()->getCollection();
             $words = $this->words;
 

@@ -12,8 +12,11 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -91,6 +94,7 @@ class MetaPieChart implements MetaPieChartInterface
         if ($this->collectOtherObjects && $direction === 'expense') {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
+            $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -102,6 +106,7 @@ class MetaPieChart implements MetaPieChartInterface
         if ($this->collectOtherObjects && $direction === 'income') {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
+            $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
             $journals                                            = $collector->getJournals();
             $sum                                                 = strval($journals->sum('transaction_amount'));
@@ -114,6 +119,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Collection $accounts
      *
      * @return MetaPieChartInterface
@@ -126,6 +133,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Collection $budgets
      *
      * @return MetaPieChartInterface
@@ -138,6 +147,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Collection $categories
      *
      * @return MetaPieChartInterface
@@ -150,6 +161,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param bool $collectOtherObjects
      *
      * @return MetaPieChartInterface
@@ -162,6 +175,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Carbon $end
      *
      * @return MetaPieChartInterface
@@ -174,6 +189,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Carbon $start
      *
      * @return MetaPieChartInterface
@@ -186,6 +203,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param Collection $tags
      *
      * @return MetaPieChartInterface
@@ -198,6 +217,8 @@ class MetaPieChart implements MetaPieChartInterface
     }
 
     /**
+     * @codeCoverageIgnore
+     *
      * @param User $user
      *
      * @return MetaPieChartInterface
@@ -209,23 +230,32 @@ class MetaPieChart implements MetaPieChartInterface
         return $this;
     }
 
-    protected function getTransactions(string $direction)
+    /**
+     * @param string $direction
+     *
+     * @return Collection
+     */
+    protected function getTransactions(string $direction): Collection
     {
-        $types    = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $modifier = -1;
-        if ($direction === 'expense') {
-            $types    = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-            $modifier = 1;
-        }
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
+        $types     = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        $collector->addFilter(NegativeAmountFilter::class);
+        if ($direction === 'expense') {
+            $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+            $collector->addFilter(PositiveAmountFilter::class);
+            $collector->removeFilter(NegativeAmountFilter::class);
+        }
+
+        $collector->setUser($this->user);
         $collector->setAccounts($this->accounts);
         $collector->setRange($this->start, $this->end);
         $collector->setTypes($types);
         $collector->withOpposingAccount();
+        $collector->addFilter(OpposingAccountFilter::class);
 
         if ($direction === 'income') {
-            $collector->disableFilter();
+            $collector->removeFilter(TransferFilter::class);
         }
 
         if ($this->budgets->count() > 0) {
@@ -240,11 +270,7 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->withBudgetInformation();
         }
 
-        $accountIds   = $this->accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = Support::filterTransactions($transactions, $accountIds, $modifier);
-
-        return $set;
+        return $collector->getJournals();
     }
 
     /**
@@ -286,6 +312,7 @@ class MetaPieChart implements MetaPieChartInterface
         $chartData  = [];
         $names      = [];
         $repository = app($this->repositories[$type]);
+        $repository->setUser($this->user);
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
                 $object           = $repository->find(intval($objectId));
@@ -300,6 +327,11 @@ class MetaPieChart implements MetaPieChartInterface
 
     }
 
+    /**
+     * @param Collection $set
+     *
+     * @return array
+     */
     private function groupByTag(Collection $set): array
     {
         $grouped = [];

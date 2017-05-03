@@ -93,6 +93,46 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getActiveGroups(User $user): Collection
+    {
+        return $user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveStoreRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                     ->where('rule_triggers.trigger_type', 'user_action')
+                     ->where('rule_triggers.trigger_value', 'store-journal')
+                     ->where('rules.active', 1)
+                     ->get(['rules.*']);
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveUpdateRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                     ->where('rule_triggers.trigger_type', 'user_action')
+                     ->where('rule_triggers.trigger_value', 'update-journal')
+                     ->where('rules.active', 1)
+                     ->get(['rules.*']);
+    }
+
+    /**
      * @return int
      */
     public function getHighestOrderRuleGroup(): int

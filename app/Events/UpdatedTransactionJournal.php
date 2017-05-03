@@ -26,6 +26,7 @@ class UpdatedTransactionJournal extends Event
 
     use SerializesModels;
 
+    /** @var TransactionJournal  */
     public $journal;
 
     /**

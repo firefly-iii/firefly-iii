@@ -23,7 +23,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.4.2',
+    'version'                    => '4.4.3',
     'maxUploadSize'              => 5242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,
@@ -99,14 +99,11 @@ return [
     'languages'                  => [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => true],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
-        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish', 'complete' => false],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
-        'hr_HR' => ['name_locale' => 'hrvatski', 'name_english' => 'Croatian', 'complete' => false],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish ', 'complete' => false],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
-        'ru-RU' => ['name_locale' => 'Russian', 'name_english' => 'Russian', 'complete' => false],
-        'zh-HK' => ['name_locale' => '繁體中文（香港）', 'name_english' => 'Chinese Traditional, Hong Kong', 'complete' => false],
+        'sl-SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian', 'complete' => false],
         'zh-TW' => ['name_locale' => '正體中文', 'name_english' => 'Chinese Traditional', 'complete' => false],
     ],
     'transactionTypesByWhat'     => [
@@ -176,7 +173,7 @@ return [
         'category_is'           => 'FireflyIII\Rules\Triggers\CategoryIs',
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
         'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
-        'has_attachments'        => 'FireflyIII\Rules\Triggers\HasAttachment',
+        'has_attachments'       => 'FireflyIII\Rules\Triggers\HasAttachment',
     ],
     'rule-actions'               => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',

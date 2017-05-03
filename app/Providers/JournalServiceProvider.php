@@ -62,7 +62,7 @@ class JournalServiceProvider extends ServiceProvider
                 if ($app->auth->check()) {
                     $collector->setUser(auth()->user());
                 }
-                $collector->startQuery();
+
 
                 return $collector;
             }

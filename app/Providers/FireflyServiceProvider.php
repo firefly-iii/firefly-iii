@@ -55,6 +55,7 @@ use Illuminate\Support\ServiceProvider;
 use Twig;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
+use Illuminate\Foundation\Application;
 
 /**
  * Class FireflyServiceProvider
@@ -123,7 +124,18 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(GeneratorInterface::class, ChartJsGenerator::class);
 
         // chart builder
-        $this->app->bind(MetaPieChartInterface::class, MetaPieChart::class);
+        $this->app->bind(
+            MetaPieChartInterface::class,
+            function (Application $app) {
+                /** @var MetaPieChart $chart */
+                $chart = app(MetaPieChart::class);
+                if ($app->auth->check()) {
+                    $chart->setUser(auth()->user());
+                }
+
+                return $chart;
+            }
+        );
 
         // other generators
         $this->app->bind(ProcessorInterface::class, Processor::class);

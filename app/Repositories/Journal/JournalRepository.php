@@ -140,6 +140,16 @@ class JournalRepository implements JournalRepositoryInterface
 
     /**
      * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function isTransfer(TransactionJournal $journal): bool
+    {
+        return $journal->transactionType->type === TransactionType::TRANSFER;
+    }
+
+    /**
+     * @param TransactionJournal $journal
      * @param int                $order
      *
      * @return bool

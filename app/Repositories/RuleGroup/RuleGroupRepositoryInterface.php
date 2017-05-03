@@ -54,6 +54,27 @@ interface RuleGroupRepositoryInterface
     public function get(): Collection;
 
     /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getActiveGroups(User $user): Collection;
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveStoreRules(RuleGroup $group): Collection;
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveUpdateRules(RuleGroup $group): Collection;
+
+    /**
      * @return int
      */
     public function getHighestOrderRuleGroup(): int;

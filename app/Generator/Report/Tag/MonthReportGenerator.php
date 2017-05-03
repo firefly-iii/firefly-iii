@@ -14,8 +14,11 @@ namespace FireflyIII\Generator\Report\Tag;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -27,7 +30,7 @@ use Log;
  *
  * @package FireflyIII\Generator\Report\Tag
  */
-class MonthReportGenerator extends Support implements ReportGeneratorInterface
+class MonthReportGenerator implements ReportGeneratorInterface
 {
 
     /** @var Collection */
@@ -162,11 +165,14 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($this->tags)->withOpposingAccount()->disableFilter();
+                  ->setTags($this->tags)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
-        $accountIds     = $this->accounts->pluck('id')->toArray();
-        $transactions   = $collector->getJournals();
-        $transactions   = self::filterExpenses($transactions, $accountIds);
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
         $this->expenses = $transactions;
 
         return $transactions;
@@ -186,9 +192,11 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setTags($this->tags)->withOpposingAccount();
-        $accountIds   = $this->accounts->pluck('id')->toArray();
+
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(NegativeAmountFilter::class);
+
         $transactions = $collector->getJournals();
-        $transactions = self::filterIncome($transactions, $accountIds);
         $this->income = $transactions;
 
         return $transactions;
