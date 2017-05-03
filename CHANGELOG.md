@@ -4,7 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.4.3] - 2017-05-02
 ### Added
-- Support for Slovenian
+- Added support for Slovenian
+- Removed support for Spanish. No translations whatsoever by the guy who requested it.
+- Removed support for Russian. Same thing.
+- Removed support for Croatian. Same thing.
+- Removed support for Chinese Traditional, Hong Kong. Same thing.
 
 ### Changed
 - The journal collector, an internal piece of code to collect transactions, now uses a slightly different method of collecting journals. This may cause problems.
