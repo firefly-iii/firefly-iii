@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.4.3] - 2017-05-02
+## [4.4.3] - 2017-05-03
 ### Added
 - Added support for Slovenian
 - Removed support for Spanish. No translations whatsoever by the guy who requested it.
@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Issue #638 as reported by [worldworm](https://github.com/worldworm).
+- Possible fix for #624
 
 ## [4.4.2] - 2017-04-27
 ### Fixed
