@@ -30,15 +30,15 @@ return [
     'column_role'            => 'pomen podatkov v stolpcu',
     'do_map_value'           => 'poveži te vrednosti',
     'column'                 => 'stolpec',
-    'no_example_data'        => 'No example data available',
-    'store_column_roles'     => 'Continue import',
-    'do_not_map'             => '(do not map)',
-    'map_title'              => 'Connect import data to Firefly III data',
+    'no_example_data'        => 'primeri podatkov niso na voljo',
+    'store_column_roles'     => 'nadaljuj z uvozom',
+    'do_not_map'             => '(ne poveži)',
+    'map_title'              => 'poveži podatke za uvoz s podatki iz Firefly III',
     'map_text'               => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
 
     'field_value'          => 'Field value',
     'field_mapped_to'      => 'Mapped to',
-    'store_column_mapping' => 'Store mapping',
+    'store_column_mapping' => 'shrani nastavitve',
 
     // map things.
 
@@ -47,7 +47,7 @@ return [
     'column_account-iban'           => 'premoženjski račun (IBAN)',
     'column_account-id'             => 'ID premoženjskega računa (ujemajoč z Firefly-jem)',
     'column_account-name'           => 'premoženjski račun (ime)',
-    'column_amount'                 => 'Amount',
+    'column_amount'                 => 'znesek',
     'column_amount-comma-separated' => 'Amount (comma as decimal separator)',
     'column_bill-id'                => 'Bill ID (matching Firefly)',
     'column_bill-name'              => 'Bill name',
