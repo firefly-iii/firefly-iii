@@ -18,7 +18,7 @@ return [
     'import_configure_form'  => 'Osnovne možnosti za uvoz CSV datoteke.',
     'header_help'            => 'Preverite ali prva vrstica v CSV datoteki vsebuje naslove stolpcev.',
     'date_help'              => 'Formatiranje datuma in časa v vaši CSV datoteki. Uporabite obliko zapisa kot je navedena<a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> na tej strani</a>. Privzeta vrednost bo prepoznala datume, ki so videti takole:: dateExample.',
-    'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'delimiter_help'         => 'Izberi ločilo, ki je uporabljeno za ločevanje med posameznimi stolpci v vaši datoteki. Če niste prepričani, je vejica najbolj pogosta izbira.',
     'import_account_help'    => 'Če vaša CSV datoteka ne vsebuje informacij o vaših premoženjskih računih, uporabite ta seznam, da izberete kateremu računu pripadajo transakcije v CSV datoteki.',
     'upload_not_writeable'   => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
 
