@@ -158,7 +158,7 @@ function validateCurrencyForTransfer() {
     $('#source_amount_holder').show().find('.non-selectable-currency-symbol').text(sourceSymbol);
 
     if (sourceCurrency === destinationCurrency) {
-        console.log('Both accounts accept ' + sourceCurrency);
+        console.log('Both accounts accept #' + sourceCurrency);
         $('#destination_amount_holder').hide();
         $('#amount_holder').hide();
         return;
