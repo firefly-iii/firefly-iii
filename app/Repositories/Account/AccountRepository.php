@@ -251,6 +251,19 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @return Account
+     */
+    public function getCashAccount(): Account
+    {
+        $type    = AccountType::where('type', AccountType::CASH)->first();
+        $account = Account::firstOrCreateEncrypted(
+            ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => 'Cash account', 'active' => 1]
+        );
+
+        return $account;
+    }
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account

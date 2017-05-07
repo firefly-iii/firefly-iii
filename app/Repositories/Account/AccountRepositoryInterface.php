@@ -37,6 +37,11 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
+     * @return Account
+     */
+    public function getCashAccount(): Account;
+
+    /**
      * Moved here from account CRUD.
      *
      * @param Account $account

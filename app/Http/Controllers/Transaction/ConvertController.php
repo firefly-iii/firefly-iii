@@ -182,6 +182,12 @@ class ConvertController extends Controller
                 break;
             case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL: // three
             case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL: // five
+                if ($data['destination_account_expense'] === '') {
+                    // destination is a cash account.
+                    $destination = $accountRepository->getCashAccount();
+
+                    return $destination;
+                }
                 $data        = [
                     'name'           => $data['destination_account_expense'],
                     'accountType'    => 'expense',
@@ -221,6 +227,14 @@ class ConvertController extends Controller
                 throw new FireflyException('Cannot handle ' . $joined); // @codeCoverageIgnore
             case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT: // one
             case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT: // six
+
+                if ($data['source_account_revenue'] === '') {
+                    // destination is a cash account.
+                    $destination = $accountRepository->getCashAccount();
+
+                    return $destination;
+                }
+
                 $data   = [
                     'name'           => $data['source_account_revenue'],
                     'accountType'    => 'revenue',
