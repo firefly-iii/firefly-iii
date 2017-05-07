@@ -119,7 +119,7 @@ class TransactionController extends Controller
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/budgets/list/no-budget');
+            $journals->setPath('/transactions/' . $what);
             $count = $journals->getCollection()->count();
             if ($count === 0) {
                 $start->subDay();
@@ -179,10 +179,10 @@ class TransactionController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $events           = $tasker->getPiggyBankEvents($journal);
-        $transactions     = $tasker->getTransactionsOverview($journal);
-        $what             = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle         = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
+        $events          = $tasker->getPiggyBankEvents($journal);
+        $transactions    = $tasker->getTransactionsOverview($journal);
+        $what            = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle        = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
         $foreignCurrency = null;
 
         if ($journal->hasMeta('foreign_currency_id')) {
