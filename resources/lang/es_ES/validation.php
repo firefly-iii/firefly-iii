@@ -10,7 +10,7 @@
  */
 
 return [
-    'iban'                           => 'This is not a valid IBAN.',
+    'iban'                           => 'This is not a valid CBU.',
     'unique_account_number_for_user' => 'It looks like this account number is already in use.',
     'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
