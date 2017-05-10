@@ -8,10 +8,10 @@
  */
 
 return [
-    'no_demo_text'                   => 'Sorry, there is no extra demo-explanation text for <abbr title=":route">this page</abbr>.',
-    'see_help_icon'                  => 'However, the <i class="fa fa-question-circle"></i>-icon in the top right corner may tell you more.',
-    'index'                          => 'Welcome to <strong>Firefly III</strong>! On this page you get a quick overview of your finances. For more information, check out Accounts &rarr; <a href=":asset">Asset Accounts</a> and of course the <a href=":budgets">Budgets</a> and <a href=":reports">Reports</a> pages. Or just take a look around and see where you end up.',
-    'accounts-index'                 => 'Asset accounts are your personal bank accounts. Expense accounts are the accounts you spend money at, such as stores and friends. Revenue accounts are accounts you receive money from, such as your job, the government or other sources of income. On this page you can edit or remove them.',
+    'no_demo_text'                   => 'Lamentablemente no hay textos de ayuda para <abbr title=":route">esta página</abbr>.',
+    'see_help_icon'                  => 'Sin embargo, el ícono <i class="fa fa-question-circle"></i> en la esquina superior-derecha puede tener más información.',
+    'index'                          => '¡Bienvenido a <strong>Firefly III</strong>! En esta página tendrá una vista rápida de sus finanzas. Para más información, mire sus cuentas rarr; <a href=":asset">Asset Accounts</a> y, claro, las páginas de <a href=":budgets">presupuestos</a> y <a href=":reports">reportes</a>. O simplemente investigue la aplicación por su cuenta.',
+    'accounts-index'                 => 'Las cajas de ahorro son sus cuentas de banco personales. Las cuentas de gastos contienen sus gastos habituales como compras y salidas con amigos. Las cuentas de ingresos repesentan ingresos de su trabajo u otras fuentes. En esta página puede editarlas o eliminarlas.',
     'budgets-index'                  => 'This page shows you an overview of your budgets. The top bar shows the amount that is available to be budgeted. This can be customized for any period by clicking the amount on the right. The amount you\'ve actually spent is shown in the bar below. Below that are the expenses per budget and what you\'ve budgeted for them.',
     'reports-index-start'            => 'Firefly III supports four types of reports. Read about them by clicking on the <i class="fa fa-question-circle"></i>-icon in the top right corner.',
     'reports-index-examples'         => 'Be sure to check out these examples: <a href=":one">a monthly financial overview</a>, <a href=":two">a yearly financial overview</a> and <a href=":three">a budget overview</a>.',
