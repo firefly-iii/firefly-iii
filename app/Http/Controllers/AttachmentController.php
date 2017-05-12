@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -18,10 +18,10 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 use Response;
-use Session;
 use View;
 
 /**
@@ -53,35 +53,37 @@ class AttachmentController extends Controller
     }
 
     /**
+     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return View
      */
-    public function delete(Attachment $attachment)
+    public function delete(Request $request, Attachment $attachment)
     {
         $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
         $this->rememberPreviousUri('attachments.delete.uri');
-        Session::flash('gaEventCategory', 'attachments');
-        Session::flash('gaEventAction', 'delete-attachment');
+        $request->session()->flash('gaEventCategory', 'attachments');
+        $request->session()->flash('gaEventAction', 'delete-attachment');
 
         return view('attachments.delete', compact('attachment', 'subTitle'));
     }
 
     /**
+     * @param Request                       $request
      * @param AttachmentRepositoryInterface $repository
      * @param Attachment                    $attachment
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(AttachmentRepositoryInterface $repository, Attachment $attachment)
+    public function destroy(Request $request, AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
         $name = $attachment->filename;
 
         $repository->destroy($attachment);
 
-        Session::flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
+        $request->session()->flash('success', strval(trans('firefly.attachment_deleted', ['name' => $name])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('attachments.delete.uri'));
@@ -119,11 +121,12 @@ class AttachmentController extends Controller
     }
 
     /**
+     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return View
      */
-    public function edit(Attachment $attachment)
+    public function edit(Request $request, Attachment $attachment)
     {
         $subTitleIcon = 'fa-pencil';
         $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
@@ -132,7 +135,7 @@ class AttachmentController extends Controller
         if (session('attachments.edit.fromUpdate') !== true) {
             $this->rememberPreviousUri('attachments.edit.uri');
         }
-        Session::forget('attachments.edit.fromUpdate');
+        $request->session()->forget('attachments.edit.fromUpdate');
 
         return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
@@ -169,14 +172,15 @@ class AttachmentController extends Controller
         $data = $request->getAttachmentData();
         $repository->update($attachment, $data);
 
-        Session::flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
+        $request->session()->flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
-            Session::put('attachments.edit.fromUpdate', true);
+            // @codeCoverageIgnoreStart
+            $request->session()->put('attachments.edit.fromUpdate', true);
 
             return redirect(route('attachments.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.

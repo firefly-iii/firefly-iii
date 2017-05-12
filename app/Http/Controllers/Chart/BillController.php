@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -60,7 +60,7 @@ class BillController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $paid      = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
@@ -88,7 +88,7 @@ class BillController extends Controller
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $results   = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();

@@ -9,14 +9,16 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Exceptions\ValidationException;
+use FireflyIII\Http\Middleware\IsLimitedUser;
 use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Hash;
 use Log;
 use Session;
@@ -45,6 +47,8 @@ class ProfileController extends Controller
                 return $next($request);
             }
         );
+        $this->middleware(IsLimitedUser::class);
+
     }
 
     /**
@@ -52,16 +56,6 @@ class ProfileController extends Controller
      */
     public function changePassword()
     {
-        if (intval(getenv('SANDSTORM')) === 1) {
-            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
-        }
-
-        if (auth()->user()->hasRole('demo')) {
-            Session::flash('info', strval(trans('firefly.cannot_change_demo')));
-
-            return redirect(route('profile.index'));
-        }
-
         $title        = auth()->user()->email;
         $subTitle     = strval(trans('firefly.change_your_password'));
         $subTitleIcon = 'fa-key';
@@ -74,16 +68,6 @@ class ProfileController extends Controller
      */
     public function deleteAccount()
     {
-        if (intval(getenv('SANDSTORM')) === 1) {
-            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
-        }
-
-        if (auth()->user()->hasRole('demo')) {
-            Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
-
-            return redirect(route('profile.index'));
-        }
-
         $title        = auth()->user()->email;
         $subTitle     = strval(trans('firefly.delete_account'));
         $subTitleIcon = 'fa-trash';
@@ -111,32 +95,18 @@ class ProfileController extends Controller
      */
     public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository)
     {
-        if (intval(getenv('SANDSTORM')) === 1) {
-            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
-        }
-
-        if (auth()->user()->hasRole('demo')) {
-            Session::flash('info', strval(trans('firefly.cannot_change_demo')));
-
-            return redirect(route('profile.index'));
-        }
-
-        // old, new1, new2
-        if (!Hash::check($request->get('current_password'), auth()->user()->password)) {
-            Session::flash('error', strval(trans('firefly.invalid_current_password')));
-
-            return redirect(route('profile.change-password'));
-        }
+        // the request has already validated both new passwords must be equal.
+        $current = $request->get('current_password');
+        $new     = $request->get('new_password');
 
         try {
-            $this->validatePassword($request->get('current_password'), $request->get('new_password'));
+            $this->validatePassword(auth()->user(), $current, $new);
         } catch (ValidationException $e) {
             Session::flash('error', $e->getMessage());
 
             return redirect(route('profile.change-password'));
         }
 
-        // update the user with the new password.
         $repository->changePassword(auth()->user(), $request->get('new_password'));
         Session::flash('success', strval(trans('firefly.password_changed')));
 
@@ -151,17 +121,6 @@ class ProfileController extends Controller
      */
     public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request)
     {
-        if (intval(getenv('SANDSTORM')) === 1) {
-            return view('error')->with('message', strval(trans('firefly.sandstorm_not_available')));
-        }
-
-        if (auth()->user()->hasRole('demo')) {
-            Session::flash('info', strval(trans('firefly.cannot_delete_demo')));
-
-            return redirect(route('profile.index'));
-        }
-
-        // old, new1, new2
         if (!Hash::check($request->get('password'), auth()->user()->password)) {
             Session::flash('error', strval(trans('firefly.invalid_password')));
 
@@ -181,16 +140,22 @@ class ProfileController extends Controller
         return redirect(route('index'));
     }
 
+
     /**
-     * @param string $old
+     * @param User   $user
+     * @param string $current
      * @param string $new
      *
      * @return bool
      * @throws ValidationException
      */
-    protected function validatePassword(string $old, string $new): bool
+    protected function validatePassword(User $user, string $current, string $new): bool
     {
-        if ($new === $old) {
+        if (!Hash::check($current, $user->password)) {
+            throw new ValidationException(strval(trans('firefly.invalid_current_password')));
+        }
+
+        if ($current === $new) {
             throw new ValidationException(strval(trans('firefly.should_change')));
         }
 

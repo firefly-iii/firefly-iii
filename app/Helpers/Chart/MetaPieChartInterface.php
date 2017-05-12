@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Chart;
 
@@ -71,6 +71,13 @@ interface MetaPieChartInterface
      * @return MetaPieChartInterface
      */
     public function setStart(Carbon $start): MetaPieChartInterface;
+
+    /**
+     * @param Collection $tags
+     *
+     * @return MetaPieChartInterface
+     */
+    public function setTags(Collection $tags): MetaPieChartInterface;
 
     /**
      * @param User $user

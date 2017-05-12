@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
@@ -49,7 +49,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $budgets = $helper->getBudgetReport($start, $end, $accounts);
@@ -76,7 +76,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         // generate budget report right here.

@@ -8,7 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -20,6 +20,7 @@ use FireflyIII\Import\Setup\SetupInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
@@ -87,8 +88,6 @@ class ImportController extends Controller
     {
         Log::debug('Now at start of configure()');
         if (!$this->jobInCorrectStep($job, 'configure')) {
-            Log::debug('Job is not in correct state for configure()', ['status' => $job->status]);
-
             return $this->redirectToCorrectStep($job);
         }
 
@@ -100,8 +99,6 @@ class ImportController extends Controller
         $subTitleIcon = 'fa-wrench';
 
         return view('import.' . $job->file_type . '.configure', compact('data', 'job', 'subTitle', 'subTitleIcon'));
-
-
     }
 
     /**
@@ -145,8 +142,6 @@ class ImportController extends Controller
     public function finished(ImportJob $job)
     {
         if (!$this->jobInCorrectStep($job, 'finished')) {
-            Log::debug('Job is not in correct state for finished()', ['status' => $job->status]);
-
             return $this->redirectToCorrectStep($job);
         }
 
@@ -224,13 +219,13 @@ class ImportController extends Controller
     /**
      * Step 4. Save the configuration.
      *
-     * @param Request   $request
-     * @param ImportJob $job
+     * @param Request                      $request
+     * @param ImportJobRepositoryInterface $repository
+     * @param ImportJob                    $job
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws FireflyException
      */
-    public function postConfigure(Request $request, ImportJob $job)
+    public function postConfigure(Request $request, ImportJobRepositoryInterface $repository, ImportJob $job)
     {
         Log::debug('Now in postConfigure()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'process')) {
@@ -245,8 +240,7 @@ class ImportController extends Controller
         $importer->saveImportConfiguration($data, $files);
 
         // update job:
-        $job->status = 'import_configuration_saved';
-        $job->save();
+        $repository->updateStatus($job, 'import_configuration_saved');
 
         // return redirect to settings.
         // this could loop until the user is done.
@@ -280,17 +274,15 @@ class ImportController extends Controller
      * Step 5. Depending on the importer, this will show the user settings to
      * fill in.
      *
-     * @param ImportJob $job
+     * @param ImportJobRepositoryInterface $repository
+     * @param ImportJob                    $job
      *
      * @return View
-     * @throws FireflyException
      */
-    public function settings(ImportJob $job)
+    public function settings(ImportJobRepositoryInterface $repository, ImportJob $job)
     {
         Log::debug('Now in settings()', ['job' => $job->key]);
         if (!$this->jobInCorrectStep($job, 'settings')) {
-            Log::debug('Job should not be in settings()');
-
             return $this->redirectToCorrectStep($job);
         }
         Log::debug('Continue in settings()');
@@ -308,8 +300,7 @@ class ImportController extends Controller
         }
         Log::debug('Job does NOT require user config.');
 
-        $job->status = 'settings_complete';
-        $job->save();
+        $repository->updateStatus($job, 'settings_complete');
 
         // if no more settings, save job and continue to process thing.
         return redirect(route('import.complete', [$job->key]));
@@ -350,15 +341,17 @@ class ImportController extends Controller
         return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
     }
 
+
     /**
      * This is step 2. It creates an Import Job. Stores the import.
      *
      * @param ImportUploadRequest          $request
      * @param ImportJobRepositoryInterface $repository
+     * @param UserRepositoryInterface      $userRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function upload(ImportUploadRequest $request, ImportJobRepositoryInterface $repository)
+    public function upload(ImportUploadRequest $request, ImportJobRepositoryInterface $repository, UserRepositoryInterface $userRepository)
     {
         Log::debug('Now in upload()');
         // create import job:
@@ -375,7 +368,7 @@ class ImportController extends Controller
         $disk             = Storage::disk('upload');
 
         // user is demo user, replace upload with prepared file.
-        if (auth()->user()->hasRole('demo')) {
+        if ($userRepository->hasRole(auth()->user(), 'demo')) {
             $stubsDisk        = Storage::disk('stubs');
             $content          = $stubsDisk->get('demo-import.csv');
             $contentEncrypted = Crypt::encrypt($content);
@@ -383,15 +376,14 @@ class ImportController extends Controller
             Log::debug('Replaced upload with demo file.');
 
             // also set up prepared configuration.
-            $configuration      = json_decode($stubsDisk->get('demo-configuration.json'), true);
-            $job->configuration = $configuration;
-            $job->save();
+            $configuration = json_decode($stubsDisk->get('demo-configuration.json'), true);
+            $repository->setConfiguration($job, $configuration);
             Log::debug('Set configuration for demo user', $configuration);
 
             // also flash info
             Session::flash('info', trans('demo.import-configure-security'));
         }
-        if (!auth()->user()->hasRole('demo')) {
+        if (!$userRepository->hasRole(auth()->user(), 'demo')) {
             // user is not demo, process original upload:
             $disk->put($newName, $contentEncrypted);
             Log::debug('Uploaded file', ['name' => $upload->getClientOriginalName(), 'size' => $upload->getSize(), 'mime' => $upload->getClientMimeType()]);
@@ -411,18 +403,15 @@ class ImportController extends Controller
             $configRaw        = $configFileObject->fread($configFileObject->getSize());
             $configuration    = json_decode($configRaw, true);
 
+            // @codeCoverageIgnoreStart
             if (!is_null($configuration) && is_array($configuration)) {
                 Log::debug('Found configuration', $configuration);
-                $job->configuration = $configuration;
-                $job->save();
+                $repository->setConfiguration($job, $configuration);
             }
+            // @codeCoverageIgnoreEnd
         }
 
-        // if user is demo user, replace config with prepared config:
-
-
         return redirect(route('import.configure', [$job->key]));
-
     }
 
     /**
@@ -440,6 +429,8 @@ class ImportController extends Controller
                 return $job->status === 'import_status_never_started';
             case 'settings':
             case 'store-settings':
+                Log::debug(sprintf('Job %d with key %s has status %s', $job->id, $job->key, $job->status));
+
                 return $job->status === 'import_configuration_saved';
             case 'finished':
                 return $job->status === 'import_complete';
@@ -449,7 +440,7 @@ class ImportController extends Controller
                 return ($job->status === 'settings_complete') || ($job->status === 'import_running');
         }
 
-        return false;
+        return false; // @codeCoverageIgnore
 
     }
 
@@ -475,7 +466,7 @@ class ImportController extends Controller
 
             return $importer;
         }
-        throw new FireflyException(sprintf('"%s" is not a valid file type', $type));
+        throw new FireflyException(sprintf('"%s" is not a valid file type', $type)); // @codeCoverageIgnore
 
     }
 
@@ -507,7 +498,7 @@ class ImportController extends Controller
                 return redirect(route('import.finished', [$job->key]));
         }
 
-        throw new FireflyException('Cannot redirect for job state ' . $job->status);
+        throw new FireflyException('Cannot redirect for job state ' . $job->status); // @codeCoverageIgnore
 
     }
 }

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 
 namespace FireflyIII\Http\Controllers;
@@ -23,7 +23,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
-use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface as EJRI;
 use Illuminate\Http\Response as LaravelResponse;
 use Preferences;
 use Response;
@@ -55,9 +54,10 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportJob $job
+     * @param ExportJobRepositoryInterface $repository
+     * @param ExportJob                    $job
      *
-     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      * @throws FireflyException
      */
     public function download(ExportJobRepositoryInterface $repository, ExportJob $job)
@@ -102,12 +102,12 @@ class ExportController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param EJRI                       $jobs
+     * @param AccountRepositoryInterface   $repository
+     * @param ExportJobRepositoryInterface $jobs
      *
      * @return View
      */
-    public function index(AccountRepositoryInterface $repository, EJRI $jobs)
+    public function index(AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
     {
         // create new export job.
         $job = $jobs->create();
@@ -128,13 +128,13 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportFormRequest          $request
-     * @param AccountRepositoryInterface $repository
-     * @param EJRI                       $jobs
+     * @param ExportFormRequest            $request
+     * @param AccountRepositoryInterface   $repository
+     * @param ExportJobRepositoryInterface $jobs
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, EJRI $jobs)
+    public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
     {
         $job      = $jobs->findByKey($request->get('job'));
         $settings = [

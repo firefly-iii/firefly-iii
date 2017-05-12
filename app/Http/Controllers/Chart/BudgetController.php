@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -18,11 +18,14 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -80,7 +83,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;
@@ -133,7 +136,7 @@ class BudgetController extends Controller
         $cache->addProperty($budgetLimit->id);
 
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries          = [];
@@ -154,6 +157,144 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseAsset(Budget $budget, BudgetLimit $budgetLimit = null)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($budget->id);
+        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty('chart.budget.expense-asset');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget);
+        if (!is_null($budgetLimit->id)) {
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+        }
+
+        $transactions = $collector->getJournals();
+        $result       = [];
+        $chartData    = [];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $assetId          = intval($transaction->account_id);
+            $result[$assetId] = $result[$assetId] ?? '0';
+            $result[$assetId] = bcadd($transaction->transaction_amount, $result[$assetId]);
+        }
+
+        $names = $this->getAccountNames(array_keys($result));
+        foreach ($result as $assetId => $amount) {
+            $chartData[$names[$assetId]] = $amount;
+        }
+
+        $data = $this->generator->pieChart($chartData);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseCategory(Budget $budget, BudgetLimit $budgetLimit = null)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($budget->id);
+        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty('chart.budget.expense-category');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withCategoryInformation();
+        if (!is_null($budgetLimit->id)) {
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+        }
+
+        $transactions = $collector->getJournals();
+        $result       = [];
+        $chartData    = [];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $jrnlCatId           = intval($transaction->transaction_journal_category_id);
+            $transCatId          = intval($transaction->transaction_category_id);
+            $categoryId          = max($jrnlCatId, $transCatId);
+            $result[$categoryId] = $result[$categoryId] ?? '0';
+            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
+        }
+
+        $names = $this->getCategoryNames(array_keys($result));
+        foreach ($result as $categoryId => $amount) {
+            $chartData[$names[$categoryId]] = $amount;
+        }
+
+        $data = $this->generator->pieChart($chartData);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseExpense(Budget $budget, BudgetLimit $budgetLimit = null)
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($budget->id);
+        $cache->addProperty($budgetLimit->id ?? 0);
+        $cache->addProperty('chart.budget.expense-expense');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withOpposingAccount();
+        if (!is_null($budgetLimit->id)) {
+            $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+        }
+
+        $transactions = $collector->getJournals();
+        $result       = [];
+        $chartData    = [];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $opposingId          = intval($transaction->opposing_account_id);
+            $result[$opposingId] = $result[$opposingId] ?? '0';
+            $result[$opposingId] = bcadd($transaction->transaction_amount, $result[$opposingId]);
+        }
+
+        $names = $this->getAccountNames(array_keys($result));
+        foreach ($result as $opposingId => $amount) {
+            $name             = $names[$opposingId] ?? 'no name';
+            $chartData[$name] = $amount;
+        }
+
+        $data = $this->generator->pieChart($chartData);
+        $cache->store($data);
+
+        return Response::json($data);
+
+    }
+
+    /**
      * Shows a budget list with spent/left/overspent.
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // 46 lines, I'm fine with this.
@@ -170,7 +311,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
@@ -227,7 +368,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $periods  = Navigation::listOfPeriods($start, $end);
         $entries  = $this->repository->getBudgetPeriodReport(new Collection([$budget]), $accounts, $start, $end); // get the expenses
@@ -268,7 +409,7 @@ class BudgetController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // the expenses:
@@ -286,6 +427,28 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
+    }
+
+    /**
+     * @param array $accountIds
+     *
+     * @return array
+     */
+    private function getAccountNames(array $accountIds): array
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE]);
+        $grouped    = $accounts->groupBy('id')->toArray();
+        $return     = [];
+        foreach ($accountIds as $accountId) {
+            if (isset($grouped[$accountId])) {
+                $return[$accountId] = $grouped[$accountId][0]['name'];
+            }
+        }
+        $return[0] = '(no name)';
+
+        return $return;
     }
 
     /**
@@ -312,6 +475,30 @@ class BudgetController extends Controller
         }
 
         return $budgeted;
+    }
+
+    /**
+     * Small helper function for some of the charts.
+     *
+     * @param array $categoryIds
+     *
+     * @return array
+     */
+    private function getCategoryNames(array $categoryIds): array
+    {
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $categories = $repository->getCategories();
+        $grouped    = $categories->groupBy('id')->toArray();
+        $return     = [];
+        foreach ($categoryIds as $categoryId) {
+            if (isset($grouped[$categoryId])) {
+                $return[$categoryId] = $grouped[$categoryId][0]['name'];
+            }
+        }
+        $return[0] = trans('firefly.noCategory');
+
+        return $return;
     }
 
     /**
@@ -386,9 +573,14 @@ class BudgetController extends Controller
                         ]
                     );
             }
+            /*
+             * amount: amount of budget limit
+             * left: amount of budget limit min spent, or 0 when < 0.
+             * spent: spent, or amount of budget limit when > amount
+             */
             $amount        = $budgetLimit->amount;
             $left          = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent         = $expenses;
+            $spent         = bccomp($expenses, $amount) === 1 ? $expenses : bcmul($amount, '-1');
             $overspent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
             $return[$name] = [
                 'left'      => $left,

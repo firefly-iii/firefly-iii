@@ -9,11 +9,11 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
 
-use FireflyIII\Models\TransactionCurrency as TC;
+use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class TransactionCurrencies
@@ -28,7 +28,7 @@ class TransactionCurrencies implements MapperInterface
      */
     public function getMap(): array
     {
-        $currencies = TC::get();
+        $currencies = TransactionCurrency::get();
         $list       = [];
         foreach ($currencies as $currency) {
             $list[$currency->id] = $currency->name . ' (' . $currency->code . ')';

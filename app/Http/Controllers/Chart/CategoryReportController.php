@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -19,12 +19,14 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -41,10 +43,6 @@ use Response;
 class CategoryReportController extends Controller
 {
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
     /** @var  GeneratorInterface */
     private $generator;
 
@@ -56,9 +54,7 @@ class CategoryReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->generator          = app(GeneratorInterface::class);
-                $this->categoryRepository = app(CategoryRepositoryInterface::class);
-                $this->accountRepository  = app(AccountRepositoryInterface::class);
+                $this->generator = app(GeneratorInterface::class);
 
                 return $next($request);
             }
@@ -78,11 +74,8 @@ class CategoryReportController extends Controller
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts);
-        $helper->setCategories($categories);
-        $helper->setStart($start);
-        $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setAccounts($accounts)->setCategories($categories)->setStart($start)->setEnd($end)->setCollectOtherObjects(intval($others) === 1);
+
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -179,7 +172,7 @@ class CategoryReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format       = Navigation::preferredCarbonLocalizedFormat($start, $end);
@@ -282,12 +275,15 @@ class CategoryReportController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount()->disableFilter();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
+                  ->setCategories($categories)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**
@@ -304,11 +300,13 @@ class CategoryReportController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setCategories($categories)->withOpposingAccount();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterIncome($transactions, $accountIds);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(NegativeAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**
@@ -327,24 +325,6 @@ class CategoryReportController extends Controller
             $categoryId           = max($jrnlCatId, $transCatId);
             $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
             $grouped[$categoryId] = bcadd($transaction->transaction_amount, $grouped[$categoryId]);
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * @param Collection $set
-     *
-     * @return array
-     */
-    private function groupByOpposingAccount(Collection $set): array
-    {
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $accountId           = $transaction->opposing_account_id;
-            $grouped[$accountId] = $grouped[$accountId] ?? '0';
-            $grouped[$accountId] = bcadd($transaction->transaction_amount, $grouped[$accountId]);
         }
 
         return $grouped;

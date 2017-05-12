@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
@@ -111,15 +112,15 @@ class NewUserController extends Controller
     private function createAssetAccount(NewUserFormRequest $request, AccountRepositoryInterface $repository): bool
     {
         $assetAccount = [
-            'name'                   => $request->get('bank_name'),
-            'iban'                   => null,
-            'accountType'            => 'asset',
-            'virtualBalance'         => 0,
-            'active'                 => true,
-            'accountRole'            => 'defaultAsset',
-            'openingBalance'         => round($request->input('bank_balance'), 12),
-            'openingBalanceDate'     => new Carbon,
-            'openingBalanceCurrency' => intval($request->input('amount_currency_id_bank_balance')),
+            'name'               => $request->get('bank_name'),
+            'iban'               => null,
+            'accountType'        => 'asset',
+            'virtualBalance'     => 0,
+            'active'             => true,
+            'accountRole'        => 'defaultAsset',
+            'openingBalance'     => round($request->input('bank_balance'), 12),
+            'openingBalanceDate' => new Carbon,
+            'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
         ];
 
         $repository->store($assetAccount);
@@ -136,15 +137,15 @@ class NewUserController extends Controller
     private function createSavingsAccount(NewUserFormRequest $request, AccountRepositoryInterface $repository): bool
     {
         $savingsAccount = [
-            'name'                   => $request->get('bank_name') . ' savings account',
-            'iban'                   => null,
-            'accountType'            => 'asset',
-            'virtualBalance'         => 0,
-            'active'                 => true,
-            'accountRole'            => 'savingAsset',
-            'openingBalance'         => round($request->input('savings_balance'), 12),
-            'openingBalanceDate'     => new Carbon,
-            'openingBalanceCurrency' => intval($request->input('amount_currency_id_savings_balance')),
+            'name'               => $request->get('bank_name') . ' savings account',
+            'iban'               => null,
+            'accountType'        => 'asset',
+            'virtualBalance'     => 0,
+            'active'             => true,
+            'accountRole'        => 'savingAsset',
+            'openingBalance'     => round($request->input('savings_balance'), 12),
+            'openingBalanceDate' => new Carbon,
+            'currency_id'        => intval($request->input('amount_currency_id_savings_balance')),
         ];
         $repository->store($savingsAccount);
 

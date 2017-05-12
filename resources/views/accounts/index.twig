@@ -5,32 +5,38 @@
 {% endblock %}
 
 {% block content %}
+    {% if accounts.count > 0 %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box" id="account-index-{{ what }}">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ subTitle }}</h3>
 
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box" id="account-index-{{ what }}">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ subTitle }}</h3>
-
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('accounts.create', what) }}"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}
-                                    </a></li>
-                            </ul>
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <div class="btn-group">
+                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('accounts.create', what) }}"><i
+                                                    class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}
+                                        </a></li>
+                                </ul>
+                            </div>
                         </div>
+
+
                     </div>
 
+                    <div class="box-body table-responsive no-padding">
+                        {% include 'list.accounts' %}
+                    </div>
 
-                </div>
-                <div class="box-body table-responsive no-padding">
-                    {% include 'list.accounts' %}
                 </div>
             </div>
         </div>
-    </div>
+    {% else %}
+        {% include 'partials.empty' with {what: what, type: 'accounts',route: route('accounts.create', [what])} %}
+    {% endif %}
 {% endblock %}
 
 {% block styles %}

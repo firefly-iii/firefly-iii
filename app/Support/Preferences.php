@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
@@ -118,9 +118,13 @@ class Preferences
      */
     public function lastActivity(): string
     {
-        $preference = $this->get('lastActivity', microtime())->data;
+        $lastActivity = microtime();
+        $preference   = $this->get('lastActivity', microtime());
+        if (!is_null($preference)) {
+            $lastActivity = $preference->data;
+        }
 
-        return md5($preference);
+        return md5($lastActivity);
     }
 
     /**

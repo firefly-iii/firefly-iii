@@ -9,14 +9,13 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
 
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\ExportJob;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;

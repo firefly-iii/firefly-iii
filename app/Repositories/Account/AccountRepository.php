@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 
 namespace FireflyIII\Repositories\Account;
@@ -251,6 +251,19 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @return Account
+     */
+    public function getCashAccount(): Account
+    {
+        $type    = AccountType::where('type', AccountType::CASH)->first();
+        $account = Account::firstOrCreateEncrypted(
+            ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => 'Cash account', 'active' => 1]
+        );
+
+        return $account;
+    }
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account
@@ -455,13 +468,15 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $amount          = $data['openingBalance'];
         $name            = $data['name'];
+        $currencyId      = $data['currency_id'];
         $opposing        = $this->storeOpposingAccount($name);
         $transactionType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
-        $journal         = TransactionJournal::create(
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['openingBalanceCurrency'],
+                'transaction_currency_id' => $currencyId,
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
@@ -529,12 +544,8 @@ class AccountRepository implements AccountRepositoryInterface
         }
         // opening balance data? update it!
         if (!is_null($openingBalance->id)) {
-            $date   = $data['openingBalanceDate'];
-            $amount = $data['openingBalance'];
-
             Log::debug('Opening balance journal found, update journal.');
-
-            $this->updateOpeningBalanceJournal($account, $openingBalance, $date, $amount);
+            $this->updateOpeningBalanceJournal($account, $openingBalance, $data);
 
             return true;
         }
@@ -588,15 +599,19 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account            $account
      * @param TransactionJournal $journal
-     * @param Carbon             $date
-     * @param float              $amount
+     * @param array              $data
      *
      * @return bool
      */
-    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, Carbon $date, float $amount): bool
+    protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
+        $date       = $data['openingBalanceDate'];
+        $amount     = $data['openingBalance'];
+        $currencyId = intval($data['currency_id']);
+
         // update date:
-        $journal->date = $date;
+        $journal->date                    = $date;
+        $journal->transaction_currency_id = $currencyId;
         $journal->save();
         // update transactions:
         /** @var Transaction $transaction */
@@ -623,9 +638,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function validOpeningBalanceData(array $data): bool
     {
-        if (isset($data['openingBalance'])
-            && isset($data['openingBalanceDate'])
-            && isset($data['openingBalanceCurrency'])
+        if (isset($data['openingBalance']) && isset($data['openingBalanceDate'])
             && bccomp(strval($data['openingBalance']), '0') !== 0
         ) {
             Log::debug('Array has valid opening balance data.');

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Import\Setup;
 
@@ -182,8 +182,8 @@ class CsvSetup implements SetupInterface
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $importId = $data['csv_import_account'] ?? 0;
-        $account  = $repository->find(intval($importId));
+        $importId   = $data['csv_import_account'] ?? 0;
+        $account    = $repository->find(intval($importId));
 
         $hasHeaders            = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
         $config                = $this->job->configuration;

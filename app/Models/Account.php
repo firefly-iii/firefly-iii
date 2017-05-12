@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
@@ -209,6 +209,26 @@ class Account extends Model
         }
 
         return $value;
+    }
+
+    /**
+     * Returns the opening balance
+     *
+     * @return TransactionJournal
+     * @throws FireflyException
+     */
+    public function getOpeningBalance(): TransactionJournal
+    {
+        $journal = TransactionJournal::sortCorrectly()
+                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                     ->where('transactions.account_id', $this->id)
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->first(['transaction_journals.*']);
+        if (is_null($journal)) {
+            return new TransactionJournal;
+        }
+
+        return $journal;
     }
 
     /**

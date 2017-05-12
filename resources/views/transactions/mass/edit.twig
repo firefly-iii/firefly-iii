@@ -22,66 +22,92 @@
                             <tr>
                             <tr>
                                 <th class="">&nbsp;</th>
-                                <th class="col-lg-4 col-md-4 col-sm-4">{{ trans('list.description') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.description') }}</th>
                                 <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.amount') }}</th>
                                 <th class="col-lg-1 col-md-1 col-sm-1">{{ trans('list.date') }}</th>
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.from') }}</th>
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.to') }}</th>
                                 <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.category') }}</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2">{{ trans('list.budget') }}</th>
                             </tr>
                             {% for journal in journals %}
                                 {% if journal.transaction_count == 2 %}
                                     <tr>
                                         <td>
-                                            <!-- LINK TO EDIT FORM -->
-                                            <a href="{{ route('transactions.edit', journal.id) }}" class="btn btn-xs btn-default">
-                                                <i class="fa fa-fw fa-pencil"></i>
-                                            </a>
+                                            {# LINK TO EDIT FORM #}
+                                            <a href="{{ route('transactions.edit', journal.id) }}" class="btn btn-xs btn-default"><i
+                                                        class="fa fa-fw fa-pencil"></i></a>
                                             <input type="hidden" name="journals[]" value="{{ journal.id }}"/>
                                         </td>
                                         <td>
-                                            <!-- DESCRIPTION -->
-                                            <input
-                                                    class="form-control"
-                                                    id="ffInput_description_{{ journal.id }}" autocomplete="off"
-                                                    placeholder="Description" name="description[{{ journal.id }}]"
-                                                    type="text" value="{{ journal.description }}">
+                                            {# DESCRIPTION #}
+                                            <input class="form-control input-sm" autocomplete="off"
+                                                   placeholder="{{ journal.description }}" name="description[{{ journal.id }}]"
+                                                   type="text" value="{{ journal.description }}">
                                         </td>
                                         <td>
-                                            <!-- AMOUNT -->
-                                            {{ ExpandedForm.amountSmall('amount_'~journal.id, journal.amount, {'name' : 'amount['~journal.id~']', 'currency' : journal.transactionCurrency}) }}
-                                        </td>
-                                        <td>
-                                            <!-- DATE -->
-                                            <input
-                                                    class="form-control" id="ffInput_date_{{ journal.id }}"
-                                                    autocomplete="off" name="date[{{ journal.id }}]" type="date" value="{{ journal.date.format('Y-m-d') }}">
-                                        </td>
-                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon">{{ journal.transactionCurrency.symbol }}</span>
+                                                <input name="amount[{{ journal.id }}]" class="form-control" autocomplete="off"
+                                                       step="any" type="number" value="{{ journal.amount }}">
+                                            </div>
 
-                                            <!-- SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL -->
+                                        </td>
+                                        <td>
+                                            {# DATE #}
+                                            <input class="form-control input-sm" autocomplete="off"
+                                                   name="date[{{ journal.id }}]" type="date" value="{{ journal.date.format('Y-m-d') }}">
+                                        </td>
+                                        <td>
+                                            {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}
                                             {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Withdrawal' %}
-                                                {{ Form.select('source_account_id['~journal.id~']', accountList, journal.source_account_id, {'class': 'form-control'}) }}
+                                                <select class="form-control input-sm" name="source_account_id[{{ journal.id }}]">
+                                                    {% for account in accounts %}
+                                                        <option value="{{ account.id }}"{% if account.id==journal.source_account_id %} selected="selected"{% endif %}
+                                                                label="{{ account.name }}">{{ account.name }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             {% else %}
-                                                <!-- SOURCE ACCOUNT NAME FOR DEPOSIT -->
-                                                {{ Form.input('text', 'source_account_name['~journal.id~']', journal.source_account_name, {'class': 'form-control', 'placeholder': trans('form.revenue_account')}) }}
+                                                {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
+                                                <input class="form-control input-sm" placeholder="{{ journal.source_account_name }}"
+                                                       name="source_account_name[{{ journal.id }}]" type="text" value="{{ journal.source_account_name }}">
                                             {% endif %}
-
                                         </td>
                                         <td>
-
                                             {% if journal.transaction_type_type == 'Transfer' or journal.transaction_type_type == 'Deposit' %}
-                                                <!-- DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT -->
-                                                {{ Form.select('destination_account_id['~journal.id~']', accountList, journal.destination_account_id, {'class': 'form-control'}) }}
+                                                {# DESTINATION ACCOUNT NAME FOR TRANSFER AND DEPOSIT #}
+                                                <select class="form-control input-sm" name="destination_account_id[{{ journal.id }}]">
+                                                    {% for account in accounts %}
+                                                        <option value="{{ account.id }}"{% if account.id==journal.destination_account_id %} selected="selected"{% endif %}
+                                                                label="{{ account.name }}">{{ account.name }}</option>
+                                                    {% endfor %}
+                                                </select>
                                             {% else %}
-                                                <!-- DESTINATION ACCOUNT NAME FOR EXPENSE-->
-
-                                                {{ Form.input('text', 'destination_account_name['~journal.id~']', journal.destination_account_name, {'class': 'form-control', 'placeholder': trans('form.expense_account')}) }}
+                                                {# DESTINATION ACCOUNT NAME FOR EXPENSE #}
+                                                <input class="form-control input-sm" placeholder="{{ journal.destination_account_name }}"
+                                                       name="destination_account_name[{{ journal.id }}]" type="text"
+                                                       value="{{ journal.destination_account_name }}">
                                             {% endif %}
                                         </td>
-                                        <!-- category -->
+                                        {# category #}
                                         <td>
-                                            {{ Form.input('text', 'category['~journal.id~']', journal.categories[0].name, {'class': 'form-control', 'placeholder': trans('form.category')}) }}
+                                            <input class="form-control input-sm" placeholder="{{ journal.categories[0].name }}"
+                                                   name="category[{{ journal.id }}]" type="text" value="{{ journal.categories[0].name }}">
+                                        </td>
+                                        {# budget #}
+                                        <td>
+                                            {% if journal.transaction_type_type == 'Withdrawal' %}
+                                                <select class="form-control input-sm" name="budget_id[{{ journal.id }}]">
+                                                    <option value="0" label="(none)"
+                                                            {% if journal.budgets.count == 0 %}selected="selected"{% endif %}
+                                                    >(none)
+                                                    </option>
+                                                    {% for budget in budgets %}
+                                                        <option value="{{ budget.id }}"{% if budget.id==journal.budgets[0].id %} selected="selected"{% endif %}
+                                                                label="{{ budget.name }}">{{ budget.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}

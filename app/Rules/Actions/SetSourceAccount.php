@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Rules\Actions;
 
@@ -62,7 +62,7 @@ class SetSourceAccount implements ActionInterface
         $this->journal    = $journal;
         $this->repository = app(AccountRepositoryInterface::class);
         $this->repository->setUser($journal->user);
-        $count            = $journal->transactions()->count();
+        $count = $journal->transactions()->count();
         if ($count > 2) {
             Log::error(sprintf('Cannot change source account of journal #%d because it is a split journal.', $journal->id));
 

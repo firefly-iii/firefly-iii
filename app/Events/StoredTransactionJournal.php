@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Events;
 
@@ -26,7 +26,9 @@ class StoredTransactionJournal extends Event
 
     use SerializesModels;
 
+    /** @var TransactionJournal  */
     public $journal;
+    /** @var int  */
     public $piggyBankId;
 
     /**

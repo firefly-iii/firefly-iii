@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
@@ -72,7 +72,7 @@ class Navigation
      * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
+    public function endOfPeriod(\Carbon\Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd = clone $end;
 

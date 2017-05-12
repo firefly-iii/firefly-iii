@@ -8,7 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
@@ -24,6 +24,8 @@ use Session;
 use Validator;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class RegisterController
  *
  * @package FireflyIII\Http\Controllers\Auth
@@ -122,12 +124,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create(
+        /** @var User $user */
+        $user = User::create(
             [
                 'email'    => $data['email'],
                 'password' => bcrypt($data['password']),
             ]
         );
+
+        return $user;
     }
 
     /**

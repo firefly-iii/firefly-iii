@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
@@ -29,14 +29,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
 
     /**
      * @return int
@@ -98,6 +90,46 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function get(): Collection
     {
         return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getActiveGroups(User $user): Collection
+    {
+        return $user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveStoreRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                     ->where('rule_triggers.trigger_type', 'user_action')
+                     ->where('rule_triggers.trigger_value', 'store-journal')
+                     ->where('rules.active', 1)
+                     ->get(['rules.*']);
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveUpdateRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                     ->where('rule_triggers.trigger_type', 'user_action')
+                     ->where('rule_triggers.trigger_value', 'update-journal')
+                     ->where('rules.active', 1)
+                     ->get(['rules.*']);
     }
 
     /**
@@ -226,6 +258,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         return true;
 
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**

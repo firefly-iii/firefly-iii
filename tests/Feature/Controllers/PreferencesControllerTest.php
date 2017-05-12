@@ -7,20 +7,41 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Collection;
+use PragmaRX\Google2FA\Contracts\Google2FA;
+use Preferences;
 use Tests\TestCase;
 
+/**
+ * Class PreferencesControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class PreferencesControllerTest extends TestCase
 {
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::code
+     * @covers \FireflyIII\Http\Controllers\PreferencesController::getDomain
      */
     public function testCode()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $google       = $this->mock(Google2FA::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $google->shouldReceive('generateSecretKey')->andReturn('secret');
+        $google->shouldReceive('getQRCodeInline')->andReturn('long-data-url');
+
         $this->be($this->user());
         $response = $this->get(route('preferences.code'));
         $response->assertStatus(200);
@@ -32,6 +53,10 @@ class PreferencesControllerTest extends TestCase
      */
     public function testDeleteCode()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('preferences.delete-code'));
         $response->assertStatus(302);
@@ -42,9 +67,16 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::index
+     * @covers \FireflyIII\Http\Controllers\PreferencesController::__construct
      */
     public function testIndex()
     {
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
+
         $this->be($this->user());
         $response = $this->get(route('preferences.index'));
         $response->assertStatus(200);
@@ -52,13 +84,47 @@ class PreferencesControllerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function testPostCode()
+    {
+        $secret = '0123456789abcde';
+        $key    = '123456';
+        $google = $this->mock(Google2FA::class);
+
+        $this->withoutMiddleware();
+        $this->session(['two-factor-secret' => $secret]);
+
+        Preferences::shouldReceive('set')->withArgs(['twoFactorAuthEnabled', 1])->once();
+        Preferences::shouldReceive('set')->withArgs(['twoFactorAuthSecret', $secret])->once();
+        Preferences::shouldReceive('mark')->once();
+
+        $google->shouldReceive('verifyKey')->withArgs([$secret, $key])->andReturn(true);
+
+        $data = [
+            'code' => $key,
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('preferences.code.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\PreferencesController::postIndex
      */
     public function testPostIndex()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $userRepos->shouldReceive('hasRole')->andReturn(false);
+
         $data = [
             'fiscalYearStart'       => '2016-01-01',
-            'frontPageAccounts'     => [],
+            'frontPageAccounts'     => [1],
             'viewRange'             => '1M',
             'customFiscalYear'      => 0,
             'showDepositsFrontpage' => 0,
@@ -73,6 +139,82 @@ class PreferencesControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
         $response->assertRedirect(route('preferences.index'));
+    }
+
+    /**
+     * User wants 2FA and has secret already.
+     *
+     * @covers \FireflyIII\Http\Controllers\PreferencesController::postIndex
+     */
+    public function testPostIndexWith2FA()
+    {
+        $this->withoutMiddleware();
+        // mock stuff
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->andReturn(false);
+
+        // mock preferences (in a useful way?)
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn('12345');
+        Preferences::shouldReceive('set');
+        Preferences::shouldReceive('mark');
+
+        $data = [
+            'fiscalYearStart'       => '2016-01-01',
+            'frontPageAccounts'     => [1],
+            'viewRange'             => '1M',
+            'customFiscalYear'      => 0,
+            'showDepositsFrontpage' => 0,
+            'transactionPageSize'   => 100,
+            'twoFactorAuthEnabled'  => 1,
+            'language'              => 'en_US',
+            'tj'                    => [],
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('preferences.update'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        // go to code to get a secret.
+        $response->assertRedirect(route('preferences.index'));
+    }
+
+    /**
+     * User wants 2FA and has no secret.
+     *
+     * @covers \FireflyIII\Http\Controllers\PreferencesController::postIndex
+     */
+    public function testPostIndexWithEmpty2FA()
+    {
+        $this->withoutMiddleware();
+        // mock stuff
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->andReturn(false);
+
+        // mock preferences (in a useful way?)
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null);
+        Preferences::shouldReceive('set');
+        Preferences::shouldReceive('mark');
+
+        $data = [
+            'fiscalYearStart'       => '2016-01-01',
+            'frontPageAccounts'     => [1],
+            'viewRange'             => '1M',
+            'customFiscalYear'      => 0,
+            'showDepositsFrontpage' => 0,
+            'transactionPageSize'   => 100,
+            'twoFactorAuthEnabled'  => 1,
+            'language'              => 'en_US',
+            'tj'                    => [],
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('preferences.update'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        // go to code to get a secret.
+        $response->assertRedirect(route('preferences.code'));
     }
 
 }

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -43,14 +43,12 @@ class AccountFormRequest extends Request
             'accountType'            => $this->string('what'),
             'currency_id'            => $this->integer('currency_id'),
             'virtualBalance'         => $this->float('virtualBalance'),
-            'virtualBalanceCurrency' => $this->integer('amount_currency_id_virtualBalance'),
             'iban'                   => $this->string('iban'),
             'BIC'                    => $this->string('BIC'),
             'accountNumber'          => $this->string('accountNumber'),
             'accountRole'            => $this->string('accountRole'),
             'openingBalance'         => $this->float('openingBalance'),
             'openingBalanceDate'     => $this->date('openingBalanceDate'),
-            'openingBalanceCurrency' => $this->integer('amount_currency_id_openingBalance'),
             'ccType'                 => $this->string('ccType'),
             'ccMonthlyPaymentDate'   => $this->string('ccMonthlyPaymentDate'),
         ];

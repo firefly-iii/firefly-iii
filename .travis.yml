@@ -9,7 +9,6 @@ cache:
         - $HOME/.composer/cache
 
 install:
-  - if [[ "$(php -v | grep 'PHP 7')" ]]; then phpenv config-rm xdebug.ini; fi
   - rm composer.lock
   - composer update --no-scripts
   - cp .env.testing .env
@@ -18,9 +17,13 @@ install:
   - php artisan env
   - cp .env.testing .env
   - mv storage/database/databasecopy.sqlite storage/database/database.sqlite
+  - mkdir -p build/logs
 
 script:
-  - phpunit
+  - phpunit -c phpunit.xml
+
+#after_success:
+#  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
 
 # safelist
 branches:

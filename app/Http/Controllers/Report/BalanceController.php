@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
@@ -47,7 +47,7 @@ class BalanceController extends Controller
         $cache->addProperty('balance-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balance = $helper->getBalanceReport($accounts, $start, $end);

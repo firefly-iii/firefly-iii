@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
 
@@ -24,43 +24,52 @@ use Illuminate\Support\Collection;
 interface SearchInterface
 {
     /**
-     * @param array $words
-     *
+     * @return string
+     */
+    public function getWordsAsString(): string;
+
+    /**
+     * @return bool
+     */
+    public function hasModifiers(): bool;
+
+    /**
+     * @param string $query
+     */
+    public function parseQuery(string $query);
+
+    /**
      * @return Collection
      */
-    public function searchAccounts(array $words): Collection;
+    public function searchAccounts(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function searchBudgets(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function searchCategories(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function searchTags(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function searchTransactions(): Collection;
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit(int $limit);
 
     /**
      * @param User $user
      */
     public function setUser(User $user);
-
-    /**
-     * @param array $words
-     *
-     * @return Collection
-     */
-    public function searchBudgets(array $words): Collection;
-
-    /**
-     * @param array $words
-     *
-     * @return Collection
-     */
-    public function searchCategories(array $words): Collection;
-
-    /**
-     *
-     * @param array $words
-     *
-     * @return Collection
-     */
-    public function searchTags(array $words): Collection;
-
-    /**
-     * @param array $words
-     *
-     * @return Collection
-     */
-    public function searchTransactions(array $words): Collection;
 }

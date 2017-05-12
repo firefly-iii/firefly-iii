@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -58,22 +58,22 @@ class HelpController extends Controller
             return Response::json($content);
         }
 
-        $content = $help->getFromGithub($language, $route);
+        $content         = $help->getFromGithub($route, $language);
+        $notYourLanguage = '<p><em>' . strval(trans('firefly.help_may_not_be_your_language')) . '</em></p>';
 
         // get backup language content (try English):
         if (strlen($content) === 0) {
             $language = 'en_US';
             if ($help->inCache($route, $language)) {
                 Log::debug(sprintf('Help text %s was in cache.', $language));
-                $content = $help->getFromCache($route, $language);
+                $content = $notYourLanguage . $help->getFromCache($route, $language);
             }
             if (!$help->inCache($route, $language)) {
-                $content = $help->getFromGithub($language, $route);
-                $content = '<p><em>' . strval(trans('firefly.help_may_not_be_your_language')) . '</em></p>' . $content;
+                $content = trim($notYourLanguage . $help->getFromGithub($route, $language));
             }
         }
 
-        if (strlen($content) === 0) {
+        if ($content === $notYourLanguage) {
             $content = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
         }
 

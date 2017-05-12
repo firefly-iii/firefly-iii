@@ -12,8 +12,14 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Report;
 
 
+use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Tests\TestCase;
 
+/**
+ * Class AccountControllerTest
+ *
+ * @package Tests\Feature\Controllers\Report
+ */
 class AccountControllerTest extends TestCase
 {
     /**
@@ -21,6 +27,17 @@ class AccountControllerTest extends TestCase
      */
     public function testGeneral()
     {
+        $return = [
+            'accounts'   => [],
+            'start'      => '0',
+            'end'        => '0',
+            'difference' => '0',
+        ];
+
+        $tasker = $this->mock(AccountTaskerInterface::class);
+        $tasker->shouldReceive('getAccountReport')->andReturn($return);
+
+
         $this->be($this->user());
         $response = $this->get(route('report-data.account.general', ['1', '20120101', '20120131']));
         $response->assertStatus(200);

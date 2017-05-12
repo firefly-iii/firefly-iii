@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
@@ -141,25 +141,27 @@ class SplitController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal, $files);
-
         event(new UpdatedTransactionJournal($journal));
-        // update, get events by date and sort DESC
 
         // flash messages
+        // @codeCoverageIgnoreStart
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             Session::flash('info', $this->attachments->getMessages()->get('attachments'));
         }
+        // @codeCoverageIgnoreEnd
 
-        $type = strtolower(TransactionJournal::transactionTypeStr($journal));
+        $type = strtolower($journal->transactionTypeStr());
         Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));
         Preferences::mark();
 
+        // @codeCoverageIgnoreStart
         if (intval($request->get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
             return redirect(route('transactions.split.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
         }
+        // @codeCoverageIgnoreEnd
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit-split.uri'));
@@ -207,18 +209,18 @@ class SplitController extends Controller
      */
     private function arrayFromJournal(Request $request, TransactionJournal $journal): array
     {
-        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
-        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
+        $sourceAccounts      = $journal->sourceAccountList();
+        $destinationAccounts = $journal->destinationAccountList();
         $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
-            'journal_amount'                 => TransactionJournal::amountPositive($journal),
+            'journal_amount'                 => $journal->amountPositive(),
             'sourceAccounts'                 => $sourceAccounts,
             'journal_source_account_id'      => $request->old('journal_source_account_id', $sourceAccounts->first()->id),
             'journal_source_account_name'    => $request->old('journal_source_account_name', $sourceAccounts->first()->name),
             'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
             'currency_id'                    => $request->old('currency_id', $journal->transaction_currency_id),
             'destinationAccounts'            => $destinationAccounts,
-            'what'                           => strtolower(TransactionJournal::transactionTypeStr($journal)),
+            'what'                           => strtolower($journal->transactionTypeStr()),
             'date'                           => $request->old('date', $journal->date),
             'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
 
@@ -263,8 +265,8 @@ class SplitController extends Controller
 
             // set initial category and/or budget:
             if (count($transactions) === 1 && $index === 0) {
-                $set['budget_id'] = TransactionJournal::budgetId($journal);
-                $set['category']  = TransactionJournal::categoryAsString($journal);
+                $set['budget_id'] = $journal->budgetId();
+                $set['category']  = $journal->categoryAsString();
             }
 
             $return[] = $set;

@@ -91,7 +91,7 @@ function doubleYChart(URI, container) {
     "use strict";
 
     var colorData = true;
-    var options = defaultChartOptions;
+    var options = $.extend(true, {}, defaultChartOptions);
     options.scales.yAxes = [
         // y axis 0:
         {
@@ -141,7 +141,7 @@ function doubleYNonStackedChart(URI, container) {
     "use strict";
 
     var colorData = true;
-    var options = defaultChartOptions;
+    var options = $.extend(true, {}, defaultChartOptions);
     options.scales.yAxes = [
         // y axis 0:
         {
@@ -186,7 +186,7 @@ function doubleYNonStackedChart(URI, container) {
  */
 function columnChart(URI, container) {
     "use strict";
-
+    console.log('Going to draw column chart for ' + URI + ' in ' + container);
     var colorData = true;
     var options = defaultChartOptions;
     var chartType = 'bar';
@@ -204,9 +204,11 @@ function stackedColumnChart(URI, container) {
     "use strict";
 
     var colorData = true;
-    var options = defaultChartOptions;
+    var options = $.extend(true, {}, defaultChartOptions);
+
     options.stacked = true;
     options.scales.xAxes[0].stacked = true;
+    options.scales.yAxes[0].stacked = true;
 
     var chartType = 'bar';
 

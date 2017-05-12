@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
@@ -36,6 +36,12 @@ class PiggyBank extends Twig_Extension
         $functions[] = new Twig_SimpleFunction(
             'currentRelevantRepAmount', function (PB $piggyBank) {
             return $piggyBank->currentRelevantRep()->currentamount;
+        }
+        );
+
+        $functions[] = new Twig_SimpleFunction(
+            'suggestedMonthlyAmount', function (PB $piggyBank) {
+            return $piggyBank->getSuggestedMonthlyAmount();
         }
         );
 

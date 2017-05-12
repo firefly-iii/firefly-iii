@@ -12,7 +12,11 @@
     {% for id, info in report %}
         <tr>
             <td>
-                <a class="btn btn-default btn-xs" href="{{ route('categories.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                {% if id != 0 %}
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                {% else %}
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.no-category') }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                {% endif %}
             </td>
             <td data-value="{{ info.name }}">
                 <a title="{{ info.name }}" href="#" data-category="{{ id }}" class="category-chart-activate">{{ info.name }}</a>

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Rules\Triggers;
 
@@ -61,7 +61,7 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
         $name = '';
 
         /** @var Account $account */
-        foreach (TransactionJournal::sourceAccountList($journal) as $account) {
+        foreach ($journal->sourceAccountList() as $account) {
             $name .= strtolower($account->name);
         }
 

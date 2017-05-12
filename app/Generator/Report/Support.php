@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
 
@@ -25,57 +25,122 @@ use Log;
  */
 class Support
 {
-
     /**
-     * @param Collection $collection
-     * @param array      $accounts
-     *
      * @return Collection
      */
-    public static function filterExpenses(Collection $collection, array $accounts): Collection
+    public function getTopExpenses(): Collection
     {
-        return self::filterTransactions($collection, $accounts, 1);
+        $transactions = $this->getExpenses()->sortBy('transaction_amount');
+
+        return $transactions;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTopIncome(): Collection
+    {
+        $transactions = $this->getIncome()->sortByDesc('transaction_amount');
+
+        return $transactions;
     }
 
     /**
      * @param Collection $collection
-     * @param array      $accounts
+     * @param int        $sortFlag
      *
-     * @return Collection
+     * @return array
      */
-    public static function filterIncome(Collection $collection, array $accounts): Collection
+    protected function getAverages(Collection $collection, int $sortFlag): array
     {
-        return self::filterTransactions($collection, $accounts, -1);
-    }
+        $result = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            // opposing name and ID:
+            $opposingId = $transaction->opposing_account_id;
 
-    /**
-     * @param Collection $collection
-     * @param array      $accounts
-     * @param int        $modifier
-     *
-     * @return Collection
-     */
-    public static function filterTransactions(Collection $collection, array $accounts, int $modifier): Collection
-    {
-        $result = $collection->filter(
-            function (Transaction $transaction) use ($accounts, $modifier) {
-                $opposing = $transaction->opposing_account_id;
-                // remove internal transfer
-                if (in_array($opposing, $accounts)) {
-                    Log::debug(sprintf('Filtered #%d because its opposite is in accounts.', $transaction->id));
-
-                    return null;
-                }
-                // remove positive amount
-                if (bccomp($transaction->transaction_amount, '0') === $modifier) {
-                    Log::debug(sprintf('Filtered #%d because amount is %f.', $transaction->id, $transaction->transaction_amount));
-
-                    return null;
-                }
-
-                return $transaction;
+            // is not set?
+            if (!isset($result[$opposingId])) {
+                $name                = $transaction->opposing_account_name;
+                $result[$opposingId] = [
+                    'name'    => $name,
+                    'count'   => 1,
+                    'id'      => $opposingId,
+                    'average' => $transaction->transaction_amount,
+                    'sum'     => $transaction->transaction_amount,
+                ];
+                continue;
             }
-        );
+            $result[$opposingId]['count']++;
+            $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
+            $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], strval($result[$opposingId]['count']));
+        }
+
+        // sort result by average:
+        $average = [];
+        foreach ($result as $key => $row) {
+            $average[$key] = floatval($row['average']);
+        }
+
+        array_multisort($average, $sortFlag, $result);
+
+        return $result;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     * @param array $spent
+     * @param array $earned
+     *
+     * @return array
+     */
+    protected function getObjectSummary(array $spent, array $earned): array
+    {
+        $return = [];
+
+        /**
+         * @var int    $accountId
+         * @var string $entry
+         */
+        foreach ($spent as $objectId => $entry) {
+            if (!isset($return[$objectId])) {
+                $return[$objectId] = ['spent' => 0, 'earned' => 0];
+            }
+
+            $return[$objectId]['spent'] = $entry;
+        }
+        unset($entry);
+
+        /**
+         * @var int    $accountId
+         * @var string $entry
+         */
+        foreach ($earned as $objectId => $entry) {
+            if (!isset($return[$objectId])) {
+                $return[$objectId] = ['spent' => 0, 'earned' => 0];
+            }
+
+            $return[$objectId]['earned'] = $entry;
+        }
+
+
+        return $return;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    protected function summarizeByAccount(Collection $collection): array
+    {
+        $result = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            $accountId          = $transaction->account_id;
+            $result[$accountId] = $result[$accountId] ?? '0';
+            $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
+        }
 
         return $result;
     }

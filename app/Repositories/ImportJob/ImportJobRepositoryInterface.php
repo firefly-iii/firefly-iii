@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ImportJob;
 
@@ -38,7 +38,23 @@ interface ImportJobRepositoryInterface
     public function findByKey(string $key): ImportJob;
 
     /**
+     * @param ImportJob $job
+     * @param array     $configuration
+     *
+     * @return ImportJob
+     */
+    public function setConfiguration(ImportJob $job, array $configuration): ImportJob;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
+
+    /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function updateStatus(ImportJob $job, string $status): ImportJob;
 }

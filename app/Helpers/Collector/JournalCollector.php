@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
 
@@ -18,12 +18,17 @@ use Carbon\Carbon;
 use Crypt;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Filter\FilterInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -74,6 +79,9 @@ class JournalCollector implements JournalCollectorInterface
     private $filterInternalTransfers;
     /** @var  bool */
     private $filterTransfers = false;
+    /** @var array */
+    private $filters = [InternalTransferFilter::class];
+
     /** @var  bool */
     private $joinedBudget = false;
     /** @var  bool */
@@ -94,6 +102,22 @@ class JournalCollector implements JournalCollectorInterface
     private $run = false;
     /** @var User */
     private $user;
+
+    /**
+     * @param string $filter
+     *
+     * @return JournalCollectorInterface
+     */
+    public function addFilter(string $filter): JournalCollectorInterface
+    {
+        $interfaces = class_implements($filter);
+        if (in_array(FilterInterface::class, $interfaces)) {
+            Log::debug(sprintf('Enabled filter %s', $filter));
+            $this->filters[] = $filter;
+        }
+
+        return $this;
+    }
 
     /**
      * @return int
@@ -120,36 +144,6 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
-     * @return JournalCollectorInterface
-     */
-    public function disableFilter(): JournalCollectorInterface
-    {
-        $this->filterTransfers = false;
-
-        return $this;
-    }
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function disableInternalFilter(): JournalCollectorInterface
-    {
-        $this->filterInternalTransfers = false;
-
-        return $this;
-    }
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function enableInternalFilter(): JournalCollectorInterface
-    {
-        $this->filterInternalTransfers = true;
-
-        return $this;
-    }
-
-    /**
      * @return Collection
      */
     public function getJournals(): Collection
@@ -157,23 +151,18 @@ class JournalCollector implements JournalCollectorInterface
         $this->run = true;
         /** @var Collection $set */
         $set = $this->query->get(array_values($this->fields));
-        Log::debug(sprintf('Count of set is %d', $set->count()));
-        $set = $this->filterTransfers($set);
-        Log::debug(sprintf('Count of set after filterTransfers() is %d', $set->count()));
 
-        // possibly filter "internal" transfers:
-        $set = $this->filterInternalTransfers($set);
-        Log::debug(sprintf('Count of set after filterInternalTransfers() is %d', $set->count()));
-
+        // run all filters:
+        $set = $this->filter($set);
 
         // loop for decryption.
         $set->each(
             function (Transaction $transaction) {
                 $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = $transaction->encrypted ? Crypt::decrypt($transaction->description) : $transaction->description;
+                $transaction->description = Steam::decrypt(intval($transaction->encrypted), $transaction->description);
 
                 if (!is_null($transaction->bill_name)) {
-                    $transaction->bill_name = $transaction->bill_name_encrypted ? Crypt::decrypt($transaction->bill_name) : $transaction->bill_name;
+                    $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
 
                 try {
@@ -205,6 +194,22 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param string $filter
+     *
+     * @return JournalCollectorInterface
+     */
+    public function removeFilter(string $filter): JournalCollectorInterface
+    {
+        $key = array_search($filter, $this->filters, true);
+        if (!($key === false)) {
+            Log::debug(sprintf('Removed filter %s', $filter));
+            unset($this->filters[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Collection $accounts
      *
      * @return JournalCollectorInterface
@@ -219,6 +224,7 @@ class JournalCollector implements JournalCollectorInterface
         }
 
         if ($accounts->count() > 1) {
+            $this->addFilter(TransferFilter::class);
             $this->filterTransfers = true;
         }
 
@@ -242,6 +248,7 @@ class JournalCollector implements JournalCollectorInterface
         }
 
         if ($accounts->count() > 1) {
+            $this->addFilter(TransferFilter::class);
             $this->filterTransfers = true;
         }
 
@@ -431,6 +438,20 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Collection $tags
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setTags(Collection $tags): JournalCollectorInterface
+    {
+        $this->joinTagTables();
+        $tagIds = $tags->pluck('id')->toArray();
+        $this->query->whereIn('tag_transaction_journal.tag_id', $tagIds);
+
+        return $this;
+    }
+
+    /**
      * @param array $types
      *
      * @return JournalCollectorInterface
@@ -450,7 +471,9 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setUser(User $user)
     {
+        Log::debug(sprintf('Journal collector now collecting for user #%d', $user->id));
         $this->user = $user;
+        $this->startQuery();
     }
 
     /**
@@ -458,6 +481,7 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function startQuery()
     {
+        Log::debug('journalCollector::startQuery');
         /** @var EloquentBuilder $query */
         $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
@@ -503,6 +527,7 @@ class JournalCollector implements JournalCollectorInterface
     public function withOpposingAccount(): JournalCollectorInterface
     {
         $this->joinOpposingTables();
+
         return $this;
     }
 
@@ -545,79 +570,23 @@ class JournalCollector implements JournalCollectorInterface
      *
      * @return Collection
      */
-    private function filterInternalTransfers(Collection $set): Collection
+    private function filter(Collection $set): Collection
     {
-        if ($this->filterInternalTransfers === false) {
-            Log::debug('Did NO filtering for internal transfers on given set.');
-
-            return $set;
-        }
-        if ($this->joinedOpposing === false) {
-            Log::info('Cannot filter internal transfers because no opposing information is present.');
-
-            return $set;
-        }
-
-        $accountIds = $this->accountIds;
-        $set        = $set->filter(
-            function (Transaction $transaction) use ($accountIds) {
-                // both id's in $accountids?
-                if (in_array($transaction->account_id, $accountIds) && in_array($transaction->opposing_account_id, $accountIds)) {
-                    Log::debug(
-                        sprintf(
-                            'Transaction #%d has #%d and #%d in set, so removed',
-                            $transaction->id, $transaction->account_id, $transaction->opposing_account_id
-                        ), $accountIds
-                    );
-
-                    return false;
-                }
-
-                return $transaction;
-
+        // create all possible filters:
+        $filters = [
+            InternalTransferFilter::class => new InternalTransferFilter($this->accountIds),
+            OpposingAccountFilter::class  => new OpposingAccountFilter($this->accountIds),
+            TransferFilter::class         => new TransferFilter,
+            PositiveAmountFilter::class   => new PositiveAmountFilter,
+            NegativeAmountFilter::class   => new NegativeAmountFilter,
+        ];
+        Log::debug(sprintf('Will run %d filters on the set.', count($this->filters)));
+        foreach ($this->filters as $enabled) {
+            if (isset($filters[$enabled])) {
+                Log::debug(sprintf('Before filter %s: %d', $enabled, $set->count()));
+                $set = $filters[$enabled]->filter($set);
+                Log::debug(sprintf('After filter %s: %d', $enabled, $set->count()));
             }
-        );
-
-        return $set;
-    }
-
-    /**
-     * If the set of accounts used by the collector includes more than one asset
-     * account, chances are the set include double entries: transfers get selected
-     * on both the source, and then again on the destination account.
-     *
-     * This method filters them out by removing transfers that have been selected twice.
-     *
-     * @param Collection $set
-     *
-     * @return Collection
-     */
-    private function filterTransfers(Collection $set): Collection
-    {
-        if ($this->filterTransfers) {
-            $count = [];
-            $new   = new Collection;
-            /** @var Transaction $transaction */
-            foreach ($set as $transaction) {
-                if ($transaction->transaction_type_type !== TransactionType::TRANSFER) {
-                    $new->push($transaction);
-                    continue;
-                }
-                // make property string:
-                $journalId  = $transaction->transaction_journal_id;
-                $amount     = Steam::positive($transaction->transaction_amount);
-                $accountIds = [intval($transaction->account_id), intval($transaction->opposing_account_id)];
-                sort($accountIds);
-                $key = $journalId . '-' . join(',', $accountIds) . '-' . $amount;
-                Log::debug(sprintf('Key is %s', $key));
-                if (!isset($count[$key])) {
-                    // not yet counted? add to new set and count it:
-                    $new->push($transaction);
-                    $count[$key] = 1;
-                }
-            }
-
-            return $new;
         }
 
         return $set;

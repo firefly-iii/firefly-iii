@@ -16,11 +16,17 @@ use FireflyConfig;
 use FireflyIII\Models\Configuration;
 use Tests\TestCase;
 
+/**
+ * Class ConfigurationControllerTest
+ *
+ * @package Tests\Feature\Controllers\Admin
+ */
 class ConfigurationControllerTest extends TestCase
 {
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::index
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::__construct
      */
     public function testIndex()
     {

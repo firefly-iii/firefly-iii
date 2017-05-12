@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
@@ -17,7 +17,6 @@ use Amount;
 use App;
 use Carbon\Carbon;
 use Closure;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;

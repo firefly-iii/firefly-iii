@@ -8,7 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,6 +18,14 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreateUsersTable extends Migration
 {
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::drop('users');
+    }
+
     /**
      * Run the migrations.
      *
@@ -39,13 +47,5 @@ class CreateUsersTable extends Migration
             }
             );
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down()
-    {
-        Schema::drop('users');
     }
 }

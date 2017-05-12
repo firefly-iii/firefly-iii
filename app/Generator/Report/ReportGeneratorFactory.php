@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
 
@@ -49,7 +49,7 @@ class ReportGeneratorFactory
         $class = sprintf('FireflyIII\Generator\Report\%s\%sReportGenerator', $type, $period);
         if (class_exists($class)) {
             /** @var ReportGeneratorInterface $obj */
-            $obj = new $class;
+            $obj = app($class);
             $obj->setStartDate($start);
             $obj->setEndDate($end);
 

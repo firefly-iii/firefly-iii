@@ -10,11 +10,18 @@ TESTINGENV=./.env.testing
 resetTestFlag=''
 testflag=''
 coverageflag=''
-acceptancetestclass=''
+
+featureflag=''
+featuretestclass=''
+
+unitflag=''
+unittestclass=''
+
 verbalflag=''
 testsuite=''
+configfile='phpunit.xml';
 
-while getopts 'vcrta:s:' flag; do
+while getopts 'vcrtf:u:s:' flag; do
   case "${flag}" in
     r)
         resetTestFlag='true'
@@ -24,14 +31,21 @@ while getopts 'vcrta:s:' flag; do
     ;;
     c)
         coverageflag='true'
+        configfile='phpunit.coverage.xml';
     ;;
     v)
         verbalflag=' -v --debug'
         echo "Will be verbal about it"
     ;;
-    a)
-        acceptancetestclass=./tests/acceptance/$OPTARG
-        echo "Will only run acceptance test $OPTARG"
+    f)
+        featureflag='true'
+        featuretestclass=./tests/Feature/$OPTARG
+        echo "Will only run Feature test $OPTARG"
+    ;;
+    u)
+        unitflag='true'
+        unittestclass=./tests/Unit/$OPTARG
+        echo "Will only run Unit test $OPTARG"
     ;;
     s)
         testsuite="--testsuite $OPTARG"
@@ -41,6 +55,11 @@ while getopts 'vcrta:s:' flag; do
   esac
 done
 
+if [[ $coverageflag == "true" && ($featureflag == "true" || $unitflag == "true") ]]
+then
+    echo "Use config file specific.xml"
+    configfile='phpunit.coverage.specific.xml'
+fi
 
 
 # backup current config (if it exists):
@@ -99,12 +118,13 @@ else
     if [[ $coverageflag == "" ]]
     then
         echo "Must run PHPUnit without coverage:"
-        echo "phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite"
-        phpunit --stop-on-error $verbalflag $acceptancetestclass $testsuite
+
+        echo "phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
+        phpunit $verbalflag  --configuration $configfile $featuretestclass $unittestclass $testsuite
     else
         echo "Must run PHPUnit with coverage"
-        echo "phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite"
-        phpunit --stop-on-error $verbalflag --configuration phpunit.coverage.xml $acceptancetestclass $testsuite
+        echo "phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite"
+        phpunit $verbalflag --configuration $configfile $featuretestclass $unittestclass $testsuite
     fi
 fi
 

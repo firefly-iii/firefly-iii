@@ -1,0 +1,59 @@
+{
+  "name": "Firefly III",
+  "description": "A free and open source personal finances manager",
+  "repository": "https://github.com/firefly-iii/firefly-iii",
+  "logo": "https://raw.githubusercontent.com/firefly-iii/firefly-iii/master/public/mstile-150x150.png",
+  "keywords": [
+    "finance",
+    "finances",
+    "manager",
+    "management",
+    "euro",
+    "dollar",
+    "laravel",
+    "money",
+    "currency",
+    "financials",
+    "financial",
+    "budgets",
+    "administration",
+    "tool",
+    "tooling",
+    "help",
+    "helper",
+    "assistant",
+    "planning",
+    "organizing",
+    "bills",
+    "personal finance",
+    "budgets",
+    "budgeting",
+    "budgeting tool",
+    "budgeting application",
+    "transactions",
+    "self hosted",
+    "self-hosted",
+    "transfers",
+    "management"
+  ],
+  "website": "https://firefly-iii.github.io/",
+  "addons": [
+    {
+      "plan": "heroku-postgresql"
+    }
+  ],
+  "scripts": {
+    "postdeploy": "export APP_KEY=$(php artisan --no-ansi key:generate --show)"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/php"
+    }
+  ],
+  "env": {
+    "APP_KEY": {
+      "description": "This key is used to encrypt your data.",
+      "value": "base64:If1gJN4pyycXTq+WS5TjneDympKuu+8SKvTl6RZnhJg="
+    }
+  }
+}

@@ -3,10 +3,10 @@
     <tr>
         <th data-defaultsign="az">{{ 'budget'|_ }}</th>
         <th data-defaultsign="month" class="hidden-xs">{{ 'date'|_ }}</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'budgeted'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;" class="hidden-xs">{{ 'budgeted'|_ }}</th>
         <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
-        <th data-defaultsort="disabled">&nbsp;</th>
-        <th data-defaultsign="_19" style="text-align: right;">{{ 'left'|_ }}</th>
+        <th data-defaultsort="disabled" class="hidden-xs">&nbsp;</th>
+        <th data-defaultsign="_19" style="text-align: right;" class="hidden-xs">{{ 'left'|_ }}</th>
         <th data-defaultsign="_19" style="text-align: right;">{{ 'overspent'|_ }}</th>
     </tr>
     </thead>
@@ -23,6 +23,7 @@
         {% set sum_overspent = sum_overspent + line.overspent %}
 
         <tr>
+            {# Budget name, always visible #}
             {% if line.type == 'no-budget' %}
                 <td data-value="zzzzzzz">
                     <em>{{ 'no_budget'|_ }}</em>
@@ -32,6 +33,7 @@
                     <a href="{{ route('budgets.show',line.id) }}">{{ line.name }}</a>
                 </td>
             {% endif %}
+            {# date, hidden on mobile #}
             {% if line.type == 'budget-line' %}
                 <td class="hidden-xs" data-value="{{ line.start.format('Y-m-d') }}">
                     <a href="{{ route('budgets.show.limit', [line.id, line.limit]) }}">
@@ -41,25 +43,35 @@
                     </a>
                 </td>
             {% else %}
-                <td data-value="0000-00-00">
+                <td data-value="0000-00-00" class="hidden-xs">
 
                 </td>
             {% endif %}
-            <td data-value="{{ line.budgeted }}" style="text-align: right;">
+
+            {# budgeted, hidden on mobile #}
+            <td data-value="{{ line.budgeted }}" style="text-align: right;" class="hidden-xs">
                 {{ line.budgeted|formatAmount }}
             </td>
+
+            {# spent, visible on mobile #}
             <td data-value="{{ line.spent }}" style="text-align: right;">
                 {{ line.spent|formatAmount }}
             </td>
-            <td>
+
+            {# info button, not visible on mobile #}
+            <td class="hidden-xs">
                 {% if line.spent != 0 %}
                     <i class="fa fa-fw text-muted fa-info-circle firefly-info-button"
                        data-location="budget-spent-amount" data-budget-id="{{ line.id }}"></i>
                 {% endif %}
             </td>
-            <td data-value="{{ line.left }}" style="text-align: right;">
+
+            {# left, hidden on mobile #}
+            <td data-value="{{ line.left }}" style="text-align: right;" class="hidden-xs">
                 {{ line.left|formatAmount }}
             </td>
+
+            {# overspent, visible. #}
             <td data-value="{{ line.overspent }}" style="text-align: right;">
                 {{ line.overspent|formatAmount }}
             </td>
@@ -68,12 +80,22 @@
     </tbody>
     <tfoot>
     <tr>
+        {# title, visible #}
         <td><em>{{ 'sum'|_ }}</em></td>
+        {# date, hidden #}
         <td class="hidden-xs">&nbsp;</td>
-        <td style="text-align: right;">{{ sum_budgeted|formatAmount }}</td>
+
+        {# sum of budgeted, hidden #}
+        <td style="text-align: right;" class="hidden-xs">{{ sum_budgeted|formatAmount }}</td>
+
+        {# spent, visible #}
         <td style="text-align: right;">{{ sum_spent|formatAmount }}</td>
-        <td>&nbsp;</td>
-        <td style="text-align: right;">{{ sum_left|formatAmount }}</td>
+
+        {# info button, hidden #}
+        <td class="hidden-xs">&nbsp;</td>
+
+        {# left, hidden #}
+        <td style="text-align: right;" class="hidden-xs">{{ sum_left|formatAmount }}</td>
         <td style="text-align: right;">{{ sum_overspent|formatAmount }}</td>
     </tr>
     </tfoot>

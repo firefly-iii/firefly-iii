@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
@@ -52,6 +52,27 @@ interface RuleGroupRepositoryInterface
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getActiveGroups(User $user): Collection;
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveStoreRules(RuleGroup $group): Collection;
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getActiveUpdateRules(RuleGroup $group): Collection;
 
     /**
      * @return int

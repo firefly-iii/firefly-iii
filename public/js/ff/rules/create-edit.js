@@ -104,14 +104,14 @@ function addNewAction() {
 function removeTrigger(e) {
     "use strict";
     var target = $(e.target);
-    if (target.prop("tagName") == "I") {
+    if (target.prop("tagName") === "I") {
         target = target.parent();
     }
     // remove grand parent:
     target.parent().parent().remove();
 
     // if now at zero, immediatly add one again:
-    if ($('.rule-trigger-tbody tr').length == 0) {
+    if ($('.rule-trigger-tbody tr').length === 0) {
         addNewTrigger();
     }
     return false;
@@ -125,14 +125,14 @@ function removeTrigger(e) {
 function removeAction(e) {
     "use strict";
     var target = $(e.target);
-    if (target.prop("tagName") == "I") {
+    if (target.prop("tagName") === "I") {
         target = target.parent();
     }
     // remove grand parent:
     target.parent().parent().remove();
 
     // if now at zero, immediatly add one again:
-    if ($('.rule-action-tbody tr').length == 0) {
+    if ($('.rule-action-tbody tr').length === 0) {
         addNewAction();
     }
     return false;
@@ -300,7 +300,7 @@ function testRuleTriggers() {
         }
 
         // Show the modal dialog
-        $("#testTriggerModal").modal();
+        modal.modal();
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
     });

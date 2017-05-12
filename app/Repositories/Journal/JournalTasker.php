@@ -9,11 +9,10 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
-use Crypt;
 use DB;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankEvent;
@@ -23,6 +22,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class JournalTasker
@@ -113,7 +113,7 @@ class JournalTasker implements JournalTaskerInterface
                 'source_amount'              => $entry->amount,
                 'description'                => $entry->description,
                 'source_account_id'          => $entry->account_id,
-                'source_account_name'        => intval($entry->account_encrypted) === 1 ? Crypt::decrypt($entry->account_name) : $entry->account_name,
+                'source_account_name'        => Steam::decrypt(intval($entry->account_encrypted), $entry->account_name),
                 'source_account_type'        => $entry->account_type,
                 'source_account_before'      => $sourceBalance,
                 'source_account_after'       => bcadd($sourceBalance, $entry->amount),
@@ -121,8 +121,7 @@ class JournalTasker implements JournalTaskerInterface
                 'destination_amount'         => bcmul($entry->amount, '-1'),
                 'destination_account_id'     => $entry->destination_account_id,
                 'destination_account_type'   => $entry->destination_account_type,
-                'destination_account_name'   =>
-                    intval($entry->destination_account_encrypted) === 1 ? Crypt::decrypt($entry->destination_account_name) : $entry->destination_account_name,
+                'destination_account_name'   => Steam::decrypt(intval($entry->destination_account_encrypted), $entry->destination_account_name),
                 'destination_account_before' => $destinationBalance,
                 'destination_account_after'  => bcadd($destinationBalance, bcmul($entry->amount, '-1')),
                 'budget_id'                  => is_null($budget) ? 0 : $budget->id,

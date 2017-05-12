@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -100,7 +100,7 @@ class Controller extends BaseController
      */
     protected function isOpeningBalance(TransactionJournal $journal): bool
     {
-        return TransactionJournal::transactionTypeStr($journal) === TransactionType::OPENING_BALANCE;
+        return $journal->transactionTypeStr() === TransactionType::OPENING_BALANCE;
     }
 
     /**
@@ -120,9 +120,11 @@ class Controller extends BaseController
             }
 
         }
+        // @codeCoverageIgnoreStart
         Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
 
         return redirect(route('index'));
+        // @codeCoverageIgnoreEnd
     }
 
     /**

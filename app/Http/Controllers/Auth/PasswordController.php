@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Password;
 
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class PasswordController
  *
  * @package FireflyIII\Http\Controllers\Auth

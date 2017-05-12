@@ -1,14 +1,7 @@
 /node_modules
 /public/storage
 /vendor
-/.idea
 Homestead.json
 Homestead.yaml
 .env
-_development
-.env.local
-result.html
-test-import.sh
-test-import-report.txt
 public/google*.html
-.env.backup

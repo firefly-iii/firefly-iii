@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Budget;
 
@@ -18,6 +18,9 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -142,51 +145,9 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     }
 
     /**
-     * @param Collection $collection
-     * @param int        $sortFlag
-     *
-     * @return array
-     */
-    private function getAverages(Collection $collection, int $sortFlag): array
-    {
-        $result = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            // opposing name and ID:
-            $opposingId = $transaction->opposing_account_id;
-
-            // is not set?
-            if (!isset($result[$opposingId])) {
-                $name                = $transaction->opposing_account_name;
-                $result[$opposingId] = [
-                    'name'    => $name,
-                    'count'   => 1,
-                    'id'      => $opposingId,
-                    'average' => $transaction->transaction_amount,
-                    'sum'     => $transaction->transaction_amount,
-                ];
-                continue;
-            }
-            $result[$opposingId]['count']++;
-            $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
-            $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], strval($result[$opposingId]['count']));
-        }
-
-        // sort result by average:
-        $average = [];
-        foreach ($result as $key => $row) {
-            $average[$key] = floatval($row['average']);
-        }
-
-        array_multisort($average, $sortFlag, $result);
-
-        return $result;
-    }
-
-    /**
      * @return Collection
      */
-    private function getExpenses(): Collection
+    protected function getExpenses(): Collection
     {
         if ($this->expenses->count() > 0) {
             Log::debug('Return previous set of expenses.');
@@ -198,42 +159,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setBudgets($this->budgets)->withOpposingAccount()->disableFilter();
+                  ->setBudgets($this->budgets)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
-        $accountIds     = $this->accounts->pluck('id')->toArray();
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
         $transactions   = $collector->getJournals();
-        $transactions   = self::filterExpenses($transactions, $accountIds);
         $this->expenses = $transactions;
 
         return $transactions;
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getTopExpenses(): Collection
-    {
-        $transactions = $this->getExpenses()->sortBy('transaction_amount');
-
-        return $transactions;
-    }
-
-    /**
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    private function summarizeByAccount(Collection $collection): array
-    {
-        $result = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $accountId          = $transaction->account_id;
-            $result[$accountId] = $result[$accountId] ?? '0';
-            $result[$accountId] = bcadd($transaction->transaction_amount, $result[$accountId]);
-        }
-
-        return $result;
     }
 
     /**

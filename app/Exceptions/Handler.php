@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Exceptions;
 
 use ErrorException;
@@ -97,6 +98,7 @@ class Handler extends ExceptionHandler
                 'file'         => $exception->getFile(),
                 'line'         => $exception->getLine(),
                 'code'         => $exception->getCode(),
+                'version'      => config('firefly.version'),
             ];
 
             // create job that will mail.

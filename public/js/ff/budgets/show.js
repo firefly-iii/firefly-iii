@@ -8,11 +8,23 @@
  * See the LICENSE file for details.
  */
 
-/** global: budgetChartUri */
+/** global: budgetChartUri,budgetLimitID */
 
 $(function () {
     "use strict";
+    if (budgetLimitID > 0) {
+        lineChart(budgetChartUri, 'budgetOverview');
+    }
+    if (budgetLimitID === 0) {
+        columnChart(budgetChartUri, 'budgetOverview');
+    }
 
-    columnChart(budgetChartUri, 'budgetOverview');
+    // other three charts:
+    pieChart(expenseCategoryUri, 'budget-cat-out');
+    pieChart(expenseAssetUri, 'budget-asset-out');
+    pieChart(expenseExpenseUri, 'budget-expense-out');
+
+
+
 
 });

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -81,10 +81,10 @@ class CreateImport extends Command
         /** @var ImportJobRepositoryInterface $jobRepository */
         $jobRepository = app(ImportJobRepositoryInterface::class);
         $jobRepository->setUser($user);
-        $job           = $jobRepository->create($type);
+        $job = $jobRepository->create($type);
         $this->line(sprintf('Created job "%s"...', $job->key));
 
-        Artisan::call('firefly:encrypt', ['file' => $file, 'key' => $job->key]);
+        Artisan::call('firefly:encrypt-file', ['file' => $file, 'key' => $job->key]);
         $this->line('Stored import data...');
 
         $job->configuration = $configurationData;

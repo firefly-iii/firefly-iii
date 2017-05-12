@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Popup;
 
@@ -17,17 +17,13 @@ namespace FireflyIII\Http\Controllers\Popup;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Response;
 use View;
@@ -39,6 +35,44 @@ use View;
  */
 class ReportController extends Controller
 {
+
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
+    /** @var BudgetRepositoryInterface */
+    private $budgetRepository;
+    /** @var CategoryRepositoryInterface */
+    private $categoryRepository;
+    /** @var PopupReportInterface */
+    private $popupHelper;
+
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+
+                /** @var AccountRepositoryInterface $repository */
+                $this->accountRepository = app(AccountRepositoryInterface::class);
+
+                /** @var BudgetRepositoryInterface $repository */
+                $this->budgetRepository = app(BudgetRepositoryInterface::class);
+
+                /** @var CategoryRepositoryInterface categoryRepository */
+                $this->categoryRepository = app(CategoryRepositoryInterface::class);
+
+                /** @var PopupReportInterface popupHelper */
+                $this->popupHelper = app(PopupReportInterface::class);
+
+                return $next($request);
+            }
+        );
+
+    }
+
 
     /**
      * @param Request $request
@@ -59,7 +93,6 @@ class ReportController extends Controller
                 throw new FireflyException('Firefly cannot handle "' . e($attributes['location']) . '" ');
             case 'budget-spent-amount':
                 $html = $this->budgetSpentAmount($attributes);
-
                 break;
             case 'expense-entry':
                 $html = $this->expenseEntry($attributes);
@@ -88,63 +121,26 @@ class ReportController extends Controller
      */
     private function balanceAmount(array $attributes): string
     {
-        $role = intval($attributes['role']);
-
-        /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app(BudgetRepositoryInterface::class);
-        $budget           = $budgetRepository->find(intval($attributes['budgetId']));
-
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        $account = $repository->find(intval($attributes['accountId']));
-        $types   = [TransactionType::WITHDRAWAL];
+        $role    = intval($attributes['role']);
+        $budget  = $this->budgetRepository->find(intval($attributes['budgetId']));
+        $account = $this->accountRepository->find(intval($attributes['accountId']));
 
         switch (true) {
             case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollectorInterface::class);
-                $collector
-                    ->setAccounts(new Collection([$account]))
-                    ->setRange($attributes['startDate'], $attributes['endDate'])
-                    ->setBudget($budget);
-                $journals = $collector->getJournals();
-
+                // normal row with a budget:
+                $journals = $this->popupHelper->balanceForBudget($budget, $account, $attributes);
                 break;
             case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
+                // normal row without a budget:
+                $journals     = $this->popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = strval(trans('firefly.no_budget'));
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollectorInterface::class);
-                $collector
-                    ->setAccounts(new Collection([$account]))
-                    ->setTypes($types)
-                    ->setRange($attributes['startDate'], $attributes['endDate'])
-                    ->withoutBudget();
-                $journals = $collector->getJournals();
                 break;
             case ($role === BalanceLine::ROLE_DIFFROLE):
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollectorInterface::class);
-                $collector
-                    ->setAccounts(new Collection([$account]))
-                    ->setTypes($types)
-                    ->setRange($attributes['startDate'], $attributes['endDate'])
-                    ->withoutBudget();
-                $journals = $collector->getJournals();
-
+                $journals     = $this->popupHelper->balanceDifference($account, $attributes);
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
-                $journals     = $journals->filter(
-                    function (Transaction $transaction) {
-                        $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
-                        if ($tags === 0) {
-                            return true;
-                        }
-
-                        return false;
-                    }
-                );
                 break;
             case ($role === BalanceLine::ROLE_TAGROLE):
+                // row with tag info.
                 throw new FireflyException('Firefly cannot handle this type of info-button (BalanceLine::TagRole)');
         }
         $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
@@ -162,27 +158,8 @@ class ReportController extends Controller
      */
     private function budgetSpentAmount(array $attributes): string
     {
-        // need to find the budget
-        // then search for expenses in the given period
-        // list them in some table format.
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budget     = $repository->find(intval($attributes['budgetId']));
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-
-        $collector
-            ->setAccounts($attributes['accounts'])
-            ->setRange($attributes['startDate'], $attributes['endDate']);
-
-        if (is_null($budget->id)) {
-            $collector->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
-        }
-        if (!is_null($budget->id)) {
-            // get all expenses in budget in period:
-            $collector->setBudget($budget);
-        }
-        $journals = $collector->getJournals();
+        $budget   = $this->budgetRepository->find(intval($attributes['budgetId']));
+        $journals = $this->popupHelper->byBudget($budget, $attributes);
         $view     = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
 
         return $view;
@@ -198,18 +175,9 @@ class ReportController extends Controller
      */
     private function categoryEntry(array $attributes): string
     {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $category   = $repository->find(intval($attributes['categoryId']));
-        $types      = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($attributes['accounts'])->setTypes($types)
-                  ->setRange($attributes['startDate'], $attributes['endDate'])
-                  ->setCategory($category);
-        $journals = $collector->getJournals(); // 7193
-
-        $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
+        $category = $this->categoryRepository->find(intval($attributes['categoryId']));
+        $journals = $this->popupHelper->byCategory($category, $attributes);
+        $view     = view('popup.report.category-entry', compact('journals', 'category'))->render();
 
         return $view;
     }
@@ -224,29 +192,9 @@ class ReportController extends Controller
      */
     private function expenseEntry(array $attributes): string
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        $account = $repository->find(intval($attributes['accountId']));
-        $types   = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
-        $journals = $collector->getJournals();
-        $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
-
-        // filter for transfers and withdrawals TO the given $account
-        $journals = $journals->filter(
-            function (Transaction $transaction) use ($report) {
-                // get the destinations:
-                $sources = TransactionJournal::sourceAccountList($transaction->transactionJournal)->pluck('id')->toArray();
-
-                // do these intersect with the current list?
-                return !empty(array_intersect($report, $sources));
-            }
-        );
-
-        $view = view('popup.report.expense-entry', compact('journals', 'account'))->render();
+        $account  = $this->accountRepository->find(intval($attributes['accountId']));
+        $journals = $this->popupHelper->byExpenses($account, $attributes);
+        $view     = view('popup.report.expense-entry', compact('journals', 'account'))->render();
 
         return $view;
     }
@@ -261,28 +209,9 @@ class ReportController extends Controller
      */
     private function incomeEntry(array $attributes): string
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $account    = $repository->find(intval($attributes['accountId']));
-        $types      = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setTypes($types);
-        $journals = $collector->getJournals();
-        $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
-
-        // filter the set so the destinations outside of $attributes['accounts'] are not included.
-        $journals = $journals->filter(
-            function (Transaction $transaction) use ($report) {
-                // get the destinations:
-                $destinations = TransactionJournal::destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
-
-                // do these intersect with the current list?
-                return !empty(array_intersect($report, $destinations));
-            }
-        );
-
-        $view = view('popup.report.income-entry', compact('journals', 'account'))->render();
+        $account  = $this->accountRepository->find(intval($attributes['accountId']));
+        $journals = $this->popupHelper->byIncome($account, $attributes);
+        $view     = view('popup.report.income-entry', compact('journals', 'account'))->render();
 
         return $view;
     }

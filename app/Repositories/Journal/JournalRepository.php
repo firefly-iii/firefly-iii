@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
@@ -41,15 +41,10 @@ class JournalRepository implements JournalRepositoryInterface
     private $user;
 
     /** @var array */
-    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
+    private $validMetaFields
+        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes', 'foreign_amount',
+           'foreign_currency_id',
+        ];
 
     /**
      * @param TransactionJournal $journal
@@ -144,6 +139,38 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function isTransfer(TransactionJournal $journal): bool
+    {
+        return $journal->transactionType->type === TransactionType::TRANSFER;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param int                $order
+     *
+     * @return bool
+     */
+    public function setOrder(TransactionJournal $journal, int $order): bool
+    {
+        $journal->order = $order;
+        $journal->save();
+
+        return true;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param array $data
      *
      * @return TransactionJournal
@@ -151,12 +178,17 @@ class JournalRepository implements JournalRepositoryInterface
     public function store(array $data): TransactionJournal
     {
         // find transaction type.
+        /** @var TransactionType $transactionType */
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
+        $accounts        = $this->storeAccounts($transactionType, $data);
+        $data            = $this->verifyNativeAmount($data, $accounts);
+        $currencyId      = $data['currency_id'];
+        $amount          = strval($data['amount']);
         $journal         = new TransactionJournal(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $data['currency_id'],
+                'transaction_currency_id' => $currencyId,
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
@@ -167,13 +199,13 @@ class JournalRepository implements JournalRepositoryInterface
         // store stuff:
         $this->storeCategoryWithJournal($journal, $data['category']);
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
-        $accounts = $this->storeAccounts($transactionType, $data);
+
 
         // store two transactions:
         $one = [
             'journal'     => $journal,
             'account'     => $accounts['source'],
-            'amount'      => bcmul(strval($data['amount']), '-1'),
+            'amount'      => bcmul($amount, '-1'),
             'description' => null,
             'category'    => null,
             'budget'      => null,
@@ -184,7 +216,7 @@ class JournalRepository implements JournalRepositoryInterface
         $two = [
             'journal'     => $journal,
             'account'     => $accounts['destination'],
-            'amount'      => $data['amount'],
+            'amount'      => $amount,
             'description' => null,
             'category'    => null,
             'budget'      => null,
@@ -222,10 +254,22 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
+
         // update actual journal:
-        $journal->transaction_currency_id = $data['currency_id'];
-        $journal->description             = $data['description'];
-        $journal->date                    = $data['date'];
+        $journal->description = $data['description'];
+        $journal->date        = $data['date'];
+        $accounts             = $this->storeAccounts($journal->transactionType, $data);
+        $amount               = strval($data['amount']);
+
+        if ($data['currency_id'] !== $journal->transaction_currency_id) {
+            // user has entered amount in foreign currency.
+            // amount in "our" currency is $data['exchanged_amount']:
+            $amount = strval($data['exchanged_amount']);
+            // other values must be stored as well:
+            $data['original_amount']      = $data['amount'];
+            $data['original_currency_id'] = $data['currency_id'];
+
+        }
 
         // unlink all categories, recreate them:
         $journal->categories()->detach();
@@ -233,12 +277,9 @@ class JournalRepository implements JournalRepositoryInterface
 
         $this->storeCategoryWithJournal($journal, $data['category']);
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
-        $accounts = $this->storeAccounts($journal->transactionType, $data);
 
-        $sourceAmount = bcmul(strval($data['amount']), '-1');
-        $this->updateSourceTransaction($journal, $accounts['source'], $sourceAmount); // negative because source loses money.
 
-        $amount = strval($data['amount']);
+        $this->updateSourceTransaction($journal, $accounts['source'], bcmul($amount, '-1')); // negative because source loses money.
         $this->updateDestinationTransaction($journal, $accounts['destination'], $amount); // positive because destination gets money.
 
         $journal->save();
@@ -730,5 +771,57 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * This method checks the data array and the given accounts to verify that the native amount, currency
+     * and possible the foreign currency and amount are properly saved.
+     *
+     * @param array $data
+     * @param array $accounts
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function verifyNativeAmount(array $data, array $accounts): array
+    {
+        /** @var TransactionType $transactionType */
+        $transactionType     = TransactionType::where('type', ucfirst($data['what']))->first();
+        $submittedCurrencyId = $data['currency_id'];
+
+        // which account to check for what the native currency is?
+        $check = 'source';
+        if ($transactionType->type === TransactionType::DEPOSIT) {
+            $check = 'destination';
+        }
+        switch ($transactionType->type) {
+            case TransactionType::DEPOSIT:
+            case TransactionType::WITHDRAWAL:
+                // continue:
+                $nativeCurrencyId = intval($accounts[$check]->getMeta('currency_id'));
+
+                // does not match? Then user has submitted amount in a foreign currency:
+                if ($nativeCurrencyId !== $submittedCurrencyId) {
+                    // store amount and submitted currency in "foreign currency" fields:
+                    $data['foreign_amount']      = $data['amount'];
+                    $data['foreign_currency_id'] = $submittedCurrencyId;
+
+                    // overrule the amount and currency ID fields to be the original again:
+                    $data['amount']      = strval($data['native_amount']);
+                    $data['currency_id'] = $nativeCurrencyId;
+                }
+                break;
+            case TransactionType::TRANSFER:
+                // source gets the original amount.
+                $data['amount']              = strval($data['source_amount']);
+                $data['currency_id']         = intval($accounts['source']->getMeta('currency_id'));
+                $data['foreign_amount']      = strval($data['destination_amount']);
+                $data['foreign_currency_id'] = intval($accounts['destination']->getMeta('currency_id'));
+                break;
+            default:
+                throw new FireflyException(sprintf('Cannot handle %s in verifyNativeAmount()', $transactionType->type));
+        }
+
+        return $data;
     }
 }

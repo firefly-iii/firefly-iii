@@ -149,12 +149,14 @@
 
         <ul class="treeview-menu">
             {% if not SANDSTORM %}
-            <li class="{{ activeRoutePartial('profile') }}">
-                <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}</a>
-            </li>
+                <li class="{{ activeRoutePartial('profile') }}">
+                    <a class="{{ activeRouteStrict('profile.index') }}" href="{{ route('profile.index') }}"><i class="fa fa-user fa-fw"></i> {{ 'profile'|_ }}
+                    </a>
+                </li>
             {% endif %}
             <li class="{{ activeRoutePartial('preferences') }}">
-                <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+                <a class="{{ activeRouteStrict('preferences.index') }}" href="{{ route('preferences.index') }}"><i
+                            class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
             </li>
             <li class="{{ activeRoutePartial('currency') }}">
                 <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currencies.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
@@ -174,11 +176,11 @@
 
     <!-- other options -->
     {% if not SANDSTORM %}
-    <li>
-        <a href="{{ route('logout') }}">
-            <i class="fa fa-sign-out fa-fw"></i>
-            <span>{{ 'logout'|_ }}</span>
-        </a>
-    </li>
+        <li>
+            <a href="{{ route('logout') }}">
+                <i class="fa fa-sign-out fa-fw"></i>
+                <span>{{ 'logout'|_ }}</span>
+            </a>
+        </li>
     {% endif %}
 </ul>

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -37,7 +37,7 @@ class UserFormRequest extends Request
     {
         return [
             'email'        => $this->string('email'),
-            'blocked'      => $this->integer('blocked'),
+            'blocked'      => $this->integer('blocked') === 1,
             'blocked_code' => $this->string('blocked_code'),
             'password'     => $this->string('password'),
         ];
@@ -50,7 +50,7 @@ class UserFormRequest extends Request
     {
         return [
             'id'           => 'required|exists:users,id',
-            'email'        => 'required',
+            'email'        => 'email|required',
             'password'     => 'confirmed',
             'blocked_code' => 'between:0,30',
             'blocked'      => 'between:0,1|numeric',

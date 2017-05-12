@@ -9,12 +9,11 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Foundation\Application;
@@ -53,6 +52,7 @@ class PiggyBankServiceProvider extends ServiceProvider
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }
+
                 return $repository;
             }
         );

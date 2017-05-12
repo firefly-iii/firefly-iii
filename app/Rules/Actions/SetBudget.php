@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Rules\Actions;
 
@@ -52,9 +52,9 @@ class SetBudget implements ActionInterface
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser($journal->user);
-        $search     = $this->action->action_value;
-        $budgets    = $repository->getActiveBudgets();
-        $budget     = $budgets->filter(
+        $search  = $this->action->action_value;
+        $budgets = $repository->getActiveBudgets();
+        $budget  = $budgets->filter(
             function (Budget $current) use ($search) {
                 return $current->name == $search;
             }

@@ -10,7 +10,7 @@
                 <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.amount_min') }}</th>
                 <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.amount_max') }}</th>
                 <th data-defaultsign="_19" style="text-align: right;">{{ trans('form.amount') }}</th>
-                <th data-defaultsign="_19" style="text-align: right;">{{ trans('form.under') }}</th>
+                <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ trans('form.under') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -34,7 +34,7 @@
                     {% if not line.isActive %}
                         <td data-value="-1">&nbsp;</td>
                     {% endif %}
-                    <td data-value="{{ (line.getMax - line.getAmount) }}" style="text-align: right;">
+                    <td data-value="{{ (line.getMax - line.getAmount) }}" style="text-align: right;" class="hidden-xs">
                         {% if line.isActive %}
                             {{ (line.getMax + line.getAmount)|formatAmount }}
                         {% endif %}

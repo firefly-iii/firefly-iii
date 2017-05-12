@@ -9,11 +9,12 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -42,7 +43,7 @@ class Steam
         $cache->addProperty('balance');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balance = strval(
@@ -73,7 +74,7 @@ class Steam
         $cache->addProperty('balance-no-virtual');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balance = strval(
@@ -107,7 +108,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balances = [];
@@ -157,7 +158,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $balances = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -178,6 +179,21 @@ class Steam
         $cache->store($result);
 
         return $result;
+    }
+
+    /**
+     * @param int $isEncrypted
+     * @param     $value
+     *
+     * @return string
+     */
+    public function decrypt(int $isEncrypted, string $value)
+    {
+        if ($isEncrypted === 1) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
     }
 
     /**

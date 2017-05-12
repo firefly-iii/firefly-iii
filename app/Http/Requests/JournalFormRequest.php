@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
@@ -67,6 +67,11 @@ class JournalFormRequest extends Request
             'destination_account_name' => $this->string('destination_account_name'),
             'piggy_bank_id'            => $this->integer('piggy_bank_id'),
 
+            // native amount and stuff like that:
+            'native_amount'            => $this->float('native_amount'),
+            'source_amount'            => $this->float('source_amount'),
+            'destination_amount'       => $this->float('destination_amount'),
+
         ];
 
         return $data;
@@ -101,6 +106,11 @@ class JournalFormRequest extends Request
             'destination_account_id'   => 'numeric|belongsToUser:accounts,id',
             'destination_account_name' => 'between:1,255',
             'piggy_bank_id'            => 'between:1,255',
+
+            // foreign currency amounts
+            'native_amount'            => 'numeric|more:0',
+            'source_amount'            => 'numeric|more:0',
+            'destination_amount'       => 'numeric|more:0',
         ];
 
         // some rules get an upgrade depending on the type of data:

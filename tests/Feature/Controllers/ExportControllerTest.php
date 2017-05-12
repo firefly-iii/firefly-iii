@@ -13,12 +13,20 @@ namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Export\ProcessorInterface;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ExportJob;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class ExportControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class ExportControllerTest extends TestCase
 {
 
@@ -27,7 +35,11 @@ class ExportControllerTest extends TestCase
      */
     public function testDownload()
     {
-        $repository = $this->mock(ExportJobRepositoryInterface::class);
+        // mock stuff
+        $repository   = $this->mock(ExportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('Some content beep boop');
 
@@ -37,10 +49,32 @@ class ExportControllerTest extends TestCase
     }
 
     /**
+     * @covers                   \FireflyIII\Http\Controllers\ExportController::download
+     * @expectedExceptionMessage Against all expectations
+     */
+    public function testDownloadFailed()
+    {
+        // mock stuff
+        $repository   = $this->mock(ExportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $repository->shouldReceive('exists')->once()->andReturn(false);
+
+        $this->be($this->user());
+        $response = $this->get(route('export.download', ['testExport']));
+        $response->assertStatus(500);
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\ExportController::getStatus
      */
     public function testGetStatus()
     {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
         $this->be($this->user());
         $response = $this->get(route('export.status', ['testExport']));
         $response->assertStatus(200);
@@ -48,9 +82,19 @@ class ExportControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::index
+     * @covers \FireflyIII\Http\Controllers\ExportController::__construct
      */
     public function testIndex()
     {
+        // mock stuff
+        $repository   = $this->mock(ExportJobRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('create')->andReturn(new ExportJob);
+        $repository->shouldReceive('cleanup');
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+
         $this->be($this->user());
         $response = $this->get(route('export.index'));
         $response->assertStatus(200);
@@ -64,31 +108,38 @@ class ExportControllerTest extends TestCase
      */
     public function testPostIndex()
     {
+        // mock stuff
+        $repository   = $this->mock(ExportJobRepositoryInterface::class);
+        $processor    = $this->mock(ProcessorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->andReturn(new TransactionJournal);
+
         $this->session(
             ['first' => new Carbon('2014-01-01')]
         );
 
 
-        $data      = [
-
-            'export_start_range' => '2015-01-01',
-            'export_end_range'   => '2015-01-21',
-            'exportFormat'       => 'csv',
-            'accounts'           => [1],
-            'job'                => 'testExport',
+        $data = [
+            'export_start_range'  => '2015-01-01',
+            'export_end_range'    => '2015-01-21',
+            'exportFormat'        => 'csv',
+            'accounts'            => [1],
+            'include_attachments' => '1',
+            'include_old_uploads' => '1',
+            'job'                 => 'testExport',
         ];
 
-        $accountRepository = $this->mock(AccountRepositoryInterface::class);
-        $accountRepository->shouldReceive('getAccountsById')->withArgs([$data['accounts']])->andReturn(new Collection);
+        $accountRepos->shouldReceive('getAccountsById')->withArgs([$data['accounts']])->andReturn(new Collection);
 
-        $processor = $this->mock(ProcessorInterface::class);
         $processor->shouldReceive('setSettings')->once();
         $processor->shouldReceive('collectJournals')->once();
         $processor->shouldReceive('convertJournals')->once();
         $processor->shouldReceive('exportJournals')->once();
         $processor->shouldReceive('createZipFile')->once();
+        $processor->shouldReceive('collectOldUploads')->once();
+        $processor->shouldReceive('collectAttachments')->once();
 
-        $repository = $this->mock(ExportJobRepositoryInterface::class);
         $repository->shouldReceive('changeStatus')->andReturn(true);
         $repository->shouldReceive('findByKey')->andReturn(new ExportJob);
 

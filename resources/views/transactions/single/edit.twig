@@ -46,24 +46,32 @@
                             {{ ExpandedForm.text('source_account_name',data.source_account_name, {label: trans('form.revenue_account')}) }}
                         {% endif %}
 
-                        <!-- FREE FORMAT DESTINATION ACCOUNT ONLY FOR EXPENSES -->
+                        {# FREE FORMAT DESTINATION ACCOUNT ONLY FOR EXPENSES #}
                         {% if what == 'withdrawal' %}
                             {{ ExpandedForm.text('destination_account_name',data.destination_account_name, {label: trans('form.expense_account')}) }}
                         {% endif %}
 
-                        <!-- SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS -->
+                        {# SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS #}
                         {% if what == 'transfer' or what == 'deposit' %}
                             {{ ExpandedForm.select('destination_account_id',assetAccounts, data.destination_account_id, {label: trans('form.asset_destination_account')} ) }}
                         {% endif %}
 
-                        <!-- ALWAYS SHOW AMOUNT -->
-                        {{ ExpandedForm.amount('amount',data.amount,{'currency' : journal.transactionCurrency}) }}
+                        {# ALWAYS SHOW AMOUNT #}
+                        {{ ExpandedForm.amount('amount',data.amount, {'currency' : data.currency}) }}
 
-                        <!-- ALWAYS SHOW DATE -->
+                        {# INSTRUCTIONS FOR EXCHANGE RATES #}
+                        {{ ExpandedForm.staticText('exchange_rate_instruction','(here be text)') }}
+
+                        {{ ExpandedForm.nonSelectableAmount('native_amount', data.native_amount, {currency: data.native_currency}) }}
+
+                        {{ ExpandedForm.nonSelectableAmount('source_amount', data.native_amount, {currency: data.native_currency }) }}
+
+                        {{ ExpandedForm.nonSelectableAmount('destination_amount', data.amount, {currency: data.currency }) }}
+
+                        {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date',data['date']) }}
                     </div>
                 </div>
-                <!-- close panel -->
 
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12">
@@ -235,6 +243,15 @@
     <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
+    <script type="text/javascript" src="javascript/accounts?ext=.js"></script>
+    <script type="text/javascript" src="javascript/currencies?ext=.js"></script>
+    <script type="text/javascript">
+        var journal = {{ journal.toArray()|json_encode|raw }};
+        var journalData = {{ data|json_encode|raw }};
+        var exchangeRateInstructions = "{{ 'exchange_rate_instructions'|_|escape('js') }}";
+        var transferInstructions = "{{ 'transfer_exchange_rate_instructions'|_|escape('js') }}";
+    </script>
+    <script type="text/javascript" src="js/ff/transactions/single/common.js"></script>
     <script type="text/javascript" src="js/ff/transactions/single/edit.js"></script>
 
 {% endblock %}

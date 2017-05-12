@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
@@ -44,10 +44,10 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('destination-account-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
-            $list  = TransactionJournal::destinationAccountList($journal);
+            $list  = $journal->destinationAccountList();
             $array = [];
             /** @var Account $entry */
             foreach ($list as $entry) {
@@ -116,10 +116,10 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('source-account-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
-            $list  = TransactionJournal::sourceAccountList($journal);
+            $list  = $journal->sourceAccountList();
             $array = [];
             /** @var Account $entry */
             foreach ($list as $entry) {
@@ -152,7 +152,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('budget-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
 
@@ -189,7 +189,7 @@ class Journal extends Twig_Extension
             $cache->addProperty('transaction-journal');
             $cache->addProperty('category-string');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
             $categories = [];
             // get all categories for the journal itself (easy):

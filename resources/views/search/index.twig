@@ -16,15 +16,36 @@
 
         <div class="row">
             <div class="col-lg-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'advanced_search'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ 'advanced_search_intro'|_ }}
+                        </p>
+                        {# search form #}
+                        <form class="form-horizontal" action="{{ route('search.index') }}" method="get">
+                            <div class="form-group">
+                                <label for="query" class="col-sm-1 control-label">Query</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="q" id="query" value="{{ rawQuery }}" class="form-control" placeholder="{{ rawQuery }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <p>{{ trans('firefly.results_limited', {count: limit}) }}</p>
             </div>
         </div>
-
-        <div class="row">
-
-
-            {% if result.transactions|length > 0 %}
-                <div class="col-lg-6 col-md-12 col-sm-12">
+        {% if hasModifiers %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -33,72 +54,90 @@
                             <p>
                                 {{ trans('firefly.search_found_transactions', {count: result.transactions|length}) }}
                             </p>
-                            {% include 'search.partials.transactions' with {'transactions' : result.transactions} %}
+                            {% include 'search.partials.transactions-large' with {'journals' : result.transactions} %}
                         </div>
                     </div>
                 </div>
-            {% endif %}
-            {% if result.categories|length > 0 %}
-                <div class="col-lg-6 col-md-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'categories'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <p>
-                                {{ trans('firefly.search_found_categories', {count: result.categories|length}) }}
-                            </p>
-                            {% include 'search.partials.categories' %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if result.tags|length > 0 %}
-                <div class="col-lg-6 col-md-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'tags'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <p>
-                                {{ trans('firefly.search_found_tags', {count: result.tags|length}) }}
-                            </p>
-                            {% include 'search.partials.tags' %}
+            </div>
+        {% else %}
+            <div class="row">
+                {% if result.transactions|length > 0 %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <p>
+                                    {{ trans('firefly.search_found_transactions', {count: result.transactions|length}) }}
+                                </p>
+                                {% include 'search.partials.transactions' with {'transactions' : result.transactions} %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
-            {% if result.accounts|length > 0 %}
-                <div class="col-lg-6 col-md-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'accounts'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <p>
-                                {{ trans('firefly.search_found_accounts', {count: result.accounts|length}) }}
-                            </p>
-                            {% include 'search.partials.accounts' %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if result.budgets|length > 0 %}
-                <div class="col-lg-6 col-md-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'budgets'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <p>
-                                {{ trans('firefly.search_found_budgets', {count: result.budgets|length}) }}
-                            </p>
-                            {% include 'search.partials.budgets' %}
+                {% endif %}
+                {% if result.categories|length > 0 %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <p>
+                                    {{ trans('firefly.search_found_categories', {count: result.categories|length}) }}
+                                </p>
+                                {% include 'search.partials.categories' %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
-        </div>
+                {% endif %}
+                {% if result.tags|length > 0 %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">{{ 'tags'|_ }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <p>
+                                    {{ trans('firefly.search_found_tags', {count: result.tags|length}) }}
+                                </p>
+                                {% include 'search.partials.tags' %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if result.accounts|length > 0 %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">{{ 'accounts'|_ }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <p>
+                                    {{ trans('firefly.search_found_accounts', {count: result.accounts|length}) }}
+                                </p>
+                                {% include 'search.partials.accounts' %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if result.budgets|length > 0 %}
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                            </div>
+                            <div class="box-body">
+                                <p>
+                                    {{ trans('firefly.search_found_budgets', {count: result.budgets|length}) }}
+                                </p>
+                                {% include 'search.partials.budgets' %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
     {% endif %}
 
 

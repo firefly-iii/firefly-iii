@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag, moment, start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -37,10 +37,15 @@
                     {% if tag.date %}
                         <p>{{ 'date'|_ }}: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
                     {% endif %}
-
-                    <p>
-                        {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
-                    </p>
+                    {% if moment == 'all' %}
+                        <p>
+                            {{ 'total_sum'|_ }}: {{ sum|formatAmount }}<br/>
+                        </p>
+                    {% else %}
+                        <p>
+                            {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
+                        </p>
+                    {% endif %}
 
                 </div>
             </div>
@@ -65,9 +70,7 @@
                 </div>
                 <div class="box-body">
                     {% if tag.latitude and tag.longitude and tag.zoomLevel %}
-                        <p>
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ tag.latitude }},{{ tag.longitude }}&zoom={{ tag.zoomLevel }}&size=600x300">
-                        </p>
+                        <div id="map-canvas" style="width:100%;height:300px;"></div>
                     {% else %}
                         <p>{{ 'no_location_set'|_ }}</p>
                     {% endif %}
@@ -75,13 +78,15 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-            <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+    {% if periods.count > 0 %}
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
         </div>
-    </div>
+    {% endif %}
     <div class="row">
-        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+        <div class="{% if periods.count > 0 %}col-lg-10 col-md-10 col-sm-12 col-xs-12{% else %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -101,45 +106,80 @@
                 </div>
                 <div class="box-body">
                     {% include 'list/journals-tasker' %}
+
+                    {% if periods %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('tags.show', [tag.id,'all']) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        </p>
+                    {% else %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('tags.show', [tag.id]) }}">
+                                {{ 'show_the_current_period_and_overview'|_ }}
+                            </a>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-            {% for period in periods %}
-                {% if period.spent != 0 or period.earned != 0 %}
-                    <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><a href="{{ route('tags.show',[tag.id, period.date_string]) }}">{{ period.date_name }}</a>
-                            </h3>
+        {% if periods %}
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                {% for period in periods %}
+                    {% if period.spent != 0 or period.earned != 0 %}
+                        <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><a href="{{ route('tags.show',[tag.id, period.string]) }}">{{ period.name }}</a>
+                                </h3>
+                            </div>
+                            <div class="box-body no-padding">
+                                <table class="table table-hover">
+                                    {% if period.spent != 0 %}
+                                        <tr>
+                                            <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                            <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if period.earned != 0 %}
+                                        <tr>
+                                            <td style="width:33%;">{{ 'earned'|_ }}</td>
+                                            <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                            </div>
                         </div>
-                        <div class="box-body no-padding">
-                            <table class="table table-hover">
-                                {% if period.spent != 0 %}
-                                    <tr>
-                                        <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                        <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
-                                    </tr>
-                                {% endif %}
-                                {% if period.earned != 0 %}
-                                    <tr>
-                                        <td style="width:33%;">{{ 'earned'|_ }}</td>
-                                        <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
-                                    </tr>
-                                {% endif %}
-                            </table>
-                        </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
 
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
-    <div class="row">
-        <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-            <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+    {% if periods %}
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript">
+        var latitude = {{ tag.latitude|default("52.3167") }};
+        var longitude = {{ tag.longitude|default("5.5500") }};
+        var zoomLevel = {{ tag.zoomLevel|default("6") }};
+
+        {% if tag.latitude and tag.longitude and tag.zoomLevel %}
+        var doPlaceMarker = true;
+        {% else %}
+        var doPlaceMarker = false;
+        {% endif %}
+
+        var apiKey = "{{ apiKey }}";
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
+    <script src="js/ff/tags/show.js"></script>
 {% endblock %}

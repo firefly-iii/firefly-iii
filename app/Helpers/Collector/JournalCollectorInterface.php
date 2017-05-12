@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
 
@@ -29,24 +29,16 @@ use Illuminate\Support\Collection;
 interface JournalCollectorInterface
 {
     /**
+     * @param string $filter
+     *
+     * @return JournalCollectorInterface
+     */
+    public function addFilter(string $filter): JournalCollectorInterface;
+
+    /**
      * @return int
      */
     public function count(): int;
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function disableFilter(): JournalCollectorInterface;
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function disableInternalFilter(): JournalCollectorInterface;
-
-    /**
-     * @return JournalCollectorInterface
-     */
-    public function enableInternalFilter(): JournalCollectorInterface;
 
     /**
      * @return Collection
@@ -57,6 +49,13 @@ interface JournalCollectorInterface
      * @return LengthAwarePaginator
      */
     public function getPaginatedJournals(): LengthAwarePaginator;
+
+    /**
+     * @param string $filter
+     *
+     * @return JournalCollectorInterface
+     */
+    public function removeFilter(string $filter): JournalCollectorInterface;
 
     /**
      * @param Collection $accounts
@@ -140,6 +139,13 @@ interface JournalCollectorInterface
      * @return JournalCollectorInterface
      */
     public function setTag(Tag $tag): JournalCollectorInterface;
+
+    /**
+     * @param Collection $tags
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setTags(Collection $tags): JournalCollectorInterface;
 
     /**
      * @param array $types

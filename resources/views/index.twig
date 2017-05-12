@@ -12,7 +12,7 @@
 
     <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12">
-            <!-- ACCOUNTS -->
+            {# ACCOUNTS #}
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'yourAccounts'|_ }}</h3>
@@ -22,13 +22,13 @@
                 </div>
             </div>
 
-            <!-- BUDGETS -->
+            {# BUDGETS #}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'budgetsAndSpending'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas id="budgets-chart" style="width:100%;" height="400"></canvas>
+                    <canvas id="budgets-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
             <!-- CATEGORIES -->
@@ -38,7 +38,7 @@
 
                 </div>
                 <div class="box-body">
-                    <canvas id="categories-chart" style="width:100%;" height="400"></canvas>
+                    <canvas id="categories-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -51,8 +51,8 @@
 
                     </div>
                     <div class="box-body">
-                        <div style="width:60%;margin:0 auto;">
-                            <canvas id="bills-chart" style="width:100%;height:175px;" height="175"></canvas>
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="bills-chart" style="width:100%;height:200px;" height="200"></canvas>
                         </div>
 
                     </div>
@@ -114,7 +114,7 @@
 
                 </div>
                 <div class="box-body">
-                    <canvas id="expense-accounts-chart" style="width:100%;" height="400"></canvas>
+                    <canvas id="expense-accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
             <!-- OPTIONAL REVENUE ACCOUNTS -->
@@ -125,7 +125,7 @@
 
                     </div>
                     <div class="box-body">
-                        <canvas id="revenue-accounts-chart" style="width:100%;" height="400"></canvas>
+                        <canvas id="revenue-accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                     </div>
                 </div>
             {% endif %}

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
@@ -20,7 +20,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 
 /**
@@ -45,9 +44,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-expenses-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            Log::debug('Return report from cache');
-
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -79,9 +76,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            Log::debug('Return report from cache');
-
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -114,7 +109,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var CategoryRepositoryInterface $repository */

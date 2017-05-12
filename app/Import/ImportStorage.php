@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Import;
 
@@ -162,7 +162,7 @@ class ImportStorage
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->user);
-        $data       = [
+        $data = [
             'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
             'date'        => new Carbon,
             'description' => null,
@@ -171,7 +171,7 @@ class ImportStorage
             'zoomLevel'   => null,
             'tagMode'     => 'nothing',
         ];
-        $tag        = $repository->store($data);
+        $tag  = $repository->store($data);
 
         return $tag;
     }

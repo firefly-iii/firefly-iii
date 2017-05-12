@@ -7,12 +7,17 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 use Navigation;
 use Preferences;
@@ -25,9 +30,61 @@ use Session;
  */
 class JavascriptController extends Controller
 {
+    /**
+     * @param AccountRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $currencyRepository
+     *
+     * @return $this
+     */
+    public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
+    {
+        $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $default    = $currencyRepository->findByCode($preference->data);
+
+        $data = ['accounts' => [],];
+
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $accountId                    = $account->id;
+            $currency                     = intval($account->getMeta('currency_id'));
+            $currency                     = $currency === 0 ? $default->id : $currency;
+            $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
+            $data['accounts'][$accountId] = $entry;
+        }
+
+
+        return response()
+            ->view('javascript.accounts', $data, 200)
+            ->header('Content-Type', 'text/javascript');
+    }
 
     /**
+     * @param CurrencyRepositoryInterface $repository
      *
+     * @return $this
+     */
+    public function currencies(CurrencyRepositoryInterface $repository)
+    {
+        $currencies = $repository->get();
+        $data       = ['currencies' => [],];
+        /** @var TransactionCurrency $currency */
+        foreach ($currencies as $currency) {
+            $currencyId                    = $currency->id;
+            $entry                         = ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol];
+            $data['currencies'][$currencyId] = $entry;
+        }
+
+        return response()
+            ->view('javascript.currencies', $data, 200)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
      */
     public function variables(Request $request)
     {
@@ -95,7 +152,7 @@ class JavascriptController extends Controller
 
         switch ($viewRange) {
             default:
-                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".');
+                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".'); // @codeCoverageIgnore
             case '1D':
             case 'custom':
                 $format = (string)trans('config.month_and_day');

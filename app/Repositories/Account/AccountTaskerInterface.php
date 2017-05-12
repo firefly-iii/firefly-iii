@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
 
@@ -26,36 +26,30 @@ interface AccountTaskerInterface
 {
     /**
      * @param Collection $accounts
-     * @param Collection $excluded
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountTasker::amountInPeriod()
-     *
-     * @return string
-     */
-    public function amountInInPeriod(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $excluded
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @see AccountTasker::amountInPeriod()
-     *
-     * @return string
-     */
-    public function amountOutInPeriod(Collection $accounts, Collection $excluded, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array;
+
+    /**
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
      * @param User $user

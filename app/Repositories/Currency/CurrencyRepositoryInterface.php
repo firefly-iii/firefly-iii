@@ -9,11 +9,13 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Currency;
 
 
+use Carbon\Carbon;
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -94,6 +96,15 @@ interface CurrencyRepositoryInterface
      * @return TransactionCurrency
      */
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
+
+    /**
+     * @param TransactionCurrency $fromCurrency
+     * @param TransactionCurrency $toCurrency
+     * @param Carbon              $date
+     *
+     * @return CurrencyExchangeRate
+     */
+    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate;
 
     /**
      * @param User $user

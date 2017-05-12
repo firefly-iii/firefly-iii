@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
@@ -27,6 +27,7 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -66,6 +67,21 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getTransactionTypes(): Collection;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function isTransfer(TransactionJournal $journal): bool;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param int                $order
+     *
+     * @return bool
+     */
+    public function setOrder(TransactionJournal $journal, int $order): bool;
 
     /**
      * @param User $user

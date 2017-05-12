@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ImportJob;
 
@@ -87,10 +87,38 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param ImportJob $job
+     * @param array     $configuration
+     *
+     * @return ImportJob
+     */
+    public function setConfiguration(ImportJob $job, array $configuration): ImportJob
+    {
+        $job->configuration = $configuration;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param ImportJob $job
+     * @param string    $status
+     *
+     * @return ImportJob
+     */
+    public function updateStatus(ImportJob $job, string $status): ImportJob
+    {
+        $job->status = $status;
+        $job->save();
+
+        return $job;
     }
 }

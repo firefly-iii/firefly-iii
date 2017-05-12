@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Import;
 
@@ -215,7 +215,7 @@ class ImportEntry
      */
     private function setAppendableString(string $field, string $value)
     {
-        $value = trim($value);
+        $value                = trim($value);
         $this->fields[$field] .= ' ' . $value;
     }
 

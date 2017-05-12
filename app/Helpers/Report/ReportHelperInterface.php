@@ -9,13 +9,12 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
-use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use Illuminate\Support\Collection;

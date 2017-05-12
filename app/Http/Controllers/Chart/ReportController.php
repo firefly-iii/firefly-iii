@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
@@ -20,6 +20,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Response;
 use Steam;
@@ -64,7 +65,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $ids       = $accounts->pluck('id')->toArray();
         $current   = clone $start;
@@ -103,8 +104,9 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
+        Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
@@ -161,8 +163,10 @@ class ReportController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
+
+
         $source  = $this->getChartData($accounts, $start, $end);
         $numbers = [
             'sum_earned'   => '0',
@@ -246,19 +250,41 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get(); // @codeCoverageIgnore
         }
 
-
-        $tasker       = app(AccountTaskerInterface::class);
         $currentStart = clone $start;
         $spentArray   = [];
         $earnedArray  = [];
+
+        /** @var AccountTaskerInterface $tasker */
+        $tasker = app(AccountTaskerInterface::class);
+
         while ($currentStart <= $end) {
-            $currentEnd          = Navigation::endOfPeriod($currentStart, '1M');
+
+            $currentEnd = Navigation::endOfPeriod($currentStart, '1M');
+            $earned     = strval(
+                array_sum(
+                    array_map(
+                        function ($item) {
+                            return $item['sum'];
+                        }, $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
+                    )
+                )
+            );
+
+            $spent = strval(
+                array_sum(
+                    array_map(
+                        function ($item) {
+                            return $item['sum'];
+                        }, $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
+                    )
+                )
+            );
+
+
             $label               = $currentStart->format('Y-m') . '-01';
-            $spent               = $tasker->amountOutInPeriod($accounts, $accounts, $currentStart, $currentEnd);
-            $earned              = $tasker->amountInInPeriod($accounts, $accounts, $currentStart, $currentEnd);
             $spentArray[$label]  = bcmul($spent, '-1');
             $earnedArray[$label] = $earned;
             $currentStart        = Navigation::addPeriod($currentStart, '1M', 0);

@@ -9,12 +9,14 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use PragmaRX\Google2FA\Contracts\Google2FA;
 use Preferences;
@@ -55,8 +57,7 @@ class PreferencesController extends Controller
     public function code(Google2FA $google2fa)
     {
         $domain = $this->getDomain();
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $secret = $google2fa->generateSecretKey(32, auth()->user()->id);
+        $secret = $google2fa->generateSecretKey(16);
         Session::flash('two-factor-secret', $secret);
         $image = $google2fa->getQRCodeInline('Firefly III at ' . $domain, auth()->user()->email, $secret, 150);
 
@@ -127,11 +128,13 @@ class PreferencesController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                 $request
+     *
+     * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postIndex(Request $request)
+    public function postIndex(Request $request, UserRepositoryInterface $repository)
     {
         // front page accounts
         $frontPageAccounts = [];
@@ -160,16 +163,15 @@ class PreferencesController extends Controller
         Preferences::set('showDepositsFrontpage', $showDepositsFrontpage);
 
         // save page size:
+        Preferences::set('transactionPageSize', 50);
         $transactionPageSize = intval($request->get('transactionPageSize'));
         if ($transactionPageSize > 0 && $transactionPageSize < 1337) {
             Preferences::set('transactionPageSize', $transactionPageSize);
-        } else {
-            Preferences::set('transactionPageSize', 50);
         }
 
         $twoFactorAuthEnabled   = false;
         $hasTwoFactorAuthSecret = false;
-        if (!auth()->user()->hasRole('demo')) {
+        if (!$repository->hasRole(auth()->user(), 'demo')) {
             // two factor auth
             $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
             $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));

@@ -9,18 +9,17 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TokenFormRequest;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
-use Session;
 
 /**
  * Class TwoFactorController
@@ -42,11 +41,12 @@ class TwoFactorController extends Controller
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
-        $secret = Preferences::get('twoFactorAuthSecret', null)->data;
-        $title  = strval(trans('firefly.two_factor_title'));
+        $secretPreference = Preferences::get('twoFactorAuthSecret', null);
+        $secret           = is_null($secretPreference) ? null : $secretPreference->data;
+        $title            = strval(trans('firefly.two_factor_title'));
 
         // make sure the user has two factor configured:
-        $has2FA = Preferences::get('twoFactorAuthEnabled', null)->data;
+        $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;
         if (is_null($has2FA) || $has2FA === false) {
             return redirect(route('index'));
         }
@@ -80,16 +80,18 @@ class TwoFactorController extends Controller
 
     /**
      * @param TokenFormRequest $request
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     * @param CookieJar        $cookieJar
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
+     *
      */
-    public function postIndex(TokenFormRequest $request)
+    public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {
-        Session::put('twofactor-authenticated', true);
-        Session::put('twofactor-authenticated-date', new Carbon);
+        // set cookie!
+        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'true');
 
-        return redirect(route('home'));
+        return redirect(route('home'))->withCookie($cookie);
     }
 
 }

@@ -15,22 +15,30 @@ use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class SearchControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ */
 class SearchControllerTest extends TestCase
 {
 
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController::index
-     * Implement testIndex().
+     * @covers \FireflyIII\Http\Controllers\SearchController::__construct
      */
     public function testIndex()
     {
         $search = $this->mock(SearchInterface::class);
         $search->shouldReceive('setLimit')->once();
-        $search->shouldReceive('searchTransactions')->andReturn(new Collection)->withArgs([['test']])->once();
-        $search->shouldReceive('searchBudgets')->andReturn(new Collection)->withArgs([['test']])->once();
-        $search->shouldReceive('searchTags')->andReturn(new Collection)->withArgs([['test']])->once();
-        $search->shouldReceive('searchCategories')->andReturn(new Collection)->withArgs([['test']])->once();
-        $search->shouldReceive('searchAccounts')->andReturn(new Collection)->withArgs([['test']])->once();
+        $search->shouldReceive('parseQuery')->once();
+        $search->shouldReceive('hasModifiers')->once()->andReturn(false);
+        $search->shouldReceive('getWordsAsString')->once()->andReturn('test');
+        $search->shouldReceive('searchTransactions')->andReturn(new Collection)->once();
+        $search->shouldReceive('searchBudgets')->andReturn(new Collection)->once();
+        $search->shouldReceive('searchTags')->andReturn(new Collection)->once();
+        $search->shouldReceive('searchCategories')->andReturn(new Collection)->once();
+        $search->shouldReceive('searchAccounts')->andReturn(new Collection)->once();
         $this->be($this->user());
         $response = $this->get(route('search.index') . '?q=test');
         $response->assertStatus(200);

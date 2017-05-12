@@ -9,7 +9,13 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'overview'|_ }}</h3>
+                    <h3 class="box-title">
+                        {% if budgetLimit %}
+                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.formatLocalized(monthAndDayFormat), end: budgetLimit.end_date.formatLocalized(monthAndDayFormat) }) }}
+                        {% else %}
+                            {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
+                        {% endif %}
+                    </h3>
 
                     <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
@@ -23,7 +29,46 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <canvas id="budgetOverview" style="width:100%;" height="400"></canvas>
+                    <canvas id="budgetOverview" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="budget-cat-out" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_asset_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="budget-asset-out" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expenses_by_expense_account'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="budget-expense-out" style="width:100%;height:250px;" height="250"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +88,15 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals-tasker' %}
+                    {% include 'list.journals-tasker' with {hideBudgets:true, hideBills:true} %}
+                    {% if budgetLimit %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('budgets.show', [budget.id]) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -101,13 +154,21 @@
 {% block scripts %}
     <script type="text/javascript">
         var budgetID = {{ budget.id }};
+        var budgetLimitID = 0;
         {% if budgetLimit.id %}
-        var budgetLimitID = {{ budgetLimit.id }};
-        var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
-        {% else %}
-        var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
-        {% endif %}
+            budgetLimitID = {{ budgetLimit.id }};
+            var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
 
+            var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
+            var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
+            var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
+        {% else %}
+            var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
+
+        var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id]) }}';
+        var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
+        var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
+        {% endif %}
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>

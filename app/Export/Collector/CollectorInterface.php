@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
 
@@ -34,18 +34,18 @@ interface CollectorInterface
     public function run(): bool;
 
     /**
-     * @param ExportJob $job
-     *
-     * @return mixed
-     */
-    public function setJob(ExportJob $job);
-
-    /**
      * @param Collection $entries
      *
      * @return void
      *
      */
     public function setEntries(Collection $entries);
+
+    /**
+     * @param ExportJob $job
+     *
+     * @return mixed
+     */
+    public function setJob(ExportJob $job);
 
 }

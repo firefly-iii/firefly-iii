@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
@@ -255,10 +255,11 @@ class RuleController extends Controller
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
-            // set value so create routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('rules.create.fromStore', true);
 
             return redirect(route('rules.create', [$ruleGroup]))->withInput();
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('rules.create.uri'));
@@ -340,10 +341,11 @@ class RuleController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('rules.edit.fromUpdate', true);
 
             return redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('rules.edit.uri'));
@@ -473,7 +475,7 @@ class RuleController extends Controller
             $actions[] = view(
                 'rules.partials.action',
                 [
-                    'oldTrigger' => $entry,
+                    'oldAction'  => $entry,
                     'oldValue'   => $request->old('rule-action-value')[$index],
                     'oldChecked' => $checked,
                     'count'      => $count,
@@ -530,7 +532,8 @@ class RuleController extends Controller
         ];
         if (is_array($data['rule-triggers'])) {
             foreach ($data['rule-triggers'] as $index => $triggerType) {
-                $triggers[] = [
+                $data['rule-trigger-stop'][$index] = $data['rule-trigger-stop'][$index] ?? 0;
+                $triggers[]                        = [
                     'type'           => $triggerType,
                     'value'          => $data['rule-trigger-values'][$index],
                     'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,

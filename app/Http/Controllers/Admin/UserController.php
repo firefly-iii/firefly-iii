@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
@@ -18,6 +18,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Log;
 use Preferences;
 use Session;
 use View;
@@ -124,34 +125,34 @@ class UserController extends Controller
     }
 
     /**
-     * @param UserFormRequest $request
-     * @param User            $user
+     * @param UserFormRequest         $request
+     * @param User                    $user
+     *
+     * @param UserRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(UserFormRequest $request, User $user)
+    public function update(UserFormRequest $request, User $user, UserRepositoryInterface $repository)
     {
+        Log::debug('Actually here');
         $data = $request->getUserData();
 
         // update password
         if (strlen($data['password']) > 0) {
-            $user->password = bcrypt($data['password']);
-            $user->save();
+            $repository->changePassword($user, $data['password']);
         }
 
-        // change blocked status and code:
-        $user->blocked      = $data['blocked'];
-        $user->blocked_code = $data['blocked_code'];
-        $user->save();
+        $repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
 
         Session::flash('success', strval(trans('firefly.updated_user', ['email' => $user->email])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('users.edit.fromUpdate', true);
 
             return redirect(route('admin.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.

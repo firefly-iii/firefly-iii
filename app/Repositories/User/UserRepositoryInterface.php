@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
@@ -51,6 +51,15 @@ interface UserRepositoryInterface
     public function changePassword(User $user, string $password);
 
     /**
+     * @param User   $user
+     * @param bool   $isBlocked
+     * @param string $code
+     *
+     * @return bool
+     */
+    public function changeStatus(User $user, bool $isBlocked, string $code): bool;
+
+    /**
      * Returns a count of all users.
      *
      * @return int
@@ -79,4 +88,12 @@ interface UserRepositoryInterface
      * @return array
      */
     public function getUserData(User $user): array;
+
+    /**
+     * @param User   $user
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(User $user, string $role): bool;
 }

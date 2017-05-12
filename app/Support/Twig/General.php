@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
@@ -310,7 +310,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'getAmount', function (TransactionJournal $journal): string {
-            return TransactionJournal::amount($journal);
+            return $journal->amount();
         }
         );
     }

@@ -13,7 +13,7 @@
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas height="400" id="income-expenses-chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="income-expenses-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                     <h3 class="box-title">{{ 'net_worth'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas height="400" id="net-worth" style="width:100%;height:400px;"></canvas>
+                    <canvas id="net-worth" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@
                     <h3 class="box-title">{{ 'chart'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas height="400" id="budget_chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="budget_chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -168,7 +168,7 @@
                     <h3 class="box-title">{{ 'chart'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <canvas height="400" id="category_chart" style="width:100%;height:400px;"></canvas>
+                    <canvas id="category_chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>
@@ -190,9 +190,9 @@
         var accountIds = '{{ accountIds }}';
 
         // report uri's
-        var opChartUri ='{{ route('chart.report.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var sumChartUri='{{ route('chart.report.sum', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var netWorthUri ='{{ route('chart.report.net-worth', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var opChartUri = '{{ route('chart.report.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sumChartUri = '{{ route('chart.report.sum', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var netWorthUri = '{{ route('chart.report.net-worth', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
         // data uri's
         var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';

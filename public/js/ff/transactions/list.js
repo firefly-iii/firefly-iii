@@ -72,8 +72,8 @@ function countChecked() {
     "use strict";
     var checked = $('.select_all_single:checked').length;
     if (checked > 0) {
-        $('.mass_edit span').text(edit_selected_txt + ' (' + checked + ')')
-        $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')')
+        $('.mass_edit span').text(edit_selected_txt + ' (' + checked + ')');
+        $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')');
         $('.mass_button_options').show();
 
     } else {

@@ -9,16 +9,16 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
 use Amount;
-use Crypt;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
+use Steam;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -195,7 +195,7 @@ class Transaction extends Twig_Extension
         return new Twig_SimpleFunction(
             'transactionDestinationAccount', function (TransactionModel $transaction): string {
 
-            $name = intval($transaction->account_encrypted) === 1 ? Crypt::decrypt($transaction->account_name) : $transaction->account_name;
+            $name = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
             $id   = intval($transaction->account_id);
             $type = $transaction->account_type;
 
@@ -204,7 +204,7 @@ class Transaction extends Twig_Extension
 
                 $name = $transaction->opposing_account_name;
                 $id   = intval($transaction->opposing_account_id);
-                $type = intval($transaction->opposing_account_type);
+                $type = $transaction->opposing_account_type;
             }
 
             // Find the opposing account and use that one:
@@ -217,7 +217,7 @@ class Transaction extends Twig_Extension
                                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                          ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                          ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-                $name  = intval($other->encrypted) === 1 ? Crypt::decrypt($other->name) : $other->name;
+                $name  = Steam::decrypt(intval($other->encrypted), $other->name);
                 $id    = $other->account_id;
                 $type  = $other->type;
             }
@@ -269,7 +269,7 @@ class Transaction extends Twig_Extension
             'transactionSourceAccount', function (TransactionModel $transaction): string {
 
             // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
-            $name = intval($transaction->account_encrypted) === 1 ? Crypt::decrypt($transaction->account_name) : $transaction->account_name;
+            $name = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
             $id   = intval($transaction->account_id);
             $type = $transaction->account_type;
 
@@ -278,7 +278,7 @@ class Transaction extends Twig_Extension
 
                 $name = $transaction->opposing_account_name;
                 $id   = intval($transaction->opposing_account_id);
-                $type = intval($transaction->opposing_account_type);
+                $type = $transaction->opposing_account_type;
             }
             // Find the opposing account and use that one:
             if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
@@ -289,7 +289,7 @@ class Transaction extends Twig_Extension
                                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                          ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                          ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-                $name  = intval($other->encrypted) === 1 ? Crypt::decrypt($other->name) : $other->name;
+                $name  = Steam::decrypt(intval($other->encrypted), $other->name);
                 $id    = $other->account_id;
                 $type  = $other->type;
             }
@@ -338,21 +338,6 @@ class Transaction extends Twig_Extension
     }
 
     /**
-     * @param int    $isEncrypted
-     * @param string $value
-     *
-     * @return string
-     */
-    private function encrypted(int $isEncrypted, string $value): string
-    {
-        if ($isEncrypted === 1) {
-            return Crypt::decrypt($value);
-        }
-
-        return $value;
-    }
-
-    /**
      * @param TransactionModel $transaction
      *
      * @return string
@@ -361,14 +346,14 @@ class Transaction extends Twig_Extension
     {
         // journal has a budget:
         if (isset($transaction->transaction_journal_budget_id)) {
-            $name = $this->encrypted(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
+            $name = Steam::decrypt(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
 
             return sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
         }
 
         // transaction has a budget
         if (isset($transaction->transaction_budget_id)) {
-            $name = $this->encrypted(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
+            $name = Steam::decrypt(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
 
             return sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
         }
@@ -400,14 +385,14 @@ class Transaction extends Twig_Extension
     {
         // journal has a category:
         if (isset($transaction->transaction_journal_category_id)) {
-            $name = $this->encrypted(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
+            $name = Steam::decrypt(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
 
             return sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
         }
 
         // transaction has a category:
         if (isset($transaction->transaction_category_id)) {
-            $name = $this->encrypted(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
+            $name = Steam::decrypt(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
 
             return sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
         }

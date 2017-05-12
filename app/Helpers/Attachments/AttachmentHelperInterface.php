@@ -9,11 +9,13 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Helpers\Attachments;
 
 use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -32,6 +34,11 @@ interface AttachmentHelperInterface
     public function getAttachmentLocation(Attachment $attachment): string;
 
     /**
+     * @return Collection
+     */
+    public function getAttachments(): Collection;
+
+    /**
      * @return MessageBag
      */
     public function getErrors(): MessageBag;
@@ -42,7 +49,9 @@ interface AttachmentHelperInterface
     public function getMessages(): MessageBag;
 
     /**
-     * @param Model $model
+     * @param Model      $model
+     *
+     * @param null|array $files
      *
      * @return bool
      */

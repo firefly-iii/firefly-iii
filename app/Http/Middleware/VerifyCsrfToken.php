@@ -8,13 +8,14 @@
  *
  * See the LICENSE file for details.
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 use Symfony\Component\HttpFoundation\Cookie;
-use Carbon\Carbon;
+
 /**
  * Class VerifyCsrfToken
  *
@@ -35,8 +36,9 @@ class VerifyCsrfToken extends BaseVerifier
     /**
      * Add the CSRF token to the response cookies.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Symfony\Component\HttpFoundation\Response  $response
+     * @param  \Illuminate\Http\Request                   $request
+     * @param  \Symfony\Component\HttpFoundation\Response $response
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function addCookieToResponse($request, $response)

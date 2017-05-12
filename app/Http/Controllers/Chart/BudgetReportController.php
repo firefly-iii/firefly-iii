@@ -9,22 +9,23 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\OpposingAccountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -41,8 +42,6 @@ use Response;
 class BudgetReportController extends Controller
 {
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
     /** @var BudgetRepositoryInterface */
     private $budgetRepository;
     /** @var  GeneratorInterface */
@@ -56,9 +55,8 @@ class BudgetReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->generator         = app(GeneratorInterface::class);
-                $this->budgetRepository  = app(BudgetRepositoryInterface::class);
-                $this->accountRepository = app(AccountRepositoryInterface::class);
+                $this->generator        = app(GeneratorInterface::class);
+                $this->budgetRepository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -131,10 +129,8 @@ class BudgetReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        /** @var BudgetRepositoryInterface $repository */
-        $repository   = app(BudgetRepositoryInterface::class);
         $format       = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $function     = Navigation::preferredEndOfPeriod($start, $end);
         $chartData    = [];
@@ -163,7 +159,7 @@ class BudgetReportController extends Controller
                 'entries' => [],
             ];
         }
-        $allBudgetLimits = $repository->getAllBudgetLimits($start, $end);
+        $allBudgetLimits = $this->budgetRepository->getAllBudgetLimits($start, $end);
         $sumOfExpenses   = [];
         $leftOfLimits    = [];
         while ($currentStart < $end) {
@@ -203,6 +199,7 @@ class BudgetReportController extends Controller
      * Returns the budget limits belonging to the given budget and valid on the given day.
      *
      * @param Collection $budgetLimits
+     * @param Budget     $budget
      * @param Carbon     $start
      * @param Carbon     $end
      *
@@ -239,12 +236,15 @@ class BudgetReportController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setBudgets($budgets)->withOpposingAccount()->disableFilter();
-        $accountIds   = $accounts->pluck('id')->toArray();
-        $transactions = $collector->getJournals();
-        $set          = MonthReportGenerator::filterExpenses($transactions, $accountIds);
+                  ->setBudgets($budgets)->withOpposingAccount();
+        $collector->removeFilter(TransferFilter::class);
 
-        return $set;
+        $collector->addFilter(OpposingAccountFilter::class);
+        $collector->addFilter(PositiveAmountFilter::class);
+
+        $transactions = $collector->getJournals();
+
+        return $transactions;
     }
 
     /**
@@ -268,21 +268,4 @@ class BudgetReportController extends Controller
         return $grouped;
     }
 
-    /**
-     * @param Collection $set
-     *
-     * @return array
-     */
-    private function groupByOpposingAccount(Collection $set): array
-    {
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $accountId           = $transaction->opposing_account_id;
-            $grouped[$accountId] = $grouped[$accountId] ?? '0';
-            $grouped[$accountId] = bcadd($transaction->transaction_amount, $grouped[$accountId]);
-        }
-
-        return $grouped;
-    }
 }

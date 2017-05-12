@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -84,21 +84,8 @@ class UpgradeFireflyInstructions extends Command
         }
     }
 
-    /**
-     * Show a line
-     */
-    private function showLine()
+    private function installInstructions()
     {
-        $line = '+';
-        for ($i = 0; $i < 78; $i++) {
-            $line .= '-';
-        }
-        $line .= '+';
-        $this->line($line);
-
-    }
-
-    private function installInstructions() {
         /** @var string $version */
         $version = config('firefly.version');
         $config  = config('upgrade.text.install');
@@ -120,6 +107,7 @@ class UpgradeFireflyInstructions extends Command
             $this->boxed('Firefly III should be ready for use.');
             $this->boxed('');
             $this->showLine();
+
             return;
         }
 
@@ -127,6 +115,20 @@ class UpgradeFireflyInstructions extends Command
         $this->boxedInfo($text);
         $this->boxed('');
         $this->showLine();
+    }
+
+    /**
+     * Show a line
+     */
+    private function showLine()
+    {
+        $line = '+';
+        for ($i = 0; $i < 78; $i++) {
+            $line .= '-';
+        }
+        $line .= '+';
+        $this->line($line);
+
     }
 
     private function updateInstructions()
@@ -152,6 +154,7 @@ class UpgradeFireflyInstructions extends Command
             $this->boxed('Firefly III should be ready for use.');
             $this->boxed('');
             $this->showLine();
+
             return;
         }
 

@@ -13,6 +13,8 @@
 $(function () {
     "use strict";
 
+    configAccounting(currencySymbol);
+
     $.ajaxSetup({
                     headers: {
                         'X-CSRF-Token': $('meta[name="_token"]').attr('content')
@@ -20,7 +22,7 @@ $(function () {
                 });
 
     // when you click on a currency, this happens:
-    $('.currency-option').click(currencySelect);
+    $('.currency-option').on('click', currencySelect);
 
     var ranges = {};
     ranges[dateRangeConfig.currentPeriod] = [moment(dateRangeConfig.ranges.current[0]), moment(dateRangeConfig.ranges.current[1])];
@@ -102,28 +104,30 @@ function currencySelect(e) {
     $('#' + spanId).text(symbol);
 
     // close the menu (hack hack)
-    $('#' + menuID).click();
+    $('#' + menuID).dropdown('toggle');
 
 
     return false;
 }
 
-// Settings object that controls default parameters for library methods:
-accounting.settings = {
-    currency: {
-        symbol: currencySymbol,   // default currency symbol is '$'
-        format: accountingConfig, // controls output: %s = symbol, %v = value/number (can be object: see below)
-        decimal: mon_decimal_point,  // decimal point separator
-        thousand: mon_thousands_sep,  // thousands separator
-        precision: frac_digits   // decimal places
-    },
-    number: {
-        precision: 0,  // default precision on numbers is 0
-        thousand: ",",
-        decimal: "."
-    }
-};
+function configAccounting(customCurrency) {
 
+// Settings object that controls default parameters for library methods:
+    accounting.settings = {
+        currency: {
+            symbol: customCurrency,   // default currency symbol is '$'
+            format: accountingConfig, // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal: mon_decimal_point,  // decimal point separator
+            thousand: mon_thousands_sep,  // thousands separator
+            precision: frac_digits   // decimal places
+        },
+        number: {
+            precision: 0,  // default precision on numbers is 0
+            thousand: ",",
+            decimal: "."
+        }
+    };
+}
 
 function listLengthInitial() {
     "use strict";

@@ -12,13 +12,25 @@ declare(strict_types = 1);
 namespace Tests\Feature\Controllers\Transaction;
 
 
+use DB;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class MassControllerTest
+ *
+ * @package Tests\Feature\Controllers\Transaction
+ */
 class MassControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::__construct
      */
     public function testDelete()
     {
@@ -36,21 +48,24 @@ class MassControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $this->session(['transactions.mass-delete.url' => 'http://localhost']);
-        $deposits = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
-        $data     = [
-            'confirm_mass_delete' => $deposits,
+        $deposits   = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->take(2)->get();
+        $depositIds = $deposits->pluck('id')->toArray();
+
+        // mock deletion:
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('find')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
+        $repository->shouldReceive('delete')->times(2);
+
+        $this->session(['transactions.mass-delete.uri' => 'http://localhost']);
+
+        $data = [
+            'confirm_mass_delete' => $depositIds,
         ];
         $this->be($this->user());
         $response = $this->post(route('transactions.mass.destroy'), $data);
         $response->assertSessionHas('success');
         $response->assertStatus(302);
-
-        // visit them should give 404.
-        $response = $this->get(route('transactions.show', [$deposits[0]]));
-        $response->assertStatus(404);
-
-
     }
 
     /**
@@ -58,9 +73,88 @@ class MassControllerTest extends TestCase
      */
     public function testEdit()
     {
+        // mock stuff:
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+
+        // mock more stuff:
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+
         $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();
+
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.delete', $transfers));
+        $response = $this->get(route('transactions.mass.edit', $transfers));
+        $response->assertStatus(200);
+        $response->assertSee('Edit a number of transactions');
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     */
+    public function testEditMultiple()
+    {
+        // mock stuff:
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+
+        // default transactions
+        $collection = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
+
+        // add deposit (with multiple sources)
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 2)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+
+        // add withdrawal (with multiple destinations)
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 1)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+        $allIds = $collection->pluck('id')->toArray();
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
+        $response->assertStatus(200);
+        $response->assertSee('Edit a number of transactions');
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     */
+    public function testEditMultipleNothingLeft()
+    {
+        // mock stuff:
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+
+        // default transactions
+        $collection = new Collection;
+        $collection->push(
+            TransactionJournal::where('transaction_type_id', 1)
+                              ->whereNull('transaction_journals.deleted_at')
+                              ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                              ->groupBy('transaction_journals.id')
+                              ->orderBy('ct', 'DESC')
+                              ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
+        );
+        $allIds = $collection->pluck('id')->toArray();
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
         // has bread crumb
@@ -75,7 +169,14 @@ class MassControllerTest extends TestCase
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)
                                      ->whereNull('deleted_at')
                                      ->first();
-        $this->session(['transactions.mass-edit.url' => 'http://localhost']);
+        // mock stuff
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('update')->once();
+        $repository->shouldReceive('find')->once()->andReturn($deposit);
+
+
+        $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 
         $data = [
             'journals'                                  => [$deposit->id],
@@ -92,12 +193,5 @@ class MassControllerTest extends TestCase
         $response = $this->post(route('transactions.mass.update', [$deposit->id]), $data);
         $response->assertSessionHas('success');
         $response->assertStatus(302);
-
-        // visit them should show updated content
-        $response = $this->get(route('transactions.show', [$deposit->id]));
-        $response->assertStatus(200);
-        $response->assertSee('Updated salary thing');
     }
-
-
 }

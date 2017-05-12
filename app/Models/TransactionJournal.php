@@ -9,15 +9,16 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Models\TransactionJournalSupport;
+use FireflyIII\Support\Models\TransactionJournalTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
@@ -30,9 +31,9 @@ use Watson\Validating\ValidatingTrait;
  *
  * @package FireflyIII\Models
  */
-class TransactionJournal extends TransactionJournalSupport
+class TransactionJournal extends Model
 {
-    use SoftDeletes, ValidatingTrait;
+    use SoftDeletes, ValidatingTrait, TransactionJournalTrait;
 
     /**
      * The attributes that should be casted to native types.
@@ -169,7 +170,7 @@ class TransactionJournal extends TransactionJournalSupport
         $cache->addProperty($name);
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         Log::debug(sprintf('Looking for journal #%d meta field "%s".', $this->id, $name));

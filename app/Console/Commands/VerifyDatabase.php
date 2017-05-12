@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
@@ -93,6 +93,7 @@ class VerifyDatabase extends Command
 
         // report on journals with the wrong types of accounts.
         $this->reportIncorrectJournals();
+
     }
 
     /**
@@ -131,7 +132,7 @@ class VerifyDatabase extends Command
         /** @var Budget $entry */
         foreach ($set as $entry) {
             $line = sprintf(
-                'Notice: User #%d (%s) has budget #%d ("%s") which has no budget limits.',
+                'User #%d (%s) has budget #%d ("%s") which has no budget limits.',
                 $entry->user_id, $entry->email, $entry->id, $entry->name
             );
             $this->line($line);
@@ -277,7 +278,7 @@ class VerifyDatabase extends Command
             }
 
             $line = sprintf(
-                'Notice: User #%d (%s) has %s #%d ("%s") which has no transactions.',
+                'User #%d (%s) has %s #%d ("%s") which has no transactions.',
                 $entry->user_id, $entry->email, $name, $entry->id, $objName
             );
             $this->line($line);

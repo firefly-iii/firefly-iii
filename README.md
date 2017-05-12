@@ -1,6 +1,6 @@
 # Firefly III: A personal finances manager 
 
-[![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php#v7.0.4) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/?branch=master) [![Build Status](https://travis-ci.org/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.org/firefly-iii/firefly-iii) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
+[![Requires PHP7](https://img.shields.io/badge/php-7.0-red.svg)](https://secure.php.net/downloads.php) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 
 [![The index of Firefly III](https://i.nder.be/hurdhgyg/400)](https://i.nder.be/h2b37243) [![The account overview of Firefly III](https://i.nder.be/hnkfkdpr/400)](https://i.nder.be/hv70pbwc)
 
@@ -10,11 +10,15 @@
 
 ## Try it out!
 
-Try out Firefly III on the [demo site](https://firefly-iii.nder.be/).
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
+
+Firefly III can be run on Heroku. Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
+
+There is also a [demo site](https://firefly-iii.nder.be) with an example financial administration already present. 
 
 ## Installation
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/installation-guide/).
+To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
 
 ## More about Firefly III
 
@@ -34,3 +38,5 @@ Firefly is pretty awesome. [You can read more about Firefly III, and its feature
 If you like Firefly and if it helps you save lots of money, why not send me [a dime for every dollar saved](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) (this is a joke, although the Paypal form works just fine, try it!)
 
 If you want to contact me, please open an issue or [email me](mailto:thegrumpydictator@gmail.com).
+
+[![Build Status](https://travis-ci.org/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.org/firefly-iii/firefly-iii) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/firefly-iii/firefly-iii/badge.svg?branch=master)](https://coveralls.io/github/firefly-iii/firefly-iii?branch=master)

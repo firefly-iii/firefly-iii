@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
@@ -40,6 +40,8 @@ class ExpandedForm
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
+        $options['min'] = '0.01';
+
         return $this->currencyField($name, 'amount', $value, $options);
     }
 
@@ -52,6 +54,8 @@ class ExpandedForm
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
+        $options['min'] = '0.01';
+
         return $this->currencyField($name, 'amount-small', $value, $options);
     }
 
@@ -257,6 +261,67 @@ class ExpandedForm
 
         unset($options['class']);
         $html = view('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function nonSelectableAmount(string $name, $value = null, array $options = []): string
+    {
+        $label            = $this->label($name, $options);
+        $options          = $this->expandOptionArray($name, $label, $options);
+        $classes          = $this->getHolderClasses($name);
+        $value            = $this->fillFieldValue($name, $value);
+        $options['step']  = 'any';
+        $options['min']   = '0.01';
+        $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        unset($options['currency']);
+        unset($options['placeholder']);
+
+        // make sure value is formatted nicely:
+        if (!is_null($value) && $value !== '') {
+            $value = round($value, $selectedCurrency->decimal_places);
+        }
+
+
+        $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function nonSelectableBalance(string $name, $value = null, array $options = []): string
+    {
+        $label            = $this->label($name, $options);
+        $options          = $this->expandOptionArray($name, $label, $options);
+        $classes          = $this->getHolderClasses($name);
+        $value            = $this->fillFieldValue($name, $value);
+        $options['step']  = 'any';
+        $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
+        unset($options['currency']);
+        unset($options['placeholder']);
+
+        // make sure value is formatted nicely:
+        if (!is_null($value) && $value !== '') {
+            $decimals = $selectedCurrency->decimal_places ?? 2;
+            $value    = round($value, $decimals);
+        }
+
+
+        $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }

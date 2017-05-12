@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Category;
 
@@ -17,7 +17,7 @@ namespace FireflyIII\Generator\Report\Category;
 /**
  * Class YearReportGenerator
  *
- * @package FireflyIII\Generator\Report\Audit
+ * @package FireflyIII\Generator\Report\Category
  */
 class YearReportGenerator extends MonthReportGenerator
 {

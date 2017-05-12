@@ -9,13 +9,14 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -67,7 +68,7 @@ class PiggyBank extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function account()
+    public function account(): BelongsTo
     {
         return $this->belongsTo('FireflyIII\Models\Account');
     }
@@ -106,6 +107,31 @@ class PiggyBank extends Model
         }
 
         return $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSuggestedMonthlyAmount(): string
+    {
+        $savePerMonth = '0';
+        if ($this->targetdate && $this->currentRelevantRep()->currentamount < $this->targetamount) {
+            $now             = Carbon::now();
+            $diffInMonths    = $now->diffInMonths($this->targetdate, false);
+            $remainingAmount = bcsub($this->targetamount, $this->currentRelevantRep()->currentamount);
+
+            // more than 1 month to go and still need money to save:
+            if ($diffInMonths > 0 && bccomp($remainingAmount, '0') === 1) {
+                $savePerMonth = bcdiv($remainingAmount, strval($diffInMonths));
+            }
+
+            // less than 1 month to go but still need money to save:
+            if ($diffInMonths === 0 && bccomp($remainingAmount, '0') === 1) {
+                $savePerMonth = $remainingAmount;
+            }
+        }
+
+        return $savePerMonth;
     }
 
     /**

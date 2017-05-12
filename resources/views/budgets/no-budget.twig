@@ -1,22 +1,80 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, subTitle) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, moment, start, end) }}
 {% endblock %}
 
 {% block content %}
+
+    {# upper show-all instruction #}
+    {% if periods.count > 0 %}
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="{% if periods.count > 0 %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ subTitle }}</h3>
                 </div>
-                <div class="box-body">
-                    {% include 'list.journals-tasker' with {'journals': journals} %}
+                <div class="box-body ">
+                    {% include 'list.journals-tasker' with {'journals': journals,'hideBudgets': true} %}
+                    {% if periods.count > 0 %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('budgets.no-budget', ['all']) }}">{{ 'show_all_no_filter'|_ }}</a>
+                        </p>
+                    {% else %}
+                        <p>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <a href="{{ route('budgets.no-budget') }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
+
+        {% if periods.count > 0 %}
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                {% for period in periods %}
+                    {% if period.count > 0 %}
+                        <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><a href="{{ route('budgets.no-budget',[period.string]) }}">{{ period.name }}</a>
+                                </h3>
+                            </div>
+                            <div class="box-body no-padding">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <td style="width:33%;">{{ 'transactions'|_ }}</td>
+                                        <td style="text-align: right;">{{ period.count }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                        <td style="text-align: right;">{{ period.sum|formatAmount }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
     </div>
+
+    {# lower show-all instruction #}
+    {% if periods.count > 0 %}
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}
 {% block scripts %}

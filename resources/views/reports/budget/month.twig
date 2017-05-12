@@ -27,7 +27,8 @@
                                     <a href="{{ route('accounts.show', account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
                                 </td>
                                 {% if accountSummary[account.id] %}
-                                    <td data-value="{{ accountSummary[account.id] }}" style="text-align: right;">{{ accountSummary[account.id]|formatAmount }}</td>
+                                    <td data-value="{{ accountSummary[account.id] }}"
+                                        style="text-align: right;">{{ accountSummary[account.id]|formatAmount }}</td>
                                 {% else %}
                                     <td data-value="0" style="text-align: right;">{{ 0|formatAmount }}</td>
                                 {% endif %}
@@ -75,8 +76,8 @@
                         <h3 class="box-title">{{ 'expense_per_budget'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <div style="width:75%;margin:0 auto;">
-                            <canvas id="budgets-out-pie-chart" style="margin:0 auto;"></canvas>
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="budgets-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                         </div>
                         <label style="font-weight:normal;">
                             <input type="checkbox" id="budgets-out-pie-chart-checked">
@@ -92,8 +93,8 @@
                     <h3 class="box-title">{{ 'expense_per_account'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div style="width:75%;margin:0 auto;">
-                    <canvas id="accounts-out-pie-chart" style="margin:0 auto;"></canvas>
+                    <div style="width:100%;margin:0 auto;">
+                        <canvas id="accounts-out-pie-chart" style="width:100%;height:250px;" height="250"></canvas>
                     </div>
                     <label style="font-weight:normal;">
                         <input type="checkbox" id="accounts-out-pie-chart-checked">
@@ -116,7 +117,7 @@
                     amount spent vs budget limit reps<br>
                     over the entire period the amount spent would rise and the budget limit rep would be like a heart beat jumping up and down<br>
                     needs to be two axes to work<br>#}
-                    <canvas id="in-out-chart" style="margin:0 auto;" height="300"></canvas>
+                    <canvas id="in-out-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
         </div>

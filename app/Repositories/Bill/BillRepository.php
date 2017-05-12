@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Bill;
 
@@ -251,7 +251,7 @@ class BillRepository implements BillRepositoryInterface
         $count    = strval($journals->count());
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
+            $sum = bcadd($sum, $journal->amountPositive());
         }
         $avg = '0';
         if ($journals->count() > 0) {
@@ -370,7 +370,7 @@ class BillRepository implements BillRepositoryInterface
         $count    = strval($journals->count());
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, TransactionJournal::amountPositive($journal));
+            $sum = bcadd($sum, $journal->amountPositive());
         }
         $avg = '0';
         if ($journals->count() > 0) {
@@ -396,7 +396,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextDateMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
@@ -433,7 +433,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
@@ -478,15 +478,15 @@ class BillRepository implements BillRepositoryInterface
         if (false === $journal->isWithdrawal()) {
             return false;
         }
-        $destinationAccounts = TransactionJournal::destinationAccountList($journal);
-        $sourceAccounts      = TransactionJournal::sourceAccountList($journal);
+        $destinationAccounts = $journal->destinationAccountList();
+        $sourceAccounts      = $journal->sourceAccountList();
         $matches             = explode(',', $bill->match);
         $description         = strtolower($journal->description) . ' ';
-        $description .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
-        $description .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
+        $description         .= strtolower(join(' ', $destinationAccounts->pluck('name')->toArray()));
+        $description         .= strtolower(join(' ', $sourceAccounts->pluck('name')->toArray()));
 
         $wordMatch   = $this->doWordMatch($matches, $description);
-        $amountMatch = $this->doAmountMatch(TransactionJournal::amountPositive($journal), $bill->amount_min, $bill->amount_max);
+        $amountMatch = $this->doAmountMatch($journal->amountPositive(), $bill->amount_min, $bill->amount_max);
 
 
         /*
@@ -525,8 +525,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function store(array $data): Bill
     {
-
-
+        /** @var Bill $bill */
         $bill = Bill::create(
             [
                 'name'        => $data['name'],

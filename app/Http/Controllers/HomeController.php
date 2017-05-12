@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Http\Controllers;
 
 use Artisan;
@@ -17,13 +18,12 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface as ARI;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
-use Route;
 use Session;
 use View;
 
@@ -91,18 +91,18 @@ class HomeController extends Controller
     public function flush(Request $request)
     {
         Preferences::mark();
-        $request->session()->forget(['start', 'end','_previous', 'viewRange', 'range', 'is_custom_range']);
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
         Artisan::call('cache:clear');
 
         return redirect(route('index'));
     }
 
     /**
-     * @param ARI $repository
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function index(ARI $repository)
+    public function index(AccountRepositoryInterface $repository)
     {
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);

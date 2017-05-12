@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
@@ -44,7 +44,7 @@ class Budget extends Model
             'encrypted'  => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'name', 'active'];
     protected $hidden   = ['encrypted'];
     protected $rules    = ['name' => 'required|between:1,200',];

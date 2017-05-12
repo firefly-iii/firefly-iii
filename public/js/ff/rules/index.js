@@ -25,7 +25,7 @@ $(function () {
           {
               helper: fixHelper,
               stop: sortStop,
-              cursor: "move",
+              cursor: "move"
           }
       );
 

@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 return [
     'name'            => 'Firefly III',
@@ -21,7 +21,7 @@ return [
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
-    'log'             => env('APP_LOG', 'daily'),
+    'log'             => env('APP_LOG', 'errorlog'),
     'log_level'       => env('APP_LOG_LEVEL', 'info'),
     'providers'       => [
 
@@ -70,7 +70,7 @@ return [
         //Barryvdh\Debugbar\ServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         TwigBridge\ServiceProvider::class,
-        'PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider',
+        PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider::class,
 
         /*
          * More service providers.
@@ -125,7 +125,7 @@ return [
         'URL'           => Illuminate\Support\Facades\URL::class,
         'Validator'     => Illuminate\Support\Facades\Validator::class,
         'View'          => Illuminate\Support\Facades\View::class,
-        'Twig'          => 'TwigBridge\Facade\Twig',
+        'Twig'          => TwigBridge\Facade\Twig::class,
         'Form'          => Collective\Html\FormFacade::class,
         'Html'          => Collective\Html\HtmlFacade::class,
         'Breadcrumbs'   => 'DaveJamesMiller\Breadcrumbs\Facade',
@@ -137,7 +137,7 @@ return [
         'ExpandedForm'  => 'FireflyIII\Support\Facades\ExpandedForm',
         'Entrust'       => 'Zizaco\Entrust\EntrustFacade',
         'Input'         => 'Illuminate\Support\Facades\Input',
-        'Google2FA'     => 'PragmaRX\Google2FA\Vendor\Laravel\Facade',
+        'Google2FA'     => PragmaRX\Google2FA\Vendor\Laravel\Facade::class,
     ],
 
 ];

@@ -42,13 +42,6 @@ class ChangesForV431 extends Migration
         }
         );
 
-        // change field "start_date" to "startdate"
-//        Schema::table(
-//            'budget_limits', function (Blueprint $table) {
-//            $table->renameColumn('startdate', 'start_date');
-//        }
-//        );
-
     }
 
     /**

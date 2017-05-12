@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
@@ -69,6 +69,7 @@ final class Processor
         $triggerSet = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $trigger */
         foreach ($triggerSet as $trigger) {
+            Log::debug(sprintf('Push trigger %d', $trigger->id));
             $self->triggers->push(TriggerFactory::getTrigger($trigger));
         }
         $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();

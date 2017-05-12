@@ -7,14 +7,13 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Session\SessionManager;
-use Log;
 
 /**
  * Class StartFireflySession

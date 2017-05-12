@@ -9,20 +9,19 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Preferences;
 use Session;
@@ -141,11 +140,13 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag                    $tag
+     *
+     * @param TagRepositoryInterface $repository
      *
      * @return View
      */
-    public function edit(Tag $tag)
+    public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
@@ -159,8 +160,8 @@ class TagController extends Controller
         /*
          * Can this tag become another type?
          */
-        $allowAdvance        = Tag::tagAllowAdvance($tag);
-        $allowToBalancingAct = Tag::tagAllowBalancing($tag);
+        $allowAdvance        = $repository->tagAllowAdvance($tag);
+        $allowToBalancingAct = $repository->tagAllowBalancing($tag);
 
         // edit tag options:
         if ($allowAdvance === false) {
@@ -183,24 +184,26 @@ class TagController extends Controller
     }
 
     /**
+     * @param TagRepositoryInterface $repository
      *
+     * @return View
      */
-    public function index()
+    public function index(TagRepositoryInterface $repository)
     {
         $title         = 'Tags';
         $mainTitleIcon = 'fa-tags';
         $types         = ['nothing', 'balancingAct', 'advancePayment'];
+        $count         = $repository->count();
 
         // loop each types and get the tags, group them by year.
         $collection = [];
         foreach ($types as $type) {
 
             /** @var Collection $tags */
-            $tags = auth()->user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
+            $tags = $repository->getByType($type);
             $tags = $tags->sortBy(
                 function (Tag $tag) {
                     $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
-
 
                     return strtolower($date . $tag->tag);
                 }
@@ -216,57 +219,95 @@ class TagController extends Controller
             }
         }
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection'));
+        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection', 'count'));
     }
 
     /**
-     * @param Request                   $request
-     * @param JournalCollectorInterface $collector
-     * @param Tag                       $tag
+     * @param Request                $request
+     * @param TagRepositoryInterface $repository
+     * @param Tag                    $tag
+     * @param string                 $moment
      *
      * @return View
      */
-    public function show(Request $request, JournalCollectorInterface $collector, Tag $tag, string $moment = '')
+    public function show(Request $request, TagRepositoryInterface $repository, Tag $tag, string $moment = '')
     {
-        $range = Preferences::get('viewRange', '1M')->data;
-        $start = new Carbon;
-        $end   = new Carbon;
-
-        if (strlen($moment) > 0) {
-            try {
-                $start = new Carbon($moment);
-                $end   = Navigation::endOfPeriod($start, $range);
-            } catch (Exception $e) {
-                $start = Navigation::startOfPeriod($this->repository->firstUseDate($tag), $range);
-                $end   = Navigation::startOfPeriod($this->repository->lastUseDate($tag), $range);
-            }
-        }
-        if (strlen($moment) === 0) {
-            $start = clone session('start', Carbon::now()->startOfMonth());
-            $end   = clone session('end', Carbon::now()->endOfMonth());
-        }
-
+        // default values:
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $periods      = $this->getPeriodOverview($tag);
+        $count        = 0;
+        $loop         = 0;
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $start        = null;
+        $end          = null;
+        $periods      = new Collection;
+        $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
+        $sum          = '0';
 
-        // use collector:
-        $collector->setAllAssetAccounts()
-                  ->setLimit($pageSize)->setPage($page)->setTag($tag)
-                  ->withBudgetInformation()->withCategoryInformation()->setRange($start, $end);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath('tags/show/' . $tag->id);
 
-        $sum = $journals->sum(
-            function (Transaction $transaction) {
-                return $transaction->transaction_amount;
+        // prep for "all" view.
+        if ($moment === 'all') {
+            $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $start    = $repository->firstUseDate($tag);
+            $end      = new Carbon;
+            $sum      = $repository->sumOfTag($tag);
+        }
+
+        // prep for "specific date" view.
+        if (strlen($moment) > 0 && $moment !== 'all') {
+            $start    = new Carbon($moment);
+            $end      = Navigation::endOfPeriod($start, $range);
+            $subTitle = trans(
+                'firefly.journals_in_period_for_tag',
+                ['tag'   => $tag->tag,
+                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+            $periods  = $this->getPeriodOverview($tag);
+            $sum      = $repository->sumOfTag($tag, $start, $end);
+        }
+
+        // prep for current period
+        if (strlen($moment) === 0) {
+            $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+            $periods  = $this->getPeriodOverview($tag);
+            $subTitle = trans(
+                'firefly.journals_in_period_for_tag',
+                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+        }
+        // grab journals, but be prepared to jump a period back to get the right ones:
+        Log::info('Now at tag loop start.');
+        while ($count === 0 && $loop < 3) {
+            $loop++;
+            Log::info('Count is zero, search for journals.');
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+                      ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+            $journals = $collector->getPaginatedJournals();
+            $journals->setPath('tags/show/' . $tag->id);
+            $count = $journals->getCollection()->count();
+            if ($count === 0) {
+                $start->subDay();
+                $start = Navigation::startOfPeriod($start, $range);
+                $end   = Navigation::endOfPeriod($start, $range);
+                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
             }
-        );
+        }
 
-        return view('tags.show', compact('tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end'));
+        if ($moment != 'all' && $loop > 1) {
+            $subTitle = trans(
+                'firefly.journals_in_period_for_tag',
+                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            );
+        }
+
+        return view('tags.show', compact('apiKey', 'tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
+
 
     /**
      * @param TagFormRequest $request
@@ -282,10 +323,11 @@ class TagController extends Controller
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
-            // set value so create routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('tags.create.fromStore', true);
 
             return redirect(route('tags.create'))->withInput();
+            // @codeCoverageIgnoreEnd
         }
 
         return redirect($this->getPreviousUri('tags.create.uri'));
@@ -307,10 +349,11 @@ class TagController extends Controller
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
-            // set value so edit routine will not overwrite URL:
+            // @codeCoverageIgnoreStart
             Session::put('tags.edit.fromUpdate', true);
 
             return redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
+            // @codeCoverageIgnoreEnd
         }
 
         // redirect to previous URL.
@@ -336,7 +379,7 @@ class TagController extends Controller
         $cache->addProperty($tag->id);
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $collection = new Collection;
@@ -347,11 +390,11 @@ class TagController extends Controller
 
             // get expenses and what-not in this period and this tag.
             $arr = [
-                'date_string' => $end->format('Y-m-d'),
-                'date_name'   => Navigation::periodShow($end, $range),
-                'date'        => $end,
-                'spent'       => $this->repository->spentInperiod($tag, $end, $currentEnd),
-                'earned'      => $this->repository->earnedInperiod($tag, $end, $currentEnd),
+                'string' => $end->format('Y-m-d'),
+                'name'   => Navigation::periodShow($end, $range),
+                'date'   => clone $end,
+                'spent'  => $this->repository->spentInperiod($tag, $end, $currentEnd),
+                'earned' => $this->repository->earnedInperiod($tag, $end, $currentEnd),
             ];
             $collection->push($arr);
 

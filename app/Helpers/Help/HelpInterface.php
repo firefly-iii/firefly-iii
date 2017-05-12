@@ -9,7 +9,8 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace FireflyIII\Helpers\Help;
 
 /**
@@ -29,12 +30,12 @@ interface HelpInterface
     public function getFromCache(string $route, string $language): string;
 
     /**
-     * @param string $language
      * @param string $route
+     * @param string $language
      *
      * @return string
      */
-    public function getFromGithub(string $language, string $route): string;
+    public function getFromGithub(string $route, string $language): string;
 
     /**
      * @param string $route

@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8" class="form-horizontal" id="store"
+    <form method="POST" action="{{ route('transactions.convert.index.post', [destinationType.type|lower, journal.id]) }}" accept-charset="UTF-8"
+          class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
@@ -22,12 +23,23 @@
                         {# in case of withdrawal #}
                         {% if sourceType.type == "Withdrawal" %}
                             {{ ExpandedForm.staticText('source_account_asset', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
-                            {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                            {# if destination is cash, show (cash) #}
+                            {% if destinationAccount.accountType.type == "Cash account" %}
+                                {{ ExpandedForm.staticText('destination_account_expense', '<span class="text-success">(cash)</a>') }}
+                            {% else %}
+                                {{ ExpandedForm.staticText('destination_account_expense', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
+                            {% endif %}
+
                         {% endif %}
 
                         {# in case of deposit #}
                         {% if sourceType.type == "Deposit" %}
-                            {{ ExpandedForm.staticText('source_account_revenue', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                            {# if source is cash, show (cash) #}
+                            {% if sourceAccount.accountType.type == "Cash account" %}
+                                {{ ExpandedForm.staticText('source_account_revenue', '<span class="text-success">(cash)</a>') }}
+                            {% else %}
+                                {{ ExpandedForm.staticText('source_account_revenue', '<a href="'~route('accounts.show',[sourceAccount.id])~'">'~sourceAccount.name~'</a>') }}
+                            {% endif %}
                             {{ ExpandedForm.staticText('destination_account_asset', '<a href="'~route('accounts.show',[destinationAccount.id])~'">'~destinationAccount.name~'</a>') }}
                         {% endif %}
 
@@ -47,16 +59,18 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
                             <p><em>
                                     {{ 'convert_please_set_revenue_source'|_ }}
                                 </em>
                             </p>
-
-                            {{ ExpandedForm.text('source_account_revenue', destinationAccount.name) }}
+                            {% if destinationAccount.accountType.type == "Cash account" %}
+                                {{ ExpandedForm.text('source_account_revenue', '') }}
+                            {% else %}
+                                {{ ExpandedForm.text('source_account_revenue', destinationAccount.name) }}
+                            {% endif %}
                         {% endif %}
 
                         {# TWO #}
@@ -69,8 +83,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em></p>
 
                             <p>
@@ -95,8 +108,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
                             <p>
@@ -105,7 +117,11 @@
 
                                 </em>
                             </p>
-                            {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
+                            {% if sourceAccount.accountType.type == "Cash account" %}
+                                {{ ExpandedForm.text('destination_account_expense', '') }}
+                            {% else %}
+                                {{ ExpandedForm.text('destination_account_expense', destinationAccount.name) }}
+                            {% endif %}
 
                         {% endif %}
 
@@ -121,8 +137,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
                             <p>
@@ -147,8 +162,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
 
@@ -175,8 +189,7 @@
                                         sourceName: sourceAccount.name,
                                         destinationRoute: route('accounts.show', [destinationAccount.id]),
                                         destinationName: destinationAccount.name,
-                                    })|raw
-                                    }}
+                                    })|raw }}
                                 </em>
                             </p>
 

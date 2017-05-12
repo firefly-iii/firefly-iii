@@ -15,7 +15,8 @@
             </td>
             <td class="hidden-xs" data-value="{{ account.start_balance }}" style="text-align: right;">{{ account.start_balance|formatAmount }}</td>
             <td class="hidden-xs" data-value="{{ account.end_balance }}" style="text-align: right;">{{ account.end_balance|formatAmount }}</td>
-            <td style="text-align: right;" data-value="{{ (account.end_balance - account.start_balance) }}">{{ (account.end_balance - account.start_balance)|formatAmount }}</td>
+            <td style="text-align: right;"
+                data-value="{{ (account.end_balance - account.start_balance) }}">{{ (account.end_balance - account.start_balance)|formatAmount }}</td>
         </tr>
     {% endfor %}
     </tbody>

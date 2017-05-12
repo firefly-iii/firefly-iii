@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use FireflyIII\Models\AccountType;
 use Illuminate\Database\Seeder;
@@ -21,8 +21,6 @@ class AccountTypeSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('account_types')->delete();
-
         AccountType::create(['type' => 'Default account']);
         AccountType::create(['type' => 'Cash account']);
         AccountType::create(['type' => 'Asset account']);
@@ -31,6 +29,7 @@ class AccountTypeSeeder extends Seeder
         AccountType::create(['type' => 'Initial balance account']);
         AccountType::create(['type' => 'Beneficiary account']);
         AccountType::create(['type' => 'Import account']);
+        AccountType::create(['type' => 'Loan']);
     }
 
 

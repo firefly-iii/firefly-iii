@@ -9,14 +9,15 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use Cookie;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
-use Session;
+
 
 /**
  * Class RedirectIfTwoFactorAuthenticated
@@ -40,7 +41,10 @@ class RedirectIfTwoFactorAuthenticated
 
             $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
             $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
-            $is2faAuthed  = Session::get('twofactor-authenticated');
+
+            // grab 2auth information from cookie
+            $is2faAuthed = Cookie::get('twoFactorAuthenticated') === 'true';
+
             if ($is2faEnabled && $has2faSecret && $is2faAuthed) {
                 return redirect('/');
             }

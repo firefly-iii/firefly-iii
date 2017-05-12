@@ -9,7 +9,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
@@ -61,6 +61,23 @@ class UserRepository implements UserRepositoryInterface
     public function changePassword(User $user, string $password): bool
     {
         $user->password = bcrypt($password);
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * @param User   $user
+     * @param bool   $isBlocked
+     * @param string $code
+     *
+     * @return bool
+     */
+    public function changeStatus(User $user, bool $isBlocked, string $code): bool
+    {
+        // change blocked status and code:
+        $user->blocked      = $isBlocked;
+        $user->blocked_code = $code;
         $user->save();
 
         return true;
@@ -146,5 +163,16 @@ class UserRepository implements UserRepositoryInterface
         $return['tags']                = $user->tags()->count();
 
         return $return;
+    }
+
+    /**
+     * @param User   $user
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(User $user, string $role): bool
+    {
+        return $user->hasRole($role);
     }
 }
