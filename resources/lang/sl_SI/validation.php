@@ -12,7 +12,7 @@
 return [
     'iban'                           => 'To ni veljaven IBAN.',
     'unique_account_number_for_user' => 'Kaže, da je ta številka računa že v uporabi.',
-    'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
+    'deleted_user'                   => 'Iz varnostnih razlogov ne morete ustvariti uporabnika s takim e-poštnim naslovom.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
     'rule_action_value'              => 'This value is invalid for the selected action.',
     'invalid_domain'                 => 'Due to security constraints, you cannot register from this domain.',
