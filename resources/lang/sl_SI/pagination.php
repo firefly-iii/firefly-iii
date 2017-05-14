@@ -11,7 +11,7 @@
 
 return [
 
-    'previous' => '&laquo; Previous',
+    'previous' => '&laquo; Prejšnja stran',
     'next'     => 'Next &raquo;',
 
 ];
