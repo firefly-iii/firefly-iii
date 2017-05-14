@@ -269,9 +269,10 @@ class UpgradeDatabase extends Command
         $repository   = app(CurrencyRepositoryInterface::class);
         $notification = '%s #%d uses %s but should use %s. It has been updated. Please verify this in Firefly III.';
         $transfer     = 'Transfer #%d has been updated to use the correct currencies. Please verify this in Firefly III.';
+        $driver = DB::connection()->getDriverName();
 
         foreach ($types as $type => $operator) {
-            $set = TransactionJournal
+            $query = TransactionJournal
                 ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')->leftJoin(
                     'transactions', function (JoinClause $join) use ($operator) {
                     $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', $operator, '0');
@@ -280,9 +281,15 @@ class UpgradeDatabase extends Command
                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                 ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                 ->where('transaction_types.type', $type)
-                ->where('account_meta.name', 'currency_id')
-                ->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'))
-                ->get(['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']);
+                ->where('account_meta.name', 'currency_id');
+            if($driver === 'postgresql') {
+                $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('cast(account_meta.data as int)'));
+            }
+            if($driver !== 'postgresql') {
+                $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'));
+            }
+
+            $set = $query->get(['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']);
             /** @var TransactionJournal $journal */
             foreach ($set as $journal) {
                 $expectedCurrency = $repository->find(intval($journal->expected_currency_id));
