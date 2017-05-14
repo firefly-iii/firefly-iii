@@ -34,10 +34,10 @@ return [
     'store_column_roles'     => 'nadaljuj z uvozom',
     'do_not_map'             => '(ne poveži)',
     'map_title'              => 'poveži podatke za uvoz s podatki iz Firefly III',
-    'map_text'               => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'map_text'               => 'Vrednosti na levi v spodnji tabeli prikazujejo podatke iz naložene CSV datoteke. Vaša naloga je, da jim, če je možno, določite obtoječio vrednost iz podatkovne baze. Firefly bo to upošteval pri uvozu. Če v podatkovni bazi ni ustrezne vrednosti, ali vrednosti ne želite določiti ničesar, potem pustite prazno.',
 
-    'field_value'          => 'Field value',
-    'field_mapped_to'      => 'Mapped to',
+    'field_value'          => 'podatek',
+    'field_mapped_to'      => 'povezan z',
     'store_column_mapping' => 'shrani nastavitve',
 
     // map things.
@@ -49,7 +49,7 @@ return [
     'column_account-name'           => 'premoženjski račun (ime)',
     'column_amount'                 => 'znesek',
     'column_amount-comma-separated' => 'znesek (z decimalno vejico)',
-    'column_bill-id'                => 'Bill ID (matching Firefly)',
+    'column_bill-id'                => 'ID trajnika (Firefly)',
     'column_bill-name'              => 'Bill name',
     'column_budget-id'              => 'ID bugžeta (Firefly)',
     'column_budget-name'            => 'ime budžeta',
