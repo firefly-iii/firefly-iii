@@ -12,7 +12,7 @@
 return [
 
     // tour!
-    'main-content-title'     => 'Welcome to Firefly III',
+    'main-content-title'     => 'Dobrodošli na Firefly III',
     'main-content-text'      => 'Do yourself a favor and follow this short guide to make sure you know your way around.',
     'sidebar-toggle-title'   => 'Sidebar to create stuff',
     'sidebar-toggle-text'    => 'Hidden under the plus icon are all the buttons to create new stuff. Accounts, transactions, everything!',
