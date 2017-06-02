@@ -250,8 +250,8 @@ class SingleController extends Controller
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
-            'amount'            => $journal->amountPositive(),
-            'currency'          => $journal->transactionCurrency,
+            'amount'                   => $journal->amountPositive(),
+            'currency'                 => $journal->transactionCurrency,
 
             // new custom fields:
             'due_date'                 => $journal->dateAsString('due_date'),
@@ -261,8 +261,8 @@ class SingleController extends Controller
             'notes'                    => $journal->getMeta('notes'),
 
             // exchange rate fields
-            'native_amount'         => $journal->amountPositive(),
-            'native_currency'       => $journal->transactionCurrency,
+            'native_amount'            => $journal->amountPositive(),
+            'native_currency'          => $journal->transactionCurrency,
         ];
 
         // if user has entered a foreign currency, update some fields
