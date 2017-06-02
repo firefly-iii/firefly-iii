@@ -22,7 +22,7 @@
                     <h3 class="box-title">{{ subTitle }}</h3>
                 </div>
                 <div class="box-body ">
-                    {% include 'list.journals-tasker' with {'journals': journals,'hideBudgets': true} %}
+                    {% include 'list.journals' with {'journals': journals,'hideBudgets': true} %}
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>

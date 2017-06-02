@@ -86,7 +86,7 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals-tasker' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true} %}
+                    {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true} %}
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
