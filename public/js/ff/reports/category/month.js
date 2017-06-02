@@ -45,9 +45,6 @@ function drawChart() {
     redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
     redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
 
-    stackedColumnChart(expenseAccountTimeUri, 'expense-time-chart');
-    stackedColumnChart(revenueAccountTimeUri, 'revenue-time-chart');
-
 }
 
 function redrawPieChart(uri, container) {
