@@ -15,19 +15,19 @@ $(function () {
     drawChart();
 
     $('#categories-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('categories-in-pie-chart', categoryIncomeUri);
+        redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
     });
 
     $('#categories-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
+        redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
     });
 
     $('#accounts-in-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
+        redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
     });
 
     $('#accounts-out-pie-chart-checked').on('change', function () {
-        redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
+        redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
     });
 
 });
@@ -40,15 +40,17 @@ function drawChart() {
     doubleYChart(mainUri, 'in-out-chart');
 
     // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart('categories-in-pie-chart', categoryIncomeUri);
-    redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
-    redrawPieChart('accounts-in-pie-chart', accountIncomeUri);
-    redrawPieChart('accounts-out-pie-chart', accountExpenseUri);
+    redrawPieChart(categoryIncomeUri, 'categories-in-pie-chart');
+    redrawPieChart(categoryExpenseUri, 'categories-out-pie-chart');
+    redrawPieChart(accountIncomeUri, 'accounts-in-pie-chart');
+    redrawPieChart(accountExpenseUri, 'accounts-out-pie-chart');
 
+    stackedColumnChart(expenseAccountTimeUri, 'expense-time-chart');
+    stackedColumnChart(revenueAccountTimeUri, 'revenue-time-chart');
 
 }
 
-function redrawPieChart(container, uri) {
+function redrawPieChart(uri, container) {
     "use strict";
     var checkbox = $('#' + container + '-checked');
 
