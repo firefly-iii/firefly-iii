@@ -466,7 +466,12 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
-        $amount          = $data['openingBalance'];
+        $amount = strval($data['openingBalance']);
+
+        if (bccomp($amount, '0') === 0) {
+            return new TransactionJournal;
+        }
+
         $name            = $data['name'];
         $currencyId      = $data['currency_id'];
         $opposing        = $this->storeOpposingAccount($name);
@@ -487,12 +492,12 @@ class AccountRepository implements AccountRepositoryInterface
         $firstAccount  = $account;
         $secondAccount = $opposing;
         $firstAmount   = $amount;
-        $secondAmount  = $amount * -1;
+        $secondAmount  = bcmul($amount, '-1');
 
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
-            $firstAmount   = $amount * -1;
+            $firstAmount   = bcmul($amount, '-1');
             $secondAmount  = $amount;
         }
 
@@ -606,8 +611,14 @@ class AccountRepository implements AccountRepositoryInterface
     protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
         $date       = $data['openingBalanceDate'];
-        $amount     = $data['openingBalance'];
+        $amount     = strval($data['openingBalance']);
         $currencyId = intval($data['currency_id']);
+
+        if (bccomp($amount, '0') === 0) {
+            $journal->delete();
+
+            return true;
+        }
 
         // update date:
         $journal->date                    = $date;
@@ -621,7 +632,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $transaction->save();
             }
             if ($account->id != $transaction->account_id) {
-                $transaction->amount = $amount * -1;
+                $transaction->amount = bcmul($amount, '-1');
                 $transaction->save();
             }
         }
@@ -631,6 +642,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     }
 
+
     /**
      * @param array $data
      *
@@ -638,9 +650,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function validOpeningBalanceData(array $data): bool
     {
-        if (isset($data['openingBalance']) && isset($data['openingBalanceDate'])
-            && bccomp(strval($data['openingBalance']), '0') !== 0
-        ) {
+        if (isset($data['openingBalance']) && isset($data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
 
             return true;
