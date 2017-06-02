@@ -259,17 +259,8 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->description = $data['description'];
         $journal->date        = $data['date'];
         $accounts             = $this->storeAccounts($journal->transactionType, $data);
+        $data                 = $this->verifyNativeAmount($data, $accounts);
         $amount               = strval($data['amount']);
-
-        if ($data['currency_id'] !== $journal->transaction_currency_id) {
-            // user has entered amount in foreign currency.
-            // amount in "our" currency is $data['exchanged_amount']:
-            $amount = strval($data['exchanged_amount']);
-            // other values must be stored as well:
-            $data['original_amount']      = $data['amount'];
-            $data['original_currency_id'] = $data['currency_id'];
-
-        }
 
         // unlink all categories, recreate them:
         $journal->categories()->detach();
