@@ -17,6 +17,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
@@ -102,17 +103,6 @@ class Amount
     }
 
     /**
-     * @param string $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     */
-    public function format(string $amount, bool $coloured = true): string
-    {
-        return $this->formatAnything($this->getDefaultCurrency(), $amount, $coloured);
-    }
-
-    /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
@@ -157,49 +147,6 @@ class Amount
         }
 
         return $result;
-    }
-
-    /**
-     * Used in many places (unfortunately).
-     *
-     * @param string $currencyCode
-     * @param string $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     */
-    public function formatByCode(string $currencyCode, string $amount, bool $coloured = true): string
-    {
-        $currency = TransactionCurrency::where('code', $currencyCode)->first();
-
-        return $this->formatAnything($currency, $amount, $coloured);
-    }
-
-    /**
-     *
-     * @param \FireflyIII\Models\TransactionJournal $journal
-     * @param bool                                  $coloured
-     *
-     * @return string
-     */
-    public function formatJournal(TransactionJournal $journal, bool $coloured = true): string
-    {
-        $currency = $journal->transactionCurrency;
-
-        return $this->formatAnything($currency, $journal->amount(), $coloured);
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @param bool        $coloured
-     *
-     * @return string
-     */
-    public function formatTransaction(Transaction $transaction, bool $coloured = true)
-    {
-        $currency = $transaction->transactionJournal->transactionCurrency;
-
-        return $this->formatAnything($currency, strval($transaction->amount), $coloured);
     }
 
     /**

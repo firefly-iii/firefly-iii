@@ -74,6 +74,7 @@ class ImportValidator
             $entry = $this->setOpposingAccount($entry);
             $entry = $this->cleanDescription($entry);
             $entry = $this->setTransactionType($entry);
+            // TODO update this transaction currency reference.
             $entry = $this->setTransactionCurrency($entry);
 
             $newCollection->put($index, $entry);
@@ -383,6 +384,7 @@ class ImportValidator
      */
     private function setTransactionCurrency(ImportEntry $entry): ImportEntry
     {
+        // TODO update this transaction currency reference.
         if (is_null($entry->fields['currency'])) {
             /** @var CurrencyRepositoryInterface $repository */
             $repository = app(CurrencyRepositoryInterface::class);

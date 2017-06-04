@@ -81,6 +81,8 @@ class JournalTasker implements JournalTaskerInterface
             ->leftJoin('account_types as source_account_types', 'source_accounts.account_type_id', '=', 'source_account_types.id')
             ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
             ->leftJoin('account_types as destination_account_types', 'destination_accounts.account_type_id', '=', 'destination_account_types.id')
+            ->leftJoin('transaction_currencies as native_currencies', 'transactions.transaction_currency_id', '=', 'native_currencies.id')
+            ->leftJoin('transaction_currencies as foreign_currencies', 'transactions.foreign_currency_id', '=', 'foreign_currencies.id')
             ->where('transactions.amount', '<', 0)
             ->whereNull('transactions.deleted_at')
             ->get(
@@ -91,12 +93,21 @@ class JournalTasker implements JournalTaskerInterface
                     'source_accounts.encrypted as account_encrypted',
                     'source_account_types.type as account_type',
                     'transactions.amount',
+                    'transactions.foreign_amount',
                     'transactions.description',
                     'destination.id as destination_id',
                     'destination.account_id as destination_account_id',
                     'destination_accounts.name as destination_account_name',
                     'destination_accounts.encrypted as destination_account_encrypted',
                     'destination_account_types.type as destination_account_type',
+                    'native_currencies.id as transaction_currency_id',
+                    'native_currencies.code as transaction_currency_code',
+                    'native_currencies.symbol as transaction_currency_symbol',
+
+                    'foreign_currencies.id as foreign_currency_id',
+                    'foreign_currencies.code as foreign_currency_code',
+                    'foreign_currencies.symbol as foreign_currency_symbol',
+
                 ]
             );
 
@@ -109,23 +120,31 @@ class JournalTasker implements JournalTaskerInterface
             $budget             = $entry->budgets->first();
             $category           = $entry->categories->first();
             $transaction        = [
-                'source_id'                  => $entry->id,
-                'source_amount'              => $entry->amount,
-                'description'                => $entry->description,
-                'source_account_id'          => $entry->account_id,
-                'source_account_name'        => Steam::decrypt(intval($entry->account_encrypted), $entry->account_name),
-                'source_account_type'        => $entry->account_type,
-                'source_account_before'      => $sourceBalance,
-                'source_account_after'       => bcadd($sourceBalance, $entry->amount),
-                'destination_id'             => $entry->destination_id,
-                'destination_amount'         => bcmul($entry->amount, '-1'),
-                'destination_account_id'     => $entry->destination_account_id,
-                'destination_account_type'   => $entry->destination_account_type,
-                'destination_account_name'   => Steam::decrypt(intval($entry->destination_account_encrypted), $entry->destination_account_name),
-                'destination_account_before' => $destinationBalance,
-                'destination_account_after'  => bcadd($destinationBalance, bcmul($entry->amount, '-1')),
-                'budget_id'                  => is_null($budget) ? 0 : $budget->id,
-                'category'                   => is_null($category) ? '' : $category->name,
+                'source_id'                   => $entry->id,
+                'source_amount'               => $entry->amount,
+                'foreign_source_amount'       => $entry->foreign_amount,
+                'description'                 => $entry->description,
+                'source_account_id'           => $entry->account_id,
+                'source_account_name'         => Steam::decrypt(intval($entry->account_encrypted), $entry->account_name),
+                'source_account_type'         => $entry->account_type,
+                'source_account_before'       => $sourceBalance,
+                'source_account_after'        => bcadd($sourceBalance, $entry->amount),
+                'destination_id'              => $entry->destination_id,
+                'destination_amount'          => bcmul($entry->amount, '-1'),
+                'foreign_destination_amount'  => is_null($entry->foreign_amount) ? null : bcmul($entry->foreign_amount, '-1'),
+                'destination_account_id'      => $entry->destination_account_id,
+                'destination_account_type'    => $entry->destination_account_type,
+                'destination_account_name'    => Steam::decrypt(intval($entry->destination_account_encrypted), $entry->destination_account_name),
+                'destination_account_before'  => $destinationBalance,
+                'destination_account_after'   => bcadd($destinationBalance, bcmul($entry->amount, '-1')),
+                'budget_id'                   => is_null($budget) ? 0 : $budget->id,
+                'category'                    => is_null($category) ? '' : $category->name,
+                'transaction_currency_id'     => $entry->transaction_currency_id,
+                'transaction_currency_code'   => $entry->transaction_currency_code,
+                'transaction_currency_symbol' => $entry->transaction_currency_symbol,
+                'foreign_currency_id'         => $entry->foreign_currency_id,
+                'foreign_currency_code'       => $entry->foreign_currency_code,
+                'foreign_currency_symbol'     => $entry->foreign_currency_symbol,
             ];
             if ($entry->destination_account_type === AccountType::CASH) {
                 $transaction['destination_account_name'] = '';

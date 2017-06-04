@@ -481,6 +481,7 @@ class AccountRepository implements AccountRepositoryInterface
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
+                // TODO update this transaction currency reference.
                 'transaction_currency_id' => $currencyId,
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
@@ -622,6 +623,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         // update date:
         $journal->date                    = $date;
+        // TODO update this transaction currency reference.
         $journal->transaction_currency_id = $currencyId;
         $journal->save();
         // update transactions:

@@ -89,6 +89,7 @@ $factory->define(
         'user_id'                 => 1,
         'transaction_type_id'     => 1,
         'bill_id'                 => null,
+        // TODO update this transaction currency reference.
         'transaction_currency_id' => 1,
         'description'             => $faker->words(3, true),
         'date'                    => '2017-01-01',

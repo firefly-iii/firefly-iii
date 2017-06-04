@@ -36,14 +36,9 @@
                         <!-- total amount -->
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
-                            <td>{{ journal|formatJournal }}
-                                {% if journal.hasMeta('foreign_amount') %}
-                                    {% if journal.transactiontype.type == 'Withdrawal' %}
-                                        ({{ formatAnything(foreignCurrency, journal.getMeta('foreign_amount')*-1) }})
-                                    {% else %}
-                                        ({{ formatAnything(foreignCurrency, journal.getMeta('foreign_amount')) }})
-                                    {% endif %}
-                                {% endif %}
+                            <td>
+                                {# TODO fix amount display #}
+                                XX.XX
                             </td>
                         </tr>
                         <tr>
@@ -304,9 +299,8 @@
 
                             </td>
                             <td>
-
-                                {{ formatAnything(journal.transactionCurrency, transaction.source_account_before) }}
-                                &longrightarrow; {{ formatAnything(journal.transactionCurrency, transaction.source_account_after) }}
+                                {# TODO replace with new display: #}
+                                XX.XX
                             </td>
                             <td>
                                 {% if transaction.destination_account_type == 'Cash account' %}
@@ -317,25 +311,27 @@
 
                             </td>
                             <td>
-
-                                {{ formatAnything(journal.transactionCurrency, transaction.destination_account_before) }}
-                                &longrightarrow; {{ formatAnything(journal.transactionCurrency, transaction.destination_account_after) }}
+                                {# TODO replace with new format code #}
+                                XX.XX
                             </td>
                             <td>
                                 {% if journal.transactiontype.type == 'Deposit' %}
                                     <!-- deposit, positive amount with correct currency -->
-                                    {{ formatAnything(journal.transactionCurrency, transaction.destination_amount) }}
+                                    {# TODO replace with new format code #}
+                                    XX.XX
 
                                 {% endif %}
                                 {% if journal.transactiontype.type == 'Withdrawal' %}
                                     <!-- withdrawal, negative amount with correct currency -->
-                                    {{ formatAnything(journal.transactionCurrency, transaction.source_amount) }}
+                                    {# TODO replace with new format code #}
+                                    XX.XX
 
                                 {% endif %}
                                 {% if journal.transactiontype.type == 'Transfer' %}
                                     <!-- transfer, positive amount in blue -->
                                     <span class="text-info">
-                                        {{ formatAnythingPlain(journal.transactionCurrency, transaction.destination_amount) }}
+                                        {# TODO replace with new format code #}
+                                        XX.XX
                                     </span>
                                 {% endif %}
                             </td>

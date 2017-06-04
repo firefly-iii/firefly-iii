@@ -43,7 +43,8 @@
                                         <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
                                     </td>
                                     <td>
-                                        {{ journal|formatJournal }}
+                                        {# TODO fix amount display #}
+                                        XX.XX
                                     </td>
                                     <td>
                                         {{ journal.date.formatLocalized(monthAndDayFormat) }}

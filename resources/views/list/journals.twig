@@ -64,14 +64,11 @@
                 <span style="margin-right:5px;">
                     {% if transaction.transaction_type_type == 'Transfer' %}
                         <!-- format amount of transaction -->
-                        {{ formatByCode(transaction.transaction_currency_code, steam_positive(transaction.transaction_amount)) }}
-                        <!-- and then amount of journal itself. -->
-                        {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount, transaction.transaction_currency_code, transaction.transaction_type_type) }}
+                        {# TODO format amount of transaction. #}
+                        {# TODO format: Amount of transaction (amount in foreign) / total (total foreign) #}
+                        XX.XX
                     {% else %}
-                        <!-- format amount of transaction -->
-                        {{ formatByCode(transaction.transaction_currency_code, transaction.transaction_amount) }}
-                        <!-- and then amount of journal itself. -->
-                        {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount, transaction.transaction_currency_code, transaction.transaction_type_type) }}
+                        XX.XX
                     {% endif %}
                 </span>
 

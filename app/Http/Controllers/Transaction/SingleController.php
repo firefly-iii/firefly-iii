@@ -238,6 +238,7 @@ class SingleController extends Controller
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $pTransaction        = $journal->positiveTransaction();
         $preFilled           = [
             'date'                     => $journal->dateAsString(),
             'interest_date'            => $journal->dateAsString('interest_date'),
@@ -250,8 +251,6 @@ class SingleController extends Controller
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
-            'amount'                   => $journal->amountPositive(),
-            'currency'                 => $journal->transactionCurrency,
 
             // new custom fields:
             'due_date'                 => $journal->dateAsString('due_date'),
@@ -260,26 +259,36 @@ class SingleController extends Controller
             'interal_reference'        => $journal->getMeta('internal_reference'),
             'notes'                    => $journal->getMeta('notes'),
 
-            // exchange rate fields
-            'native_amount'            => $journal->amountPositive(),
-            'native_currency'          => $journal->transactionCurrency,
+            // amount fields
+            'amount'                   => $pTransaction->amount,
+            'source_amount'            => $pTransaction->amount,
+            'native_amount'            => $pTransaction->amount,
+            'destination_amount'       => $pTransaction->foreign_amount,
+            'currency'                 => $pTransaction->transactionCurrency,
+            'source_currency'          => $pTransaction->transactionCurrency,
+            'native_currency'          => $pTransaction->transactionCurrency,
+            'foreign_currency'         => !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency,
+            'destination_currency'     => !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency,
         ];
 
-        // if user has entered a foreign currency, update some fields
-        $foreignCurrencyId = intval($journal->getMeta('foreign_currency_id'));
-        if ($foreignCurrencyId > 0) {
-            // update some fields in pre-filled.
-            // @codeCoverageIgnoreStart
-            $preFilled['amount']   = $journal->getMeta('foreign_amount');
-            $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('foreign_currency_id')));
-            // @codeCoverageIgnoreEnd
+        // amounts for withdrawals and deposits:
+        // (amount, native_amount, source_amount, destination_amount)
+        if (($journal->isWithdrawal() || $journal->isDeposit()) && !is_null($pTransaction->foreign_amount)) {
+            $preFilled['amount']   = $pTransaction->foreign_amount;
+            $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
 
-        if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
+        if ($journal->isTransfer() && !is_null($pTransaction->foreign_amount)) {
+            $preFilled['destination_amount']   = $pTransaction->foreign_amount;
+            $preFilled['destination_currency'] = $pTransaction->foreignCurrency;
+        }
+
+        // fixes for cash accounts:
+        if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type === AccountType::CASH) {
             $preFilled['destination_account_name'] = '';
         }
 
-        if ($journal->isDeposit() && $sourceAccounts->first()->accountType->type == AccountType::CASH) {
+        if ($journal->isDeposit() && $sourceAccounts->first()->accountType->type === AccountType::CASH) {
             $preFilled['source_account_name'] = '';
         }
 
@@ -319,6 +328,7 @@ class SingleController extends Controller
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
+
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);

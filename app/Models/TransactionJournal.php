@@ -68,7 +68,6 @@ class TransactionJournal extends Model
         = [
             'user_id'                 => 'required|exists:users,id',
             'transaction_type_id'     => 'required|exists:transaction_types,id',
-            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'description'             => 'required|between:1,1024',
             'completed'               => 'required|boolean',
             'date'                    => 'required|date',
@@ -297,46 +296,6 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
-    }
-
-    /**
-     * @param EloquentBuilder $query
-     */
-    public function scopeExpanded(EloquentBuilder $query)
-    {
-        // left join transaction type:
-        if (!self::isJoined($query, 'transaction_types')) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-        }
-
-        // left join transaction currency:
-        $query->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id');
-
-        // extend group by:
-        $query->groupBy(
-            [
-                'transaction_journals.id',
-                'transaction_journals.created_at',
-                'transaction_journals.updated_at',
-                'transaction_journals.deleted_at',
-                'transaction_journals.user_id',
-                'transaction_journals.transaction_type_id',
-                'transaction_journals.bill_id',
-                'transaction_journals.transaction_currency_id',
-                'transaction_journals.description',
-                'transaction_journals.date',
-                'transaction_journals.interest_date',
-                'transaction_journals.book_date',
-                'transaction_journals.process_date',
-                'transaction_journals.order',
-                'transaction_journals.tag_count',
-                'transaction_journals.encrypted',
-                'transaction_journals.completed',
-                'transaction_types.type',
-                'transaction_currencies.code',
-            ]
-        );
-        $query->with(['categories', 'budgets', 'attachments', 'bill', 'transactions']);
     }
 
     /**

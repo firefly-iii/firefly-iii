@@ -38,11 +38,12 @@ function updateInitialPage() {
         $('#native_amount_holder').hide();
         $('#amount_holder').hide();
 
-        if (journalData.native_currency.id === journalData.currency.id) {
+
+        if (journalData.native_currency.id === journalData.destination_currency.id) {
             $('#exchange_rate_instruction_holder').hide();
             $('#destination_amount_holder').hide();
         }
-        if (journalData.native_currency.id !== journalData.currency.id) {
+        if (journalData.native_currency.id !== journalData.destination_currency.id) {
             $('#exchange_rate_instruction_holder').show().find('p').text(getTransferExchangeInstructions());
 
         }

@@ -19,6 +19,7 @@ use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -126,8 +127,7 @@ class MassController extends Controller
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budgets          = $budgetRepository->getBudgets();
 
-        // skip transactions that have multiple destinations
-        // or multiple sources:
+        // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
         $messages = [];
         /**
@@ -146,6 +146,10 @@ class MassController extends Controller
                 $messages[] = trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
             }
+            if ($journal->transactionType->type === TransactionType::OPENING_BALANCE) {
+                $messages[] = trans('firefly.cannot_edit_opening_balance');
+                continue;
+            }
             $filtered->push($journal);
         }
 
@@ -158,13 +162,21 @@ class MassController extends Controller
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'mass-edit');
 
-        // set some values to be used in the edit routine:
+        // collect some useful meta data for the mass edit:
         $filtered->each(
             function (TransactionJournal $journal) {
-                $journal->amount            = $journal->amountPositive();
-                $sources                    = $journal->sourceAccountList();
-                $destinations               = $journal->destinationAccountList();
-                $journal->transaction_count = $journal->transactions()->count();
+                $transaction                    = $journal->positiveTransaction();
+                $currency                       = $transaction->transactionCurrency;
+                $journal->amount                = floatval($transaction->amount);
+                $sources                        = $journal->sourceAccountList();
+                $destinations                   = $journal->destinationAccountList();
+                $journal->transaction_count     = $journal->transactions()->count();
+                $journal->currency_symbol       = $currency->symbol;
+                $journal->transaction_type_type = $journal->transactionType->type;
+
+                $journal->foreign_amount   = floatval($transaction->foreign_amount);
+                $journal->foreign_currency = $transaction->foreignCurrency;
+
                 if (!is_null($sources->first())) {
                     $journal->source_account_id   = $sources->first()->id;
                     $journal->source_account_name = $sources->first()->editname;
@@ -195,6 +207,7 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         $count      = 0;
+
         if (is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
                 $journal = $repository->find(intval($journalId));
@@ -208,6 +221,10 @@ class MassController extends Controller
                     $budgetId          = $request->get('budget_id')[$journal->id] ??  0;
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();
+                    $amount            = round($request->get('amount')[$journal->id], 12);
+                    $foreignAmount     = isset($request->get('foreign_amount')[$journal->id]) ? round($request->get('foreign_amount')[$journal->id], 12) : null;
+                    $foreignCurrencyId = isset($request->get('foreign_currency_id')[$journal->id]) ?
+                        intval($request->get('foreign_currency_id')[$journal->id]) : null;
 
                     // build data array
                     $data = [
@@ -218,16 +235,20 @@ class MassController extends Controller
                         'source_account_name'      => $sourceAccountName,
                         'destination_account_id'   => intval($destAccountId),
                         'destination_account_name' => $destAccountName,
-                        'amount'                   => round($request->get('amount')[$journal->id], 12),
-                        'currency_id'              => $journal->transaction_currency_id,
+                        'amount'                   => $foreignAmount,
+                        'native_amount'            => $amount,
+                        'source_amount'            => $amount,
                         'date'                     => new Carbon($request->get('date')[$journal->id]),
                         'interest_date'            => $journal->interest_date,
                         'book_date'                => $journal->book_date,
                         'process_date'             => $journal->process_date,
                         'budget_id'                => intval($budgetId),
+                        'currency_id'              => $foreignCurrencyId,
+                        'foreign_amount'           => $foreignAmount,
+                        'destination_amount'       => $foreignAmount,
+                        //'foreign_currency_id'      => $foreignCurrencyId,
                         'category'                 => $category,
                         'tags'                     => $tags,
-
                     ];
                     // call repository update function.
                     $repository->update($journal, $data);
@@ -235,6 +256,7 @@ class MassController extends Controller
                     $count++;
                 }
             }
+
         }
         Preferences::mark();
         Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));

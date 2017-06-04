@@ -214,6 +214,14 @@ trait TransactionJournalTrait
     }
 
     /**
+     * @return Transaction
+     */
+    public function positiveTransaction(): Transaction
+    {
+        return $this->transactions()->where('amount', '>', 0)->first();
+    }
+
+    /**
      * @return Collection
      */
     public function sourceAccountList(): Collection

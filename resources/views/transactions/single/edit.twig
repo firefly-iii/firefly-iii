@@ -64,9 +64,9 @@
 
                         {{ ExpandedForm.nonSelectableAmount('native_amount', data.native_amount, {currency: data.native_currency}) }}
 
-                        {{ ExpandedForm.nonSelectableAmount('source_amount', data.native_amount, {currency: data.native_currency }) }}
+                        {{ ExpandedForm.nonSelectableAmount('source_amount', data.source_amount, {currency: data.source_currency }) }}
 
-                        {{ ExpandedForm.nonSelectableAmount('destination_amount', data.amount, {currency: data.currency }) }}
+                        {{ ExpandedForm.nonSelectableAmount('destination_amount', data.destination_amount, {currency: data.destination_currency }) }}
 
                         {# ALWAYS SHOW DATE #}
                         {{ ExpandedForm.date('date',data['date']) }}

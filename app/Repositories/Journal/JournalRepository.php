@@ -39,7 +39,6 @@ class JournalRepository implements JournalRepositoryInterface
 {
     /** @var User */
     private $user;
-
     /** @var array */
     private $validMetaFields
         = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes', 'foreign_amount',
@@ -182,13 +181,12 @@ class JournalRepository implements JournalRepositoryInterface
         $transactionType = TransactionType::where('type', ucfirst($data['what']))->first();
         $accounts        = $this->storeAccounts($transactionType, $data);
         $data            = $this->verifyNativeAmount($data, $accounts);
-        $currencyId      = $data['currency_id'];
         $amount          = strval($data['amount']);
         $journal         = new TransactionJournal(
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                'transaction_currency_id' => $currencyId,
+                'transaction_currency_id' => $data['currency_id'], // no longer used.
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
@@ -200,27 +198,32 @@ class JournalRepository implements JournalRepositoryInterface
         $this->storeCategoryWithJournal($journal, $data['category']);
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
 
-
         // store two transactions:
         $one = [
-            'journal'     => $journal,
-            'account'     => $accounts['source'],
-            'amount'      => bcmul($amount, '-1'),
-            'description' => null,
-            'category'    => null,
-            'budget'      => null,
-            'identifier'  => 0,
+            'journal'                 => $journal,
+            'account'                 => $accounts['source'],
+            'amount'                  => bcmul($amount, '-1'),
+            'transaction_currency_id' => $data['currency_id'],
+            'foreign_amount'          => is_null($data['foreign_amount']) ? null : bcmul(strval($data['foreign_amount']), '-1'),
+            'foreign_currency_id'     => $data['foreign_currency_id'],
+            'description'             => null,
+            'category'                => null,
+            'budget'                  => null,
+            'identifier'              => 0,
         ];
         $this->storeTransaction($one);
 
         $two = [
-            'journal'     => $journal,
-            'account'     => $accounts['destination'],
-            'amount'      => $amount,
-            'description' => null,
-            'category'    => null,
-            'budget'      => null,
-            'identifier'  => 0,
+            'journal'                 => $journal,
+            'account'                 => $accounts['destination'],
+            'amount'                  => $amount,
+            'transaction_currency_id' => $data['currency_id'],
+            'foreign_amount'          => $data['foreign_amount'],
+            'foreign_currency_id'     => $data['foreign_currency_id'],
+            'description'             => null,
+            'category'                => null,
+            'budget'                  => null,
+            'identifier'              => 0,
         ];
 
         $this->storeTransaction($two);
@@ -256,11 +259,14 @@ class JournalRepository implements JournalRepositoryInterface
     {
 
         // update actual journal:
-        $journal->description = $data['description'];
-        $journal->date        = $data['date'];
-        $accounts             = $this->storeAccounts($journal->transactionType, $data);
-        $data                 = $this->verifyNativeAmount($data, $accounts);
-        $amount               = strval($data['amount']);
+        $journal->description   = $data['description'];
+        $journal->date          = $data['date'];
+        $accounts               = $this->storeAccounts($journal->transactionType, $data);
+        $data                   = $this->verifyNativeAmount($data, $accounts);
+        $data['amount']         = strval($data['amount']);
+        $data['foreign_amount'] = is_null($data['foreign_amount']) ? null : strval($data['foreign_amount']);
+
+        var_dump($data);
 
         // unlink all categories, recreate them:
         $journal->categories()->detach();
@@ -269,9 +275,11 @@ class JournalRepository implements JournalRepositoryInterface
         $this->storeCategoryWithJournal($journal, $data['category']);
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
 
+        // negative because source loses money.
+        $this->updateSourceTransaction($journal, $accounts['source'], $data);
 
-        $this->updateSourceTransaction($journal, $accounts['source'], bcmul($amount, '-1')); // negative because source loses money.
-        $this->updateDestinationTransaction($journal, $accounts['destination'], $amount); // positive because destination gets money.
+        // positive because destination gets money.
+        $this->updateDestinationTransaction($journal, $accounts['destination'], $data);
 
         $journal->save();
 
@@ -308,9 +316,8 @@ class JournalRepository implements JournalRepositoryInterface
     public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal
     {
         // update actual journal:
-        $journal->transaction_currency_id = $data['currency_id'];
-        $journal->description             = $data['journal_description'];
-        $journal->date                    = $data['date'];
+        $journal->description = $data['journal_description'];
+        $journal->date        = $data['date'];
         $journal->save();
         Log::debug(sprintf('Updated split journal #%d', $journal->id));
 
@@ -342,6 +349,7 @@ class JournalRepository implements JournalRepositoryInterface
         // store each transaction.
         $identifier = 0;
         Log::debug(sprintf('Count %d transactions in updateSplitJournal()', count($data['transactions'])));
+
         foreach ($data['transactions'] as $transaction) {
             Log::debug(sprintf('Split journal update split transaction %d', $identifier));
             $transaction = $this->appendTransactionData($transaction, $data);
@@ -564,30 +572,40 @@ class JournalRepository implements JournalRepositoryInterface
         $accounts = $this->storeAccounts($journal->transactionType, $transaction);
 
         // store transaction one way:
-        $one = $this->storeTransaction(
+        $amount        = bcmul(strval($transaction['amount']), '-1');
+        $foreignAmount = is_null($transaction['foreign_amount']) ? null : bcmul(strval($transaction['foreign_amount']), '-1');
+        $one           = $this->storeTransaction(
             [
-                'journal'     => $journal,
-                'account'     => $accounts['source'],
-                'amount'      => bcmul(strval($transaction['amount']), '-1'),
-                'description' => $transaction['description'],
-                'category'    => null,
-                'budget'      => null,
-                'identifier'  => $identifier,
+                'journal'                 => $journal,
+                'account'                 => $accounts['source'],
+                'amount'                  => $amount,
+                'transaction_currency_id' => $transaction['transaction_currency_id'],
+                'foreign_amount'          => $foreignAmount,
+                'foreign_currency_id'     => $transaction['foreign_currency_id'],
+                'description'             => $transaction['description'],
+                'category'                => null,
+                'budget'                  => null,
+                'identifier'              => $identifier,
             ]
         );
         $this->storeCategoryWithTransaction($one, $transaction['category']);
         $this->storeBudgetWithTransaction($one, $transaction['budget_id']);
 
         // and the other way:
-        $two = $this->storeTransaction(
+        $amount        = strval($transaction['amount']);
+        $foreignAmount = is_null($transaction['foreign_amount']) ? null : strval($transaction['foreign_amount']);
+        $two           = $this->storeTransaction(
             [
-                'journal'     => $journal,
-                'account'     => $accounts['destination'],
-                'amount'      => strval($transaction['amount']),
-                'description' => $transaction['description'],
-                'category'    => null,
-                'budget'      => null,
-                'identifier'  => $identifier,
+                'journal'                 => $journal,
+                'account'                 => $accounts['destination'],
+                'amount'                  => $amount,
+                'transaction_currency_id' => $transaction['transaction_currency_id'],
+                'foreign_amount'          => $foreignAmount,
+                'foreign_currency_id'     => $transaction['foreign_currency_id'],
+                'description'             => $transaction['description'],
+                'category'                => null,
+                'budget'                  => null,
+                'identifier'              => $identifier,
             ]
         );
         $this->storeCategoryWithTransaction($two, $transaction['category']);
@@ -603,16 +621,27 @@ class JournalRepository implements JournalRepositoryInterface
      */
     private function storeTransaction(array $data): Transaction
     {
+        $fields = [
+            'transaction_journal_id'  => $data['journal']->id,
+            'account_id'              => $data['account']->id,
+            'amount'                  => $data['amount'],
+            'foreign_amount'          => $data['foreign_amount'],
+            'transaction_currency_id' => $data['transaction_currency_id'],
+            'foreign_currency_id'     => $data['foreign_currency_id'],
+            'description'             => $data['description'],
+            'identifier'              => $data['identifier'],
+        ];
+
+
+        if (is_null($data['foreign_currency_id'])) {
+            unset($fields['foreign_currency_id']);
+        }
+        if (is_null($data['foreign_amount'])) {
+            unset($fields['foreign_amount']);
+        }
+
         /** @var Transaction $transaction */
-        $transaction = Transaction::create(
-            [
-                'transaction_journal_id' => $data['journal']->id,
-                'account_id'             => $data['account']->id,
-                'amount'                 => $data['amount'],
-                'description'            => $data['description'],
-                'identifier'             => $data['identifier'],
-            ]
-        );
+        $transaction = Transaction::create($fields);
 
         Log::debug(sprintf('Transaction stored with ID: %s', $transaction->id));
 
@@ -675,22 +704,23 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * @param TransactionJournal $journal
      * @param Account            $account
-     * @param string             $amount
+     * @param array              $data
      *
      * @throws FireflyException
      */
-    private function updateDestinationTransaction(TransactionJournal $journal, Account $account, string $amount)
+    private function updateDestinationTransaction(TransactionJournal $journal, Account $account, array $data)
     {
-        // should be one:
         $set = $journal->transactions()->where('amount', '>', 0)->get();
         if ($set->count() != 1) {
-            throw new FireflyException(
-                sprintf('Journal #%d has an unexpected (%d) amount of transactions with an amount more than zero.', $journal->id, $set->count())
-            );
+            throw new FireflyException(sprintf('Journal #%d has %d transactions with an amount more than zero.', $journal->id, $set->count()));
         }
         /** @var Transaction $transaction */
-        $transaction             = $set->first();
-        $transaction->amount     = $amount;
+        $transaction                          = $set->first();
+        $transaction->amount                  = app('steam')->positive($data['amount']);
+        $transaction->transaction_currency_id = $data['currency_id'];
+        $transaction->foreign_amount          = is_null($data['foreign_amount']) ? null : app('steam')->positive($data['foreign_amount']);
+        $transaction->foreign_currency_id     = $data['foreign_currency_id'];
+
         $transaction->account_id = $account->id;
         $transaction->save();
 
@@ -699,26 +729,24 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * @param TransactionJournal $journal
      * @param Account            $account
-     * @param string             $amount
+     * @param array              $data
      *
      * @throws FireflyException
      */
-    private function updateSourceTransaction(TransactionJournal $journal, Account $account, string $amount)
+    private function updateSourceTransaction(TransactionJournal $journal, Account $account, array $data)
     {
         // should be one:
         $set = $journal->transactions()->where('amount', '<', 0)->get();
         if ($set->count() != 1) {
-            throw new FireflyException(
-                sprintf('Journal #%d has an unexpected (%d) amount of transactions with an amount less than zero.', $journal->id, $set->count())
-            );
+            throw new FireflyException(sprintf('Journal #%d has %d transactions with an amount more than zero.', $journal->id, $set->count()));
         }
         /** @var Transaction $transaction */
-        $transaction             = $set->first();
-        $transaction->amount     = $amount;
-        $transaction->account_id = $account->id;
+        $transaction                          = $set->first();
+        $transaction->amount                  = bcmul(app('steam')->positive($data['amount']), '-1');
+        $transaction->transaction_currency_id = $data['currency_id'];
+        $transaction->foreign_amount          = is_null($data['foreign_amount']) ? null : bcmul(app('steam')->positive($data['foreign_amount']), '-1');
+        $transaction->foreign_currency_id     = $data['foreign_currency_id'];
         $transaction->save();
-
-
     }
 
     /**
@@ -777,8 +805,10 @@ class JournalRepository implements JournalRepositoryInterface
     private function verifyNativeAmount(array $data, array $accounts): array
     {
         /** @var TransactionType $transactionType */
-        $transactionType     = TransactionType::where('type', ucfirst($data['what']))->first();
-        $submittedCurrencyId = $data['currency_id'];
+        $transactionType             = TransactionType::where('type', ucfirst($data['what']))->first();
+        $submittedCurrencyId         = $data['currency_id'];
+        $data['foreign_amount']      = null;
+        $data['foreign_currency_id'] = null;
 
         // which account to check for what the native currency is?
         $check = 'source';
@@ -803,11 +833,17 @@ class JournalRepository implements JournalRepositoryInterface
                 }
                 break;
             case TransactionType::TRANSFER:
-                // source gets the original amount.
-                $data['amount']              = strval($data['source_amount']);
-                $data['currency_id']         = intval($accounts['source']->getMeta('currency_id'));
-                $data['foreign_amount']      = strval($data['destination_amount']);
-                $data['foreign_currency_id'] = intval($accounts['destination']->getMeta('currency_id'));
+                $sourceCurrencyId      = intval($accounts['source']->getMeta('currency_id'));
+                $destinationCurrencyId = intval($accounts['destination']->getMeta('currency_id'));
+                $data['amount']        = strval($data['source_amount']);
+                $data['currency_id']   = intval($accounts['source']->getMeta('currency_id'));
+
+                if ($sourceCurrencyId !== $destinationCurrencyId) {
+                    // accounts have different id's, save this info:
+                    $data['foreign_amount']      = strval($data['destination_amount']);
+                    $data['foreign_currency_id'] = $destinationCurrencyId;
+                }
+
                 break;
             default:
                 throw new FireflyException(sprintf('Cannot handle %s in verifyNativeAmount()', $transactionType->type));

@@ -26,7 +26,6 @@ use Watson\Validating\ValidatingTrait;
  */
 class Transaction extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -42,16 +41,18 @@ class Transaction extends Model
             'bill_name_encrypted' => 'boolean',
         ];
     protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
-    protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier'];
+    protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id','foreign_amount'];
     protected $hidden   = ['encrypted'];
     protected $rules
                         = [
-            'account_id'             => 'required|exists:accounts,id',
-            'transaction_journal_id' => 'required|exists:transaction_journals,id',
-            'description'            => 'between:0,1024',
-            'amount'                 => 'required|numeric',
+            'account_id'              => 'required|exists:accounts,id',
+            'transaction_journal_id'  => 'required|exists:transaction_journals,id',
+            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            //'foreign_currency_id'     => 'exists:transaction_currencies,id',
+            'description'             => 'between:0,1024',
+            'amount'                  => 'required|numeric',
+            //'foreign_amount'          => 'numeric',
         ];
-    use SoftDeletes, ValidatingTrait;
 
     /**
      * @param Builder $query
@@ -73,6 +74,8 @@ class Transaction extends Model
 
         return false;
     }
+
+    use SoftDeletes, ValidatingTrait;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -158,6 +161,22 @@ class Transaction extends Model
     public function setAmountAttribute($value)
     {
         $this->attributes['amount'] = strval(round($value, 12));
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function transactionCurrency()
+    {
+        return $this->belongsTo('FireflyIII\Models\TransactionCurrency');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function foreignCurrency()
+    {
+        return $this->belongsTo('FireflyIII\Models\TransactionCurrency','foreign_currency_id');
     }
 
     /**
