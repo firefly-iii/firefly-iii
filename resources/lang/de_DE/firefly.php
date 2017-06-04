@@ -963,6 +963,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'split_this_transfer'                   => 'Diese Überweisung aufteilen',
     'cannot_edit_multiple_source'           => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple source accounts.',
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'You have selected no valid transactions to edit.',
 
     // import
