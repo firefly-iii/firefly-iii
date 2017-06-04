@@ -27,14 +27,14 @@ class ChangesForV450 extends Migration
         // add "foreign_amount" to transactions
         Schema::table(
             'transactions', function (Blueprint $table) {
-            $table->decimal('foreign_amount', 22, 12)->after('amount');
+            $table->decimal('foreign_amount', 22, 12)->nullable()->after('amount');
         }
         );
 
         // add foreign transaction currency id to transactions (is nullable):
         Schema::table(
             'transactions', function (Blueprint $table) {
-            $table->integer('foreign_currency_id', false, true)->after('foreign_amount')->nullable();
+            $table->integer('foreign_currency_id', false, true)->default(null)->after('foreign_amount')->nullable();
             $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
         }
         );
