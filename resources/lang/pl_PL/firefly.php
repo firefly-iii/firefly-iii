@@ -962,6 +962,7 @@ return [
     'split_this_transfer'                   => 'Podziel ten transfer',
     'cannot_edit_multiple_source'           => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple source accounts.',
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
 
     // import
