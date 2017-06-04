@@ -116,10 +116,11 @@ class JsonController extends Controller
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
-        $amount = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $amount = bcmul($amount, '-1');
+        $amount   = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $amount   = bcmul($amount, '-1');
+        $currency = Amount::getDefaultCurrency();
 
-        $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $data = ['box' => 'bills-paid', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
 
         return Response::json($data);
     }
@@ -131,10 +132,11 @@ class JsonController extends Controller
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
-        $start  = session('start', Carbon::now()->startOfMonth());
-        $end    = session('end', Carbon::now()->endOfMonth());
-        $amount = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $data   = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $start    = session('start', Carbon::now()->startOfMonth());
+        $end      = session('end', Carbon::now()->endOfMonth());
+        $amount   = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $currency = Amount::getDefaultCurrency();
+        $data     = ['box' => 'bills-unpaid', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
 
         return Response::json($data);
     }
@@ -167,8 +169,9 @@ class JsonController extends Controller
                   ->setTypes([TransactionType::DEPOSIT])
                   ->withOpposingAccount();
 
-        $amount = strval($collector->getJournals()->sum('transaction_amount'));
-        $data   = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $amount   = strval($collector->getJournals()->sum('transaction_amount'));
+        $currency = Amount::getDefaultCurrency();
+        $data     = ['box' => 'in', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
         $cache->store($data);
 
         return Response::json($data);
@@ -200,9 +203,9 @@ class JsonController extends Controller
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->withOpposingAccount();
-        $amount = strval($collector->getJournals()->sum('transaction_amount'));
-
-        $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $amount   = strval($collector->getJournals()->sum('transaction_amount'));
+        $currency = Amount::getDefaultCurrency();
+        $data     = ['box' => 'out', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
         $cache->store($data);
 
         return Response::json($data);

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -28,6 +28,7 @@ use Preferences as Prefs;
  */
 class Amount
 {
+
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
@@ -241,5 +242,82 @@ class Amount
             'neg'  => $negative,
             'zero' => $positive,
         ];
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool               $coloured
+     *
+     * @return string
+     */
+    public function journalAmount(TransactionJournal $journal, bool $coloured = true): string
+    {
+        $amounts      = [];
+        $transactions = $journal->transactions()->where('amount', '>', 0)->get();
+        /** @var TransactionModel $transaction */
+        foreach ($transactions as $transaction) {
+            // model some fields to fit "transactionAmount()":
+            $transaction->transaction_amount          = $transaction->amount;
+            $transaction->transaction_foreign_amount  = $transaction->foreign_amount;
+            $transaction->transaction_type_type       = $journal->transactionType->type;
+            $transaction->transaction_currency_symbol = $transaction->transactionCurrency->symbol;
+            $transaction->transaction_currency_dp     = $transaction->transactionCurrency->decimal_places;
+            if (!is_null($transaction->foreign_currency_id)) {
+                $transaction->foreign_currency_symbol = $transaction->foreignCurrency->symbol;
+                $transaction->foreign_currency_dp     = $transaction->foreignCurrency->decimal_places;
+            }
+
+            $amounts[] = $this->transactionAmount($transaction, $coloured);
+        }
+
+        return join(' / ', $amounts);
+
+    }
+
+    /**
+     * This formats a transaction, IF that transaction has been "collected" using the JournalCollector.
+     *
+     * @param TransactionModel $transaction
+     * @param bool             $coloured
+     *
+     * @return string
+     */
+    public function transactionAmount(TransactionModel $transaction, bool $coloured = true): string
+    {
+        $amount = bcmul(app('steam')->positive(strval($transaction->transaction_amount)), '-1');
+        $format = '%s';
+
+        if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
+            $amount = app('steam')->positive($amount);
+            $coloured = false;
+            $format   = '<span class="text-info">%s</span>';
+        }
+
+        $currency                 = new TransactionCurrency;
+        $currency->symbol         = $transaction->transaction_currency_symbol;
+        $currency->decimal_places = $transaction->transaction_currency_dp;
+        $str                      = sprintf($format, $this->formatAnything($currency, $amount, $coloured));
+
+
+        if (!is_null($transaction->transaction_foreign_amount)) {
+            $amount = strval($transaction->transaction_foreign_amount);
+
+            if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
+                $amount   = app('steam')->positive($amount);
+                $coloured = false;
+                $format   = '<span class="text-info">%s</span>';
+            }
+
+            $currency                 = new TransactionCurrency;
+            $currency->symbol         = $transaction->foreign_currency_symbol;
+            $currency->decimal_places = $transaction->foreign_currency_dp;
+            $str                      .= ' (' . sprintf($format, $this->formatAnything($currency, $amount, $coloured)) . ')';
+        }
+
+        return $str;
     }
 }

@@ -62,14 +62,7 @@
             </td>
             <td style="text-align: right;">
                 <span style="margin-right:5px;">
-                    {% if transaction.transaction_type_type == 'Transfer' %}
-                        <!-- format amount of transaction -->
-                        {# TODO format amount of transaction. #}
-                        {# TODO format: Amount of transaction (amount in foreign) / total (total foreign) #}
-                        XX.XX
-                    {% else %}
-                        XX.XX
-                    {% endif %}
+                    {{ transactionAmount(transaction) }}
                 </span>
 
             </td>

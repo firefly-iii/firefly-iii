@@ -37,8 +37,7 @@
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
-                                {# TODO fix amount display #}
-                                XX.XX
+                                {{ journalAmount(journal) }}
                             </td>
                         </tr>
                         <tr>
@@ -299,8 +298,7 @@
 
                             </td>
                             <td>
-                                {# TODO replace with new display: #}
-                                XX.XX
+                                {{ formatSourceBefore(transaction) }} &rarr; {{ formatSourceAfter(transaction) }}
                             </td>
                             <td>
                                 {% if transaction.destination_account_type == 'Cash account' %}
@@ -311,29 +309,10 @@
 
                             </td>
                             <td>
-                                {# TODO replace with new format code #}
-                                XX.XX
+                                {{ formatDestinationBefore(transaction) }} &rarr; {{ formatDestinationAfter(transaction) }}
                             </td>
                             <td>
-                                {% if journal.transactiontype.type == 'Deposit' %}
-                                    <!-- deposit, positive amount with correct currency -->
-                                    {# TODO replace with new format code #}
-                                    XX.XX
-
-                                {% endif %}
-                                {% if journal.transactiontype.type == 'Withdrawal' %}
-                                    <!-- withdrawal, negative amount with correct currency -->
-                                    {# TODO replace with new format code #}
-                                    XX.XX
-
-                                {% endif %}
-                                {% if journal.transactiontype.type == 'Transfer' %}
-                                    <!-- transfer, positive amount in blue -->
-                                    <span class="text-info">
-                                        {# TODO replace with new format code #}
-                                        XX.XX
-                                    </span>
-                                {% endif %}
+                                {{ journalAmount(journal) }}
                             </td>
                             <td>
                                 {{ transactionIdBudgets(transaction.source_id) }}

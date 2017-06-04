@@ -14,8 +14,7 @@
                 {{ transaction.description }}
             {% endif %}
             <span class="pull-right small">
-                {# TODO replace with new format code #}
-                XX.XX
+                {{ transactionAmount(transaction) }}
         </span>
         </a>
     {% endfor %}

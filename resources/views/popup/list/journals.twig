@@ -46,7 +46,7 @@
             </td>
             <td>
                 {# TODO replace with new format code #}
-                XX.XX
+                {{ transactionAmount(transaction) }}
             </td>
             <td class="hidden-sm hidden-xs">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}

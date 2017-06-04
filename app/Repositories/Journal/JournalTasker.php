@@ -101,10 +101,12 @@ class JournalTasker implements JournalTaskerInterface
                     'destination_accounts.encrypted as destination_account_encrypted',
                     'destination_account_types.type as destination_account_type',
                     'native_currencies.id as transaction_currency_id',
+                    'native_currencies.decimal_places as transaction_currency_dp',
                     'native_currencies.code as transaction_currency_code',
                     'native_currencies.symbol as transaction_currency_symbol',
 
                     'foreign_currencies.id as foreign_currency_id',
+                    'foreign_currencies.decimal_places as foreign_currency_dp',
                     'foreign_currencies.code as foreign_currency_code',
                     'foreign_currencies.symbol as foreign_currency_symbol',
 
@@ -142,9 +144,11 @@ class JournalTasker implements JournalTaskerInterface
                 'transaction_currency_id'     => $entry->transaction_currency_id,
                 'transaction_currency_code'   => $entry->transaction_currency_code,
                 'transaction_currency_symbol' => $entry->transaction_currency_symbol,
+                'transaction_currency_dp' => $entry->transaction_currency_dp,
                 'foreign_currency_id'         => $entry->foreign_currency_id,
                 'foreign_currency_code'       => $entry->foreign_currency_code,
                 'foreign_currency_symbol'     => $entry->foreign_currency_symbol,
+                'foreign_currency_dp'     => $entry->foreign_currency_dp,
             ];
             if ($entry->destination_account_type === AccountType::CASH) {
                 $transaction['destination_account_name'] = '';

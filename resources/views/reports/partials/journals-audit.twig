@@ -59,8 +59,7 @@
             </td>
             <td class="hide-balance_before" style="text-align: right;">{{ transaction.before|formatAmount }}</td>
             <td class="hide-amount" style="text-align: right;">
-                {# TODO replace with new format code #}
-                XX.XX
+                {{ transactionAmount(transaction) }}
             </td>
             <td class="hide-balance_after" style="text-align: right;">{{ transaction.after|formatAmount }}</td>
 

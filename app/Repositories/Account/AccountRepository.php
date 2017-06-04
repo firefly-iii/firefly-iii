@@ -481,7 +481,6 @@ class AccountRepository implements AccountRepositoryInterface
             [
                 'user_id'                 => $this->user->id,
                 'transaction_type_id'     => $transactionType->id,
-                // TODO update this transaction currency reference.
                 'transaction_currency_id' => $currencyId,
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
@@ -502,9 +501,23 @@ class AccountRepository implements AccountRepositoryInterface
             $secondAmount  = $amount;
         }
 
-        $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
+        $one = new Transaction(
+            [
+                'account_id'              => $firstAccount->id,
+                'transaction_journal_id'  => $journal->id,
+                'amount'                  => $firstAmount,
+                'transaction_currency_id' => $currencyId,
+            ]
+        );
         $one->save();// first transaction: from
-        $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
+
+        $two = new Transaction(
+            [
+                'account_id'              => $secondAccount->id,
+                'transaction_journal_id'  => $journal->id,
+                'amount'                  => $secondAmount,
+                'transaction_currency_id' => $currencyId,]
+        );
         $two->save(); // second transaction: to
 
         Log::debug(sprintf('Stored two transactions, #%d and #%d', $one->id, $two->id));
@@ -623,18 +636,19 @@ class AccountRepository implements AccountRepositoryInterface
 
         // update date:
         $journal->date                    = $date;
-        // TODO update this transaction currency reference.
         $journal->transaction_currency_id = $currencyId;
         $journal->save();
         // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id == $transaction->account_id) {
-                $transaction->amount = $amount;
+                $transaction->amount                  = $amount;
+                $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
             if ($account->id != $transaction->account_id) {
-                $transaction->amount = bcmul($amount, '-1');
+                $transaction->amount                  = bcmul($amount, '-1');
+                $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
         }

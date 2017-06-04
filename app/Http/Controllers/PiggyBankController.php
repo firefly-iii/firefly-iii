@@ -276,18 +276,29 @@ class PiggyBankController extends Controller
      */
     public function postAdd(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount = $request->get('amount');
-
+        $amount   = $request->get('amount');
+        $currency = Amount::getDefaultCurrency();
         if ($repository->canAddAmount($piggyBank, $amount)) {
             $repository->addAmount($piggyBank, $amount);
-            Session::flash('success', strval(trans('firefly.added_amount_to_piggy', ['amount' => Amount::format($amount, false), 'name' => $piggyBank->name])));
+            Session::flash(
+                'success', strval(
+                             trans(
+                                 'firefly.added_amount_to_piggy',
+                                 ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
+                             )
+                         )
+            );
             Preferences::mark();
 
             return redirect(route('piggy-banks.index'));
         }
 
         Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
-        Session::flash('error', strval(trans('firefly.cannot_add_amount_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)])));
+        Session::flash(
+            'error', strval(
+            trans('firefly.cannot_add_amount_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)])
+        )
+        );
 
         return redirect(route('piggy-banks.index'));
     }
@@ -302,10 +313,11 @@ class PiggyBankController extends Controller
     public function postRemove(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $amount = $request->get('amount');
+        $currency = Amount::getDefaultCurrency();
         if ($repository->canRemoveAmount($piggyBank, $amount)) {
             $repository->removeAmount($piggyBank, $amount);
             Session::flash(
-                'success', strval(trans('firefly.removed_amount_from_piggy', ['amount' => Amount::format($amount, false), 'name' => $piggyBank->name]))
+                'success', strval(trans('firefly.removed_amount_from_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => $piggyBank->name]))
             );
             Preferences::mark();
 
@@ -314,7 +326,7 @@ class PiggyBankController extends Controller
 
         $amount = strval(round($request->get('amount'), 12));
 
-        Session::flash('error', strval(trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::format($amount, false), 'name' => e($piggyBank->name)])));
+        Session::flash('error', strval(trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)])));
 
         return redirect(route('piggy-banks.index'));
     }
