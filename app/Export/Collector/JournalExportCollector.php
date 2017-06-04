@@ -303,7 +303,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                                     ->leftJoin('accounts AS opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id')
                                     ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', 'transaction_types.id')
-                                    ->leftJoin('transaction_currencies', 'transaction_journals.transaction_currency_id', '=', 'transaction_currencies.id')
+                                    ->leftJoin('transaction_currencies', 'transactions.transaction_currency_id', '=', 'transaction_currencies.id')
                                     ->whereIn('transactions.account_id', $accountIds)
                                     ->where('transaction_journals.user_id', $this->job->user_id)
                                     ->where('transaction_journals.date', '>=', $this->start->format('Y-m-d'))
@@ -338,7 +338,7 @@ class JournalExportCollector extends BasicCollector implements CollectorInterfac
                                             'transaction_journals.encrypted as journal_encrypted',
                                             'transaction_journals.transaction_type_id',
                                             'transaction_types.type as transaction_type',
-                                            'transaction_journals.transaction_currency_id',
+                                            'transactions.transaction_currency_id',
                                             'transaction_currencies.code AS transaction_currency_code',
 
                                         ]
