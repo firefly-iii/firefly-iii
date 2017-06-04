@@ -962,6 +962,7 @@ return [
     'split_this_transfer'                   => 'Split this transfer',
     'cannot_edit_multiple_source'           => '你不能修改描述為 ":description" 的分割交易 #:id 因為他有多個來源帳號。',
     'cannot_edit_multiple_dest'             => '你不能修改描述為 ":description" 的分割交易 #:id 因為他有多個目標帳號。',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'You have selected no valid transactions to edit.',
 
     // import
