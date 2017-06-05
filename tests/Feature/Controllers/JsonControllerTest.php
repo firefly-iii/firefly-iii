@@ -21,7 +21,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -88,15 +87,17 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsPaid()
     {
         // mock stuff
+
         $billRepos    = $this->mock(BillRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $billRepos->shouldReceive('getBillsPaidInRange')->andReturn('-100');
 
         $this->be($this->user());
+        $currency     = Amount::getDefaultCurrency();
         $response = $this->get(route('json.box.paid'));
         $response->assertStatus(200);
-        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'bills-paid']);
+        $response->assertExactJson(['amount' => Amount::formatAnything($currency, '100', false), 'amount_raw' => '100', 'box' => 'bills-paid']);
     }
 
     /**
@@ -105,6 +106,7 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsUnpaid()
     {
         // mock stuff
+
         $billRepos    = $this->mock(BillRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -112,9 +114,10 @@ class JsonControllerTest extends TestCase
 
 
         $this->be($this->user());
+        $currency     = Amount::getDefaultCurrency();
         $response = $this->get(route('json.box.unpaid'));
         $response->assertStatus(200);
-        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'bills-unpaid']);
+        $response->assertExactJson(['amount' => Amount::formatAnything($currency, '100', false), 'amount_raw' => '100', 'box' => 'bills-unpaid']);
     }
 
     /**
@@ -123,8 +126,7 @@ class JsonControllerTest extends TestCase
     public function testBoxIn()
     {
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $tasker       = $this->mock(AccountTaskerInterface::class);
+
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -139,9 +141,10 @@ class JsonControllerTest extends TestCase
 
 
         $this->be($this->user());
+        $currency     = Amount::getDefaultCurrency();
         $response = $this->get(route('json.box.in'));
         $response->assertStatus(200);
-        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'in']);
+        $response->assertExactJson(['amount' => Amount::formatAnything($currency, '100', false), 'amount_raw' => '100', 'box' => 'in']);
     }
 
     /**
@@ -150,8 +153,7 @@ class JsonControllerTest extends TestCase
     public function testBoxOut()
     {
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $tasker       = $this->mock(AccountTaskerInterface::class);
+
         $collector    = $this->mock(JournalCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
@@ -165,9 +167,10 @@ class JsonControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
 
         $this->be($this->user());
+        $currency     = Amount::getDefaultCurrency();
         $response = $this->get(route('json.box.out'));
         $response->assertStatus(200);
-        $response->assertExactJson(['amount' => Amount::format('100', false), 'amount_raw' => '100', 'box' => 'out']);
+        $response->assertExactJson(['amount' => Amount::formatAnything($currency, '100', false), 'amount_raw' => '100', 'box' => 'out']);
     }
 
     /**
