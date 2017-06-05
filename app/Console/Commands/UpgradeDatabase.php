@@ -82,9 +82,8 @@ class UpgradeDatabase extends Command
      */
     private function currencyInfoToTransactions()
     {
-        $count    = 0;
-        $expanded = 0;
-        $set      = TransactionJournal::with('transactions')->get();
+        $count = 0;
+        $set   = TransactionJournal::with('transactions')->get();
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             /** @var Transaction $transaction */
