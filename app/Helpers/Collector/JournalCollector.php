@@ -499,7 +499,7 @@ class JournalCollector implements JournalCollectorInterface
                             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                             ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
                             ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transactions.transaction_currency_id')
-            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', 'transactions.foreign_currency_id')
+                            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', 'transactions.foreign_currency_id')
                             ->whereNull('transactions.deleted_at')
                             ->whereNull('transaction_journals.deleted_at')
                             ->where('transaction_journals.user_id', $this->user->id)

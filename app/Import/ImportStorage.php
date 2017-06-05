@@ -291,7 +291,6 @@ class ImportStorage
             'user_id'                 => $entry->user->id,
             'transaction_type_id'     => $entry->fields['transaction-type']->id,
             'bill_id'                 => $billId,
-            // TODO update this transaction currency reference.
             'transaction_currency_id' => $entry->fields['currency']->id,
             'description'             => $entry->fields['description'],
             'date'                    => $entry->fields['date-transaction'],

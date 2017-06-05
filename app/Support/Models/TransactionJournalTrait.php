@@ -15,16 +15,21 @@ namespace FireflyIII\Support\Models;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Rules\Triggers\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
  * Class TransactionJournalTrait
  *
- * @property int $id
- * @method Collection transactions()
- * @method bool isWithdrawal()
+ * @property int             $id
+ * @property Carbon          $date
+ * @property string          $transaction_type_type
+ * @property TransactionType $transactionType
  *
  * @package FireflyIII\Support\Models
  */
@@ -90,6 +95,16 @@ trait TransactionJournalTrait
 
         return 0;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    abstract public function budgets(): BelongsToMany;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    abstract public function categories(): BelongsToMany;
 
     /**
      * @return string
@@ -181,6 +196,19 @@ trait TransactionJournalTrait
     }
 
     /**
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    abstract public function getMeta(string $name);
+
+    /**
+     * @return bool
+     */
+    abstract public function isDeposit(): bool;
+
+    /**
      * @param Builder $query
      * @param string  $table
      *
@@ -202,6 +230,29 @@ trait TransactionJournalTrait
     }
 
     /**
+     *
+     * @return bool
+     */
+    abstract public function isOpeningBalance(): bool;
+
+    /**
+     *
+     * @return bool
+     */
+    abstract public function isTransfer(): bool;
+
+    /**
+     *
+     * @return bool
+     */
+    abstract public function isWithdrawal(): bool;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    abstract public function piggyBankEvents(): HasMany;
+
+    /**
      * @return int
      */
     public function piggyBankId(): int
@@ -220,6 +271,23 @@ trait TransactionJournalTrait
     {
         return $this->transactions()->where('amount', '>', 0)->first();
     }
+
+    /**
+     * Save the model to the database.
+     *
+     * @param  array $options
+     *
+     * @return bool
+     */
+    abstract public function save(array $options = []): bool;
+
+    /**
+     * @param string $name
+     * @param        $value
+     *
+     * @return TransactionJournalMeta
+     */
+    abstract public function setMeta(string $name, $value): TransactionJournalMeta;
 
     /**
      * @return Collection
@@ -281,4 +349,9 @@ trait TransactionJournalTrait
 
         return $typeStr;
     }
+
+    /**
+     * @return HasMany
+     */
+    abstract public function transactions(): HasMany;
 }

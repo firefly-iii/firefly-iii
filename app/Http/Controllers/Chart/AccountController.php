@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -336,7 +335,7 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
-     * @param Carbon $start
+     * @param Carbon  $start
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException

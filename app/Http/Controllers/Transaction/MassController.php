@@ -246,7 +246,6 @@ class MassController extends Controller
                         'currency_id'              => $foreignCurrencyId,
                         'foreign_amount'           => $foreignAmount,
                         'destination_amount'       => $foreignAmount,
-                        //'foreign_currency_id'      => $foreignCurrencyId,
                         'category'                 => $category,
                         'tags'                     => $tags,
                     ];

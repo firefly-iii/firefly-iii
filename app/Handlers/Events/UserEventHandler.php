@@ -74,6 +74,7 @@ class UserEventHandler
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
         }
+
         // @codeCoverageIgnoreEnd
 
         return true;
@@ -106,6 +107,7 @@ class UserEventHandler
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
         }
+
         // @codeCoverageIgnoreEnd
 
         return true;

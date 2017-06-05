@@ -112,7 +112,7 @@ class ChartJsGenerator implements GeneratorInterface
         // sort by value, keep keys.
         asort($data);
 
-        $index     = 0;
+        $index = 0;
         foreach ($data as $key => $value) {
 
             // make larger than 0

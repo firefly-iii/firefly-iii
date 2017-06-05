@@ -15,7 +15,6 @@ namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;

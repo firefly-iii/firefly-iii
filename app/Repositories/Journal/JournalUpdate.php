@@ -258,8 +258,7 @@ class JournalUpdate implements JournalUpdateInterface
         $transaction->transaction_currency_id = $data['currency_id'];
         $transaction->foreign_amount          = is_null($data['foreign_amount']) ? null : app('steam')->positive($data['foreign_amount']);
         $transaction->foreign_currency_id     = $data['foreign_currency_id'];
-
-        $transaction->account_id = $account->id;
+        $transaction->account_id              = $account->id;
         $transaction->save();
 
     }
@@ -284,6 +283,7 @@ class JournalUpdate implements JournalUpdateInterface
         $transaction->transaction_currency_id = $data['currency_id'];
         $transaction->foreign_amount          = is_null($data['foreign_amount']) ? null : bcmul(app('steam')->positive($data['foreign_amount']), '-1');
         $transaction->foreign_currency_id     = $data['foreign_currency_id'];
+        $transaction->account_id              = $account->id;
         $transaction->save();
     }
 

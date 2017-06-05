@@ -241,11 +241,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function getPiggyBanksWithAmount(): Collection
     {
         $currency = Amount::getDefaultCurrency();
-        $set = $this->getPiggyBanks();
+        $set      = $this->getPiggyBanks();
         foreach ($set as $piggy) {
             $currentAmount = $piggy->currentRelevantRep()->currentamount ?? '0';
 
-            $piggy->name   = $piggy->name . ' (' . Amount::formatAnything($currency, $currentAmount, false) . ')';
+            $piggy->name = $piggy->name . ' (' . Amount::formatAnything($currency, $currentAmount, false) . ')';
         }
 
         return $set;

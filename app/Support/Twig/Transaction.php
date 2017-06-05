@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Amount;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionType;

@@ -19,6 +19,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Models\TransactionJournalTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
@@ -66,12 +67,12 @@ class TransactionJournal extends Model
     /** @var array */
     protected $rules
         = [
-            'user_id'                 => 'required|exists:users,id',
-            'transaction_type_id'     => 'required|exists:transaction_types,id',
-            'description'             => 'required|between:1,1024',
-            'completed'               => 'required|boolean',
-            'date'                    => 'required|date',
-            'encrypted'               => 'required|boolean',
+            'user_id'             => 'required|exists:users,id',
+            'transaction_type_id' => 'required|exists:transaction_types,id',
+            'description'         => 'required|between:1,1024',
+            'completed'           => 'required|boolean',
+            'date'                => 'required|date',
+            'encrypted'           => 'required|boolean',
         ];
 
     /**
@@ -114,7 +115,7 @@ class TransactionJournal extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function budgets()
+    public function budgets(): BelongsToMany
     {
         return $this->belongsToMany('FireflyIII\Models\Budget');
     }
@@ -122,7 +123,7 @@ class TransactionJournal extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function categories()
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany('FireflyIII\Models\Category');
     }
@@ -203,7 +204,7 @@ class TransactionJournal extends Model
     /**
      * @return bool
      */
-    public function isDeposit()
+    public function isDeposit(): bool
     {
         if (!is_null($this->transaction_type_type)) {
             return $this->transaction_type_type == TransactionType::DEPOSIT;
@@ -216,7 +217,7 @@ class TransactionJournal extends Model
      *
      * @return bool
      */
-    public function isOpeningBalance()
+    public function isOpeningBalance(): bool
     {
         if (!is_null($this->transaction_type_type)) {
             return $this->transaction_type_type == TransactionType::OPENING_BALANCE;
@@ -229,7 +230,7 @@ class TransactionJournal extends Model
      *
      * @return bool
      */
-    public function isTransfer()
+    public function isTransfer(): bool
     {
         if (!is_null($this->transaction_type_type)) {
             return $this->transaction_type_type == TransactionType::TRANSFER;
@@ -242,7 +243,7 @@ class TransactionJournal extends Model
      *
      * @return bool
      */
-    public function isWithdrawal()
+    public function isWithdrawal(): bool
     {
         if (!is_null($this->transaction_type_type)) {
             return $this->transaction_type_type == TransactionType::WITHDRAWAL;
@@ -254,7 +255,7 @@ class TransactionJournal extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggyBankEvents()
+    public function piggyBankEvents(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
     }
@@ -266,7 +267,7 @@ class TransactionJournal extends Model
      *
      * @return bool
      */
-    public function save(array $options = [])
+    public function save(array $options = []): bool
     {
         $count           = $this->tags()->count();
         $this->tag_count = $count;
@@ -404,9 +405,9 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactions()
+    public function transactions(): HasMany
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
     }

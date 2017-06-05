@@ -273,7 +273,7 @@ class SingleController extends Controller
         ];
 
         // amounts for withdrawals and deposits:
-        // (amount, native_amount, source_amount, destination_amount)
+        // amount, native_amount, source_amount, destination_amount
         if (($journal->isWithdrawal() || $journal->isDeposit()) && !is_null($pTransaction->foreign_amount)) {
             $preFilled['amount']   = $pTransaction->foreign_amount;
             $preFilled['currency'] = $pTransaction->foreignCurrency;
@@ -365,14 +365,13 @@ class SingleController extends Controller
     }
 
     /**
-     * @param JournalFormRequest         $request
-     * @param JournalRepositoryInterface $repository
-     * @param JournalUpdateInterface     $updater
-     * @param TransactionJournal         $journal
+     * @param JournalFormRequest     $request
+     * @param JournalUpdateInterface $updater
+     * @param TransactionJournal     $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, JournalUpdateInterface $updater, TransactionJournal $journal)
+    public function update(JournalFormRequest $request, JournalUpdateInterface $updater, TransactionJournal $journal)
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {

@@ -23,7 +23,7 @@ use FireflyIII\Support\Events\BillScanner;
 
 /**
  * @codeCoverageIgnore
- * 
+ *
  * Class UpdatedJournalEventHandler
  *
  * @package FireflyIII\Handlers\Events
@@ -54,7 +54,7 @@ class UpdatedJournalEventHandler
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         $journal = $updatedJournalEvent->journal;
-        $groups = $this->repository->getActiveGroups($journal->user);
+        $groups  = $this->repository->getActiveGroups($journal->user);
 
         /** @var RuleGroup $group */
         foreach ($groups as $group) {

@@ -293,8 +293,8 @@ class AccountController extends Controller
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $count       = 0;
-        $loop        = 0;
+        $count = 0;
+        $loop  = 0;
         // grab journals, but be prepared to jump a period back to get the right ones:
         Log::info('Now at loop start.');
         while ($count === 0 && $loop < 3) {

@@ -10,20 +10,20 @@ class RequestedNewPassword extends Mailable
 {
     use Queueable, SerializesModels;
     /** @var  string */
-    public $ip;
-    /** @var  string */
     public $url;
+    /** @var  string */
+    public $userIp;
 
     /**
      * RequestedNewPassword constructor.
      *
      * @param string $url
-     * @param string $ip
+     * @param string $userIp
      */
-    public function __construct(string $url, string $ip)
+    public function __construct(string $url, string $userIp)
     {
-        $this->url = $url;
-        $this->ip  = $ip;
+        $this->url    = $url;
+        $this->userIp = $userIp;
     }
 
     /**

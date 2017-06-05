@@ -98,26 +98,6 @@ class JournalServiceProvider extends ServiceProvider
     /**
      *
      */
-    private function registerUpdater()
-    {
-        $this->app->bind(
-            JournalUpdateInterface::class,
-            function (Application $app) {
-                /** @var JournalUpdateInterface $tasker */
-                $update = app(JournalUpdate::class);
-
-                if ($app->auth->check()) {
-                    $update->setUser(auth()->user());
-                }
-
-                return $update;
-            }
-        );
-    }
-
-    /**
-     *
-     */
     private function registerTasker()
     {
         $this->app->bind(
@@ -131,6 +111,26 @@ class JournalServiceProvider extends ServiceProvider
                 }
 
                 return $tasker;
+            }
+        );
+    }
+
+    /**
+     *
+     */
+    private function registerUpdater()
+    {
+        $this->app->bind(
+            JournalUpdateInterface::class,
+            function (Application $app) {
+                /** @var JournalUpdateInterface $tasker */
+                $update = app(JournalUpdate::class);
+
+                if ($app->auth->check()) {
+                    $update->setUser(auth()->user());
+                }
+
+                return $update;
             }
         );
     }

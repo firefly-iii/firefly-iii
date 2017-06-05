@@ -52,11 +52,11 @@ use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Twig;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
-use Illuminate\Foundation\Application;
 
 /**
  * Class FireflyServiceProvider

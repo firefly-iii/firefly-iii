@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions */
+/** global: currencyInfo, accountInfo, what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions, convertForeignToNative, convertSourceToDestination, selectsForeignCurrency, accountInfo */
 
 $(document).ready(function () {
     "use strict";
@@ -64,8 +64,6 @@ function updateNativeCurrency() {
     var newAccountId = getAccountId();
     var nativeCurrencyId = accountInfo[newAccountId].preferredCurrency;
 
-    console.log('User selected account #' + newAccountId + '. Native currency is #' + nativeCurrencyId);
-
     $('.currency-option[data-id="' + nativeCurrencyId + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     if (what !== 'transfer') {
@@ -107,6 +105,7 @@ function updateForm() {
     var srcName = $('#ffInput_source_account_name');
 
     switch (what) {
+
         case 'withdrawal':
             // show source_id and dest_name
             document.getElementById('source_account_id_holder').style.display = 'block';
@@ -178,6 +177,8 @@ function updateForm() {
             }
             document.getElementById('piggy_bank_id_holder').style.display = showPiggies;
             break;
+        default:
+            break;
     }
     updateNativeCurrency();
 }
@@ -232,4 +233,5 @@ function getAccountId() {
     if (what === "deposit" || what === "transfer") {
         return $('select[name="destination_account_id"]').val();
     }
+    return undefined;
 }

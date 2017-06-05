@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what, Modernizr */
+/** global: what, Modernizr, selectsForeignCurrency, convertForeignToNative, validateCurrencyForTransfer, convertSourceToDestination, journalData, journal, accountInfo, exchangeRateInstructions, currencyInfo */
 
 $(document).ready(function () {
     "use strict";
@@ -79,6 +79,7 @@ function getAccountId() {
     }
 
     alert('Cannot handle ' + journal.transaction_type.type);
+    return undefined;
 }
 
 /**

@@ -292,7 +292,7 @@ class Amount
         }
 
         if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
-            $amount = app('steam')->positive($amount);
+            $amount   = app('steam')->positive($amount);
             $coloured = false;
             $format   = '<span class="text-info">%s</span>';
         }

@@ -171,6 +171,49 @@ class JournalSupport
     }
 
     /**
+     * @param array $data
+     *
+     * @return Transaction
+     */
+    public static function storeTransaction(array $data): Transaction
+    {
+        $fields = [
+            'transaction_journal_id'  => $data['journal']->id,
+            'account_id'              => $data['account']->id,
+            'amount'                  => $data['amount'],
+            'foreign_amount'          => $data['foreign_amount'],
+            'transaction_currency_id' => $data['transaction_currency_id'],
+            'foreign_currency_id'     => $data['foreign_currency_id'],
+            'description'             => $data['description'],
+            'identifier'              => $data['identifier'],
+        ];
+
+
+        if (is_null($data['foreign_currency_id'])) {
+            unset($fields['foreign_currency_id']);
+        }
+        if (is_null($data['foreign_amount'])) {
+            unset($fields['foreign_amount']);
+        }
+
+        /** @var Transaction $transaction */
+        $transaction = Transaction::create($fields);
+
+        Log::debug(sprintf('Transaction stored with ID: %s', $transaction->id));
+
+        if (!is_null($data['category'])) {
+            $transaction->categories()->save($data['category']);
+        }
+
+        if (!is_null($data['budget'])) {
+            $transaction->categories()->save($data['budget']);
+        }
+
+        return $transaction;
+
+    }
+
+    /**
      * @param User  $user
      * @param array $data
      *
@@ -314,48 +357,5 @@ class JournalSupport
         }
 
         return $data;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Transaction
-     */
-    public static function storeTransaction(array $data): Transaction
-    {
-        $fields = [
-            'transaction_journal_id'  => $data['journal']->id,
-            'account_id'              => $data['account']->id,
-            'amount'                  => $data['amount'],
-            'foreign_amount'          => $data['foreign_amount'],
-            'transaction_currency_id' => $data['transaction_currency_id'],
-            'foreign_currency_id'     => $data['foreign_currency_id'],
-            'description'             => $data['description'],
-            'identifier'              => $data['identifier'],
-        ];
-
-
-        if (is_null($data['foreign_currency_id'])) {
-            unset($fields['foreign_currency_id']);
-        }
-        if (is_null($data['foreign_amount'])) {
-            unset($fields['foreign_amount']);
-        }
-
-        /** @var Transaction $transaction */
-        $transaction = Transaction::create($fields);
-
-        Log::debug(sprintf('Transaction stored with ID: %s', $transaction->id));
-
-        if (!is_null($data['category'])) {
-            $transaction->categories()->save($data['category']);
-        }
-
-        if (!is_null($data['budget'])) {
-            $transaction->categories()->save($data['budget']);
-        }
-
-        return $transaction;
-
     }
 }

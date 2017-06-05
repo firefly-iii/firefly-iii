@@ -38,19 +38,19 @@ class AccountFormRequest extends Request
     public function getAccountData(): array
     {
         return [
-            'name'                   => $this->string('name'),
-            'active'                 => $this->boolean('active'),
-            'accountType'            => $this->string('what'),
-            'currency_id'            => $this->integer('currency_id'),
-            'virtualBalance'         => $this->float('virtualBalance'),
-            'iban'                   => $this->string('iban'),
-            'BIC'                    => $this->string('BIC'),
-            'accountNumber'          => $this->string('accountNumber'),
-            'accountRole'            => $this->string('accountRole'),
-            'openingBalance'         => $this->float('openingBalance'),
-            'openingBalanceDate'     => $this->date('openingBalanceDate'),
-            'ccType'                 => $this->string('ccType'),
-            'ccMonthlyPaymentDate'   => $this->string('ccMonthlyPaymentDate'),
+            'name'                 => $this->string('name'),
+            'active'               => $this->boolean('active'),
+            'accountType'          => $this->string('what'),
+            'currency_id'          => $this->integer('currency_id'),
+            'virtualBalance'       => $this->float('virtualBalance'),
+            'iban'                 => $this->string('iban'),
+            'BIC'                  => $this->string('BIC'),
+            'accountNumber'        => $this->string('accountNumber'),
+            'accountRole'          => $this->string('accountRole'),
+            'openingBalance'       => $this->float('openingBalance'),
+            'openingBalanceDate'   => $this->date('openingBalanceDate'),
+            'ccType'               => $this->string('ccType'),
+            'ccMonthlyPaymentDate' => $this->string('ccMonthlyPaymentDate'),
         ];
     }
 
