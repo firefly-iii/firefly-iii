@@ -92,13 +92,17 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatAmountByAccount', function (AccountModel $account, string $amount, bool $coloured = true): string {
             $currencyId = intval($account->getMeta('currency_id'));
-            if ($currencyId === 0) {
-                // Format using default currency:
-                return app('amount')->format($amount, $coloured);
+
+            if ($currencyId !== 0) {
+                $currency = TransactionCurrency::find($currencyId);
+
+                return app('amount')->formatAnything($currency, $amount, $coloured);
             }
-            $currency = TransactionCurrency::find($currencyId);
+            $currency = app('amount')->getDefaultCurrency();
 
             return app('amount')->formatAnything($currency, $amount, $coloured);
+
+
         }, ['is_safe' => ['html']]
         );
     }
