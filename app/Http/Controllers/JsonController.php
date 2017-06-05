@@ -142,10 +142,9 @@ class JsonController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface     $accountTasker
-     * @param AccountRepositoryInterface $repository
-     *
      * @return \Illuminate\Http\JsonResponse
+     * @internal param AccountTaskerInterface $accountTasker
+     * @internal param AccountRepositoryInterface $repository
      *
      */
     public function boxIn()
@@ -178,10 +177,10 @@ class JsonController extends Controller
     }
 
     /**
-     * @param AccountTaskerInterface     $accountTasker
-     * @param AccountRepositoryInterface $repository
-     *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @internal param AccountTaskerInterface $accountTasker
+     * @internal param AccountRepositoryInterface $repository
+     *
      */
     public function boxOut()
     {

@@ -35,6 +35,8 @@ class UpdatedJournalEventHandler
 
     /**
      * StoredJournalEventHandler constructor.
+     *
+     * @param RuleGroupRepositoryInterface $ruleGroupRepository
      */
     public function __construct(RuleGroupRepositoryInterface $ruleGroupRepository)
     {

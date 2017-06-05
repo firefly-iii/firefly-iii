@@ -17,7 +17,8 @@ class RegisteredUser extends Mailable
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param string $address
+     * @param string $ip
      */
     public function __construct(string $address, string $ip)
     {

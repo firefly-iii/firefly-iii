@@ -95,20 +95,4 @@ interface JournalRepositoryInterface
      */
     public function store(array $data): TransactionJournal;
 
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     */
-    public function update(TransactionJournal $journal, array $data): TransactionJournal;
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     */
-    public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal;
-
 }

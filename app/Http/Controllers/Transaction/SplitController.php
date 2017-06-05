@@ -25,6 +25,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use Illuminate\Http\Request;
 use Log;
 use Preferences;
@@ -124,18 +125,19 @@ class SplitController extends Controller
     /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
+     * @param JournalUpdateInterface     $updater
      * @param TransactionJournal         $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(Request $request, JournalRepositoryInterface $repository, JournalUpdateInterface $updater, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
 
         $data    = $this->arrayFromInput($request);
-        $journal = $repository->updateSplitJournal($journal, $data);
+        $journal = $updater->updateSplitJournal($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
