@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Rules\Triggers\TransactionType;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
