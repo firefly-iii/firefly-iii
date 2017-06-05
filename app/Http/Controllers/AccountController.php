@@ -219,8 +219,8 @@ class AccountController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
         $activities    = Steam::getLastActivities($ids);
 
         $accounts->each(

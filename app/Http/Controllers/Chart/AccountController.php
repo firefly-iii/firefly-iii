@@ -114,9 +114,8 @@ class AccountController extends Controller
         $start->subDay();
 
         $accounts      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
         $chartData     = [];
 
         foreach ($accounts as $account) {
@@ -350,7 +349,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.period');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format    = (string)trans('config.month_and_day');
@@ -410,9 +409,8 @@ class AccountController extends Controller
         $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
 
         $start->subDay();
-        $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
 
         foreach ($accounts as $account) {
             $id           = $account->id;

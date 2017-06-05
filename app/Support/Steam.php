@@ -18,6 +18,7 @@ use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use Illuminate\Support\Collection;
 
 /**
  * Class Steam
@@ -107,7 +108,7 @@ class Steam
                     ->where('transactions.foreign_currency_id', $currencyId)
                     ->sum('transactions.foreign_amount')
         );
-        $balance = bcadd($nativeBalance, $foreignBalance);
+        $balance        = bcadd($nativeBalance, $foreignBalance);
 
         $cache->store($balance);
 
@@ -134,30 +135,59 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
 
-        $balances = [];
         $start->subDay();
         $end->addDay();
-        $startBalance                      = $this->balance($account, $start);
-        $balances[$start->format('Y-m-d')] = $startBalance;
+        $balances             = [];
+        $formatted            = $start->format('Y-m-d');
+        $startBalance         = $this->balance($account, $start);
+        $balances[$formatted] = $startBalance;
+        $currencyId           = intval($account->getMeta('currency_id'));
         $start->addDay();
 
         // query!
-        $set            = $account->transactions()
-                                  ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                  ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                                  ->groupBy('transaction_journals.date')
-                                  ->orderBy('transaction_journals.date', 'ASC')
-                                  ->whereNull('transaction_journals.deleted_at')
-                                  ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
+        $set = $account->transactions()
+                       ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                       ->groupBy('transaction_journals.date')
+                       ->groupBy('transactions.transaction_currency_id')
+                       ->groupBy('transactions.foreign_currency_id')
+                       ->orderBy('transaction_journals.date', 'ASC')
+                       ->whereNull('transaction_journals.deleted_at')
+                       ->get(
+                           [
+                               'transaction_journals.date',
+                               'transactions.transaction_currency_id',
+                               DB::raw('SUM(transactions.amount) AS modified'),
+                               'transactions.foreign_currency_id',
+                               DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                           ]
+                       );
+
+//        echo '<pre>';
+//        var_dump($set->toArray());
+//        exit;
+
         $currentBalance = $startBalance;
         /** @var Transaction $entry */
         foreach ($set as $entry) {
+            // normal amount and foreign amount
             $modified        = is_null($entry->modified) ? '0' : strval($entry->modified);
-            $currentBalance  = bcadd($currentBalance, $modified);
+            $foreignModified = is_null($entry->modified_foreign) ? '0' : strval($entry->modified_foreign);
+            $amount          = '0';
+            if ($currencyId === $entry->transaction_currency_id) {
+                // use normal amount:
+                $amount = $modified;
+            }
+            if ($currencyId === $entry->foreign_currency_id) {
+                // use normal amount:
+                $amount = $foreignModified;
+            }
+
+            $currentBalance  = bcadd($currentBalance, $amount);
             $carbon          = new Carbon($entry->date);
             $date            = $carbon->format('Y-m-d');
             $balances[$date] = $currentBalance;
@@ -173,37 +203,29 @@ class Steam
     /**
      * This method always ignores the virtual balance.
      *
-     * @param array          $ids
-     * @param \Carbon\Carbon $date
+     * @param \Illuminate\Support\Collection $accounts
+     * @param \Carbon\Carbon                 $date
      *
      * @return array
      */
-    public function balancesById(array $ids, Carbon $date): array
+    public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
-
+        $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties;
         $cache->addProperty($ids);
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
 
-        $balances = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                               ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
-                               ->groupBy('transactions.account_id')
-                               ->whereIn('transactions.account_id', $ids)
-                               ->whereNull('transaction_journals.deleted_at')
-                               ->get(['transactions.account_id', DB::raw('sum(transactions.amount) AS aggregate')]);
-
+        // need to do this per account.
         $result = [];
-        foreach ($balances as $entry) {
-            $accountId          = intval($entry->account_id);
-            $balance            = $entry->aggregate;
-            $result[$accountId] = $balance;
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $result[$account->id] = $this->balance($account, $date);
         }
-
 
         $cache->store($result);
 

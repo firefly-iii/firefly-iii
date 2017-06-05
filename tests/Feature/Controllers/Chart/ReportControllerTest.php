@@ -33,9 +33,8 @@ class ReportControllerTest extends TestCase
     public function testNetWorth()
     {
         $generator = $this->mock(GeneratorInterface::class);
-        $tasker    = $this->mock(AccountTaskerInterface::class);
 
-        Steam::shouldReceive('balancesById')->andReturn(['5', '10']);
+        Steam::shouldReceive('balancesByAccounts')->andReturn(['5', '10']);
         $generator->shouldReceive('singleSet')->andReturn([]);
 
         $this->be($this->user());

@@ -67,11 +67,10 @@ class ReportController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $ids       = $accounts->pluck('id')->toArray();
         $current   = clone $start;
         $chartData = [];
         while ($current < $end) {
-            $balances          = Steam::balancesById($ids, $current);
+            $balances          = Steam::balancesByAccounts($accounts, $current);
             $sum               = $this->arraySum($balances);
             $label             = $current->formatLocalized(strval(trans('config.month_and_day')));
             $chartData[$label] = $sum;
