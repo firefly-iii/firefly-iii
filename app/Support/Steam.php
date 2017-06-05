@@ -45,14 +45,27 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-
-        $balance = strval(
-            $account->transactions()->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+        $currencyId = intval($account->getMeta('currency_id'));
+        // first part: get all balances in own currency:
+        $nativeBalance = strval(
+            $account->transactions()
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                    ->where('transactions.transaction_currency_id', $currencyId)
+                    ->sum('transactions.amount')
         );
-        $virtual = is_null($account->virtual_balance) ? '0' : strval($account->virtual_balance);
-        $balance = bcadd($balance, $virtual);
+
+        // get all balances in foreign currency:
+        $foreignBalance = strval(
+            $account->transactions()
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                    ->where('transactions.foreign_currency_id', $currencyId)
+                    ->sum('transactions.foreign_amount')
+        );
+        $balance        = bcadd($nativeBalance, $foreignBalance);
+        $virtual        = is_null($account->virtual_balance) ? '0' : strval($account->virtual_balance);
+        $balance        = bcadd($balance, $virtual);
         $cache->store($balance);
 
         return $balance;
@@ -76,12 +89,25 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
+        $currencyId = intval($account->getMeta('currency_id'));
 
-        $balance = strval(
-            $account->transactions()->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+        $nativeBalance = strval(
+            $account->transactions()
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                    ->where('transactions.transaction_currency_id', $currencyId)
+                    ->sum('transactions.amount')
         );
+
+        // get all balances in foreign currency:
+        $foreignBalance = strval(
+            $account->transactions()
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                    ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
+                    ->where('transactions.foreign_currency_id', $currencyId)
+                    ->sum('transactions.foreign_amount')
+        );
+        $balance = bcadd($nativeBalance, $foreignBalance);
 
         $cache->store($balance);
 
@@ -128,10 +154,13 @@ class Steam
                                   ->whereNull('transaction_journals.deleted_at')
                                   ->get(['transaction_journals.date', DB::raw('SUM(transactions.amount) AS modified')]);
         $currentBalance = $startBalance;
+        /** @var Transaction $entry */
         foreach ($set as $entry) {
-            $modified               = is_null($entry->modified) ? '0' : strval($entry->modified);
-            $currentBalance         = bcadd($currentBalance, $modified);
-            $balances[$entry->date] = $currentBalance;
+            $modified        = is_null($entry->modified) ? '0' : strval($entry->modified);
+            $currentBalance  = bcadd($currentBalance, $modified);
+            $carbon          = new Carbon($entry->date);
+            $date            = $carbon->format('Y-m-d');
+            $balances[$date] = $currentBalance;
         }
 
         $cache->store($balances);
