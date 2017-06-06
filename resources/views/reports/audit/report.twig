@@ -59,7 +59,7 @@
                                     account_name: account.name,
                                     url: url,
                                     end: auditData[account.id].end,
-                                    balance: auditData[account.id].endBalance|formatAmount
+                                    balance: formatAmountByAccount(account,auditData[account.id].endBalance)
                                 })|raw }}
                             </p>
                             {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
@@ -69,7 +69,7 @@
                                     account_name: account.name,
                                     url: url,
                                     end: auditData[account.id].dayBefore,
-                                    balance: auditData[account.id].dayBeforeBalance|formatAmount
+                                    balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance)
                                 })|raw }}
                             </p>
                         </div>

@@ -19,6 +19,7 @@ use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Steam;
 
@@ -147,6 +148,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     private function getAuditReport(Account $account, Carbon $date): array
     {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -155,15 +158,21 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $journals         = $journals->reverse();
         $dayBeforeBalance = Steam::balance($account, $date);
         $startBalance     = $dayBeforeBalance;
-
+        $currency         = $currencyRepos->find(intval($account->getMeta('currency_id')));
 
         /** @var Transaction $journal */
         foreach ($journals as $transaction) {
             $transaction->before = $startBalance;
-            $transactionAmount   = $transaction->transaction_amount;
-            $newBalance          = bcadd($startBalance, $transactionAmount);
-            $transaction->after  = $newBalance;
-            $startBalance        = $newBalance;
+            $transactionAmount = $transaction->transaction_amount;
+
+            if ($currency->id === $transaction->foreign_currency_id) {
+                $transactionAmount = $transaction->transaction_foreign_amount;
+            }
+
+            $newBalance            = bcadd($startBalance, $transactionAmount);
+            $transaction->after    = $newBalance;
+            $startBalance          = $newBalance;
+            $transaction->currency = $currency;
         }
 
         /*

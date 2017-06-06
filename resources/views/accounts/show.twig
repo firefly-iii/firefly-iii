@@ -119,13 +119,13 @@
                                     {% if period.spent != 0 %}
                                         <tr>
                                             <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
+                                            <td style="text-align: right;">{{ formatAmountByCurrency(currency, period.spent) }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if period.earned != 0 %}
                                         <tr>
                                             <td style="width: 33%;">{{ 'earned'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
+                                            <td style="text-align: right;">{{ formatAmountByCurrency(currency, period.earned) }}</td>
                                         </tr>
                                     {% endif %}
                                 </table>

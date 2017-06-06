@@ -72,11 +72,14 @@ class JournalCollector implements JournalCollectorInterface
             'transactions.transaction_journal_id',
 
             'transactions.amount as transaction_amount',
+
+            'transactions.transaction_currency_id as transaction_currency_id',
             'transaction_currencies.code as transaction_currency_code',
             'transaction_currencies.symbol as transaction_currency_symbol',
             'transaction_currencies.decimal_places as transaction_currency_dp',
 
             'transactions.foreign_amount as transaction_foreign_amount',
+            'transactions.foreign_currency_id as foreign_currency_id',
             'foreign_currencies.code as foreign_currency_code',
             'foreign_currencies.symbol as foreign_currency_symbol',
             'foreign_currencies.decimal_places as foreign_currency_dp',

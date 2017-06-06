@@ -57,11 +57,11 @@
                     {% endif %}
                 </a>
             </td>
-            <td class="hide-balance_before" style="text-align: right;">{{ transaction.before|formatAmount }}</td>
+            <td class="hide-balance_before" style="text-align: right;">{{ formatAmountByCurrency(transaction.currency, transaction.before) }}</td>
             <td class="hide-amount" style="text-align: right;">
                 {{ transactionAmount(transaction) }}
             </td>
-            <td class="hide-balance_after" style="text-align: right;">{{ transaction.after|formatAmount }}</td>
+            <td class="hide-balance_after" style="text-align: right;">{{ formatAmountByCurrency(transaction.currency, transaction.after) }}</td>
 
             <td class="hide-date">{{ transaction.date.formatLocalized(monthAndDayFormat) }}</td>
             <td class="hide-book_date">
