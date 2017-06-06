@@ -10,6 +10,10 @@ If you are requesting a new feature, please check out the list of [often request
 
 If you find a bug, please take the time and see if the [demo site](https://firefly-iii.nder.be/) is also suffering from this bug. Include as many log files and details as you think are necessary. 
 
+## Getting ready for development
+
+First, clone this repository somewhere. Create a `.env` file, for example by `cp .env.testing .env` and adjust the settings. Then run `composer` to download all prerequisites. Create a database file: `touch storage/database/database.sqlite` and finally seed the database: `php artisan migrate:refresh --seed`. You are now ready to start Firefly in development mode: `php artisan serve`. Happy devving!
+
 ## Installation problems
 
 Take the time to read the [installation guide FAQ](https://firefly-iii.github.io/installation-guide-faq/) and make sure you search through closed issues for the problems other people have had. Your problem may be among them!
