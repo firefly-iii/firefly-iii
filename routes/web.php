@@ -134,7 +134,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'budgets', 'as' => 'budgets.'], function () {
-    Route::get('', ['uses' => 'BudgetController@index', 'as' => 'index']);
+    Route::get('{moment?}', ['uses' => 'BudgetController@index', 'as' => 'index']);
     Route::get('income', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
     Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);

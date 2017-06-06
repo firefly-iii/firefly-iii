@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BudgetFormRequest;
@@ -166,16 +167,36 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param string|null $moment
+     *
      * @return View
      */
-    public function index()
+    public function index(string $moment = null)
     {
+        $range = Preferences::get('viewRange', '1M')->data;
+        $start = session('start', new Carbon);
+        $end   = session('end', new Carbon);
+
+        // make date if present:
+        if (!is_null($moment) || strlen(strval($moment)) !== 0) {
+            try {
+                $start = new Carbon($moment);
+                $end   = Navigation::endOfPeriod($start, $range);
+            } catch (Exception $e) {
+
+            }
+        }
+        $next = clone $end;
+        $next->addDay();
+        $prev = clone $start;
+        $prev->subDay();
+
+
         $this->repository->cleanupBudgets();
+
 
         $budgets           = $this->repository->getActiveBudgets();
         $inactive          = $this->repository->getInactiveBudgets();
-        $start             = session('start', new Carbon);
-        $end               = session('end', new Carbon);
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
         $budgetInformation = $this->collectBudgetInformation($budgets, $start, $end);
@@ -184,9 +205,17 @@ class BudgetController extends Controller
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
         $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
 
+        // display info
+        $currentMonth = Navigation::periodShow($start, $range);
+        $nextText     = Navigation::periodShow($next, $range);
+        $prevText     = Navigation::periodShow($prev, $range);
+
         return view(
             'budgets.index',
-            compact('available', 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets', 'spent', 'budgeted')
+            compact(
+                'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText', 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
+                'spent', 'budgeted'
+            )
         );
     }
 

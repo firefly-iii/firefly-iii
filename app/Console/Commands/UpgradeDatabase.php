@@ -389,7 +389,7 @@ class UpgradeDatabase extends Command
     }
 
     /**
-     * 
+     *
      */
     private function verifyCurrencyInfo()
     {
