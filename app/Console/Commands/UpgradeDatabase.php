@@ -74,6 +74,7 @@ class UpgradeDatabase extends Command
         $this->updateAccountCurrencies();
         $this->updateJournalCurrencies();
         $this->currencyInfoToTransactions();
+        $this->verifyCurrencyInfo();
         $this->info('Firefly III database is up to date.');
     }
 
@@ -385,5 +386,26 @@ class UpgradeDatabase extends Command
                 $this->line($line);
             }
         }
+    }
+
+    /**
+     * 
+     */
+    private function verifyCurrencyInfo()
+    {
+        $count        = 0;
+        $transactions = Transaction::get();
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $currencyId = intval($transaction->transaction_currency_id);
+            $foreignId  = intval($transaction->foreign_currency_id);
+            if ($currencyId === $foreignId) {
+                $transaction->foreign_currency_id = null;
+                $transaction->foreign_amount      = null;
+                $transaction->save();
+                $count++;
+            }
+        }
+        $this->line(sprintf('Updated currency information for %d transactions', $count));
     }
 }
