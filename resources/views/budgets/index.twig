@@ -98,20 +98,26 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-lg-2">
-                            <select class="form-control">
-                                <option>x</option>
+                            <select class="form-control selectPeriod" name="previous">
+                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
+                                {% for format, previousLabel in previousLoop %}
+                                    <option label="{{ previousLabel }}" value="{{ format }}">{{ previousLabel }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="col-lg-8 text-center">
                             <div class="btn btn-group btn-group-lg" style="padding-top:0;">
                                 <a href="{{ route('budgets.index', [prev.format('Y-m-d')]) }}" class="btn btn-default" title="{{ prevText }}">&larr;</a>
-                                <a href="#" class="btn btn-default">{{ currentMonth }}</a>
+                                <a href="{{ route('budgets.index', [start.format('Y-m-d')]) }}" class="btn btn-default">{{ currentMonth }}</a>
                                 <a href="{{ route('budgets.index', [next.format('Y-m-d')]) }}" class="btn btn-default" title="{{ nextText }}">&rarr;</a>
                             </div>
                         </div>
                         <div class="col-lg-2 text-right">
-                            <select class="form-control">
-                                <option>x</option>
+                            <select class="form-control selectPeriod" name="next">
+                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
+                                {% for format, nextLabel in nextLoop %}
+                                    <option label="{{ nextLabel }}" value="{{ format }}">{{ nextLabel }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -131,10 +137,10 @@
                         <thead>
                         <tr>
                             <th style="width:10%;">&nbsp;</th>
-                            <th>Budget</th>
+                            <th>{{ 'budget'|_ }}</th>
                             <th style="width:25%;">{{ 'budgeted'|_ }}</th>
-                            <th>Spent</th>
-                            <th>Left</th>
+                            <th>{{ 'spent'|_ }}</th>
+                            <th>{{ 'left'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -264,6 +270,7 @@
                 // budgeted data:
                 var budgeted = {{ budgeted }};
                 var available = {{ available }};
+                var budgetIndexURI = "{{ route('budgets.index','REPLACE') }}";
             </script>
 
             <script type="text/javascript" src="js/ff/budgets/index.js"></script>

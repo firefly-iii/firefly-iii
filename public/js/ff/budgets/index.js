@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: spent, budgeted, available, currencySymbol */
+/** global: spent, budgeted, available, currencySymbol, budgetIndexURI */
 
 function drawSpentBar() {
     "use strict";
@@ -98,6 +98,15 @@ $(function () {
      When the input changes, update the percentages for the budgeted bar:
      */
     $('input[type="number"]').on('input', updateBudgetedAmounts);
+
+    //
+    $('.selectPeriod').change(function (e) {
+        var sel = $(e.target).val();
+        if (sel !== "x") {
+            var newURI = budgetIndexURI.replace("REPLACE", sel);
+            window.location.assign(newURI);
+        }
+    });
 
 });
 

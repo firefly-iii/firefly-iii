@@ -190,6 +190,7 @@ class BudgetController extends Controller
         $next->addDay();
         $prev = clone $start;
         $prev->subDay();
+        $prev = Navigation::startOfPeriod($prev, $range);
 
 
         $this->repository->cleanupBudgets();
@@ -205,6 +206,32 @@ class BudgetController extends Controller
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
         $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
 
+        // select thing for last 12 periods:
+        $previousLoop = [];
+        $previousDate = clone $start;
+        $count        = 0;
+        while ($count < 12) {
+            $previousDate->subDay();
+            $previousDate          = Navigation::startOfPeriod($previousDate, $range);
+            $format                = $previousDate->format('Y-m-d');
+            $previousLoop[$format] = Navigation::periodShow($previousDate, $range);
+            $count++;
+        }
+
+        // select thing for next 12 periods:
+        $nextLoop = [];
+        $nextDate = clone $end;
+        $nextDate->addDay();
+        $count = 0;
+
+        while ($count < 12) {
+            $format            = $nextDate->format('Y-m-d');
+            $nextLoop[$format] = Navigation::periodShow($nextDate, $range);
+            $nextDate          = Navigation::endOfPeriod($nextDate, $range);
+            $count++;
+            $nextDate->addDay();
+        }
+
         // display info
         $currentMonth = Navigation::periodShow($start, $range);
         $nextText     = Navigation::periodShow($next, $range);
@@ -214,7 +241,7 @@ class BudgetController extends Controller
             'budgets.index',
             compact(
                 'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText', 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
-                'spent', 'budgeted'
+                'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start'
             )
         );
     }
