@@ -180,7 +180,7 @@
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
                             </td>
                             <td>
-                                {{ (repAmount - budgetInformation[budget.id]['spent'])|formatAmount }}
+                                {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                             </td>
                             {#
                                                     <div class="box-body">
