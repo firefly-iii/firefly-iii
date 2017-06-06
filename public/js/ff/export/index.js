@@ -104,10 +104,22 @@ function callExport() {
         // show download
         showDownload();
 
-    }).fail(function () {
+    }).fail(function (data) {
         // show error.
         // show form again.
-        showError('The export failed. Please check the log files to find out why.');
+
+        var errorText = 'The export failed. Please check the log files to find out why.';
+        if (typeof data.responseJSON === 'object') {
+            errorText = '';
+            for (var propt in data.responseJSON) {
+                if (data.responseJSON.hasOwnProperty(propt)) {
+                    errorText += propt + ': ' + data.responseJSON[propt][0];
+                }
+            }
+        }
+
+        showError(errorText);
+
 
         // stop polling:
         window.clearTimeout(intervalId);
