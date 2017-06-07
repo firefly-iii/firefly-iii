@@ -23,7 +23,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -270,7 +269,6 @@ class SingleControllerTest extends TestCase
         // mock
         $this->expectsEvents(UpdatedTransactionJournal::class);
 
-        $updater = $this->mock(JournalUpdateInterface::class);
         $repository = $this->mock(JournalRepositoryInterface::class);
         $journal    = new TransactionJournal();
 
@@ -280,7 +278,7 @@ class SingleControllerTest extends TestCase
         $journal->transactionType()->associate($type);
 
 
-        $updater->shouldReceive('update')->andReturn($journal);
+        $repository->shouldReceive('update')->andReturn($journal);
         $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
 
         $this->session(['transactions.edit.uri' => 'http://localhost']);

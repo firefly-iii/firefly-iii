@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
@@ -18,7 +18,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -172,9 +171,8 @@ class MassControllerTest extends TestCase
                                      ->first();
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $updater = $this->mock(JournalUpdateInterface::class);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $updater->shouldReceive('update')->once();
+        $repository->shouldReceive('update')->once();
         $repository->shouldReceive('find')->once()->andReturn($deposit);
 
 

@@ -214,9 +214,9 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-        $ip = Request::ip();
+        $ipAddress = Request::ip();
 
-        event(new RequestedNewPassword($this, $token, $ip));
+        event(new RequestedNewPassword($this, $token, $ipAddress));
     }
 
     /**

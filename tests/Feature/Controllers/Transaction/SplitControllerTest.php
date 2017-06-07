@@ -21,7 +21,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
-use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Tests\TestCase;
@@ -135,8 +134,7 @@ class SplitControllerTest extends TestCase
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $updater    = $this->mock(JournalUpdateInterface::class);
-        $updater->shouldReceive('updateSplitJournal')->andReturn($deposit);
+        $repository->shouldReceive('updateSplitJournal')->andReturn($deposit);
         $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
         $attachmentRepos = $this->mock(AttachmentHelperInterface::class);
         $attachmentRepos->shouldReceive('saveAttachmentsForModel');

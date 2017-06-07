@@ -12,18 +12,18 @@ class RegisteredUser extends Mailable
     /** @var  string */
     public $address;
     /** @var  string */
-    public $userIp;
+    public $ipAddress;
 
     /**
      * Create a new message instance.
      *
      * @param string $address
-     * @param string $userIp
+     * @param string $ipAddress
      */
-    public function __construct(string $address, string $userIp)
+    public function __construct(string $address, string $ipAddress)
     {
         $this->address = $address;
-        $this->userIp  = $userIp;
+        $this->ipAddress  = $ipAddress;
     }
 
     /**

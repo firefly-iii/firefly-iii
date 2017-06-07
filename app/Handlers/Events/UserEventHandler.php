@@ -97,12 +97,12 @@ class UserEventHandler
         }
         // get the email address
         $email     = $event->user->email;
-        $address   = route('index');
+        $uri       = route('index');
         $ipAddress = $event->ipAddress;
 
         // send email.
         try {
-            Mail::to($email)->send(new RegisteredUserMail($address, $ipAddress));
+            Mail::to($email)->send(new RegisteredUserMail($uri, $ipAddress));
             // @codeCoverageIgnoreStart
         } catch (Swift_TransportException $e) {
             Log::error($e->getMessage());
