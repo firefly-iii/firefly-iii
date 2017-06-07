@@ -20,7 +20,7 @@ return [
     'everything'                                 => 'Alles',
     'customRange'                                => 'Zelf bereik kiezen',
     'apply'                                      => 'Go',
-    'select_date'                                => 'Select date..',
+    'select_date'                                => 'Selecteer periode..',
     'cancel'                                     => 'Annuleren',
     'from'                                       => 'Van',
     'to'                                         => 'Tot',
