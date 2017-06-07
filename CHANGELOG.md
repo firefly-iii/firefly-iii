@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.5.0] - 2017-07-07
+
+### Added
+- Better support for multi-currency transactions and display of transactions, accounts and everything. This requires a database overhaul (moving the currency information to specific transactions) so be careful when upgrading.
+- Translations for Spanish and Slovenian.
+- New interface for budget page, ~~stolen from~~ inspired by YNAB.
+- Expanded Docker to work with postgresql as well, thanks to @kressh
+
+### Fixed
+- PostgreSQL support in database upgrade routine (#644, reported by @)
+- Frontpage budget chart was off, fix by @nhaarman
+- Was not possible to remove opening balance.
+
 ## [4.4.3] - 2017-05-03
 ### Added
 - Added support for Slovenian
