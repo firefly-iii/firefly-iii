@@ -963,7 +963,7 @@ return [
     'split_this_transfer'                   => 'Splits deze overschrijving',
     'cannot_edit_multiple_source'           => 'Je kan transactie #:id met omschrijving ":description" niet splitsen, want deze bevat meerdere bronrekeningen.',
     'cannot_edit_multiple_dest'             => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
-    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
+    'cannot_edit_opening_balance'           => 'Je kan het startsaldo van een rekening niet wijzigen via dit scherm.',
     'no_edit_multiple_left'                 => 'Je hebt geen geldige transacties geselecteerd.',
 
     // import
