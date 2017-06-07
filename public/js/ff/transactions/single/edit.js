@@ -32,8 +32,6 @@ $(document).ready(function () {
  */
 function updateInitialPage() {
 
-    console.log('Native currency is #' + journalData.native_currency.id + ' and (foreign) currency id is #' + journalData.currency.id);
-
     if (journal.transaction_type.type === "Transfer") {
         $('#native_amount_holder').hide();
         $('#amount_holder').hide();

@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: budgetChartUri, expenseCategoryUri, expenseAssetUri, expenseExpenseUri */
+/** global: budgetChartUri, expenseCategoryUri, expenseAssetUri, expenseExpenseUri, budgetLimitID */
 
 $(function () {
     "use strict";

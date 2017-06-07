@@ -349,7 +349,7 @@ class AccountController extends Controller
         $cache->addProperty('chart.account.period');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            //return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $format    = (string)trans('config.month_and_day');

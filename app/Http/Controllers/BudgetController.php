@@ -183,6 +183,7 @@ class BudgetController extends Controller
                 $start = new Carbon($moment);
                 $end   = Navigation::endOfPeriod($start, $range);
             } catch (Exception $e) {
+                // start and end are already defined.
 
             }
         }

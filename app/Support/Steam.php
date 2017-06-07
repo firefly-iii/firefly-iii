@@ -135,7 +135,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $start->subDay();
@@ -166,10 +166,6 @@ class Steam
                                DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
                            ]
                        );
-
-//        echo '<pre>';
-//        var_dump($set->toArray());
-//        exit;
 
         $currentBalance = $startBalance;
         /** @var Transaction $entry */
@@ -217,7 +213,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         // need to do this per account.
