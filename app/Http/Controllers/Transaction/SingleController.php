@@ -27,7 +27,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
 use Preferences;
@@ -365,13 +364,13 @@ class SingleController extends Controller
     }
 
     /**
-     * @param JournalFormRequest     $request
-     * @param JournalUpdateInterface $updater
-     * @param TransactionJournal     $journal
+     * @param JournalFormRequest         $request
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(JournalFormRequest $request, JournalUpdateInterface $updater, TransactionJournal $journal)
+    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
@@ -380,7 +379,7 @@ class SingleController extends Controller
         // @codeCoverageIgnoreEnd
 
         $data    = $request->getJournalData();
-        $journal = $updater->update($journal, $data);
+        $journal = $repository->update($journal, $data);
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);

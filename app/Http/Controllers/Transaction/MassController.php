@@ -23,7 +23,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Session;
@@ -204,7 +203,7 @@ class MassController extends Controller
      *
      * @return mixed
      */
-    public function update(MassEditJournalRequest $request, JournalRepositoryInterface $repository, JournalUpdateInterface $updater)
+    public function update(MassEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
         $journalIds = $request->get('journals');
         $count      = 0;
@@ -250,7 +249,7 @@ class MassController extends Controller
                         'tags'                     => $tags,
                     ];
                     // call repository update function.
-                    $updater->update($journal, $data);
+                    $repository->update($journal, $data);
 
                     $count++;
                 }

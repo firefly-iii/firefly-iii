@@ -20,8 +20,6 @@ use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTasker;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
-use FireflyIII\Repositories\Journal\JournalUpdate;
-use FireflyIII\Repositories\Journal\JournalUpdateInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,7 +50,6 @@ class JournalServiceProvider extends ServiceProvider
         $this->registerRepository();
         $this->registerTasker();
         $this->registerCollector();
-        $this->registerUpdater();
     }
 
     /**
@@ -115,23 +112,4 @@ class JournalServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     *
-     */
-    private function registerUpdater()
-    {
-        $this->app->bind(
-            JournalUpdateInterface::class,
-            function (Application $app) {
-                /** @var JournalUpdateInterface $tasker */
-                $update = app(JournalUpdate::class);
-
-                if ($app->auth->check()) {
-                    $update->setUser(auth()->user());
-                }
-
-                return $update;
-            }
-        );
-    }
 }
