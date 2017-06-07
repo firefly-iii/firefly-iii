@@ -20,6 +20,7 @@ return [
     'everything'                                 => 'Alles',
     'customRange'                                => 'Zelf bereik kiezen',
     'apply'                                      => 'Go',
+    'select_date'                                => 'Selecteer periode..',
     'cancel'                                     => 'Annuleren',
     'from'                                       => 'Van',
     'to'                                         => 'Tot',
@@ -112,8 +113,8 @@ return [
     'budget_in_period'                           => 'Alle transacties voor budget ":name" tussen :start en :end',
     'chart_budget_in_period'                     => 'Grafiek voor alle transacties voor budget ":name" tussen :start en :end',
     'chart_account_in_period'                    => 'Grafiek voor alle transacties voor rekening ":name" tussen :start en :end',
-    'chart_category_in_period'                    => 'Grafiek voor alle transacties voor categorie ":name" tussen :start en :end',
-    'chart_category_all'                    => 'Grafiek voor alle transacties voor categorie ":name"',
+    'chart_category_in_period'                   => 'Grafiek voor alle transacties voor categorie ":name" tussen :start en :end',
+    'chart_category_all'                         => 'Grafiek voor alle transacties voor categorie ":name"',
     'budget_in_period_breadcrumb'                => 'Tussen :start en :end',
     'clone_withdrawal'                           => 'Kopieer deze uitgave',
     'clone_deposit'                              => 'Kopieer deze inkomsten',
@@ -962,6 +963,7 @@ return [
     'split_this_transfer'                   => 'Splits deze overschrijving',
     'cannot_edit_multiple_source'           => 'Je kan transactie #:id met omschrijving ":description" niet splitsen, want deze bevat meerdere bronrekeningen.',
     'cannot_edit_multiple_dest'             => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Je hebt geen geldige transacties geselecteerd.',
 
     // import

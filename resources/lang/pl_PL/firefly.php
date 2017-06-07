@@ -20,6 +20,7 @@ return [
     'everything'                                 => 'Wszystko',
     'customRange'                                => 'Niestandardowy zakres',
     'apply'                                      => 'Zastosuj',
+    'select_date'                                => 'Select date..',
     'cancel'                                     => 'Anuluj',
     'from'                                       => 'Z',
     'to'                                         => 'Do',
@@ -112,8 +113,8 @@ return [
     'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end',
     'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end',
     'chart_account_in_period'                    => 'Chart for all transactions for account ":name" between :start and :end',
-    'chart_category_in_period'                    => 'Chart for all transactions for category ":name" between :start and :end',
-    'chart_category_all'                    => 'Chart for all transactions for category ":name"',
+    'chart_category_in_period'                   => 'Chart for all transactions for category ":name" between :start and :end',
+    'chart_category_all'                         => 'Chart for all transactions for category ":name"',
     'budget_in_period_breadcrumb'                => 'Między :start i :end',
     'clone_withdrawal'                           => 'Zduplikuj tę wypłatę',
     'clone_deposit'                              => 'Zduplikuj tą wpłatę',
@@ -962,6 +963,7 @@ return [
     'split_this_transfer'                   => 'Podziel ten transfer',
     'cannot_edit_multiple_source'           => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple source accounts.',
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
 
     // import

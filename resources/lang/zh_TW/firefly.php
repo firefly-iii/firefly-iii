@@ -20,6 +20,7 @@ return [
     'everything'                                 => '顯示所有',
     'customRange'                                => '自訂範圍',
     'apply'                                      => '套用',
+    'select_date'                                => 'Select date..',
     'cancel'                                     => '取消',
     'from'                                       => '從',
     'to'                                         => '到',
@@ -112,8 +113,8 @@ return [
     'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end',
     'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end',
     'chart_account_in_period'                    => 'Chart for all transactions for account ":name" between :start and :end',
-    'chart_category_in_period'                    => 'Chart for all transactions for category ":name" between :start and :end',
-    'chart_category_all'                    => 'Chart for all transactions for category ":name"',
+    'chart_category_in_period'                   => 'Chart for all transactions for category ":name" between :start and :end',
+    'chart_category_all'                         => 'Chart for all transactions for category ":name"',
     'budget_in_period_breadcrumb'                => 'Between :start and :end',
     'clone_withdrawal'                           => 'Clone this withdrawal',
     'clone_deposit'                              => 'Clone this deposit',
@@ -962,6 +963,7 @@ return [
     'split_this_transfer'                   => 'Split this transfer',
     'cannot_edit_multiple_source'           => '你不能修改描述為 ":description" 的分割交易 #:id 因為他有多個來源帳號。',
     'cannot_edit_multiple_dest'             => '你不能修改描述為 ":description" 的分割交易 #:id 因為他有多個目標帳號。',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'You have selected no valid transactions to edit.',
 
     // import
