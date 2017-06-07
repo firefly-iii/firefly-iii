@@ -176,61 +176,12 @@
                                            step="1" min="0" name="amount" type="number">
                                 </div>
                             </td>
-                            <td>
+                            <td class="spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
                             </td>
-                            <td>
+                            <td class="left" data-id="{{ budget.id }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                             </td>
-                            {#
-                                                    <div class="box-body">
-                                                        <table class="table">
-                                                            <tr>
-                                                                <td style="width:40%;">
-
-
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-group" style="margin-bottom:0;">
-
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="width:40%;">
-                                                                    {{ 'spent'|_ }}
-                                                                    <span class="small"><br/>
-                                                                        {{ session('start').formatLocalized(monthAndDayFormat) }} -
-                                                                        {{ session('end').formatLocalized(monthAndDayFormat) }}
-                                                                </span>
-                                                                </td>
-                                                                <td>
-
-                                                                </td>
-                                                            </tr>
-                                                            {% if budgetInformation[budget.id]['otherLimits'].count > 0 %}
-                                                                <tr>
-                                                                    <td colspan="2">
-                                                                        <ul class="list-unstyled">
-                                                                            {% for other in budgetInformation[budget.id]['otherLimits'] %}
-                                                                                <li>
-                                                                                    <!-- translate -->
-                                                                                    Budgeted
-                                                                                    <a href="{{ route('budgets.show.limit', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
-                                                                                    between
-                                                                                    {{ other.start_date.formatLocalized(monthAndDayFormat) }}
-                                                                                    and {{ other.end_date.formatLocalized(monthAndDayFormat) }}.
-                                                                                </li>
-                                                                            {% endfor %}
-                                                                        </ul>
-                                                                    </td>
-                                                                </tr>
-                                                            {% endif %}
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            #}
                         </tr>
                         {% endfor %}
                         </tbody>

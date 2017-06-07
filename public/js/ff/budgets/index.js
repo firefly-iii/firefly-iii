@@ -59,9 +59,26 @@ function updateBudgetedAmounts(e) {
     "use strict";
     var target = $(e.target);
     var id = target.data('id');
+
     var value = target.val();
     var original = target.data('original');
     var difference = value - original;
+
+    var spentCell = $('td[class="spent"][data-id="' + id + '"]');
+    var leftCell = $('td[class="left"][data-id="' + id + '"]');
+    var spentAmount = parseFloat(spentCell.data('spent'));
+    var newAmountLeft = spentAmount + parseFloat(value);
+    var amountLeftString = accounting.formatMoney(newAmountLeft);
+    if(newAmountLeft < 0) {
+        leftCell.html('<span class="text-danger">' + amountLeftString + '</span>');
+    }
+    if(newAmountLeft > 0) {
+        leftCell.html('<span class="text-success">' + amountLeftString + '</span>');
+    }
+    if(newAmountLeft === 0.0) {
+        leftCell.html('<span style="color:#999">' + amountLeftString + '</span>');
+    }
+
     if (difference !== 0) {
         // add difference to 'budgeted' var
         budgeted = budgeted + difference;

@@ -204,7 +204,7 @@ class Amount
     }
 
     /**
-     * @return TransactionCurrency
+     * @return \FireflyIII\Models\TransactionCurrency
      * @throws FireflyException
      */
     public function getDefaultCurrency(): TransactionCurrency

@@ -241,7 +241,8 @@ class BudgetController extends Controller
         return view(
             'budgets.index',
             compact(
-                'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText', 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
+                'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText',
+                'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
                 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start'
             )
         );
