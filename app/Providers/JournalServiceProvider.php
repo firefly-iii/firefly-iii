@@ -52,6 +52,9 @@ class JournalServiceProvider extends ServiceProvider
         $this->registerCollector();
     }
 
+    /**
+     *
+     */
     private function registerCollector()
     {
         $this->app->bind(
@@ -69,6 +72,9 @@ class JournalServiceProvider extends ServiceProvider
         );
     }
 
+    /**
+     *
+     */
     private function registerRepository()
     {
         $this->app->bind(
@@ -86,6 +92,9 @@ class JournalServiceProvider extends ServiceProvider
         );
     }
 
+    /**
+     *
+     */
     private function registerTasker()
     {
         $this->app->bind(
@@ -102,4 +111,5 @@ class JournalServiceProvider extends ServiceProvider
             }
         );
     }
+
 }

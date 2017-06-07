@@ -18,7 +18,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -119,7 +118,7 @@ class TransactionController extends Controller
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/budgets/list/no-budget');
+            $journals->setPath('/transactions/' . $what);
             $count = $journals->getCollection()->count();
             if ($count === 0) {
                 $start->subDay();
@@ -179,21 +178,12 @@ class TransactionController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $events           = $tasker->getPiggyBankEvents($journal);
-        $transactions     = $tasker->getTransactionsOverview($journal);
-        $what             = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle         = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
-        $foreignCurrency = null;
+        $events       = $tasker->getPiggyBankEvents($journal);
+        $transactions = $tasker->getTransactionsOverview($journal);
+        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
-        if ($journal->hasMeta('foreign_currency_id')) {
-            // @codeCoverageIgnoreStart
-            /** @var CurrencyRepositoryInterface $repository */
-            $repository      = app(CurrencyRepositoryInterface::class);
-            $foreignCurrency = $repository->find(intval($journal->getMeta('foreign_currency_id')));
-            // @codeCoverageIgnoreEnd
-        }
-
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'foreignCurrency'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
 
 
     }

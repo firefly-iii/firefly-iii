@@ -16,7 +16,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;

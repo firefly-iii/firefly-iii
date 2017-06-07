@@ -20,7 +20,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Log;
+
 /**
  * Class AttachmentHelper
  *
@@ -202,6 +202,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * @codeCoverageIgnore
+     *
      * @param UploadedFile $file
      *
      * @return bool

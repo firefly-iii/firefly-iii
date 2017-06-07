@@ -99,6 +99,11 @@ interface AccountRepositoryInterface
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
+     * @return Account
+     */
+    public function getCashAccount(): Account;
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account

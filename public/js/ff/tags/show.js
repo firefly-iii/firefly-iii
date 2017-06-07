@@ -6,6 +6,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: zoomLevel, latitude, longitude, google, doPlaceMarker */
+
 /*
  Some vars as prep for the map:
  */

@@ -219,8 +219,8 @@ class AccountController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
         $activities    = Steam::getLastActivities($ids);
 
         $accounts->each(
@@ -293,8 +293,8 @@ class AccountController extends Controller
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $count       = 0;
-        $loop        = 0;
+        $count = 0;
+        $loop  = 0;
         // grab journals, but be prepared to jump a period back to get the right ones:
         Log::info('Now at loop start.');
         while ($count === 0 && $loop < 3) {

@@ -6,6 +6,8 @@
  * See the LICENSE file for details.
  */
 
+/** global: Modernizr, accountInfo, currencyInfo, accountInfo, transferInstructions, what */
+
 $(document).ready(function () {
     "use strict";
     setCommonAutocomplete();
@@ -73,7 +75,6 @@ function selectsForeignCurrency() {
     var nativeCurrencyId = parseInt(accountInfo[selectedAccountId].preferredCurrency);
 
     if (foreignCurrencyId !== nativeCurrencyId) {
-        console.log('User has selected currency #' + foreignCurrencyId + ' and this is different from native currency #' + nativeCurrencyId);
 
         // the input where the native amount is entered gets the symbol for the native currency:
         $('.non-selectable-currency-symbol').text(currencyInfo[nativeCurrencyId].symbol);
@@ -90,7 +91,6 @@ function selectsForeignCurrency() {
 
     }
     if (foreignCurrencyId === nativeCurrencyId) {
-        console.log('User has selected currency #' + foreignCurrencyId + ' and this is equal to native currency #' + nativeCurrencyId + ' (phew).');
         $('#exchange_rate_instruction_holder').hide();
         $('#native_amount_holder').hide();
     }
@@ -110,7 +110,6 @@ function convertForeignToNative() {
     var date = $('#ffInput_date').val();
     var amount = $('#ffInput_amount').val();
     var uri = 'json/rate/' + foreignCurrencyCode + '/' + nativeCurrencyCode + '/' + date + '?amount=' + amount;
-    console.log('Will grab ' + uri);
     $.get(uri).done(updateNativeAmount);
 }
 
@@ -119,8 +118,6 @@ function convertForeignToNative() {
  * @param data
  */
 function updateNativeAmount(data) {
-    console.log('Returned data:');
-    console.log(data);
     $('#ffInput_native_amount').val(data.amount);
 }
 
@@ -158,12 +155,10 @@ function validateCurrencyForTransfer() {
     $('#source_amount_holder').show().find('.non-selectable-currency-symbol').text(sourceSymbol);
 
     if (sourceCurrency === destinationCurrency) {
-        console.log('Both accounts accept ' + sourceCurrency);
         $('#destination_amount_holder').hide();
         $('#amount_holder').hide();
         return;
     }
-    console.log('Source accepts #' + sourceCurrency + ', destination #' + destinationCurrency);
     $('#ffInput_exchange_rate_instruction').text(getTransferExchangeInstructions());
     $('#exchange_rate_instruction_holder').show();
     $('input[name="source_amount"]').val($('input[name="amount"]').val());
@@ -191,7 +186,6 @@ function convertSourceToDestination() {
     var amount = $('#ffInput_source_amount').val();
     $('#ffInput_amount').val(amount);
     var uri = 'json/rate/' + sourceCurrencyCode + '/' + destinationCurrencyCode + '/' + date + '?amount=' + amount;
-    console.log('Will grab ' + uri);
     $.get(uri).done(updateDestinationAmount);
 }
 
@@ -200,7 +194,5 @@ function convertSourceToDestination() {
  * @param data
  */
 function updateDestinationAmount(data) {
-    console.log('Returned data:');
-    console.log(data);
     $('#ffInput_destination_amount').val(data.amount);
 }

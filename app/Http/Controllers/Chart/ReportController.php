@@ -67,11 +67,10 @@ class ReportController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $ids       = $accounts->pluck('id')->toArray();
         $current   = clone $start;
         $chartData = [];
         while ($current < $end) {
-            $balances          = Steam::balancesById($ids, $current);
+            $balances          = Steam::balancesByAccounts($accounts, $current);
             $sum               = $this->arraySum($balances);
             $label             = $current->formatLocalized(strval(trans('config.month_and_day')));
             $chartData[$label] = $sum;
@@ -104,7 +103,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            //return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
@@ -250,7 +249,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            // return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $currentStart = clone $start;

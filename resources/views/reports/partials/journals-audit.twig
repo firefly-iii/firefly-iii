@@ -57,14 +57,11 @@
                     {% endif %}
                 </a>
             </td>
-            <td class="hide-balance_before" style="text-align: right;">{{ transaction.before|formatAmount }}</td>
+            <td class="hide-balance_before" style="text-align: right;">{{ formatAmountByCurrency(transaction.currency, transaction.before) }}</td>
             <td class="hide-amount" style="text-align: right;">
-                <!-- format amount of transaction -->
-                {{ formatByCode(transaction.transaction_currency_code, transaction.transaction_amount) }}
-                <!-- and then amount of journal itself. -->
-                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount, transaction.transaction_currency_code, transaction.transaction_type_type) }}
+                {{ transactionAmount(transaction) }}
             </td>
-            <td class="hide-balance_after" style="text-align: right;">{{ transaction.after|formatAmount }}</td>
+            <td class="hide-balance_after" style="text-align: right;">{{ formatAmountByCurrency(transaction.currency, transaction.after) }}</td>
 
             <td class="hide-date">{{ transaction.date.formatLocalized(monthAndDayFormat) }}</td>
             <td class="hide-book_date">

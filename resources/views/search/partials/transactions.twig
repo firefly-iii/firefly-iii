@@ -39,10 +39,8 @@
 
             </td>
             <td data-value="{{ transaction.transaction_amount }}">
-                <!-- format amount of transaction -->
-                {{ formatByCode(transaction.transaction_currency_code, transaction.transaction_amount) }}
-                <!-- and then amount of journal itself. -->
-                {{ optionalJournalAmount(transaction.journal_id, transaction.transaction_amount, transaction.transaction_currency_code, transaction.transaction_type_type) }}
+                {# TODO replace with new format code #}
+                XX.XX
 
 
             </td>

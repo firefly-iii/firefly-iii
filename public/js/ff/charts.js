@@ -75,7 +75,7 @@ function lineChart(URI, container) {
     "use strict";
 
     var colorData = true;
-    var options = defaultChartOptions;
+    var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'line';
 
     drawAChart(URI, container, chartType, options, colorData);
@@ -186,9 +186,8 @@ function doubleYNonStackedChart(URI, container) {
  */
 function columnChart(URI, container) {
     "use strict";
-    console.log('Going to draw column chart for ' + URI + ' in ' + container);
     var colorData = true;
-    var options = defaultChartOptions;
+    var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'bar';
 
     drawAChart(URI, container, chartType, options, colorData);
@@ -224,7 +223,7 @@ function pieChart(URI, container) {
     "use strict";
 
     var colorData = false;
-    var options = defaultPieOptions;
+    var options = $.extend(true, {}, defaultPieOptions);
     var chartType = 'pie';
 
     drawAChart(URI, container, chartType, options, colorData);

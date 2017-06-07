@@ -87,96 +87,108 @@
     {% if budgets.count == 0 and inactive.count == 0 %}
         {% include 'partials.empty' with {what: 'default', type: 'budgets',route: route('budgets.create')} %}
     {% endif %}
+
+    {# date thing #}
     <div class="row">
-    {% for budget in budgets %}
-        <div class="col-lg-4 col-sm-6 col-md-6">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">
-                        <!-- link in header -->
-                        {% if budgetInformation[budget.id]['currentLimit'] %}
-                            <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}" class="budget-link"
-                               data-id="{{ budget.id }}">{{ budget.name }}</a>
-                        {% else %}
-                            <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
-                        {% endif %}
-                    </h3>
-
-                    <!-- ACTIONS MENU -->
-                    <div class="box-tools pull-right">
-                        <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
-                            </ul>
+                    <h3 class="box-title">Period thing</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <select class="form-control selectPeriod" name="previous">
+                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
+                                {% for format, previousLabel in previousLoop %}
+                                    <option label="{{ previousLabel }}" value="{{ format }}">{{ previousLabel }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-8 text-center">
+                            <div class="btn btn-group btn-group-lg" style="padding-top:0;">
+                                <a href="{{ route('budgets.index', [prev.format('Y-m-d')]) }}" class="btn btn-default" title="{{ prevText }}">&larr;</a>
+                                <a href="{{ route('budgets.index', [start.format('Y-m-d')]) }}" class="btn btn-default">{{ currentMonth }}</a>
+                                <a href="{{ route('budgets.index', [next.format('Y-m-d')]) }}" class="btn btn-default" title="{{ nextText }}">&rarr;</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 text-right">
+                            <select class="form-control selectPeriod" name="next">
+                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
+                                {% for format, nextLabel in nextLoop %}
+                                    <option label="{{ nextLabel }}" value="{{ format }}">{{ nextLabel }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="box-body">
-                    <table class="table">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Budget stuff</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-bordered table-striped">
+                        <thead>
                         <tr>
-                            <td style="width:40%;">
-                                {{ 'budgeted'|_ }}
-                                <span class="small"><br/>
-                                    {{ session('start').formatLocalized(monthAndDayFormat) }} -
-                                    {{ session('end').formatLocalized(monthAndDayFormat) }}</span>
-                            </td>
+                            <th style="width:10%;">&nbsp;</th>
+                            <th>{{ 'budget'|_ }}</th>
+                            <th style="width:25%;">{{ 'budgeted'|_ }}</th>
+                            <th>{{ 'spent'|_ }}</th>
+                            <th>{{ 'left'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            {% for budget in budgets %}
+                        <tr>
                             <td>
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
-                                        <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
-                                        {% if budgetInformation[budget.id]['currentLimit'] %}
-                                            {% set repAmount = budgetInformation[budget.id]['currentLimit'].amount %}
-                                        {% else %}
-                                            {% set repAmount = '0' %}
-                                        {% endif %}
-                                        <input class="form-control budgetAmount" data-original="{{ repAmount }}"
-                                               data-id="{{ budget.id }}" value="{{ repAmount|round }}" autocomplete="off"
-                                               step="1" min="0" name="amount" type="number">
-                                    </div>
+                                <div class="btn-group btn-group-xs">
+                                    <a href="{{ route('budgets.edit',budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                                    <a href="{{ route('budgets.delete',budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
-                            <td style="width:40%;">
-                                {{ 'spent'|_ }}
-                                <span class="small"><br/>
-                                    {{ session('start').formatLocalized(monthAndDayFormat) }} -
-                                    {{ session('end').formatLocalized(monthAndDayFormat) }}
-                                    </span>
+                            <td>
+                                {% if budgetInformation[budget.id]['currentLimit'] %}
+                                    <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}"
+                                       class="budget-link"
+                                       data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                {% else %}
+                                    <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                {% endif %}
                             </td>
                             <td>
+                                <div class="input-group">
+                                    <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
+                                    <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                    {% if budgetInformation[budget.id]['currentLimit'] %}
+                                        {% set repAmount = budgetInformation[budget.id]['currentLimit'].amount %}
+                                    {% else %}
+                                        {% set repAmount = '0' %}
+                                    {% endif %}
+                                    <input class="form-control budgetAmount" data-original="{{ repAmount }}"
+                                           data-id="{{ budget.id }}" value="{{ repAmount|round }}" autocomplete="off"
+                                           step="1" min="0" name="amount" type="number">
+                                </div>
+                            </td>
+                            <td class="spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
                             </td>
+                            <td class="left" data-id="{{ budget.id }}">
+                                {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
+                            </td>
                         </tr>
-                        {% if budgetInformation[budget.id]['otherLimits'].count > 0 %}
-                            <tr>
-                                <td colspan="2">
-                                    <ul class="list-unstyled">
-                                        {% for other in budgetInformation[budget.id]['otherLimits'] %}
-                                            <li>
-                                                <!-- translate -->
-                                                Budgeted
-                                                <a href="{{ route('budgets.show.limit', [budget.id, other.id]) }}">{{ other.amount|formatAmountPlain }}</a>
-                                                between
-                                                {{ other.start_date.formatLocalized(monthAndDayFormat) }}
-                                                and {{ other.end_date.formatLocalized(monthAndDayFormat) }}.
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </td>
-                            </tr>
-                        {% endif %}
+                        {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        {% if loop.index % 3 == 0 %}
-            </div><div class="row">
-        {% endif %}
-    {% endfor %}
     </div>
 
     {% if inactive|length > 0 %}
@@ -200,16 +212,17 @@
         </div>
     {% endif %}
 {% endblock %}
-{% block scripts %}
-    <script type="text/javascript">
-        // actually spent bar data:
-        var spent = {{ spent * -1 }}; // must be positive for the calculation to work.
-        var currencySymbol = "{{ getCurrencySymbol()|raw }}";
+        {% block scripts %}
+            <script type="text/javascript">
+                // actually spent bar data:
+                var spent = {{ spent * -1 }}; // must be positive for the calculation to work.
+                var currencySymbol = "{{ getCurrencySymbol()|raw }}";
 
-        // budgeted data:
-        var budgeted = {{ budgeted }};
-        var available = {{ available }};
-    </script>
+                // budgeted data:
+                var budgeted = {{ budgeted }};
+                var available = {{ available }};
+                var budgetIndexURI = "{{ route('budgets.index','REPLACE') }}";
+            </script>
 
-    <script type="text/javascript" src="js/ff/budgets/index.js"></script>
-{% endblock %}
+            <script type="text/javascript" src="js/ff/budgets/index.js"></script>
+        {% endblock %}

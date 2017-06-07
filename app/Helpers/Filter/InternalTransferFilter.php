@@ -26,7 +26,7 @@ use Log;
  */
 class InternalTransferFilter implements FilterInterface
 {
-    /** @var array  */
+    /** @var array */
     private $accounts = [];
 
     /**

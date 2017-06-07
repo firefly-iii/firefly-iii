@@ -166,11 +166,31 @@ function resetSplits() {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][amount]');
     });
+
+    // ends with ][foreign_amount]
+    $.each($('input[name$="][foreign_amount]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transactions[' + i + '][foreign_amount]');
+    });
+
+    // ends with ][transaction_currency_id]
+    $.each($('input[name$="][transaction_currency_id]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transactions[' + i + '][transaction_currency_id]');
+    });
+
+    // ends with ][foreign_currency_id]
+    $.each($('input[name$="][foreign_currency_id]"]'), function (i, v) {
+        var input = $(v);
+        input.attr('name', 'transactions[' + i + '][foreign_currency_id]');
+    });
+
     // ends with ][budget_id]
     $.each($('select[name$="][budget_id]"]'), function (i, v) {
         var input = $(v);
         input.attr('name', 'transactions[' + i + '][budget_id]');
     });
+
     // ends with ][category]
     $.each($('input[name$="][category]"]'), function (i, v) {
         var input = $(v);

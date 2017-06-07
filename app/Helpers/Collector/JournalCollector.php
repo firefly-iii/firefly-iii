@@ -60,17 +60,30 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.description',
             'transaction_journals.date',
             'transaction_journals.encrypted',
-            'transaction_currencies.code as transaction_currency_code',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
             'bills.name as bill_name',
             'bills.name_encrypted as bill_name_encrypted',
             'transactions.id as id',
-            'transactions.amount as transaction_amount',
+
             'transactions.description as transaction_description',
             'transactions.account_id',
             'transactions.identifier',
             'transactions.transaction_journal_id',
+
+            'transactions.amount as transaction_amount',
+
+            'transactions.transaction_currency_id as transaction_currency_id',
+            'transaction_currencies.code as transaction_currency_code',
+            'transaction_currencies.symbol as transaction_currency_symbol',
+            'transaction_currencies.decimal_places as transaction_currency_dp',
+
+            'transactions.foreign_amount as transaction_foreign_amount',
+            'transactions.foreign_currency_id as foreign_currency_id',
+            'foreign_currencies.code as foreign_currency_code',
+            'foreign_currencies.symbol as foreign_currency_symbol',
+            'foreign_currencies.decimal_places as foreign_currency_dp',
+
             'accounts.name as account_name',
             'accounts.encrypted as account_encrypted',
             'account_types.type as account_type',
@@ -484,11 +497,12 @@ class JournalCollector implements JournalCollectorInterface
         Log::debug('journalCollector::startQuery');
         /** @var EloquentBuilder $query */
         $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transaction_journals.transaction_currency_id')
                             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
                             ->leftJoin('bills', 'bills.id', 'transaction_journals.bill_id')
                             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                             ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                            ->leftJoin('transaction_currencies', 'transaction_currencies.id', 'transactions.transaction_currency_id')
+                            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', 'transactions.foreign_currency_id')
                             ->whereNull('transactions.deleted_at')
                             ->whereNull('transaction_journals.deleted_at')
                             ->where('transaction_journals.user_id', $this->user->id)

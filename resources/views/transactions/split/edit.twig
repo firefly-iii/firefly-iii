@@ -40,9 +40,6 @@
                         {# DESCRIPTION IS ALWAYS AVAILABLE #}
                         {{ ExpandedForm.text('journal_description', journal.description) }}
 
-                        {# CURRENCY IS NEW FOR SPLIT JOURNALS #}
-                        {{ ExpandedForm.select('currency_id', currencies, preFilled.currency_id) }}
-
                         {# show source if withdrawal or transfer #}
                         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
                             {{ ExpandedForm.select('journal_source_account_id', assetAccounts, preFilled.journal_source_account_id) }}
@@ -59,6 +56,7 @@
                         {% endif %}
 
                         {# TOTAL AMOUNT IS STATIC TEXT #}
+                        {# TODO this does not reflect the actual currency (currencies) #}
                         {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
                         <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
 
@@ -204,7 +202,7 @@
                                     <th>{{ trans('list.source') }}</th>
                                 {% endif %}
 
-                                <th>{{ trans('list.amount') }}</th>
+                                <th colspan="2">{{ trans('list.amount') }}</th>
 
                                 {# only withdrawal has budget #}
                                 {% if preFilled.what == 'withdrawal' %}
@@ -234,7 +232,7 @@
                                         </td>
                                     {% endif %}
 
-                                    <!-- deposit has several source names -->
+                                    {# deposit has several source names #}
                                     {% if preFilled.what == 'deposit' %}
                                         <td>
                                             <input type="text" name="transactions[{{ loop.index0 }}][source_account_name]"
@@ -243,10 +241,26 @@
                                         </td>
                                     {% endif %}
 
-
+                                    {# two fields for amount #}
                                     <td style="width:10%;">
-                                        <input type="number" name="transactions[{{ loop.index0 }}][amount]" value="{{ transaction.amount }}"
-                                               class="form-control" autocomplete="off" step="any" min="0.01">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{ transaction.transaction_currency_symbol }}</div>
+                                            <input type="number" name="transactions[{{ loop.index0 }}][amount]" value="{{ transaction.amount }}"
+                                                   class="form-control" autocomplete="off" step="any" min="0.01">
+                                        </div>
+                                        <input type="hidden" name="transactions[{{ loop.index0 }}][transaction_currency_id]" value="{{ transaction.transaction_currency_id }}">
+                                    </td>
+                                    {# foreign amount #}
+                                    <td style="width:10%;">
+                                        {% if transaction.foreign_amount != null %}
+                                            <div class="input-group">
+                                                <div class="input-group-addon">{{ transaction.foreign_currency_symbol }}</div>
+                                                <input type="number" name="transactions[{{ loop.index0 }}][foreign_amount]"
+                                                       value="{{ transaction.foreign_amount }}"
+                                                       class="form-control" autocomplete="off" step="any" min="0.01">
+                                            </div>
+                                            <input type="hidden" name="transactions[{{ loop.index0 }}][foreign_currency_id]" value="{{ transaction.foreign_currency_id }}">
+                                        {% endif %}
                                     </td>
 
                                     {% if preFilled.what == 'withdrawal' %}

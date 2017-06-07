@@ -56,7 +56,7 @@ class UserEventHandlerTest extends TestCase
 
         Mail::assertSent(
             RequestedNewPasswordMail::class, function ($mail) use ($user) {
-            return $mail->hasTo($user->email) && $mail->ip === '127.0.0.1';
+            return $mail->hasTo($user->email) && $mail->ipAddress === '127.0.0.1';
         }
         );
 
@@ -78,7 +78,7 @@ class UserEventHandlerTest extends TestCase
         // must send user an email:
         Mail::assertSent(
             RegisteredUserMail::class, function ($mail) use ($user) {
-            return $mail->hasTo($user->email) && $mail->ip === '127.0.0.1';
+            return $mail->hasTo($user->email) && $mail->ipAddress === '127.0.0.1';
         }
         );
 

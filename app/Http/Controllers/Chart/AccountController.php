@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -115,9 +114,8 @@ class AccountController extends Controller
         $start->subDay();
 
         $accounts      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
         $chartData     = [];
 
         foreach ($accounts as $account) {
@@ -336,7 +334,7 @@ class AccountController extends Controller
 
     /**
      * @param Account $account
-     * @param Carbon $start
+     * @param Carbon  $start
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws FireflyException
@@ -411,9 +409,8 @@ class AccountController extends Controller
         $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
 
         $start->subDay();
-        $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
 
         foreach ($accounts as $account) {
             $id           = $account->id;

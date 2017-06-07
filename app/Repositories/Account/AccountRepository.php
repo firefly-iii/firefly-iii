@@ -24,8 +24,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 use Log;
 
 
@@ -37,6 +35,7 @@ use Log;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
+    use FindAccountsTrait;
 
     /** @var User */
     private $user;
@@ -75,179 +74,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param $accountId
-     *
-     * @return Account
-     */
-    public function find(int $accountId): Account
-    {
-        $account = $this->user->accounts()->find($accountId);
-        if (is_null($account)) {
-            return new Account;
-        }
-
-        return $account;
-    }
-
-    /**
-     * @param string $number
-     * @param array  $types
-     *
-     * @return Account
-     */
-    public function findByAccountNumber(string $number, array $types): Account
-    {
-        $query = $this->user->accounts()
-                            ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                            ->where('account_meta.name', 'accountNumber')
-                            ->where('account_meta.data', json_encode($number));
-
-        if (count($types) > 0) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $query->whereIn('account_types.type', $types);
-        }
-
-        /** @var Collection $accounts */
-        $accounts = $query->get(['accounts.*']);
-        if ($accounts->count() > 0) {
-            return $accounts->first();
-        }
-
-        return new Account;
-    }
-
-    /**
-     * @param string $iban
-     * @param array  $types
-     *
-     * @return Account
-     */
-    public function findByIban(string $iban, array $types): Account
-    {
-        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
-
-        if (count($types) > 0) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $query->whereIn('account_types.type', $types);
-        }
-
-        $accounts = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->iban === $iban) {
-                return $account;
-            }
-        }
-
-        return new Account;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $types
-     *
-     * @return Account
-     */
-    public function findByName(string $name, array $types): Account
-    {
-        $query = $this->user->accounts();
-
-        if (count($types) > 0) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $query->whereIn('account_types.type', $types);
-
-        }
-        Log::debug(sprintf('Searching for account named %s of the following type(s)', $name), ['types' => $types]);
-
-        $accounts = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name) {
-                Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
-
-                return $account;
-            }
-        }
-        Log::debug('Found nothing.');
-
-        return new Account;
-    }
-
-    /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
-    public function getAccountsById(array $accountIds): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts();
-
-        if (count($accountIds) > 0) {
-            $query->whereIn('accounts.id', $accountIds);
-        }
-
-        $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getAccountsByType(array $types): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts();
-        if (count($types) > 0) {
-            $query->accountTypeIn($types);
-        }
-
-        $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
-    }
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getActiveAccountsByType(array $types): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        );
-        if (count($types) > 0) {
-            $query->accountTypeIn($types);
-        }
-        $query->where('active', 1);
-        $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
-        return $result;
     }
 
     /**
@@ -453,7 +279,12 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
-        $amount          = $data['openingBalance'];
+        $amount = strval($data['openingBalance']);
+
+        if (bccomp($amount, '0') === 0) {
+            return new TransactionJournal;
+        }
+
         $name            = $data['name'];
         $currencyId      = $data['currency_id'];
         $opposing        = $this->storeOpposingAccount($name);
@@ -474,18 +305,32 @@ class AccountRepository implements AccountRepositoryInterface
         $firstAccount  = $account;
         $secondAccount = $opposing;
         $firstAmount   = $amount;
-        $secondAmount  = $amount * -1;
+        $secondAmount  = bcmul($amount, '-1');
 
         if ($data['openingBalance'] < 0) {
             $firstAccount  = $opposing;
             $secondAccount = $account;
-            $firstAmount   = $amount * -1;
+            $firstAmount   = bcmul($amount, '-1');
             $secondAmount  = $amount;
         }
 
-        $one = new Transaction(['account_id' => $firstAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $firstAmount]);
+        $one = new Transaction(
+            [
+                'account_id'              => $firstAccount->id,
+                'transaction_journal_id'  => $journal->id,
+                'amount'                  => $firstAmount,
+                'transaction_currency_id' => $currencyId,
+            ]
+        );
         $one->save();// first transaction: from
-        $two = new Transaction(['account_id' => $secondAccount->id, 'transaction_journal_id' => $journal->id, 'amount' => $secondAmount]);
+
+        $two = new Transaction(
+            [
+                'account_id'              => $secondAccount->id,
+                'transaction_journal_id'  => $journal->id,
+                'amount'                  => $secondAmount,
+                'transaction_currency_id' => $currencyId,]
+        );
         $two->save(); // second transaction: to
 
         Log::debug(sprintf('Stored two transactions, #%d and #%d', $one->id, $two->id));
@@ -593,8 +438,14 @@ class AccountRepository implements AccountRepositoryInterface
     protected function updateOpeningBalanceJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
         $date       = $data['openingBalanceDate'];
-        $amount     = $data['openingBalance'];
+        $amount     = strval($data['openingBalance']);
         $currencyId = intval($data['currency_id']);
+
+        if (bccomp($amount, '0') === 0) {
+            $journal->delete();
+
+            return true;
+        }
 
         // update date:
         $journal->date                    = $date;
@@ -604,11 +455,13 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id == $transaction->account_id) {
-                $transaction->amount = $amount;
+                $transaction->amount                  = $amount;
+                $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
             if ($account->id != $transaction->account_id) {
-                $transaction->amount = $amount * -1;
+                $transaction->amount                  = bcmul($amount, '-1');
+                $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
         }
@@ -618,6 +471,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     }
 
+
     /**
      * @param array $data
      *
@@ -625,9 +479,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function validOpeningBalanceData(array $data): bool
     {
-        if (isset($data['openingBalance']) && isset($data['openingBalanceDate'])
-            && bccomp(strval($data['openingBalance']), '0') !== 0
-        ) {
+        if (isset($data['openingBalance']) && isset($data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
 
             return true;

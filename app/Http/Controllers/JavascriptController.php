@@ -34,7 +34,7 @@ class JavascriptController extends Controller
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
      *
-     * @return $this
+     * @return \Illuminate\Http\Response
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {
@@ -63,7 +63,7 @@ class JavascriptController extends Controller
     /**
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return $this
+     * @return \Illuminate\Http\Response
      */
     public function currencies(CurrencyRepositoryInterface $repository)
     {
@@ -71,8 +71,8 @@ class JavascriptController extends Controller
         $data       = ['currencies' => [],];
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
-            $currencyId                    = $currency->id;
-            $entry                         = ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol];
+            $currencyId                      = $currency->id;
+            $entry                           = ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol];
             $data['currencies'][$currencyId] = $entry;
         }
 

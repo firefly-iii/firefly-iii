@@ -86,7 +86,7 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals-tasker' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true} %}
+                    {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true} %}
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -119,13 +119,13 @@
                                     {% if period.spent != 0 %}
                                         <tr>
                                             <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
+                                            <td style="text-align: right;">{{ formatAmountByCurrency(currency, period.spent) }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if period.earned != 0 %}
                                         <tr>
                                             <td style="width: 33%;">{{ 'earned'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
+                                            <td style="text-align: right;">{{ formatAmountByCurrency(currency, period.earned) }}</td>
                                         </tr>
                                     {% endif %}
                                 </table>

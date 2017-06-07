@@ -38,9 +38,6 @@ class General extends Twig_Extension
     public function getFilters(): array
     {
         return [
-            $this->formatAmount(),
-            $this->formatAmountPlain(),
-            $this->formatJournal(),
             $this->balance(),
             $this->formatFilesize(),
             $this->mimeIcon(),
@@ -174,33 +171,6 @@ class General extends Twig_Extension
     }
 
     /**
-     *
-     * @return Twig_SimpleFilter
-     */
-    protected function formatAmount(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'formatAmount', function (string $string): string {
-
-            return app('amount')->format($string);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatAmountPlain(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'formatAmountPlain', function (string $string): string {
-
-            return app('amount')->format($string, false);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
      * @return Twig_SimpleFilter
      */
     protected function formatFilesize(): Twig_SimpleFilter
@@ -223,17 +193,6 @@ class General extends Twig_Extension
         );
     }
 
-    /**
-     * @return Twig_SimpleFilter
-     */
-    protected function formatJournal(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'formatJournal', function (TransactionJournal $journal): string {
-            return app('amount')->formatJournal($journal);
-        }, ['is_safe' => ['html']]
-        );
-    }
 
     /**
      * @return Twig_SimpleFunction

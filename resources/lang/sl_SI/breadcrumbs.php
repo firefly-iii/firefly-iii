@@ -11,7 +11,7 @@
  */
 
 return [
-    'home'              => 'Domov',
+    'home'              => 'Prva stran',
     'edit_currency'     => 'uredi valuto ":name"',
     'delete_currency'   => 'izbriši valuto ":name"',
     'newPiggyBank'      => 'ustvari novega pujska',
@@ -19,10 +19,10 @@ return [
     'preferences'       => 'nastavitve',
     'profile'           => 'profil',
     'changePassword'    => 'spremeni geslo',
-    'bills'             => 'Bills',
-    'newBill'           => 'New bill',
-    'edit_bill'         => 'Edit bill ":name"',
-    'delete_bill'       => 'Delete bill ":name"',
+    'bills'             => 'Trajniki',
+    'newBill'           => 'nov trajnik',
+    'edit_bill'         => 'uredi trajnik ":name"',
+    'delete_bill'       => 'izbriši trajnik ":name"',
     'reports'           => 'Poročila',
     'searchResult'      => 'rezultati iskanja za ":query"',
     'withdrawal_list'   => 'stroški',

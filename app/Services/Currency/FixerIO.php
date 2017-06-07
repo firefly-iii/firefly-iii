@@ -61,6 +61,8 @@ class FixerIO implements ExchangeRateInterface
 
     /**
      * @param User $user
+     *
+     * @return mixed|void
      */
     public function setUser(User $user)
     {

@@ -444,14 +444,16 @@ class BudgetControllerTest extends TestCase
      */
     public function testUpdateIncome()
     {
+        // must be in list
+        $this->be($this->user());
+
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAvailableBudget')->andReturn('1');
+        $repository->shouldReceive('cleanupBudgets');
 
-        // must be in list
-        $this->be($this->user());
         $response = $this->get(route('budgets.income', [1]));
         $response->assertStatus(200);
     }

@@ -23,7 +23,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.4.3',
+    'version'                    => '4.5.0',
     'maxUploadSize'              => 5242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,

@@ -87,6 +87,10 @@ then
 
     # call test data generation script
     $(which php) /sites/FF3/test-data/artisan generate:data local sqlite
+
+    # also run upgrade routine:
+    $(which php) /sites/FF3/firefly-iii/artisan firefly:upgrade-database
+
     # copy new database over backup (resets backup)
     cp $DATABASE $DATABASECOPY
 fi

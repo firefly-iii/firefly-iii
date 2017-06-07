@@ -47,7 +47,7 @@ class TagRepository implements TagRepositoryInterface
          * Already connected:
          */
         if ($journal->tags()->find($tag->id)) {
-            Log::error(sprintf('Cannot find tag #%d', $tag->id));
+            Log::info(sprintf('Tag #%d is already connected to journal #%d.', $tag->id, $journal->id));
 
             return false;
         }

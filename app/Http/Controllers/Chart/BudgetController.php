@@ -31,6 +31,7 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
+use Steam;
 
 /**
  * Class BudgetController
@@ -320,12 +321,12 @@ class BudgetController extends Controller
             ['label' => strval(trans('firefly.overspent')), 'entries' => [], 'type' => 'bar',],
         ];
 
-
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             // get relevant repetitions:
             $limits   = $this->repository->getBudgetLimits($budget, $start, $end);
             $expenses = $this->getExpensesForBudget($limits, $budget, $start, $end);
+
             foreach ($expenses as $name => $row) {
                 $chartData[0]['entries'][$name] = $row['spent'];
                 $chartData[1]['entries'][$name] = $row['left'];
@@ -529,9 +530,7 @@ class BudgetController extends Controller
         $rows = $this->spentInPeriodMulti($budget, $limits);
         foreach ($rows as $name => $row) {
             if (bccomp($row['spent'], '0') !== 0 || bccomp($row['left'], '0') !== 0) {
-                $return[$name]['spent']     = bcmul($row['spent'], '-1');
-                $return[$name]['left']      = $row['left'];
-                $return[$name]['overspent'] = bcmul($row['overspent'], '-1');
+                $return[$name] = $row;
             }
         }
         unset($rows, $row);
@@ -563,6 +562,7 @@ class BudgetController extends Controller
         /** @var BudgetLimit $budgetLimit */
         foreach ($limits as $budgetLimit) {
             $expenses = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
+            $expenses = Steam::positive($expenses);
 
             if ($limits->count() > 1) {
                 $name = $budget->name . ' ' . trans(
@@ -578,10 +578,14 @@ class BudgetController extends Controller
              * left: amount of budget limit min spent, or 0 when < 0.
              * spent: spent, or amount of budget limit when > amount
              */
-            $amount        = $budgetLimit->amount;
-            $left          = bccomp(bcadd($amount, $expenses), '0') < 1 ? '0' : bcadd($amount, $expenses);
-            $spent         = bccomp($expenses, $amount) === 1 ? $expenses : bcmul($amount, '-1');
-            $overspent     = bccomp(bcadd($amount, $expenses), '0') < 1 ? bcadd($amount, $expenses) : '0';
+            $amount       = $budgetLimit->amount;
+            $leftInLimit  = bcsub($amount, $expenses);
+            $hasOverspent = bccomp($leftInLimit, '0') === -1;
+
+            $left      = $hasOverspent ? '0' : bcsub($amount, $expenses);
+            $spent     = $hasOverspent ? $amount : $expenses;
+            $overspent = $hasOverspent ? Steam::positive($leftInLimit) : '0';
+
             $return[$name] = [
                 'left'      => $left,
                 'overspent' => $overspent,
