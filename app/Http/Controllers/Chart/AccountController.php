@@ -127,6 +127,7 @@ class AccountController extends Controller
                 $chartData[$account->name] = $diff;
             }
         }
+
         arsort($chartData);
         $data = $this->generator->singleSet(strval(trans('firefly.spent')), $chartData);
         $cache->store($data);

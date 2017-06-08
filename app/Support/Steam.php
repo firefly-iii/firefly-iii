@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Amount;
 use Carbon\Carbon;
 use Crypt;
 use DB;
@@ -47,6 +48,11 @@ class Steam
             return $cache->get(); // @codeCoverageIgnore
         }
         $currencyId = intval($account->getMeta('currency_id'));
+        // if null, use system default currency:
+        if ($currencyId === 0) {
+            $currency   = Amount::getDefaultCurrency();
+            $currencyId = $currency->id;
+        }
         // first part: get all balances in own currency:
         $nativeBalance = strval(
             $account->transactions()
