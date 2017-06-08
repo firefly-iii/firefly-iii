@@ -316,6 +316,7 @@ class UpgradeDatabase extends Command
         $notification = '%s #%d uses %s but should use %s. It has been updated. Please verify this in Firefly III.';
         $transfer     = 'Transfer #%d has been updated to use the correct currencies. Please verify this in Firefly III.';
         $driver       = DB::connection()->getDriverName();
+        $pgsql        = ['pgsql', 'postgresql'];
 
         foreach ($types as $type => $operator) {
             $query = TransactionJournal
@@ -328,10 +329,10 @@ class UpgradeDatabase extends Command
                 ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                 ->where('transaction_types.type', $type)
                 ->where('account_meta.name', 'currency_id');
-            if ($driver === 'postgresql') {
+            if (in_array($driver, $pgsql)) {
                 $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('cast(account_meta.data as int)'));
             }
-            if ($driver !== 'postgresql') {
+            if (!in_array($driver, $pgsql)) {
                 $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'));
             }
 
