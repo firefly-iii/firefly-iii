@@ -16,11 +16,14 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Import\Specifics\SpecificInterface;
+use FireflyIII\Models\ImportJob;
 use League\Csv\Reader;
 use Log;
 
 /**
  * Trait CsvImportSupportTrait
+ *
+ * @property ImportJob $job
  *
  * @package FireflyIII\Support\Import
  */

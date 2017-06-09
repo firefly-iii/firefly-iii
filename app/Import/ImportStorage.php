@@ -361,17 +361,19 @@ class ImportStorage
 
         // create new transactions. This is something that needs a rewrite for multiple/split transactions.
         $sourceData = [
-            'account_id'             => $accounts['source']->id,
-            'transaction_journal_id' => $journal->id,
-            'description'            => null,
-            'amount'                 => bcmul($amount, '-1'),
+            'account_id'              => $accounts['source']->id,
+            'transaction_journal_id'  => $journal->id,
+            'transaction_currency_id' => $journal->transaction_currency_id,
+            'description'             => null,
+            'amount'                  => bcmul($amount, '-1'),
         ];
 
         $destinationData = [
-            'account_id'             => $accounts['destination']->id,
-            'transaction_journal_id' => $journal->id,
-            'description'            => null,
-            'amount'                 => $amount,
+            'account_id'              => $accounts['destination']->id,
+            'transaction_currency_id' => $journal->transaction_currency_id,
+            'transaction_journal_id'  => $journal->id,
+            'description'             => null,
+            'amount'                  => $amount,
         ];
 
         $one   = Transaction::create($sourceData);
@@ -383,7 +385,7 @@ class ImportStorage
         }
 
         if (is_null($two->id)) {
-            Log::error('Could not create transaction 1.', $two->getErrors()->all());
+            Log::error('Could not create transaction 2.', $two->getErrors()->all());
             $error = true;
         }
 
