@@ -13,28 +13,32 @@ declare(strict_types=1);
 
 return [
 
-    'import_configure_title' => 'Configure sua importação',
-    'import_configure_intro' => 'Existem algumas opções para sua importação CSV. Por favor, indique se o seu arquivo CSV contém cabeçalhos na primeira coluna, e qual o formato de data de seus campos de data. Isso pode exigir alguma experimentação. O delimitador de campo é geralmente um ",", mas também poderia ser um ";". Verifique isto cuidadosamente.',
-    'import_configure_form'  => 'Opções básicas de importação CSV',
-    'header_help'            => 'Verifique se a primeira linha do seu arquivo CSV está com os títulos de coluna',
-    'date_help'              => 'Formato de data e hora em seu CSV. Siga o formato como indica <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">esta página</a>. O valor padrão analisará datas que se parecem com isso: :dateExample.',
-    'delimiter_help'         => 'Escolha o delimitador de campo que é usado em seu arquivo de entrada. Se não tiver certeza, a vírgula é a opção mais segura.',
-    'import_account_help'    => 'Se o seu arquivo CSV NÃO contém informações sobre sua(s) conta(s) ativa(s), use este combobox para selecionar para qual conta pertencem as transações no CSV.',
-    'upload_not_writeable'   => 'A caixa cinza contém um caminho para um arquivo. Deve ser possível escrever nele. Por favor, certifique-se de que é.',
+    // initial config
+    'initial_config_title'        => 'Import configuration (1/3)',
+    'initial_config_text'         => 'To be able to import your file correctly, please validate the options below.',
+    'initial_config_box'          => 'Basic CSV import configuration',
+    'initial_header_help'         => 'Check this box if the first row of your CSV file are the column titles.',
+    'initial_date_help'           => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'initial_delimiter_help'      => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'initial_import_account_help' => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
 
-    // roles
-    'column_roles_title'     => 'Definir as funções da coluna',
-    'column_roles_table'     => 'Tabela',
-    'column_name'            => 'Nome da coluna',
-    'column_example'         => 'Dados de exemplo da coluna',
-    'column_role'            => 'Significado dos dados da coluna',
-    'do_map_value'           => 'Mapear estes valores',
-    'column'                 => 'Coluna',
-    'no_example_data'        => 'Não há dados de exemplo disponíveis',
-    'store_column_roles'     => 'Continuar a importação',
-    'do_not_map'             => '(não mapear)',
-    'map_title'              => 'Conectar dados importados para dados do Firefly III',
-    'map_text'               => 'Nas tabelas a seguir, o valor à esquerda mostra informações encontradas no seu arquivo CSV carregado. É sua tarefa mapear esse valor, se possível, para um valor já presente em seu banco de dados. O Firefly vai se ater a esse mapeamento. Se não há nenhum valor para mapear, ou não quer mapear o valor específico, não selecione nada.',
+    // roles config
+    'roles_title'                 => 'Define each column\'s role',
+    'roles_text'                  => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_table'                 => 'Table',
+    'roles_column_name'           => 'Name of column',
+    'roles_column_example'        => 'Column example data',
+    'roles_column_role'           => 'Column data meaning',
+    'roles_do_map_value'          => 'Map these values',
+    'roles_column'                => 'Column',
+    'roles_no_example_data'       => 'No example data available',
+
+    'roles_store' => 'Continue import',
+    'roles_do_not_map'         => '(do not map)',
+
+    // map data
+    'map_title'                => 'Conectar dados importados para dados do Firefly III',
+    'map_text'                 => 'Nas tabelas a seguir, o valor à esquerda mostra informações encontradas no seu arquivo CSV carregado. É sua tarefa mapear esse valor, se possível, para um valor já presente em seu banco de dados. O Firefly vai se ater a esse mapeamento. Se não há nenhum valor para mapear, ou não quer mapear o valor específico, não selecione nada.',
 
     'field_value'          => 'Valor do campo',
     'field_mapped_to'      => 'Mapeado para',
