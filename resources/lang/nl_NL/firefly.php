@@ -1003,7 +1003,6 @@ return [
     'import_finished_report'                => 'Het importeren is voltooid. Kijk naar eventuele fouten in het blok hierboven. Alle geimporteerde transacties hebben een tag, en die kan je hieronder bekijken. ',
     'import_finished_link'                  => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'need_at_least_one_account'             => 'Je moet minstens één betaalrekening hebben voor je spaarpotjes kan maken',
-    'see_help_top_right'                    => 'Meer informatie vind je in de help pagina\'s. Gebruik daarvoor het icoontje rechtsboven in de hoek.',
     'bread_crumb_import_complete'           => 'Import ":key" compleet',
     'bread_crumb_configure_import'          => 'Import ":key" instellen',
     'bread_crumb_import_finished'           => 'Import ":key" klaar',
