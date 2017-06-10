@@ -1003,7 +1003,6 @@ return [
     'import_finished_report'                => '匯入已完成。請留意在這行上面的錯誤記錄。這次所匯入的所有交易都已經進行標記，你可以在下面查看。 ',
     'import_finished_link'                  => '匯入成功的所有交易都可以在標籤 <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a> 內找到。',
     'need_at_least_one_account'             => 'You need at least one asset account to be able to create piggy banks',
-    'see_help_top_right'                    => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
     'bread_crumb_import_complete'           => 'Import ":key" complete',
     'bread_crumb_configure_import'          => 'Configure import ":key"',
     'bread_crumb_import_finished'           => 'Import ":key" finished',
