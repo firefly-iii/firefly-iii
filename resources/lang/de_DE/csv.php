@@ -13,28 +13,32 @@ declare(strict_types=1);
 
 return [
 
-    'import_configure_title' => 'Konfigurieren Sie Ihren Import',
-    'import_configure_intro' => 'Es gibt einige Optionen für Ihren CSV-Import. Bitte geben Sie an, ob Ihre CSV-Datei Überschriften in der ersten Spalte enthält und was das Datumsformat in Ihrem Datumsfeld ist. Dieses kann einige Experimente erfordern. Das Trennzeichen ist in der Regel ein ",", könnte aber auch ein "." sein. Bitte überprüfen Sie dieses sorgfältig.',
-    'import_configure_form'  => 'Standard CSV Importoptionen',
-    'header_help'            => 'Hier auswählen, wenn die ersten Zeilen der CSV-Datei die Spaltenüberschriften sind',
-    'date_help'              => 'Datumsformat in ihrer CSV-Datei. Geben Sie das Format so an, wie es <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">diese Seite</a> zeigt. Die Standardeinstellung ergibt Daten die so aussehen: :dateExample.',
-    'delimiter_help'         => 'Wählen Sie das Trennzeichen, welches in ihrer Datei genutzt wird. Wenn Sie nicht sicher sind ist Komma die sicherste Option.',
-    'import_account_help'    => 'Wenn ihre CSV-Datei KEINE Informationen über ihre Girokonten enthält nutzen Sie bitte diese Dropdown-Liste um anzugeben, zu welchem Girokonto die Transaktionen in de CSV-Datei gehören.',
-    'upload_not_writeable'   => 'Das graue Feld enthält einen Dateipfad. Dieser sollte schreibbar sein. Bitte stellen Sie sicher, dass er es ist.',
+    // initial config
+    'initial_config_title'        => 'Import configuration (1/3)',
+    'initial_config_text'         => 'To be able to import your file correctly, please validate the options below.',
+    'initial_config_box'          => 'Basic CSV import configuration',
+    'initial_header_help'         => 'Check this box if the first row of your CSV file are the column titles.',
+    'initial_date_help'           => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'initial_delimiter_help'      => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'initial_import_account_help' => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
 
-    // roles
-    'column_roles_title'     => 'Definieren Sie Spaltenfunktionen',
-    'column_roles_table'     => 'Tabelle',
-    'column_name'            => 'Name der Spalte',
-    'column_example'         => 'Beispieldaten',
-    'column_role'            => 'Bedeutung der Spalte',
-    'do_map_value'           => 'Ordnen Sie diese Werte zu',
-    'column'                 => 'Spalte',
-    'no_example_data'        => 'Keine Beispieldaten vorhanden',
-    'store_column_roles'     => 'Import fortsetzen',
-    'do_not_map'             => '(keine Zuordnung)',
-    'map_title'              => 'Verbinde Importdaten mit Firefly III Daten',
-    'map_text'               => 'In den folgenden Tabellen zeigt der linke Wert Informationen, die sich in Ihrer hochgeladenen CSV-Datei befinden. Es ist Ihre Aufgabe, diesen Wert, wenn möglich, einem bereits in der Datenbank vorhandem zuzuordnen. Firefly wird sich an diese Zuordnung halten. Wenn kein Wert für die Zuordnung vorhanden ist oder Sie den bestimmten Wert nicht abbilden möchten, wählen Sie nichts aus.',
+    // roles config
+    'roles_title'                 => 'Define each column\'s role',
+    'roles_text'                  => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_table'                 => 'Table',
+    'roles_column_name'           => 'Name of column',
+    'roles_column_example'        => 'Column example data',
+    'roles_column_role'           => 'Column data meaning',
+    'roles_do_map_value'          => 'Map these values',
+    'roles_column'                => 'Column',
+    'roles_no_example_data'       => 'No example data available',
+
+    'roles_store' => 'Continue import',
+    'roles_do_not_map'         => '(do not map)',
+
+    // map data
+    'map_title'                => 'Verbinde Importdaten mit Firefly III Daten',
+    'map_text'                 => 'In den folgenden Tabellen zeigt der linke Wert Informationen, die sich in Ihrer hochgeladenen CSV-Datei befinden. Es ist Ihre Aufgabe, diesen Wert, wenn möglich, einem bereits in der Datenbank vorhandem zuzuordnen. Firefly wird sich an diese Zuordnung halten. Wenn kein Wert für die Zuordnung vorhanden ist oder Sie den bestimmten Wert nicht abbilden möchten, wählen Sie nichts aus.',
 
     'field_value'          => 'Feldwert',
     'field_mapped_to'      => 'Zugeordnet zu',
