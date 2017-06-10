@@ -1003,7 +1003,6 @@ return [
     'import_finished_report'                => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
     'import_finished_link'                  => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'need_at_least_one_account'             => 'Potrzebujesz przynajmniej jednego konta aktywów, aby móc tworzyć skarbonki',
-    'see_help_top_right'                    => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
     'bread_crumb_import_complete'           => 'Import ":key" complete',
     'bread_crumb_configure_import'          => 'Configure import ":key"',
     'bread_crumb_import_finished'           => 'Import ":key" został zakończony',
