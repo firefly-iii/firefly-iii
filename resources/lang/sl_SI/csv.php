@@ -13,28 +13,32 @@ declare(strict_types=1);
 
 return [
 
-    'import_configure_title' => 'Nastavitve uvoza',
-    'import_configure_intro' => 'Tu je nekaj nastavitev za uvoz CSV datoteke. Prosim, označite, če vaša CSV datoteka vsebuje prvo vrstico z naslovi stolpcev in v kakšnem formatu so izpisani datumi. Morda bo to zahtevalo nekaj poizkušanja. Ločilo v CSV datoteki je ponavadi ",", lahko pa je tudi ";". Pozorno preverite.',
-    'import_configure_form'  => 'Osnovne možnosti za uvoz CSV datoteke.',
-    'header_help'            => 'Preverite ali prva vrstica v CSV datoteki vsebuje naslove stolpcev.',
-    'date_help'              => 'Formatiranje datuma in časa v vaši CSV datoteki. Uporabite obliko zapisa kot je navedena<a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters"> na tej strani</a>. Privzeta vrednost bo prepoznala datume, ki so videti takole:: dateExample.',
-    'delimiter_help'         => 'Izberi ločilo, ki je uporabljeno za ločevanje med posameznimi stolpci v vaši datoteki. Če niste prepričani, je vejica najbolj pogosta izbira.',
-    'import_account_help'    => 'Če vaša CSV datoteka ne vsebuje informacij o vaših premoženjskih računih, uporabite ta seznam, da izberete kateremu računu pripadajo transakcije v CSV datoteki.',
-    'upload_not_writeable'   => 'Prosim zagotovite, da ima Firefly dovoljenje za pisanje v datoteko, ki je navedena v sivem okvirčku.',
+    // initial config
+    'initial_config_title'        => 'Import configuration (1/3)',
+    'initial_config_text'         => 'To be able to import your file correctly, please validate the options below.',
+    'initial_config_box'          => 'Basic CSV import configuration',
+    'initial_header_help'         => 'Check this box if the first row of your CSV file are the column titles.',
+    'initial_date_help'           => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'initial_delimiter_help'      => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'initial_import_account_help' => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
 
-    // roles
-    'column_roles_title'     => 'doličite pomen stolpcev',
-    'column_roles_table'     => 'tabela',
-    'column_name'            => 'Ime stolpca',
-    'column_example'         => 'primeri podatkov',
-    'column_role'            => 'pomen podatkov v stolpcu',
-    'do_map_value'           => 'poveži te vrednosti',
-    'column'                 => 'stolpec',
-    'no_example_data'        => 'primeri podatkov niso na voljo',
-    'store_column_roles'     => 'nadaljuj z uvozom',
-    'do_not_map'             => '(ne poveži)',
-    'map_title'              => 'poveži podatke za uvoz s podatki iz Firefly III',
-    'map_text'               => 'Vrednosti na levi v spodnji tabeli prikazujejo podatke iz naložene CSV datoteke. Vaša naloga je, da jim, če je možno, določite obtoječio vrednost iz podatkovne baze. Firefly bo to upošteval pri uvozu. Če v podatkovni bazi ni ustrezne vrednosti, ali vrednosti ne želite določiti ničesar, potem pustite prazno.',
+    // roles config
+    'roles_title'                 => 'Define each column\'s role',
+    'roles_text'                  => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_table'                 => 'Table',
+    'roles_column_name'           => 'Name of column',
+    'roles_column_example'        => 'Column example data',
+    'roles_column_role'           => 'Column data meaning',
+    'roles_do_map_value'          => 'Map these values',
+    'roles_column'                => 'Column',
+    'roles_no_example_data'       => 'No example data available',
+
+    'roles_store' => 'Continue import',
+    'roles_do_not_map'         => '(do not map)',
+
+    // map data
+    'map_title'                => 'poveži podatke za uvoz s podatki iz Firefly III',
+    'map_text'                 => 'Vrednosti na levi v spodnji tabeli prikazujejo podatke iz naložene CSV datoteke. Vaša naloga je, da jim, če je možno, določite obtoječio vrednost iz podatkovne baze. Firefly bo to upošteval pri uvozu. Če v podatkovni bazi ni ustrezne vrednosti, ali vrednosti ne želite določiti ničesar, potem pustite prazno.',
 
     'field_value'          => 'podatek',
     'field_mapped_to'      => 'povezan z',
