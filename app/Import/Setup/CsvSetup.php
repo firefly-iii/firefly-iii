@@ -237,7 +237,6 @@ class CsvSetup implements SetupInterface
         $all    = $request->all();
         if ($request->get('settings') == 'roles') {
             $count = $config['column-count'];
-
             $roleSet = 0; // how many roles have been defined
             $mapSet  = 0;  // how many columns must be mapped
             for ($i = 0; $i < $count; $i++) {

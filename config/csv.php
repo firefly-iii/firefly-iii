@@ -292,6 +292,7 @@ return [
     // number of example rows:
     'example_rows'     => 5,
     'default_config'   => [
+        'initial-config-complete' => false,
         'has-headers'             => false, // assume
         'date-format'             => 'Ymd', // assume
         'delimiter'               => ',', // assume

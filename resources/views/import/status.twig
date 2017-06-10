@@ -4,6 +4,59 @@
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
+
+    {# Initial display. Will refresh (and disappear almost immediately. #}
+
+    <div class="row status_initial">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Nothing to see here...</h3>
+                </div>
+                <div class="box-body">
+                    <p>This box will be replaced in a moment with the status of your import.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row status_configured">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_complete'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'import_complete_text'|_ }}
+                    </p>
+                    <p>
+                        <code>php artisan firefly:start-import {{ job.key }}</code>
+                    </p>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
+                                        class="fa fa-fw fa-download"></i> {{ 'import_download_config'|_ }}</a>
+                        </div>
+                        <div class="col-lg-4">
+                            <a href="#" class="btn btn-success start-job"><i
+                                        class="fa fa-fw fa-gears"></i> {{ 'import_start_import'|_ }}</a>
+                        </div>
+                    </div>
+                    <p>
+                        &nbsp;
+                    </p>
+                    <p class="text-info">
+                        {{ 'import_share_configuration'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {#
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
@@ -54,7 +107,7 @@
             </div>
         </div>
     </div>
-
+    #}
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">

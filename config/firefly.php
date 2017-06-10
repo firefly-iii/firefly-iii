@@ -31,7 +31,10 @@ return [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
     'import_formats'             => [
-        'csv' => 'FireflyIII\Import\Importer\CsvImporter',
+        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
+    ],
+    'import_configurators'       => [
+        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
     ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',

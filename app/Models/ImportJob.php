@@ -42,11 +42,9 @@ class ImportJob extends Model
 
     protected $validStatus
         = [
-            'import_status_never_started', // initial state
-            'import_configuration_saved', // import configuration saved. This step is going to be obsolete.
-            'settings_complete', // aka: ready for import.
-            'import_running', // import currently underway
-            'import_complete', // done with everything
+            'new',
+            'initialized',
+            'configured',
         ];
 
     /**

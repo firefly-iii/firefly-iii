@@ -10,6 +10,10 @@
 
 /** global: jobImportUrl, langImportSingleError, langImportMultiError, jobStartUrl, langImportTimeOutError, langImportFinished, langImportFatalError */
 
+var displayStatus = 'initial';
+var timeOutId;
+
+
 var startedImport = false;
 var startInterval = 2000;
 var interval = 500;
@@ -19,19 +23,84 @@ var stepCount = 0;
 $(function () {
     "use strict";
 
-    $('#import-status-intro').hide();
-    $('#import-status-more-info').hide();
+    //$('#import-status-intro').hide();
+    //$('#import-status-more-info').hide();
 
     // check status, every 500 ms.
-    setTimeout(checkImportStatus, startInterval);
+    timeOutId = setTimeout(checkImportStatus, startInterval);
+
+    // button to start import routine:
+    $('.start-job').click(startJob);
 
 });
 
+function startJob() {
+    console.log('Job started.');
+    $.post(jobStartUrl);
+    return false;
+}
 
 function checkImportStatus() {
     "use strict";
     $.getJSON(jobImportUrl).done(reportOnJobImport).fail(failedJobImport);
 }
+
+function reportOnJobImport(data) {
+    "use strict";
+    displayCorrectBox(data.status);
+    //updateBar(data);
+    //reportErrors(data);
+    //reportStatus(data);
+    //updateTimeout(data);
+
+    //if (importJobFinished(data)) {
+    //    finishedJob(data);
+    //    return;
+    //}
+
+
+    // same number of steps as last time?
+    //if (currentLimit > timeoutLimit) {
+    //    timeoutError();
+    //    return;
+    //}
+
+    // if the job has not actually started, do so now:
+    //if (!data.started && !startedImport) {
+    //    kickStartJob();
+    //    return;
+    //}
+
+    // trigger another check.
+    //timeOutId = setTimeout(checkImportStatus, interval);
+
+}
+
+function displayCorrectBox(status) {
+    console.log('Current job state is ' + status);
+    if(status === 'configured' && displayStatus === 'initial') {
+        // hide some boxes:
+        $('.status_initial').hide();
+        return;
+    }
+    console.error('CANNOT HANDLE CURRENT STATE');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function importComplete() {
     "use strict";
@@ -131,35 +200,7 @@ function finishedJob(data) {
 
 }
 
-function reportOnJobImport(data) {
-    "use strict";
-    updateBar(data);
-    reportErrors(data);
-    reportStatus(data);
-    updateTimeout(data);
 
-    if (importJobFinished(data)) {
-        finishedJob(data);
-        return;
-    }
-
-
-    // same number of steps as last time?
-    if (currentLimit > timeoutLimit) {
-        timeoutError();
-        return;
-    }
-
-    // if the job has not actually started, do so now:
-    if (!data.started && !startedImport) {
-        kickStartJob();
-        return;
-    }
-
-    // trigger another check.
-    setTimeout(checkImportStatus, interval);
-
-}
 
 function startedTheImport() {
     "use strict";

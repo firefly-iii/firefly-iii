@@ -380,7 +380,10 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'import', 'as' => 'import.'], function () {
+
     Route::get('', ['uses' => 'ImportController@index', 'as' => 'index']);
+    Route::post('initialize', ['uses' => 'ImportController@initialize', 'as' => 'initialize']);
+
     Route::get('configure/{importJob}', ['uses' => 'ImportController@configure', 'as' => 'configure']);
     Route::get('settings/{importJob}', ['uses' => 'ImportController@settings', 'as' => 'settings']);
     Route::get('complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'complete']);
@@ -389,7 +392,7 @@ Route::group(
     Route::get('json/{importJob}', ['uses' => 'ImportController@json', 'as' => 'json']);
     Route::get('finished/{importJob}', ['uses' => 'ImportController@finished', 'as' => 'finished']);
 
-    Route::post('upload', ['uses' => 'ImportController@upload', 'as' => 'upload']);
+
     Route::post('configure/{importJob}', ['uses' => 'ImportController@postConfigure', 'as' => 'process-configuration']);
     Route::post('settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'post-settings']);
     Route::post('start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'start']);

@@ -10,11 +10,11 @@
         <div class="col-lg-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('csv.import_configure_title') }}</h3>
+                    <h3 class="box-title">{{ trans('csv.initial_config_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ trans('csv.import_configure_intro') }}
+                        {{ trans('csv.initial_config_text') }}
                     </p>
                 </div>
             </div>
@@ -29,16 +29,16 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('csv.import_configure_form') }}</h3>
+                        <h3 class="box-title">{{ trans('csv.initial_config_box') }}</h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-6">
 
-                                {{ ExpandedForm.checkbox('has_headers',1,job.configuration['has-headers'],{helpText: trans('csv.header_help')}) }}
-                                {{ ExpandedForm.text('date_format',job.configuration['date-format'],{helpText: trans('csv.date_help', {dateExample: phpdate('Ymd')}) }) }}
-                                {{ ExpandedForm.select('csv_delimiter', data.delimiters, job.configuration['delimiter'], {helpText: trans('csv.delimiter_help') } ) }}
-                                {{ ExpandedForm.select('csv_import_account', data.accounts, job.configuration['import-account'], {helpText: trans('csv.import_account_help')} ) }}
+                                {{ ExpandedForm.checkbox('has_headers',1,job.configuration['has-headers'],{helpText: trans('csv.initial_header_help')}) }}
+                                {{ ExpandedForm.text('date_format',job.configuration['date-format'],{helpText: trans('csv.initial_date_help', {dateExample: phpdate('Ymd')}) }) }}
+                                {{ ExpandedForm.select('csv_delimiter', data.delimiters, job.configuration['delimiter'], {helpText: trans('csv.initial_delimiter_help') } ) }}
+                                {{ ExpandedForm.select('csv_import_account', data.accounts, job.configuration['import-account'], {helpText: trans('csv.initial_import_account_help')} ) }}
 
                                 {% for type, specific in data.specifics %}
                                     <div class="form-group">
@@ -56,40 +56,23 @@
                                         </div>
                                     </div>
                                 {% endfor %}
-
-                                {% if not data.is_upload_possible %}
-                                    <div class="form-group" id="csv_holder">
-                                        <div class="col-sm-4">
-                                            &nbsp;
-                                        </div>
-
-                                        <div class="col-sm-8">
-                                            <pre>{{ data.upload_path }}</pre>
-                                            <p class="text-danger">
-                                                {{ trans('csv.upload_not_writeable') }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {% if data.is_upload_possible %}
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <button type="submit" class="pull-right btn btn-success">
-                                {{ 'import_finish_configuration'|_ }}
-                            </button>
-                        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-body">
+                        <button type="submit" class="pull-right btn btn-success">
+                            {{ 'import_finish_configuration'|_ }}
+                        </button>
                     </div>
                 </div>
             </div>
-        {% endif %}
+        </div>
     </form>
 
 

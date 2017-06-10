@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, job) }}
 {% endblock %}
 
 {% block content %}
@@ -22,9 +22,8 @@
 
         </div>
     </div>
-    <form action="{{ route('import.post-settings', job.key) }}" method="post">
+    <form action="{{ route('import.process-configuration', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-        <input type="hidden" name="settings" value="map"/>
 
         {% for field in data %}
             <div class="row">

@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, job) }}
 {% endblock %}
 
 {% block content %}
@@ -10,18 +10,18 @@
         <div class="col-lg-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('csv.column_roles_title') }}</h3>
+                    <h3 class="box-title">{{ trans('csv.roles_title') }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
-                        {{ 'see_help_top_right'|_ }}
+                        {{ trans('csv.roles_text') }}
                     </p>
                 </div>
             </div>
 
         </div>
     </div>
-    <form action="{{ route('import.post-settings', job.key) }}" method="post">
+    <form action="{{ route('import.process-configuration', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="settings" value="roles"/>
 
@@ -29,41 +29,41 @@
             <div class="col-lg-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('csv.column_roles_table') }}</h3>
+                        <h3 class="box-title">{{ trans('csv.roles_table') }}</h3>
                     </div>
                     <div class="box-body">
 
                         <table class="table">
                             <thead>
                             <tr>
-                                <th style="width:20%;">{{ trans('csv.column_name') }}</th>
-                                <th style="width:40%;">{{ trans('csv.column_example') }}</th>
-                                <th style="width:30%;">{{ trans('csv.column_role') }}</th>
-                                <th style="width:10%;">{{ trans('csv.do_map_value') }}</th>
+                                <th style="width:20%;">{{ trans('csv.roles_column_name') }}</th>
+                                <th style="width:40%;">{{ trans('csv.roles_column_example') }}</th>
+                                <th style="width:30%;">{{ trans('csv.roles_column_role') }}</th>
+                                <th style="width:10%;">{{ trans('csv.roles_do_map_value') }}</th>
                             </tr>
                             </thead>
-                            {% for i in 0..(data.columnCount-1) %}
+                            {% for i in 0..(data.total -1) %}
 
                                 <tr>
                                     <td>
-                                        {% if data.columnHeaders[i] == '' %}
-                                            {{ trans('csv.column') }} #{{ loop.index }}
+                                        {% if data.headers[i] == '' %}
+                                            {{ trans('csv.roles_column') }} #{{ loop.index }}
                                         {% else %}
-                                            {{ data.columnHeaders[i] }}
+                                            {{ data.headers[i] }}
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if data.columns[i]|length == 0 %}
-                                            <em>{{ trans('csv.no_example_data') }}</em>
+                                        {% if data.examples[i]|length == 0 %}
+                                            <em>{{ trans('csv.roles_no_example_data') }}</em>
                                         {% else %}
-                                            {% for example in data.columns[i] %}
+                                            {% for example in data.examples[i] %}
                                                 <code>{{ example }}</code><br/>
                                             {% endfor %}
                                         {% endif %}
 
                                     <td>
                                         {{ Form.select(('role['~loop.index0~']'),
-                                        data.available_roles,
+                                        data.roles,
                                         job.configuration['column-roles'][loop.index0],
                                         {class: 'form-control'}) }}
                                     </td>
@@ -91,7 +91,7 @@
                 <div class="box">
                     <div class="box-body">
                         <button type="submit" class="btn btn-success pull-right">
-                            {{ trans('csv.store_column_roles') }} <i class="fa fa-arrow-right"></i>
+                            {{ trans('csv.roles_store') }} <i class="fa fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>

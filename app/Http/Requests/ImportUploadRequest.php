@@ -38,8 +38,9 @@ class ImportUploadRequest extends Request
         $types = array_keys(config('firefly.import_formats'));
 
         return [
-            'import_file'      => 'required|file',
-            'import_file_type' => 'required|in:' . join(',', $types),
+            'import_file'        => 'required|file',
+            'import_file_type'   => 'required|in:' . join(',', $types),
+            'configuration_file' => 'file',
         ];
 
     }
