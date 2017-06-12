@@ -46,9 +46,10 @@ class CsvConfigurator implements ConfiguratorInterface
     public function configureJob(array $data): bool
     {
         $class = $this->getConfigurationClass();
-
+        $job   = $this->job;
         /** @var ConfigurationInterface $object */
         $object = new $class($this->job);
+        $object->setJob($job);
 
         return $object->storeConfiguration($data);
     }
@@ -62,9 +63,10 @@ class CsvConfigurator implements ConfiguratorInterface
     public function getNextData(): array
     {
         $class = $this->getConfigurationClass();
-
+        $job   = $this->job;
         /** @var ConfigurationInterface $object */
-        $object = new $class($this->job);
+        $object = app($class);
+        $object->setJob($job);
 
         return $object->getData();
 
@@ -128,7 +130,7 @@ class CsvConfigurator implements ConfiguratorInterface
                 break;
         }
 
-        if ($class === false) {
+        if ($class === false || strlen($class) === 0) {
             throw new FireflyException('Cannot handle current job state in getConfigurationClass().');
         }
         if (!class_exists($class)) {

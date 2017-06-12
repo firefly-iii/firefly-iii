@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\ImportUploadRequest;
 use FireflyIII\Import\Configurator\ConfiguratorInterface;
+use FireflyIII\Import\FileProcessor\FileProcessorInterface;
 use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
@@ -22,6 +23,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
+use Illuminate\Support\Collection;
 use Log;
 use Response;
 use View;
@@ -325,16 +327,26 @@ class ImportController extends Controller
     //    }
 
     /**
-     * @param ImportProcedureInterface $importProcedure
-     * @param ImportJob                $job
+     * @param ImportJob $job
      */
-    public function start(ImportProcedureInterface $importProcedure, ImportJob $job)
+    public function start(ImportJob $job)
     {
-        die('TODO here.');
+        $objects = new Collection();
+        $type  = $job->file_type;
+        $class = config(sprintf('firefly.import_processors.%s', $type));
+        /** @var FileProcessorInterface $processor */
+        $processor = new $class($job);
+
+        echo 'x';exit;
+
         set_time_limit(0);
-        if ($job->status == 'settings_complete') {
-            $importProcedure->runImport($job);
+        if ($job->status == 'configured') {
+            $processor->run();
+            $objects = $processor->getObjects();
         }
+
+        // once done, use storage thing to actually store them:
+
     }
 
     /**

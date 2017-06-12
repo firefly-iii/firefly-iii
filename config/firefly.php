@@ -36,6 +36,9 @@ return [
     'import_configurators'       => [
         'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
     ],
+    'import_processors'          => [
+        'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
+    ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
     'bill_periods'               => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],

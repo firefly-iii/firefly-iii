@@ -30,16 +30,6 @@ class Roles implements ConfigurationInterface
     private $job;
 
     /**
-     * ConfigurationInterface constructor.
-     *
-     * @param ImportJob $job
-     */
-    public function __construct(ImportJob $job)
-    {
-        $this->job = $job;
-    }
-
-    /**
      * Get the data necessary to show the configuration screen.
      *
      * @return array
@@ -257,5 +247,17 @@ class Roles implements ConfigurationInterface
         $this->job->save();
 
         return true;
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return ConfigurationInterface
+     */
+    public function setJob(ImportJob $job): ConfigurationInterface
+    {
+        $this->job = $job;
+
+        return $this;
     }
 }

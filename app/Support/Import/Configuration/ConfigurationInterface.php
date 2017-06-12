@@ -21,18 +21,18 @@ use FireflyIII\Models\ImportJob;
 interface ConfigurationInterface
 {
     /**
-     * ConfigurationInterface constructor.
-     *
-     * @param ImportJob $job
-     */
-    public function __construct(ImportJob $job);
-
-    /**
      * Get the data necessary to show the configuration screen.
      *
      * @return array
      */
     public function getData(): array;
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return ConfigurationInterface
+     */
+    public function setJob(ImportJob $job);
 
     /**
      * Store the result.

@@ -14,6 +14,7 @@ namespace FireflyIII\Support\Import\Configuration\Csv;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;
+use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
@@ -27,22 +28,14 @@ use Log;
  */
 class Map implements ConfigurationInterface
 {
+    /** @var array */
+    private $configuration = [];
     /** @var array that holds each column to be mapped by the user */
     private $data = [];
-    /** @var array that holds the indexes of those columns (ie. 2, 5, 8) */
-    private $indexes = [];
     /** @var  ImportJob */
     private $job;
-
-    /**
-     * ConfigurationInterface constructor.
-     *
-     * @param ImportJob $job
-     */
-    public function __construct(ImportJob $job)
-    {
-        $this->job = $job;
-    }
+    /** @var array */
+    private $validSpecifics = [];
 
     /**
      * @return array
@@ -50,41 +43,24 @@ class Map implements ConfigurationInterface
      */
     public function getData(): array
     {
-        $config = $this->job->configuration;
+        $this->configuration = $this->job->configuration;
         $this->getMappableColumns();
-
 
         // in order to actually map we also need all possible values from the CSV file.
         $content = $this->job->uploadFileContents();
         /** @var Reader $reader */
         $reader = Reader::createFromString($content);
-        $reader->setDelimiter($config['delimiter']);
-        $results        = $reader->fetch();
-        $validSpecifics = array_keys(config('csv.import_specifics'));
-
+        $reader->setDelimiter($this->configuration['delimiter']);
+        $offset               = $this->configuration['has-headers'] ? 1 : 0;
+        $results              = $reader->setOffset($offset)->fetch();
+        $this->validSpecifics = array_keys(config('csv.import_specifics'));
+        $indexes              = array_keys($this->data);
         foreach ($results as $rowIndex => $row) {
 
-            // skip first row?
-            if ($rowIndex === 0 && $config['has-headers']) {
-                continue;
-            }
-
-            // run specifics here:
-            // and this is the point where the specifix go to work.
-            foreach ($config['specifics'] as $name => $enabled) {
-
-                if (!in_array($name, $validSpecifics)) {
-                    throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
-                }
-                $class = config('csv.import_specifics.' . $name);
-                /** @var SpecificInterface $specific */
-                $specific = app($class);
-
-                // it returns the row, possibly modified:
-                $row = $specific->run($row);
-            }
+            $row = $this->runSpecifics($row);
 
             //do something here
+
             foreach ($indexes as $index) { // this is simply 1, 2, 3, etc.
                 if (!isset($row[$index])) {
                     // don't really know how to handle this. Just skip, for now.
@@ -95,11 +71,11 @@ class Map implements ConfigurationInterface
 
                     // we can do some preprocessing here,
                     // which is exclusively to fix the tags:
-                    if (!is_null($data[$index]['preProcessMap'])) {
+                    if (!is_null($this->data[$index]['preProcessMap']) && strlen($this->data[$index]['preProcessMap']) > 0) {
                         /** @var PreProcessorInterface $preProcessor */
-                        $preProcessor           = app($data[$index]['preProcessMap']);
+                        $preProcessor           = app($this->data[$index]['preProcessMap']);
                         $result                 = $preProcessor->run($value);
-                        $data[$index]['values'] = array_merge($data[$index]['values'], $result);
+                        $data[$index]['values'] = array_merge($this->data[$index]['values'], $result);
 
                         Log::debug($rowIndex . ':' . $index . 'Value before preprocessor', ['value' => $value]);
                         Log::debug($rowIndex . ':' . $index . 'Value after preprocessor', ['value-new' => $result]);
@@ -109,15 +85,28 @@ class Map implements ConfigurationInterface
                         continue;
                     }
 
-                    $data[$index]['values'][] = $value;
+                    $this->data[$index]['values'][] = $value;
                 }
             }
         }
-        foreach ($data as $index => $entry) {
-            $data[$index]['values'] = array_unique($data[$index]['values']);
+        foreach ($this->data as $index => $entry) {
+            $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
         }
 
-        return $data;
+        return $this->data;
+
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return ConfigurationInterface
+     */
+    public function setJob(ImportJob $job): ConfigurationInterface
+    {
+        $this->job = $job;
+
+        return $this;
     }
 
     /**
@@ -129,6 +118,23 @@ class Map implements ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool
     {
+        $config = $this->job->configuration;
+
+        foreach ($data['mapping'] as $index => $data) {
+            $config['column-mapping-config'][$index] = [];
+            foreach ($data as $value => $mapId) {
+                $mapId = intval($mapId);
+                if ($mapId !== 0) {
+                    $config['column-mapping-config'][$index][$value] = intval($mapId);
+                }
+            }
+        }
+
+        // set thing to be completed.
+        $config['column-mapping-complete'] = true;
+        $this->job->configuration          = $config;
+        $this->job->save();
+
         return true;
     }
 
@@ -195,6 +201,32 @@ class Map implements ConfigurationInterface
         }
 
         return $name;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function runSpecifics(array $row): array
+    {
+        // run specifics here:
+        // and this is the point where the specifix go to work.
+        foreach ($this->configuration['specifics'] as $name => $enabled) {
+
+            if (!in_array($name, $this->validSpecifics)) {
+                throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
+            }
+            $class = config('csv.import_specifics.' . $name);
+            /** @var SpecificInterface $specific */
+            $specific = app($class);
+
+            // it returns the row, possibly modified:
+            $row = $specific->run($row);
+        }
+
+        return $row;
     }
 
     /**

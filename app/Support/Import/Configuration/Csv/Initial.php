@@ -26,17 +26,6 @@ use Log;
 class Initial implements ConfigurationInterface
 {
     private $job;
-
-    /**
-     * ConfigurationInterface constructor.
-     *
-     * @param ImportJob $job
-     */
-    public function __construct(ImportJob $job)
-    {
-        $this->job = $job;
-    }
-
     /**
      * @return array
      */
@@ -69,6 +58,18 @@ class Initial implements ConfigurationInterface
         ];
 
         return $data;
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return ConfigurationInterface
+     */
+    public function setJob(ImportJob $job): ConfigurationInterface
+    {
+        $this->job = $job;
+
+        return $this;
     }
 
     /**
