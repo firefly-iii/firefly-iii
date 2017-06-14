@@ -21,12 +21,12 @@ use Illuminate\Support\Collection;
  */
 interface FileProcessorInterface
 {
+
+
     /**
-     * FileProcessorInterface constructor.
-     *
-     * @param ImportJob $job
+     * @return Collection
      */
-    public function __construct(ImportJob $job);
+    public function getObjects(): Collection;
 
     /**
      * @return bool
@@ -34,7 +34,9 @@ interface FileProcessorInterface
     public function run(): bool;
 
     /**
-     * @return Collection
+     * @param ImportJob $job
+     *
+     * @return FileProcessorInterface
      */
-    public function getObjects(): Collection;
+    public function setJob(ImportJob $job): FileProcessorInterface;
 }

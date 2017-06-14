@@ -51,25 +51,6 @@ class ImportController extends Controller
             }
         );
     }
-    //
-    //    /**
-    //     * This is the last step before the import starts.
-    //     *
-    //     * @param ImportJob $job
-    //     *
-    //     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-    //     */
-    //    public function complete(ImportJob $job)
-    //    {
-    //        Log::debug('Now in complete()', ['job' => $job->key]);
-    //        if (!$this->jobInCorrectStep($job, 'complete')) {
-    //            return $this->redirectToCorrectStep($job);
-    //        }
-    //        $subTitle     = trans('firefly.import_complete');
-    //        $subTitleIcon = 'fa-star';
-    //
-    //        return view('import.complete', compact('job', 'subTitle', 'subTitleIcon'));
-    //    }
 
     /**
      * This is step 3. This repeats until the job is configured.
@@ -107,9 +88,13 @@ class ImportController extends Controller
     {
         Log::debug('Now in download()', ['job' => $job->key]);
         $config                            = $job->configuration;
+
+        // TODO this is CSV import specific:
         $config['column-roles-complete']   = false;
         $config['column-mapping-complete'] = false;
+        $config['initial-config-complete'] = false;
         $config['delimiter']               = $config['delimiter'] === "\t" ? 'tab' : $config['delimiter'];
+
         $result                            = json_encode($config, JSON_PRETTY_PRINT);
         $name                              = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
@@ -128,26 +113,6 @@ class ImportController extends Controller
 
 
     }
-
-    //    /**
-    //     * @param ImportJob $job
-    //     *
-    //     * @return View
-    //     */
-    //    public function finished(ImportJob $job)
-    //    {
-    //        if (!$this->jobInCorrectStep($job, 'finished')) {
-    //            return $this->redirectToCorrectStep($job);
-    //        }
-    //
-    //        // if there is a tag (there might not be), we can link to it:
-    //        $tagId = $job->extended_status['importTag'] ?? 0;
-    //
-    //        $subTitle     = trans('firefly.import_finished');
-    //        $subTitleIcon = 'fa-star';
-    //
-    //        return view('import.finished', compact('job', 'subTitle', 'subTitleIcon', 'tagId'));
-    //    }
 
     /**
      * This is step 1. Upload a file.
@@ -263,69 +228,6 @@ class ImportController extends Controller
         return redirect(route('import.configure', [$job->key]));
     }
 
-    //    /**
-    //     * This step 6. Depending on the importer, this will process the
-    //     * settings given and store them.
-    //     *
-    //     * @param Request   $request
-    //     * @param ImportJob $job
-    //     *
-    //     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-    //     * @throws FireflyException
-    //     */
-    //    public function postSettings(Request $request, ImportJob $job)
-    //    {
-    //        Log::debug('Now in postSettings()', ['job' => $job->key]);
-    //        if (!$this->jobInCorrectStep($job, 'store-settings')) {
-    //            return $this->redirectToCorrectStep($job);
-    //        }
-    //        $importer = $this->makeImporter($job);
-    //        $importer->storeSettings($request);
-    //
-    //        // return redirect to settings (for more settings perhaps)
-    //        return redirect(route('import.settings', [$job->key]));
-    //    }
-
-    //    /**
-    //     * Step 5. Depending on the importer, this will show the user settings to
-    //     * fill in.
-    //     *
-    //     * @param ImportJobRepositoryInterface $repository
-    //     * @param ImportJob                    $job
-    //     *
-    //     * @return View
-    //     */
-    //    public function settings(ImportJobRepositoryInterface $repository, ImportJob $job)
-    //    {
-    //        Log::debug('Now in settings()', ['job' => $job->key]);
-    //        if (!$this->jobInCorrectStep($job, 'settings')) {
-    //            return $this->redirectToCorrectStep($job);
-    //        }
-    //        Log::debug('Continue in settings()');
-    //        $importer     = $this->makeImporter($job);
-    //        $subTitle     = trans('firefly.settings_for_import');
-    //        $subTitleIcon = 'fa-wrench';
-    //
-    //        // now show settings screen to user.
-    //        if ($importer->requireUserSettings()) {
-    //            Log::debug('Job requires user config.');
-    //            $data = $importer->getDataForSettings();
-    //            $view = $importer->getViewForSettings();
-    //
-    //            return view($view, compact('data', 'job', 'subTitle', 'subTitleIcon'));
-    //        }
-    //        Log::debug('Job does NOT require user config.');
-    //
-    //        $repository->updateStatus($job, 'settings_complete');
-    //
-    //        // if no more settings, save job and continue to process thing.
-    //        return redirect(route('import.complete', [$job->key]));
-    //
-    //        // ask the importer for the requested action.
-    //        // for example pick columns or map data.
-    //        // depends of course on the data in the job.
-    //    }
-
     /**
      * @param ImportJob $job
      */
@@ -335,10 +237,8 @@ class ImportController extends Controller
         $type  = $job->file_type;
         $class = config(sprintf('firefly.import_processors.%s', $type));
         /** @var FileProcessorInterface $processor */
-        $processor = new $class($job);
-
-        echo 'x';exit;
-
+        $processor = app($class);
+        $processor->setJob($job);
         set_time_limit(0);
         if ($job->status == 'configured') {
             $processor->run();
@@ -364,36 +264,6 @@ class ImportController extends Controller
         return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));
     }
 
-    //    /**
-    //     * @param ImportJob $job
-    //     * @param string    $method
-    //     *
-    //     * @return bool
-    //     */
-    //    private function jobInCorrectStep(ImportJob $job, string $method): bool
-    //    {
-    //        Log::debug('Now in jobInCorrectStep()', ['job' => $job->key, 'method' => $method]);
-    //        switch ($method) {
-    //            case 'configure':
-    //            case 'process':
-    //                return $job->status === 'import_status_never_started';
-    //            case 'settings':
-    //            case 'store-settings':
-    //                Log::debug(sprintf('Job %d with key %s has status %s', $job->id, $job->key, $job->status));
-    //
-    //                return $job->status === 'import_configuration_saved';
-    //            case 'finished':
-    //                return $job->status === 'import_complete';
-    //            case 'complete':
-    //                return $job->status === 'settings_complete';
-    //            case 'status':
-    //                return ($job->status === 'settings_complete') || ($job->status === 'import_running');
-    //        }
-    //
-    //        return false; // @codeCoverageIgnore
-    //
-    //    }
-
     /**
      * @param ImportJob $job
      *
@@ -412,62 +282,4 @@ class ImportController extends Controller
 
         return $configurator;
     }
-
-    //    /**
-    //     * @param ImportJob $job
-    //     *
-    //     * @return SetupInterface
-    //     * @throws FireflyException
-    //     */
-    //    private function makeImporter(ImportJob $job): SetupInterface
-    //    {
-    //        // create proper importer (depends on job)
-    //        $type = strtolower($job->file_type);
-    //
-    //        // validate type:
-    //        $validTypes = array_keys(config('firefly.import_formats'));
-    //
-    //
-    //        if (in_array($type, $validTypes)) {
-    //            /** @var SetupInterface $importer */
-    //            $importer = app('FireflyIII\Import\Setup\\' . ucfirst($type) . 'Setup');
-    //            $importer->setJob($job);
-    //
-    //            return $importer;
-    //        }
-    //        throw new FireflyException(sprintf('"%s" is not a valid file type', $type)); // @codeCoverageIgnore
-    //
-    //    }
-
-    //    /**
-    //     * @param ImportJob $job
-    //     *
-    //     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-    //     * @throws FireflyException
-    //     */
-    //    private function redirectToCorrectStep(ImportJob $job)
-    //    {
-    //        Log::debug('Now in redirectToCorrectStep()', ['job' => $job->key]);
-    //        switch ($job->status) {
-    //            case 'import_status_never_started':
-    //                Log::debug('Will redirect to configure()');
-    //
-    //                return redirect(route('import.configure', [$job->key]));
-    //            case 'import_configuration_saved':
-    //                Log::debug('Will redirect to settings()');
-    //
-    //                return redirect(route('import.settings', [$job->key]));
-    //            case 'settings_complete':
-    //                Log::debug('Will redirect to complete()');
-    //
-    //                return redirect(route('import.complete', [$job->key]));
-    //            case 'import_complete':
-    //                Log::debug('Will redirect to finished()');
-    //
-    //                return redirect(route('import.finished', [$job->key]));
-    //        }
-    //
-    //        throw new FireflyException('Cannot redirect for job state ' . $job->status); // @codeCoverageIgnore
-    //
-    //    }
 }

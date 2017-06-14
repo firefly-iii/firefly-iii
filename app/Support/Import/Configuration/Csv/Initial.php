@@ -101,6 +101,7 @@ class Initial implements ConfigurationInterface
             Log::debug('Found account.', ['id' => $account->id, 'name' => $account->name]);
             $config['import-account'] = $account->id;
         }
+
         if (is_null($account->id)) {
             Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
         }

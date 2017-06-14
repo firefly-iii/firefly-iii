@@ -22,10 +22,20 @@ class ImportObject
     public $errors;
     /** @var ImportAccount */
     private $asset;
+    /** @var  ImportBill */
+    private $bill;
+    /** @var ImportBudget */
+    private $budget;
+    /** @var ImportCategory */
+    private $category;
+    /** @var  string */
+    private $description;
+    private $externalId = '';
     /** @var  string */
     private $hash;
     /** @var ImportAccount */
     private $opposing;
+    private $tags = [];
     /** @var ImportTransaction */
     private $transaction;
     /** @var  User */
@@ -40,6 +50,9 @@ class ImportObject
         $this->transaction = new ImportTransaction;
         $this->asset       = new ImportAccount;
         $this->opposing    = new ImportAccount;
+        $this->bill        = new ImportBill;
+        $this->category    = new ImportCategory;
+        $this->budget      = new ImportBudget;
     }
 
     public function setHash(string $hash)
@@ -57,6 +70,8 @@ class ImportObject
 
     /**
      * @param array $array
+     *
+     * @throws FireflyException
      */
     public function setValue(array $array)
     {
@@ -64,11 +79,83 @@ class ImportObject
             default:
                 throw new FireflyException(sprintf('ImportObject cannot handle "%s" with value "%s".', $array['role'], $array['value']));
             case 'account-id':
-                $this->asset->setAccountId($array['value']);
+                $this->asset->setAccountId($array);
+                break;
+            case 'amount':
+                $this->transaction->setAmount($array['value']);
+                break;
+            case 'account-iban':
+                $this->asset->setAccountIban($array);
+                break;
+            case 'account-name':
+                $this->asset->setAccountName($array);
+                break;
+            case 'account-number':
+                $this->asset->setAccountNumber($array);
+                break;
+            case 'bill-id':
+                $this->bill->setId($array);
+                break;
+            case 'bill-name':
+                $this->bill->setName($array);
+                break;
+            case 'budget-id':
+                $this->budget->setId($array);
+                break;
+            case 'budget-name':
+                $this->budget->setName($array);
+                break;
+            case 'category-id':
+                $this->category->setId($array);
+                break;
+            case 'category-name':
+                $this->category->setName($array);
+                break;
+            case 'currency-code':
+                $this->transaction->getCurrency()->setCode($array);
+                break;
+            case 'currency-id':
+                $this->transaction->getCurrency()->setId($array);
+                break;
+            case 'currency-name':
+                $this->transaction->getCurrency()->setName($array);
+                break;
+            case 'currency-symbol':
+                $this->transaction->getCurrency()->setSymbol($array);
+                break;
+            case 'date-transaction':
+                $this->transaction->setDate($array['value']);
+                break;
+            case 'description':
+                $this->description = $array['value'];
+                $this->transaction->setDescription($array['value']);
+                break;
+            case 'external-id':
+                $this->externalId = $array['value'];
+                break;
+            case '_ignore':
+                break;
+            case 'ing-debet-credit':
+            case 'rabo-debet-credit':
+                $this->transaction->addToModifier($array);
+                break;
+            case 'opposing-iban':
+                $this->opposing->setAccountIban($array);
+                break;
+            case 'opposing-name':
+                $this->opposing->setAccountName($array);
+                break;
+            case 'opposing-number':
+                $this->opposing->setAccountNumber($array);
+                break;
+            case 'opposing-id':
+                $this->opposing->setAccountId($array);
+                break;
+            case 'tags-comma':
+            case 'tags-space':
+                $this->tags[] = $array;
                 break;
         }
-        //var_dump($array);
-        //exit;
     }
 
 }

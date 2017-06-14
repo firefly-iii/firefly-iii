@@ -39,12 +39,9 @@ class CsvProcessor implements FileProcessorInterface
 
     /**
      * FileProcessorInterface constructor.
-     *
-     * @param ImportJob $job
      */
-    public function __construct(ImportJob $job)
+    public function __construct()
     {
-        $this->job             = $job;
         $this->objects         = new Collection;
         $this->validSpecifics  = array_keys(config('csv.import_specifics'));
         $this->validConverters = array_keys(config('csv.import_roles'));
@@ -55,10 +52,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     public function getObjects(): Collection
     {
-
-        // TODO: Implement getObjects() method.
-        throw new NotImplementedException;
-
+        return $this->objects;
     }
 
     /**
@@ -70,11 +64,14 @@ class CsvProcessor implements FileProcessorInterface
         $this->job->status = 'running';
         $this->job->save();
 
+        Log::debug('Mapping config: ', $this->job->configuration['column-mapping-config']);
+
         $entries = $this->getImportArray();
         $count   = 0;
         Log::notice('Building importable objects from CSV file.');
         foreach ($entries as $index => $row) {
-            $this->objects->push($this->importRow($index, $row));
+            $importObject = $this->importRow($index, $row);
+            $this->objects->push($importObject);
             /**
              * 1. Build import entry.
              * 2. Validate import entry.
@@ -85,11 +82,20 @@ class CsvProcessor implements FileProcessorInterface
             $this->job->addStepsDone(1);
             $count++;
         }
-        Log::debug(sprintf('Done building importable objects from CSV file. Processed %d rows, created %d entries.', $count, $this->objects->count()));
-
-        exit;
 
         return true;
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return FileProcessorInterface
+     */
+    public function setJob(ImportJob $job): FileProcessorInterface
+    {
+        $this->job = $job;
+
+        return $this;
     }
 
     /**
@@ -152,14 +158,9 @@ class CsvProcessor implements FileProcessorInterface
             $annotated = $this->annotateValue($rowIndex, $value);
             Log::debug('Annotated value: ', $annotated);
             $object->setValue($annotated);
-
-            //$result = $this->importValue($rowIndex, $value);
-            //$object->setValue($result['role'], $result['certainty'], $result['value']);
         }
 
-
-        return new ImportObject();
-
+        return $object;
     }
 
     /**

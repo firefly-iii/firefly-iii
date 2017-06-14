@@ -15,11 +15,49 @@ namespace FireflyIII\Import\Object;
 class ImportAccount
 {
 
-    /** @var array  */
-    private $accountIds = [];
+    /** @var  array */
+    private $accountId = [];
 
-    public function setAccountId(string $value)
+    /** @var array */
+    private $accountIban = [];
+    /** @var array */
+    private $accountName = [];
+
+    /** @var array */
+    private $accountNumber = [];
+
+    /**
+     * @param array $accountNumber
+     */
+    public function setAccountNumber(array $accountNumber)
     {
-        $this->accountIds[] = $value;
+        $this->accountNumber = $accountNumber;
     }
+
+    /**
+     * @param array $accountName
+     */
+    public function setAccountName(array $accountName)
+    {
+        $this->accountName = $accountName;
+    }
+
+
+    /**
+     * @param array $value
+     */
+    public function setAccountId(array $value)
+    {
+        $this->accountId = $value;
+    }
+
+    /**
+     * @param array $accountIban
+     */
+    public function setAccountIban(array $accountIban)
+    {
+        $this->accountIban = $accountIban;
+    }
+
+
 }

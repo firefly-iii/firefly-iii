@@ -103,7 +103,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         // demo user's configuration upload is ignored completely.
-        if ($repository->hasRole($this->user, 'demo')) {
+        if (!$repository->hasRole($this->user, 'demo')) {
             Log::debug(
                 'Uploaded configuration file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
             );

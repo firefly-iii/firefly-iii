@@ -98,9 +98,13 @@ class AttachmentController extends Controller
      */
     public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
+
+
         if ($repository->exists($attachment)) {
             $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+
+
 
             /** @var LaravelResponse $response */
             $response = response($content, 200);
@@ -148,6 +152,7 @@ class AttachmentController extends Controller
     public function preview(Attachment $attachment)
     {
         $image = 'images/page_green.png';
+
 
         if ($attachment->mime == 'application/pdf') {
             $image = 'images/page_white_acrobat.png';

@@ -24,7 +24,7 @@ return [
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
     'version'                    => '4.5.0',
-    'maxUploadSize'              => 5242880,
+    'maxUploadSize'              => 15242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,
     'export_formats'             => [

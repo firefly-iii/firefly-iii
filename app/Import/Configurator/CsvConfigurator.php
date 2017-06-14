@@ -14,6 +14,9 @@ namespace FireflyIII\Import\Configurator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
+use FireflyIII\Support\Import\Configuration\Csv\Initial;
+use FireflyIII\Support\Import\Configuration\Csv\Map;
+use FireflyIII\Support\Import\Configuration\Csv\Roles;
 use Log;
 
 /**
@@ -118,13 +121,13 @@ class CsvConfigurator implements ConfiguratorInterface
         $class = false;
         switch (true) {
             case(!$this->job->configuration['initial-config-complete']):
-                $class = 'FireflyIII\\Support\\Import\\Configuration\\Csv\\Initial';
+                $class = Initial::class;
                 break;
             case (!$this->job->configuration['column-roles-complete']):
-                $class = 'FireflyIII\\Support\\Import\\Configuration\\Csv\\Roles';
+                $class = Roles::class;
                 break;
             case (!$this->job->configuration['column-mapping-complete']):
-                $class = 'FireflyIII\\Support\\Import\\Configuration\\Csv\\Map';
+                $class = Map::class;
                 break;
             default:
                 break;
