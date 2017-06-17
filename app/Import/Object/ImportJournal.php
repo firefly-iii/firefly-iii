@@ -1,6 +1,6 @@
 <?php
 /**
- * ImportObject.php
+ * ImportJournal.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
  *
@@ -12,32 +12,52 @@ declare(strict_types=1);
 namespace FireflyIII\Import\Object;
 
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
-class ImportObject
+/**
+ * Class ImportJournal
+ *
+ * @package FireflyIII\Import\Object
+ */
+class ImportJournal
 {
     /** @var  Collection */
     public $errors;
+    /** @var string */
+    private $amount = '0';
     /** @var ImportAccount */
-    private $asset;
+    public $asset;
     /** @var  ImportBill */
     private $bill;
     /** @var ImportBudget */
     private $budget;
     /** @var ImportCategory */
     private $category;
+    /** @var  ImportCurrency */
+    private $currency;
+    /** @var string */
+    private $date = '';
+    /** @var string */
+    private $dateFormat = 'Ymd';
     /** @var  string */
     private $description;
+    /** @var string */
     private $externalId = '';
     /** @var  string */
     private $hash;
+    /** @var array */
+    private $modifiers = [];
     /** @var ImportAccount */
     private $opposing;
     private $tags = [];
-    /** @var ImportTransaction */
-    private $transaction;
+    /** @var string */
+    private $transactionType = '';
     /** @var  User */
     private $user;
 
@@ -46,18 +66,29 @@ class ImportObject
      */
     public function __construct()
     {
-        $this->errors      = new Collection;
-        $this->transaction = new ImportTransaction;
-        $this->asset       = new ImportAccount;
-        $this->opposing    = new ImportAccount;
-        $this->bill        = new ImportBill;
-        $this->category    = new ImportCategory;
-        $this->budget      = new ImportBudget;
+        $this->errors   = new Collection;
+        $this->asset    = new ImportAccount;
+        $this->opposing = new ImportAccount;
+        $this->bill     = new ImportBill;
+        $this->category = new ImportCategory;
+        $this->budget   = new ImportBudget;
     }
 
-    public function setHash(string $hash)
+    /**
+     * @param array $modifier
+     */
+    public function addToModifier(array $modifier)
     {
-        $this->hash = $hash;
+        $this->modifiers[] = $modifier;
+    }
+
+    /**
+     * @return TransactionJournal
+     * @throws FireflyException
+     */
+    public function createTransactionJournal(): TransactionJournal
+    {
+        exit('does not work yet');
     }
 
     /**
@@ -66,6 +97,9 @@ class ImportObject
     public function setUser(User $user)
     {
         $this->user = $user;
+        // set user for related objects:
+        $this->asset->setUser($user);
+        $this->opposing->setUser($user);
     }
 
     /**
@@ -77,12 +111,12 @@ class ImportObject
     {
         switch ($array['role']) {
             default:
-                throw new FireflyException(sprintf('ImportObject cannot handle "%s" with value "%s".', $array['role'], $array['value']));
+                throw new FireflyException(sprintf('ImportJournal cannot handle "%s" with value "%s".', $array['role'], $array['value']));
             case 'account-id':
                 $this->asset->setAccountId($array);
                 break;
             case 'amount':
-                $this->transaction->setAmount($array['value']);
+                $this->amount = $array['value'];
                 break;
             case 'account-iban':
                 $this->asset->setAccountIban($array);
@@ -112,23 +146,22 @@ class ImportObject
                 $this->category->setName($array);
                 break;
             case 'currency-code':
-                $this->transaction->getCurrency()->setCode($array);
+                $this->currency->setCode($array);
                 break;
             case 'currency-id':
-                $this->transaction->getCurrency()->setId($array);
+                $this->currency->setId($array);
                 break;
             case 'currency-name':
-                $this->transaction->getCurrency()->setName($array);
+                $this->currency->setName($array);
                 break;
             case 'currency-symbol':
-                $this->transaction->getCurrency()->setSymbol($array);
+                $this->currency->setSymbol($array);
                 break;
             case 'date-transaction':
-                $this->transaction->setDate($array['value']);
+                $this->date = $array['value'];
                 break;
             case 'description':
                 $this->description = $array['value'];
-                $this->transaction->setDescription($array['value']);
                 break;
             case 'external-id':
                 $this->externalId = $array['value'];
@@ -137,7 +170,7 @@ class ImportObject
                 break;
             case 'ing-debet-credit':
             case 'rabo-debet-credit':
-                $this->transaction->addToModifier($array);
+                $this->addToModifier($array);
                 break;
             case 'opposing-iban':
                 $this->opposing->setAccountIban($array);
@@ -157,5 +190,4 @@ class ImportObject
                 break;
         }
     }
-
 }

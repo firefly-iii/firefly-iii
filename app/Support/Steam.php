@@ -271,6 +271,20 @@ class Steam
     }
 
     /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function negative(string $amount): string
+    {
+        if (bccomp($amount, '0') === 1) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
+    }
+
+    /**
      * @param $string
      *
      * @return int
@@ -304,8 +318,6 @@ class Steam
 
 
     }
-
-    // parse PHP size:
 
     /**
      * @param string $amount

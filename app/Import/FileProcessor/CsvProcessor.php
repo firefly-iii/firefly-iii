@@ -13,16 +13,19 @@ namespace FireflyIII\Import\FileProcessor;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Converter\ConverterInterface;
-use FireflyIII\Import\Object\ImportObject;
+use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Support\Collection;
 use Iterator;
 use League\Csv\Reader;
 use Log;
 
 /**
- * Class CsvProcessor
+ * Class CsvProcessor, as the name suggests, goes over CSV file line by line and creates
+ * "ImportJournal" objects, which are used in another step to create new journals and transactions
+ * and what-not.
  *
  * @package FireflyIII\Import\FileProcessor
  */
@@ -56,22 +59,27 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
+     * Does the actual job:
+     *
      * @return bool
      */
     public function run(): bool
     {
-        // update the job and say we started:
-        $this->job->status = 'running';
-        $this->job->save();
-
-        Log::debug('Mapping config: ', $this->job->configuration['column-mapping-config']);
+        // TODO update the job and say we started:
+        //$this->job->status = 'running';
+        //$this->job->save();
+        Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = $this->getImportArray();
         $count   = 0;
         Log::notice('Building importable objects from CSV file.');
         foreach ($entries as $index => $row) {
-            $importObject = $this->importRow($index, $row);
-            $this->objects->push($importObject);
+            // verify if not exists already:
+            if ($this->hashPresent($row)) {
+                Log::info(sprintf('Row #%d has already been imported.', $index));
+                continue;
+            }
+            $this->objects->push($this->importRow($index, $row));
             /**
              * 1. Build import entry.
              * 2. Validate import entry.
@@ -99,6 +107,8 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
+     * Add meta data to the individual value and verify that it can be handled in a later stage.
+     *
      * @param int    $index
      * @param string $value
      *
@@ -116,6 +126,7 @@ class CsvProcessor implements FileProcessorInterface
         if (!in_array($role, $this->validConverters)) {
             throw new FireflyException(sprintf('"%s" is not a valid role.', $role));
         }
+
         $entry = [
             'role'   => $role,
             'value'  => $value,
@@ -136,79 +147,64 @@ class CsvProcessor implements FileProcessorInterface
         $reader->setDelimiter($config['delimiter']);
         $start   = $config['has-headers'] ? 1 : 0;
         $results = $reader->setOffset($start)->fetch();
+        Log::debug(sprintf('Created a CSV reader starting at offset %d', $start));
 
         return $results;
     }
 
     /**
-     * @param int   $index
-     * @param array $row
+     * Checks if the row has not been imported before.
      *
-     * @return ImportObject
+     * TODO for debugging, will always return false.
+     *
+     * @param array $array
+     *
+     * @noinspection PhpUnreachableStatementInspection
+     * @return bool
      */
-    private function importRow(int $index, array $row): ImportObject
+    private function hashPresent(array $array): bool
     {
-        Log::debug(sprintf('Now at row %d', $index));
-        $row    = $this->specifics($row);
-        $object = new ImportObject();
-        $object->setUser($this->job->user);
-        $object->setHash(hash('sha256', json_encode($row)));
+        $string = json_encode($array);
+        $hash   = hash('sha256', json_encode($string));
+        $json   = json_encode($hash);
+        $entry  = TransactionJournalMeta::
+        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                        ->where('data', $json)
+                                        ->where('name', 'importHash')
+                                        ->first();
 
-        foreach ($row as $rowIndex => $value) {
-            $annotated = $this->annotateValue($rowIndex, $value);
-            Log::debug('Annotated value: ', $annotated);
-            $object->setValue($annotated);
+        return false;
+        if (!is_null($entry)) {
+            return true;
         }
 
-        return $object;
+        return false;
+
     }
 
     /**
-     * @param int    $index
-     * @param string $value
+     * Take a row, build import journal by annotating each value and storing it in the import journal.
+     * @param int   $index
+     * @param array $row
      *
-     * @return array
-     * @throws FireflyException
+     * @return ImportJournal
      */
-    private function importValue(int $index, string $value): array
+    private function importRow(int $index, array $row): ImportJournal
     {
-        $config = $this->job->configuration;
-        $role   = $config['column-roles'][$index] ?? '_ignore';
-        $doMap  = $config['column-do-mapping'][$index] ?? false;
+        Log::debug(sprintf('Now at row %d', $index));
+        $row    = $this->specifics($row);
+        $journal = new ImportJournal;
+        $journal->setUser($this->job->user);
+        $journal->setHash(hash('sha256', json_encode($row)));
 
-        // throw error when not a valid converter.
-        if (!in_array($role, $this->validConverters)) {
-            throw new FireflyException(sprintf('"%s" is not a valid role.', $role));
+        foreach ($row as $rowIndex => $value) {
+            $annotated = $this->annotateValue($rowIndex, $value);
+            Log::debug('Annotated value', $annotated);
+            $journal->setValue($annotated);
         }
+        Log::debug('ImportJournal complete, returning.');
 
-        $converterClass = config(sprintf('csv.import_roles.%s.converter', $role));
-        $mapping        = $config['column-mapping-config'][$index] ?? [];
-        $className      = sprintf('FireflyIII\\Import\\Converter\\%s', $converterClass);
-
-        /** @var ConverterInterface $converter */
-        $converter = app($className);
-        // set some useful values for the converter:
-        $converter->setMapping($mapping);
-        $converter->setDoMap($doMap);
-        $converter->setUser($this->job->user);
-        $converter->setConfig($config);
-
-        // run the converter for this value:
-        $convertedValue = $converter->convert($value);
-        $certainty      = $converter->getCertainty();
-
-        // log it.
-        Log::debug('Value ', ['index' => $index, 'value' => $value, 'role' => $role]);
-
-        // store in import entry:
-        Log::debug('Going to import', ['role' => $role, 'value' => $value, 'certainty' => $certainty]);
-
-        return [
-            'role'      => $role,
-            'certainty' => $certainty,
-            'value'     => $convertedValue,
-        ];
-
+        return $journal;
     }
 
     /**

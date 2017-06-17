@@ -17,6 +17,8 @@ use FireflyIII\Http\Requests\ImportUploadRequest;
 use FireflyIII\Import\Configurator\ConfiguratorInterface;
 use FireflyIII\Import\FileProcessor\FileProcessorInterface;
 use FireflyIII\Import\ImportProcedureInterface;
+use FireflyIII\Import\Routine\ImportRoutine;
+use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -26,6 +28,7 @@ use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\Support\Collection;
 use Log;
 use Response;
+use Validator;
 use View;
 
 /**
@@ -87,7 +90,7 @@ class ImportController extends Controller
     public function download(ImportJob $job)
     {
         Log::debug('Now in download()', ['job' => $job->key]);
-        $config                            = $job->configuration;
+        $config = $job->configuration;
 
         // TODO this is CSV import specific:
         $config['column-roles-complete']   = false;
@@ -95,8 +98,8 @@ class ImportController extends Controller
         $config['initial-config-complete'] = false;
         $config['delimiter']               = $config['delimiter'] === "\t" ? 'tab' : $config['delimiter'];
 
-        $result                            = json_encode($config, JSON_PRETTY_PRINT);
-        $name                              = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
+        $result = json_encode($config, JSON_PRETTY_PRINT);
+        $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
 
         /** @var LaravelResponse $response */
         $response = response($result, 200);
@@ -230,23 +233,15 @@ class ImportController extends Controller
 
     /**
      * @param ImportJob $job
+     *
+     * @return string
      */
     public function start(ImportJob $job)
     {
-        $objects = new Collection();
-        $type  = $job->file_type;
-        $class = config(sprintf('firefly.import_processors.%s', $type));
-        /** @var FileProcessorInterface $processor */
-        $processor = app($class);
-        $processor->setJob($job);
-        set_time_limit(0);
-        if ($job->status == 'configured') {
-            $processor->run();
-            $objects = $processor->getObjects();
-        }
+        $routine = new ImportRoutine($job);
+        $routine->run();
 
-        // once done, use storage thing to actually store them:
-
+        return 'ok dan';
     }
 
     /**
