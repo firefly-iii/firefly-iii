@@ -107,7 +107,7 @@ trait FindAccountsTrait
             $query->whereIn('account_types.type', $types);
 
         }
-        Log::debug(sprintf('Searching for account named %s of the following type(s)', $name), ['types' => $types]);
+        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $accounts = $query->get(['accounts.*']);
         /** @var Account $account */
@@ -118,7 +118,7 @@ trait FindAccountsTrait
                 return $account;
             }
         }
-        Log::debug('Found nothing.');
+        Log::debug(sprintf('There is no account with name "%s" or types', $name), $types);
 
         return new Account;
     }

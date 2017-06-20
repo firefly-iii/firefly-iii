@@ -60,6 +60,7 @@ class ImportRoutine
         }
 
         $storage = new ImportStorage;
+        $storage->setJob($this->job);
         $storage->setDateFormat($this->job->configuration['date-format']);
         $storage->setObjects($objects);
         $storage->store();

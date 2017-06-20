@@ -285,6 +285,18 @@ class Steam
     }
 
     /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function opposite(string $amount): string
+    {
+        $amount = bcmul($amount, '-1');
+
+        return $amount;
+    }
+
+    /**
      * @param $string
      *
      * @return int

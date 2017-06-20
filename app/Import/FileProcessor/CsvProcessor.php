@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace FireflyIII\Import\FileProcessor;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
@@ -184,6 +183,7 @@ class CsvProcessor implements FileProcessorInterface
 
     /**
      * Take a row, build import journal by annotating each value and storing it in the import journal.
+     *
      * @param int   $index
      * @param array $row
      *
@@ -192,15 +192,18 @@ class CsvProcessor implements FileProcessorInterface
     private function importRow(int $index, array $row): ImportJournal
     {
         Log::debug(sprintf('Now at row %d', $index));
-        $row    = $this->specifics($row);
+        $row     = $this->specifics($row);
         $journal = new ImportJournal;
         $journal->setUser($this->job->user);
         $journal->setHash(hash('sha256', json_encode($row)));
 
         foreach ($row as $rowIndex => $value) {
-            $annotated = $this->annotateValue($rowIndex, $value);
-            Log::debug('Annotated value', $annotated);
-            $journal->setValue($annotated);
+            $value = trim($value);
+            if (strlen($value) > 0) {
+                $annotated = $this->annotateValue($rowIndex, $value);
+                Log::debug('Annotated value', $annotated);
+                $journal->setValue($annotated);
+            }
         }
         Log::debug('ImportJournal complete, returning.');
 

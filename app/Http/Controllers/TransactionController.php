@@ -78,6 +78,7 @@ class TransactionController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
+        $path         = '/transactions/' . $what;
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -85,6 +86,7 @@ class TransactionController extends Controller
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
             $end      = new Carbon;
+            $path = '/transactions/'.$what.'/all/';
         }
 
         // prep for "specific date" view.
@@ -118,7 +120,7 @@ class TransactionController extends Controller
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/transactions/' . $what);
+            $journals->setPath($path);
             $count = $journals->getCollection()->count();
             if ($count === 0) {
                 $start->subDay();

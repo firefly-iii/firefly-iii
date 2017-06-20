@@ -46,7 +46,7 @@ class ImportCurrency
     /**
      * @return TransactionCurrency
      */
-    public function createCurrency(): TransactionCurrency
+    public function getTransactionCurrency(): TransactionCurrency
     {
         if (!is_null($this->currency->id)) {
             return $this->currency;
@@ -77,6 +77,12 @@ class ImportCurrency
             'name'           => $this->name['value'] ?? null,
             'decimal_places' => 2,
         ];
+        if (is_null($data['code'])) {
+            Log::info('Need at least a code to create currency, return nothing.');
+
+            return new TransactionCurrency();
+        }
+
         Log::debug('Search for maps resulted in nothing, create new one based on', $data);
         $currency       = $this->repository->store($data);
         $this->currency = $currency;

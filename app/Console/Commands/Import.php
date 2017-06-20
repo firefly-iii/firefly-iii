@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
-use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\Logging\CommandHandler;
+use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -75,15 +75,16 @@ class Import extends Command
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
-        $importProcedure = new ImportProcedure;
-        $result          = $importProcedure->runImport($job);
+
+        $routine = new ImportRoutine($job);
+        $routine->run();
 
         // display result to user:
-        $this->presentResults($result);
+        //$this->presentResults($result);
         $this->line('The import has completed.');
 
         // get any errors from the importer:
-        $this->presentErrors($job);
+        //$this->presentErrors($job);
 
         return;
     }
@@ -96,12 +97,14 @@ class Import extends Command
     private function isValid(ImportJob $job): bool
     {
         if (is_null($job)) {
+            Log::error('This job does not seem to exist.');
             $this->error('This job does not seem to exist.');
 
             return false;
         }
 
-        if ($job->status != 'settings_complete') {
+        if ($job->status !== 'configured') {
+            Log::error(sprintf('This job is not ready to be imported (status is %s).', $job->status));
             $this->error('This job is not ready to be imported.');
 
             return false;

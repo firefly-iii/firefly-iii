@@ -14,11 +14,12 @@ namespace FireflyIII\Import\Object;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Import\Converter\Amount;
+use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class ImportJournal
@@ -27,35 +28,33 @@ use Illuminate\Support\Collection;
  */
 class ImportJournal
 {
-    /** @var  Collection */
-    public $errors;
-    /** @var string */
-    private $amount = '0';
     /** @var ImportAccount */
     public $asset;
+    /** @var ImportBudget */
+    public $budget;
+    /** @var  string */
+    public $description;
+    /** @var  Collection */
+    public $errors;
+    /** @var  string */
+    public $hash;
+    /** @var ImportAccount */
+    public $opposing;
+    /** @var string */
+    private $amount = '0';
     /** @var  ImportBill */
     private $bill;
-    /** @var ImportBudget */
-    private $budget;
     /** @var ImportCategory */
-    private $category;
+    public $category;
     /** @var  ImportCurrency */
     private $currency;
     /** @var string */
     private $date = '';
     /** @var string */
-    private $dateFormat = 'Ymd';
-    /** @var  string */
-    private $description;
-    /** @var string */
     private $externalId = '';
-    /** @var  string */
-    private $hash;
     /** @var array */
     private $modifiers = [];
-    /** @var ImportAccount */
-    private $opposing;
-    private $tags = [];
+    private $tags      = [];
     /** @var string */
     private $transactionType = '';
     /** @var  User */
@@ -72,6 +71,7 @@ class ImportJournal
         $this->bill     = new ImportBill;
         $this->category = new ImportCategory;
         $this->budget   = new ImportBudget;
+        $this->currency = new ImportCurrency;
     }
 
     /**
@@ -92,14 +92,65 @@ class ImportJournal
     }
 
     /**
+     * @return string
+     */
+    public function getAmount(): string
+    {
+
+        /** @var ConverterInterface $amountConverter */
+        $amountConverter = app(Amount::class);
+        $this->amount    = strval($amountConverter->convert($this->amount));
+        // modify
+        foreach ($this->modifiers as $modifier) {
+            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
+            /** @var ConverterInterface $converter */
+            $converter = app($class);
+            if ($converter->convert($modifier['value']) === -1) {
+                $this->amount = Steam::negative($this->amount);
+            }
+        }
+
+        return $this->amount;
+    }
+
+    /**
+     * @return ImportCurrency
+     */
+    public function getCurrency(): ImportCurrency
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return Carbon
+     */
+    public function getDate(string $format): Carbon
+    {
+        return Carbon::createFromFormat($format, $this->date);
+    }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash(string $hash)
+    {
+        $this->hash = $hash;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
     {
         $this->user = $user;
+
         // set user for related objects:
         $this->asset->setUser($user);
         $this->opposing->setUser($user);
+        $this->budget->setUser($user);
+        $this->category->setUser($user);
     }
 
     /**
