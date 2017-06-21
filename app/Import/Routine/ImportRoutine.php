@@ -21,6 +21,12 @@ use Log;
 class ImportRoutine
 {
 
+    /** @var  Collection */
+    public $journals;
+    /** @var  Collection */
+    public $errors;
+    /** @var int */
+    public $lines = 0;
     /** @var  ImportJob */
     private $job;
 
@@ -31,7 +37,9 @@ class ImportRoutine
      */
     public function __construct(ImportJob $job)
     {
-        $this->job = $job;
+        $this->job      = $job;
+        $this->journals = new Collection;
+        $this->errors = new Collection;
     }
 
     /**
@@ -58,6 +66,9 @@ class ImportRoutine
             $processor->run();
             $objects = $processor->getObjects();
         }
+        $this->lines = $objects->count();
+        // once done, use storage thing to actually store them:
+        Log::debug(sprintf('Returned %d valid objects from file processor', $this->lines));
 
         $storage = new ImportStorage;
         $storage->setJob($this->job);
@@ -65,8 +76,12 @@ class ImportRoutine
         $storage->setObjects($objects);
         $storage->store();
 
-        // once done, use storage thing to actually store them:
-        Log::debug(sprintf('Returned %d valid objects from file processor', $objects->count()));
+        // update job:
+        $this->job->status = 'finished';
+        $this->job->save();
+
+        $this->journals = $storage->journals;
+        $this->errors = $storage->errors;
 
         Log::debug(sprintf('Done with import job %s', $this->job->key));
 

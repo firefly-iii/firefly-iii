@@ -12,15 +12,17 @@ declare(strict_types=1);
 namespace FireflyIII\Import\Storage;
 
 use Amount;
-use FireflyIII\Exceptions\FireflyException;
+use Carbon\Carbon;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Log;
 use Steam;
 
@@ -32,8 +34,12 @@ use Steam;
  */
 class ImportStorage
 {
+    /** @var  Collection */
+    public $errors;
+    public $journals;
     /** @var string */
     private $dateFormat = 'Ymd';
+    /** @var  TransactionCurrency */
     private $defaultCurrency;
     /** @var  ImportJob */
     private $job;
@@ -45,7 +51,9 @@ class ImportStorage
      */
     public function __construct()
     {
-        $this->objects = new Collection;
+        $this->objects  = new Collection;
+        $this->journals = new Collection;
+        $this->errors   = new Collection;
     }
 
     /**
@@ -86,6 +94,8 @@ class ImportStorage
          */
         foreach ($this->objects as $index => $object) {
             Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $object->description));
+
+            $errors = new MessageBag;
 
             // create the asset account
             $asset           = $object->asset->getAccount();
@@ -131,7 +141,10 @@ class ImportStorage
             $journal->encrypted               = 0;
             $journal->completed               = 0;
             if (!$journal->save()) {
-                throw new FireflyException($journal->getErrors()->first());
+                $errorText = join(', ', $journal->getErrors()->all());
+                $errors->add('no-key', sprintf('Error storing journal: %s', $errorText));
+                Log::error(sprintf('Could not store line #%d: %s', $index, $errorText));
+                continue;
             }
             $journal->setMeta('importHash', $object->hash);
             Log::debug(sprintf('Created journal with ID #%d', $journal->id));
@@ -143,6 +156,10 @@ class ImportStorage
             $one->transaction_currency_id = $currency->id;
             $one->amount                  = $amount;
             $one->save();
+            if (is_null($one->id)) {
+                $errorText = join(', ', $one->getErrors()->all());
+                $errors->add('no-key', sprintf('Error storing transaction one for journal %d: %s', $journal->id, $errorText));
+            }
             Log::debug(sprintf('Created transaction with ID #%d and account #%d', $one->id, $asset->id));
 
             $two                          = new Transaction;
@@ -151,6 +168,10 @@ class ImportStorage
             $two->transaction_currency_id = $currency->id;
             $two->amount                  = Steam::opposite($amount);
             $two->save();
+            if (is_null($two->id)) {
+                $errorText = join(', ', $two->getErrors()->all());
+                $errors->add('no-key', sprintf('Error storing transaction one for journal %d: %s', $journal->id, $errorText));
+            }
             Log::debug(sprintf('Created transaction with ID #%d and account #%d', $two->id, $opposing->id));
 
             // category
@@ -167,13 +188,33 @@ class ImportStorage
                 $journal->budgets()->save($budget);
             }
             // bill
+            $bill = $object->bill->getBill();
+            if (!is_null($bill->id)) {
+                Log::debug(sprintf('Linked bill #%d to journal #%d', $bill->id, $journal->id));
+                $journal->bill()->associate($bill);
+                $journal->save();
+            }
 
-            // 
+            // all other date fields as meta thing:
+            foreach ($object->metaDates as $name => $value) {
+                try {
+                    $date = new Carbon($value);
+                    $journal->setMeta($name, $date);
+                } catch (\Exception $e) {
+                    // don't care, ignore:
+                    Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));
+                }
+            }
 
-
+            // sepa thing as note:
+            if (strlen($object->notes) > 0) {
+                $journal->setMeta('notes', $object->notes);
+            }
+            $this->journals->push($journal);
+            $this->errors->push($errors);
         }
 
-        die('Cannot actually store yet.');
+
     }
 
 }

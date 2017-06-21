@@ -46,6 +46,7 @@ class ImportJob extends Model
             'initialized',
             'configured',
             'running',
+            'finished',
         ];
 
     /**

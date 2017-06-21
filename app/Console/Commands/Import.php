@@ -19,6 +19,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Log;
 
 /**
@@ -79,9 +80,17 @@ class Import extends Command
         $routine = new ImportRoutine($job);
         $routine->run();
 
+        /** @var MessageBag $error */
+        foreach($routine->errors as $index => $error) {
+            if($error->count() > 0) {
+                $message = join(', ',$error->all());
+                $this->error(sprintf('Error importing line #%d: %s', $index, $message));
+            }
+        }
+
         // display result to user:
         //$this->presentResults($result);
-        $this->line('The import has completed.');
+        $this->line(sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->journals->count(), $routine->lines));
 
         // get any errors from the importer:
         //$this->presentErrors($job);

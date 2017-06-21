@@ -64,9 +64,8 @@ class CsvProcessor implements FileProcessorInterface
      */
     public function run(): bool
     {
-        // TODO update the job and say we started:
-        //$this->job->status = 'running';
-        //$this->job->save();
+        $this->job->status = 'running';
+        $this->job->save();
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = $this->getImportArray();

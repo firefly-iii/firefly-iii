@@ -33,7 +33,7 @@ class ImportJournal
     /** @var ImportBudget */
     public $budget;
     /** @var  string */
-    public $description;
+    public $description = '';
     /** @var  Collection */
     public $errors;
     /** @var  string */
@@ -43,7 +43,7 @@ class ImportJournal
     /** @var string */
     private $amount = '0';
     /** @var  ImportBill */
-    private $bill;
+    public $bill;
     /** @var ImportCategory */
     public $category;
     /** @var  ImportCurrency */
@@ -54,11 +54,16 @@ class ImportJournal
     private $externalId = '';
     /** @var array */
     private $modifiers = [];
+    /** @var array  */
     private $tags      = [];
+    /** @var string  */
+    public $notes = '';
     /** @var string */
     private $transactionType = '';
     /** @var  User */
     private $user;
+    /** @var array  */
+    public $metaDates = [];
 
     /**
      * ImportEntry constructor.
@@ -151,6 +156,7 @@ class ImportJournal
         $this->opposing->setUser($user);
         $this->budget->setUser($user);
         $this->category->setUser($user);
+        $this->bill->setUser($user);
     }
 
     /**
@@ -214,6 +220,12 @@ class ImportJournal
             case 'description':
                 $this->description = $array['value'];
                 break;
+            case 'sepa-ct-op':
+            case 'sepa-ct-id':
+            case 'sepa-db':
+                $this->notes .= ' '.$array['value'];
+                $this->notes = trim($this->notes);
+                break;
             case 'external-id':
                 $this->externalId = $array['value'];
                 break;
@@ -238,6 +250,16 @@ class ImportJournal
             case 'tags-comma':
             case 'tags-space':
                 $this->tags[] = $array;
+                break;
+                // 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date',
+            case 'date-interest':
+                $this->metaDates['interest_date'] = $array['value'];
+                break;
+            case 'date-book':
+                $this->metaDates['book_date'] = $array['value'];
+                break;
+            case 'date-process':
+                $this->metaDates['process_date'] = $array['value'];
                 break;
         }
     }
