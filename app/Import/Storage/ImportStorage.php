@@ -17,10 +17,12 @@ use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Rules\Processor;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -45,6 +47,8 @@ class ImportStorage
     private $job;
     /** @var Collection */
     private $objects;
+    /** @var Collection */
+    private $rules;
 
     /**
      * ImportStorage constructor.
@@ -54,6 +58,8 @@ class ImportStorage
         $this->objects  = new Collection;
         $this->journals = new Collection;
         $this->errors   = new Collection;
+        $this->rules    = $this->getUserRules();
+
     }
 
     /**
@@ -80,7 +86,6 @@ class ImportStorage
         $this->objects = $objects;
     }
 
-
     /**
      * Do storage of import objects
      */
@@ -88,6 +93,8 @@ class ImportStorage
     {
         $this->defaultCurrency = Amount::getDefaultCurrencyByUser($this->job->user);
 
+
+        // routine below consists of 3 steps.
         /**
          * @var int           $index
          * @var ImportJournal $object
@@ -129,6 +136,8 @@ class ImportStorage
                 Log::debug(sprintf('Opposing account #%d %s is an asset account, make transfer.', $opposing->id, $opposing->name));
                 $transactionType = TransactionType::whereType(TransactionType::TRANSFER)->first();
             }
+
+            $this->job->addStepsDone(1);
 
             $journal                          = new TransactionJournal;
             $journal->user_id                 = $this->job->user_id;
@@ -174,6 +183,9 @@ class ImportStorage
             }
             Log::debug(sprintf('Created transaction with ID #%d and account #%d', $two->id, $opposing->id));
 
+            $this->job->addStepsDone(1);
+            sleep(1);
+
             // category
             $category = $object->category->getCategory();
             if (!is_null($category->id)) {
@@ -210,11 +222,67 @@ class ImportStorage
             if (strlen($object->notes) > 0) {
                 $journal->setMeta('notes', $object->notes);
             }
+            $this->job->addStepsDone(1);
+
+            // run rules:
+            $this->applyRules($journal);
+            $this->job->addStepsDone(1);
+
             $this->journals->push($journal);
             $this->errors->push($errors);
+
+
+            sleep(1);
         }
 
 
     }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    protected function applyRules(TransactionJournal $journal): bool
+    {
+        if ($this->rules->count() > 0) {
+
+            /** @var Rule $rule */
+            foreach ($this->rules as $rule) {
+                Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
+                $processor = Processor::make($rule);
+                $processor->handleTransactionJournal($journal);
+
+                if ($rule->stop_processing) {
+                    return true;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getUserRules(): Collection
+    {
+        $set = Rule::distinct()
+                   ->where('rules.user_id', $this->job->user->id)
+                   ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                   ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                   ->where('rule_groups.active', 1)
+                   ->where('rule_triggers.trigger_type', 'user_action')
+                   ->where('rule_triggers.trigger_value', 'store-journal')
+                   ->where('rules.active', 1)
+                   ->orderBy('rule_groups.order', 'ASC')
+                   ->orderBy('rules.order', 'ASC')
+                   ->get(['rules.*', 'rule_groups.order']);
+        Log::debug(sprintf('Found %d user rules.', $set->count()));
+
+        return $set;
+
+    }
+
 
 }

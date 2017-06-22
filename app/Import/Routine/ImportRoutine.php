@@ -22,9 +22,9 @@ class ImportRoutine
 {
 
     /** @var  Collection */
-    public $journals;
-    /** @var  Collection */
     public $errors;
+    /** @var  Collection */
+    public $journals;
     /** @var int */
     public $lines = 0;
     /** @var  ImportJob */
@@ -39,7 +39,7 @@ class ImportRoutine
     {
         $this->job      = $job;
         $this->journals = new Collection;
-        $this->errors = new Collection;
+        $this->errors   = new Collection;
     }
 
     /**
@@ -60,8 +60,14 @@ class ImportRoutine
         /** @var FileProcessorInterface $processor */
         $processor = app($class);
         $processor->setJob($this->job);
+
         set_time_limit(0);
         if ($this->job->status == 'configured') {
+
+            // set job as "running"...
+            $this->job->status = 'running';
+            $this->job->save();
+
             Log::debug('Job is configured, start with run()');
             $processor->run();
             $objects = $processor->getObjects();
@@ -81,7 +87,10 @@ class ImportRoutine
         $this->job->save();
 
         $this->journals = $storage->journals;
-        $this->errors = $storage->errors;
+        $this->errors   = $storage->errors;
+
+        // run rules:
+
 
         Log::debug(sprintf('Done with import job %s', $this->job->key));
 

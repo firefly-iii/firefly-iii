@@ -64,8 +64,6 @@ class CsvProcessor implements FileProcessorInterface
      */
     public function run(): bool
     {
-        $this->job->status = 'running';
-        $this->job->save();
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = $this->getImportArray();
@@ -84,9 +82,9 @@ class CsvProcessor implements FileProcessorInterface
              * 3. Store journal.
              * 4. Run rules.
              */
-            $this->job->addTotalSteps(4);
             $this->job->addStepsDone(1);
             $count++;
+            sleep(1);
         }
 
         return true;

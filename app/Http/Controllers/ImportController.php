@@ -20,6 +20,7 @@ use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -188,11 +189,12 @@ class ImportController extends Controller
         if ($job->extended_status['total_steps'] !== 0) {
             $percentage = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
         }
-        if ($job->status === 'complete') {
-            $tagId = $job->extended_status['importTag'];
-            /** @var TagRepositoryInterface $repository */
-            $repository             = app(TagRepositoryInterface::class);
-            $tag                    = $repository->find($tagId);
+        if ($job->status === 'finished') {
+//            $tagId = $job->extended_status['importTag'];
+//            /** @var TagRepositoryInterface $repository */
+//            $repository             = app(TagRepositoryInterface::class);
+//            $tag                    = $repository->find($tagId);
+            $tag = new Tag;
             $result['finished']     = true;
             $result['finishedText'] = trans('firefly.import_finished_link', ['link' => route('tags.show', [$tag->id]), 'tag' => $tag->tag]);
         }
@@ -201,6 +203,7 @@ class ImportController extends Controller
             $result['started']    = true;
             $result['running']    = true;
             $result['percentage'] = $percentage;
+            $result['showPercentage'] = true;
         }
 
         return Response::json($result);
@@ -241,7 +244,7 @@ class ImportController extends Controller
         $routine = new ImportRoutine($job);
         $routine->run();
 
-        return 'ok dan';
+        return 'done!';
     }
 
     /**
