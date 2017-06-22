@@ -987,7 +987,7 @@ return [
     'import_file_help'                      => 'Selecione seu arquivo',
     'import_status_settings_complete'       => 'A importação está pronta para começar.',
     'import_status_import_complete'         => 'A importação foi concluída.',
-    'import_status_import_running'          => 'A importação está atualmente em execução. Por favor, seja paciente.',
+    'import_status_running'          => 'The import is currently running. Please be patient.',
     'import_status_header'                  => 'Importação status e progresso',
     'import_status_errors'                  => 'Erro de importação',
     'import_status_report'                  => 'Relatório de importação',
