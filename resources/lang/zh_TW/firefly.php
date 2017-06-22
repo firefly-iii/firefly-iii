@@ -987,7 +987,7 @@ return [
     'import_file_help'                      => 'Select your file',
     'import_status_settings_complete'       => '匯入已準備妥當，可以開始。',
     'import_status_import_complete'         => '匯入已完成。',
-    'import_status_import_running'          => '匯入正在進行中。請稍候。',
+    'import_status_running'          => 'The import is currently running. Please be patient.',
     'import_status_header'                  => '匯入狀態與進度',
     'import_status_errors'                  => '匯入錯誤',
     'import_status_report'                  => '匯入報告',
