@@ -987,7 +987,7 @@ return [
     'import_file_help'                      => 'Selecteer je bestand',
     'import_status_settings_complete'       => 'De import is klaar om te beginnen.',
     'import_status_import_complete'         => 'Het importeren is voltooid.',
-    'import_status_import_running'          => 'Het importeren is nu bezig. Een momentje geduld.',
+    'import_status_running'          => 'The import is currently running. Please be patient.',
     'import_status_header'                  => 'Importstatus en voortgang',
     'import_status_errors'                  => 'Importfouten (Engels)',
     'import_status_report'                  => 'Importrapport',
