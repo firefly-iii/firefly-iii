@@ -15,30 +15,26 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\ImportUploadRequest;
 use FireflyIII\Import\Configurator\ConfiguratorInterface;
-use FireflyIII\Import\FileProcessor\FileProcessorInterface;
-use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Import\Routine\ImportRoutine;
-use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
-use Illuminate\Support\Collection;
 use Log;
 use Response;
-use Validator;
 use View;
 
 /**
- * Class ImportController
+ * Class ImportController.
  *
  * @package FireflyIII\Http\Controllers
  */
 class ImportController extends Controller
 {
+    /** @var  ImportJobRepositoryInterface */
+    public $repository;
+
     /**
      *
      */
@@ -50,6 +46,7 @@ class ImportController extends Controller
             function ($request, $next) {
                 View::share('mainTitleIcon', 'fa-archive');
                 View::share('title', trans('firefly.import_data_full'));
+                $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -71,6 +68,8 @@ class ImportController extends Controller
 
         // is the job already configured?
         if ($configurator->isJobConfigured()) {
+            $this->repository->updateStatus($job, 'configured');
+
             return redirect(route('import.status', [$job->key]));
         }
         $view         = $configurator->getNextView();
@@ -82,11 +81,11 @@ class ImportController extends Controller
     }
 
     /**
-     * Generate a JSON file of the job's config and send it to the user.
+     * Generate a JSON file of the job's configuration and send it to the user.
      *
      * @param ImportJob $job
      *
-     * @return mixed
+     * @return string
      */
     public function download(ImportJob $job)
     {
@@ -140,70 +139,72 @@ class ImportController extends Controller
     /**
      * This is step 2. It creates an Import Job. Stores the import.
      *
-     * @param ImportUploadRequest          $request
-     * @param ImportJobRepositoryInterface $repository
-     * @param UserRepositoryInterface      $userRepository
+     * @param ImportUploadRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function initialize(ImportUploadRequest $request, ImportJobRepositoryInterface $repository, UserRepositoryInterface $userRepository)
+    public function initialize(ImportUploadRequest $request)
     {
         Log::debug('Now in initialize()');
 
         // create import job:
         $type = $request->get('import_file_type');
-        $job  = $repository->create($type);
+        $job  = $this->repository->create($type);
         Log::debug('Created new job', ['key' => $job->key, 'id' => $job->id]);
 
         // process file:
-        $repository->processFile($job, $request->files->get('import_file'));
+        $this->repository->processFile($job, $request->files->get('import_file'));
 
         // process config, if present:
         if ($request->files->has('configuration_file')) {
-            $repository->processConfiguration($job, $request->files->get('configuration_file'));
+            $this->repository->processConfiguration($job, $request->files->get('configuration_file'));
         }
+
+        $this->repository->updateStatus($job, 'initialized');
 
         return redirect(route('import.configure', [$job->key]));
     }
 
     /**
+     *
+     * Show status of import job in JSON.
+     *
      * @param ImportJob $job
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function json(ImportJob $job)
     {
-        $result     = [
+        $result = [
             'started'      => false,
             'finished'     => false,
             'running'      => false,
-            'errors'       => $job->extended_status['errors'],
+            'errors'       => array_values($job->extended_status['errors']),
             'percentage'   => 0,
-            'steps'        => $job->extended_status['total_steps'],
-            'stepsDone'    => $job->extended_status['steps_done'],
+            'steps'        => $job->extended_status['steps'],
+            'done'         => $job->extended_status['done'],
             'statusText'   => trans('firefly.import_status_' . $job->status),
             'status'       => $job->status,
             'finishedText' => '',
         ];
-        $percentage = 0;
-        if ($job->extended_status['total_steps'] !== 0) {
-            $percentage = round(($job->extended_status['steps_done'] / $job->extended_status['total_steps']) * 100, 0);
+
+        if ($job->extended_status['steps'] !== 0) {
+            $result['percentage'] = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
         }
+
         if ($job->status === 'finished') {
-//            $tagId = $job->extended_status['importTag'];
-//            /** @var TagRepositoryInterface $repository */
-//            $repository             = app(TagRepositoryInterface::class);
-//            $tag                    = $repository->find($tagId);
-            $tag = new Tag;
+            //            $tagId = $job->extended_status['importTag'];
+            //            /** @var TagRepositoryInterface $repository */
+            //            $repository             = app(TagRepositoryInterface::class);
+            //            $tag                    = $repository->find($tagId);
+            $tag                    = new Tag;
             $result['finished']     = true;
             $result['finishedText'] = trans('firefly.import_finished_link', ['link' => route('tags.show', [$tag->id]), 'tag' => $tag->tag]);
         }
 
         if ($job->status === 'running') {
-            $result['started']    = true;
-            $result['running']    = true;
-            $result['percentage'] = $percentage;
-            $result['showPercentage'] = true;
+            $result['started'] = true;
+            $result['running'] = true;
         }
 
         return Response::json($result);
@@ -212,13 +213,12 @@ class ImportController extends Controller
     /**
      * Step 4. Save the configuration.
      *
-     * @param Request                      $request
-     * @param ImportJobRepositoryInterface $repository
-     * @param ImportJob                    $job
+     * @param Request   $request
+     * @param ImportJob $job
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function postConfigure(Request $request, ImportJobRepositoryInterface $repository, ImportJob $job)
+    public function postConfigure(Request $request, ImportJob $job)
     {
         Log::debug('Now in postConfigure()', ['job' => $job->key]);
         $configurator = $this->makeConfigurator($job);
@@ -237,25 +237,31 @@ class ImportController extends Controller
     /**
      * @param ImportJob $job
      *
-     * @return string
+     * @return \Illuminate\Http\JsonResponse
+     * @throws FireflyException
      */
     public function start(ImportJob $job)
     {
         $routine = new ImportRoutine($job);
-        $routine->run();
+        $result  = $routine->run();
+        if ($result) {
+            return Response::json(['run' => 'ok']);
+        }
 
-        return 'done!';
+        throw new FireflyException('Job did not complete succesfully.');
     }
 
     /**
-     * This is the last step before the import starts.
-     *
      * @param ImportJob $job
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function status(ImportJob $job)
     {
+        $statuses = ['configured', 'running', 'finished'];
+        if (!in_array($job->status, $statuses)) {
+            return redirect(route('import.configure', [$job->key]));
+        }
         $subTitle     = trans('firefly.import_status');
         $subTitleIcon = 'fa-star';
 

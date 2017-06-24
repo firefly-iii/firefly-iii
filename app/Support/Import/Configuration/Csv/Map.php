@@ -95,7 +95,7 @@ class Map implements ConfigurationInterface
         // save number of rows, thus number of steps, in job:
         $steps                      = $rowIndex * 5;
         $extended                   = $this->job->extended_status;
-        $extended['total_steps']    = $steps;
+        $extended['steps']    = $steps;
         $this->job->extended_status = $extended;
         $this->job->save();
 

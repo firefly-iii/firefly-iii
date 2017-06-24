@@ -7,20 +7,45 @@
 
     {# Initial display. Will refresh (and disappear almost immediately. #}
 
-    <div class="row status_initial" style="display:none;">
+    <div class="row status_initial statusbox">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Nothing to see here...</h3>
+                    <h3 class="box-title">{{ 'please_wait_for_status'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <p>This box will be replaced in a moment with the status of your import.</p>
+                    <p>
+                        {{ 'box_will_refresh'|_ }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row status_configured">
+    {# Error display. Will be shown (duh) when something goes horribly wrong. #}
+    <div class="row errorbox" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_error_occurred'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'import_error'|_ }}
+                    </p>
+                    <p class="text-danger import_error_txt">
+
+                    </p>
+                    <p>
+                        {{ 'import_error_further_instructions'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Box for when the job is ready to start #}
+    <div class="row status_configured statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -39,8 +64,7 @@
                                         class="fa fa-fw fa-download"></i> {{ 'import_download_config'|_ }}</a>
                         </div>
                         <div class="col-lg-4">
-                            <a href="#" class="btn btn-success start-job"><i
-                                        class="fa fa-fw fa-gears"></i> {{ 'import_start_import'|_ }}</a>
+                            <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ 'import_start_import'|_ }}</button>
                         </div>
                     </div>
                     <p>
@@ -54,28 +78,29 @@
         </div>
     </div>
 
-    <div class="row status_running" style="display: none;">
+    {# Box for when the job is running! #}
+    <div class="row status_running statusbox" style="display: none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title" id="import-status-title">Job status</h3>
+                    <h3 class="box-title" id="import-status-title">{{ 'import_job_status'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <div id="import-status-holder">
                         <div class="progress" id="import-status-holder">
                             <div id="import-status-bar" class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar"
                                  aria-valuenow="100" aria-valuemin="0"
-                                 aria-valuemax="100" style="width: 100%">
+                                 aria-valuemax="100" style="width: 100%;min-width:40px;">
                             </div>
                         </div>
-                        <p id="import-status-txt">{{ 'import_status_settings_complete'|_ }}</p>
+                        <p id="import-status-txt">{{ 'import_status_ready_to_start'|_ }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row status_finished" style="display:none;">
+    <div class="row status_finished statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-default">
                 <div class="box-header with-border">
@@ -91,6 +116,60 @@
         </div>
     </div>
 
+    {# box to show error information. #}
+    <div class="row info_errors" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status_errors'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p id="import-status-error-intro">
+                        No errors detected.
+                    </p>
+                    <div id="import-status-error-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {#
+
+
+        <div class="row status_finished" style="display:none;">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'import_status_report'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p id="import-status-intro">
+                            {{ 'import_finished_report'|_ }}
+                        </p>
+                        <p id="import-status-more-info"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row info_errors" style="display:none;">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'import_status_errors'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p id="import-status-error-intro">
+                            No errors detected.
+                        </p>
+                        <ul id="import-status-error-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        #}
 
 
     {#

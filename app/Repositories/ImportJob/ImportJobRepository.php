@@ -58,12 +58,12 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob->file_type       = $fileType;
                 $importJob->key             = Str::random(12);
                 $importJob->status          = 'new';
+                $importJob->configuration   = [];
                 $importJob->extended_status = [
-                    'total_steps'  => 0,
-                    'steps_done'   => 0,
-                    'import_count' => 0,
-                    'importTag'    => 0,
-                    'errors'       => [],
+                    'steps'     => 0,
+                    'done'      => 0,
+                    'importTag' => 0,
+                    'errors'    => [],
                 ];
                 $importJob->save();
 
@@ -157,8 +157,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             $disk->put($newName, $contentEncrypted);
             Log::debug('Uploaded file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]);
         }
-        $job->status = 'initialized';
-        $job->save();
 
         return true;
     }

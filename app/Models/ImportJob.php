@@ -67,12 +67,27 @@ class ImportJob extends Model
     }
 
     /**
+     * @param int    $index
+     * @param string $message
+     *
+     * @return bool
+     */
+    public function addError(int $index, string $message): bool
+    {
+        $extended                     = $this->extended_status;
+        $extended['errors'][$index][] = $message;
+        $this->extended_status        = $extended;
+
+        return true;
+    }
+
+    /**
      * @param int $count
      */
     public function addStepsDone(int $count)
     {
-        $status                = $this->extended_status;
-        $status['steps_done']  += $count;
+        $status = $this->extended_status;
+        $status['done']        += $count;
         $this->extended_status = $status;
         $this->save();
 
@@ -84,7 +99,7 @@ class ImportJob extends Model
     public function addTotalSteps(int $count)
     {
         $status                = $this->extended_status;
-        $status['total_steps'] += $count;
+        $status['steps']       += $count;
         $this->extended_status = $status;
         $this->save();
 
@@ -165,7 +180,7 @@ class ImportJob extends Model
         $disk             = Storage::disk('upload');
         $encryptedContent = $disk->get($fileName);
         $content          = Crypt::decrypt($encryptedContent);
-        Log::debug(sprintf('Content size is %d bytes.', $content));
+        Log::debug(sprintf('Content size is %d bytes.', strlen($content)));
 
         return $content;
     }

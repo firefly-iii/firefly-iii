@@ -103,9 +103,6 @@ class CsvConfigurator implements ConfiguratorInterface
             && $this->job->configuration['column-roles-complete']
             && $this->job->configuration['column-mapping-complete']
         ) {
-            $this->job->status = 'configured';
-            $this->job->save();
-
             return true;
         }
 

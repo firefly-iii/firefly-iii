@@ -67,25 +67,28 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
         $entries = $this->getImportArray();
-        $count   = 0;
+        $index   = 0;
         Log::notice('Building importable objects from CSV file.');
         foreach ($entries as $index => $row) {
             // verify if not exists already:
-            if ($this->hashPresent($row)) {
-                Log::info(sprintf('Row #%d has already been imported.', $index));
+            if ($this->rowAlreadyImported($row)) {
+                $message = sprintf('Row #%d has already been imported.', $index);
+                $this->job->addError($index, $message);
+                $this->job->addStepsDone(5); // all steps.
+                Log::info($message);
                 continue;
             }
             $this->objects->push($this->importRow($index, $row));
-            /**
-             * 1. Build import entry.
-             * 2. Validate import entry.
-             * 3. Store journal.
-             * 4. Run rules.
-             */
             $this->job->addStepsDone(1);
-            $count++;
-            sleep(1);
         }
+        // if job has no step count, set it now:
+        $extended = $this->job->extended_status;
+        if ($extended['steps'] === 0) {
+            $extended['steps']          = $index * 5;
+            $this->job->extended_status = $extended;
+            $this->job->save();
+        }
+
 
         return true;
     }
@@ -149,36 +152,6 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * Checks if the row has not been imported before.
-     *
-     * TODO for debugging, will always return false.
-     *
-     * @param array $array
-     *
-     * @noinspection PhpUnreachableStatementInspection
-     * @return bool
-     */
-    private function hashPresent(array $array): bool
-    {
-        $string = json_encode($array);
-        $hash   = hash('sha256', json_encode($string));
-        $json   = json_encode($hash);
-        $entry  = TransactionJournalMeta::
-        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                        ->where('data', $json)
-                                        ->where('name', 'importHash')
-                                        ->first();
-
-        return false;
-        if (!is_null($entry)) {
-            return true;
-        }
-
-        return false;
-
-    }
-
-    /**
      * Take a row, build import journal by annotating each value and storing it in the import journal.
      *
      * @param int   $index
@@ -205,6 +178,33 @@ class CsvProcessor implements FileProcessorInterface
         Log::debug('ImportJournal complete, returning.');
 
         return $journal;
+    }
+
+    /**
+     * Checks if the row has not been imported before.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function rowAlreadyImported(array $array): bool
+    {
+        $string = json_encode($array);
+        $hash   = hash('sha256', json_encode($string));
+        $json   = json_encode($hash);
+        $entry  = TransactionJournalMeta::
+        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                        ->where('data', $json)
+                                        ->where('name', 'importHash')
+                                        ->first();
+
+        return rand(1, 10) === 3;
+        if (!is_null($entry)) {
+            return true;
+        }
+
+        return false;
+
     }
 
     /**

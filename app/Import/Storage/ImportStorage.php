@@ -58,8 +58,6 @@ class ImportStorage
         $this->objects  = new Collection;
         $this->journals = new Collection;
         $this->errors   = new Collection;
-        $this->rules    = $this->getUserRules();
-
     }
 
     /**
@@ -75,7 +73,8 @@ class ImportStorage
      */
     public function setJob(ImportJob $job)
     {
-        $this->job = $job;
+        $this->job   = $job;
+        $this->rules = $this->getUserRules();
     }
 
     /**
@@ -100,6 +99,7 @@ class ImportStorage
          * @var ImportJournal $object
          */
         foreach ($this->objects as $index => $object) {
+            sleep(4);
             Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $object->description));
 
             $errors = new MessageBag;
@@ -148,11 +148,20 @@ class ImportStorage
             $journal->order                   = 0;
             $journal->tag_count               = 0;
             $journal->encrypted               = 0;
-            $journal->completed               = 0;
+            $journal->completed               = false;
+
+            if (rand(1, 10) === 3) {
+                $journal->date        = null;
+                $journal->description = null;
+            }
+
             if (!$journal->save()) {
                 $errorText = join(', ', $journal->getErrors()->all());
-                $errors->add('no-key', sprintf('Error storing journal: %s', $errorText));
+                $this->addErrorToJob($index, sprintf('Error storing line #%d: %s', $index, $errorText));
                 Log::error(sprintf('Could not store line #%d: %s', $index, $errorText));
+                // add the rest of the steps:
+                $this->job->addStepsDone(3);
+
                 continue;
             }
             $journal->setMeta('importHash', $object->hash);
@@ -184,7 +193,6 @@ class ImportStorage
             Log::debug(sprintf('Created transaction with ID #%d and account #%d', $two->id, $opposing->id));
 
             $this->job->addStepsDone(1);
-            sleep(1);
 
             // category
             $category = $object->category->getCategory();
@@ -222,6 +230,11 @@ class ImportStorage
             if (strlen($object->notes) > 0) {
                 $journal->setMeta('notes', $object->notes);
             }
+
+            // set journal completed:
+            $journal->completed = true;
+            $journal->save();
+
             $this->job->addStepsDone(1);
 
             // run rules:
@@ -230,9 +243,6 @@ class ImportStorage
 
             $this->journals->push($journal);
             $this->errors->push($errors);
-
-
-            sleep(1);
         }
 
 
@@ -260,6 +270,18 @@ class ImportStorage
         }
 
         return true;
+    }
+
+    /**
+     * @param int    $index
+     * @param string $error
+     */
+    private function addErrorToJob(int $index, string $error)
+    {
+        $extended                     = $this->job->extended_status;
+        $extended['errors'][$index][] = $error;
+        $this->job->extended_status   = $extended;
+        $this->job->save();
     }
 
     /**

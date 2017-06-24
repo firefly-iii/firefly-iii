@@ -40,6 +40,7 @@ class ImportRoutine
         $this->job      = $job;
         $this->journals = new Collection;
         $this->errors   = new Collection;
+        Log::debug(sprintf('Job ID is #%d', $job->id));
     }
 
     /**
@@ -48,7 +49,7 @@ class ImportRoutine
     public function run(): bool
     {
         if ($this->job->status !== 'configured') {
-            Log::error(sprintf('Job %s is in state %s so it cannot be started.', $this->job->key, $this->job->status));
+            Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->job->status));
 
             return false;
         }
