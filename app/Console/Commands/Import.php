@@ -81,11 +81,8 @@ class Import extends Command
         $routine->run();
 
         /** @var MessageBag $error */
-        foreach($routine->errors as $index => $error) {
-            if($error->count() > 0) {
-                $message = join(', ',$error->all());
-                $this->error(sprintf('Error importing line #%d: %s', $index, $message));
-            }
+        foreach ($routine->errors as $index => $error) {
+            $this->error(sprintf('Error importing line #%d: %s', $index, $error));
         }
 
         // display result to user:

@@ -97,7 +97,6 @@ class ImportStorage
     {
         $this->defaultCurrency = Amount::getDefaultCurrencyByUser($this->job->user);
 
-
         // routine below consists of 3 steps.
         /**
          * @var int           $index
@@ -283,10 +282,8 @@ class ImportStorage
 
     private function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        sleep(1);
         Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->description));
 
-        $errors          = new MessageBag;
         $asset           = $importJournal->asset->getAccount();
         $amount          = $importJournal->getAmount();
         $currency        = $this->getCurrency($importJournal);
@@ -354,7 +351,6 @@ class ImportStorage
         $this->job->addStepsDone(1);
 
         $this->journals->push($journal);
-        $this->errors->push($errors);
 
         return true;
     }

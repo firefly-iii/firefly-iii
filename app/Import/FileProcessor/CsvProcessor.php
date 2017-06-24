@@ -70,7 +70,6 @@ class CsvProcessor implements FileProcessorInterface
         $index   = 0;
         Log::notice('Building importable objects from CSV file.');
         foreach ($entries as $index => $row) {
-            sleep(1);
             // verify if not exists already:
             if ($this->rowAlreadyImported($row)) {
                 $message = sprintf('Row #%d has already been imported.', $index);
@@ -198,8 +197,6 @@ class CsvProcessor implements FileProcessorInterface
                                         ->where('data', $json)
                                         ->where('name', 'importHash')
                                         ->first();
-
-        return rand(1, 10) === 3;
         if (!is_null($entry)) {
             return true;
         }

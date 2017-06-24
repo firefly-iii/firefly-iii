@@ -121,16 +121,19 @@ function showStalledBox() {
  */
 function jobIsStalled(data) {
     console.log('jobIsStalled(' + numberOfSteps + ', ' + numberOfReports + ')');
-    if (data.steps === numberOfSteps) {
+    if (data.done === numberOfSteps) {
         numberOfReports++;
+        console.log('Number of reports is now ' + numberOfReports);
     }
     if (data.done !== numberOfSteps) {
+        console.log(data.done + ' (data.done) is not ' + numberOfReports + ' (numberOfSteps)');
         numberOfReports = 0;
     }
     if (numberOfReports > 20) {
         return true;
     }
     numberOfSteps = data.done;
+    console.log('Number of steps is now ' + numberOfSteps);
 
     return false;
 }

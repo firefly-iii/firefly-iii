@@ -58,13 +58,13 @@ class ImportRoutine
             return false;
         }
         set_time_limit(0);
-        Log::debug(sprintf('Start with import job %s', $this->job->key));
+        Log::info(sprintf('Start with import job %s', $this->job->key));
 
         $importObjects = $this->getImportObjects();
         $this->lines   = $importObjects->count();
 
         // once done, use storage thing to actually store them:
-        Log::debug(sprintf('Returned %d valid objects from file processor', $this->lines));
+        Log::info(sprintf('Returned %d valid objects from file processor', $this->lines));
 
         $storage = $this->storeObjects($importObjects);
 
@@ -78,7 +78,7 @@ class ImportRoutine
         // create tag, link tag to all journals:
         $this->createImportTag();
 
-        Log::debug(sprintf('Done with import job %s', $this->job->key));
+        Log::info(sprintf('Done with import job %s', $this->job->key));
 
         return true;
     }

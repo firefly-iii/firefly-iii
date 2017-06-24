@@ -99,6 +99,13 @@ class CsvConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
+        $config                            = $this->job->configuration;
+        $config['initial-config-complete'] = $config['initial-config-complete'] ?? false;
+        $config['column-roles-complete']   = $config['column-roles-complete'] ?? false;
+        $config['column-mapping-complete'] = $config['column-mapping-complete'] ?? false;
+        $this->job->configuration          = $config;
+        $this->job->save();
+
         if ($this->job->configuration['initial-config-complete']
             && $this->job->configuration['column-roles-complete']
             && $this->job->configuration['column-mapping-complete']
