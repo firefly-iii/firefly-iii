@@ -18,6 +18,9 @@ use FireflyIII\Import\Object\ImportAccount;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
@@ -239,6 +242,45 @@ class ImportStorage
 
     }
 
+    /**
+     * @param TransactionJournal $journal
+     * @param Bill               $bill
+     */
+    private function storeBill(TransactionJournal $journal, Bill $bill)
+    {
+        if (!is_null($bill->id)) {
+            Log::debug(sprintf('Linked bill #%d to journal #%d', $bill->id, $journal->id));
+            $journal->bill()->associate($bill);
+            $journal->save();
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Budget             $budget
+     */
+    private function storeBudget(TransactionJournal $journal, Budget $budget)
+    {
+        if (!is_null($budget->id)) {
+            Log::debug(sprintf('Linked budget #%d to journal #%d', $budget->id, $journal->id));
+            $journal->budgets()->save($budget);
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Category           $category
+     */
+    private function storeCategory(TransactionJournal $journal, Category $category)
+    {
+
+        if (!is_null($category->id)) {
+            Log::debug(sprintf('Linked category #%d to journal #%d', $category->id, $journal->id));
+            $journal->categories()->save($category);
+        }
+
+    }
+
     private function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
         sleep(1);
@@ -291,41 +333,14 @@ class ImportStorage
         $this->job->addStepsDone(1);
 
         // store meta object things:
-        // category
-        $category = $object->category->getCategory();
-        if (!is_null($category->id)) {
-            Log::debug(sprintf('Linked category #%d to journal #%d', $category->id, $journal->id));
-            $journal->categories()->save($category);
-        }
-
-        // budget
-        $budget = $object->budget->getBudget();
-        if (!is_null($budget->id)) {
-            Log::debug(sprintf('Linked budget #%d to journal #%d', $budget->id, $journal->id));
-            $journal->budgets()->save($budget);
-        }
-        // bill
-        $bill = $object->bill->getBill();
-        if (!is_null($bill->id)) {
-            Log::debug(sprintf('Linked bill #%d to journal #%d', $bill->id, $journal->id));
-            $journal->bill()->associate($bill);
-            $journal->save();
-        }
-
-        // all other date fields as meta thing:
-        foreach ($object->metaDates as $name => $value) {
-            try {
-                $date = new Carbon($value);
-                $journal->setMeta($name, $date);
-            } catch (\Exception $e) {
-                // don't care, ignore:
-                Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));
-            }
-        }
+        $this->storeCategory($journal, $importJournal->category->getCategory());
+        $this->storeBudget($journal, $importJournal->budget->getBudget());
+        $this->storeBill($journal, $importJournal->bill->getBill());
+        $this->storeMeta($journal, $importJournal->metaDates);
 
         // sepa thing as note:
-        if (strlen($object->notes) > 0) {
-            $journal->setMeta('notes', $object->notes);
+        if (strlen($importJournal->notes) > 0) {
+            $journal->setMeta('notes', $importJournal->notes);
         }
 
         // set journal completed:
@@ -344,5 +359,22 @@ class ImportStorage
         return true;
     }
 
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $dates
+     */
+    private function storeMeta(TransactionJournal $journal, array $dates)
+    {
+        // all other date fields as meta thing:
+        foreach ($dates as $name => $value) {
+            try {
+                $date = new Carbon($value);
+                $journal->setMeta($name, $date);
+            } catch (\Exception $e) {
+                // don't care, ignore:
+                Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));
+            }
+        }
+    }
 
 }
