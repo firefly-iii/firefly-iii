@@ -85,7 +85,7 @@ class ImportController extends Controller
      *
      * @param ImportJob $job
      *
-     * @return string
+     * @return LaravelResponse
      */
     public function download(ImportJob $job)
     {

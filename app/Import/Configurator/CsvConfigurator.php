@@ -134,7 +134,7 @@ class CsvConfigurator implements ConfiguratorInterface
     {
         $class = false;
         switch (true) {
-            case(!$this->job->configuration['initial-config-complete']):
+            case (!$this->job->configuration['initial-config-complete']):
                 $class = Initial::class;
                 break;
             case (!$this->job->configuration['column-roles-complete']):

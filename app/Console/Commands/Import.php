@@ -87,12 +87,7 @@ class Import extends Command
             $this->error(sprintf('Error importing line #%d: %s', $index, $error));
         }
 
-        // display result to user:
-        //$this->presentResults($result);
         $this->line(sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->journals->count(), $routine->lines));
-
-        // get any errors from the importer:
-        //$this->presentErrors($job);
 
         return;
     }
@@ -119,37 +114,5 @@ class Import extends Command
         }
 
         return true;
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    private function presentErrors(ImportJob $job)
-    {
-        $extendedStatus = $job->extended_status;
-        if (isset($extendedStatus['errors']) && count($extendedStatus['errors']) > 0) {
-            $this->line(sprintf('The following %d error(s) occured during the import:', count($extendedStatus['errors'])));
-            foreach ($extendedStatus['errors'] as $error) {
-                $this->error($error);
-            }
-        }
-    }
-
-    /**
-     * @param Collection $result
-     */
-    private function presentResults(Collection $result)
-    {
-        /**
-         * @var int                $index
-         * @var TransactionJournal $journal
-         */
-        foreach ($result as $index => $journal) {
-            if (!is_null($journal->id)) {
-                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $journal->id));
-                continue;
-            }
-            $this->error(sprintf('Could not store line #%d', $index));
-        }
     }
 }

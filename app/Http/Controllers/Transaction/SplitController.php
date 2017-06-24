@@ -218,7 +218,7 @@ class SplitController extends Controller
             'journal_destination_account_id' => $request->old('journal_destination_account_id', $destinationAccounts->first()->id),
             'destinationAccounts'            => $destinationAccounts,
             'what'                           => strtolower($journal->transactionTypeStr()),
-            'date'                           => $request->old('date', $journal->date),
+            'date'                           => $request->old('date', $journal->date->format('Y-m-d')),
             'tags'                           => join(',', $journal->tags->pluck('tag')->toArray()),
 
             // all custom fields:

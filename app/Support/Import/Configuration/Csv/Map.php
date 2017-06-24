@@ -55,6 +55,7 @@ class Map implements ConfigurationInterface
         $results              = $reader->setOffset($offset)->fetch();
         $this->validSpecifics = array_keys(config('csv.import_specifics'));
         $indexes              = array_keys($this->data);
+        $rowIndex             = 0;
         foreach ($results as $rowIndex => $row) {
 
             $row = $this->runSpecifics($row);
@@ -73,13 +74,13 @@ class Map implements ConfigurationInterface
                     // which is exclusively to fix the tags:
                     if (!is_null($this->data[$index]['preProcessMap']) && strlen($this->data[$index]['preProcessMap']) > 0) {
                         /** @var PreProcessorInterface $preProcessor */
-                        $preProcessor           = app($this->data[$index]['preProcessMap']);
-                        $result                 = $preProcessor->run($value);
-                        $data[$index]['values'] = array_merge($this->data[$index]['values'], $result);
+                        $preProcessor                 = app($this->data[$index]['preProcessMap']);
+                        $result                       = $preProcessor->run($value);
+                        $this->data[$index]['values'] = array_merge($this->data[$index]['values'], $result);
 
                         Log::debug($rowIndex . ':' . $index . 'Value before preprocessor', ['value' => $value]);
                         Log::debug($rowIndex . ':' . $index . 'Value after preprocessor', ['value-new' => $result]);
-                        Log::debug($rowIndex . ':' . $index . 'Value after joining', ['value-complete' => $data[$index]['values']]);
+                        Log::debug($rowIndex . ':' . $index . 'Value after joining', ['value-complete' => $this->data[$index]['values']]);
 
 
                         continue;
@@ -95,7 +96,7 @@ class Map implements ConfigurationInterface
         // save number of rows, thus number of steps, in job:
         $steps                      = $rowIndex * 5;
         $extended                   = $this->job->extended_status;
-        $extended['steps']    = $steps;
+        $extended['steps']          = $steps;
         $this->job->extended_status = $extended;
         $this->job->save();
 

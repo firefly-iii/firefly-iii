@@ -192,8 +192,7 @@ class CsvProcessor implements FileProcessorInterface
         $string = json_encode($array);
         $hash   = hash('sha256', json_encode($string));
         $json   = json_encode($hash);
-        $entry  = TransactionJournalMeta::
-        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+        $entry  = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                         ->where('data', $json)
                                         ->where('name', 'importHash')
                                         ->first();

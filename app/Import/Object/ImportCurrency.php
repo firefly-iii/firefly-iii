@@ -54,7 +54,6 @@ class ImportCurrency
         Log::debug('In createCurrency()');
         // check if any of them is mapped:
         $mapped   = $this->findMappedObject();
-        $searched = null;
 
         if (!is_null($mapped->id)) {
 

@@ -251,7 +251,6 @@ class ImportJournal
             case 'tags-space':
                 $this->tags[] = $array;
                 break;
-                // 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date',
             case 'date-interest':
                 $this->metaDates['interest_date'] = $array['value'];
                 break;

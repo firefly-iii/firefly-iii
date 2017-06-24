@@ -140,7 +140,7 @@ class ImportAccount
         }
         /** @var Collection $accounts */
         $accounts = $this->repository->getAccountsByType([$accountType->type]);
-        // 2: find by IBAN (and type):
+        // Two: find by IBAN (and type):
         if (count($this->accountIban) === 3) {
             $iban = $this->accountIban['value'];
             Log::debug(sprintf('Finding account of type %d and IBAN %s', $accountType->id, $iban));
@@ -163,7 +163,7 @@ class ImportAccount
             Log::debug('Found nothing.');
         }
 
-        // 3: find by name (and type):
+        // Three: find by name (and type):
         if (count($this->accountName) === 3) {
             $name = $this->accountName['value'];
             Log::debug(sprintf('Finding account of type %d and name %s', $accountType->id, $name));

@@ -13,11 +13,14 @@ namespace FireflyIII\Repositories\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
+ * @property User $user
+ *
  * Trait FindAccountsTrait
  *
  * @package FireflyIII\Repositories\Account

@@ -19,10 +19,13 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
+ * @property User $user
+ *
  * Trait CreateJournalsTrait
  *
  * @package FireflyIII\Repositories\Journal

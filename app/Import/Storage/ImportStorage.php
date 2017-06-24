@@ -155,7 +155,7 @@ class ImportStorage
         $transaction->amount                  = $amount;
         $transaction->save();
         if (is_null($transaction->id)) {
-            $errorText = join(', ', $one->getErrors()->all());
+            $errorText = join(', ', $transaction->getErrors()->all());
             throw new FireflyException($errorText);
         }
         Log::debug(sprintf('Created transaction with ID #%d and account #%d', $transaction->id, $accountId));
