@@ -22,10 +22,8 @@ interface ConfiguratorInterface
 {
     /**
      * ConfiguratorInterface constructor.
-     *
-     * @param ImportJob $job
      */
-    public function __construct(ImportJob $job);
+    public function __construct();
 
     /**
      * Store any data from the $data array into the job.
@@ -35,6 +33,13 @@ interface ConfiguratorInterface
      * @return bool
      */
     public function configureJob(array $data): bool;
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return void
+     */
+    public function setJob(ImportJob $job);
 
     /**
      * Return the data required for the next step in the job configuration.

@@ -28,14 +28,11 @@ class CsvConfigurator implements ConfiguratorInterface
 {
     private $job;
 
-    public function __construct(ImportJob $job)
+    /**
+     * ConfiguratorInterface constructor.
+     */
+    public function __construct()
     {
-        $this->job = $job;
-        if (is_null($this->job->configuration) || count($this->job->configuration) === 0) {
-            Log::debug(sprintf('Gave import job %s initial configuration.', $this->job->key));
-            $this->job->configuration = config('csv.default_config');
-            $this->job->save();
-        }
     }
 
     /**
@@ -114,6 +111,19 @@ class CsvConfigurator implements ConfiguratorInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
+        if (is_null($this->job->configuration) || count($this->job->configuration) === 0) {
+            Log::debug(sprintf('Gave import job %s initial configuration.', $this->job->key));
+            $this->job->configuration = config('csv.default_config');
+            $this->job->save();
+        }
     }
 
     /**

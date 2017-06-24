@@ -77,7 +77,9 @@ class Import extends Command
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
 
-        $routine = new ImportRoutine($job);
+        /** @var ImportRoutine $routine */
+        $routine = app(ImportRoutine::class);
+        $routine->setJob($job);
         $routine->run();
 
         /** @var MessageBag $error */

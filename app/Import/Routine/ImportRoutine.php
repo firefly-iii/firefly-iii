@@ -37,15 +37,22 @@ class ImportRoutine
     /**
      * ImportRoutine constructor.
      *
-     * @param ImportJob $job
      */
-    public function __construct(ImportJob $job)
+    public function __construct()
     {
-        $this->job      = $job;
         $this->journals = new Collection;
         $this->errors   = new Collection;
         Log::debug(sprintf('Job ID is #%d', $job->id));
     }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
+    }
+
 
     /**
      *

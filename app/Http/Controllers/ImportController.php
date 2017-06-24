@@ -243,7 +243,9 @@ class ImportController extends Controller
      */
     public function start(ImportJob $job)
     {
-        $routine = new ImportRoutine($job);
+        /** @var ImportRoutine $routine */
+        $routine = app(ImportRoutine::class);
+        $routine->setJob($job);
         $result  = $routine->run();
         if ($result) {
             return Response::json(['run' => 'ok']);
@@ -281,9 +283,12 @@ class ImportController extends Controller
         $key       = sprintf('firefly.import_configurators.%s', $type);
         $className = config($key);
         if (is_null($className)) {
-            throw new FireflyException('Cannot find configurator class for this job.');
+            throw new FireflyException('Cannot find configurator class for this job.'); // @codeCoverageIgnore
         }
-        $configurator = new $className($job);
+        /** @var ConfiguratorInterface $configurator */
+        $configurator = app($className);
+        $configurator->setJob($job);
+
 
         return $configurator;
     }

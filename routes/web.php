@@ -390,7 +390,7 @@ Route::group(
     Route::get('download/{importJob}', ['uses' => 'ImportController@download', 'as' => 'download']);
     Route::get('status/{importJob}', ['uses' => 'ImportController@status', 'as' => 'status']);
     Route::get('json/{importJob}', ['uses' => 'ImportController@json', 'as' => 'json']);
-    Route::any('start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'start']);
+    Route::post('start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'start']);
 
 
 
