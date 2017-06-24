@@ -12,9 +12,13 @@ declare(strict_types=1);
 namespace FireflyIII\Import\Routine;
 
 
+use Carbon\Carbon;
 use FireflyIII\Import\FileProcessor\FileProcessorInterface;
 use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -53,8 +57,37 @@ class ImportRoutine
 
             return false;
         }
-
+        set_time_limit(0);
         Log::debug(sprintf('Start with import job %s', $this->job->key));
+
+        $importObjects = $this->getImportObjects();
+        $this->lines   = $importObjects->count();
+
+        // once done, use storage thing to actually store them:
+        Log::debug(sprintf('Returned %d valid objects from file processor', $this->lines));
+
+        $storage = $this->storeObjects($importObjects);
+
+        // update job:
+        $this->job->status = 'finished';
+        $this->job->save();
+
+        $this->journals = $storage->journals;
+        $this->errors   = $storage->errors;
+
+        // create tag, link tag to all journals:
+        $this->createImportTag();
+
+        Log::debug(sprintf('Done with import job %s', $this->job->key));
+
+        return true;
+    }
+
+    /**
+     * @return Collection
+     */
+    protected function getImportObjects(): Collection
+    {
         $objects = new Collection;
         $type    = $this->job->file_type;
         $class   = config(sprintf('firefly.import_processors.%s', $type));
@@ -62,7 +95,6 @@ class ImportRoutine
         $processor = app($class);
         $processor->setJob($this->job);
 
-        set_time_limit(0);
         if ($this->job->status == 'configured') {
 
             // set job as "running"...
@@ -73,28 +105,56 @@ class ImportRoutine
             $processor->run();
             $objects = $processor->getObjects();
         }
-        $this->lines = $objects->count();
-        // once done, use storage thing to actually store them:
-        Log::debug(sprintf('Returned %d valid objects from file processor', $this->lines));
 
+        return $objects;
+    }
+
+    /**
+     *
+     */
+    private function createImportTag(): Tag
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($this->job->user);
+        $data                       = [
+            'tag'         => trans('firefly.import_with_key', ['key' => $this->job->key]),
+            'date'        => new Carbon,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+            'tagMode'     => 'nothing',
+        ];
+        $tag                        = $repository->store($data);
+        $extended                   = $this->job->extended_status;
+        $extended['tag']            = $tag->id;
+        $this->job->extended_status = $extended;
+        $this->job->save();
+
+        $this->journals->each(
+            function (TransactionJournal $journal) use ($tag) {
+                $journal->tags()->save($tag);
+            }
+        );
+
+        return $tag;
+
+    }
+
+    /**
+     * @param Collection $objects
+     *
+     * @return ImportStorage
+     */
+    private function storeObjects(Collection $objects): ImportStorage
+    {
         $storage = new ImportStorage;
         $storage->setJob($this->job);
         $storage->setDateFormat($this->job->configuration['date-format']);
         $storage->setObjects($objects);
         $storage->store();
 
-        // update job:
-        $this->job->status = 'finished';
-        $this->job->save();
-
-        $this->journals = $storage->journals;
-        $this->errors   = $storage->errors;
-
-        // run rules:
-
-
-        Log::debug(sprintf('Done with import job %s', $this->job->key));
-
-        return true;
+        return $storage;
     }
 }

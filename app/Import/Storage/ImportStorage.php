@@ -99,7 +99,7 @@ class ImportStorage
          * @var ImportJournal $object
          */
         foreach ($this->objects as $index => $object) {
-            sleep(4);
+            sleep(1);
             Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $object->description));
 
             $errors = new MessageBag;

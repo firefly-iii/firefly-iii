@@ -60,10 +60,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob->status          = 'new';
                 $importJob->configuration   = [];
                 $importJob->extended_status = [
-                    'steps'     => 0,
-                    'done'      => 0,
-                    'importTag' => 0,
-                    'errors'    => [],
+                    'steps'  => 0,
+                    'done'   => 0,
+                    'tag'    => 0,
+                    'errors' => [],
                 ];
                 $importJob->save();
 

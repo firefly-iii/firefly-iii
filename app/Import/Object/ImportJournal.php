@@ -104,7 +104,7 @@ class ImportJournal
 
         /** @var ConverterInterface $amountConverter */
         $amountConverter = app(Amount::class);
-        $this->amount    = strval($amountConverter->convert($this->amount));
+        $this->amount    = $amountConverter->convert($this->amount);
         // modify
         foreach ($this->modifiers as $modifier) {
             $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));

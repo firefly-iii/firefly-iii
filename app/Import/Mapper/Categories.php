@@ -41,7 +41,7 @@ class Categories implements MapperInterface
         }
         asort($list);
 
-        $list = [0 => trans('csv.do_not_map')] + $list;
+        $list = [0 => trans('csv.map_do_not_map')] + $list;
 
         return $list;
 

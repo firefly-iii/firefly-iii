@@ -17,8 +17,8 @@ use FireflyIII\Http\Requests\ImportUploadRequest;
 use FireflyIII\Import\Configurator\ConfiguratorInterface;
 use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
@@ -45,7 +45,7 @@ class ImportController extends Controller
         $this->middleware(
             function ($request, $next) {
                 View::share('mainTitleIcon', 'fa-archive');
-                View::share('title', trans('firefly.import_data_full'));
+                View::share('title', trans('firefly.import_index_title'));
                 $this->repository = app(ImportJobRepositoryInterface::class);
 
                 return $next($request);
@@ -74,7 +74,7 @@ class ImportController extends Controller
         }
         $view         = $configurator->getNextView();
         $data         = $configurator->getNextData();
-        $subTitle     = trans('firefly.configure_import');
+        $subTitle     = trans('firefly.import_config_bread_crumb');
         $subTitleIcon = 'fa-wrench';
 
         return view($view, compact('data', 'job', 'subTitle', 'subTitleIcon'));
@@ -124,7 +124,7 @@ class ImportController extends Controller
      */
     public function index()
     {
-        $subTitle          = trans('firefly.import_data_index');
+        $subTitle          = trans('firefly.import_index_sub_title');
         $subTitleIcon      = 'fa-home';
         $importFileTypes   = [];
         $defaultImportType = config('firefly.default_import_format');
@@ -176,30 +176,31 @@ class ImportController extends Controller
     public function json(ImportJob $job)
     {
         $result = [
-            'started'      => false,
-            'finished'     => false,
-            'running'      => false,
-            'errors'       => array_values($job->extended_status['errors']),
-            'percentage'   => 0,
-            'steps'        => $job->extended_status['steps'],
-            'done'         => $job->extended_status['done'],
-            'statusText'   => trans('firefly.import_status_' . $job->status),
-            'status'       => $job->status,
-            'finishedText' => '',
+            'started'         => false,
+            'finished'        => false,
+            'running'         => false,
+            'errors'          => array_values($job->extended_status['errors']),
+            'percentage'      => 0,
+            'show_percentage' => false,
+            'steps'           => $job->extended_status['steps'],
+            'done'            => $job->extended_status['done'],
+            'statusText'      => trans('firefly.import_status_job_' . $job->status),
+            'status'          => $job->status,
+            'finishedText'    => '',
         ];
 
         if ($job->extended_status['steps'] !== 0) {
-            $result['percentage'] = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
+            $result['percentage']      = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
+            $result['show_percentage'] = true;
         }
 
         if ($job->status === 'finished') {
-            //            $tagId = $job->extended_status['importTag'];
-            //            /** @var TagRepositoryInterface $repository */
-            //            $repository             = app(TagRepositoryInterface::class);
-            //            $tag                    = $repository->find($tagId);
-            $tag                    = new Tag;
+            $tagId = $job->extended_status['tag'];
+            /** @var TagRepositoryInterface $repository */
+            $repository             = app(TagRepositoryInterface::class);
+            $tag                    = $repository->find($tagId);
             $result['finished']     = true;
-            $result['finishedText'] = trans('firefly.import_finished_link', ['link' => route('tags.show', [$tag->id]), 'tag' => $tag->tag]);
+            $result['finishedText'] = trans('firefly.import_status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
         }
 
         if ($job->status === 'running') {
@@ -262,7 +263,7 @@ class ImportController extends Controller
         if (!in_array($job->status, $statuses)) {
             return redirect(route('import.configure', [$job->key]));
         }
-        $subTitle     = trans('firefly.import_status');
+        $subTitle     = trans('firefly.import_status_sub_title');
         $subTitleIcon = 'fa-star';
 
         return view('import.status', compact('job', 'subTitle', 'subTitleIcon'));

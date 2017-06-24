@@ -70,6 +70,7 @@ class CsvProcessor implements FileProcessorInterface
         $index   = 0;
         Log::notice('Building importable objects from CSV file.');
         foreach ($entries as $index => $row) {
+            sleep(1);
             // verify if not exists already:
             if ($this->rowAlreadyImported($row)) {
                 $message = sprintf('Row #%d has already been imported.', $index);

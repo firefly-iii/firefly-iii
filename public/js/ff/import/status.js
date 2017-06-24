@@ -50,10 +50,10 @@ function failedJobImport(jqxhr, textStatus, error) {
     // fill in some details:
     var errorMessage = textStatus + " " + error;
 
-    $('.import_error_txt').text(errorMessage);
+    $('.fatal_error_txt').text(errorMessage);
 
-    // show the error box:
-    $('.errorbox').show();
+    // show the fatal error box:
+    $('.fatal_error').show();
 }
 
 /**
@@ -98,6 +98,7 @@ function reportOnJobImport(data) {
             $('.statusbox').hide();
             $('.status_finished').show();
             // show text:
+            $('#import-status-more-info').html(data.finishedText);
 
 
             break;
@@ -105,12 +106,12 @@ function reportOnJobImport(data) {
 }
 
 /**
- * Shows an error when the job seems to be stalled.
+ * Shows a fatal error when the job seems to be stalled.
  */
 function showStalledBox() {
     $('.statusbox').hide();
-    $('.errorbox').show();
-    $('.import_error_txt').text(langImportTimeOutError);
+    $('.fatal_error').show();
+    $('.fatal_error_txt').text(langImportTimeOutError);
 }
 
 /**
@@ -156,12 +157,12 @@ function reportOnSubmitError() {
     $('.statusbox').hide();
 
     // fill in some details:
-    var errorMessage = "Time out.";
+    var errorMessage = "Time out while waiting for job to finish.";
 
-    $('.import_error_txt').text(errorMessage);
+    $('.fatal_error_txt').text(errorMessage);
 
-    // show the error box:
-    $('.errorbox').show();
+    // show the fatal error box:
+    $('.fatal_error').show();
     jobFailed = true;
 
 }
@@ -172,7 +173,7 @@ function reportOnSubmitError() {
 function updateBar(data) {
     console.log('updateBar()');
     var bar = $('#import-status-bar');
-    if (data.percentage > 0) {
+    if (data.show_percentage) {
         console.log('Going to update bar with percentage.');
         bar.addClass('progress-bar-success').removeClass('progress-bar-info');
         bar.attr('aria-valuenow', data.percentage);
