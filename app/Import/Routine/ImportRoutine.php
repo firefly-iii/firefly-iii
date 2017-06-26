@@ -42,7 +42,6 @@ class ImportRoutine
     {
         $this->journals = new Collection;
         $this->errors   = new Collection;
-        Log::debug(sprintf('Job ID is #%d', $job->id));
     }
 
     /**

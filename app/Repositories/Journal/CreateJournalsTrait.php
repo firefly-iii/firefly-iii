@@ -32,6 +32,8 @@ use Log;
  */
 trait CreateJournalsTrait
 {
+
+
     /**
      *
      * * Remember: a balancingAct takes at most one expense and one transfer.
