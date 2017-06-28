@@ -13,36 +13,37 @@ declare(strict_types=1);
 
 return [
 
-    'import_configure_title' => 'Skonfiguruj import',
-    'import_configure_intro' => 'There are some options for your CSV import. Please indicate if your CSV file contains headers on the first column, and what the date format of your date-fields is. That might require some experimentation. The field delimiter is usually a ",", but could also be a ";". Check this carefully.',
-    'import_configure_form'  => 'Podstawowe opcje importu CSV',
-    'header_help'            => 'Check this if the first row of your CSV file are the column titles',
-    'date_help'              => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'import_account_help'    => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'upload_not_writeable'   => 'The grey box contains a file path. It should be writeable. Please make sure it is.',
+    // initial config
+    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
+    'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
+    'initial_box'                   => 'Basic CSV import setup',
+    'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
+    'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'initial_submit'                => 'Continue with step 2/3',
 
-    // roles
-    'column_roles_title'     => 'Zdefiniuj role dla kolumn',
-    'column_roles_table'     => 'Tabela',
-    'column_name'            => 'Nazwa kolumny',
-    'column_example'         => 'Przykładowe dane w kolumnie',
-    'column_role'            => 'Znaczenie danych w kolumnie',
-    'do_map_value'           => 'Zmapuj te wartości',
-    'column'                 => 'Kolumna',
-    'no_example_data'        => 'Brak dostępnych danych przykładowych',
-    'store_column_roles'     => 'Kontynuuj import',
-    'do_not_map'             => '(nie mapuj)',
-    'map_title'              => 'Połącz dane z importu z danymi z Firefly III',
-    'map_text'               => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    // roles config
+    'roles_title'                   => 'Import setup (2/3) - Define each column\'s role',
+    'roles_text'                    => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_table'                   => 'Table',
+    'roles_column_name'             => 'Name of column',
+    'roles_column_example'          => 'Column example data',
+    'roles_column_role'             => 'Column data meaning',
+    'roles_do_map_value'            => 'Map these values',
+    'roles_column'                  => 'Column',
+    'roles_no_example_data'         => 'No example data available',
+    'roles_submit'                  => 'Continue with step 3/3',
 
-    'field_value'          => 'Wartość pola',
-    'field_mapped_to'      => 'Zmapowane do',
-    'store_column_mapping' => 'Zapisz mapowanie',
+    // map data
+    'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
+    'map_text'                      => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'map_field_value'               => 'Field value',
+    'map_field_mapped_to'           => 'Mapped to',
+    'map_do_not_map'                => '(do not map)',
+    'map_submit'                    => 'Start the import',
 
     // map things.
-
-
     'column__ignore'                => '(ignoruj tę kolumnę)',
     'column_account-iban'           => 'Konto aktywów (IBAN)',
     'column_account-id'             => 'ID konta aktywów (taki sam jak w Firefly)',
