@@ -1027,7 +1027,7 @@ return [
     'no_accounts_create_expense'            => 'Maak een crediteur',
     'no_accounts_title_revenue'             => 'Je hebt een debiteur nodig!',
     'no_accounts_intro_revenue'             => 'Je hebt nog geen debiteuren-rekeningen. Debiteuren zijn de plaatsen of mensen waar je geld van ontvangt, zoals je werkgever.',
-    'no_accounts_imperative_revenue'        => 'Revenue accounts are created automatically when you create transactions, but you can create one manually too, if you want. Let\'s create one now:',
+    'no_accounts_imperative_revenue'        => 'Crediteuren worden automatisch aangemaakt als je transacties aanmaakt, maar je kan ze ook met de hand maken. Zoals nu:',
     'no_accounts_create_revenue'            => 'Maak een debiteur',
     'no_budgets_title_default'              => 'Je hebt een budget nodig',
     'no_budgets_intro_default'              => 'Je hebt nog geen budgetten. Budgetten gebruik je om je uitgaven te groeperen. Daarmee kan je je uitgaven beperken.',
