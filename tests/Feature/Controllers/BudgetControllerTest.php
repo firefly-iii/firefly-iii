@@ -134,6 +134,86 @@ class BudgetControllerTest extends TestCase
      *
      * @param string $range
      */
+    public function testIndexWithDate(string $range)
+    {
+        // mock stuff
+        $budget      = factory(Budget::class)->make();
+        $budgetLimit = factory(BudgetLimit::class)->make();
+
+        // set budget limit to current month:
+        $budgetLimit->start_date = Carbon::now()->startOfMonth();
+        $budgetLimit->end_date   = Carbon::now()->endOfMonth();
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
+        $repository->shouldReceive('cleanupBudgets');
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('budgets.index', ['2017-01-01']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::index
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::collectBudgetInformation
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::__construct
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testIndexWithInvalidDate(string $range)
+    {
+        // mock stuff
+        $budget      = factory(Budget::class)->make();
+        $budgetLimit = factory(BudgetLimit::class)->make();
+
+        // set budget limit to current month:
+        $budgetLimit->start_date = Carbon::now()->startOfMonth();
+        $budgetLimit->end_date   = Carbon::now()->endOfMonth();
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+
+        $repository->shouldReceive('cleanupBudgets');
+        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
+        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('budgets.index', ['Hello-there']));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::index
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::collectBudgetInformation
+     * @covers       \FireflyIII\Http\Controllers\BudgetController::__construct
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
     public function testIndex(string $range)
     {
         // mock stuff
