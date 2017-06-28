@@ -1005,12 +1005,12 @@ return [
     'import_status_fatal_text'              => 'Een fatale fout opgetreden, waar de import-routine niet van terug heeft. Zie de uitleg in het rood hieronder.',
     'import_status_fatal_more'              => 'Als de fout een time-out is, zal de import-routine halverwege gestopt zijn. Bij bepaalde serverconfiguraties is het alleen maar de server die gestopt terwijl de import-routine op de achtergrond doorloopt. Controleer de logboekbestanden om te zien wat er aan de hand is. Als het probleem zich blijft voordoen, gebruik dan de command-line opdracht.',
     'import_status_finished_title'          => 'Importeren is klaar',
-    'import_status_finished_text'           => 'The import routine has imported your file.',
-    'import_status_finished_job'            => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_finished_text'           => 'Je gegevensbestand is geïmporteerd.',
+    'import_status_finished_job'            => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'import_with_key'                       => 'Import met code \':key\'',
 
     // different states:
-    'import_status_job_running'             => 'The import is underway. Please be patient...',
+    'import_status_job_running'             => 'Het importeren is bezig. Een moment...',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
