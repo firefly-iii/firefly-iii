@@ -88,7 +88,7 @@ class CreateImport extends Command
         $this->line('Stored import data...');
 
         $job->configuration = $configurationData;
-        $job->status        = 'settings_complete';
+        $job->status        = 'configured';
         $job->save();
         $this->line('Stored configuration...');
 

@@ -86,14 +86,16 @@ class SingleController extends Controller
 
     public function cloneTransaction(TransactionJournal $journal)
     {
-        $source       = $journal->sourceAccountList()->first();
-        $destination  = $journal->destinationAccountList()->first();
-        $budget       = $journal->budgets()->first();
-        $budgetId     = is_null($budget) ? 0 : $budget->id;
-        $category     = $journal->categories()->first();
-        $categoryName = is_null($category) ? '' : $category->name;
-        $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
-
+        $source        = $journal->sourceAccountList()->first();
+        $destination   = $journal->destinationAccountList()->first();
+        $budget        = $journal->budgets()->first();
+        $budgetId      = is_null($budget) ? 0 : $budget->id;
+        $category      = $journal->categories()->first();
+        $categoryName  = is_null($category) ? '' : $category->name;
+        $tags          = join(',', $journal->tags()->get()->pluck('tag')->toArray());
+        $transaction   = $journal->transactions()->first();
+        $amount        = Steam::positive($transaction->amount);
+        $foreignAmount = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
 
         $preFilled = [
             'description'              => $journal->description,
@@ -101,7 +103,10 @@ class SingleController extends Controller
             'source_account_name'      => $source->name,
             'destination_account_id'   => $destination->id,
             'destination_account_name' => $destination->name,
-            'amount'                   => $journal->amountPositive(),
+            'amount'                   => $amount,
+            'source_amount'            => $amount,
+            'destination_amount'       => $foreignAmount,
+            'foreign_amount'           => $foreignAmount,
             'date'                     => $journal->date->format('Y-m-d'),
             'budget_id'                => $budgetId,
             'category'                 => $categoryName,

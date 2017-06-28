@@ -15,6 +15,7 @@ namespace FireflyIII\Repositories\ImportJob;
 
 use FireflyIII\Models\ImportJob;
 use FireflyIII\User;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Interface ImportJobRepositoryInterface
@@ -36,6 +37,22 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function findByKey(string $key): ImportJob;
+
+    /**
+     * @param ImportJob    $job
+     * @param UploadedFile $file
+     *
+     * @return mixed
+     */
+    public function processFile(ImportJob $job, UploadedFile $file): bool;
+
+    /**
+     * @param ImportJob    $job
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
+    public function processConfiguration(ImportJob $job, UploadedFile $file): bool;
 
     /**
      * @param ImportJob $job

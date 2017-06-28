@@ -13,11 +13,14 @@ namespace FireflyIII\Repositories\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
+ * @property User $user
+ *
  * Trait FindAccountsTrait
  *
  * @package FireflyIII\Repositories\Account
@@ -107,7 +110,7 @@ trait FindAccountsTrait
             $query->whereIn('account_types.type', $types);
 
         }
-        Log::debug(sprintf('Searching for account named %s of the following type(s)', $name), ['types' => $types]);
+        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $accounts = $query->get(['accounts.*']);
         /** @var Account $account */
@@ -118,7 +121,7 @@ trait FindAccountsTrait
                 return $account;
             }
         }
-        Log::debug('Found nothing.');
+        Log::debug(sprintf('There is no account with name "%s" or types', $name), $types);
 
         return new Account;
     }

@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Converter;
 
-use FireflyIII\User;
-
 /**
  * Interface ConverterInterface
  *
@@ -27,30 +25,4 @@ interface ConverterInterface
      *
      */
     public function convert($value);
-
-    /**
-     * @return int
-     */
-    public function getCertainty(): int;
-
-    /**
-     * @param array $config
-     */
-    public function setConfig(array $config);
-
-    /**
-     * @param bool $doMap
-     */
-    public function setDoMap(bool $doMap);
-
-    /**
-     * @param array $mapping
-     *
-     */
-    public function setMapping(array $mapping);
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user);
 }

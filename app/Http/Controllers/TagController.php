@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -245,6 +246,7 @@ class TagController extends Controller
         $periods      = new Collection;
         $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
         $sum          = '0';
+        $path         = 'tags/show/' . $tag->id;
 
 
         // prep for "all" view.
@@ -253,6 +255,7 @@ class TagController extends Controller
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
             $sum      = $repository->sumOfTag($tag);
+            $path     = 'tags/show/' . $tag->id . '/all';
         }
 
         // prep for "specific date" view.
@@ -282,13 +285,13 @@ class TagController extends Controller
         Log::info('Now at tag loop start.');
         while ($count === 0 && $loop < 3) {
             $loop++;
-            Log::info('Count is zero, search for journals.');
+            Log::info(sprintf('Count is zero, search for journals between %s and %s (pagesize %d, page %d).', $start, $end, $pageSize, $page));
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                      ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+                      ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('tags/show/' . $tag->id);
+            $journals->setPath($path);
             $count = $journals->getCollection()->count();
             if ($count === 0) {
                 $start->subDay();

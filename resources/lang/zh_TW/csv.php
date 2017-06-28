@@ -13,36 +13,37 @@ declare(strict_types=1);
 
 return [
 
-    'import_configure_title' => '匯入設定',
-    'import_configure_intro' => '這裡有一些 CSV 匯入選項。請檢查你的 CSV 檔的第一列是否包含欄位名稱，和你的日期格式是什麼。你可能需要嘗試幾次來調整正確。欄位分隔符號是通常 ","，但也可能是";"；仔細檢查這一點。',
-    'import_configure_form'  => 'Basic CSV import options',
-    'header_help'            => 'CSV 檔的第一行是標題',
-    'date_help'              => 'CSV 內的日期格式。請跟從<a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">這頁</a>內的格式來填寫。 系統預設能夠解析像這樣的日期： :dateExample 。',
-    'delimiter_help'         => '請選擇你的檔案中所使用的欄位分隔符號。如果不肯定的話，逗號是最安全的選項。',
-    'import_account_help'    => '如果你的 CSV 檔中沒有包含資產帳戶的資料，請選擇相關聯的帳戶。',
-    'upload_not_writeable'   => '不能寫入檔案。灰色框內包含檔案的路徑，伺服器需要寫入該檔案的權限。請調整伺服器權限設定後再試。',
+    // initial config
+    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
+    'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
+    'initial_box'                   => 'Basic CSV import setup',
+    'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
+    'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
+    'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'initial_submit'                => 'Continue with step 2/3',
 
-    // roles
-    'column_roles_title'     => '定義欄的內容',
-    'column_roles_table'     => '表格',
-    'column_name'            => '欄位名稱',
-    'column_example'         => '欄的示例資料',
-    'column_role'            => '欄內資料的含義',
-    'do_map_value'           => '配對這些資料',
-    'column'                 => '欄',
-    'no_example_data'        => '沒有可用的示例資料',
-    'store_column_roles'     => '繼續匯入',
-    'do_not_map'             => '（不要配對）',
-    'map_title'              => '配對匯入了的資料到 Firefly III 的資料',
-    'map_text'               => '在下表中，左邊的是在你的CSV 檔中的資料。而你現在要把這些資料配對到資料庫中的資料（如有的話）。如果沒有資料能夠進行配對，或者你不想進行配對，請選擇不進行配對。',
+    // roles config
+    'roles_title'                   => 'Import setup (2/3) - Define each column\'s role',
+    'roles_text'                    => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_table'                   => 'Table',
+    'roles_column_name'             => 'Name of column',
+    'roles_column_example'          => 'Column example data',
+    'roles_column_role'             => 'Column data meaning',
+    'roles_do_map_value'            => 'Map these values',
+    'roles_column'                  => 'Column',
+    'roles_no_example_data'         => 'No example data available',
+    'roles_submit'                  => 'Continue with step 3/3',
 
-    'field_value'          => '欄位值',
-    'field_mapped_to'      => '配對到',
-    'store_column_mapping' => '存儲配對',
+    // map data
+    'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
+    'map_text'                      => '在下表中，左邊的是在你的CSV 檔中的資料。而你現在要把這些資料配對到資料庫中的資料（如有的話）。如果沒有資料能夠進行配對，或者你不想進行配對，請選擇不進行配對。',
+    'map_field_value'               => 'Field value',
+    'map_field_mapped_to'           => 'Mapped to',
+    'map_do_not_map'                => '(do not map)',
+    'map_submit'                    => 'Start the import',
 
     // map things.
-
-
     'column__ignore'                => '（忽略此欄）',
     'column_account-iban'           => '資產帳戶 (IBAN)',
     'column_account-id'             => '資產帳戶 ID （與 Firefly 匹配）',

@@ -18,6 +18,7 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Log;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -157,11 +158,14 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->size     = $file->getSize();
         $attachment->uploaded = 0;
         $attachment->save();
+        Log::debug('Created attachment:', $attachment->toArray());
 
         $fileObject = $file->openFile('r');
         $fileObject->rewind();
         $content   = $fileObject->fread($file->getSize());
         $encrypted = Crypt::encrypt($content);
+        Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
+        Log::debug(sprintf('Encrypted content is %d', strlen($encrypted)));
 
         // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);

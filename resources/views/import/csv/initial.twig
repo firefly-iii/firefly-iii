@@ -1,0 +1,81 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, job) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('csv.initial_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ trans('csv.initial_text') }}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <form class="form-horizontal" action="{{ route('import.process-configuration', job.key) }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('csv.initial_box_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                {{ ExpandedForm.checkbox('has_headers',1,job.configuration['has-headers'],{helpText: trans('csv.initial_header_help')}) }}
+                                {{ ExpandedForm.text('date_format',job.configuration['date-format'],{helpText: trans('csv.initial_date_help', {dateExample: phpdate('Ymd')}) }) }}
+                                {{ ExpandedForm.select('csv_delimiter', data.delimiters, job.configuration['delimiter'], {helpText: trans('csv.initial_delimiter_help') } ) }}
+                                {{ ExpandedForm.select('csv_import_account', data.accounts, job.configuration['import-account'], {helpText: trans('csv.initial_import_account_help')} ) }}
+
+                                {% for type, specific in data.specifics %}
+                                    <div class="form-group">
+                                        <label for="{{ type }}_label" class="col-sm-4 control-label">
+                                            {{ specific.name }}
+                                        </label>
+
+                                        <div class="col-sm-8">
+                                            <div class="radio"><label>
+                                                    {{ Form.checkbox('specifics['~type~']', '1',
+                                                    job.configuration.specifics[type] == '1', {'id': type ~ '_label'}) }}
+                                                    {{ specific.description }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-body">
+                        <button type="submit" class="pull-right btn btn-success">
+                            {{ trans('csv.initial_submit') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+{% endblock %}

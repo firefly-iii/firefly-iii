@@ -18,6 +18,7 @@ use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
@@ -209,12 +210,26 @@ class Amount
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
+        $user = auth()->user();
+
+        return $this->getDefaultCurrencyByUser($user);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return \FireflyIII\Models\TransactionCurrency
+     * @throws FireflyException
+     */
+    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
+    {
         $cache = new CacheProperties;
         $cache->addProperty('getDefaultCurrency');
+        $cache->addProperty($user->id);
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currencyPreference = Prefs::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
         $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
         if (is_null($currency)) {
             throw new FireflyException(sprintf('No currency found with code "%s"', $currencyPreference->data));

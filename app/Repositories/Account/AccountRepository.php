@@ -243,9 +243,11 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         // account may exist already:
-        $existingAccount = $this->findByName($data['name'], [$data['accountType']]);
+        $existingAccount = $this->findByName($data['name'], [$type]);
         if (!is_null($existingAccount->id)) {
-            throw new FireflyException(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $data['accountType']));
+            Log::warning(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $type));
+
+            return $existingAccount;
         }
 
         // create it:
@@ -267,6 +269,7 @@ class AccountRepository implements AccountRepositoryInterface
             );
             throw new FireflyException(sprintf('Tried to create account named "%s" but failed. The logs have more details.', $data['name']));
         }
+        Log::debug(sprintf('Created new account #%d named "%s" of type %s.', $newAccount->id, $newAccount->name, $accountType->type));
 
         return $newAccount;
     }

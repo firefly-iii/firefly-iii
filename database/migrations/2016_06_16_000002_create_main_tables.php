@@ -474,7 +474,7 @@ class CreateMainTables extends Migration
                 $table->text('description')->nullable();
                 $table->decimal('latitude', 24, 12)->nullable();
                 $table->decimal('longitude', 24, 12)->nullable();
-                $table->boolean('zoomLevel')->nullable();
+                $table->smallInteger('zoomLevel', false, true)->nullable();
 
                 // link user id to users table
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: spent, budgeted, available, currencySymbol, budgetIndexURI */
+/** global: spent, budgeted, available, currencySymbol, budgetIndexURI, accounting */
 
 function drawSpentBar() {
     "use strict";

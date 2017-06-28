@@ -93,6 +93,9 @@ then
 
     # copy new database over backup (resets backup)
     cp $DATABASE $DATABASECOPY
+
+    # copy new database to test-data repository:
+    cp $DATABASE /sites/FF3/test-data/storage/database.sqlite
 fi
 
 # do not reset database (optional)

@@ -19,6 +19,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 use Storage;
 
 /**
@@ -95,16 +96,20 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
-        $disk = Storage::disk('upload');
-        $file = $attachment->fileName();
+        $disk    = Storage::disk('upload');
+        $file    = $attachment->fileName();
+        $content = '';
 
         if ($disk->exists($file)) {
             $content = Crypt::decrypt($disk->get($file));
+        }
+        if (is_bool($content)) {
+            Log::error(sprintf('Attachment #%d may be corrupted: the content could not be decrypted.', $attachment->id));
 
-            return $content;
+            return '';
         }
 
-        return '';
+        return $content;
     }
 
     /**

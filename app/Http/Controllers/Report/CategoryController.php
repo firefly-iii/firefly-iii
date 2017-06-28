@@ -120,7 +120,7 @@ class CategoryController extends Controller
         foreach ($categories as $category) {
             $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
             if (bccomp($spent, '0') !== 0) {
-                $report[$category->id] = ['name' => $category->name, 'spent' => $spent];
+                $report[$category->id] = ['name' => $category->name, 'spent' => $spent,'id' => $category->id];
             }
         }
 

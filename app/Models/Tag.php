@@ -133,6 +133,9 @@ class Tag extends Model
      */
     public function getTagAttribute($value)
     {
+        if(is_null($value)) {
+            return null;
+        }
         return Crypt::decrypt($value);
     }
 

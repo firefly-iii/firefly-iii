@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use \Amount as GlobalAmount;
 use Carbon\Carbon;
 use Crypt;
 use DB;
@@ -47,6 +48,11 @@ class Steam
             return $cache->get(); // @codeCoverageIgnore
         }
         $currencyId = intval($account->getMeta('currency_id'));
+        // use system default currency:
+        if ($currencyId === 0) {
+            $currency   = GlobalAmount::getDefaultCurrency();
+            $currencyId = $currency->id;
+        }
         // first part: get all balances in own currency:
         $nativeBalance = strval(
             $account->transactions()
@@ -265,6 +271,32 @@ class Steam
     }
 
     /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function negative(string $amount): string
+    {
+        if (bccomp($amount, '0') === 1) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function opposite(string $amount): string
+    {
+        $amount = bcmul($amount, '-1');
+
+        return $amount;
+    }
+
+    /**
      * @param $string
      *
      * @return int
@@ -298,8 +330,6 @@ class Steam
 
 
     }
-
-    // parse PHP size:
 
     /**
      * @param string $amount
