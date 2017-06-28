@@ -262,6 +262,8 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * The "paid dates" list is a list of dates of transaction journals that are linked to this bill.
+     *
      * @param Bill   $bill
      * @param Carbon $start
      * @param Carbon $end

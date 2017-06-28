@@ -40,6 +40,29 @@
                 </span>
             </td>
 
+            {#
+            Terms:
+            paidDates: journals linked to the bill between $start and $end.
+            payDates: dates in this period ($start and $end) system thinks bill should be paid.
+            Possible situations:
+
+            1:
+            paidDates = 0 (bill not paid in period)
+            payDates  = 0 (bill not expected to be paid in this period)
+            bill is active.
+
+            2:
+            paidDates = 0 (bill not paid in period)
+            payDates  = 0 (bill IS expected to be paid in this period)
+            bill is active
+
+            3:
+            paidDates >= payDates (bill is paid as many times or more than the amount of times expected).
+
+            4:
+            bill is not active
+            #}
+
             {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
                 <td class="text-muted" data-value="0001-00-00 00-00-00">
                     {{ 'not_expected_period'|_ }}
@@ -56,7 +79,7 @@
                     {{ entry.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% endif %}
-            {% if entry.paidDates.count() == entry.payDates.count() and entry.payDates.count() > 0 and entry.active %}
+            {% if entry.paidDates.count() >= entry.payDates.count() and entry.payDates.count() > 0 and entry.active %}
                 <td class="text-success" data-value="{{ entry.paidDates.first.format('Y-m-d H-i-s') }}">
                     {% for date in entry.paidDates %}
                         {{ date.formatLocalized(monthAndDayFormat) }}<br/>
