@@ -5,4 +5,3 @@ Homestead.json
 Homestead.yaml
 .env
 public/google*.html
-databasecopy.sqlite
