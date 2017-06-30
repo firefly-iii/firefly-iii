@@ -8,8 +8,8 @@
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
-        <th class="hidden-xs">{{ trans('list.from') }}</th>
-        <th class="hidden-xs">{{ trans('list.to') }}</th>
+        <th class="hidden-xs hidden-md">{{ trans('list.from') }}</th>
+        <th class="hidden-xs hidden-md">{{ trans('list.to') }}</th>
         <!-- Hide budgets? -->
         {% if not hideBudgets %}
             <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
@@ -69,10 +69,10 @@
             <td class="hidden-sm hidden-xs">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
             </td>
-            <td class="hidden-xs">
+            <td class="hidden-xs hidden-md">
                 {{ transactionSourceAccount(transaction) }}
             </td>
-            <td class="hidden-xs">
+            <td class="hidden-xs hidden-md">
                 {{ transactionDestinationAccount(transaction) }}
             </td>
 

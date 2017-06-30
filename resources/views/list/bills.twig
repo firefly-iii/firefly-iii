@@ -3,12 +3,12 @@
     <tr>
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
         <th>{{ trans('list.name') }}</th>
-        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-md hidden-xs">{{ trans('list.matchesOn') }}</th>
         <th data-defaultsign="_19" colspan="2">{{ trans('list.matchingAmount') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.paid_current_period') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.next_expected_match') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
-        <th class="hidden-sm hidden-xs">{{ trans('list.automatch') }}</th>
+        <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.active') }}</th>
+        <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.automatch') }}</th>
         <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
     </tr>
     </thead>
@@ -24,7 +24,7 @@
             <td data-value="{{ entry.name }}">
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
             </td>
-            <td class="hidden-sm hidden-xs" data-value="{{ entry.match }}">
+            <td class="hidden-sm hidden-md hidden-xs" data-value="{{ entry.match }}">
                 {% for match in entry.match|split(',') %}
                     <span class="label label-info">{{ match }}</span>
                 {% endfor %}
@@ -62,6 +62,14 @@
             4:
             bill is not active
             #}
+            <!--
+            Some debug data:
+            entry.paidDates.count(): {{ entry.paidDates.count() }}
+            entry.paidDates set:
+            entry.payDates.count(): {{ entry.payDates.count() }}
+            active: {% if entry.active %}true{% else %}false{% endif %}
+
+            -->
 
             {% if entry.paidDates.count() == 0 and entry.payDates.count() == 0 and entry.active %}
                 <td class="text-muted" data-value="0001-00-00 00-00-00">
@@ -97,14 +105,14 @@
                     ~
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs" data-value="{{ entry.active }}">
+            <td class="hidden-sm hidden-xs hidden-md" data-value="{{ entry.active }}">
                 {% if entry.active %}
                     <i class="fa fa-fw fa-check"></i>
                 {% else %}
                     <i class="fa fa-fw fa-ban"></i>
                 {% endif %}
             </td>
-            <td class="hidden-sm hidden-xs" data-value="{{ entry.automatch }}">
+            <td class="hidden-sm hidden-xs hidden-md" data-value="{{ entry.automatch }}">
                 {% if entry.automatch %}
                     <i class="fa fa-fw fa-check"></i>
                 {% else %}

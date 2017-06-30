@@ -4,14 +4,14 @@
         <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
         <th data-defaultsign="az">{{ trans('list.name') }}</th>
         {% if what == 'asset' %}
-            <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
+            <th data-defaultsign="az" class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
         {% endif %}
         <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
         <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
-        <th data-defaultsign="month" class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         <th data-defaultsign="_19"
-            class="hidden-sm hidden-xs">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
+            class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
     </tr>
     </thead>
     <tbody>
@@ -25,7 +25,7 @@
             </td>
             <td data-value="{{ account.name }}"><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></td>
             {% if what == "asset" %}
-                <td class="hidden-sm hidden-xs">
+                <td class="hidden-sm hidden-xs hidden-md">
                     {% for entry in account.accountmeta %}
                         {% if entry.name == 'accountRole' %}
                             {{ ('account_role_'~entry.data)|_ }}
@@ -47,15 +47,15 @@
                 {% endif %}
             </td>
             {% if account.lastActivityDate %}
-                <td class="hidden-sm hidden-xs" data-value="{{ account.lastActivityDate.format('Y-m-d H-i-s') }} ">
+                <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.lastActivityDate.format('Y-m-d H-i-s') }} ">
                     {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% else %}
-                <td class="hidden-sm hidden-xs" data-value="0000-00-00 00-00-00">
+                <td class="hidden-sm hidden-xs hidden-md" data-value="0000-00-00 00-00-00">
                     <em>{{ 'never'|_ }}</em>
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs" data-value="{{ account.difference }}" style="text-align: right;">
+            <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.difference }}" style="text-align: right;">
                 <span style="margin-right:5px;">
                     {{ formatAmountByAccount(account, account.difference) }}
                 </span>
