@@ -150,7 +150,7 @@ return [
     'not_available_demo_user'                    => 'De functie die je probeert te gebruiken is niet beschikbaar voor gebruikers van de demo.',
     'exchange_rate_instructions'                 => 'Betaalrekening "@naam" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
     'transfer_exchange_rate_instructions'        => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name: accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
-    'transaction_data'                           => 'Transaction data',
+    'transaction_data'                           => 'Transactiegegevens',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
