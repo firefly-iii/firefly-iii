@@ -309,7 +309,6 @@ class ImportStorage
         $journal->date                    = $date->format('Y-m-d');
         $journal->order                   = 0;
         $journal->tag_count               = 0;
-        $journal->encrypted               = 0;
         $journal->completed               = false;
 
         if (!$journal->save()) {
