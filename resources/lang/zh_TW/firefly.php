@@ -150,6 +150,7 @@ return [
     'not_available_demo_user'                    => 'The feature you try to access is not available to demo users.',
     'exchange_rate_instructions'                 => 'Asset account "@name" only accepts transactions in @native_currency. If you wish to use @foreign_currency instead, make sure that the amount in @native_currency is known as well:',
     'transfer_exchange_rate_instructions'        => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
+    'transaction_data'                           => 'Transaction data',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
