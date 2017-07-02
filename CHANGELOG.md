@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.6.1] - 2017-07-02
+### Fixed
+- Fixed several small issues all around.
+
 ## [4.6.0] - 2017-06-28
 
 ### Changed
@@ -15,9 +20,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Translation error fixed by 
 - Fix a bug where the balance routine forgot to account for accounts without a currency preference.
 - Various other bugfixes.
-
-### Security
-- Initial release.
 
 ## [4.5.0] - 2017-06-07
 

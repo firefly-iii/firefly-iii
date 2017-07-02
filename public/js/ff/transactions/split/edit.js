@@ -16,8 +16,8 @@ var descriptions = {};
 
 $(document).ready(function () {
     "use strict";
-    $('.btn-do-split').click(cloneRow);
-    $('.remove-current-split').click(removeRow);
+    $('.btn-do-split').click(cloneDivRow);
+    $('.remove-current-split').click(removeDivRow);
 
     $.getJSON('json/expense-accounts').done(function (data) {
         destAccounts = data;
@@ -67,28 +67,36 @@ $(document).ready(function () {
     }
 });
 
-
-function removeRow(e) {
+/**
+ * New and cool
+ * @param e
+ * @returns {boolean}
+ */
+function removeDivRow(e) {
     "use strict";
-    var rows = $('table.split-table tbody tr');
+    var rows = $('div.split_row');
     if (rows.length === 1) {
         return false;
     }
     var row = $(e.target);
     var index = row.data('split');
-    $('table.split-table tbody tr[data-split="' + index + '"]').remove();
+    $('div.split_row[data-split="' + index + '"]').remove();
 
 
-    resetSplits();
+    resetDivSplits();
 
     return false;
 
 }
 
-function cloneRow() {
+/**
+ * New and cool
+ * @returns {boolean}
+ */
+function cloneDivRow() {
     "use strict";
-    var source = $('.table.split-table tbody tr').last().clone();
-    var count = $('.split-table tbody tr').length + 1;
+    var source = $('div.split_row').last().clone();
+    var count = $('div.split_row').length + 1;
     source.removeClass('initial-row');
     source.find('.count').text('#' + count);
 
@@ -107,26 +115,37 @@ function cloneRow() {
         source.find('input[name$="description]"]').typeahead({source: descriptions});
     }
 
-    $('.split-table tbody').append(source);
+    $('div.split_row_holder').append(source);
 
     // remove original click things, add them again:
-    $('.remove-current-split').unbind('click').click(removeRow);
-
+    $('.remove-current-split').unbind('click').click(removeDivRow);
 
     calculateSum();
-    resetSplits();
+    resetDivSplits();
 
     return false;
 }
 
-function resetSplits() {
+/**
+ * New and hip
+ */
+function resetDivSplits() {
     "use strict";
     // loop rows, reset numbers:
 
     // update the row split number:
-    $.each($('table.split-table tbody tr'), function (i, v) {
+    $.each($('div.split_row'), function (i, v) {
         var row = $(v);
         row.attr('data-split', i);
+
+        // add or remove class with bg thing
+        if(i % 2 === 0) {
+            row.removeClass('bg-gray-light');
+        }
+        if(i % 2 === 1) {
+            row.addClass('bg-gray-light');
+        }
+
     });
 
     // loop each remove button, update the index
@@ -197,6 +216,7 @@ function resetSplits() {
         input.attr('name', 'transactions[' + i + '][category]');
     });
 }
+
 
 function calculateSum() {
     "use strict";

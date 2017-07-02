@@ -150,6 +150,7 @@ return [
     'not_available_demo_user'                    => 'Die Funktionen, auf welche sie zugreifen wollen, steht Demo-Benutzer nicht zur Verfügung.',
     'exchange_rate_instructions'                 => 'Das Girokonto "@name" akzeptiert nur Transaktionen in @native_currency. Wenn Sie stattdessen @foreign_currency verwenden wollen, sollten Sie sicherstellen, dass der Betrag auch in @native_currency angengeben ist:',
     'transfer_exchange_rate_instructions'        => 'Das Quellkonto "@source_name" akzeptiert nur Transaktionen in @source_currency. Das Zielkonto "@dest_name" akzeptiert nur Transaktionen in @dest_currency. Sie müssen den Betrag in beiden Währungen korrenkt angeben.',
+    'transaction_data'                           => 'Transaction data',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',

@@ -216,7 +216,7 @@ class CategoryController extends Controller
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/categories/list/no-category');
             $count = $journals->getCollection()->count();
-            if ($count === 0) {
+            if ($count === 0 && $loop < 3) {
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);
@@ -300,7 +300,7 @@ class CategoryController extends Controller
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('categories/show/' . $category->id);
             $count = $journals->getCollection()->count();
-            if ($count === 0) {
+            if ($count === 0 && $loop < 3) {
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);

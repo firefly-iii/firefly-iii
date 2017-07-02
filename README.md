@@ -35,7 +35,7 @@ Firefly is pretty awesome. [You can read more about Firefly III, and its feature
 
 ### Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/firefly-iii/firefly-iii/blob/master/.github/CONTRIBUTING.md) for details on the code of conduct, and the process for submitting pull requests.
+Please read [CONTRIBUTING.md](https://github.com/firefly-iii/firefly-iii/blob/master/.github/CONTRIBUTING.md) for details on contributing, and the process for submitting pull requests. Please check out the [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/master/CODE_OF_CONDUCT.md) as well.
 
 ### Versioning
 

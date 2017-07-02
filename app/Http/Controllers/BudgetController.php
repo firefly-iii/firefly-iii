@@ -302,7 +302,7 @@ class BudgetController extends Controller
         Log::info('Now at no-budget loop start.');
         while ($count === 0 && $loop < 3) {
             $loop++;
-            Log::info('Count is zero, search for journals.');
+            Log::info(sprintf('Count is zero, search for journals between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
@@ -310,7 +310,7 @@ class BudgetController extends Controller
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/budgets/list/no-budget');
             $count = $journals->getCollection()->count();
-            if ($count === 0) {
+            if ($count === 0 && $loop < 3) {
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);

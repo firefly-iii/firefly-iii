@@ -9,14 +9,14 @@
     {# upper show-all instruction #}
     {% if periods.count > 0 %}
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
 
     <div class="row">
-        <div class="{% if periods.count > 0 %}col-lg-10 col-md-10 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="{% if periods.count > 0 %}col-lg-9 col-md-9 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ subTitle }}</h3>
@@ -39,7 +39,7 @@
         </div>
 
         {% if periods.count > 0 %}
-            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 {% for period in periods %}
                     {% if period.count > 0 %}
                         <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
@@ -70,7 +70,7 @@
     {# lower show-all instruction #}
     {% if periods.count > 0 %}
         <div class="row">
-            <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
+            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
