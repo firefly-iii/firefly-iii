@@ -76,6 +76,7 @@ Route::group(
 }
 );
 
+
 /**
  * Account Controller
  */
@@ -121,8 +122,8 @@ Route::group(
     Route::get('edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'edit']);
     Route::get('delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
     Route::get('show/{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
-    Route::post('store', ['uses' => 'BillController@store', 'as' => 'store']);
 
+    Route::post('store', ['uses' => 'BillController@store', 'as' => 'store']);
     Route::post('update/{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
     Route::post('destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'destroy']);
 }
