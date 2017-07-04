@@ -39,6 +39,13 @@ interface JournalRepositoryInterface
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function countTransactions(TransactionJournal $journal): int;
+
+    /**
      * Deletes a journal.
      *
      * @param TransactionJournal $journal
