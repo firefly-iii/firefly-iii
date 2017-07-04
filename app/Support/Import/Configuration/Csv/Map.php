@@ -126,13 +126,14 @@ class Map implements ConfigurationInterface
     public function storeConfiguration(array $data): bool
     {
         $config = $this->job->configuration;
-
-        foreach ($data['mapping'] as $index => $data) {
-            $config['column-mapping-config'][$index] = [];
-            foreach ($data as $value => $mapId) {
-                $mapId = intval($mapId);
-                if ($mapId !== 0) {
-                    $config['column-mapping-config'][$index][$value] = intval($mapId);
+        if (isset($data['mapping'])) {
+            foreach ($data['mapping'] as $index => $data) {
+                $config['column-mapping-config'][$index] = [];
+                foreach ($data as $value => $mapId) {
+                    $mapId = intval($mapId);
+                    if ($mapId !== 0) {
+                        $config['column-mapping-config'][$index][$value] = intval($mapId);
+                    }
                 }
             }
         }
