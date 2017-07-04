@@ -36,7 +36,7 @@ return [
     'roles_submit'                  => 'Fortfahren mit Schritt 3/3',
 
     // map data
-    'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
+    'map_title'                     => 'Import Einrichten (3/3) - Import mit bereits vorhandenen Daten verknüpfen',
     'map_text'                      => 'In den folgenden Tabellen zeigt der linke Wert Informationen, die sich in Ihrer hochgeladenen CSV-Datei befinden. Es ist Ihre Aufgabe, diesen Wert, wenn möglich, einem bereits in der Datenbank vorhandem zuzuordnen. Firefly wird sich an diese Zuordnung halten. Wenn kein Wert für die Zuordnung vorhanden ist oder Sie den bestimmten Wert nicht abbilden möchten, wählen Sie nichts aus.',
     'map_field_value'               => 'Feldwert',
     'map_field_mapped_to'           => 'Zugeordnet zu',
