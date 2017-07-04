@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
 
     // initial config
-    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
+    'initial_title'                 => 'Import Einrichten (1/3) - Grundlegende Einstellungen',
     'initial_text'                  => 'Um Ihre Datei korrekt importieren zu können, überprüfen Sie die folgenden Optionen.',
     'initial_box'                   => 'Standard CSV Importeinstellungen',
     'initial_header_help'           => 'Hier auswählen, wenn die ersten Zeilen der CSV-Datei die Spaltenüberschriften sind.',
@@ -24,8 +24,8 @@ return [
     'initial_submit'                => 'Fortfahren mit Schritt 2/3',
 
     // roles config
-    'roles_title'                   => 'Import setup (2/3) - Define each column\'s role',
-    'roles_text'                    => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_title'                   => 'Import Einrichten (2/3) - Jeder Spalte eine Rolle zuordnen',
+    'roles_text'                    => 'Jede Spalte in Ihrer CSV-Datei enthält bestimmte Daten. Bitte geben Sie an, welche Art von Daten enthalten sind. Die Option "Daten zuordnen" bedeutet, dass jeder Eintrag in der Spalte mit einem Wert aus Ihrer der Datenbank ersetzt wird. Eine oft zugeordnete Spalte ist die Spalte, welche die IBAN des fremden Kontos enthält. Diese können leicht mit bereits angelegten IBANs in Ihrer Datenbank verglichen werden.',
     'roles_table'                   => 'Tabelle',
     'roles_column_name'             => 'Name der Spalte',
     'roles_column_example'          => 'Beispieldaten',
