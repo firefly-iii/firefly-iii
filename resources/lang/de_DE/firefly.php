@@ -20,7 +20,7 @@ return [
     'everything'                                 => 'Alle',
     'customRange'                                => 'Individueller Bereich',
     'apply'                                      => 'Übernehmen',
-    'select_date'                                => 'Select date..',
+    'select_date'                                => 'Wähle ein Datum..',
     'cancel'                                     => 'Abbrechen',
     'from'                                       => 'Von',
     'to'                                         => 'Bis',
