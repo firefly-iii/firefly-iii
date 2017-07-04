@@ -68,7 +68,7 @@ return [
     'exchanged_amount'               => 'Ausgetauschter Betrag',
     'source_amount'                  => 'Betrag (Quelle)',
     'destination_amount'             => 'Betrag (Ziel)',
-    'native_amount'                  => 'Native amount',
+    'native_amount'                  => 'Nativer Betrag',
 
     'revenue_account_source'      => 'Ertragskonto (Quelle)',
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
