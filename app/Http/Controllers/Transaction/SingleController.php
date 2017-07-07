@@ -21,6 +21,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -86,39 +87,41 @@ class SingleController extends Controller
 
     public function cloneTransaction(TransactionJournal $journal)
     {
-        $source        = $journal->sourceAccountList()->first();
-        $destination   = $journal->destinationAccountList()->first();
-        $budget        = $journal->budgets()->first();
-        $budgetId      = is_null($budget) ? 0 : $budget->id;
-        $category      = $journal->categories()->first();
-        $categoryName  = is_null($category) ? '' : $category->name;
-        $tags          = join(',', $journal->tags()->get()->pluck('tag')->toArray());
-        $transaction   = $journal->transactions()->first();
-        $amount        = Steam::positive($transaction->amount);
-        $foreignAmount = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
+        $source       = $journal->sourceAccountList()->first();
+        $destination  = $journal->destinationAccountList()->first();
+        $budget       = $journal->budgets()->first();
+        $budgetId     = is_null($budget) ? 0 : $budget->id;
+        $category     = $journal->categories()->first();
+        $categoryName = is_null($category) ? '' : $category->name;
+        $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
+        /** @var Transaction $transaction */
+        $transaction     = $journal->transactions()->first();
+        $amount          = Steam::positive($transaction->amount);
+        $foreignAmount   = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
 
         $preFilled = [
-            'description'              => $journal->description,
-            'source_account_id'        => $source->id,
-            'source_account_name'      => $source->name,
-            'destination_account_id'   => $destination->id,
-            'destination_account_name' => $destination->name,
-            'amount'                   => $amount,
-            'source_amount'            => $amount,
-            'destination_amount'       => $foreignAmount,
-            'foreign_amount'           => $foreignAmount,
-            'date'                     => $journal->date->format('Y-m-d'),
-            'budget_id'                => $budgetId,
-            'category'                 => $categoryName,
-            'tags'                     => $tags,
-            'interest_date'            => $journal->getMeta('interest_date'),
-            'book_date'                => $journal->getMeta('book_date'),
-            'process_date'             => $journal->getMeta('process_date'),
-            'due_date'                 => $journal->getMeta('due_date'),
-            'payment_date'             => $journal->getMeta('payment_date'),
-            'invoice_date'             => $journal->getMeta('invoice_date'),
-            'internal_reference'       => $journal->getMeta('internal_reference'),
-            'notes'                    => $journal->getMeta('notes'),
+            'description'               => $journal->description,
+            'source_account_id'         => $source->id,
+            'source_account_name'       => $source->name,
+            'destination_account_id'    => $destination->id,
+            'destination_account_name'  => $destination->name,
+            'amount'                    => $amount,
+            'source_amount'             => $amount,
+            'destination_amount'        => $foreignAmount,
+            'foreign_amount'            => $foreignAmount,
+            'amount_currency_id_amount' => $transaction->foreign_currency_id ?? 0,
+            'date'                      => $journal->date->format('Y-m-d'),
+            'budget_id'                 => $budgetId,
+            'category'                  => $categoryName,
+            'tags'                      => $tags,
+            'interest_date'             => $journal->getMeta('interest_date'),
+            'book_date'                 => $journal->getMeta('book_date'),
+            'process_date'              => $journal->getMeta('process_date'),
+            'due_date'                  => $journal->getMeta('due_date'),
+            'payment_date'              => $journal->getMeta('payment_date'),
+            'invoice_date'              => $journal->getMeta('invoice_date'),
+            'internal_reference'        => $journal->getMeta('internal_reference'),
+            'notes'                     => $journal->getMeta('notes'),
         ];
         Session::flash('preFilled', $preFilled);
 
