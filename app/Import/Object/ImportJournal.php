@@ -62,8 +62,6 @@ class ImportJournal
     private $modifiers = [];
     /** @var array */
     private $tags = [];
-    /** @var string */
-    private $transactionType = '';
     /** @var  User */
     private $user;
 

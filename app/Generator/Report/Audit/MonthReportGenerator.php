@@ -163,7 +163,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var Transaction $journal */
         foreach ($journals as $transaction) {
             $transaction->before = $startBalance;
-            $transactionAmount = $transaction->transaction_amount;
+            $transactionAmount   = $transaction->transaction_amount;
 
             if ($currency->id === $transaction->foreign_currency_id) {
                 $transactionAmount = $transaction->transaction_foreign_amount;
