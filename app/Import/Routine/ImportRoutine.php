@@ -86,6 +86,7 @@ class ImportRoutine
 
         Log::info(sprintf('Done with import job %s', $this->job->key));
 
+
         return true;
     }
 

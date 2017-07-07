@@ -19,6 +19,8 @@ use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
+use Log;
 use Steam;
 
 /**
@@ -30,22 +32,26 @@ class ImportJournal
 {
     /** @var ImportAccount */
     public $asset;
+    /** @var  ImportBill */
+    public $bill;
     /** @var ImportBudget */
     public $budget;
+    /** @var ImportCategory */
+    public $category;
     /** @var  string */
     public $description = '';
     /** @var  Collection */
     public $errors;
     /** @var  string */
     public $hash;
+    /** @var array */
+    public $metaDates = [];
+    /** @var string */
+    public $notes = '';
     /** @var ImportAccount */
     public $opposing;
     /** @var string */
     private $amount = '0';
-    /** @var  ImportBill */
-    public $bill;
-    /** @var ImportCategory */
-    public $category;
     /** @var  ImportCurrency */
     private $currency;
     /** @var string */
@@ -54,16 +60,12 @@ class ImportJournal
     private $externalId = '';
     /** @var array */
     private $modifiers = [];
-    /** @var array  */
-    private $tags      = [];
-    /** @var string  */
-    public $notes = '';
+    /** @var array */
+    private $tags = [];
     /** @var string */
     private $transactionType = '';
     /** @var  User */
     private $user;
-    /** @var array  */
-    public $metaDates = [];
 
     /**
      * ImportEntry constructor.
@@ -133,7 +135,15 @@ class ImportJournal
      */
     public function getDate(string $format): Carbon
     {
-        return Carbon::createFromFormat($format, $this->date);
+        $date = new Carbon;
+        try {
+            $date = Carbon::createFromFormat($format, $this->date);
+        } catch (InvalidArgumentException $e) {
+            // don't care, just log.
+            Log::error(sprintf('Import journal cannot parse date "%s" from value "%s" so will return current date instead.', $format, $this->date));
+        }
+
+        return $date;
     }
 
     /**
@@ -223,7 +233,7 @@ class ImportJournal
             case 'sepa-ct-op':
             case 'sepa-ct-id':
             case 'sepa-db':
-                $this->notes .= ' '.$array['value'];
+                $this->notes .= ' ' . $array['value'];
                 $this->notes = trim($this->notes);
                 break;
             case 'external-id':

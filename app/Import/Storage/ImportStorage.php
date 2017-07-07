@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\Processor;
 use Illuminate\Support\Collection;
-use Illuminate\Support\MessageBag;
 use Log;
 use Steam;
 
@@ -107,6 +106,7 @@ class ImportStorage
                 $this->storeImportJournal($index, $object);
             } catch (FireflyException $e) {
                 $this->errors->push($e->getMessage());
+                Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
             }
         }
 
@@ -350,6 +350,13 @@ class ImportStorage
         $this->job->addStepsDone(1);
 
         $this->journals->push($journal);
+
+        Log::info(
+            sprintf(
+                'Imported new journal #%d with description "%s" and amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code,
+                $amount
+            )
+        );
 
         return true;
     }
