@@ -397,7 +397,7 @@ class PiggyBankController extends Controller
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('piggy-banks.edit.uri'));
+        return redirect($this->getPreviousUri('piggy-banks.create.uri'));
     }
 
     /**
