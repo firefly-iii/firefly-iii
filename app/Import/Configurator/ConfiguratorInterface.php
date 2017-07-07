@@ -35,13 +35,6 @@ interface ConfiguratorInterface
     public function configureJob(array $data): bool;
 
     /**
-     * @param ImportJob $job
-     *
-     * @return void
-     */
-    public function setJob(ImportJob $job);
-
-    /**
      * Return the data required for the next step in the job configuration.
      *
      * @return array
@@ -61,5 +54,12 @@ interface ConfiguratorInterface
      * @return bool
      */
     public function isJobConfigured(): bool;
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return void
+     */
+    public function setJob(ImportJob $job);
 
 }

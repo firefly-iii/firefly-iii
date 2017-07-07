@@ -86,7 +86,7 @@ class ImportJob extends Model
      */
     public function addStepsDone(int $count)
     {
-        $status = $this->extended_status;
+        $status                = $this->extended_status;
         $status['done']        += $count;
         $this->extended_status = $status;
         $this->save();

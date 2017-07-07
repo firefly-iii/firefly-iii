@@ -16,9 +16,7 @@ namespace FireflyIII\Console\Commands;
 use FireflyIII\Import\Logging\CommandHandler;
 use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
 

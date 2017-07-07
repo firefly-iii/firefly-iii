@@ -45,15 +45,6 @@ class ImportRoutine
     }
 
     /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job)
-    {
-        $this->job = $job;
-    }
-
-
-    /**
      *
      */
     public function run(): bool
@@ -88,6 +79,14 @@ class ImportRoutine
 
 
         return true;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
     }
 
     /**

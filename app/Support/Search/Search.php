@@ -53,7 +53,7 @@ class Search implements SearchInterface
     public function __construct()
     {
         $this->modifiers      = new Collection;
-        $this->validModifiers = (array) config('firefly.search_modifiers');
+        $this->validModifiers = (array)config('firefly.search_modifiers');
     }
 
     /**
