@@ -74,7 +74,6 @@ function updateNativeCurrency(useAccountCurrency) {
     if (what !== 'transfer') {
         $('select[name="source_account_id"]').focus();
     }
-
     validateCurrencyForTransfer();
 }
 

@@ -95,9 +95,9 @@ class SingleController extends Controller
         $categoryName = is_null($category) ? '' : $category->name;
         $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
         /** @var Transaction $transaction */
-        $transaction     = $journal->transactions()->first();
-        $amount          = Steam::positive($transaction->amount);
-        $foreignAmount   = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
+        $transaction   = $journal->transactions()->first();
+        $amount        = Steam::positive($transaction->amount);
+        $foreignAmount = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
 
         $preFilled = [
             'description'               => $journal->description,
@@ -109,6 +109,7 @@ class SingleController extends Controller
             'source_amount'             => $amount,
             'destination_amount'        => $foreignAmount,
             'foreign_amount'            => $foreignAmount,
+            'native_amount'             => $foreignAmount,
             'amount_currency_id_amount' => $transaction->foreign_currency_id ?? 0,
             'date'                      => $journal->date->format('Y-m-d'),
             'budget_id'                 => $budgetId,
