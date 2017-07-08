@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.2] - 2017-07-08
+### Added
+- Links added to boxes, idea by @simonsmiley
+
+### Fixed
+- Various bugs in import routine
 
 ## [4.6.1] - 2017-07-02
 ### Fixed
