@@ -139,10 +139,10 @@ function resetDivSplits() {
         row.attr('data-split', i);
 
         // add or remove class with bg thing
-        if(i % 2 === 0) {
+        if (i % 2 === 0) {
             row.removeClass('bg-gray-light');
         }
-        if(i % 2 === 1) {
+        if (i % 2 === 1) {
             row.addClass('bg-gray-light');
         }
 

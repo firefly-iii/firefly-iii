@@ -20,8 +20,8 @@ $(document).ready(function () {
     $('#ffInput_amount').on('change', convertForeignToNative);
 
     // respond to transfer changes:
-    $('#ffInput_source_account_id').on('change',validateCurrencyForTransfer);
-    $('#ffInput_destination_account_id').on('change',validateCurrencyForTransfer);
+    $('#ffInput_source_account_id').on('change', validateCurrencyForTransfer);
+    $('#ffInput_destination_account_id').on('change', validateCurrencyForTransfer);
 
     // convert source currency to destination currency (slightly different routine for transfers)
     $('#ffInput_source_amount').on('change', convertSourceToDestination);
@@ -62,7 +62,6 @@ function updateInitialPage() {
     }
 
 }
-
 
 
 /**

@@ -327,7 +327,7 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueAccounts(string $range)
     {
-        $account = factory(Account::class)->make();
+        $account      = factory(Account::class)->make();
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 

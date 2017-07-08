@@ -69,13 +69,13 @@ function updateBudgetedAmounts(e) {
     var spentAmount = parseFloat(spentCell.data('spent'));
     var newAmountLeft = spentAmount + parseFloat(value);
     var amountLeftString = accounting.formatMoney(newAmountLeft);
-    if(newAmountLeft < 0) {
+    if (newAmountLeft < 0) {
         leftCell.html('<span class="text-danger">' + amountLeftString + '</span>');
     }
-    if(newAmountLeft > 0) {
+    if (newAmountLeft > 0) {
         leftCell.html('<span class="text-success">' + amountLeftString + '</span>');
     }
-    if(newAmountLeft === 0.0) {
+    if (newAmountLeft === 0.0) {
         leftCell.html('<span style="color:#999">' + amountLeftString + '</span>');
     }
 

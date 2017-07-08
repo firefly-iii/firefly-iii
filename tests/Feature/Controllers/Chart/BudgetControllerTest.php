@@ -139,7 +139,7 @@ class BudgetControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transactions = factory(Transaction::class, 10)->make();
-        $categories = factory(Category::class, 10)->make();
+        $categories   = factory(Category::class, 10)->make();
 
         $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();

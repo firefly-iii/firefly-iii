@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -159,10 +159,10 @@ class PiggyBankControllerTest extends TestCase
     public function testIndex()
     {
         // mock stuff
-        $repository   = $this->mock(PiggyBankRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $one = factory(PiggyBank::class)->make();
-        $two = factory(PiggyBank::class)->make();
+        $repository      = $this->mock(PiggyBankRepositoryInterface::class);
+        $journalRepos    = $this->mock(JournalRepositoryInterface::class);
+        $one             = factory(PiggyBank::class)->make();
+        $two             = factory(PiggyBank::class)->make();
         $two->account_id = $one->account_id;
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$one, $two]));

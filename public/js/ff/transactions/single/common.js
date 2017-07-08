@@ -122,7 +122,7 @@ function convertForeignToNative() {
 function updateNativeAmount(data) {
     // if native amount is already filled in, even though we do this for the first time:
     // don't overrule it.
-    if(countConversions === 0 && $('#ffInput_native_amount').val().length > 0) {
+    if (countConversions === 0 && $('#ffInput_native_amount').val().length > 0) {
         countConversions++;
         return;
     }

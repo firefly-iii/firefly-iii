@@ -25,6 +25,4 @@ $(function () {
     pieChart(expenseExpenseUri, 'budget-expense-out');
 
 
-
-
 });
