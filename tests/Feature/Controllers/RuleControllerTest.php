@@ -275,22 +275,6 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     * This actually hits an error and not the actually code but OK.
-     *
-     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
-     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
-     */
-    public function testTestTriggersError()
-    {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $uri = route('rules.test-triggers');
-        $response = $this->get($uri);
-        $response->assertStatus(200);
-    }
-    /**
      *
      * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
      * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
@@ -314,7 +298,24 @@ class RuleControllerTest extends TestCase
         $matcher->shouldReceive('findMatchingTransactions')->andReturn(new Collection);
 
         $this->be($this->user());
-        $uri = route('rules.test-triggers') . '?' . http_build_query($data);
+        $uri      = route('rules.test-triggers') . '?' . http_build_query($data);
+        $response = $this->get($uri);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * This actually hits an error and not the actually code but OK.
+     *
+     * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
+     * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
+     */
+    public function testTestTriggersError()
+    {
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $uri      = route('rules.test-triggers');
         $response = $this->get($uri);
         $response->assertStatus(200);
     }
@@ -330,7 +331,7 @@ class RuleControllerTest extends TestCase
             'rule-trigger-value' => ['Bla bla'],
             'rule-trigger-stop'  => ['1'],
         ];
-        $set = factory(Transaction::class, 10)->make();
+        $set  = factory(Transaction::class, 10)->make();
 
         // mock stuff
         $matcher      = $this->mock(TransactionMatcher::class);
@@ -343,7 +344,7 @@ class RuleControllerTest extends TestCase
         $matcher->shouldReceive('findMatchingTransactions')->andReturn($set);
 
         $this->be($this->user());
-        $uri = route('rules.test-triggers') . '?' . http_build_query($data);
+        $uri      = route('rules.test-triggers') . '?' . http_build_query($data);
         $response = $this->get($uri);
         $response->assertStatus(200);
     }

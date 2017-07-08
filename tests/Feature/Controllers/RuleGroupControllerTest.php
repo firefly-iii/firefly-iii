@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -175,7 +175,6 @@ class RuleGroupControllerTest extends TestCase
             'title'       => 'A',
             'description' => '',
         ];
-
 
 
         $this->be($this->user());

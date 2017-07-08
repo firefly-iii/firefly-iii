@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
@@ -54,8 +54,8 @@ class BillControllerTest extends TestCase
     public function testSingle()
     {
         $transaction = factory(Transaction::class)->make();
-        $generator  = $this->mock(GeneratorInterface::class);
-        $collector  = $this->mock(JournalCollectorInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $collector   = $this->mock(JournalCollectorInterface::class);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setBills')->andReturnSelf()->once();

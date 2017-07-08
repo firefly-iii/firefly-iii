@@ -394,13 +394,10 @@ Route::group(
     Route::post('start/{importJob}', ['uses' => 'ImportController@start', 'as' => 'start']);
 
 
-
-
     //Route::get('settings/{importJob}', ['uses' => 'ImportController@settings', 'as' => 'settings']);
     //Route::get('complete/{importJob}', ['uses' => 'ImportController@complete', 'as' => 'complete']);
     //Route::get('finished/{importJob}', ['uses' => 'ImportController@finished', 'as' => 'finished']);
     //Route::post('settings/{importJob}', ['uses' => 'ImportController@postSettings', 'as' => 'post-settings']);
-
 
 
 }

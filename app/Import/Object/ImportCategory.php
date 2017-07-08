@@ -30,32 +30,16 @@ class ImportCategory
     private $repository;
     /** @var  User */
     private $user;
-    /**
-     * @param array $id
-     */
-    public function setId(array $id)
-    {
-        $this->id = $id;
-    }
 
     /**
      * ImportCategory constructor.
      */
     public function __construct()
     {
-        $this->category = new Category();
+        $this->category   = new Category();
         $this->repository = app(CategoryRepositoryInterface::class);
         Log::debug('Created ImportCategory.');
     }
-
-    /**
-     * @param array $name
-     */
-    public function setName(array $name)
-    {
-        $this->name = $name;
-    }
-
 
     /**
      * @return Category
@@ -68,6 +52,23 @@ class ImportCategory
 
         return $this->category;
     }
+
+    /**
+     * @param array $id
+     */
+    public function setId(array $id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param array $name
+     */
+    public function setName(array $name)
+    {
+        $this->name = $name;
+    }
+
     /**
      * @param User $user
      */
@@ -100,7 +101,7 @@ class ImportCategory
         if (count($this->name) === 3) {
             /** @var Collection $categories */
             $categories = $this->repository->getCategories();
-            $name    = $this->name['value'];
+            $name       = $this->name['value'];
             Log::debug(sprintf('Finding category with name %s', $name));
             $filtered = $categories->filter(
                 function (Category $category) use ($name) {

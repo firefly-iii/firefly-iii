@@ -27,9 +27,9 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Rules\Processor;
 use Illuminate\Support\Collection;
-use Illuminate\Support\MessageBag;
 use Log;
 use Steam;
 
@@ -44,6 +44,8 @@ class ImportStorage
     /** @var  Collection */
     public $errors;
     public $journals;
+    /** @var  CurrencyRepositoryInterface */
+    private $currencyRepository;
     /** @var string */
     private $dateFormat = 'Ymd';
     /** @var  TransactionCurrency */
@@ -78,8 +80,11 @@ class ImportStorage
      */
     public function setJob(ImportJob $job)
     {
-        $this->job   = $job;
-        $this->rules = $this->getUserRules();
+        $this->job  = $job;
+        $repository = app(CurrencyRepositoryInterface::class);
+        $repository->setUser($job->user);
+        $this->currencyRepository = $repository;
+        $this->rules              = $this->getUserRules();
     }
 
     /**
@@ -107,6 +112,7 @@ class ImportStorage
                 $this->storeImportJournal($index, $object);
             } catch (FireflyException $e) {
                 $this->errors->push($e->getMessage());
+                Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
             }
         }
 
@@ -168,12 +174,22 @@ class ImportStorage
      *
      * @return TransactionCurrency
      */
-    private function getCurrency(ImportJournal $importJournal): TransactionCurrency
+    private function getCurrency(ImportJournal $importJournal, Account $account): TransactionCurrency
     {
-        $currency = $importJournal->getCurrency()->getTransactionCurrency();
-        if (is_null($currency->id)) {
-            $currency = $this->defaultCurrency;
+        // start with currency pref of account, if any:
+        $currency = $this->currencyRepository->find(intval($account->getMeta('currency_id')));
+        if (!is_null($currency->id)) {
+            return $currency;
         }
+
+        // use given currency
+        $currency = $importJournal->getCurrency()->getTransactionCurrency();
+        if (!is_null($currency->id)) {
+            return $currency;
+        }
+
+        // backup to default
+        $currency = $this->defaultCurrency;
 
         return $currency;
     }
@@ -196,7 +212,9 @@ class ImportStorage
         // amount is positive, it's a deposit, opposing is an revenue:
         $account->setExpectedType(AccountType::REVENUE);
 
-        return $account->getAccount();
+        $databaseAccount = $account->getAccount();
+
+        return $databaseAccount;
 
     }
 
@@ -286,7 +304,7 @@ class ImportStorage
 
         $asset           = $importJournal->asset->getAccount();
         $amount          = $importJournal->getAmount();
-        $currency        = $this->getCurrency($importJournal);
+        $currency        = $this->getCurrency($importJournal, $asset);
         $date            = $importJournal->getDate($this->dateFormat);
         $transactionType = $this->getTransactionType($amount);
         $opposing        = $this->getOpposingAccount($importJournal->opposing, $amount);
@@ -295,6 +313,11 @@ class ImportStorage
         if ($opposing->accountType->type === AccountType::ASSET) {
             Log::debug(sprintf('Opposing account #%d %s is an asset account, make transfer.', $opposing->id, $opposing->name));
             $transactionType = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        }
+
+        // verify that opposing account is of the correct type:
+        if ($opposing->accountType->type === AccountType::EXPENSE && $transactionType->type !== TransactionType::WITHDRAWAL) {
+            Log::error(sprintf('Row #%d is imported as a %s but opposing is an expense account. This cannot be!', $index, $transactionType->type));
         }
 
         /*** First step done! */
@@ -350,6 +373,13 @@ class ImportStorage
         $this->job->addStepsDone(1);
 
         $this->journals->push($journal);
+
+        Log::info(
+            sprintf(
+                'Imported new journal #%d with description "%s" and amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code,
+                $amount
+            )
+        );
 
         return true;
     }

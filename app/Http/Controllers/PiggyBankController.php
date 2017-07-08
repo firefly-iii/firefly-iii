@@ -329,8 +329,8 @@ class PiggyBankController extends Controller
 
         Session::flash(
             'error', strval(
-            trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)])
-        )
+                       trans('firefly.cannot_remove_from_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)])
+                   )
         );
 
         return redirect(route('piggy-banks.index'));
@@ -397,7 +397,7 @@ class PiggyBankController extends Controller
             // @codeCoverageIgnoreEnd
         }
 
-        return redirect($this->getPreviousUri('piggy-banks.edit.uri'));
+        return redirect($this->getPreviousUri('piggy-banks.create.uri'));
     }
 
     /**

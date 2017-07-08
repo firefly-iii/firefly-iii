@@ -154,6 +154,37 @@ class TagControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::show
      */
+    public function testShowAll()
+    {
+        // mock stuff
+        $repository   = $this->mock(TagRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
+
+        $collector->shouldReceive('removeFilter')->andReturnSelf()->times(3);
+        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('tags.show', [1, 'all']));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\TagController::show
+     */
     public function testShowDate()
     {
         // mock stuff
@@ -181,37 +212,6 @@ class TagControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1, '2016-01-01']));
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
-     */
-    public function testShowAll()
-    {
-        // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
-
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->times(3);
-        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
-
-
-        $this->be($this->user());
-        $response = $this->get(route('tags.show', [1, 'all']));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }

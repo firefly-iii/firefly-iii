@@ -15,8 +15,8 @@ namespace Tests\Unit\Handlers\Events;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Handlers\Events\UserEventHandler;
-use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
+use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -67,10 +67,11 @@ class UserEventHandlerTest extends TestCase
      * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendRegistrationMail
      * @covers \FireflyIII\Events\RegisteredUser
      */
-    public function testSendRegistrationMail() {
+    public function testSendRegistrationMail()
+    {
         Mail::fake();
-        $user       = $this->emptyUser();
-        $event      = new RegisteredUser($user, '127.0.0.1');
+        $user  = $this->emptyUser();
+        $event = new RegisteredUser($user, '127.0.0.1');
 
         $listener = new UserEventHandler;
         $listener->sendRegistrationMail($event);

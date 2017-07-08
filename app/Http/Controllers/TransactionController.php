@@ -86,7 +86,7 @@ class TransactionController extends Controller
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
             $end      = new Carbon;
-            $path = '/transactions/'.$what.'/all/';
+            $path     = '/transactions/' . $what . '/all/';
         }
 
         // prep for "specific date" view.

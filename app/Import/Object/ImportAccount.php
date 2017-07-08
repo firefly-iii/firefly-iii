@@ -68,6 +68,22 @@ class ImportAccount
     }
 
     /**
+     * @return string
+     */
+    public function getExpectedType(): string
+    {
+        return $this->expectedType;
+    }
+
+    /**
+     * @param string $expectedType
+     */
+    public function setExpectedType(string $expectedType)
+    {
+        $this->expectedType = $expectedType;
+    }
+
+    /**
      * @param array $accountIban
      */
     public function setAccountIban(array $accountIban)
@@ -97,14 +113,6 @@ class ImportAccount
     public function setAccountNumber(array $accountNumber)
     {
         $this->accountNumber = $accountNumber;
-    }
-
-    /**
-     * @param string $expectedType
-     */
-    public function setExpectedType(string $expectedType)
-    {
-        $this->expectedType = $expectedType;
     }
 
     /**
@@ -240,6 +248,16 @@ class ImportAccount
 
         $search  = intval($array['mapped']);
         $account = $this->repository->find($search);
+
+        if ($account->accountType->type !== $this->expectedType) {
+            Log::error(
+                sprintf(
+                    'Mapped account #%d is of type "%s" but we expect a "%s"-account. Mapping will be ignored.', $account->id, $account->accountType->type,
+                    $this->expectedType
+                )
+            );
+            return new Account;
+        }
 
         Log::debug(sprintf('Found account! #%d ("%s"). Return it', $account->id, $account->name));
 

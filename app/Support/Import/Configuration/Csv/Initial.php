@@ -26,6 +26,7 @@ use Log;
 class Initial implements ConfigurationInterface
 {
     private $job;
+
     /**
      * @return array
      */
@@ -106,6 +107,21 @@ class Initial implements ConfigurationInterface
             Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
         }
 
+        $config                   = $this->storeSpecifics($data, $config);
+        $this->job->configuration = $config;
+        $this->job->save();
+
+        return true;
+    }
+
+    /**
+     * @param array $data
+     * @param array $config
+     *
+     * @return array
+     */
+    private function storeSpecifics(array $data, array $config): array
+    {
         // loop specifics.
         if (isset($data['specifics']) && is_array($data['specifics'])) {
             foreach ($data['specifics'] as $name => $enabled) {
@@ -116,9 +132,7 @@ class Initial implements ConfigurationInterface
                 }
             }
         }
-        $this->job->configuration = $config;
-        $this->job->save();
 
-        return true;
+        return $config;
     }
 }

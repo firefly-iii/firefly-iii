@@ -231,6 +231,10 @@
         button['{{ type }}'] = '{{ trans('form.store_new_' ~ type) }}';
         {% endfor %}
 
+        // some code for the foreign amount logic:
+        var useAccountCurrency = {% if preFilled.amount_currency_id_amount > 0 %}false{% else %}true{% endif %};
+        var overruleCurrency = {{ preFilled.amount_currency_id_amount|default(0) }};
+
     </script>
     <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
     <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>

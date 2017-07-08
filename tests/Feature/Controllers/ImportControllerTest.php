@@ -188,8 +188,9 @@ class ImportControllerTest extends TestCase
         $response = $this->post(route('import.start', ['running']));
         $response->assertStatus(200);
     }
+
     /**
-     * @covers \FireflyIII\Http\Controllers\ImportController::start
+     * @covers                   \FireflyIII\Http\Controllers\ImportController::start
      * @expectedExceptionMessage Job did not complete succesfully.
      */
     public function testStartFailed()

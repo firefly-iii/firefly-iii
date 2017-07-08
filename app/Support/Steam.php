@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use \Amount as GlobalAmount;
+use Amount as GlobalAmount;
 use Carbon\Carbon;
 use Crypt;
 use DB;

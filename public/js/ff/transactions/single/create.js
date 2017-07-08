@@ -23,7 +23,6 @@ $(document).ready(function () {
     updateForm();
     updateLayout();
     updateDescription();
-    updateNativeCurrency();
 
 
     // when user changes source account or destination, native currency may be different.
@@ -60,16 +59,21 @@ function getExchangeInstructions() {
  * There is an input that shows the currency symbol that is native to the selected
  * acccount. So when the user changes the selected account, the native currency is updated:
  */
-function updateNativeCurrency() {
-    var newAccountId = getAccountId();
-    var nativeCurrencyId = accountInfo[newAccountId].preferredCurrency;
+function updateNativeCurrency(useAccountCurrency) {
+    var nativeCurrencyId;
+    if (useAccountCurrency) {
+        var newAccountId = getAccountId();
+        nativeCurrencyId = accountInfo[newAccountId].preferredCurrency;
+    }
+    if (!useAccountCurrency) {
+        nativeCurrencyId = overruleCurrency;
+    }
 
     $('.currency-option[data-id="' + nativeCurrencyId + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     if (what !== 'transfer') {
         $('select[name="source_account_id"]').focus();
     }
-
     validateCurrencyForTransfer();
 }
 
@@ -180,7 +184,9 @@ function updateForm() {
         default:
             break;
     }
-    updateNativeCurrency();
+    // get instructions all the time.
+    updateNativeCurrency(useAccountCurrency);
+    selectsForeignCurrency();
 }
 
 /**

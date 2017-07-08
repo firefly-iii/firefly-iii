@@ -42,17 +42,17 @@ interface ImportJobRepositoryInterface
      * @param ImportJob    $job
      * @param UploadedFile $file
      *
-     * @return mixed
+     * @return bool
      */
-    public function processFile(ImportJob $job, UploadedFile $file): bool;
+    public function processConfiguration(ImportJob $job, UploadedFile $file): bool;
 
     /**
      * @param ImportJob    $job
      * @param UploadedFile $file
      *
-     * @return bool
+     * @return mixed
      */
-    public function processConfiguration(ImportJob $job, UploadedFile $file): bool;
+    public function processFile(ImportJob $job, UploadedFile $file): bool;
 
     /**
      * @param ImportJob $job

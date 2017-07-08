@@ -53,7 +53,7 @@ class ImportCurrency
         }
         Log::debug('In createCurrency()');
         // check if any of them is mapped:
-        $mapped   = $this->findMappedObject();
+        $mapped = $this->findMappedObject();
 
         if (!is_null($mapped->id)) {
 
@@ -77,7 +77,7 @@ class ImportCurrency
             'decimal_places' => 2,
         ];
         if (is_null($data['code'])) {
-            Log::info('Need at least a code to create currency, return nothing.');
+            Log::debug('Need at least a code to create currency, return nothing.');
 
             return new TransactionCurrency();
         }

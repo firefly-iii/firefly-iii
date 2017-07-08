@@ -69,6 +69,18 @@ class Roles implements ConfigurationInterface
     }
 
     /**
+     * @param ImportJob $job
+     *
+     * @return ConfigurationInterface
+     */
+    public function setJob(ImportJob $job): ConfigurationInterface
+    {
+        $this->job = $job;
+
+        return $this;
+    }
+
+    /**
      * Store the result.
      *
      * @param array $data
@@ -217,16 +229,20 @@ class Roles implements ConfigurationInterface
      */
     private function setRolesComplete(): bool
     {
-        $config   = $this->job->configuration;
-        $count    = $config['column-count'];
-        $assigned = 0;
+        $config    = $this->job->configuration;
+        $count     = $config['column-count'];
+        $assigned  = 0;
+        $hasAmount = false;
         for ($i = 0; $i < $count; $i++) {
             $role = $config['column-roles'][$i] ?? '_ignore';
             if ($role !== '_ignore') {
                 $assigned++;
             }
+            if ($role === 'amount') {
+                $hasAmount = true;
+            }
         }
-        if ($assigned > 0) {
+        if ($assigned > 0 && $hasAmount) {
             $config['column-roles-complete'] = true;
             $this->job->configuration        = $config;
             $this->job->save();
@@ -247,17 +263,5 @@ class Roles implements ConfigurationInterface
         $this->job->save();
 
         return true;
-    }
-
-    /**
-     * @param ImportJob $job
-     *
-     * @return ConfigurationInterface
-     */
-    public function setJob(ImportJob $job): ConfigurationInterface
-    {
-        $this->job = $job;
-
-        return $this;
     }
 }

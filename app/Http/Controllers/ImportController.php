@@ -246,7 +246,7 @@ class ImportController extends Controller
         /** @var ImportRoutine $routine */
         $routine = app(ImportRoutine::class);
         $routine->setJob($job);
-        $result  = $routine->run();
+        $result = $routine->run();
         if ($result) {
             return Response::json(['run' => 'ok']);
         }

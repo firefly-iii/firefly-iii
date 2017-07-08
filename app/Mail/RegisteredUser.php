@@ -22,8 +22,8 @@ class RegisteredUser extends Mailable
      */
     public function __construct(string $address, string $ipAddress)
     {
-        $this->address = $address;
-        $this->ipAddress  = $ipAddress;
+        $this->address   = $address;
+        $this->ipAddress = $ipAddress;
     }
 
     /**

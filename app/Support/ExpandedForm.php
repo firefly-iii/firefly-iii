@@ -565,6 +565,19 @@ class ExpandedForm
         unset($options['currency']);
         unset($options['placeholder']);
 
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled      = session('preFilled');
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = isset($preFilled[$key]) ? intval($preFilled[$key]) : $defaultCurrency->id;
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $defaultCurrency = $currency;
+                break;
+            }
+        }
+
         // make sure value is formatted nicely:
         if (!is_null($value) && $value !== '') {
             $value = round($value, $defaultCurrency->decimal_places);

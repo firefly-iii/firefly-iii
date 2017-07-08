@@ -45,15 +45,6 @@ class ImportRoutine
     }
 
     /**
-     * @param ImportJob $job
-     */
-    public function setJob(ImportJob $job)
-    {
-        $this->job = $job;
-    }
-
-
-    /**
      *
      */
     public function run(): bool
@@ -86,7 +77,16 @@ class ImportRoutine
 
         Log::info(sprintf('Done with import job %s', $this->job->key));
 
+
         return true;
+    }
+
+    /**
+     * @param ImportJob $job
+     */
+    public function setJob(ImportJob $job)
+    {
+        $this->job = $job;
     }
 
     /**
