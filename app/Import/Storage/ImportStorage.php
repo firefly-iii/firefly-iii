@@ -301,7 +301,7 @@ class ImportStorage
     private function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
         Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->description));
-
+        $importJournal->asset->setDefaultAccountId($this->job->configuration['import-account']);
         $asset           = $importJournal->asset->getAccount();
         $amount          = $importJournal->getAmount();
         $currency        = $this->getCurrency($importJournal, $asset);

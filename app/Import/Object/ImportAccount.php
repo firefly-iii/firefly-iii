@@ -37,6 +37,8 @@ class ImportAccount
     private $accountName = [];
     /** @var array */
     private $accountNumber = [];
+    /** @var int */
+    private $defaultAccountId = 0;
     /** @var string */
     private $expectedType = '';
     /** @var  AccountRepositoryInterface */
@@ -113,6 +115,14 @@ class ImportAccount
     public function setAccountNumber(array $accountNumber)
     {
         $this->accountNumber = $accountNumber;
+    }
+
+    /**
+     * @param int $defaultAccountId
+     */
+    public function setDefaultAccountId(int $defaultAccountId)
+    {
+        $this->defaultAccountId = $defaultAccountId;
     }
 
     /**
@@ -249,6 +259,12 @@ class ImportAccount
         $search  = intval($array['mapped']);
         $account = $this->repository->find($search);
 
+        if (is_null($account->id)) {
+            Log::error(sprintf('There is no account with id #%d. Invalid mapping will be ignored!', $search));
+
+            return new Account;
+        }
+
         if ($account->accountType->type !== $this->expectedType) {
             Log::error(
                 sprintf(
@@ -256,6 +272,7 @@ class ImportAccount
                     $this->expectedType
                 )
             );
+
             return new Account;
         }
 
@@ -296,6 +313,14 @@ class ImportAccount
             return true;
         }
         $this->expectedType = $oldExpectedType;
+
+        // if search for an asset account, fall back to given "default account" (mandatory)
+        if ($this->expectedType === AccountType::ASSET) {
+            $this->account = $this->repository->find($this->defaultAccountId);
+            Log::debug(sprintf('Fall back to default account #%d "%s"', $this->account->id, $this->account->name));
+
+            return true;
+        }
 
         Log::debug(sprintf('Found no account of type %s so must create one ourselves.', $this->expectedType));
 
