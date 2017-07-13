@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
 
     // initial config
-    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
+    'initial_title'                 => 'Импорт данных (1/3) - Подготовка к импорту CSV',
     'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
     'initial_box'                   => 'Basic CSV import setup',
     'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
