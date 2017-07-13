@@ -12,11 +12,11 @@
 return [
 
     // tour!
-    'main-content-title'     => 'Welcome to Firefly III',
-    'main-content-text'      => 'Do yourself a favor and follow this short guide to make sure you know your way around.',
-    'sidebar-toggle-title'   => 'Sidebar to create stuff',
+    'main-content-title'     => 'Добро пожаловать в Firefly III',
+    'main-content-text'      => 'Пожалуйста, ознакомьтесь с этим кратким руководством, чтобы убедиться, что вы знаете, куда идти дальше.',
+    'sidebar-toggle-title'   => 'Основные операции доступны в боковой панели',
     'sidebar-toggle-text'    => 'Hidden under the plus icon are all the buttons to create new stuff. Accounts, transactions, everything!',
-    'account-menu-title'     => 'All your accounts',
+    'account-menu-title'     => 'Все ваши счета',
     'account-menu-text'      => 'Here you can find all the accounts you\'ve made.',
     'budget-menu-title'      => 'Budgets',
     'budget-menu-text'       => 'Use this page to organise your finances and limit spending.',
