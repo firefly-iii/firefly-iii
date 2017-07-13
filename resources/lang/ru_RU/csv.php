@@ -15,13 +15,13 @@ return [
 
     // initial config
     'initial_title'                 => 'Импорт данных (1/3) - Подготовка к импорту CSV',
-    'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
-    'initial_box'                   => 'Basic CSV import setup',
-    'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
-    'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'initial_submit'                => 'Continue with step 2/3',
+    'initial_text'                  => 'Чтобы импорт данных прошёл успешно, пожалуйста проверьте несколько параметров.',
+    'initial_box'                   => 'Основные параметры импорта CSV',
+    'initial_header_help'           => 'Установите этот флажок, если первая строка CSV-файла содержит заголовки столбцов.',
+    'initial_date_help'             => 'Формат даты и времени в вашем CSV-файле. Придерживайтесь формата, описанного <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">на этой</a> странице. По умолчанию дату будут анализироваться на соответствие такому формату: :dateExample.',
+    'initial_delimiter_help'        => 'Выберите разделитель полей, который используется в вашем файле. Если вы не уверены, помните, что запятая - это самый безопасный вариант.',
+    'initial_import_account_help'   => 'Если ваш CSV-файл НЕ СОДЕРЖИТ информацию о ваших счётах, укажите счета для всех транзакций, выбрав подходящие из выпадающего списка.',
+    'initial_submit'                => 'Перейти к шагу 2/3',
 
     // roles config
     'roles_title'                   => 'Import setup (2/3) - Define each column\'s role',
