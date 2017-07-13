@@ -171,15 +171,15 @@ return [
 
 
     // import
-    'import_file'           => 'Import file',
-    'configuration_file'    => 'Configuration file',
-    'import_file_type'      => 'Import file type',
-    'csv_comma'             => 'A comma (,)',
-    'csv_semicolon'         => 'A semicolon (;)',
-    'csv_tab'               => 'A tab (invisible)',
-    'csv_delimiter'         => 'CSV field delimiter',
-    'csv_import_account'    => 'Default import account',
-    'csv_config'            => 'CSV import configuration',
+    'import_file'           => 'Файл импорта',
+    'configuration_file'    => 'Файл конфигурации',
+    'import_file_type'      => 'Тип файла для импорта',
+    'csv_comma'             => 'Запятая (,)',
+    'csv_semicolon'         => 'Точка с запятой (;)',
+    'csv_tab'               => 'Табулятор (невидимый)',
+    'csv_delimiter'         => 'Разделитель полей CSV',
+    'csv_import_account'    => 'Профиль для импорта по умолчанию',
+    'csv_config'            => 'Параметры импорта CSV',
 
 
     'due_date'           => 'Due date',
