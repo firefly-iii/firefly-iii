@@ -165,7 +165,7 @@ class ImportStorage
             $errorText = join(', ', $transaction->getErrors()->all());
             throw new FireflyException($errorText);
         }
-        Log::debug(sprintf('Created transaction with ID #%d and account #%d', $transaction->id, $accountId));
+        Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $accountId, $amount));
 
         return true;
     }
@@ -301,7 +301,7 @@ class ImportStorage
 
     private function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->description));
+        Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->getDescription()));
         $importJournal->asset->setDefaultAccountId($this->job->configuration['import-account']);
         $asset           = $importJournal->asset->getAccount();
         $amount          = $importJournal->getAmount();
@@ -338,7 +338,7 @@ class ImportStorage
         $journal->user_id                 = $this->job->user_id;
         $journal->transaction_type_id     = $transactionType->id;
         $journal->transaction_currency_id = $currency->id;
-        $journal->description             = $importJournal->description;
+        $journal->description             = $importJournal->getDescription();
         $journal->date                    = $date->format('Y-m-d');
         $journal->order                   = 0;
         $journal->tag_count               = 0;
@@ -430,7 +430,7 @@ class ImportStorage
             $asset       = $importJournal->asset->getAccount();
             $opposing    = $this->getOpposingAccount($importJournal->opposing, $amount);
             $date        = $importJournal->getDate($this->dateFormat);
-            $description = $importJournal->description;
+            $description = $importJournal->getDescription();
             $set         = TransactionJournal::
             leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                              ->leftJoin(
