@@ -92,7 +92,9 @@ class Map implements ConfigurationInterface
         }
         foreach ($this->data as $index => $entry) {
             $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
+            asort($this->data[$index]['values']);
         }
+
         // save number of rows, thus number of steps, in job:
         $steps                      = $rowIndex * 5;
         $extended                   = $this->job->extended_status;

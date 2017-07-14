@@ -19,6 +19,7 @@ use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 
 /**
@@ -244,6 +245,21 @@ class Steam
     {
         if ($isEncrypted === 1) {
             return Crypt::decrypt($value);
+        }
+
+        return $value;
+    }
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function tryDecrypt($value)
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            // do not care.
         }
 
         return $value;

@@ -264,8 +264,10 @@ class ImportAccount
 
             return new Account;
         }
-
-        if ($account->accountType->type !== $this->expectedType) {
+        // must be of the same type
+        // except when mapped is an asset, then it's fair game.
+        // which only shows that user must map very carefully.
+        if ($account->accountType->type !== $this->expectedType && $account->accountType->type !== AccountType::ASSET) {
             Log::error(
                 sprintf(
                     'Mapped account #%d is of type "%s" but we expect a "%s"-account. Mapping will be ignored.', $account->id, $account->accountType->type,

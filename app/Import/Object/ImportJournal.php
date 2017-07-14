@@ -226,7 +226,7 @@ class ImportJournal
                 $this->date = $array['value'];
                 break;
             case 'description':
-                $this->description = $array['value'];
+                $this->description .= $array['value'];
                 break;
             case 'sepa-ct-op':
             case 'sepa-ct-id':
