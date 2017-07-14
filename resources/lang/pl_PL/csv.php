@@ -14,34 +14,34 @@ declare(strict_types=1);
 return [
 
     // initial config
-    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
-    'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
+    'initial_title'                 => 'Konfiguracja importu (1/3) - Podstawowa konfiguracja importu CSV',
+    'initial_text'                  => 'Abyś mógł poprawnie zaimportować plik, sprawdź poprawność poniższych opcji.',
     'initial_box'                   => 'Podstawowa konfiguracja importu CSV',
     'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
     'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'initial_submit'                => 'Continue with step 2/3',
+    'initial_submit'                => 'Przejdź do kroku 2/3',
 
     // roles config
-    'roles_title'                   => 'Import setup (2/3) - Define each column\'s role',
+    'roles_title'                   => 'Konfiguracja importu (2/3) - Określ rolę każdej z kolumn',
     'roles_text'                    => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
-    'roles_table'                   => 'Table',
-    'roles_column_name'             => 'Name of column',
-    'roles_column_example'          => 'Column example data',
-    'roles_column_role'             => 'Column data meaning',
-    'roles_do_map_value'            => 'Map these values',
-    'roles_column'                  => 'Column',
-    'roles_no_example_data'         => 'No example data available',
-    'roles_submit'                  => 'Continue with step 3/3',
+    'roles_table'                   => 'Tabela',
+    'roles_column_name'             => 'Nazwa kolumny',
+    'roles_column_example'          => 'Przykładowe dane w kolumnie',
+    'roles_column_role'             => 'Znaczenie danych w kolumnie',
+    'roles_do_map_value'            => 'Zmapuj te wartości',
+    'roles_column'                  => 'Kolumna',
+    'roles_no_example_data'         => 'Brak dostępnych danych przykładowych',
+    'roles_submit'                  => 'Przejdź do kroku 3/3',
 
     // map data
-    'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
+    'map_title'                     => 'Konfiguracja importu (3/3) - Połącz importowane dane z danymi w Firefly III',
     'map_text'                      => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
-    'map_field_value'               => 'Field value',
-    'map_field_mapped_to'           => 'Mapped to',
-    'map_do_not_map'                => '(do not map)',
-    'map_submit'                    => 'Start the import',
+    'map_field_value'               => 'Wartość pola',
+    'map_field_mapped_to'           => 'Zmapowane na',
+    'map_do_not_map'                => '(nie mapuj)',
+    'map_submit'                    => 'Rozpocznij Importowanie',
 
     // map things.
     'column__ignore'                => '(ignoruj tę kolumnę)',
