@@ -93,6 +93,7 @@ class TransactionController extends Controller
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
+            $path     = '/transactions/' . $what . '/' . $moment;
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
