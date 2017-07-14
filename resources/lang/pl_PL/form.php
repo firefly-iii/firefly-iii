@@ -42,7 +42,7 @@ return [
     'journal_description'            => 'Opis',
     'note'                           => 'Notatki',
     'split_journal'                  => 'Podziel tę transakcję',
-    'split_journal_explanation'      => 'Split this transaction in multiple parts',
+    'split_journal_explanation'      => 'Podziel transakcję na wiele części',
     'currency'                       => 'Waluta',
     'account_id'                     => 'Konto aktywów',
     'budget_id'                      => 'Budżet',
