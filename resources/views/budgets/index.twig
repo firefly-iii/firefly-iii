@@ -131,14 +131,14 @@
                     <h3 class="box-title">Budget stuff</h3>
                 </div>
                 <div class="box-body no-padding">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped sortable">
                         <thead>
                         <tr>
-                            <th class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
-                            <th>{{ 'budget'|_ }}</th>
-                            <th style="width:25%;">{{ 'budgeted'|_ }}</th>
-                            <th class="hidden-sm hidden-xs">{{ 'spent'|_ }}</th>
-                            <th class="hidden-sm hidden-xs">{{ 'left'|_ }}</th>
+                            <th data-defaultsort="disabled" class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
+                            <th data-defaultsign="az">{{ 'budget'|_ }}</th>
+                            <th data-defaultsign="_19" style="width:25%;">{{ 'budgeted'|_ }}</th>
+                            <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ 'spent'|_ }}</th>
+                            <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ 'left'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -151,7 +151,7 @@
                                     <a href="{{ route('budgets.delete',budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                                 </div>
                             </td>
-                            <td>
+                            <td data-value="{{ budget.name }}">
                                 {% if budgetInformation[budget.id]['currentLimit'] %}
                                     <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}"
                                        class="budget-link"
@@ -160,24 +160,27 @@
                                     <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
                                 {% endif %}
                             </td>
-                            <td>
+                            {% if budgetInformation[budget.id]['currentLimit'] %}
+                                {% set repAmount = budgetInformation[budget.id]['currentLimit'].amount %}
+                            {% else %}
+                                {% set repAmount = '0' %}
+                            {% endif %}
+
+                            <td data-value="{{ repAmount }}">
                                 <div class="input-group">
                                     <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
                                     <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
-                                    {% if budgetInformation[budget.id]['currentLimit'] %}
-                                        {% set repAmount = budgetInformation[budget.id]['currentLimit'].amount %}
-                                    {% else %}
-                                        {% set repAmount = '0' %}
-                                    {% endif %}
                                     <input class="form-control budgetAmount" data-original="{{ repAmount }}"
                                            data-id="{{ budget.id }}" value="{{ repAmount|round }}" autocomplete="off"
                                            step="1" min="0" name="amount" type="number">
                                 </div>
                             </td>
-                            <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}">
+                            <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
+                                data-value="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
                             </td>
-                            <td class="hidden-sm hidden-xs left" data-id="{{ budget.id }}">
+                            <td class="hidden-sm hidden-xs left" data-id="{{ budget.id }}"
+                                data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                             </td>
                         </tr>
@@ -210,17 +213,22 @@
         </div>
     {% endif %}
 {% endblock %}
-        {% block scripts %}
-            <script type="text/javascript">
-                // actually spent bar data:
-                var spent = {{ spent * -1 }}; // must be positive for the calculation to work.
-                var currencySymbol = "{{ getCurrencySymbol()|raw }}";
 
-                // budgeted data:
-                var budgeted = {{ budgeted }};
-                var available = {{ available }};
-                var budgetIndexURI = "{{ route('budgets.index','REPLACE') }}";
-            </script>
+{% block styles %}
+    <link href="css/bootstrap-sortable.css" type="text/css" rel="stylesheet" media="all">
+{% endblock %}
 
-            <script type="text/javascript" src="js/ff/budgets/index.js"></script>
-        {% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        // actually spent bar data:
+        var spent = {{ spent * -1 }}; // must be positive for the calculation to work.
+        var currencySymbol = "{{ getCurrencySymbol()|raw }}";
+
+        // budgeted data:
+        var budgeted = {{ budgeted }};
+        var available = {{ available }};
+        var budgetIndexURI = "{{ route('budgets.index','REPLACE') }}";
+    </script>
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+    <script type="text/javascript" src="js/ff/budgets/index.js"></script>
+{% endblock %}
