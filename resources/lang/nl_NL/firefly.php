@@ -70,11 +70,8 @@ return [
     'warning_much_data'                          => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                 => 'Je bent geregistreerd!',
     'search'                                     => 'Zoeken',
-    'search_found_accounts'                      => ':count rekening(en) gevonden bij je zoekopdracht.',
-    'search_found_categories'                    => ':count categorie(en) gevonden bij je zoekopdracht.',
-    'search_found_budgets'                       => ':count budget(ten) gevonden bij je zoekopdracht.',
-    'search_found_tags'                          => ':count tag(s) gevonden bij je zoekopdracht.',
     'search_found_transactions'                  => ':count transactie(s) gevonden bij je zoekopdracht.',
+
     'results_limited'                            => 'Er worden maximaal :count resultaten getoond.',
     'tagbalancingAct'                            => 'Balancerende tag',
     'tagadvancePayment'                          => 'Vooruitbetaalde tag',

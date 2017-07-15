@@ -641,7 +641,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'search', 'as' => 'search.'], function () {
     Route::get('', ['uses' => 'SearchController@index', 'as' => 'index']);
-
+    Route::any('search', ['uses' => 'SearchController@search', 'as' => 'search']);
 }
 );
 
