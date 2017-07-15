@@ -427,12 +427,6 @@ return [
     'attachment_updated'                         => 'Pièce jointe ":name" mise à jour',
     'upload_max_file_size'                       => 'Taille maximum du fichier : :size',
 
-    // tour:
-    'prev'                                       => 'Précédent',
-    'next'                                       => 'Suivant',
-    'end-tour'                                   => 'End tour',
-    'pause'                                      => 'Suspendre',
-
     // transaction index
     'title_expenses'                             => 'Dépenses',
     'title_withdrawal'                           => 'Dépenses',
@@ -499,15 +493,6 @@ return [
     'currencies_intro'                           => 'Firefly III prend en charge diverses monnaies que vous pouvez configurer et activer ici.',
     'make_default_currency'                      => 'définir par défaut',
     'default_currency'                           => 'par défaut',
-
-    // new user:
-    'submit'                                     => 'Soumettre',
-    'getting_started'                            => 'Mise en route',
-    'to_get_started'                             => 'Pour débuter avec Firefly, veuillez entrer le nom de votre banque actuelle et le solde de votre compte courant :',
-    'savings_balance_text'                       => 'Si vous avez un compte d’épargne, entrer le solde actuel de votre compte d’épargne :',
-    'cc_balance_text'                            => 'Si vous avez une carte de crédit, entrez la plafond de votre carte.',
-    'stored_new_account_new_user'                => 'Super ! Votre nouveau compte à été créé.',
-    'stored_new_accounts_new_user'               => 'Super ! Vos nouveaux comptes ont été créé.',
 
     // forms:
     'mandatoryFields'                            => 'Champs obligatoires',
@@ -644,6 +629,12 @@ return [
 
     // new user:
     'welcome'                                    => 'Bienvenue sur Firefly !',
+    'submit'                                     => 'Soumettre',
+    'getting_started'                            => 'Mise en route',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Super ! Vos nouveaux comptes ont été créé.',
 
     // home page:
     'yourAccounts'                               => 'Vos comptes',
