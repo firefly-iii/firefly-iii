@@ -112,10 +112,12 @@ class ChartJsGenerator implements GeneratorInterface
         // sort by value, keep keys.
         // different sort when values are positive and when they're negative.
         asort($data);
-        if(bccomp(next($data),'0') === 1) {
+        $next = next($data);
+        if (!is_bool($next) && bccomp($next, '0') === 1) {
             // next is positive, sort other way around.
             arsort($data);
         }
+        unset($next);
 
         $index = 0;
         foreach ($data as $key => $value) {
