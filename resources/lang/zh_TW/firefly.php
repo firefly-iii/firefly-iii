@@ -427,12 +427,6 @@ return [
     'attachment_updated'                         => 'Updated attachment ":name"',
     'upload_max_file_size'                       => 'Maximum file size: :size',
 
-    // tour:
-    'prev'                                       => 'Prev',
-    'next'                                       => 'Next',
-    'end-tour'                                   => 'End tour',
-    'pause'                                      => 'Pause',
-
     // transaction index
     'title_expenses'                             => 'Expenses',
     'title_withdrawal'                           => 'Expenses',
@@ -499,15 +493,6 @@ return [
     'currencies_intro'                           => 'Firefly III supports various currencies which you can set and enable here.',
     'make_default_currency'                      => 'make default',
     'default_currency'                           => 'default',
-
-    // new user:
-    'submit'                                     => 'Submit',
-    'getting_started'                            => 'Getting started',
-    'to_get_started'                             => '請輸入你的銀行名稱和帳戶餘額，以開始使用 Firefly︰',
-    'savings_balance_text'                       => '如果你有儲蓄帳戶的話，請輸入你的儲蓄帳戶當前的餘額︰',
-    'cc_balance_text'                            => '如果你有信用卡，請輸入你的信用卡限額。',
-    'stored_new_account_new_user'                => 'Yay! Your new account has been stored.',
-    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
 
     // forms:
     'mandatoryFields'                            => 'Mandatory fields',
@@ -644,6 +629,12 @@ return [
 
     // new user:
     'welcome'                                    => 'Welcome to Firefly!',
+    'submit'                                     => 'Submit',
+    'getting_started'                            => 'Getting started',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
 
     // home page:
     'yourAccounts'                               => 'Your accounts',
