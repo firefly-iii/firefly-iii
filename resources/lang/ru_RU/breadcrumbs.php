@@ -24,7 +24,7 @@ return [
     'edit_bill'         => 'Редактирование счёта к оплате ":name"',
     'delete_bill'       => 'Удаление счёта к оплате ":name"',
     'reports'           => 'Отчёты',
-    'searchResult'      => 'Поиск по ключу ":query"',
+    'search_result'     => 'Search results for ":query"',
     'withdrawal_list'   => 'Мои расходы',
     'deposit_list'      => 'Мои доходы',
     'transfer_list'     => 'Переводы',
