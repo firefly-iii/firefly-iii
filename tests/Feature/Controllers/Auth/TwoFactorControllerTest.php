@@ -35,9 +35,16 @@ class TwoFactorControllerTest extends TestCase
         $truePref->data         = true;
         $secretPreference       = new Preference;
         $secretPreference->data = 'BlablaSeecret';
+
+
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->twice();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference)->once();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference)->once();
+
+        $falsePref              = new Preference;
+        $falsePref->data        = false;
+        Preferences::shouldReceive('get')->withArgs(['shown_demo_two-factor.index', false])->andReturn($falsePref)->once();
+
         $response = $this->get(route('two-factor.index'));
         $response->assertStatus(200);
     }
@@ -54,6 +61,8 @@ class TwoFactorControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference)->twice();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn(null)->once();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn(null)->once();
+        Preferences::shouldReceive('get')->withArgs(['shown_demo_two-factor.index', false])->andReturn($falsePreference)->once();
+
         $response = $this->get(route('two-factor.index'));
         $response->assertStatus(302);
         $response->assertRedirect(route('index'));
@@ -74,6 +83,11 @@ class TwoFactorControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->twice();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference)->once();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference)->once();
+
+        $falsePref              = new Preference;
+        $falsePref->data        = false;
+        Preferences::shouldReceive('get')->withArgs(['shown_demo_two-factor.index', false])->andReturn($falsePref)->once();
+
         $response = $this->get(route('two-factor.index'));
         $response->assertStatus(500);
     }
@@ -92,6 +106,11 @@ class TwoFactorControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference);
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturn($secretPreference);
+
+        $falsePref              = new Preference;
+        $falsePref->data        = false;
+        Preferences::shouldReceive('get')->withArgs(['shown_demo_two-factor.lost', false])->andReturn($falsePref)->once();
+
         $response = $this->get(route('two-factor.lost'));
         $response->assertStatus(200);
     }

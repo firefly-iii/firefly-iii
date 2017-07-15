@@ -85,7 +85,7 @@ class Budget extends Model
     public static function routeBinder(Budget $value)
     {
         if (auth()->check()) {
-            if ($value->user_id === auth()->user()->id) {
+            if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
             }
         }

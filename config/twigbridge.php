@@ -156,6 +156,7 @@ return [
             'Preferences',
             'URL',
             'Config',
+            'Request',
             'ExpandedForm' => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location',

@@ -23,10 +23,10 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Route;
 use Session;
 use URL;
 use View;
-use Route;
 
 /**
  * Class Controller
@@ -66,10 +66,12 @@ class Controller extends BaseController
                 $this->dateTimeFormat    = (string)trans('config.date_time');
 
                 // get shown-intro-preference:
-                $key       = 'shown_demo_' . Route::currentRouteName();
-                $shownDemo = Preferences::get($key, false)->data;
-                View::share('shownDemo', $shownDemo);
-                View::share('current_route_name', Route::currentRouteName());
+                if (auth()->check()) {
+                    $key       = 'shown_demo_' . Route::currentRouteName();
+                    $shownDemo = Preferences::get($key, false)->data;
+                    View::share('shownDemo', $shownDemo);
+                    View::share('current_route_name', Route::currentRouteName());
+                }
 
                 return $next($request);
             }
