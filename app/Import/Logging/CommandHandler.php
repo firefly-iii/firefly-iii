@@ -36,7 +36,8 @@ class CommandHandler extends AbstractProcessingHandler
     {
         parent::__construct();
         $this->command = $command;
-        $this->changeLevel(env('LOG_LEVEL', 'debug'));
+
+        $this->changeLevel(env('APP_LOG_LEVEL', 'info'));
     }
 
     /**
@@ -56,9 +57,10 @@ class CommandHandler extends AbstractProcessingHandler
      */
     private function changeLevel(string $level)
     {
-        $level = strtoupper($level);
-        if (defined(sprintf('Logger::%s', $level))) {
-            $this->setLevel(constant(sprintf('Logger::%s', $level)));
+        $level     = strtoupper($level);
+        $reference = sprintf('\Monolog\Logger::%s', $level);
+        if (defined($reference)) {
+            $this->setLevel(constant($reference));
         }
     }
 }
