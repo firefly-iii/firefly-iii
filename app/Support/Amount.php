@@ -311,6 +311,9 @@ class Amount
             $coloured = false;
             $format   = '<span class="text-info">%s</span>';
         }
+        if($transaction->transaction_type_type === TransactionType::OPENING_BALANCE) {
+            $amount = strval($transaction->transaction_amount);
+        }
 
         $currency                 = new TransactionCurrency;
         $currency->symbol         = $transaction->transaction_currency_symbol;

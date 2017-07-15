@@ -44,6 +44,7 @@ Route::group(
     Route::get('error', ['uses' => 'HomeController@displayError', 'as' => 'error']);
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
     Route::get('flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+    Route::get('routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
 }
 );
 
@@ -435,7 +436,6 @@ Route::group(
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
     Route::get('budgets', ['uses' => 'JsonController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
-    Route::get('tour', ['uses' => 'JsonController@tour', 'as' => 'tour']);
     Route::get('box/in', ['uses' => 'JsonController@boxIn', 'as' => 'box.in']);
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.unpaid']);
@@ -445,8 +445,6 @@ Route::group(
     Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
-
-    Route::post('end-tour', ['uses' => 'JsonController@endTour', 'as' => 'end-tour']);
 
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);

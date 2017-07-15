@@ -4,10 +4,6 @@
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
-
-
-
-
     {% include 'partials.boxes' %}
 
     <div class="row">
@@ -31,7 +27,7 @@
                     <canvas id="budgets-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
-            <!-- CATEGORIES -->
+            {# CATEGORIES #}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'categories'|_ }}</h3>
@@ -44,7 +40,7 @@
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
             {% if billCount > 0 %}
-                <!-- BILLS -->
+                {# BILLS #}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'bills'|_ }}</h3>
@@ -59,13 +55,12 @@
                 </div>
             {% endif %}
 
-            <!-- TRANSACTIONS -->
+            {# TRANSACTIONS #}
             {% for data in transactions %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title"><a href="{{ route('accounts.show', data[1].id) }}">{{ data[1].name }}</a></h3>
 
-                        <!-- ACTIONS MENU -->
                         <div class="box-tools pull-right">
                             <div class="btn-group">
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -107,7 +102,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <!-- EXPENSE ACCOUNTS -->
+            {# EXPENSE ACCOUNTS #}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'expense_accounts'|_ }}</h3>
@@ -117,7 +112,7 @@
                     <canvas id="expense-accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
             </div>
-            <!-- OPTIONAL REVENUE ACCOUNTS -->
+            {# OPTIONAL REVENUE ACCOUNTS #}
             {% if showDepositsFrontpage %}
                 <div class="box">
                     <div class="box-header with-border">
@@ -134,14 +129,7 @@
 
 {% endblock %}
 {% block scripts %}
-    <!-- show tour? -->
     <script type="text/javascript">
-        var showTour;
-        {% if showTour %}
-        showTour = true;
-        {% else %}
-        showTour = false;
-        {% endif %}
         var billCount = {{ billCount }};
 
         // uri's of charts:

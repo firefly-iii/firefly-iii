@@ -10,13 +10,16 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
         <div class="row">
-            <div class="col-lg-6 col-sm-8 col-xs-12">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-xs-12">
 
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'getting_started'|_ }}</h3>
                     </div>
                     <div class="box-body">
+                        <p>
+                            <strong>{{ 'welcome'|_ }}</strong>
+                        </p>
                         <p>
                             {{ 'to_get_started'|_ }}
                         </p>
@@ -28,14 +31,11 @@
                             {{ 'savings_balance_text'|_ }}
                         </p>
 
-                        {{ ExpandedForm.balance('savings_balance') }}
+                        {{ ExpandedForm.balance('savings_balance',0) }}
 
                         <p>
-                            {{ 'cc_balance_text'|_ }}
-
+                            {{ 'finish_up_new_user'|_ }}
                         </p>
-
-                        {{ ExpandedForm.balance('credit_card_limit') }}
 
                     </div>
                     <div class="box-footer">
