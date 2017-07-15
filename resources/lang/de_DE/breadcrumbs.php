@@ -24,7 +24,7 @@ return [
     'edit_bill'         => 'Bearbeite Rechnung ":name"',
     'delete_bill'       => 'Lösche Rechnung ":name"',
     'reports'           => 'Berichte',
-    'searchResult'      => 'Suche nach ":query"',
+    'search_result'     => 'Search results for ":query"',
     'withdrawal_list'   => 'Ausgaben',
     'deposit_list'      => 'Umsatz, Einkommen und Einlagen',
     'transfer_list'     => 'Überweisungen',
