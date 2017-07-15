@@ -10,5 +10,5 @@
 
 $(function () {
     "use strict";
-    alert('show user intro for ' + route_for_tour);
+    //alert('show user intro for ' + route_for_tour);
 });
