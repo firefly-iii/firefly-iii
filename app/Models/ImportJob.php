@@ -124,7 +124,7 @@ class ImportJob extends Model
         if (is_null($value)) {
             return [];
         }
-        if (strlen($value) == 0) {
+        if (strlen($value) === 0) {
             return [];
         }
 
@@ -138,7 +138,7 @@ class ImportJob extends Model
      */
     public function getExtendedStatusAttribute($value)
     {
-        if (strlen($value) == 0) {
+        if (strlen($value) === 0) {
             return [];
         }
 

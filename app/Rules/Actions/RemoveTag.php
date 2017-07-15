@@ -52,7 +52,7 @@ class RemoveTag implements ActionInterface
         /** @var Tag $tag */
         $tag = $journal->user->tags()->get()->filter(
             function (Tag $tag) use ($name) {
-                return $tag->tag == $name;
+                return $tag->tag === $name;
             }
         )->first();
 

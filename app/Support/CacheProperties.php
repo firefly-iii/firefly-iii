@@ -75,7 +75,7 @@ class CacheProperties
      */
     public function has(): bool
     {
-        if (getenv('APP_ENV') == 'testing') {
+        if (getenv('APP_ENV') === 'testing') {
             return false;
         }
         $this->md5();

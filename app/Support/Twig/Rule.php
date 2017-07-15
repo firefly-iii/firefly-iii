@@ -70,7 +70,7 @@ class Rule extends Twig_Extension
             $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
             $possibleTriggers = [];
             foreach ($ruleTriggers as $key) {
-                if ($key != 'user_action') {
+                if ($key !== 'user_action') {
                     $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
                 }
             }

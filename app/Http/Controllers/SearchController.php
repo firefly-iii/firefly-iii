@@ -51,6 +51,10 @@ class SearchController extends Controller
      */
     public function index(Request $request, SearchInterface $searcher)
     {
+        $query = $request->get('q');
+
+        return view('search.index',compact('query'));
+
         // yes, hard coded values:
         $minSearchLen = 1;
         $limit        = 20;

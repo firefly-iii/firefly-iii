@@ -81,7 +81,7 @@ class BudgetController extends Controller
         /** @var Carbon $end */
         $end         = session('end', Carbon::now()->endOfMonth());
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
-        if ($amount == 0) {
+        if ($amount === 0) {
             $budgetLimit = null;
         }
         Preferences::mark();
@@ -293,7 +293,7 @@ class BudgetController extends Controller
             );
         }
 
-        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         $count = 0;
@@ -318,7 +318,7 @@ class BudgetController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -357,7 +357,7 @@ class BudgetController extends Controller
         /** @var Carbon $start */
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
-        $page       = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page       = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
         $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
@@ -384,11 +384,11 @@ class BudgetController extends Controller
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
-        if ($budgetLimit->budget->id != $budget->id) {
+        if ($budgetLimit->budget->id !== $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans(
             'firefly.budget_in_period', [

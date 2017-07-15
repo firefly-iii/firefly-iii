@@ -316,7 +316,7 @@ class AccountController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                            'end'  => $end->formatLocalized($this->monthAndDayFormat)]

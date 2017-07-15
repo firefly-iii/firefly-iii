@@ -93,7 +93,7 @@ class NewUserController extends Controller
             $count++;
         }
         $message = strval(trans('firefly.stored_new_accounts_new_user'));
-        if ($count == 1) {
+        if ($count === 1) {
             $message = strval(trans('firefly.stored_new_account_new_user'));
         }
 

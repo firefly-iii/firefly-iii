@@ -67,7 +67,7 @@ class CategoryController extends Controller
 
         $start = $repository->firstUseDate($category);
 
-        if ($start->year == 1900) {
+        if ($start->year === 1900) {
             $start = new Carbon;
         }
 

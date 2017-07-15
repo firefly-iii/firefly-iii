@@ -199,7 +199,7 @@ class CategoryController extends Controller
             );
         }
 
-        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         $count = 0;
@@ -224,7 +224,7 @@ class CategoryController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -247,7 +247,7 @@ class CategoryController extends Controller
         // default values:
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
-        $page         = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $count        = 0;
         $loop         = 0;
@@ -308,7 +308,7 @@ class CategoryController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
@@ -463,7 +463,7 @@ class CategoryController extends Controller
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
-        if ($first->year == 1900) {
+        if ($first->year === 1900) {
             $first = new Carbon;
         }
         $range   = Preferences::get('viewRange', '1M')->data;

@@ -36,10 +36,10 @@ class Amount implements ConverterInterface
         $decimalPosition = $len - 3;
         $decimal         = null;
 
-        if (($len > 2 && $value{$decimalPosition} == '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
+        if (($len > 2 && $value{$decimalPosition} === '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
             $decimal = '.';
         }
-        if ($len > 2 && $value{$decimalPosition} == ',') {
+        if ($len > 2 && $value{$decimalPosition} === ',') {
             $decimal = ',';
         }
 

@@ -52,7 +52,7 @@ class RuleGroup extends Model
     public static function routeBinder(RuleGroup $value)
     {
         if (auth()->check()) {
-            if ($value->user_id == auth()->user()->id) {
+            if ($value->user_id === auth()->user()->id) {
                 return $value;
             }
         }

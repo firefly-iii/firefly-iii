@@ -231,7 +231,7 @@ class TagReportController extends Controller
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
-            if (!array_sum($entry['entries']) == 0) {
+            if (!array_sum($entry['entries']) === 0) {
                 $newSet[$key] = $chartData[$key];
             }
         }

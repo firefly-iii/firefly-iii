@@ -152,11 +152,9 @@ class ImportRoutine
             Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
             DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
         }
-        Log::debug('Done!');
         Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $this->journals->count(), $tag->id, $tag->tag));
 
         return $tag;
-
     }
 
     /**

@@ -179,7 +179,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // update the account:
         $account->name            = $data['name'];
-        $account->active          = $data['active'] == '1' ? true : false;
+        $account->active          = $data['active'] === '1' ? true : false;
         $account->virtual_balance = $data['virtualBalance'];
         $account->iban            = $data['iban'];
         $account->save();
@@ -460,12 +460,12 @@ class AccountRepository implements AccountRepositoryInterface
         // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id == $transaction->account_id) {
+            if ($account->id === $transaction->account_id) {
                 $transaction->amount                  = $amount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
-            if ($account->id != $transaction->account_id) {
+            if ($account->id !== $transaction->account_id) {
                 $transaction->amount                  = bcmul($amount, '-1');
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();

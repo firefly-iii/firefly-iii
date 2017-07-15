@@ -107,7 +107,7 @@ class HomeController extends Controller
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
-        if ($count == 0) {
+        if ($count === 0) {
             return redirect(route('new-user.index'));
         }
 

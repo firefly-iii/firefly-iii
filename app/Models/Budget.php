@@ -66,7 +66,7 @@ class Budget extends Model
         $set = $query->get(['budgets.*']);
         /** @var Budget $budget */
         foreach ($set as $budget) {
-            if ($budget->name == $fields['name']) {
+            if ($budget->name === $fields['name']) {
                 return $budget;
             }
         }
@@ -85,7 +85,7 @@ class Budget extends Model
     public static function routeBinder(Budget $value)
     {
         if (auth()->check()) {
-            if ($value->user_id == auth()->user()->id) {
+            if ($value->user_id === auth()->user()->id) {
                 return $value;
             }
         }

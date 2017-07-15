@@ -236,7 +236,7 @@ class TagController extends Controller
         // default values:
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $page         = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $count        = 0;
         $loop         = 0;
@@ -301,7 +301,7 @@ class TagController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
                 ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]

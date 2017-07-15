@@ -259,7 +259,7 @@ class VerifyDatabase extends Command
     {
         $plural = str_plural($name);
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
-        $field  = $name == 'tag' ? 'tag' : 'name';
+        $field  = $name === 'tag' ? 'tag' : 'name';
         $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
                         ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
                         ->distinct()

@@ -365,7 +365,7 @@ class JsonController extends Controller
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {
-            if ($key != 'user_action') {
+            if ($key !== 'user_action') {
                 $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
             }
         }

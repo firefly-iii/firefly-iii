@@ -37,7 +37,7 @@ class TagFormRequest extends Request
      */
     public function collectTagData(): array
     {
-        if ($this->get('setTag') == 'true') {
+        if ($this->get('setTag') === 'true') {
             $latitude  = $this->string('latitude');
             $longitude = $this->string('longitude');
             $zoomLevel = $this->integer('zoomLevel');

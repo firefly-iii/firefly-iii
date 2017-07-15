@@ -103,7 +103,7 @@ class AbnAmroDescription implements SpecificInterface
             $this->row[8] = $matches[4]; // 'opposing-account-name'
             $this->row[7] = $matches[4]; // 'description'
 
-            if ($matches[1] == 'GEA') {
+            if ($matches[1] === 'GEA') {
                 $this->row[7] = 'GEA ' . $matches[4]; // 'description'
             }
 
