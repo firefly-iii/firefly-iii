@@ -67,7 +67,7 @@ class CategoryController extends Controller
 
         $start = $repository->firstUseDate($category);
 
-        if ($start->year == 1900) {
+        if ($start->year === 1900) {
             $start = new Carbon;
         }
 
@@ -277,10 +277,10 @@ class CategoryController extends Controller
      */
     public function specificPeriod(CategoryRepositoryInterface $repository, Category $category, Carbon $date)
     {
-        $range  = Preferences::get('viewRange', '1M')->data;
-        $start  = Navigation::startOfPeriod($date, $range);
-        $end    = Navigation::endOfPeriod($date, $range);
-        $data   = $this->makePeriodChart($repository, $category, $start, $end);
+        $range = Preferences::get('viewRange', '1M')->data;
+        $start = Navigation::startOfPeriod($date, $range);
+        $end   = Navigation::endOfPeriod($date, $range);
+        $data  = $this->makePeriodChart($repository, $category, $start, $end);
 
         return Response::json($data);
     }
@@ -336,9 +336,9 @@ class CategoryController extends Controller
             $sum    = bcadd($spent, $earned);
             $label  = trim(Navigation::periodShow($start, '1D'));
 
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'),12);
-            $chartData[1]['entries'][$label] = round($earned,12);
-            $chartData[2]['entries'][$label] = round($sum,12);
+            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
+            $chartData[1]['entries'][$label] = round($earned, 12);
+            $chartData[2]['entries'][$label] = round($sum, 12);
 
 
             $start->addDay();

@@ -253,7 +253,7 @@ class RuleGroupController extends Controller
         $data = [
             'title'       => $request->input('title'),
             'description' => $request->input('description'),
-            'active'      => intval($request->input('active')) == 1,
+            'active'      => intval($request->input('active')) === 1,
         ];
 
         $repository->update($ruleGroup, $data);

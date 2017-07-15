@@ -32,6 +32,7 @@ use Illuminate\Database\QueryException;
 use Log;
 use Preferences;
 use Schema;
+use Steam;
 
 /**
  * Class UpgradeDatabase
@@ -72,7 +73,52 @@ class UpgradeDatabase extends Command
         $this->repairPiggyBanks();
         $this->updateAccountCurrencies();
         $this->updateJournalCurrencies();
+        $this->currencyInfoToTransactions();
+        $this->verifyCurrencyInfo();
         $this->info('Firefly III database is up to date.');
+    }
+
+    /**
+     * Moves the currency id info to the transaction instead of the journal.
+     */
+    private function currencyInfoToTransactions()
+    {
+        $count = 0;
+        $set   = TransactionJournal::with('transactions')->get();
+        /** @var TransactionJournal $journal */
+        foreach ($set as $journal) {
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions as $transaction) {
+                if (is_null($transaction->transaction_currency_id)) {
+                    $transaction->transaction_currency_id = $journal->transaction_currency_id;
+                    $transaction->save();
+                    $count++;
+                }
+            }
+
+
+            // read and use the foreign amounts when present.
+            if ($journal->hasMeta('foreign_amount')) {
+                $amount = Steam::positive($journal->getMeta('foreign_amount'));
+
+                // update both transactions:
+                foreach ($journal->transactions as $transaction) {
+                    $transaction->foreign_amount = $amount;
+                    if (bccomp($transaction->amount, '0') === -1) {
+                        // update with negative amount:
+                        $transaction->foreign_amount = bcmul($amount, '-1');
+                    }
+                    // set foreign currency id:
+                    $transaction->foreign_currency_id = intval($journal->getMeta('foreign_currency_id'));
+                    $transaction->save();
+                }
+                $journal->deleteMeta('foreign_amount');
+                $journal->deleteMeta('foreign_currency_id');
+            }
+
+        }
+
+        $this->line(sprintf('Updated currency information for %d transactions', $count));
     }
 
     /**
@@ -269,9 +315,11 @@ class UpgradeDatabase extends Command
         $repository   = app(CurrencyRepositoryInterface::class);
         $notification = '%s #%d uses %s but should use %s. It has been updated. Please verify this in Firefly III.';
         $transfer     = 'Transfer #%d has been updated to use the correct currencies. Please verify this in Firefly III.';
+        $driver       = DB::connection()->getDriverName();
+        $pgsql        = ['pgsql', 'postgresql'];
 
         foreach ($types as $type => $operator) {
-            $set = TransactionJournal
+            $query = TransactionJournal
                 ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')->leftJoin(
                     'transactions', function (JoinClause $join) use ($operator) {
                     $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', $operator, '0');
@@ -280,9 +328,15 @@ class UpgradeDatabase extends Command
                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                 ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                 ->where('transaction_types.type', $type)
-                ->where('account_meta.name', 'currency_id')
-                ->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'))
-                ->get(['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']);
+                ->where('account_meta.name', 'currency_id');
+            if (in_array($driver, $pgsql)) {
+                $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('cast(account_meta.data as int)'));
+            }
+            if (!in_array($driver, $pgsql)) {
+                $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'));
+            }
+
+            $set = $query->get(['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']);
             /** @var TransactionJournal $journal */
             foreach ($set as $journal) {
                 $expectedCurrency = $repository->find(intval($journal->expected_currency_id));
@@ -333,5 +387,26 @@ class UpgradeDatabase extends Command
                 $this->line($line);
             }
         }
+    }
+
+    /**
+     *
+     */
+    private function verifyCurrencyInfo()
+    {
+        $count        = 0;
+        $transactions = Transaction::get();
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $currencyId = intval($transaction->transaction_currency_id);
+            $foreignId  = intval($transaction->foreign_currency_id);
+            if ($currencyId === $foreignId) {
+                $transaction->foreign_currency_id = null;
+                $transaction->foreign_amount      = null;
+                $transaction->save();
+                $count++;
+            }
+        }
+        $this->line(sprintf('Updated currency information for %d transactions', $count));
     }
 }

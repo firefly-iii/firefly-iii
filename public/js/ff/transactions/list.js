@@ -41,7 +41,14 @@ function goToMassEdit() {
     var checkedArray = getCheckboxes();
 
     // go to specially crafted URL:
-    window.location.href = 'transactions/mass/edit/' + checkedArray;
+    var bases = document.getElementsByTagName('base');
+    var baseHref = null;
+
+    if (bases.length > 0) {
+        baseHref = bases[0].href;
+    }
+
+    window.location.href = baseHref + '/transactions/mass/edit/' + checkedArray;
     return false;
 }
 
@@ -50,7 +57,13 @@ function goToMassDelete() {
     var checkedArray = getCheckboxes();
 
     // go to specially crafted URL:
-    window.location.href = 'transactions/mass/delete/' + checkedArray;
+    var bases = document.getElementsByTagName('base');
+    var baseHref = null;
+
+    if (bases.length > 0) {
+        baseHref = bases[0].href;
+    }
+    window.location.href = baseHref + '/transactions/mass/delete/' + checkedArray;
     return false;
 }
 

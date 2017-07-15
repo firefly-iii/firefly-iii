@@ -5,151 +5,93 @@
 {% endblock %}
 
 {% block content %}
-    {% if query == "" %}
-        <div class="row">
-            <div class="col-lg-12">
-                <p>{{ 'no_results_for_empty_search'|_ }}</p>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'search_box'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'search_box_intro'|_ }}
+                    </p>
+                    {# search form #}
+                    <form class="form-horizontal" action="{{ route('search.index') }}" method="get">
+                        <div class="form-group">
+                            <label for="query" class="col-sm-1 control-label">Query</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="q" id="query" value="{{ fullQuery }}" class="form-control" placeholder="{{ fullQuery }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    {% endif %}
+    </div>
     {% if query %}
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="box box-primary">
+        <div class="row result_row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box search_box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'advanced_search'|_ }}</h3>
+                        <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <p>
-                            {{ 'advanced_search_intro'|_ }}
+                        <p class="search_ongoing text-center" style="margin-top:70px;">
+                            {{ 'search_searching'|_ }}
                         </p>
-                        {# search form #}
-                        <form class="form-horizontal" action="{{ route('search.index') }}" method="get">
-                            <div class="form-group">
-                                <label for="query" class="col-sm-1 control-label">Query</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="q" id="query" value="{{ rawQuery }}" class="form-control" placeholder="{{ rawQuery }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-1 col-sm-10">
-                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Search</button>
-                                </div>
-                            </div>
-                        </form>
+                        <p class="search_count" style="display: none;">
+                            {{ 'search_found_transactions'|_ }} <span class="search_count"></span>
+                        </p>
+                        <div class="search_results" style="display: none;">
+                        </div>
+                        {# loading indicator #}
+                        <div class="overlay">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
                     </div>
                 </div>
-                <p>{{ trans('firefly.results_limited', {count: limit}) }}</p>
             </div>
         </div>
-        {% if hasModifiers %}
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'transactions'|_ }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <p>
-                                {{ trans('firefly.search_found_transactions', {count: result.transactions|length}) }}
-                            </p>
-                            {% include 'search.partials.transactions-large' with {'journals' : result.transactions} %}
-                        </div>
+
+        <div class="row error_row" style="display:none; ">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'search_error'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="search_ongoing">
+                            {{ 'general_search_error'|_ }}
+                        </p>
                     </div>
                 </div>
             </div>
-        {% else %}
-            <div class="row">
-                {% if result.transactions|length > 0 %}
-                    <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">{{ 'transactions'|_ }}</h3>
-                            </div>
-                            <div class="box-body">
-                                <p>
-                                    {{ trans('firefly.search_found_transactions', {count: result.transactions|length}) }}
-                                </p>
-                                {% include 'search.partials.transactions' with {'transactions' : result.transactions} %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if result.categories|length > 0 %}
-                    <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">{{ 'categories'|_ }}</h3>
-                            </div>
-                            <div class="box-body">
-                                <p>
-                                    {{ trans('firefly.search_found_categories', {count: result.categories|length}) }}
-                                </p>
-                                {% include 'search.partials.categories' %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if result.tags|length > 0 %}
-                    <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">{{ 'tags'|_ }}</h3>
-                            </div>
-                            <div class="box-body">
-                                <p>
-                                    {{ trans('firefly.search_found_tags', {count: result.tags|length}) }}
-                                </p>
-                                {% include 'search.partials.tags' %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if result.accounts|length > 0 %}
-                    <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">{{ 'accounts'|_ }}</h3>
-                            </div>
-                            <div class="box-body">
-                                <p>
-                                    {{ trans('firefly.search_found_accounts', {count: result.accounts|length}) }}
-                                </p>
-                                {% include 'search.partials.accounts' %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if result.budgets|length > 0 %}
-                    <div class="col-lg-6 col-md-12 col-sm-12">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">{{ 'budgets'|_ }}</h3>
-                            </div>
-                            <div class="box-body">
-                                <p>
-                                    {{ trans('firefly.search_found_budgets', {count: result.budgets|length}) }}
-                                </p>
-                                {% include 'search.partials.budgets' %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
+        </div>
     {% endif %}
-
-
-
+    {% if query == "" %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'search_results'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>{{ 'no_results_for_empty_search'|_ }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
     <script type="text/javascript">
-        var query = '{{ query }}';
+        var searchQuery = "{{ fullQuery|escape('js') }}";
+        var searchUri = "{{ route('search.search') }}";
     </script>
-{% endblock %}
-
-{% block styles %}
-    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+    <script type="text/javascript" src="js/ff/search/index.js"></script>
 {% endblock %}

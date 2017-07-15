@@ -37,15 +37,8 @@ class JournalList implements BinderInterface
             $ids = explode(',', $value);
             /** @var \Illuminate\Support\Collection $object */
             $object = TransactionJournal::whereIn('transaction_journals.id', $ids)
-                                        ->expanded()
                                         ->where('transaction_journals.user_id', auth()->user()->id)
-                                        ->get(
-                                            [
-                                                'transaction_journals.*',
-                                                'transaction_types.type AS transaction_type_type',
-                                                'transaction_currencies.code AS transaction_currency_code',
-                                            ]
-                                        );
+                                        ->get(['transaction_journals.*',]);
 
             if ($object->count() > 0) {
                 return $object;

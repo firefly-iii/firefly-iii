@@ -219,8 +219,8 @@ class AccountController extends Controller
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
-        $startBalances = Steam::balancesById($ids, $start);
-        $endBalances   = Steam::balancesById($ids, $end);
+        $startBalances = Steam::balancesByAccounts($accounts, $start);
+        $endBalances   = Steam::balancesByAccounts($accounts, $end);
         $activities    = Steam::getLastActivities($ids);
 
         $accounts->each(
@@ -293,8 +293,8 @@ class AccountController extends Controller
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $count       = 0;
-        $loop        = 0;
+        $count = 0;
+        $loop  = 0;
         // grab journals, but be prepared to jump a period back to get the right ones:
         Log::info('Now at loop start.');
         while ($count === 0 && $loop < 3) {
@@ -308,7 +308,7 @@ class AccountController extends Controller
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('accounts/show/' . $account->id . '/' . $moment);
             $count = $journals->getCollection()->count();
-            if ($count === 0) {
+            if ($count === 0 && $loop < 3) {
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);
@@ -316,7 +316,7 @@ class AccountController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                            'end'  => $end->formatLocalized($this->monthAndDayFormat)]

@@ -47,11 +47,20 @@
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm">
-                                                <span class="input-group-addon">{{ journal.transactionCurrency.symbol }}</span>
+                                                <span class="input-group-addon">{{ journal.currency_symbol }}</span>
                                                 <input name="amount[{{ journal.id }}]" class="form-control" autocomplete="off"
                                                        step="any" type="number" value="{{ journal.amount }}">
+                                                <input type="hidden" name="transaction_currency_id[{{ journal.id }}]" value="{{ journal.transaction_currency_id }}">
                                             </div>
-
+                                            {% if journal.foreign_amount %}
+                                                {# insert foreign data #}
+                                                <div class="input-group input-group-sm">
+                                                    <span class="input-group-addon">{{ journal.foreign_currency.symbol }}</span>
+                                                    <input name="foreign_amount[{{ journal.id }}]" class="form-control" autocomplete="off"
+                                                           step="any" type="number" value="{{ journal.foreign_amount }}">
+                                                    <input type="hidden" name="foreign_currency_id[{{ journal.id }}]" value="{{ journal.foreign_currency.id }}">
+                                                </div>
+                                            {% endif %}
                                         </td>
                                         <td>
                                             {# DATE #}

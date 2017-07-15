@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
@@ -122,10 +122,13 @@ class MassControllerTest extends TestCase
                               ->orderBy('ct', 'DESC')
                               ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')])
         );
-        $allIds = $collection->pluck('id')->toArray();
 
+        // add opening balance:
+        $collection->push(TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first());
+        $allIds = $collection->pluck('id')->toArray();
+        $route  = route('transactions.mass.edit', join(',', $allIds));
         $this->be($this->user());
-        $response = $this->get(route('transactions.mass.edit', join(',', $allIds)));
+        $response = $this->get($route);
         $response->assertStatus(200);
         $response->assertSee('Edit a number of transactions');
         // has bread crumb

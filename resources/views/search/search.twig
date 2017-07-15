@@ -1,0 +1,72 @@
+<table class="table table-hover table-condensed">
+    <thead>
+    <tr class="ignore">
+        <th class="hidden-xs" colspan="2">&nbsp;</th>
+        <th>{{ trans('list.description') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+        <th class="hidden-xs">{{ trans('list.from') }}</th>
+        <th class="hidden-xs">{{ trans('list.to') }}</th>
+        <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        <th class="hidden-xs"><i class="fa fa-fw fa-rotate-right" title="{{ trans('list.bill') }}"></i></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for transaction in transactions %}
+        <tr>
+            <td class="hidden-xs">
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i
+                                class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i
+                                class="fa fa-fw fa-trash-o"></i></a></div>
+            </td>
+            <td class="hidden-xs">
+                {{ transaction|typeIconTransaction }}
+            </td>
+            <td>
+                <a href="{{ route('transactions.show',transaction.journal_id) }}">
+
+                    {% if transaction.transaction_description|length > 0 %}
+                        {{ transaction.transaction_description }} ({{ transaction.description }})
+                    {% else %}
+                        {{ transaction.description }}
+                    {% endif %}
+                </a>
+                {{ splitJournalIndicator(transaction.journal_id) }}
+
+                {% if transaction.transactionJournal.attachments|length > 0 %}
+                    <i class="fa fa-paperclip"
+                       title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
+                {% endif %}
+            </td>
+            <td style="text-align: right;">
+                                            <span style="margin-right:5px;">
+                                                {{ transactionAmount(transaction) }}
+                                            </span>
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+            </td>
+            <td class="hidden-xs">
+                {{ transactionSourceAccount(transaction) }}
+            </td>
+            <td class="hidden-xs">
+                {{ transactionDestinationAccount(transaction) }}
+            </td>
+            <td class="hidden-xs">
+                {{ transactionBudgets(transaction) }}
+            </td>
+            <td class="hidden-xs">
+                {{ transactionCategories(transaction) }}
+            </td>
+            <td class="hidden-xs">
+                {% if transaction.bill_id %}
+                    <a href="{{ route('bills.show',transaction.bill_id) }}">{{ transaction.bill_name }}</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

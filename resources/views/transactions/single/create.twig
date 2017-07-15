@@ -10,7 +10,7 @@
         <input type="hidden" name="what" value="{{ what }}"/>
 
         <div class="row">
-            <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'optional_field_meta_data'|_ }}</h3>
@@ -230,6 +230,10 @@
         middleCrumbUrl['{{ type }}'] = '{{ route('transactions.index', type) }}';
         button['{{ type }}'] = '{{ trans('form.store_new_' ~ type) }}';
         {% endfor %}
+
+        // some code for the foreign amount logic:
+        var useAccountCurrency = {% if preFilled.amount_currency_id_amount > 0 %}false{% else %}true{% endif %};
+        var overruleCurrency = {{ preFilled.amount_currency_id_amount|default(0) }};
 
     </script>
     <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>

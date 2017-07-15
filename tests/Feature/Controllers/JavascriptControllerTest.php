@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -27,20 +27,6 @@ use Tests\TestCase;
 class JavascriptControllerTest extends TestCase
 {
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::currencies
-     */
-    public function testCurrencies()
-    {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $currency = factory(TransactionCurrency::class)->make();
-        $repository->shouldReceive('get')->andReturn(new Collection([$currency]));
-
-        $this->be($this->user());
-        $response = $this->get(route('javascript.currencies'));
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers       \FireflyIII\Http\Controllers\JavascriptController::accounts
      */
     public function testAccounts()
@@ -55,6 +41,20 @@ class JavascriptControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('javascript.accounts'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController::currencies
+     */
+    public function testCurrencies()
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $currency   = factory(TransactionCurrency::class)->make();
+        $repository->shouldReceive('get')->andReturn(new Collection([$currency]));
+
+        $this->be($this->user());
+        $response = $this->get(route('javascript.currencies'));
         $response->assertStatus(200);
     }
 

@@ -8,38 +8,34 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import'|_ }}</h3>
+                    <h3 class="box-title">{{ 'import_index_title'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
                         <div class="col-lg-8">
-                            <h4>
-                                {{ 'import_data_full'|_ }}
-                            </h4>
                             <p>
-                                {{ 'see_help_top_right'|_ }}
+                                {{ 'import_index_intro'|_ }}
                             </p>
                         </div>
                     </div>
 
                     <div class="row">
-                        <form method="POST" action="{{ route('import.upload') }}" accept-charset="UTF-8" class="form-horizontal" id="update"
+                        <form method="POST" action="{{ route('import.initialize') }}" accept-charset="UTF-8" class="form-horizontal" id="initialize"
                               enctype="multipart/form-data">
 
                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
                             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                                {{ ExpandedForm.file('import_file', {helpText: 'import_file_help'|_}) }}
-                                {{ ExpandedForm.file('configuration_file', {helpText: 'configuration_file_help'|_|raw}) }}
 
-                                {{ ExpandedForm.select('import_file_type', importFileTypes, defaultImportType, {'helpText' : 'import_file_type_help'|_}) }}
+                                {{ ExpandedForm.file('import_file', {helpText: 'import_index_file'|_}) }}
+                                {{ ExpandedForm.file('configuration_file', {helpText: 'import_index_config'|_|raw}) }}
+                                {{ ExpandedForm.select('import_file_type', importFileTypes, defaultImportType, {'helpText' : 'import_index_type'|_}) }}
 
                                 <div class="form-group" id="import_file_holder">
                                     <label for="ffInput_submit" class="col-sm-4 control-label">&nbsp;</label>
-
                                     <div class="col-sm-8">
                                         <button type="submit" class="btn pull-right btn-success">
-                                            {{ ('import_start')|_ }}
+                                            {{ ('import_index_start')|_ }}
                                         </button>
                                     </div>
                                 </div>

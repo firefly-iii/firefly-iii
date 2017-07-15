@@ -211,7 +211,7 @@ class FireflyValidator extends Validator
                     // count budgets, should have at least one
                     $count = $budgets->filter(
                         function (Budget $budget) use ($value) {
-                            return $budget->name == $value;
+                            return $budget->name === $value;
                         }
                     )->count();
 
@@ -329,7 +329,7 @@ class FireflyValidator extends Validator
 
         /** @var AccountMeta $entry */
         foreach ($set as $entry) {
-            if ($entry->data == $value) {
+            if ($entry->data === $value) {
 
                 return false;
             }
@@ -398,7 +398,7 @@ class FireflyValidator extends Validator
         /** @var PiggyBank $entry */
         foreach ($set as $entry) {
             $fieldValue = $this->tryDecrypt($entry->name);
-            if ($fieldValue == $value) {
+            if ($fieldValue === $value) {
                 return false;
             }
         }
@@ -460,7 +460,7 @@ class FireflyValidator extends Validator
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
-            if ($entry->name == $value) {
+            if ($entry->name === $value) {
                 return false;
             }
         }
@@ -486,7 +486,7 @@ class FireflyValidator extends Validator
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
-            if ($entry->name == $value) {
+            if ($entry->name === $value) {
                 return false;
             }
         }
@@ -510,7 +510,7 @@ class FireflyValidator extends Validator
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
-            if ($entry->name == $value) {
+            if ($entry->name === $value) {
                 return false;
             }
         }
@@ -534,7 +534,7 @@ class FireflyValidator extends Validator
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
-            if ($entry->name == $value) {
+            if ($entry->name === $value) {
                 return false;
             }
         }

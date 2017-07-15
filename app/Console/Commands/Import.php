@@ -13,12 +13,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
-use FireflyIII\Import\ImportProcedure;
 use FireflyIII\Import\Logging\CommandHandler;
+use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use Log;
 
 /**
@@ -75,15 +74,18 @@ class Import extends Command
         $monolog = Log::getMonolog();
         $handler = new CommandHandler($this);
         $monolog->pushHandler($handler);
-        $importProcedure = new ImportProcedure;
-        $result          = $importProcedure->runImport($job);
 
-        // display result to user:
-        $this->presentResults($result);
-        $this->line('The import has completed.');
+        /** @var ImportRoutine $routine */
+        $routine = app(ImportRoutine::class);
+        $routine->setJob($job);
+        $routine->run();
 
-        // get any errors from the importer:
-        $this->presentErrors($job);
+        /** @var MessageBag $error */
+        foreach ($routine->errors as $index => $error) {
+            $this->error(sprintf('Error importing line #%d: %s', $index, $error));
+        }
+
+        $this->line(sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->journals->count(), $routine->lines));
 
         return;
     }
@@ -96,49 +98,19 @@ class Import extends Command
     private function isValid(ImportJob $job): bool
     {
         if (is_null($job)) {
+            Log::error('This job does not seem to exist.');
             $this->error('This job does not seem to exist.');
 
             return false;
         }
 
-        if ($job->status != 'settings_complete') {
+        if ($job->status !== 'configured') {
+            Log::error(sprintf('This job is not ready to be imported (status is %s).', $job->status));
             $this->error('This job is not ready to be imported.');
 
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * @param ImportJob $job
-     */
-    private function presentErrors(ImportJob $job)
-    {
-        $extendedStatus = $job->extended_status;
-        if (isset($extendedStatus['errors']) && count($extendedStatus['errors']) > 0) {
-            $this->line(sprintf('The following %d error(s) occured during the import:', count($extendedStatus['errors'])));
-            foreach ($extendedStatus['errors'] as $error) {
-                $this->error($error);
-            }
-        }
-    }
-
-    /**
-     * @param Collection $result
-     */
-    private function presentResults(Collection $result)
-    {
-        /**
-         * @var int                $index
-         * @var TransactionJournal $journal
-         */
-        foreach ($result as $index => $journal) {
-            if (!is_null($journal->id)) {
-                $this->line(sprintf('Line #%d has been imported as transaction #%d.', $index, $journal->id));
-                continue;
-            }
-            $this->error(sprintf('Could not store line #%d', $index));
-        }
     }
 }

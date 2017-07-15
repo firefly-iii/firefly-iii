@@ -13,13 +13,10 @@ namespace Tests\Feature\Controllers\Popup;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -165,8 +162,8 @@ class ReportControllerTest extends TestCase
         $popupHelper  = $this->mock(PopupReportInterface::class);
 
 
-        $budget       = factory(Budget::class)->make();
-        $account      = factory(Account::class)->make();
+        $budget  = factory(Budget::class)->make();
+        $account = factory(Account::class)->make();
 
         $budgetRepos->shouldReceive('find')->andReturn($budget)->once()->withArgs([1]);
         $accountRepos->shouldReceive('find')->andReturn($account)->once()->withArgs([1]);

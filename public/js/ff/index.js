@@ -8,35 +8,14 @@
  * See the LICENSE file for details.
  */
 
-/** global: Tour, showTour, accountFrontpageUri, token, billCount, accountExpenseUri, accountRevenueUri */
+/** global: accountFrontpageUri, token, billCount, accountExpenseUri, accountRevenueUri */
 
 $(function () {
     "use strict";
     // do chart JS stuff.
     drawChart();
-    if (showTour === true) {
-        $.getJSON('json/tour').done(function (data) {
-            var tour = new Tour(
-                {
-                    steps: data.steps,
-                    template: data.template,
-                    onEnd: endTheTour
-                });
-            // Initialize the tour
-            tour.init();
-            // Start the tour
-            tour.start();
-        });
-    }
-
 
 });
-
-function endTheTour() {
-    "use strict";
-    $.post('json/end-tour', {_token: token});
-
-}
 
 function drawChart() {
     "use strict";

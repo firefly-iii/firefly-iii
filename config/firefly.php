@@ -23,15 +23,21 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.4.3',
-    'maxUploadSize'              => 5242880,
+    'version'                    => '4.6.2',
+    'maxUploadSize'              => 15242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,
     'export_formats'             => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
     'import_formats'             => [
-        'csv' => 'FireflyIII\Import\Importer\CsvImporter',
+        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
+    ],
+    'import_configurators'       => [
+        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
+    ],
+    'import_processors'          => [
+        'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
     ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',

@@ -116,7 +116,7 @@ class BillRepository implements BillRepositoryInterface
         $set = $set->sortBy(
             function (Bill $bill) {
 
-                $int = $bill->active == 1 ? 0 : 1;
+                $int = $bill->active === 1 ? 0 : 1;
 
                 return $int . strtolower($bill->name);
             }
@@ -168,7 +168,7 @@ class BillRepository implements BillRepositoryInterface
         $set = $set->sortBy(
             function (Bill $bill) {
 
-                $int = $bill->active == 1 ? 0 : 1;
+                $int = $bill->active === 1 ? 0 : 1;
 
                 return $int . strtolower($bill->name);
             }
@@ -262,6 +262,8 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * The "paid dates" list is a list of dates of transaction journals that are linked to this bill.
+     *
      * @param Bill   $bill
      * @param Carbon $start
      * @param Carbon $end
@@ -498,7 +500,7 @@ class BillRepository implements BillRepositoryInterface
 
             return true;
         }
-        if ($bill->id == $journal->bill_id) {
+        if ($bill->id === $journal->bill_id) {
             // if no match, but bill used to match, remove it:
             $journal->bill_id = null;
             $journal->save();

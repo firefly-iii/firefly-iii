@@ -15,6 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Amount;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BudgetFormRequest;
@@ -80,7 +81,7 @@ class BudgetController extends Controller
         /** @var Carbon $end */
         $end         = session('end', Carbon::now()->endOfMonth());
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
-        if ($amount == 0) {
+        if ($amount === 0) {
             $budgetLimit = null;
         }
         Preferences::mark();
@@ -166,16 +167,38 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param string|null $moment
+     *
      * @return View
      */
-    public function index()
+    public function index(string $moment = null)
     {
+        $range = Preferences::get('viewRange', '1M')->data;
+        $start = session('start', new Carbon);
+        $end   = session('end', new Carbon);
+
+        // make date if present:
+        if (!is_null($moment) || strlen(strval($moment)) !== 0) {
+            try {
+                $start = new Carbon($moment);
+                $end   = Navigation::endOfPeriod($start, $range);
+            } catch (Exception $e) {
+                // start and end are already defined.
+
+            }
+        }
+        $next = clone $end;
+        $next->addDay();
+        $prev = clone $start;
+        $prev->subDay();
+        $prev = Navigation::startOfPeriod($prev, $range);
+
+
         $this->repository->cleanupBudgets();
+
 
         $budgets           = $this->repository->getActiveBudgets();
         $inactive          = $this->repository->getInactiveBudgets();
-        $start             = session('start', new Carbon);
-        $end               = session('end', new Carbon);
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
         $budgetInformation = $this->collectBudgetInformation($budgets, $start, $end);
@@ -184,9 +207,44 @@ class BudgetController extends Controller
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
         $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
 
+        // select thing for last 12 periods:
+        $previousLoop = [];
+        $previousDate = clone $start;
+        $count        = 0;
+        while ($count < 12) {
+            $previousDate->subDay();
+            $previousDate          = Navigation::startOfPeriod($previousDate, $range);
+            $format                = $previousDate->format('Y-m-d');
+            $previousLoop[$format] = Navigation::periodShow($previousDate, $range);
+            $count++;
+        }
+
+        // select thing for next 12 periods:
+        $nextLoop = [];
+        $nextDate = clone $end;
+        $nextDate->addDay();
+        $count = 0;
+
+        while ($count < 12) {
+            $format            = $nextDate->format('Y-m-d');
+            $nextLoop[$format] = Navigation::periodShow($nextDate, $range);
+            $nextDate          = Navigation::endOfPeriod($nextDate, $range);
+            $count++;
+            $nextDate->addDay();
+        }
+
+        // display info
+        $currentMonth = Navigation::periodShow($start, $range);
+        $nextText     = Navigation::periodShow($next, $range);
+        $prevText     = Navigation::periodShow($prev, $range);
+
         return view(
             'budgets.index',
-            compact('available', 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets', 'spent', 'budgeted')
+            compact(
+                'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText',
+                'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
+                'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start'
+            )
         );
     }
 
@@ -235,7 +293,7 @@ class BudgetController extends Controller
             );
         }
 
-        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         $count = 0;
@@ -244,7 +302,7 @@ class BudgetController extends Controller
         Log::info('Now at no-budget loop start.');
         while ($count === 0 && $loop < 3) {
             $loop++;
-            Log::info('Count is zero, search for journals.');
+            Log::info(sprintf('Count is zero, search for journals between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
@@ -252,7 +310,7 @@ class BudgetController extends Controller
             $journals = $collector->getPaginatedJournals();
             $journals->setPath('/budgets/list/no-budget');
             $count = $journals->getCollection()->count();
-            if ($count === 0) {
+            if ($count === 0 && $loop < 3) {
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);
@@ -260,7 +318,7 @@ class BudgetController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -299,7 +357,7 @@ class BudgetController extends Controller
         /** @var Carbon $start */
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
-        $page       = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page       = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
         $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
@@ -326,11 +384,11 @@ class BudgetController extends Controller
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
-        if ($budgetLimit->budget->id != $budget->id) {
+        if ($budgetLimit->budget->id !== $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        $page     = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans(
             'firefly.budget_in_period', [

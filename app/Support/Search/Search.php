@@ -17,11 +17,6 @@ namespace FireflyIII\Support\Search;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -53,7 +48,7 @@ class Search implements SearchInterface
     public function __construct()
     {
         $this->modifiers      = new Collection;
-        $this->validModifiers = config('firefly.search_modifiers');
+        $this->validModifiers = (array)config('firefly.search_modifiers');
     }
 
     /**
@@ -101,109 +96,17 @@ class Search implements SearchInterface
     /**
      * @return Collection
      */
-    public function searchAccounts(): Collection
-    {
-        $words    = $this->words;
-        $accounts = $this->user->accounts()
-                               ->accountTypeIn([AccountType::DEFAULT, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::BENEFICIARY])
-                               ->get(['accounts.*']);
-        /** @var Collection $result */
-        $result = $accounts->filter(
-            function (Account $account) use ($words) {
-                if ($this->strpos_arr(strtolower($account->name), $words)) {
-                    return $account;
-                }
-
-                return false;
-            }
-        );
-
-        $result = $result->slice(0, $this->limit);
-
-        return $result;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function searchBudgets(): Collection
-    {
-        /** @var Collection $set */
-        $set   = auth()->user()->budgets()->get();
-        $words = $this->words;
-        /** @var Collection $result */
-        $result = $set->filter(
-            function (Budget $budget) use ($words) {
-                if ($this->strpos_arr(strtolower($budget->name), $words)) {
-                    return $budget;
-                }
-
-                return false;
-            }
-        );
-
-        $result = $result->slice(0, $this->limit);
-
-        return $result;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function searchCategories(): Collection
-    {
-        $words      = $this->words;
-        $categories = $this->user->categories()->get();
-        /** @var Collection $result */
-        $result = $categories->filter(
-            function (Category $category) use ($words) {
-                if ($this->strpos_arr(strtolower($category->name), $words)) {
-                    return $category;
-                }
-
-                return false;
-            }
-        );
-        $result = $result->slice(0, $this->limit);
-
-        return $result;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function searchTags(): Collection
-    {
-        $words = $this->words;
-        $tags  = $this->user->tags()->get();
-        /** @var Collection $result */
-        $result = $tags->filter(
-            function (Tag $tag) use ($words) {
-                if ($this->strpos_arr(strtolower($tag->tag), $words)) {
-                    return $tag;
-                }
-
-                return false;
-            }
-        );
-        $result = $result->slice(0, $this->limit);
-
-        return $result;
-    }
-
-    /**
-     * @return Collection
-     */
     public function searchTransactions(): Collection
     {
+        Log::debug('Start of searchTransactions()');
         $pageSize  = 100;
         $processed = 0;
         $page      = 1;
         $result    = new Collection();
+        $startTime = microtime(true);
         do {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setUser($this->user);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
@@ -247,7 +150,11 @@ class Search implements SearchInterface
             Log::debug(sprintf('reachedEndOfList: %s', var_export($reachedEndOfList, true)));
             Log::debug(sprintf('foundEnough: %s', var_export($foundEnough, true)));
 
-        } while (!$reachedEndOfList && !$foundEnough);
+            // break at some point so the script does not crash:
+            $currentTime = microtime(true) - $startTime;
+            Log::debug(sprintf('Have been running for %f seconds.', $currentTime));
+
+        } while (!$reachedEndOfList && !$foundEnough && $currentTime <= 30);
 
         $result = $result->slice(0, $this->limit);
 

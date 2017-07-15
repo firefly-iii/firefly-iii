@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
@@ -32,37 +32,6 @@ use Tests\TestCase;
  */
 class SplitControllerTest extends TestCase
 {
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
-     */
-    public function testEditSingle()
-    {
-
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
-        $transactions       = factory(Transaction::class, 1)->make();
-        $tasker             = $this->mock(JournalTaskerInterface::class);
-
-        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection)->once();
-        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
-
-
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $this->be($this->user());
-        $response = $this->get(route('transactions.split.edit', [$deposit->id]));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
@@ -105,6 +74,36 @@ class SplitControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     */
+    public function testEditSingle()
+    {
+
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $transactions       = factory(Transaction::class, 1)->make();
+        $tasker             = $this->mock(JournalTaskerInterface::class);
+
+        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
+        $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
+                          ->andReturn(new Collection)->once();
+        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
+
+
+        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $this->be($this->user());
+        $response = $this->get(route('transactions.split.edit', [$deposit->id]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::update
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromInput
      * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromRequest
@@ -124,10 +123,11 @@ class SplitControllerTest extends TestCase
             'tags'                           => '',
             'transactions'                   => [
                 [
-                    'description'         => 'Split #1',
-                    'source_account_name' => 'Job',
-                    'amount'              => 1591,
-                    'category'            => '',
+                    'description'             => 'Split #1',
+                    'source_account_name'     => 'Job',
+                    'transaction_currency_id' => 1,
+                    'amount'                  => 1591,
+                    'category'                => '',
                 ],
             ],
         ];

@@ -187,7 +187,7 @@ class PopupReport implements PopupReportInterface
         $journals = $journals->filter(
             function (Transaction $transaction) use ($report) {
                 // get the destinations:
-                $destinations = $transaction->destinationAccountList($transaction->transactionJournal)->pluck('id')->toArray();
+                $destinations = $transaction->transactionJournal->destinationAccountList()->pluck('id')->toArray();
 
                 // do these intersect with the current list?
                 return !empty(array_intersect($report, $destinations));

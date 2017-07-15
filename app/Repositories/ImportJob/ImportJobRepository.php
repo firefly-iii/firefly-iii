@@ -13,10 +13,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ImportJob;
 
+use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Str;
+use Log;
+use SplFileObject;
+use Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class ImportJobRepository
@@ -51,13 +57,13 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 $importJob->user()->associate($this->user);
                 $importJob->file_type       = $fileType;
                 $importJob->key             = Str::random(12);
-                $importJob->status          = 'import_status_never_started';
+                $importJob->status          = 'new';
+                $importJob->configuration   = [];
                 $importJob->extended_status = [
-                    'total_steps'  => 0,
-                    'steps_done'   => 0,
-                    'import_count' => 0,
-                    'importTag'    => 0,
-                    'errors'       => [],
+                    'steps'  => 0,
+                    'done'   => 0,
+                    'tag'    => 0,
+                    'errors' => [],
                 ];
                 $importJob->save();
 
@@ -84,6 +90,75 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param ImportJob    $job
+     * @param UploadedFile $file
+     *
+     * @return bool
+     */
+    public function processConfiguration(ImportJob $job, UploadedFile $file): bool
+    {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        // demo user's configuration upload is ignored completely.
+        if (!$repository->hasRole($this->user, 'demo')) {
+            Log::debug(
+                'Uploaded configuration file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
+            );
+
+            $configFileObject = new SplFileObject($file->getRealPath());
+            $configRaw        = $configFileObject->fread($configFileObject->getSize());
+            $configuration    = json_decode($configRaw, true);
+
+            if (!is_null($configuration) && is_array($configuration)) {
+                Log::debug('Found configuration', $configuration);
+                $this->setConfiguration($job, $configuration);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ImportJob    $job
+     * @param UploadedFile $file
+     *
+     * @return mixed
+     */
+    public function processFile(ImportJob $job, UploadedFile $file): bool
+    {
+        /** @var UserRepositoryInterface $repository */
+        $repository       = app(UserRepositoryInterface::class);
+        $newName          = sprintf('%s.upload', $job->key);
+        $uploaded         = new SplFileObject($file->getRealPath());
+        $content          = $uploaded->fread($uploaded->getSize());
+        $contentEncrypted = Crypt::encrypt($content);
+        $disk             = Storage::disk('upload');
+
+
+        // user is demo user, replace upload with prepared file.
+        if ($repository->hasRole($this->user, 'demo')) {
+            $stubsDisk        = Storage::disk('stubs');
+            $content          = $stubsDisk->get('demo-import.csv');
+            $contentEncrypted = Crypt::encrypt($content);
+            $disk->put($newName, $contentEncrypted);
+            Log::debug('Replaced upload with demo file.');
+
+            // also set up prepared configuration.
+            $configuration = json_decode($stubsDisk->get('demo-configuration.json'), true);
+            $this->setConfiguration($job, $configuration);
+            Log::debug('Set configuration for demo user', $configuration);
+        }
+
+        if (!$repository->hasRole($this->user, 'demo')) {
+            // user is not demo, process original upload:
+            $disk->put($newName, $contentEncrypted);
+            Log::debug('Uploaded file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]);
+        }
+
+        return true;
     }
 
     /**

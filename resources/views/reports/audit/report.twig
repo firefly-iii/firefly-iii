@@ -59,17 +59,17 @@
                                     account_name: account.name,
                                     url: url,
                                     end: auditData[account.id].end,
-                                    balance: auditData[account.id].endBalance|formatAmount
+                                    balance: formatAmountByAccount(account,auditData[account.id].endBalance)
                                 })|raw }}
                             </p>
-                            {% include 'reports.partials.journals-audit-tasker'  with {'journals': auditData[account.id].journals,'account':account} %}
+                            {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
                             <p style="padding:10px;">
                                 {{ trans('firefly.audit_end_balance',
                                 {
                                     account_name: account.name,
                                     url: url,
                                     end: auditData[account.id].dayBefore,
-                                    balance: auditData[account.id].dayBeforeBalance|formatAmount
+                                    balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance)
                                 })|raw }}
                             </p>
                         </div>

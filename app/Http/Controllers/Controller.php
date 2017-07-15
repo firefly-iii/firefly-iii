@@ -18,6 +18,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -25,6 +26,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Session;
 use URL;
 use View;
+use Route;
 
 /**
  * Class Controller
@@ -62,6 +64,12 @@ class Controller extends BaseController
                 $this->monthFormat       = (string)trans('config.month');
                 $this->monthAndDayFormat = (string)trans('config.month_and_day');
                 $this->dateTimeFormat    = (string)trans('config.date_time');
+
+                // get shown-intro-preference:
+                $key       = 'shown_demo_' . Route::currentRouteName();
+                $shownDemo = Preferences::get($key, false)->data;
+                View::share('shownDemo', $shownDemo);
+                View::share('current_route_name', Route::currentRouteName());
 
                 return $next($request);
             }

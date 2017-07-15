@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Amount;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction as TransactionModel;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use Steam;
 use Twig_Extension;
@@ -30,49 +28,6 @@ use Twig_SimpleFunction;
  */
 class Transaction extends Twig_Extension
 {
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function formatAnything(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatAnything', function (TransactionCurrency $currency, string $amount): string {
-
-            return Amount::formatAnything($currency, $amount, true);
-
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function formatAnythingPlain(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatAnythingPlain', function (TransactionCurrency $currency, string $amount): string {
-
-            return Amount::formatAnything($currency, $amount, false);
-
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function formatByCode(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'formatByCode', function (string $currencyCode, string $amount): string {
-
-            return Amount::formatByCode($currencyCode, $amount, true);
-
-        }, ['is_safe' => ['html']]
-        );
-    }
-
     /**
      * @return array
      */
@@ -91,17 +46,13 @@ class Transaction extends Twig_Extension
     public function getFunctions(): array
     {
         $functions = [
-            $this->formatAnything(),
-            $this->formatAnythingPlain(),
             $this->transactionSourceAccount(),
             $this->transactionDestinationAccount(),
-            $this->optionalJournalAmount(),
             $this->transactionBudgets(),
             $this->transactionIdBudgets(),
             $this->transactionCategories(),
             $this->transactionIdCategories(),
             $this->splitJournalIndicator(),
-            $this->formatByCode(),
         ];
 
         return $functions;
@@ -115,33 +66,6 @@ class Transaction extends Twig_Extension
     public function getName(): string
     {
         return 'transaction';
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function optionalJournalAmount(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'optionalJournalAmount', function (int $journalId, string $transactionAmount, string $code, string $type): string {
-            // get amount of journal:
-            $amount = strval(TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->where('amount', '<', 0)->sum('amount'));
-            // display deposit and transfer positive
-            if ($type === TransactionType::DEPOSIT || $type === TransactionType::TRANSFER) {
-                $amount = bcmul($amount, '-1');
-            }
-
-            // not equal to transaction amount?
-            if (bccomp($amount, $transactionAmount) !== 0 && bccomp($amount, bcmul($transactionAmount, '-1')) !== 0) {
-                //$currency =
-                return sprintf(' (%s)', Amount::formatByCode($code, $amount, true));
-            }
-
-            return '';
-
-
-        }, ['is_safe' => ['html']]
-        );
     }
 
     /**

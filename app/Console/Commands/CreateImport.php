@@ -14,10 +14,14 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Artisan;
+use FireflyIII\Import\Logging\CommandHandler;
+use FireflyIII\Import\Routine\ImportRoutine;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
+use Illuminate\Support\MessageBag;
 use Log;
+use Monolog\Formatter\LineFormatter;
 
 /**
  * Class CreateImport
@@ -73,30 +77,55 @@ class CreateImport extends Command
             return;
         }
 
-        $this->info(sprintf('Going to create a job to import file: %s', $file));
-        $this->info(sprintf('Using configuration file: %s', $configuration));
-        $this->info(sprintf('Import into user: #%d (%s)', $user->id, $user->email));
-        $this->info(sprintf('Type of import: %s', $type));
+        $this->line(sprintf('Going to create a job to import file: %s', $file));
+        $this->line(sprintf('Using configuration file: %s', $configuration));
+        $this->line(sprintf('Import into user: #%d (%s)', $user->id, $user->email));
+        $this->line(sprintf('Type of import: %s', $type));
+
 
         /** @var ImportJobRepositoryInterface $jobRepository */
         $jobRepository = app(ImportJobRepositoryInterface::class);
         $jobRepository->setUser($user);
         $job = $jobRepository->create($type);
-        $this->line(sprintf('Created job "%s"...', $job->key));
+        $this->line(sprintf('Created job "%s"', $job->key));
+
 
         Artisan::call('firefly:encrypt-file', ['file' => $file, 'key' => $job->key]);
         $this->line('Stored import data...');
 
+
         $job->configuration = $configurationData;
-        $job->status        = 'settings_complete';
+        $job->status        = 'configured';
         $job->save();
         $this->line('Stored configuration...');
+
 
         if ($this->option('start') === true) {
             $this->line('The import will start in a moment. This process is not visible...');
             Log::debug('Go for import!');
-            Artisan::call('firefly:start-import', ['key' => $job->key]);
-            $this->line('Done!');
+
+            // normally would refer to other firefly:start-import but that doesn't seem to work all to well...
+            $monolog   = Log::getMonolog();
+            $handler   = new CommandHandler($this);
+            $formatter = new LineFormatter(null, null, false, true);
+            $handler->setFormatter($formatter);
+            $monolog->pushHandler($handler);
+
+
+            // start the actual routine:
+            /** @var ImportRoutine $routine */
+            $routine = app(ImportRoutine::class);
+            $routine->setJob($job);
+            $routine->run();
+
+            // give feedback.
+            /** @var MessageBag $error */
+            foreach ($routine->errors as $index => $error) {
+                $this->error(sprintf('Error importing line #%d: %s', $index, $error));
+            }
+            $this->line(
+                sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->journals->count(), $routine->lines)
+            );
         }
 
         return;

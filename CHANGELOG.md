@@ -2,6 +2,44 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.2] - 2017-07-08
+### Added
+- Links added to boxes, idea by @simonsmiley
+
+### Fixed
+- Various bugs in import routine
+
+## [4.6.1] - 2017-07-02
+### Fixed
+- Fixed several small issues all around.
+
+## [4.6.0] - 2017-06-28
+
+### Changed
+- Revamped import routine. Will be buggy.
+
+### Fixed
+- Issue #667, postgresql reported by @skibbipl.
+- Issue #680 by @Xeli
+- Fixed #660
+- Fixes #672, reported by @dzaikos
+- Translation error fixed by 
+- Fix a bug where the balance routine forgot to account for accounts without a currency preference.
+- Various other bugfixes.
+
+## [4.5.0] - 2017-06-07
+
+### Added
+- Better support for multi-currency transactions and display of transactions, accounts and everything. This requires a database overhaul (moving the currency information to specific transactions) so be careful when upgrading.
+- Translations for Spanish and Slovenian.
+- New interface for budget page, ~~stolen from~~ inspired by YNAB.
+- Expanded Docker to work with postgresql as well, thanks to @kressh
+
+### Fixed
+- PostgreSQL support in database upgrade routine (#644, reported by @skibbipl)
+- Frontpage budget chart was off, fix by @nhaarman
+- Was not possible to remove opening balance.
+
 ## [4.4.3] - 2017-05-03
 ### Added
 - Added support for Slovenian

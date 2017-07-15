@@ -282,7 +282,7 @@ class RuleController extends Controller
         // build trigger array from response
         $triggers = $this->getValidTriggerList($request);
 
-        if (count($triggers) == 0) {
+        if (count($triggers) === 0) {
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
@@ -298,15 +298,15 @@ class RuleController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if (count($matchingTransactions) == $limit) {
+        if (count($matchingTransactions) === $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
         }
-        if (count($matchingTransactions) == 0) {
+        if (count($matchingTransactions) === 0) {
             $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
         }
 
         // Return json response
-        $view = view('list.journals-tiny-tasker', ['transactions' => $matchingTransactions])->render();
+        $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
 
         return Response::json(['html' => $view, 'warning' => $warning]);
     }
@@ -440,7 +440,7 @@ class RuleController extends Controller
 
         /** @var RuleTrigger $entry */
         foreach ($rule->ruleTriggers as $entry) {
-            if ($entry->trigger_type != 'user_action') {
+            if ($entry->trigger_type !== 'user_action') {
                 $count      = ($index + 1);
                 $triggers[] = view(
                     'rules.partials.trigger',

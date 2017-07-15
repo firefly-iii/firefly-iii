@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
@@ -24,6 +24,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Steam;
@@ -145,7 +146,6 @@ class SingleControllerTest extends TestCase
         $response->assertSee(' name="source_account_name" type="text" value="">');
     }
 
-
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      */
@@ -185,6 +185,63 @@ class SingleControllerTest extends TestCase
                                         ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')]);
         $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
         $response->assertStatus(302);
+    }
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     */
+    public function testEditTransferWithForeignAmount()
+    {
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
+
+        $this->be($this->user());
+        $withdrawal = TransactionJournal::where('transaction_type_id', 3)
+                                        ->whereNull('transaction_journals.deleted_at')
+                                        ->leftJoin(
+                                            'transactions', function (JoinClause $join) {
+                                            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                                        }
+                                        )
+                                        ->where('user_id', $this->user()->id)
+                                        ->whereNotNull('transactions.foreign_amount')
+                                        ->first(['transaction_journals.*']);
+        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     */
+    public function testEditWithForeignAmount()
+    {
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
+
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->once();
+
+        $this->be($this->user());
+        $withdrawal = TransactionJournal::where('transaction_type_id', 1)
+                                        ->whereNull('transaction_journals.deleted_at')
+                                        ->leftJoin(
+                                            'transactions', function (JoinClause $join) {
+                                            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('amount', '<', 0);
+                                        }
+                                        )
+                                        ->where('user_id', $this->user()->id)
+                                        ->whereNotNull('transactions.foreign_amount')
+                                        ->first(['transaction_journals.*']);
+        $response   = $this->get(route('transactions.edit', [$withdrawal->id]));
+        $response->assertStatus(200);
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**

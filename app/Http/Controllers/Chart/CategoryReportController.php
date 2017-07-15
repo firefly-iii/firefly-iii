@@ -16,7 +16,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Generator\Report\Category\MonthReportGenerator;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
@@ -248,7 +247,7 @@ class CategoryReportController extends Controller
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
-            if (!array_sum($entry['entries']) == 0) {
+            if (!array_sum($entry['entries']) === 0) {
                 $newSet[$key] = $chartData[$key];
             }
         }

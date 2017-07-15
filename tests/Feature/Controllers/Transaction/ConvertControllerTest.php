@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
@@ -214,6 +214,29 @@ class ConvertControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
      */
+    public function testPostIndexDepositWithdrawalEmptyName()
+    {
+        // mock stuff
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('convert')->andReturn(new MessageBag);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('getCashAccount')->andReturn(new Account)->once();
+
+        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $data    = ['destination_account_expense' => '',];
+        $this->be($this->user());
+        $response = $this->post(route('transactions.convert.index', ['withdrawal', $deposit->id]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('transactions.show', [$deposit->id]));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     */
     public function testPostIndexErrored()
     {
         // mock stuff
@@ -296,7 +319,7 @@ class ConvertControllerTest extends TestCase
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('store')->andReturn(new Account);
+        $accountRepos->shouldReceive('store')->andReturn(new Account)->once();
 
         $transfer = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->first();
         $data     = ['source_account_revenue' => 'New rev'];
@@ -319,10 +342,33 @@ class ConvertControllerTest extends TestCase
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('store')->andReturn(new Account);
+        $accountRepos->shouldReceive('store')->andReturn(new Account)->once();
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $data       = ['source_account_revenue' => 'New revenue name.',];
+        $this->be($this->user());
+        $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     */
+    public function testPostIndexWithdrawalDepositEmptyName()
+    {
+        // mock stuff
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('convert')->andReturn(new MessageBag);
+        $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('getCashAccount')->andReturn(new Account)->once();
+
+        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
+        $data       = ['source_account_revenue' => '',];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
         $response->assertStatus(302);

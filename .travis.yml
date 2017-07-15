@@ -16,7 +16,7 @@ install:
   - php artisan optimize
   - php artisan env
   - cp .env.testing .env
-  - mv storage/database/databasecopy.sqlite storage/database/database.sqlite
+  - wget -q https://github.com/firefly-iii/test-data/raw/master/storage/database.sqlite -O storage/database/database.sqlite
   - mkdir -p build/logs
 
 script:

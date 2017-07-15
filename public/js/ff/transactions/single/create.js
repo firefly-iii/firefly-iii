@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions */
+/** global: currencyInfo, accountInfo, what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions, convertForeignToNative, convertSourceToDestination, selectsForeignCurrency, accountInfo */
 
 $(document).ready(function () {
     "use strict";
@@ -23,7 +23,6 @@ $(document).ready(function () {
     updateForm();
     updateLayout();
     updateDescription();
-    updateNativeCurrency();
 
 
     // when user changes source account or destination, native currency may be different.
@@ -60,16 +59,21 @@ function getExchangeInstructions() {
  * There is an input that shows the currency symbol that is native to the selected
  * acccount. So when the user changes the selected account, the native currency is updated:
  */
-function updateNativeCurrency() {
-    var newAccountId = getAccountId();
-    var nativeCurrencyId = accountInfo[newAccountId].preferredCurrency;
-
-    console.log('User selected account #' + newAccountId + '. Native currency is #' + nativeCurrencyId);
+function updateNativeCurrency(useAccountCurrency) {
+    var nativeCurrencyId;
+    if (useAccountCurrency) {
+        var newAccountId = getAccountId();
+        nativeCurrencyId = accountInfo[newAccountId].preferredCurrency;
+    }
+    if (!useAccountCurrency) {
+        nativeCurrencyId = overruleCurrency;
+    }
 
     $('.currency-option[data-id="' + nativeCurrencyId + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
-    //$('select[name="source_account_id"]').focus();
-
+    if (what !== 'transfer') {
+        $('select[name="source_account_id"]').focus();
+    }
     validateCurrencyForTransfer();
 }
 
@@ -105,6 +109,7 @@ function updateForm() {
     var srcName = $('#ffInput_source_account_name');
 
     switch (what) {
+
         case 'withdrawal':
             // show source_id and dest_name
             document.getElementById('source_account_id_holder').style.display = 'block';
@@ -176,8 +181,12 @@ function updateForm() {
             }
             document.getElementById('piggy_bank_id_holder').style.display = showPiggies;
             break;
+        default:
+            break;
     }
-    updateNativeCurrency();
+    // get instructions all the time.
+    updateNativeCurrency(useAccountCurrency);
+    selectsForeignCurrency();
 }
 
 /**
@@ -230,4 +239,5 @@ function getAccountId() {
     if (what === "deposit" || what === "transfer") {
         return $('select[name="destination_account_id"]').val();
     }
+    return undefined;
 }

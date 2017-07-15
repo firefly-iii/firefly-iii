@@ -18,7 +18,7 @@ namespace FireflyIII\Import\Converter;
  *
  * @package FireflyIII\Import\Converter
  */
-class Amount extends BasicConverter implements ConverterInterface
+class Amount implements ConverterInterface
 {
 
     /**
@@ -28,18 +28,18 @@ class Amount extends BasicConverter implements ConverterInterface
      *
      * @param $value
      *
-     * @return float
+     * @return string
      */
-    public function convert($value): float
+    public function convert($value): string
     {
         $len             = strlen($value);
         $decimalPosition = $len - 3;
         $decimal         = null;
 
-        if (($len > 2 && $value{$decimalPosition} == '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
+        if (($len > 2 && $value{$decimalPosition} === '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
             $decimal = '.';
         }
-        if ($len > 2 && $value{$decimalPosition} == ',') {
+        if ($len > 2 && $value{$decimalPosition} === ',') {
             $decimal = ',';
         }
 
@@ -59,10 +59,7 @@ class Amount extends BasicConverter implements ConverterInterface
             $value  = str_replace($search, '', $value);
         }
 
-        $this->setCertainty(90);
-
-
-        return round(floatval($value), 12);
+        return strval(round(floatval($value), 12));
 
     }
 }

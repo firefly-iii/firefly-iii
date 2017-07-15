@@ -33,8 +33,6 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
-use FireflyIII\Import\ImportProcedure;
-use FireflyIII\Import\ImportProcedureInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Amount;
@@ -43,7 +41,7 @@ use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
-use FireflyIII\Support\Twig\Account;
+use FireflyIII\Support\Twig\AmountFormat;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
@@ -51,11 +49,11 @@ use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Twig;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
-use Illuminate\Foundation\Application;
 
 /**
  * Class FireflyServiceProvider
@@ -79,7 +77,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Translation);
         Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
-        Twig::addExtension(new Account);
+        Twig::addExtension(new AmountFormat);
     }
 
     /**
@@ -139,7 +137,6 @@ class FireflyServiceProvider extends ServiceProvider
 
         // other generators
         $this->app->bind(ProcessorInterface::class, Processor::class);
-        $this->app->bind(ImportProcedureInterface::class, ImportProcedure::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 

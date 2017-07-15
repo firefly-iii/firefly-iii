@@ -55,7 +55,7 @@ class Attachment extends Model
     {
         if (auth()->check()) {
 
-            if ($value->user_id == auth()->user()->id) {
+            if ($value->user_id === auth()->user()->id) {
                 return $value;
             }
         }

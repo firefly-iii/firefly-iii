@@ -41,11 +41,10 @@ class AccountTasker implements AccountTaskerInterface
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $ids       = $accounts->pluck('id')->toArray();
         $yesterday = clone $start;
         $yesterday->subDay();
-        $startSet = Steam::balancesById($ids, $yesterday);
-        $endSet   = Steam::balancesById($ids, $end);
+        $startSet = Steam::balancesByAccounts($accounts, $yesterday);
+        $endSet   = Steam::balancesByAccounts($accounts, $end);
 
         Log::debug('Start of accountreport');
 

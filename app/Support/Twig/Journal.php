@@ -51,7 +51,7 @@ class Journal extends Twig_Extension
             $array = [];
             /** @var Account $entry */
             foreach ($list as $entry) {
-                if ($entry->accountType->type == AccountType::CASH) {
+                if ($entry->accountType->type === AccountType::CASH) {
                     $array[] = '<span class="text-success">(cash)</span>';
                     continue;
                 }
@@ -123,7 +123,7 @@ class Journal extends Twig_Extension
             $array = [];
             /** @var Account $entry */
             foreach ($list as $entry) {
-                if ($entry->accountType->type == 'Cash account') {
+                if ($entry->accountType->type === AccountType::CASH) {
                     $array[] = '<span class="text-success">(cash)</span>';
                     continue;
                 }

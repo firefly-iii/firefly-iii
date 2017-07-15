@@ -149,7 +149,7 @@ class User extends Authenticatable
     {
 
         foreach ($this->roles as $role) {
-            if ($role->name == $name) {
+            if ($role->name === $name) {
                 return true;
             }
         }
@@ -214,9 +214,9 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-        $ip = Request::ip();
+        $ipAddress = Request::ip();
 
-        event(new RequestedNewPassword($this, $token, $ip));
+        event(new RequestedNewPassword($this, $token, $ipAddress));
     }
 
     /**

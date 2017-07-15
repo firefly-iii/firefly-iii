@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: budgetChartUri,budgetLimitID */
+/** global: budgetChartUri, expenseCategoryUri, expenseAssetUri, expenseExpenseUri, budgetLimitID */
 
 $(function () {
     "use strict";
@@ -23,8 +23,6 @@ $(function () {
     pieChart(expenseCategoryUri, 'budget-cat-out');
     pieChart(expenseAssetUri, 'budget-asset-out');
     pieChart(expenseExpenseUri, 'budget-expense-out');
-
-
 
 
 });

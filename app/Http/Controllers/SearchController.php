@@ -16,6 +16,7 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Response;
 use View;
 
 /**
@@ -51,6 +52,15 @@ class SearchController extends Controller
      */
     public function index(Request $request, SearchInterface $searcher)
     {
+        $fullQuery = $request->get('q');
+
+        // parse search terms:
+        $searcher->parseQuery($fullQuery);
+        $query    = $searcher->getWordsAsString();
+        $subTitle = trans('breadcrumbs.search_result', ['query' => $query]);
+
+        return view('search.index', compact('query', 'fullQuery', 'subTitle'));
+
         // yes, hard coded values:
         $minSearchLen = 1;
         $limit        = 20;
@@ -92,6 +102,21 @@ class SearchController extends Controller
         }
 
         return view('search.index', compact('rawQuery', 'hasModifiers', 'modifiers', 'subTitle', 'limit', 'query', 'result'));
+    }
+
+    public function search(Request $request, SearchInterface $searcher)
+    {
+        $fullQuery = $request->get('query');
+
+        // parse search terms:
+        $searcher->parseQuery($fullQuery);
+        $searcher->setLimit(20);
+        $transactions = $searcher->searchTransactions();
+        $html         = view('search.search', compact('transactions'))->render();
+
+        return Response::json(['count' => $transactions->count(), 'html' => $html]);
+
+
     }
 
 }

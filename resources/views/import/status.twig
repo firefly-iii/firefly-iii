@@ -4,52 +4,130 @@
     {{ Breadcrumbs.renderIfExists }}
 {% endblock %}
 {% block content %}
-    <div class="row">
+
+    {# Initial display. Will refresh (and disappear almost immediately. #}
+
+    <div class="row status_initial statusbox">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_status_header'|_ }}</h3>
+                    <h3 class="box-title">{{ 'import_status_wait_title'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div class="progress" id="import-status-holder">
-                        <div id="import-status-bar" class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar"
-                             aria-valuenow="100" aria-valuemin="0"
-                             aria-valuemax="100" style="width: 100%">
-                        </div>
-                    </div>
-                    <p id="import-status-txt">{{ 'import_status_settings_complete'|_ }}</p>
+                    <p>
+                        {{ 'import_status_wait_text'|_ }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
+    {# Fatal error display. Will be shown (duh) when something goes horribly wrong. #}
+    <div class="row fatal_error" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-danger">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_status_errors'|_ }}</h3>
+                    <h3 class="box-title">{{ 'import_status_fatal_title'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <p id="import-status-error-intro">
-                        No errors detected.
+                    <p>
+                        {{ 'import_status_fatal_text'|_ }}
                     </p>
-                    <ul id="import-status-error-list"></ul>
+                    <p class="text-danger fatal_error_txt">
+
+                    </p>
+                    <p>
+                        {{ 'import_status_fatal_more'|_ }}
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
+    {# Box for when the job is ready to start #}
+    <div class="row status_configured statusbox" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status_ready_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'import_status_ready_text'|_ }}
+                    </p>
+                    <p>
+                        <code>php artisan firefly:start-import {{ job.key }}</code>
+                    </p>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
+                                        class="fa fa-fw fa-download"></i> {{ 'import_status_ready_config'|_ }}</a>
+                        </div>
+                        <div class="col-lg-4">
+                            <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ 'import_status_ready_start'|_ }}</button>
+                        </div>
+                    </div>
+                    <p>
+                        &nbsp;
+                    </p>
+                    <p class="text-info">
+                        {{ 'import_status_ready_share'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Box for when the job is running! #}
+    <div class="row status_running statusbox" style="display: none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="import-status-title">{{ 'import_status_running_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="import-status-holder">
+                        <div class="progress" id="import-status-holder">
+                            <div id="import-status-bar" class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar"
+                                 aria-valuenow="100" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 100%;min-width:40px;">
+                            </div>
+                        </div>
+                        <p id="import-status-txt">{{ 'import_status_running_placeholder'|_ }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# displays the finished status of the import. #}
+    <div class="row status_finished statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'import_status_report'|_ }}</h3>
+                    <h3 class="box-title">{{ 'import_status_finished_title'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <p id="import-status-intro">
-                        {{ 'import_finished_report'|_ }}
+                        {{ 'import_status_finished_text'|_ }}
                     </p>
                     <p id="import-status-more-info"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# box to show error information. #}
+    <div class="row info_errors" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_status_errors_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p id="import-status-error-intro">
+                    </p>
+                    <div id="import-status-error-list"></div>
                 </div>
             </div>
         </div>
@@ -60,11 +138,12 @@
     <script type="text/javascript">
 
         // some useful translations.
-        var langImportSingleError = '{{ 'import_error_single'|_|escape }}';
-        var langImportMultiError = '{{ 'import_error_multi'|_|escape }}';
-        var langImportFatalError = '{{ 'import_error_fatal'|_|escape }}';
-        var langImportTimeOutError = '{{ 'import_error_timeout'|_|escape }}';
-        var langImportFinished = '{{ 'import_finished_all'|_|escape }}';
+        var langImportSingleError = '{{ 'import_status_errors_single'|_|escape }}';
+        var langImportMultiError = '{{ 'import_status_errors_multi'|_|escape }}';
+
+        //var langImportFatalError = '{{ 'import_error_fatal'|_|escape }}';
+        //var langImportTimeOutError = '{{ 'import_error_timeout'|_|escape }}';
+        //var langImportFinished = '{{ 'import_finished_all'|_|escape }}';
 
 
         var jobKey = '{{ job.key }}';

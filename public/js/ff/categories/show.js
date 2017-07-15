@@ -13,10 +13,7 @@
 $(function () {
     "use strict";
 
-    console.log('Getting charts');
     columnChart(everything, 'category-everything');
-
-    console.log('Specific: ' + specific);
     columnChart(specific, 'specific-period');
 
 });

@@ -48,7 +48,7 @@ class OpposingAccountIbans implements MapperInterface
             if (strlen($iban) > 0) {
                 $topList[$account->id] = $account->iban . ' (' . $account->name . ')';
             }
-            if (strlen($iban) == 0) {
+            if (strlen($iban) === 0) {
                 $list[$account->id] = $account->name;
             }
         }
@@ -56,7 +56,7 @@ class OpposingAccountIbans implements MapperInterface
         asort($list);
 
         $list = $topList + $list;
-        $list = [0 => trans('csv.do_not_map')] + $list;
+        $list = [0 => trans('csv.map_do_not_map')] + $list;
 
 
         return $list;

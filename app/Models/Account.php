@@ -95,7 +95,7 @@ class Account extends Model
 
         /** @var Account $account */
         foreach ($set as $account) {
-            if ($account->name == $fields['name']) {
+            if ($account->name === $fields['name']) {
                 return $account;
             }
         }
@@ -116,7 +116,7 @@ class Account extends Model
     {
 
         if (auth()->check()) {
-            if ($value->user_id == auth()->user()->id) {
+            if ($value->user_id === auth()->user()->id) {
                 return $value;
             }
         }
@@ -187,7 +187,7 @@ class Account extends Model
     public function getMeta(string $fieldName): string
     {
         foreach ($this->accountMeta as $meta) {
-            if ($meta->name == $fieldName) {
+            if ($meta->name === $fieldName) {
                 return strval($meta->data);
             }
         }

@@ -68,7 +68,7 @@ class AccountControllerTest extends TestCase
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn(new Collection([$account]));
         $generator->shouldReceive('singleSet')->andReturn([]);
-        Steam::shouldReceive('balancesById')->twice()->andReturn([]);
+        Steam::shouldReceive('balancesByAccounts')->twice()->andReturn([]);
 
 
         $this->be($this->user());
@@ -327,13 +327,13 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueAccounts(string $range)
     {
-        $account = factory(Account::class)->make();
+        $account      = factory(Account::class)->make();
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->andReturn(new Collection([$account]));
         $generator->shouldReceive('singleSet')->andReturn([]);
-        Steam::shouldReceive('balancesById')->twice()->andReturn([]);
+        Steam::shouldReceive('balancesByAccounts')->twice()->andReturn([]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

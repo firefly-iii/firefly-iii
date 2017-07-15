@@ -153,7 +153,6 @@ class MetaPieChartTest extends TestCase
         $this->assertTrue(true);
 
 
-
     }
 
     private function fakeOthers(): Collection

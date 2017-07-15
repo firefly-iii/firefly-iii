@@ -20,7 +20,6 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -116,10 +115,11 @@ class JsonController extends Controller
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
-        $amount = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $amount = bcmul($amount, '-1');
+        $amount   = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
+        $amount   = bcmul($amount, '-1');
+        $currency = Amount::getDefaultCurrency();
 
-        $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $data = ['box' => 'bills-paid', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
 
         return Response::json($data);
     }
@@ -131,19 +131,19 @@ class JsonController extends Controller
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository)
     {
-        $start  = session('start', Carbon::now()->startOfMonth());
-        $end    = session('end', Carbon::now()->endOfMonth());
-        $amount = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $data   = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $start    = session('start', Carbon::now()->startOfMonth());
+        $end      = session('end', Carbon::now()->endOfMonth());
+        $amount   = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
+        $currency = Amount::getDefaultCurrency();
+        $data     = ['box' => 'bills-unpaid', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
 
         return Response::json($data);
     }
 
     /**
-     * @param AccountTaskerInterface     $accountTasker
-     * @param AccountRepositoryInterface $repository
-     *
      * @return \Illuminate\Http\JsonResponse
+     * @internal param AccountTaskerInterface $accountTasker
+     * @internal param AccountRepositoryInterface $repository
      *
      */
     public function boxIn()
@@ -167,18 +167,19 @@ class JsonController extends Controller
                   ->setTypes([TransactionType::DEPOSIT])
                   ->withOpposingAccount();
 
-        $amount = strval($collector->getJournals()->sum('transaction_amount'));
-        $data   = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $amount   = strval($collector->getJournals()->sum('transaction_amount'));
+        $currency = Amount::getDefaultCurrency();
+        $data     = ['box' => 'in', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
         $cache->store($data);
 
         return Response::json($data);
     }
 
     /**
-     * @param AccountTaskerInterface     $accountTasker
-     * @param AccountRepositoryInterface $repository
-     *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @internal param AccountTaskerInterface $accountTasker
+     * @internal param AccountRepositoryInterface $repository
+     *
      */
     public function boxOut()
     {
@@ -200,9 +201,9 @@ class JsonController extends Controller
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->withOpposingAccount();
-        $amount = strval($collector->getJournals()->sum('transaction_amount'));
-
-        $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        $amount   = strval($collector->getJournals()->sum('transaction_amount'));
+        $currency = Amount::getDefaultCurrency();
+        $data     = ['box' => 'out', 'amount' => Amount::formatAnything($currency, $amount, false), 'amount_raw' => $amount];
         $cache->store($data);
 
         return Response::json($data);
@@ -234,16 +235,6 @@ class JsonController extends Controller
         sort($return);
 
         return Response::json($return);
-    }
-
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function endTour()
-    {
-        Preferences::set('tour', false);
-
-        return Response::json('true');
     }
 
     /**
@@ -293,34 +284,6 @@ class JsonController extends Controller
     }
 
     /**
-     *
-     */
-    public function tour()
-    {
-        $pref = Preferences::get('tour', true);
-        if (!$pref) {
-            throw new FireflyException('Cannot find preference for tour. Exit.'); // @codeCoverageIgnore
-        }
-        $headers = ['main-content', 'sidebar-toggle', 'account-menu', 'budget-menu', 'report-menu', 'transaction-menu', 'option-menu', 'main-content-end'];
-        $steps   = [];
-        foreach ($headers as $header) {
-            $steps[] = [
-                'element' => '#' . $header,
-                'title'   => trans('help.' . $header . '-title'),
-                'content' => trans('help.' . $header . '-text'),
-            ];
-        }
-        $steps[0]['orphan']    = true;// orphan and backdrop for first element.
-        $steps[0]['backdrop']  = true;
-        $steps[1]['placement'] = 'left';// sidebar position left:
-        $steps[7]['orphan']    = true; // final in the center again.
-        $steps[7]['backdrop']  = true;
-        $template              = view('json.tour')->render();
-
-        return Response::json(['steps' => $steps, 'template' => $template]);
-    }
-
-    /**
      * @param JournalCollectorInterface $collector
      * @param string                    $what
      *
@@ -364,7 +327,7 @@ class JsonController extends Controller
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {
-            if ($key != 'user_action') {
+            if ($key !== 'user_action') {
                 $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
             }
         }

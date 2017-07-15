@@ -11,13 +11,14 @@ RUN apt-get update -y && \
                                                libtidy-dev \
                                                libxml2-dev \
                                                libsqlite3-dev \
+                                               libpq-dev \
                                                libbz2-dev \
                                                gettext-base \
                                                locales && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install -j$(nproc) curl gd intl json mcrypt readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2
+RUN docker-php-ext-install -j$(nproc) curl gd intl json mcrypt readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
 
 # Generate locales supported by firefly
 RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8" > /etc/locale.gen && locale-gen

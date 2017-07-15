@@ -42,6 +42,10 @@ class StoredJournalEventHandler
 
     /**
      * StoredJournalEventHandler constructor.
+     *
+     * @param PRI  $repository
+     * @param JRI  $journalRepository
+     * @param RGRI $ruleGroupRepository
      */
     public function __construct(PRI $repository, JRI $journalRepository, RGRI $ruleGroupRepository)
     {

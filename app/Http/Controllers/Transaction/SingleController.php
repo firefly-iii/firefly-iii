@@ -21,6 +21,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -93,27 +94,35 @@ class SingleController extends Controller
         $category     = $journal->categories()->first();
         $categoryName = is_null($category) ? '' : $category->name;
         $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
-
+        /** @var Transaction $transaction */
+        $transaction   = $journal->transactions()->first();
+        $amount        = Steam::positive($transaction->amount);
+        $foreignAmount = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
 
         $preFilled = [
-            'description'              => $journal->description,
-            'source_account_id'        => $source->id,
-            'source_account_name'      => $source->name,
-            'destination_account_id'   => $destination->id,
-            'destination_account_name' => $destination->name,
-            'amount'                   => $journal->amountPositive(),
-            'date'                     => $journal->date->format('Y-m-d'),
-            'budget_id'                => $budgetId,
-            'category'                 => $categoryName,
-            'tags'                     => $tags,
-            'interest_date'            => $journal->getMeta('interest_date'),
-            'book_date'                => $journal->getMeta('book_date'),
-            'process_date'             => $journal->getMeta('process_date'),
-            'due_date'                 => $journal->getMeta('due_date'),
-            'payment_date'             => $journal->getMeta('payment_date'),
-            'invoice_date'             => $journal->getMeta('invoice_date'),
-            'internal_reference'       => $journal->getMeta('internal_reference'),
-            'notes'                    => $journal->getMeta('notes'),
+            'description'               => $journal->description,
+            'source_account_id'         => $source->id,
+            'source_account_name'       => $source->name,
+            'destination_account_id'    => $destination->id,
+            'destination_account_name'  => $destination->name,
+            'amount'                    => $amount,
+            'source_amount'             => $amount,
+            'destination_amount'        => $foreignAmount,
+            'foreign_amount'            => $foreignAmount,
+            'native_amount'             => $foreignAmount,
+            'amount_currency_id_amount' => $transaction->foreign_currency_id ?? 0,
+            'date'                      => $journal->date->format('Y-m-d'),
+            'budget_id'                 => $budgetId,
+            'category'                  => $categoryName,
+            'tags'                      => $tags,
+            'interest_date'             => $journal->getMeta('interest_date'),
+            'book_date'                 => $journal->getMeta('book_date'),
+            'process_date'              => $journal->getMeta('process_date'),
+            'due_date'                  => $journal->getMeta('due_date'),
+            'payment_date'              => $journal->getMeta('payment_date'),
+            'invoice_date'              => $journal->getMeta('invoice_date'),
+            'internal_reference'        => $journal->getMeta('internal_reference'),
+            'notes'                     => $journal->getMeta('notes'),
         ];
         Session::flash('preFilled', $preFilled);
 
@@ -238,6 +247,7 @@ class SingleController extends Controller
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $pTransaction        = $journal->positiveTransaction();
         $preFilled           = [
             'date'                     => $journal->dateAsString(),
             'interest_date'            => $journal->dateAsString('interest_date'),
@@ -250,8 +260,6 @@ class SingleController extends Controller
             'source_account_name'      => $sourceAccounts->first()->edit_name,
             'destination_account_id'   => $destinationAccounts->first()->id,
             'destination_account_name' => $destinationAccounts->first()->edit_name,
-            'amount'            => $journal->amountPositive(),
-            'currency'          => $journal->transactionCurrency,
 
             // new custom fields:
             'due_date'                 => $journal->dateAsString('due_date'),
@@ -260,26 +268,36 @@ class SingleController extends Controller
             'interal_reference'        => $journal->getMeta('internal_reference'),
             'notes'                    => $journal->getMeta('notes'),
 
-            // exchange rate fields
-            'native_amount'         => $journal->amountPositive(),
-            'native_currency'       => $journal->transactionCurrency,
+            // amount fields
+            'amount'                   => $pTransaction->amount,
+            'source_amount'            => $pTransaction->amount,
+            'native_amount'            => $pTransaction->amount,
+            'destination_amount'       => $pTransaction->foreign_amount,
+            'currency'                 => $pTransaction->transactionCurrency,
+            'source_currency'          => $pTransaction->transactionCurrency,
+            'native_currency'          => $pTransaction->transactionCurrency,
+            'foreign_currency'         => !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency,
+            'destination_currency'     => !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency,
         ];
 
-        // if user has entered a foreign currency, update some fields
-        $foreignCurrencyId = intval($journal->getMeta('foreign_currency_id'));
-        if ($foreignCurrencyId > 0) {
-            // update some fields in pre-filled.
-            // @codeCoverageIgnoreStart
-            $preFilled['amount']   = $journal->getMeta('foreign_amount');
-            $preFilled['currency'] = $this->currency->find(intval($journal->getMeta('foreign_currency_id')));
-            // @codeCoverageIgnoreEnd
+        // amounts for withdrawals and deposits:
+        // amount, native_amount, source_amount, destination_amount
+        if (($journal->isWithdrawal() || $journal->isDeposit()) && !is_null($pTransaction->foreign_amount)) {
+            $preFilled['amount']   = $pTransaction->foreign_amount;
+            $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
 
-        if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type == AccountType::CASH) {
+        if ($journal->isTransfer() && !is_null($pTransaction->foreign_amount)) {
+            $preFilled['destination_amount']   = $pTransaction->foreign_amount;
+            $preFilled['destination_currency'] = $pTransaction->foreignCurrency;
+        }
+
+        // fixes for cash accounts:
+        if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type === AccountType::CASH) {
             $preFilled['destination_account_name'] = '';
         }
 
-        if ($journal->isDeposit() && $sourceAccounts->first()->accountType->type == AccountType::CASH) {
+        if ($journal->isDeposit() && $sourceAccounts->first()->accountType->type === AccountType::CASH) {
             $preFilled['source_account_name'] = '';
         }
 
@@ -319,6 +337,7 @@ class SingleController extends Controller
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
+
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($journal, $files);

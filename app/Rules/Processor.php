@@ -254,7 +254,7 @@ final class Processor
             }
 
         }
-        $result = ($hitTriggers == $foundTriggers && $foundTriggers > 0);
+        $result = ($hitTriggers === $foundTriggers && $foundTriggers > 0);
         Log::debug('Result of triggered()', ['hitTriggers' => $hitTriggers, 'foundTriggers' => $foundTriggers, 'result' => $result]);
 
         return $result;

@@ -160,42 +160,19 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function lastUseDate(Category $category, Collection $accounts): Carbon
     {
-        $last = null;
+        $last            = new Carbon('1900-01-01');
+        $lastJournalDate = $this->getLastJournalDate($category, $accounts);
 
-        /** @var TransactionJournal $first */
-        $lastJournalQuery = $category->transactionJournals()->orderBy('date', 'DESC');
-
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $ids = $accounts->pluck('id')->toArray();
-            $lastJournalQuery->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
-            $lastJournalQuery->whereIn('t.account_id', $ids);
+        if ($lastJournalDate->year !== 1900) {
+            $last = clone $lastJournalDate;
+            unset($lastJournalDate);
         }
 
-        $lastJournal = $lastJournalQuery->first(['transaction_journals.*']);
+        $lastTransactionDate = $this->getLastTransactionDate($category, $accounts);
 
-        if ($lastJournal) {
-            $last = $lastJournal->date;
-        }
-
-        // check transactions:
-
-        $lastTransactionQuery = $category->transactions()
-                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                         ->orderBy('transaction_journals.date', 'DESC');
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $ids = $accounts->pluck('id')->toArray();
-            $lastTransactionQuery->whereIn('transactions.account_id', $ids);
-        }
-
-        $lastTransaction = $lastTransactionQuery->first(['transaction_journals.*']);
-        if (!is_null($lastTransaction) && ((!is_null($last) && $lastTransaction->date < $last) || is_null($last))) {
-            $last = new Carbon($lastTransaction->date);
-        }
-
-        if (is_null($last)) {
-            return new Carbon('1900-01-01');
+        if ($lastTransactionDate->year !== 1900 && $lastTransactionDate < $last) {
+            $last = clone $lastTransactionDate;
+            unset($lastTransactionDate);
         }
 
         return $last;
@@ -477,6 +454,55 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category->save();
 
         return $category;
+    }
+
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @return Carbon
+     */
+    private function getLastJournalDate(Category $category, Collection $accounts): Carbon
+    {
+        $query = $category->transactionJournals()->orderBy('date', 'DESC');
+
+        if ($accounts->count() > 0) {
+            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $result = $query->first(['transaction_journals.*']);
+
+        if (!is_null($result)) {
+            return $result->date;
+        }
+
+        return new Carbon('1900-01-01');
+    }
+
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @return Carbon
+     */
+    private function getLastTransactionDate(Category $category, Collection $accounts): Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'DESC');
+        if ($accounts->count() > 0) {
+            // filter journals:
+            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (!is_null($lastTransaction)) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return new Carbon('1900-01-01');
     }
 
 }

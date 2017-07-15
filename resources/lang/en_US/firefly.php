@@ -20,14 +20,14 @@ return [
     'everything'                                 => 'Everything',
     'customRange'                                => 'Custom range',
     'apply'                                      => 'Apply',
+    'select_date'                                => 'Select date..',
     'cancel'                                     => 'Cancel',
     'from'                                       => 'From',
     'to'                                         => 'To',
     'showEverything'                             => 'Show everything',
     'never'                                      => 'Never',
     'search_results_for'                         => 'Search results for ":query"',
-    'advanced_search'                            => 'Advanced search',
-    'advanced_search_intro'                      => 'There are several modifiers that you can use in your search to narrow down the results. If you use any of these, the search will <em>only</em> return transactions. Please click the <i class="fa fa-question-circle"></i>-icon for more information.',
+    'no_results_for_empty_search'                => 'Your search was empty, so nothing was found.',
     'bounced_error'                              => 'The message sent to :email bounced, so no access for you.',
     'deleted_error'                              => 'These credentials do not match our records.',
     'general_blocked_error'                      => 'Your account has been disabled, so you cannot login.',
@@ -68,13 +68,6 @@ return [
     'two_factor_lost_fix_owner'                  => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
     'warning_much_data'                          => ':days days of data may take a while to load.',
     'registered'                                 => 'You have registered successfully!',
-    'search'                                     => 'Search',
-    'search_found_accounts'                      => 'Found :count account(s) for your query.',
-    'search_found_categories'                    => 'Found :count category(ies) for your query.',
-    'search_found_budgets'                       => 'Found :count budget(s) for your query.',
-    'search_found_tags'                          => 'Found :count tag(s) for your query.',
-    'search_found_transactions'                  => 'Found :count transaction(s) for your query.',
-    'results_limited'                            => 'The results are limited to :count entries.',
     'tagbalancingAct'                            => 'Balancing act',
     'tagadvancePayment'                          => 'Advance payment',
     'tagnothing'                                 => '',
@@ -112,8 +105,8 @@ return [
     'budget_in_period'                           => 'All transactions for budget ":name" between :start and :end',
     'chart_budget_in_period'                     => 'Chart for all transactions for budget ":name" between :start and :end',
     'chart_account_in_period'                    => 'Chart for all transactions for account ":name" between :start and :end',
-    'chart_category_in_period'                    => 'Chart for all transactions for category ":name" between :start and :end',
-    'chart_category_all'                    => 'Chart for all transactions for category ":name"',
+    'chart_category_in_period'                   => 'Chart for all transactions for category ":name" between :start and :end',
+    'chart_category_all'                         => 'Chart for all transactions for category ":name"',
     'budget_in_period_breadcrumb'                => 'Between :start and :end',
     'clone_withdrawal'                           => 'Clone this withdrawal',
     'clone_deposit'                              => 'Clone this deposit',
@@ -149,6 +142,16 @@ return [
     'not_available_demo_user'                    => 'The feature you try to access is not available to demo users.',
     'exchange_rate_instructions'                 => 'Asset account "@name" only accepts transactions in @native_currency. If you wish to use @foreign_currency instead, make sure that the amount in @native_currency is known as well:',
     'transfer_exchange_rate_instructions'        => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
+    'transaction_data'                           => 'Transaction data',
+
+    // search
+    'search'                                     => 'Search',
+    'search_found_transactions'                  => 'Number of transactions found:',
+    'general_search_error'                       => 'An error occured while searching. Please check the log files for more information.',
+    'search_box'                                 => 'Search',
+    'search_box_intro'                           => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
+    'search_error'                               => 'Error while searching',
+    'search_searching'                           => 'Searching ...',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
@@ -424,12 +427,6 @@ return [
     'attachment_updated'                         => 'Updated attachment ":name"',
     'upload_max_file_size'                       => 'Maximum file size: :size',
 
-    // tour:
-    'prev'                                       => 'Prev',
-    'next'                                       => 'Next',
-    'end-tour'                                   => 'End tour',
-    'pause'                                      => 'Pause',
-
     // transaction index
     'title_expenses'                             => 'Expenses',
     'title_withdrawal'                           => 'Expenses',
@@ -496,15 +493,6 @@ return [
     'currencies_intro'                           => 'Firefly III supports various currencies which you can set and enable here.',
     'make_default_currency'                      => 'make default',
     'default_currency'                           => 'default',
-
-    // new user:
-    'submit'                                     => 'Submit',
-    'getting_started'                            => 'Getting started',
-    'to_get_started'                             => 'To get started with Firefly, please enter your current bank\'s name, and the balance of your checking account:',
-    'savings_balance_text'                       => 'If you have a savings account, please enter the current balance of your savings account:',
-    'cc_balance_text'                            => 'If you have a credit card, please enter your credit card\'s limit.',
-    'stored_new_account_new_user'                => 'Yay! Your new account has been stored.',
-    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
 
     // forms:
     'mandatoryFields'                            => 'Mandatory fields',
@@ -641,6 +629,12 @@ return [
 
     // new user:
     'welcome'                                    => 'Welcome to Firefly!',
+    'submit'                                     => 'Submit',
+    'getting_started'                            => 'Getting started',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
 
     // home page:
     'yourAccounts'                               => 'Your accounts',
@@ -962,52 +956,54 @@ return [
     'split_this_transfer'                   => 'Split this transfer',
     'cannot_edit_multiple_source'           => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple source accounts.',
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
+    'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'You have selected no valid transactions to edit.',
 
-    // import
-    'configuration_file_help'               => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
-    'import_data_index'                     => 'Index',
-    'import_file_type_csv'                  => 'CSV (comma separated values)',
-    'import_file_type_help'                 => 'Select the type of file you will upload',
-    'import_start'                          => 'Start the import',
-    'configure_import'                      => 'Further configure your import',
-    'import_finish_configuration'           => 'Finish configuration',
-    'settings_for_import'                   => 'Settings',
-    'import_status'                         => 'Import status',
-    'import_status_text'                    => 'The import is currently running, or will start momentarily.',
-    'import_complete'                       => 'Import configuration complete!',
-    'import_complete_text'                  => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
-    'import_download_config'                => 'Download configuration',
-    'import_start_import'                   => 'Start import',
-    'import_data'                           => 'Import data',
-    'import_data_full'                      => 'Import data into Firefly III',
+    // import bread crumbs and titles:
     'import'                                => 'Import',
-    'import_file_help'                      => 'Select your file',
-    'import_status_settings_complete'       => 'The import is ready to start.',
-    'import_status_import_complete'         => 'The import has completed.',
-    'import_status_import_running'          => 'The import is currently running. Please be patient.',
-    'import_status_header'                  => 'Import status and progress',
-    'import_status_errors'                  => 'Import errors',
-    'import_status_report'                  => 'Import report',
-    'import_finished'                       => 'Import has finished',
-    'import_error_single'                   => 'An error has occured during the import.',
-    'import_error_multi'                    => 'Some errors occured during the import.',
-    'import_error_fatal'                    => 'There was an error during the import routine. Please check the log files. The error seems to be:',
-    'import_error_timeout'                  => 'The import seems to have timed out. If this error persists, please import your data using the console command.',
-    'import_double'                         => 'Row #:row: This row has been imported before, and is stored in <a href=":link">:description</a>.',
-    'import_finished_all'                   => 'The import has finished. Please check out the results below.',
+    'import_data'                           => 'Import data',
+
+    // import index page:
+    'import_index_title'                    => 'Import data into Firefly III',
+    'import_index_sub_title'                => 'Index',
+    'import_index_intro'                    => 'Welcome to Firefly\'s import routine. These pages can help you import data from your bank into Firefly III. Please check out the help pages in the top right corner.',
+    'import_index_file'                     => 'Select your file',
+    'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
+    'import_index_type'                     => 'Select the type of file you will upload',
+    'import_index_start'                    => 'Start importing',
+
+    // supported file types:
+    'import_file_type_csv'                  => 'CSV (comma separated values)',
+
+    // import configuration routine:
+    'import_config_sub_title'               => 'Set up your import file',
+    'import_config_bread_crumb'             => 'Set up your import file',
+
+    // import status page:
+    'import_status_bread_crumb'             => 'Import status',
+    'import_status_sub_title'               => 'Import status',
+    'import_status_wait_title'              => 'Please hold...',
+    'import_status_wait_text'               => 'This box will disappear in a moment.',
+    'import_status_ready_title'             => 'Import is ready to start',
+    'import_status_ready_text'              => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
+    'import_status_ready_config'            => 'Download configuration',
+    'import_status_ready_start'             => 'Start the import',
+    'import_status_ready_share'             => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
+    'import_status_running_title'           => 'The import is running',
+    'import_status_running_placeholder'     => 'Please hold for an update...',
+    'import_status_errors_title'            => 'Errors during the import',
+    'import_status_errors_single'           => 'An error has occured during the import. It does not appear to be fatal.',
+    'import_status_errors_multi'            => 'Some errors occured during the import. These do not appear to be fatal.',
+    'import_status_fatal_title'             => 'A fatal error occurred',
+    'import_status_fatal_text'              => 'A fatal error occurred, which the import-routine cannot recover from. Please see the explanation in red below.',
+    'import_status_fatal_more'              => 'If the error is a time-out, the import will have stopped half-way. For some server configurations, it is merely the server that stopped while the import keeps running in the background. To verify this, check out the log files. If the problem persists, consider importing over the command line instead.',
+    'import_status_finished_title'          => 'Import routine finished',
+    'import_status_finished_text'           => 'The import routine has imported your file.',
+    'import_status_finished_job'            => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
     'import_with_key'                       => 'Import with key \':key\'',
-    'import_share_configuration'            => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
-    'import_finished_report'                => 'The import has finished. Please note any errors in the block above this line. All transactions imported during this particular session have been tagged, and you can check them out below. ',
-    'import_finished_link'                  => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'need_at_least_one_account'             => 'You need at least one asset account to be able to create piggy banks',
-    'see_help_top_right'                    => 'For more information, please check out the help pages using the icon in the top right corner of the page.',
-    'bread_crumb_import_complete'           => 'Import ":key" complete',
-    'bread_crumb_configure_import'          => 'Configure import ":key"',
-    'bread_crumb_import_finished'           => 'Import ":key" finished',
-    'import_finished_intro'                 => 'The import has finished! You can now see the new transactions in Firefly.',
-    'import_finished_text_without_link'     => 'It seems there is no tag that points to all your imported transactions. Please look for your imported data in the menu on the left, under "Transactions".',
-    'import_finished_text_with_link'        => 'You can find a list of your imported transactions on the page of the <a href="tags/show/:tag">tag that was created for this import</a>.',
+
+    // different states:
+    'import_status_job_running'             => 'The import is underway. Please be patient...',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',

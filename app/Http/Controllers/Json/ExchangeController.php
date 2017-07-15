@@ -41,7 +41,6 @@ class ExchangeController extends Controller
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
         $rate       = $repository->getExchangeRate($fromCurrency, $toCurrency, $date);
-        $amount     = null;
         if (is_null($rate->id)) {
             Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
             $preferred = env('EXCHANGE_RATE_SERVICE', config('firefly.preferred_exchange_service'));

@@ -132,7 +132,7 @@ class AccountControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        Steam::shouldReceive('balancesById')->andReturn([$account->id => '100']);
+        Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
         $this->be($this->user());

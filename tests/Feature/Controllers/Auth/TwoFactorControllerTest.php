@@ -101,7 +101,7 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testPostIndex()
     {
-        $data     = ['code' => '123456'];
+        $data   = ['code' => '123456'];
         $google = $this->mock(Google2FA::class);
         $google->shouldReceive('verifyKey')->andReturn(true)->once();
 

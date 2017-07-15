@@ -105,9 +105,9 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% include 'list/journals-tasker' %}
+                    {% include 'list/journals' %}
 
-                    {% if periods %}
+                    {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar" aria-hidden="true"></i>
                             <a href="{{ route('tags.show', [tag.id,'all']) }}">
@@ -125,7 +125,7 @@
                 </div>
             </div>
         </div>
-        {% if periods %}
+        {% if periods.count > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 {% for period in periods %}
                     {% if period.spent != 0 or period.earned != 0 %}
@@ -157,7 +157,7 @@
             </div>
         {% endif %}
     </div>
-    {% if periods %}
+    {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
                 <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>

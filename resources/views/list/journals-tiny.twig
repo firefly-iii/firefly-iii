@@ -1,0 +1,21 @@
+<div class="list-group">
+    {% for transaction in transactions %}
+        <a class="list-group-item" title="{{ transaction.date.formatLocalized(trans('config.month_and_day')) }}"
+                {% if transaction.transaction_type_type == 'Opening balance' %}
+                    href="#"
+                {% else %}
+                    href="{{ route('transactions.show',transaction.journal_id) }}"
+                {% endif %}
+        >
+            {{ transaction|typeIconTransaction }}
+            {% if transaction.transaction_description|length > 0 %}
+                {{ transaction.transaction_description }} ({{ transaction.description }})
+            {% else %}
+                {{ transaction.description }}
+            {% endif %}
+            <span class="pull-right small">
+                {{ transactionAmount(transaction) }}
+        </span>
+        </a>
+    {% endfor %}
+</div>

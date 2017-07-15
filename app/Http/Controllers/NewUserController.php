@@ -54,7 +54,6 @@ class NewUserController extends Controller
         View::share('title', trans('firefly.welcome'));
         View::share('mainTitleIcon', 'fa-fire');
 
-
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
@@ -74,30 +73,13 @@ class NewUserController extends Controller
      */
     public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository)
     {
-        $count = 1;
         // create normal asset account:
         $this->createAssetAccount($request, $repository);
 
         // create savings account
-        $savingBalance = strval($request->get('savings_balance')) === '' ? '0' : strval($request->get('savings_balance'));
-        if (bccomp($savingBalance, '0') !== 0) {
-            $this->createSavingsAccount($request, $repository);
-            $count++;
-        }
+        $this->createSavingsAccount($request, $repository);
 
-
-        // create credit card.
-        $limit = strval($request->get('credit_card_limit')) === '' ? '0' : strval($request->get('credit_card_limit'));
-        if (bccomp($limit, '0') !== 0) {
-            $this->storeCreditCard($request, $repository);
-            $count++;
-        }
-        $message = strval(trans('firefly.stored_new_accounts_new_user'));
-        if ($count == 1) {
-            $message = strval(trans('firefly.stored_new_account_new_user'));
-        }
-
-        Session::flash('success', $message);
+        Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
         Preferences::mark();
 
         return redirect(route('index'));
@@ -152,29 +134,4 @@ class NewUserController extends Controller
         return true;
     }
 
-    /**
-     * @param NewUserFormRequest         $request
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return bool
-     */
-    private function storeCreditCard(NewUserFormRequest $request, AccountRepositoryInterface $repository): bool
-    {
-        $creditAccount = [
-            'name'                   => 'Credit card',
-            'iban'                   => null,
-            'accountType'            => 'asset',
-            'virtualBalance'         => round($request->get('credit_card_limit'), 12),
-            'active'                 => true,
-            'accountRole'            => 'ccAsset',
-            'openingBalance'         => null,
-            'openingBalanceDate'     => null,
-            'openingBalanceCurrency' => intval($request->input('amount_currency_id_credit_card_limit')),
-            'ccType'                 => 'monthlyFull',
-            'ccMonthlyPaymentDate'   => Carbon::now()->year . '-01-01',
-        ];
-        $repository->store($creditAccount);
-
-        return true;
-    }
 }

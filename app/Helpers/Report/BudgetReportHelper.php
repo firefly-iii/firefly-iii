@@ -56,7 +56,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         /** @var Budget $budget */
         foreach ($set as $budget) {
             $budgetLimits = $this->repository->getBudgetLimits($budget, $start, $end);
-            if ($budgetLimits->count() == 0) { // no budget limit(s) for this budget
+            if ($budgetLimits->count() === 0) { // no budget limit(s) for this budget
 
                 $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);// spent for budget in time range
                 if (bccomp($spent, '0') === -1) {

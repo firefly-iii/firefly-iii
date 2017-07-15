@@ -18,7 +18,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -71,7 +70,7 @@ class TransactionController extends Controller
         // default values:
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
-        $page         = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $count        = 0;
         $loop         = 0;
@@ -79,6 +78,7 @@ class TransactionController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
+        $path         = '/transactions/' . $what;
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -86,12 +86,14 @@ class TransactionController extends Controller
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
             $end      = new Carbon;
+            $path     = '/transactions/' . $what . '/all/';
         }
 
         // prep for "specific date" view.
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
+            $path     = '/transactions/' . $what . '/' . $moment;
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -119,9 +121,9 @@ class TransactionController extends Controller
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/transactions/' . $what);
+            $journals->setPath($path);
             $count = $journals->getCollection()->count();
-            if ($count === 0) {
+            if ($count === 0 && $loop < 3) {
                 $start->subDay();
                 $start = Navigation::startOfPeriod($start, $range);
                 $end   = Navigation::endOfPeriod($start, $range);
@@ -129,7 +131,7 @@ class TransactionController extends Controller
             }
         }
 
-        if ($moment != 'all' && $loop > 1) {
+        if ($moment !== 'all' && $loop > 1) {
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -179,21 +181,12 @@ class TransactionController extends Controller
             return $this->redirectToAccount($journal);
         }
 
-        $events          = $tasker->getPiggyBankEvents($journal);
-        $transactions    = $tasker->getTransactionsOverview($journal);
-        $what            = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle        = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
-        $foreignCurrency = null;
+        $events       = $tasker->getPiggyBankEvents($journal);
+        $transactions = $tasker->getTransactionsOverview($journal);
+        $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
+        $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
-        if ($journal->hasMeta('foreign_currency_id')) {
-            // @codeCoverageIgnoreStart
-            /** @var CurrencyRepositoryInterface $repository */
-            $repository      = app(CurrencyRepositoryInterface::class);
-            $foreignCurrency = $repository->find(intval($journal->getMeta('foreign_currency_id')));
-            // @codeCoverageIgnoreEnd
-        }
-
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'foreignCurrency'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
 
 
     }

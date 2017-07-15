@@ -37,11 +37,6 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
-     * @return Account
-     */
-    public function getCashAccount(): Account;
-
-    /**
      * Moved here from account CRUD.
      *
      * @param Account $account
@@ -102,6 +97,11 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function getActiveAccountsByType(array $types): Collection;
+
+    /**
+     * @return Account
+     */
+    public function getCashAccount(): Account;
 
     /**
      * Returns the date of the very last transaction in this account.

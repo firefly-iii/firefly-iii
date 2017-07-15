@@ -15,7 +15,6 @@ namespace FireflyIII\Generator\Report;
 
 use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
-use Log;
 
 
 /**

@@ -7,7 +7,7 @@
  * See the LICENSE file for details.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
@@ -26,6 +26,24 @@ use Tests\TestCase;
  */
 class CurrencyControllerTest extends TestCase
 {
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController::create
+     */
+    public function testCannotCreate()
+    {
+        // mock stuff
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $userRepos->shouldReceive('hasRole')->once()->andReturn(false);
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.create'));
+        $response->assertStatus(302);
+        $response->assertSessionHas('error');
+    }
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::delete
@@ -66,24 +84,6 @@ class CurrencyControllerTest extends TestCase
         $this->session(['currencies.delete.uri' => 'http://localhost']);
         $this->be($this->user());
         $response = $this->post(route('currencies.destroy', [1]));
-        $response->assertStatus(302);
-        $response->assertSessionHas('error');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::create
-     */
-    public function testCannotCreate()
-    {
-        // mock stuff
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(false);
-
-        $this->be($this->user());
-        $response = $this->get(route('currencies.create'));
         $response->assertStatus(302);
         $response->assertSessionHas('error');
     }
@@ -236,7 +236,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::store
      */
-    public function testStoreNoRights()
+    public function testStore()
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
@@ -263,7 +263,7 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::store
      */
-    public function testStore()
+    public function testStoreNoRights()
     {
         // mock stuff
         $repository   = $this->mock(CurrencyRepositoryInterface::class);

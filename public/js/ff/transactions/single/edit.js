@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: what, Modernizr */
+/** global: what, Modernizr, selectsForeignCurrency, convertForeignToNative, validateCurrencyForTransfer, convertSourceToDestination, journalData, journal, accountInfo, exchangeRateInstructions, currencyInfo */
 
 $(document).ready(function () {
     "use strict";
@@ -20,8 +20,8 @@ $(document).ready(function () {
     $('#ffInput_amount').on('change', convertForeignToNative);
 
     // respond to transfer changes:
-    $('#ffInput_source_account_id').on('change',validateCurrencyForTransfer);
-    $('#ffInput_destination_account_id').on('change',validateCurrencyForTransfer);
+    $('#ffInput_source_account_id').on('change', validateCurrencyForTransfer);
+    $('#ffInput_destination_account_id').on('change', validateCurrencyForTransfer);
 
     // convert source currency to destination currency (slightly different routine for transfers)
     $('#ffInput_source_amount').on('change', convertSourceToDestination);
@@ -32,17 +32,16 @@ $(document).ready(function () {
  */
 function updateInitialPage() {
 
-    console.log('Native currency is #' + journalData.native_currency.id + ' and (foreign) currency id is #' + journalData.currency.id);
-
     if (journal.transaction_type.type === "Transfer") {
         $('#native_amount_holder').hide();
         $('#amount_holder').hide();
 
-        if (journalData.native_currency.id === journalData.currency.id) {
+
+        if (journalData.native_currency.id === journalData.destination_currency.id) {
             $('#exchange_rate_instruction_holder').hide();
             $('#destination_amount_holder').hide();
         }
-        if (journalData.native_currency.id !== journalData.currency.id) {
+        if (journalData.native_currency.id !== journalData.destination_currency.id) {
             $('#exchange_rate_instruction_holder').show().find('p').text(getTransferExchangeInstructions());
 
         }
@@ -65,7 +64,6 @@ function updateInitialPage() {
 }
 
 
-
 /**
  * Get accountID based on some meta info.
  */
@@ -78,6 +76,7 @@ function getAccountId() {
     }
 
     alert('Cannot handle ' + journal.transaction_type.type);
+    return undefined;
 }
 
 /**
