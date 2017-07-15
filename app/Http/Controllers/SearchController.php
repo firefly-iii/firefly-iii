@@ -60,48 +60,6 @@ class SearchController extends Controller
         $subTitle = trans('breadcrumbs.search_result', ['query' => $query]);
 
         return view('search.index', compact('query', 'fullQuery', 'subTitle'));
-
-        // yes, hard coded values:
-        $minSearchLen = 1;
-        $limit        = 20;
-
-        // ui stuff:
-        $subTitle = '';
-
-        // query stuff
-        $query        = null;
-        $result       = [];
-        $rawQuery     = $request->get('q');
-        $hasModifiers = true;
-        $modifiers    = [];
-
-        if (!is_null($request->get('q')) && strlen($request->get('q')) >= $minSearchLen) {
-            // parse query, find modifiers:
-            // set limit for search
-            $searcher->setLimit($limit);
-            $searcher->parseQuery($request->get('q'));
-
-            $transactions = $searcher->searchTransactions();
-            $accounts     = new Collection;
-            $categories   = new Collection;
-            $tags         = new Collection;
-            $budgets      = new Collection;
-
-            // no special search thing?
-            if (!$searcher->hasModifiers()) {
-                $hasModifiers = false;
-                $accounts     = $searcher->searchAccounts();
-                $categories   = $searcher->searchCategories();
-                $budgets      = $searcher->searchBudgets();
-                $tags         = $searcher->searchTags();
-            }
-            $query    = $searcher->getWordsAsString();
-            $subTitle = trans('firefly.search_results_for', ['query' => $query]);
-            $result   = ['transactions' => $transactions, 'accounts' => $accounts, 'categories' => $categories, 'budgets' => $budgets, 'tags' => $tags];
-
-        }
-
-        return view('search.index', compact('rawQuery', 'hasModifiers', 'modifiers', 'subTitle', 'limit', 'query', 'result'));
     }
 
     public function search(Request $request, SearchInterface $searcher)

@@ -73,14 +73,13 @@ class NewUserControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('store')->times(3);
+        $accountRepos->shouldReceive('store')->times(2);
 
 
         $data = [
             'bank_name'         => 'New bank',
             'savings_balance'   => '1000',
             'bank_balance'      => '100',
-            'credit_card_limit' => '1000',
         ];
         $this->be($this->emptyUser());
         $response = $this->post(route('new-user.submit'), $data);
@@ -97,7 +96,7 @@ class NewUserControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('store')->once();
+        $accountRepos->shouldReceive('store')->twice();
 
         $data = [
             'bank_name'    => 'New bank',
