@@ -13,11 +13,11 @@ namespace FireflyIII\Import\Routine;
 
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Import\FileProcessor\FileProcessorInterface;
 use FireflyIII\Import\Storage\ImportStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -64,13 +64,18 @@ class ImportRoutine
         Log::info(sprintf('Returned %d valid objects from file processor', $this->lines));
 
         $storage = $this->storeObjects($importObjects);
+        Log::debug('Back in run()');
 
         // update job:
         $this->job->status = 'finished';
         $this->job->save();
 
+        Log::debug('Updated job...');
+
         $this->journals = $storage->journals;
         $this->errors   = $storage->errors;
+
+        Log::debug('Going to call createImportTag()');
 
         // create tag, link tag to all journals:
         $this->createImportTag();
@@ -101,7 +106,7 @@ class ImportRoutine
         $processor = app($class);
         $processor->setJob($this->job);
 
-        if ($this->job->status == 'configured') {
+        if ($this->job->status === 'configured') {
 
             // set job as "running"...
             $this->job->status = 'running';
@@ -120,6 +125,7 @@ class ImportRoutine
      */
     private function createImportTag(): Tag
     {
+        Log::debug('Now in createImportTag()');
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);
@@ -138,11 +144,16 @@ class ImportRoutine
         $this->job->extended_status = $extended;
         $this->job->save();
 
-        $this->journals->each(
-            function (TransactionJournal $journal) use ($tag) {
-                $journal->tags()->save($tag);
-            }
-        );
+        Log::debug(sprintf('Created tag #%d ("%s")', $tag->id, $tag->tag));
+        Log::debug('Looping journals...');
+        $journalIds = $this->journals->pluck('id')->toArray();
+        $tagId      = $tag->id;
+        foreach ($journalIds as $journalId) {
+            Log::debug(sprintf('Linking journal #%d to tag #%d...', $journalId, $tagId));
+            DB::table('tag_transaction_journal')->insert(['transaction_journal_id' => $journalId, 'tag_id' => $tagId]);
+        }
+        Log::debug('Done!');
+        Log::info(sprintf('Linked %d journals to tag #%d ("%s")', $this->journals->count(), $tag->id, $tag->tag));
 
         return $tag;
 
@@ -160,6 +171,7 @@ class ImportRoutine
         $storage->setDateFormat($this->job->configuration['date-format']);
         $storage->setObjects($objects);
         $storage->store();
+        Log::info('Back in storeObjects()');
 
         return $storage;
     }

@@ -116,8 +116,9 @@ class ImportStorage
                 Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
             }
         }
+        Log::info('ImportStorage has finished.');
 
-
+        return true;
     }
 
     /**
@@ -383,7 +384,6 @@ class ImportStorage
         // run rules:
         $this->applyRules($journal);
         $this->job->addStepsDone(1);
-
         $this->journals->push($journal);
 
         Log::info(
