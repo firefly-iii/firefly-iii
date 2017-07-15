@@ -151,7 +151,7 @@ return [
     'search_box'                                 => 'Search',
     'search_box_intro'                           => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
     'search_error'                               => 'Error while searching',
-    'search_searching'                           => 'Searching ...',
+    'search_searching'                           => 'Bezig met zoeken ...',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -427,12 +427,6 @@ return [
     'attachment_updated'                         => 'Attachment ":name" geüpdatet',
     'upload_max_file_size'                       => 'Maximale grootte: :size',
 
-    // tour:
-    'prev'                                       => 'Vorige',
-    'next'                                       => 'Volgende',
-    'end-tour'                                   => 'Einde',
-    'pause'                                      => 'Pauze',
-
     // transaction index
     'title_expenses'                             => 'Uitgaven',
     'title_withdrawal'                           => 'Uitgaven',
@@ -499,15 +493,6 @@ return [
     'currencies_intro'                           => 'Firefly III ondersteunt diverse valuta die je hier kan instellen en bewerken.',
     'make_default_currency'                      => 'maak standaard',
     'default_currency'                           => 'standaard',
-
-    // new user:
-    'submit'                                     => 'Invoeren',
-    'getting_started'                            => 'Aan de start!',
-    'to_get_started'                             => 'Begin met de naam van de bank waar je je betaalrekening hebt, en het saldo van die rekening.',
-    'savings_balance_text'                       => 'Voer ook het saldo van je spaarrekening in, als je die hebt.',
-    'cc_balance_text'                            => 'Als je een credit card hebt, vul dan hier je credit cardlimiet in.',
-    'stored_new_account_new_user'                => 'Hoera! Je nieuwe account is opgeslagen.',
-    'stored_new_accounts_new_user'               => 'Hoera! Je nieuwe accounts zijn opgeslagen.',
 
     // forms:
     'mandatoryFields'                            => 'Verplichte velden',
@@ -644,6 +629,12 @@ return [
 
     // new user:
     'welcome'                                    => 'Welkom bij Firefly!',
+    'submit'                                     => 'Invoeren',
+    'getting_started'                            => 'Aan de start!',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Hoera! Je nieuwe accounts zijn opgeslagen.',
 
     // home page:
     'yourAccounts'                               => 'Je betaalrekeningen',
