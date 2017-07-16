@@ -27,7 +27,7 @@ return [
     'showEverything'                             => 'Laat alles zien',
     'never'                                      => 'Nooit',
     'search_results_for'                         => 'Zoekresultaten voor ":query"',
-    'no_results_for_empty_search'                => 'Your search was empty, so nothing was found.',
+    'no_results_for_empty_search'                => 'Je zoekopdracht was leeg, dus niets werd gevonden.',
     'bounced_error'                              => 'Het emailtje naar :email kwam nooit aan.',
     'deleted_error'                              => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                      => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
@@ -146,11 +146,11 @@ return [
 
     // search
     'search'                                     => 'Zoeken',
-    'search_found_transactions'                  => 'Number of transactions found:',
-    'general_search_error'                       => 'An error occured while searching. Please check the log files for more information.',
-    'search_box'                                 => 'Search',
-    'search_box_intro'                           => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
-    'search_error'                               => 'Error while searching',
+    'search_found_transactions'                  => 'Aantal gevonden transacties:',
+    'general_search_error'                       => 'Er is een fout opgetreden tijdens het zoeken. Controleer de log-bestanden voor meer informatie.',
+    'search_box'                                 => 'Zoeken',
+    'search_box_intro'                           => 'Welkom bij de zoekfunctie van Firefly III. Voer je zoekopdracht in het vak. Bekijk zeker de help-pagina, want de zoekfunctie is behoorlijk geadvanceerd.',
+    'search_error'                               => 'Fout tijdens het zoeken',
     'search_searching'                           => 'Bezig met zoeken ...',
 
     // repeat frequencies:
@@ -631,8 +631,8 @@ return [
     'welcome'                                    => 'Welkom bij Firefly!',
     'submit'                                     => 'Invoeren',
     'getting_started'                            => 'Aan de start!',
-    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
-    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'to_get_started'                             => 'Het is goed om te zien dat de installatie van Firefly III gelukt is. Voer de naam van je bank in en het saldo van je belangrijkste betaalrekening. Meerdere rekeningen kan je later toevoegen, maar we moeten ergens beginnen natuurlijk.',
+    'savings_balance_text'                       => 'Firefly III maakt automatisch een spaarrekening voor je. Daar zit normaal geen geld in, maar je kan hier opgeven hoeveel er op staat.',
     'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
     'stored_new_accounts_new_user'               => 'Hoera! Je nieuwe accounts zijn opgeslagen.',
 
