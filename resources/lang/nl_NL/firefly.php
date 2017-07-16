@@ -633,7 +633,7 @@ return [
     'getting_started'                            => 'Aan de start!',
     'to_get_started'                             => 'Het is goed om te zien dat de installatie van Firefly III gelukt is. Voer de naam van je bank in en het saldo van je belangrijkste betaalrekening. Meerdere rekeningen kan je later toevoegen, maar we moeten ergens beginnen natuurlijk.',
     'savings_balance_text'                       => 'Firefly III maakt automatisch een spaarrekening voor je. Daar zit normaal geen geld in, maar je kan hier opgeven hoeveel er op staat.',
-    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'finish_up_new_user'                         => 'That\'s it! Druk op <strong>Opslaan</strong> om door te gaan. Je gaat dan naar de homepage van Firefly III.',
     'stored_new_accounts_new_user'               => 'Hoera! Je nieuwe accounts zijn opgeslagen.',
 
     // home page:
