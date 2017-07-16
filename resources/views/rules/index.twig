@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <p>
-                <a href="{{ route('rule-groups.create') }}" class="btn btn-success">{{ 'new_rule_group'|_ }}</a>
+                <a href="{{ route('rule-groups.create') }}" id="new_rule_group" class="btn btn-success">{{ 'new_rule_group'|_ }}</a>
             </p>
         </div>
     </div>
@@ -71,7 +71,7 @@
                                 {% for rule in ruleGroup.rules %}
                                     <tr>
                                         <td>
-                                            <div class="btn-group btn-group-xs">
+                                            <div class="btn-group btn-group-xs prio_buttons">
                                                 {% if rule.order > 1 %}
                                                     <a title="{{ 'rule_priority_up'|_ }}"
                                                        href="{{ route('rules.up', rule.id) }}"
@@ -94,7 +94,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-xs">
+                                            <div class="btn-group btn-group-xs edit_buttons">
                                                 <a title="{{ 'edit'|_ }}" href="{{ route('rules.edit', rule.id) }}"
                                                    class="btn btn-default"><span
                                                             class="fa fa-fw fa-pencil"></span></a>
@@ -105,7 +105,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-xs">
+                                            <div class="btn-group btn-group-xs test_buttons">
                                                 {# show which transactions would match #}
                                                 <a href="#" class="btn btn-default test_rule_triggers" data-id="{{ rule.id }}"
                                                    title="{{ 'test_rule_triggers'|_ }}"><i data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></i></a>
@@ -184,7 +184,7 @@
                         <p>
                             <br/>
                             <a href="{{ route('rules.create', ruleGroup.id) }}"
-                               class="btn btn-success">{{ 'new_rule'|_ }}</a>
+                               class="btn btn-success new_rule">{{ 'new_rule'|_ }}</a>
                         </p>
                     </div>
                 </div>

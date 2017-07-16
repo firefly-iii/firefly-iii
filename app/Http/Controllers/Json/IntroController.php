@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Preferences;
 use Response;
 
 /**
@@ -29,6 +28,7 @@ class IntroController
      */
     public function getIntroSteps(string $route)
     {
+        $route    = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $route));
         $steps    = [];
         if (is_array($elements) && count($elements) > 0) {
@@ -37,11 +37,13 @@ class IntroController
 
                 // point to HTML element when not an intro or outro:
                 if (!in_array($key, ['intro', 'outro'])) {
-                    $currentStep['element'] = '#' . $key;
+                    $currentStep['element'] = $options['selector'];
                 }
 
                 // get the text:
                 $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
+
+
 
                 // save in array:
                 $steps[] = $currentStep;
@@ -59,7 +61,8 @@ class IntroController
     public function postFinished(string $route)
     {
         $key = 'shown_demo_' . $route;
-        Preferences::set($key, true);
+
+        // Preferences::set($key, true);
 
         return Response::json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }

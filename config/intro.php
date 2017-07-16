@@ -14,12 +14,22 @@ declare(strict_types=1);
  */
 
 return [
-    'index' => [
-        'intro'            => [],
-        'accounts-chart'   => [],
-        'box_out_holder'   => [],
-        'all_transactions' => ['position' => 'left'],
-        'help'             => ['position' => 'bottom'],
-        'outro'            => [],
+    'index'       => [
+        'intro'          => [],
+        'accounts-chart' => ['selector' => '#accounts-chart'],
+        'box_out_holder' => ['selector' => '#box_out_holder'],
+        'help'           => ['selector' => '#help', 'position' => 'bottom'],
+        'sidebar-toggle' => ['selector' => '#sidebar-toggle', 'position' => 'bottom'],
+        'outro'          => [],
+    ],
+    'rules_index' => [
+        'intro'          => [],
+        'new_rule_group' => ['selector' => '#new_rule_group'],
+        'new_rule' => ['selector' => '.new_rule'],
+        'prio_buttons'   => ['selector' => '.prio_buttons'],
+        'test_buttons'   => ['selector' => '.test_buttons'],
+        'rule-triggers'  => ['selector' => '.rule-triggers'],
+        'outro'          => [],
+
     ],
 ];

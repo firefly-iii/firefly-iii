@@ -68,6 +68,7 @@ class Controller extends BaseController
                 // get shown-intro-preference:
                 if (auth()->check()) {
                     $route     = Route::currentRouteName();
+                    $route     = str_replace('.', '_', $route);
                     $key       = 'shown_demo_' . $route;
                     $config    = config('intro.' . $route);
                     $shownDemo = Preferences::get($key, false)->data;
