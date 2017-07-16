@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Preferences;
 use Response;
 
 /**
@@ -44,7 +45,6 @@ class IntroController
                 $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
 
 
-
                 // save in array:
                 $steps[] = $currentStep;
             }
@@ -61,8 +61,7 @@ class IntroController
     public function postFinished(string $route)
     {
         $key = 'shown_demo_' . $route;
-
-        // Preferences::set($key, true);
+        Preferences::set($key, true);
 
         return Response::json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }

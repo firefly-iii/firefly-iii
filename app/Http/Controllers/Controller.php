@@ -68,6 +68,7 @@ class Controller extends BaseController
                 // get shown-intro-preference:
                 if (auth()->check()) {
                     $route     = Route::currentRouteName();
+                    $originalRoute = $route;
                     $route     = str_replace('.', '_', $route);
                     $key       = 'shown_demo_' . $route;
                     $config    = config('intro.' . $route);
@@ -78,6 +79,7 @@ class Controller extends BaseController
                     }
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $route);
+                    View::share('original_route_name', $originalRoute);
                 }
 
                 return $next($request);
