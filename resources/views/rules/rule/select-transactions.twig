@@ -1,12 +1,12 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, ruleGroup) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, rule) }}
 {% endblock %}
 
 {% block content %}
 
-    <form method="POST" action="{{ route('rule-groups.execute', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="execute-rule-group">
+    <form method="POST" action="{{ route('rules.execute', rule.id) }}" accept-charset="UTF-8" class="form-horizontal" id="execute-rule">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -19,7 +19,7 @@
                     <div class="box-body">
                         <div id="form-body">
                             <p>
-                                {{ trans('firefly.apply_rule_group_selection_intro', {title: ruleGroup.title}) }}
+                                {{ trans('firefly.apply_rule_selection_intro', {title: rule.title}) }}
                             </p>
                             <div class="row">
                                 <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">

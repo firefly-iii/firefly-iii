@@ -178,7 +178,7 @@ class RuleGroupController extends Controller
         $this->dispatch($job);
 
         // Tell the user that the job is queued
-        Session::flash('success', strval(trans('firefly.executed_group_on_existing_transactions', ['title' => $ruleGroup->title])));
+        Session::flash('success', strval(trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title])));
 
         return redirect()->route('rules.index');
     }
@@ -197,7 +197,7 @@ class RuleGroupController extends Controller
         $checkedAccounts = array_keys($accountList);
         $first           = session('first')->format('Y-m-d');
         $today           = Carbon::create()->format('Y-m-d');
-        $subTitle        = (string)trans('firefly.execute_on_existing_transactions');
+        $subTitle        = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
         return view('rules.rule-group.select-transactions', compact('checkedAccounts', 'accountList', 'first', 'today', 'ruleGroup', 'subTitle'));
     }

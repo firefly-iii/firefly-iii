@@ -608,12 +608,15 @@ Route::group(
     Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'edit']);
     Route::get('delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
     Route::get('test', ['uses' => 'RuleController@testTriggers', 'as' => 'test-triggers']);
+    Route::get('test-rule/{rule}', ['uses' => 'RuleController@testTriggersByRule', 'as' => 'test-triggers-rule']);
+    Route::get('select/{rule}', ['uses' => 'RuleController@selectTransactions', 'as' => 'select-transactions']);
 
     Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
     Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions', 'as' => 'reorder-actions']);
     Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'store']);
     Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
     Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'destroy']);
+    Route::post('execute/{rule}', ['uses' => 'RuleController@execute', 'as' => 'execute']);
 
 }
 );

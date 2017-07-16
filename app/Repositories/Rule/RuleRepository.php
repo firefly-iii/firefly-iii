@@ -265,7 +265,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleAction->active          = 1;
         $ruleAction->stop_processing = $values['stopProcessing'];
         $ruleAction->action_type     = $values['action'];
-        $ruleAction->action_value    = $values['value'];
+        $ruleAction->action_value    = is_null($values['value']) ? '' : $values['value'];
         $ruleAction->save();
 
 

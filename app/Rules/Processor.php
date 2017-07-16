@@ -59,9 +59,11 @@ final class Processor
      *
      * @param Rule $rule
      *
+     * @param bool $includeActions
+     *
      * @return Processor
      */
-    public static function make(Rule $rule)
+    public static function make(Rule $rule, $includeActions = true)
     {
         Log::debug(sprintf('Making new rule from Rule %d', $rule->id));
         $self       = new self;
@@ -72,7 +74,9 @@ final class Processor
             Log::debug(sprintf('Push trigger %d', $trigger->id));
             $self->triggers->push(TriggerFactory::getTrigger($trigger));
         }
-        $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+        if ($includeActions) {
+            $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+        }
 
         return $self;
     }
