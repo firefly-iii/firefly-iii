@@ -56,48 +56,50 @@
             {% endif %}
 
             {# TRANSACTIONS #}
-            {% for data in transactions %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><a href="{{ route('accounts.show', data[1].id) }}">{{ data[1].name }}</a></h3>
+            <div id="all_transactions">
+                {% for data in transactions %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a href="{{ route('accounts.show', data[1].id) }}">{{ data[1].name }}</a></h3>
 
-                        <div class="box-tools pull-right">
-                            <div class="btn-group">
-                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('transactions.create','withdrawal') }}?account_id={{ data[1].id }}"><i
-                                                    class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create','deposit') }}?account_id={{ data[1].id }}"><i
-                                                    class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create','transfer') }}?account_from_id={{ data[1].id }}"><i
-                                                    class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
-                                </ul>
+                            <div class="box-tools pull-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="{{ route('transactions.create','withdrawal') }}?account_id={{ data[1].id }}"><i
+                                                        class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
+                                        <li><a href="{{ route('transactions.create','deposit') }}?account_id={{ data[1].id }}"><i
+                                                        class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
+                                        <li><a href="{{ route('transactions.create','transfer') }}?account_from_id={{ data[1].id }}"><i
+                                                        class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
+                                    </ul>
+                                </div>
                             </div>
+
+
                         </div>
 
+                        {% if data[0].count > 0 %}
+                            <div class="box-body no-padding">
+                                {% include 'list.journals-tiny' with {'transactions': data[0],'account': data[1]} %}
+                            </div>
+                        {% else %}
+                            <div class="box-body">
+                                <p>
+                                    <em>
+                                        {{ trans('firefly.no_transactions_account', {name: data[1].name}) }}
+                                    </em>
+                                </p>
+                            </div>
+                        {% endif %}
 
+                        <div class="box-footer clearfix">
+                            <a class="btn btn-sm btn-default btn-flat pull-right"
+                               href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
+                        </div>
                     </div>
-
-                    {% if data[0].count > 0 %}
-                        <div class="box-body no-padding">
-                            {% include 'list.journals-tiny' with {'transactions': data[0],'account': data[1]} %}
-                        </div>
-                    {% else %}
-                        <div class="box-body">
-                            <p>
-                                <em>
-                                    {{ trans('firefly.no_transactions_account', {name: data[1].name}) }}
-                                </em>
-                            </p>
-                        </div>
-                    {% endif %}
-
-                    <div class="box-footer clearfix">
-                        <a class="btn btn-sm btn-default btn-flat pull-right"
-                           href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
     <div class="row">
@@ -131,8 +133,6 @@
 {% block scripts %}
     <script type="text/javascript">
         var billCount = {{ billCount }};
-
-        // uri's of charts:
         var accountFrontpageUri = '{{ route('chart.account.frontpage') }}';
         var accountRevenueUri = '{{ route('chart.account.revenue') }}';
         var accountExpenseUri = '{{ route('chart.account.expense') }}';

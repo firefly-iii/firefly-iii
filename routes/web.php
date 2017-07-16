@@ -449,6 +449,10 @@ Route::group(
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
+    // intro things:
+    Route::get('intro/{route}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
+    Route::post('intro/finished/{route}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+
 }
 );
 

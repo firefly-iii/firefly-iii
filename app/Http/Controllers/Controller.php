@@ -67,10 +67,16 @@ class Controller extends BaseController
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $key       = 'shown_demo_' . Route::currentRouteName();
+                    $route     = Route::currentRouteName();
+                    $key       = 'shown_demo_' . $route;
+                    $config    = config('intro.' . $route);
                     $shownDemo = Preferences::get($key, false)->data;
+                    if (is_null($config) || (is_array($config) && count($config) === 0)) {
+                        // no demo when no data for demo.
+                        $shownDemo = true;
+                    }
                     View::share('shownDemo', $shownDemo);
-                    View::share('current_route_name', Route::currentRouteName());
+                    View::share('current_route_name', $route);
                 }
 
                 return $next($request);
