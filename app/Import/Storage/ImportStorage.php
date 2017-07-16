@@ -44,6 +44,7 @@ class ImportStorage
 {
     /** @var  Collection */
     public $errors;
+    /** @var Collection */
     public $journals;
     /** @var  CurrencyRepositoryInterface */
     private $currencyRepository;
@@ -97,13 +98,12 @@ class ImportStorage
     }
 
     /**
-     * Do storage of import objects
+     * Do storage of import objects.
      */
     public function store()
     {
         $this->defaultCurrency = Amount::getDefaultCurrencyByUser($this->job->user);
 
-        // routine below consists of 3 steps.
         /**
          * @var int           $index
          * @var ImportJournal $object
@@ -129,7 +129,6 @@ class ImportStorage
     protected function applyRules(TransactionJournal $journal): bool
     {
         if ($this->rules->count() > 0) {
-
             /** @var Rule $rule */
             foreach ($this->rules as $rule) {
                 Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
@@ -169,6 +168,50 @@ class ImportStorage
         Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $accountId, $amount));
 
         return true;
+    }
+
+    /**
+     * @param Collection    $set
+     * @param ImportJournal $importJournal
+     *
+     * @return bool
+     */
+    private function filterTransferSet(Collection $set, ImportJournal $importJournal)
+    {
+        $amount      = Steam::positive($importJournal->getAmount());
+        $asset       = $importJournal->asset->getAccount();
+        $opposing    = $this->getOpposingAccount($importJournal->opposing, $amount);
+        $description = $importJournal->getDescription();
+
+        $filtered = $set->filter(
+            function (TransactionJournal $journal) use ($asset, $opposing, $description) {
+                $match    = true;
+                $original = [app('steam')->tryDecrypt($journal->source_name), app('steam')->tryDecrypt($journal->destination_name)];
+                $compare  = [$asset->name, $opposing->name];
+                sort($original);
+                sort($compare);
+
+                // description does not match? Then cannot be duplicate.
+                if ($journal->description !== $description) {
+                    $match = false;
+                }
+                // not both accounts in journal? Then cannot be duplicate.
+                if ($original !== $compare) {
+                    $match = false;
+                }
+
+                if ($match) {
+                    return $journal;
+                }
+
+                return null;
+            }
+        );
+        if (count($filtered) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -319,7 +362,10 @@ class ImportStorage
 
         // verify that opposing account is of the correct type:
         if ($opposing->accountType->type === AccountType::EXPENSE && $transactionType->type !== TransactionType::WITHDRAWAL) {
-            Log::error(sprintf('Row #%d is imported as a %s but opposing is an expense account. This cannot be!', $index, $transactionType->type));
+            $message = sprintf('Row #%d is imported as a %s but opposing is an expense account. This cannot be!', $index, $transactionType->type);
+            Log::error($message);
+            throw new FireflyException($message);
+
         }
 
         /*** First step done! */
@@ -426,64 +472,33 @@ class ImportStorage
     private function verifyDoubleTransfer(TransactionType $transactionType, ImportJournal $importJournal): bool
     {
         if ($transactionType->type === TransactionType::TRANSFER) {
-            $amount      = Steam::positive($importJournal->getAmount());
-            $asset       = $importJournal->asset->getAccount();
-            $opposing    = $this->getOpposingAccount($importJournal->opposing, $amount);
-            $date        = $importJournal->getDate($this->dateFormat);
-            $description = $importJournal->getDescription();
-            $set         = TransactionJournal::
+            $amount   = Steam::positive($importJournal->getAmount());
+            $date     = $importJournal->getDate($this->dateFormat);
+            $set      = TransactionJournal::
             leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                             ->leftJoin(
-                                                 'transactions AS source', function (JoinClause $join) {
-                                                 $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
-                                             }
-                                             )
-                                             ->leftJoin(
-                                                 'transactions AS destination', function (JoinClause $join) {
-                                                 $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
-                                                     'destination.amount', '>', 0
-                                                 );
-                                             }
-                                             )
-                                             ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')
-                                             ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
-                                             ->where('transaction_journals.user_id', $this->job->user_id)
-                                             ->where('transaction_types.type', TransactionType::TRANSFER)
-                                             ->where('transaction_journals.date', $date->format('Y-m-d'))
-                                             ->where('destination.amount', $amount)
-                                             ->get(
-                                                 ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
-                                                  'source_accounts.name as source_name', 'destination_accounts.name as destination_name']
-                                             );
-            if ($set->count() > 0) {
-                $filtered = $set->filter(
-                    function (TransactionJournal $journal) use ($asset, $opposing, $description) {
-                        $match   = true;
-                        $compare = [$asset->name, $opposing->name];
-
-                        if ($journal->description !== $description) {
-                            $match = false;
-                        }
-                        // when both are in array match is true. So reverse:
-                        if (!(in_array(app('steam')->tryDecrypt($journal->source_name), $compare)
-                              && in_array(
-                                  app('steam')->tryDecrypt($journal->destination_name), $compare
-                              ))
-                        ) {
-                            $match = false;
-                        }
-
-                        if ($match) {
-                            return $journal;
-                        }
-
-                        return null;
-                    }
-                );
-                if (count($filtered) > 0) {
-                    return true;
-                }
-            }
+                                          ->leftJoin(
+                                              'transactions AS source', function (JoinClause $join) {
+                                              $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
+                                          }
+                                          )
+                                          ->leftJoin(
+                                              'transactions AS destination', function (JoinClause $join) {
+                                              $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
+                                                  'destination.amount', '>', 0
+                                              );
+                                          }
+                                          )
+                                          ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')
+                                          ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
+                                          ->where('transaction_journals.user_id', $this->job->user_id)
+                                          ->where('transaction_types.type', TransactionType::TRANSFER)
+                                          ->where('transaction_journals.date', $date->format('Y-m-d'))
+                                          ->where('destination.amount', $amount)
+                                          ->get(
+                                              ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
+                                               'source_accounts.name as source_name', 'destination_accounts.name as destination_name']
+                                          );
+            $filtered = $this->filterTransferSet($set, $importJournal);
         }
 
 
