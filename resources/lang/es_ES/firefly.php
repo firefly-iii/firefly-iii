@@ -205,7 +205,6 @@ return [
 
     // rules
     'rules'                                      => 'Rules',
-    'rules_explanation'                          => 'Here you can manage rules. Rules are triggered when a transaction is created or updated. Then, if the transaction has certain properties (called "triggers") Firefly will execute the "actions". Combined, you can make Firefly respond in a certain way to new transactions.',
     'rule_name'                                  => 'Name of rule',
     'rule_triggers'                              => 'Rule triggers when',
     'rule_actions'                               => 'Rule will',
@@ -255,14 +254,14 @@ return [
     'warning_transaction_subset'                 => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
     'warning_no_matching_transactions'           => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'                  => 'No valid triggers provided.',
-    'execute_on_existing_transactions'           => 'Execute for existing transactions',
-    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
-    'execute_on_existing_transactions_intro'     => 'When a rule or group has been changed or added, you can execute it for existing transactions',
-    'execute_on_existing_transactions_short'     => 'Existing transactions',
-    'executed_group_on_existing_transactions'    => 'Executed group ":title" for existing transactions',
-    'execute_group_on_existing_transactions'     => 'Execute group ":title" for existing transactions',
+    'apply_rule_selection'                       => 'Apply rule ":title" to a selection of your transactions',
+    'apply_rule_selection_intro'                 => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'         => 'Include transactions from these accounts',
+    'applied_rule_selection'                     => 'Rule ":title" has been applied to your selection.',
     'execute'                                    => 'Execute',
+    'apply_rule_group_selection'                 => 'Apply rule group ":title" to a selection of your transactions',
+    'apply_rule_group_selection_intro'           => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
+    'applied_rule_group_selection'               => 'Rule ":title" has been applied to your selection.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'User action is ":trigger_value"',
