@@ -205,7 +205,6 @@ return [
 
     // rules
     'rules'                                      => 'Regeln',
-    'rules_explanation'                          => 'Hier können Sie Regeln verwalten. Regeln werden ausgelöst, wenn eine Überweisung erstellt oder aktualisert wird. Wenn diese Überweisungen bestimmte Merkmale aufweisen (sogenannte "Trigger") wird Firefly eine "Aktion" ausführen. Zusammengenommen kann Firefly so auf eine bestimmte Art und Weise auf neue Überweisungen reagieren.',
     'rule_name'                                  => 'Name der Regel',
     'rule_triggers'                              => 'Regeln wird ausgelöst wenn',
     'rule_actions'                               => 'Regel wird',
@@ -255,14 +254,14 @@ return [
     'warning_transaction_subset'                 => 'Aus Kapazitätgründen ist diese Liste auf :max_num_transactions Überweisungen limitiert und zeigt möglicherweise nur einen Teil dieser an',
     'warning_no_matching_transactions'           => 'Keine übereinstimmenden Überweisungen gefunden. Aus Kapazitätgründen werden nur die letzten :num_transactions Überweisungen überprüft.',
     'warning_no_valid_triggers'                  => 'Keine gültigen Trigger gefunden.',
-    'execute_on_existing_transactions'           => 'Führe für bestehende Überweisungen aus',
-    'rule_group_select_transactions'             => 'Regelgruppe ":title "auf bestehende Buchungen ausführen',
-    'execute_on_existing_transactions_intro'     => 'Wenn eine Regel oder eine Gruppe geändert oder hinzugefügt wurde, können Sie für bestehende Überweisungen ausgeführt werden',
-    'execute_on_existing_transactions_short'     => 'Bestehende Überweisungen',
-    'executed_group_on_existing_transactions'    => 'Regelgruppe ":title" wurde für bestehende Überweisungen ausgeführt',
-    'execute_group_on_existing_transactions'     => 'Regelgruppe ":title" für bestehende Überweisungen ausführen',
+    'apply_rule_selection'                       => 'Apply rule ":title" to a selection of your transactions',
+    'apply_rule_selection_intro'                 => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'         => 'Überweisungen von diesem Konto einbeziehen',
+    'applied_rule_selection'                     => 'Rule ":title" has been applied to your selection.',
     'execute'                                    => 'Ausführen',
+    'apply_rule_group_selection'                 => 'Apply rule group ":title" to a selection of your transactions',
+    'apply_rule_group_selection_intro'           => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
+    'applied_rule_group_selection'               => 'Rule ":title" has been applied to your selection.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'Die Nutzeraktion ist ":trigger_value"',
