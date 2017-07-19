@@ -100,3 +100,16 @@ body.waiting * {
     float: none;
     display: inline-block;
 }
+
+span.info-box-text a, span.info-box-number a {
+    color: #000;
+}
+
+span.info-box-icon a {
+    color: #fff;
+}
+
+span.info-box-text a:hover, span.info-box-number a:hover {
+    color: #000;
+    text-decoration: underline;
+}

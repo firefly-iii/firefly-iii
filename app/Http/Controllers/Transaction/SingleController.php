@@ -55,6 +55,9 @@ class SingleController extends Controller
     /** @var  PiggyBankRepositoryInterface */
     private $piggyBanks;
 
+    /** @var  JournalRepositoryInterface */
+    private $repository;
+
     /**
      *
      */
@@ -75,6 +78,7 @@ class SingleController extends Controller
                 $this->piggyBanks  = app(PiggyBankRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->currency    = app(CurrencyRepositoryInterface::class);
+                $this->repository  = app(JournalRepositoryInterface::class);
 
                 View::share('title', trans('firefly.transactions'));
                 View::share('mainTitleIcon', 'fa-repeat');
@@ -200,7 +204,7 @@ class SingleController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
+    public function destroy(TransactionJournal $transactionJournal)
     {
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($transactionJournal)) {
@@ -210,7 +214,7 @@ class SingleController extends Controller
         $type = $transactionJournal->transactionTypeStr();
         Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
 
-        $repository->delete($transactionJournal);
+        $this->repository->delete($transactionJournal);
 
         Preferences::mark();
 
@@ -229,10 +233,7 @@ class SingleController extends Controller
             return $this->redirectToAccount($journal);
         }
         // @codeCoverageIgnoreEnd
-
-        $count = $journal->transactions()->count();
-
-        if ($count > 2) {
+        if ($this->isSplitJournal($journal)) {
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
@@ -248,6 +249,7 @@ class SingleController extends Controller
         $destinationAccounts = $journal->destinationAccountList();
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $pTransaction        = $journal->positiveTransaction();
+        $foreignCurrency     = !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency;
         $preFilled           = [
             'date'                     => $journal->dateAsString(),
             'interest_date'            => $journal->dateAsString('interest_date'),
@@ -276,8 +278,8 @@ class SingleController extends Controller
             'currency'                 => $pTransaction->transactionCurrency,
             'source_currency'          => $pTransaction->transactionCurrency,
             'native_currency'          => $pTransaction->transactionCurrency,
-            'foreign_currency'         => !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency,
-            'destination_currency'     => !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency,
+            'foreign_currency'         => $foreignCurrency,
+            'destination_currency'     => $foreignCurrency,
         ];
 
         // amounts for withdrawals and deposits:
@@ -286,21 +288,6 @@ class SingleController extends Controller
             $preFilled['amount']   = $pTransaction->foreign_amount;
             $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
-
-        if ($journal->isTransfer() && !is_null($pTransaction->foreign_amount)) {
-            $preFilled['destination_amount']   = $pTransaction->foreign_amount;
-            $preFilled['destination_currency'] = $pTransaction->foreignCurrency;
-        }
-
-        // fixes for cash accounts:
-        if ($journal->isWithdrawal() && $destinationAccounts->first()->accountType->type === AccountType::CASH) {
-            $preFilled['destination_account_name'] = '';
-        }
-
-        if ($journal->isDeposit() && $sourceAccounts->first()->accountType->type === AccountType::CASH) {
-            $preFilled['source_account_name'] = '';
-        }
-
 
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'transactions');
@@ -419,5 +406,21 @@ class SingleController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    private function isSplitJournal(TransactionJournal $journal): bool
+    {
+        $count = $this->repository->countTransactions($journal);
+
+        if ($count > 2) {
+            return true;
+        }
+
+        return false;
     }
 }

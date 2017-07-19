@@ -79,6 +79,16 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * @param TransactionJournal $journal
      *
+     * @return int
+     */
+    public function countTransactions(TransactionJournal $journal): int
+    {
+        return $journal->transactions()->count();
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
      * @return bool
      */
     public function delete(TransactionJournal $journal): bool
