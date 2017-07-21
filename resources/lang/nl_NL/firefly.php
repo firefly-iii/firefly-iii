@@ -541,6 +541,8 @@ return [
     'average_bill_amount_overall'                => 'Gemiddeld contractbedrag (gehele periode)',
     'not_or_not_yet'                             => '(nog) niet',
     'not_expected_period'                        => 'Niet verwacht deze periode',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'                        => 'Overzicht voor crediteur ":name"',
