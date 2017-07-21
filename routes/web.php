@@ -450,8 +450,8 @@ Route::group(
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
     // intro things:
-    Route::get('intro/{route}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
-    Route::post('intro/finished/{route}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+    Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
+    Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
 
 }
 );

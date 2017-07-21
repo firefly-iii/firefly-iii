@@ -21,7 +21,7 @@ function setupIntro(steps) {
                          steps: steps,
                          exitOnEsc: true,
                          exitOnOverlayClick: true,
-                         keyboardNavigation: true,
+                         keyboardNavigation: true
                      });
     intro.oncomplete(reportIntroFinished);
     intro.onexit(reportIntroFinished);

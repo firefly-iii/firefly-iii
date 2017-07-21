@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Preferences;
 use Response;
 
 /**
@@ -24,33 +23,46 @@ class IntroController
 
     /**
      * @param string $route
+     * @param string $specificPage
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getIntroSteps(string $route)
+    public function getIntroSteps(string $route, string $specificPage = '')
     {
-        $route    = str_replace('.', '_', $route);
-        $elements = config(sprintf('intro.%s', $route));
-        $steps    = [];
-        if (is_array($elements) && count($elements) > 0) {
-            foreach ($elements as $key => $options) {
-                $currentStep = $options;
+        $steps         = $this->getBasicSteps($route);
+        $specificSteps = $this->getSpecificSteps($route, $specificPage);
+        if (count($specificSteps) === 0) {
+            return Response::json($steps);
+        }
+        if ($this->hasOutroStep($route)) {
+            // save last step:
+            $lastStep = $steps[count($steps) - 1];
+            // remove last step:
+            array_pop($steps);
+            // merge arrays and add last step again
+            $steps   = array_merge($steps, $specificSteps);
+            $steps[] = $lastStep;
 
-                // point to HTML element when not an intro or outro:
-                if (!in_array($key, ['intro', 'outro'])) {
-                    $currentStep['element'] = $options['selector'];
-                }
-
-                // get the text:
-                $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
-
-
-                // save in array:
-                $steps[] = $currentStep;
-            }
+        }
+        if (!$this->hasOutroStep($route)) {
+            $steps = array_merge($steps, $specificSteps);
         }
 
         return Response::json($steps);
+    }
+
+    /**
+     * @param string $route
+     *
+     * @return bool
+     */
+    public function hasOutroStep(string $route): bool
+    {
+        $routeKey = str_replace('.', '_', $route);
+        $elements = config(sprintf('intro.%s', $routeKey));
+        $keys     = array_keys($elements);
+
+        return in_array('outro', $keys);
     }
 
     /**
@@ -61,9 +73,67 @@ class IntroController
     public function postFinished(string $route)
     {
         $key = 'shown_demo_' . $route;
-        Preferences::set($key, true);
+
+        //Preferences::set($key, true);
 
         return Response::json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
+    }
+
+    /**
+     * @param string $route
+     *
+     * @return array
+     */
+    private function getBasicSteps(string $route): array
+    {
+        $routeKey = str_replace('.', '_', $route);
+        $elements = config(sprintf('intro.%s', $routeKey));
+        $steps    = [];
+        if (is_array($elements) && count($elements) > 0) {
+            foreach ($elements as $key => $options) {
+                $currentStep = $options;
+
+                // get the text:
+                $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
+
+
+                // save in array:
+                $steps[] = $currentStep;
+            }
+        }
+
+        return $steps;
+    }
+
+    /**
+     * @param string $route
+     * @param string $specificPage
+     *
+     * @return array
+     */
+    private function getSpecificSteps(string $route, string $specificPage): array
+    {
+        $steps = [];
+
+        // user is on page with specific instructions:
+        if (strlen($specificPage) > 0) {
+            $routeKey = str_replace('.', '_', $route);
+            $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
+            if (is_array($elements) && count($elements) > 0) {
+                foreach ($elements as $key => $options) {
+                    $currentStep            = $options;
+                    $currentStep['element'] = $options['selector'];
+
+                    // get the text:
+                    $currentStep['intro'] = trans('intro.' . $route . '_' . $specificPage . '_' . $key);
+
+                    // save in array:
+                    $steps[] = $currentStep;
+                }
+            }
+        }
+
+        return $steps;
     }
 
 }

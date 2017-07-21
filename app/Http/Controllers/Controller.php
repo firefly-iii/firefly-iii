@@ -67,12 +67,15 @@ class Controller extends BaseController
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $route     = Route::currentRouteName();
+                    $route         = Route::currentRouteName();
                     $originalRoute = $route;
-                    $route     = str_replace('.', '_', $route);
-                    $key       = 'shown_demo_' . $route;
-                    $config    = config('intro.' . $route);
-                    $shownDemo = Preferences::get($key, false)->data;
+
+                    // TODO get parameters from route?
+
+                    $route         = str_replace('.', '_', $route);
+                    $key           = 'shown_demo_' . $route;
+                    $config        = config('intro.' . $route);
+                    $shownDemo     = Preferences::get($key, false)->data;
                     if (is_null($config) || (is_array($config) && count($config) === 0)) {
                         // no demo when no data for demo.
                         $shownDemo = true;

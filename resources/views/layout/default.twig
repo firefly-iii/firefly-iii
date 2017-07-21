@@ -184,7 +184,7 @@
 {% if not shownDemo %}
     <script type="text/javascript">
         var routeForTour = "{{ current_route_name }}";
-        var routeStepsUri = "{{ route('json.intro', [current_route_name]) }}";
+        var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
         var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name]) }}";
     </script>
     <script type="text/javascript" src="lib/intro/intro.min.js"></script>
