@@ -542,6 +542,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'average_bill_amount_overall'                => 'Durchschnittliche Rechnungssumme (gesamt)',
     'not_or_not_yet'                             => '(noch) nicht',
     'not_expected_period'                        => 'Diesen Zeitraum nicht erwartet',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => 'Details für Girokonto ":name"',
     'details_for_expense'                        => 'Details für Debitor ":name"',
