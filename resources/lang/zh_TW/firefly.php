@@ -541,6 +541,8 @@ return [
     'average_bill_amount_overall'                => '平均賬單金額 （總計）',
     'not_or_not_yet'                             => 'Not (yet)',
     'not_expected_period'                        => 'Not expected this period',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => '資產帳戶的詳細資訊 ":name"',
     'details_for_expense'                        => 'Details for expense account ":name"',
