@@ -541,6 +541,8 @@ return [
     'average_bill_amount_overall'                => 'Average bill amount (overall)',
     'not_or_not_yet'                             => 'Not (yet)',
     'not_expected_period'                        => 'Not expected this period',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => 'Détails pour le compte d’actif ":name"',
     'details_for_expense'                        => 'Détail du compte de dépenses ":name"',
