@@ -25,8 +25,7 @@ return [
     ],
     // accounts: create
     'accounts_create'                => [
-        'intro' => [],
-        'iban'  => ['element' => '#ffInput_iban'],
+        'iban' => ['element' => '#ffInput_iban'],
     ],
     // extra text for asset account creation.
     'accounts_create_asset'          => [
@@ -45,14 +44,13 @@ return [
         'list_of_budgets'  => ['element' => '#budgetList'],
 
     ],
-    // tags: wait for upgrade
     // reports: index, default report, audit, budget, cat, tag
     'reports_index'                  => [
         'intro'               => [],
         'inputReportType'     => ['element' => '#inputReportType'],
         'inputAccountsSelect' => ['element' => '#inputAccountsSelect'],
         'inputDateRange'      => ['element' => '#inputDateRange'],
-        'extra-options-box'   => ['element' => '#extra-options-box'],
+        'extra-options-box'   => ['element' => '#extra-options-box', 'position' => 'top'],
     ],
     'reports_report_default'         => [
         'intro' => [],
@@ -80,7 +78,6 @@ return [
 
     // transactions: create (also per type!)
     'transactions_create'            => [
-        'intro'            => [],
         'switch_box'       => ['element' => '#switch-box'],
         'ffInput_category' => ['element' => '#ffInput_category'],
     ],
@@ -97,27 +94,39 @@ return [
 
     // piggies: index, create, show
     'piggy-banks_index'              => [
-        'intro'         => [],
         'saved'         => ['element' => '.piggySaved'],
         'button'        => ['element' => '.piggyBar',],
         'accountStatus' => ['element' => '#accountStatus', 'position' => 'top'],
     ],
     'piggy-banks_create'             => [
-        'intro' => [],
+        'name'  => ['element' => '#ffInput_name'],
+        'date'  => ['element' => '#ffInput_targetdate'],
+
     ],
     'piggy-banks_show'               => [
-        'intro' => [],
+        'intro'        => [],
+        'piggyChart'   => ['element' => '#piggyChart'],
+        'piggyDetails' => ['element' => '#piggyDetails'],
+        'piggyEvents'  => ['element' => '#piggyEvents'],
     ],
 
     // bills: index, create, show
     'bills_index'                    => [
-        'intro' => [],
+        'paid_in_period'     => ['element' => '.paid_in_period'],
+        'expected_in_period' => ['element' => '.expected_in_period'],
     ],
     'bills_create'                   => [
-        'intro' => [],
+        'name'               => ['element' => '#name_holder'],
+        'match'              => ['element' => '#match_holder'],
+        'amount_min_holder'  => ['element' => '#amount_min_holder'],
+        'repeat_freq_holder' => ['element' => '#repeat_freq_holder'],
+        'skip_holder'        => ['element' => '#skip_holder'],
     ],
     'bills_show'                     => [
-        'intro' => [],
+        'billInfo'    => ['element' => '#billInfo'],
+        'billButtons' => ['element' => '#billButtons'],
+        'billChart'   => ['element' => '#billChart', 'position' => 'top'],
+
     ],
     // rules: index, create-rule, edit-rule
     'rules_index'                    => [
@@ -130,36 +139,21 @@ return [
         'outro'          => [],
     ],
     'rules_create'                   => [
-        'intro' => [],
-    ],
-    'rules_edit'                     => [
-        'intro' => [],
-    ],
-    // import: index, config-steps
-    'import_index'                   => [
-        'intro' => [],
-    ],
-    'import_configure'               => [
-        'intro' => [],
-    ],
-    // export: index
-    'export_index'                   => [
-        'intro' => [],
+        'mandatory'          => ['element' => '#mandatory'],
+        'ruletriggerholder'  => ['element' => '.rule-trigger-box'],
+        'test_rule_triggers' => ['element' => '.test_rule_triggers'],
+        'actions'            => ['element' => '.rule-action-box', 'position' => 'top'],
     ],
     // preferences: index
     'preferences_index'              => [
-        'intro' => [],
+        'tabs'  => ['element' => '.nav-tabs'],
     ],
     // currencies: index, create
     'currencies_index'               => [
-        'intro' => [],
+        'intro'   => [],
+        'default' => ['element' => '.defaultCurrency'],
     ],
     'currencies_create'              => [
-        'intro' => [],
+        'code'  => ['element' => '#ffInput_code',],
     ],
-    // admin: index
-    'admin_index'                    => [
-        'intro' => [],
-    ],
-
 ];

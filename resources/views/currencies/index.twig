@@ -36,7 +36,7 @@
                                     </td>
                                     <td>{{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})</td>
                                     <td>{{ currency.decimal_places }}</td>
-                                    <td>
+                                    <td class="defaultCurrency">
                                         {% if currency.id == defaultCurrency.id %}
                                             <span class="label label-success">{{ 'default_currency'|_ }}</span>
                                         {% else %}
