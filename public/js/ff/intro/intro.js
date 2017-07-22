@@ -10,8 +10,9 @@
 
 $(function () {
     "use strict";
-    //alert('show user intro for ' + route_for_tour);
-    $.getJSON(routeStepsUri).done(setupIntro)
+    if(!forceDemoOff) {
+        $.getJSON(routeStepsUri).done(setupIntro)
+    }
 });
 
 function setupIntro(steps) {

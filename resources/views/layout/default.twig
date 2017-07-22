@@ -33,6 +33,9 @@
     <script src="js/lib/html5shiv.min.js"></script>
     <script src="js/lib/respond.min.js"></script>
     <![endif]-->
+    <script type="text/javascript">
+        var forceDemoOff = false;
+    </script>
 
     {# favicons #}
     {% include('partials.favicons') %}
@@ -185,7 +188,7 @@
     <script type="text/javascript">
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
-        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name]) }}";
+        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, what|default("")]) }}";
     </script>
     <script type="text/javascript" src="lib/intro/intro.min.js"></script>
     <script type="text/javascript" src="js/ff/intro/intro.js"></script>

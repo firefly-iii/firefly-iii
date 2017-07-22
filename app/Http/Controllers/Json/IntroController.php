@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Support\Facades\Preferences;
+use Log;
 use Response;
 
 /**
@@ -60,20 +62,27 @@ class IntroController
     {
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
-        $keys     = array_keys($elements);
+        if (!is_array($elements)) {
+            return false;
+        }
+        $keys = array_keys($elements);
 
         return in_array('outro', $keys);
     }
 
     /**
      * @param string $route
+     * @param string $specialPage
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postFinished(string $route)
+    public function postFinished(string $route, string $specialPage = '')
     {
         $key = 'shown_demo_' . $route;
-
+        if ($specialPage !== '') {
+            $key .= '_' . $specialPage;
+        }
+        Log::debug(sprintf('Going to mark the following route as doen: %s with special "%s" (%s)', $route, $specialPage, $key));
         //Preferences::set($key, true);
 
         return Response::json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
@@ -121,8 +130,7 @@ class IntroController
             $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
             if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
-                    $currentStep            = $options;
-                    $currentStep['element'] = $options['selector'];
+                    $currentStep = $options;
 
                     // get the text:
                     $currentStep['intro'] = trans('intro.' . $route . '_' . $specificPage . '_' . $key);
