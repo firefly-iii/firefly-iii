@@ -474,31 +474,32 @@ class ImportStorage
     private function verifyDoubleTransfer(TransactionType $transactionType, ImportJournal $importJournal): bool
     {
         if ($transactionType->type === TransactionType::TRANSFER) {
-            $amount   = Steam::positive($importJournal->getAmount());
-            $date     = $importJournal->getDate($this->dateFormat);
-            $set      = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                          ->leftJoin(
-                                              'transactions AS source', function (JoinClause $join) {
-                                              $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
-                                          }
-                                          )
-                                          ->leftJoin(
-                                              'transactions AS destination', function (JoinClause $join) {
-                                              $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
-                                                  'destination.amount', '>', 0
-                                              );
-                                          }
-                                          )
-                                          ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')
-                                          ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
-                                          ->where('transaction_journals.user_id', $this->job->user_id)
-                                          ->where('transaction_types.type', TransactionType::TRANSFER)
-                                          ->where('transaction_journals.date', $date->format('Y-m-d'))
-                                          ->where('destination.amount', $amount)
-                                          ->get(
-                                              ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
-                                               'source_accounts.name as source_name', 'destination_accounts.name as destination_name']
-                                          );
+            $amount = Steam::positive($importJournal->getAmount());
+            $date   = $importJournal->getDate($this->dateFormat);
+            $set    = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                        ->leftJoin(
+                                            'transactions AS source', function (JoinClause $join) {
+                                            $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
+                                        }
+                                        )
+                                        ->leftJoin(
+                                            'transactions AS destination', function (JoinClause $join) {
+                                            $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
+                                                'destination.amount', '>', 0
+                                            );
+                                        }
+                                        )
+                                        ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')
+                                        ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
+                                        ->where('transaction_journals.user_id', $this->job->user_id)
+                                        ->where('transaction_types.type', TransactionType::TRANSFER)
+                                        ->where('transaction_journals.date', $date->format('Y-m-d'))
+                                        ->where('destination.amount', $amount)
+                                        ->get(
+                                            ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
+                                             'source_accounts.name as source_name', 'destination_accounts.name as destination_name']
+                                        );
+
             return $this->filterTransferSet($set, $importJournal);
         }
 

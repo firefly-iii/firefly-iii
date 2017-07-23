@@ -213,11 +213,11 @@ class MassController extends Controller
                 if ($journal) {
                     // get optional fields:
                     $what              = strtolower($journal->transactionTypeStr());
-                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ??  0;
+                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? 0;
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
-                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;
+                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? 0;
                     $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
-                    $budgetId          = $request->get('budget_id')[$journal->id] ??  0;
+                    $budgetId          = $request->get('budget_id')[$journal->id] ?? 0;
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();
                     $amount            = round($request->get('amount')[$journal->id], 12);

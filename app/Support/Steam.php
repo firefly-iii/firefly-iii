@@ -249,21 +249,6 @@ class Steam
 
         return $value;
     }
-    /**
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function tryDecrypt($value)
-    {
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            // do not care.
-        }
-
-        return $value;
-    }
 
     /**
      * @param array $accounts
@@ -359,6 +344,22 @@ class Steam
         }
 
         return $amount;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function tryDecrypt($value)
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            // do not care.
+        }
+
+        return $value;
     }
 
 }

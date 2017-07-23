@@ -311,7 +311,7 @@ class Amount
             $coloured = false;
             $format   = '<span class="text-info">%s</span>';
         }
-        if($transaction->transaction_type_type === TransactionType::OPENING_BALANCE) {
+        if ($transaction->transaction_type_type === TransactionType::OPENING_BALANCE) {
             $amount = strval($transaction->transaction_amount);
         }
 

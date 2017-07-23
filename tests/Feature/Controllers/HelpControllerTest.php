@@ -56,11 +56,8 @@ class HelpControllerTest extends TestCase
         $help->shouldReceive('getFromGithub')->withArgs(['index', 'nl_NL'])->andReturn('')->once();
 
         // is US in cache?
-        $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(true)->twice();
+        $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(true)->once();
         $help->shouldReceive('getFromCache')->withArgs(['index', 'en_US'])->andReturn('US from cache.')->once();
-
-        // put US in cache:
-        $help->shouldReceive('putInCache')->once();
 
         $this->be($this->user());
         $response = $this->get(route('help.show', ['index']));
@@ -87,11 +84,8 @@ class HelpControllerTest extends TestCase
         $help->shouldReceive('getFromGithub')->withArgs(['index', 'nl_NL'])->andReturn('')->once();
 
         // is US in cache?
-        $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(false)->twice();
+        $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(false)->once();
         $help->shouldReceive('getFromGithub')->withArgs(['index', 'en_US'])->andReturn('')->once();
-
-        // put US in cache:
-        $help->shouldReceive('putInCache')->once();
 
         $this->be($this->user());
         $response = $this->get(route('help.show', ['index']));

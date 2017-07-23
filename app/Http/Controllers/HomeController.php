@@ -138,14 +138,14 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count',  'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
+            'index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
         );
     }
 
     public function routes()
     {
         $set    = RouteFacade::getRoutes();
-        $ignore = ['chart.','javascript.','json.','report-data.','popup.','debugbar.'];
+        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.'];
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
@@ -157,7 +157,7 @@ class HomeController extends Controller
                     }
                 }
                 if (!$found) {
-                    echo 'touch '.$route->getName() . '.md;';
+                    echo 'touch ' . $route->getName() . '.md;';
                 }
 
             }

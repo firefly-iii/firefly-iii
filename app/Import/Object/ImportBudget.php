@@ -180,7 +180,7 @@ class ImportBudget
 
         Log::debug('Finding a mapped budget based on', $array);
 
-        $search  = intval($array['mapped']);
+        $search = intval($array['mapped']);
         $budget = $this->repository->find($search);
 
         if (is_null($budget->id)) {

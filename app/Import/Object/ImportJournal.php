@@ -66,19 +66,6 @@ class ImportJournal
     private $user;
 
     /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        if ($this->description === '') {
-            return '(no description)';
-        }
-
-        return $this->description;
-    }
-
-
-    /**
      * ImportEntry constructor.
      */
     public function __construct()
@@ -155,6 +142,18 @@ class ImportJournal
         }
 
         return $date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        if ($this->description === '') {
+            return '(no description)';
+        }
+
+        return $this->description;
     }
 
     /**

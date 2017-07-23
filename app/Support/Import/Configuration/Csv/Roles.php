@@ -135,7 +135,7 @@ class Roles implements ConfigurationInterface
         $count  = $config['column-count'];
         for ($i = 0; $i < $count; $i++) {
             $role    = $config['column-roles'][$i] ?? '_ignore';
-            $mapping = $config['column-do-mapping'][$i]  ?? false;
+            $mapping = $config['column-do-mapping'][$i] ?? false;
 
             if ($role === '_ignore' && $mapping === true) {
                 $mapping = false;
@@ -160,7 +160,7 @@ class Roles implements ConfigurationInterface
         $count      = $config['column-count'];
         $toBeMapped = 0;
         for ($i = 0; $i < $count; $i++) {
-            $mapping = $config['column-do-mapping'][$i]  ?? false;
+            $mapping = $config['column-do-mapping'][$i] ?? false;
             if ($mapping === true) {
                 $toBeMapped++;
             }

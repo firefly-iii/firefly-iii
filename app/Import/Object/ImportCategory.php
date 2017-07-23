@@ -174,7 +174,7 @@ class ImportCategory
 
         Log::debug('Finding a mapped category based on', $array);
 
-        $search  = intval($array['mapped']);
+        $search   = intval($array['mapped']);
         $category = $this->repository->find($search);
 
         if (is_null($category->id)) {
