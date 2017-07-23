@@ -80,6 +80,8 @@ return [
     'user_id_is'                                 => 'Votre identifiant d’utilisateur est <strong>:user</strong>',
     'field_supports_markdown'                    => 'Ce champ prend en charge la <a href="https://en.support.wordpress.com/markdown-quick-reference/">syntaxe Markdown</a>.',
     'need_more_help'                             => 'Si vous désirez plus de renseignements sur l\'utilisation de Firefly III, merci <a href="https://github.com/firefly-iii/firefly-iii/issues">d\'ouvrir un ticket sur Github</a>.',
+    'reenable_intro_text'                        => 'You can also reenable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
+    'intro_boxes_after_refresh'                  => 'The introduction boxes will reappear when you refresh the page.',
     'nothing_to_display'                         => 'Il n’y a aucune transaction à afficher',
     'show_all_no_filter'                         => 'Montrer toutes les transactions sans les classer par date.',
     'expenses_by_category'                       => 'Dépenses par catégorie',
