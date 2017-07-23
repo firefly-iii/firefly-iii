@@ -69,6 +69,23 @@ class IntroController
 
         return in_array('outro', $keys);
     }
+    /**
+     * @param string $route
+     * @param string $specialPage
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postEnable(string $route, string $specialPage = '')
+    {
+        $key = 'shown_demo_' . $route;
+        if ($specialPage !== '') {
+            $key .= '_' . $specialPage;
+        }
+        Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
+        Preferences::set($key, false);
+
+        return Response::json(['message' => trans('firefly.intro_boxes_after_refresh')]);
+    }
 
     /**
      * @param string $route
@@ -82,8 +99,8 @@ class IntroController
         if ($specialPage !== '') {
             $key .= '_' . $specialPage;
         }
-        Log::debug(sprintf('Going to mark the following route as doen: %s with special "%s" (%s)', $route, $specialPage, $key));
-        //Preferences::set($key, true);
+        Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
+        Preferences::set($key, true);
 
         return Response::json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }

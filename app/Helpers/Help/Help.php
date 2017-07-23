@@ -30,6 +30,8 @@ class Help implements HelpInterface
     /** @var string */
     protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36';
 
+    const CACHEKEY = 'help_%s_%s';
+
     /**
      * @param string $route
      * @param string $language
@@ -38,7 +40,7 @@ class Help implements HelpInterface
      */
     public function getFromCache(string $route, string $language): string
     {
-        $line = sprintf('help.%s.%s', $route, $language);
+        $line = sprintf(self::CACHEKEY, $route, $language);
 
         return Cache::get($line);
     }
@@ -64,12 +66,12 @@ class Help implements HelpInterface
             return '';
         }
 
-
         Log::debug(sprintf('Status code is %d', $result->status_code));
 
         if ($result->status_code === 200) {
             $content = trim($result->body);
         }
+
         if (strlen($content) > 0) {
             Log::debug('Content is longer than zero. Expect something.');
             $converter = new CommonMarkConverter();
@@ -98,7 +100,7 @@ class Help implements HelpInterface
      */
     public function inCache(string $route, string $language): bool
     {
-        $line   = sprintf('help.%s.%s', $route, $language);
+        $line   = sprintf(self::CACHEKEY, $route, $language);
         $result = Cache::has($line);
         if ($result) {
             Log::debug(sprintf('Cache has this entry: %s', 'help.' . $route . '.' . $language));
@@ -120,7 +122,7 @@ class Help implements HelpInterface
      */
     public function putInCache(string $route, string $language, string $content)
     {
-        $key = sprintf('help.%s.%s', $route, $language);
+        $key = sprintf(self::CACHEKEY, $route, $language);
         if (strlen($content) > 0) {
             Log::debug(sprintf('Will store entry in cache: %s', $key));
             Cache::put($key, $content, 10080); // a week.

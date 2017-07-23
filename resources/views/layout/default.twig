@@ -46,7 +46,7 @@
 
     <header class="main-header">
 
-        <!-- Logo -->
+        {# Logo #}
         <a href="{{ route('index') }}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">FF</span>
@@ -65,7 +65,7 @@
                 <ul class="nav navbar-nav">
 
                     <li class="hidden-sm hidden-xs">
-                        <a href="#" id="help" data-route="{{ original_route_name }}">
+                        <a href="#" id="help" data-route="{{ original_route_name }}" data-extra="{{ what|default("") }}">
                             <i class="fa fa-question-circle" data-route="{{ original_route_name }}"></i>
                         </a>
                     </li>
@@ -168,6 +168,9 @@
             <div class="modal-footer">
                 <small class="pull-left">
                     {{ 'need_more_help'|_ }}
+                </small><br />
+                <small class="pull-left">
+                    {{ trans('firefly.reenable_intro_text')|raw }}
                 </small>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
             </div>
