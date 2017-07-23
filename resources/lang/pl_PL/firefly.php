@@ -263,7 +263,7 @@ return [
     'execute'                                    => 'Wykonaj',
     'apply_rule_group_selection'                 => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'           => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
-    'applied_rule_group_selection'               => 'Rule ":title" has been applied to your selection.',
+    'applied_rule_group_selection'               => 'Rule group ":title" has been applied to your selection.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'Akcją użytkownika jest ":trigger_value"',
