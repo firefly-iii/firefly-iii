@@ -2,6 +2,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.6.3] - 2017-07-23
+
+This will be the last release to support PHP 7.0.
+
+### Added
+- New guidelines and new introduction tour to aid new users.
+- Rules can now be applied at will to transactions, not just rule groups.
+
+### Changed
+- Improved category overview.
+- Improved budget overview.
+- Improved budget report.
+- Improved command line import responsiveness and speed.
+- All code comparisons are now strict.
+- Improve search page.
+- Charts are easier to read thanks to @simonsmiley
+- Fixed #708.
+
+### Fixed
+- Fixed bug where import would not respect default account. #694
+- Fixed various broken paths
+- Fixed several import inconsistencies.
+- Various bug fixes.
+
+### Security
+- Initial release.
+
+
+
 ## [4.6.2] - 2017-07-08
 ### Added
 - Links added to boxes, idea by @simonsmiley
