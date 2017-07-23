@@ -171,7 +171,7 @@ class BudgetController extends Controller
      *
      * @return View
      */
-    public function index(string $moment = null)
+    public function index(?string $moment)
     {
         $range = Preferences::get('viewRange', '1M')->data;
         $start = session('start', new Carbon);

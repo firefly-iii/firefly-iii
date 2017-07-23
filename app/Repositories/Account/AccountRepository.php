@@ -500,7 +500,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return null|string
      */
-    private function filterIban(string $iban = null)
+    private function filterIban(?string $iban)
     {
         if (is_null($iban)) {
             return null;

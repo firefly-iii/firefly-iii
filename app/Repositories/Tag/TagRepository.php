@@ -253,7 +253,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return string
      */
-    public function sumOfTag(Tag $tag, Carbon $start = null, Carbon $end = null): string
+    public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);

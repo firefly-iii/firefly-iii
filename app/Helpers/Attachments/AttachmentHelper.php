@@ -99,7 +99,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model, array $files = null): bool
+    public function saveAttachmentsForModel(Model $model, ?array $files): bool
     {
         if (is_array($files)) {
             foreach ($files as $entry) {

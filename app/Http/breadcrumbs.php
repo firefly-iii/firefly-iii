@@ -805,7 +805,7 @@ Breadcrumbs::register(
  * MASS TRANSACTION EDIT / DELETE
  */
 Breadcrumbs::register(
-    'transactions.mass.edit', function (BreadCrumbGenerator $breadcrumbs, Collection $journals) {
+    'transactions.mass.edit', function (BreadCrumbGenerator $breadcrumbs, Collection $journals): void {
 
     if ($journals->count() > 0) {
         $journalIds = $journals->pluck('id')->toArray();
@@ -817,6 +817,7 @@ Breadcrumbs::register(
     }
 
     $breadcrumbs->parent('index');
+    return;
 }
 );
 

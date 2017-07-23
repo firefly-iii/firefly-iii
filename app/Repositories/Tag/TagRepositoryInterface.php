@@ -133,7 +133,7 @@ interface TagRepositoryInterface
      *
      * @return string
      */
-    public function sumOfTag(Tag $tag, Carbon $start = null, Carbon $end = null): string;
+    public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string;
 
     /**
      * @param Tag $tag

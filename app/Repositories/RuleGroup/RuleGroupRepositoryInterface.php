@@ -39,7 +39,7 @@ interface RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null): bool;
+    public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool;
 
     /**
      * @param int $ruleGroupId

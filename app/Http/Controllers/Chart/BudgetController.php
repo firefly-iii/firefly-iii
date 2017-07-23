@@ -163,7 +163,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAsset(Budget $budget, BudgetLimit $budgetLimit = null)
+    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit)
     {
         $cache = new CacheProperties;
         $cache->addProperty($budget->id);
@@ -208,7 +208,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseCategory(Budget $budget, BudgetLimit $budgetLimit = null)
+    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit)
     {
         $cache = new CacheProperties;
         $cache->addProperty($budget->id);
@@ -255,7 +255,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseExpense(Budget $budget, BudgetLimit $budgetLimit = null)
+    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit)
     {
         $cache = new CacheProperties;
         $cache->addProperty($budget->id);

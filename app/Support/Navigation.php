@@ -135,7 +135,7 @@ class Navigation
      *
      * @return Carbon
      */
-    public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null): Carbon
+    public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, ?Carbon $maxDate): Carbon
     {
         $functionMap = [
             '1D'        => 'endOfDay',
