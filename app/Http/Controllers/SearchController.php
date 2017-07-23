@@ -15,7 +15,6 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Response;
 use View;
 

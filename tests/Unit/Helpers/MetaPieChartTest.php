@@ -63,9 +63,6 @@ class MetaPieChartTest extends TestCase
 
         // mock all repositories:
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $tagRepos      = $this->mock(TagRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
@@ -126,9 +123,6 @@ class MetaPieChartTest extends TestCase
 
         // mock all repositories:
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $tagRepos      = $this->mock(TagRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);

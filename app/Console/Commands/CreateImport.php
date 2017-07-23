@@ -55,6 +55,7 @@ class CreateImport extends Command
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five exactly.
      */
     public function handle()
     {

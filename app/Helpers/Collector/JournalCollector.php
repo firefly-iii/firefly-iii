@@ -89,8 +89,6 @@ class JournalCollector implements JournalCollectorInterface
             'account_types.type as account_type',
         ];
     /** @var  bool */
-    private $filterInternalTransfers;
-    /** @var  bool */
     private $filterTransfers = false;
     /** @var array */
     private $filters = [InternalTransferFilter::class];

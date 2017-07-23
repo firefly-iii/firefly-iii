@@ -135,8 +135,8 @@ class MassController extends Controller
          * @var TransactionJournal $journal
          */
         foreach ($journals as $index => $journal) {
-            $sources      = $journal->sourceAccountList($journal);
-            $destinations = $journal->destinationAccountList($journal);
+            $sources      = $journal->sourceAccountList();
+            $destinations = $journal->destinationAccountList();
             if ($sources->count() > 1) {
                 $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;

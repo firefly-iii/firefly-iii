@@ -246,7 +246,7 @@ class RuleGroupController extends Controller
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(RuleGroupFormRequest $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {

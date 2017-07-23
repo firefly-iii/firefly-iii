@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: routeForTour, routeStepsUri, routeForFinishedTour */
+/** global: routeForTour, routeStepsUri, routeForFinishedTour, forceDemoOff */
 
 $(function () {
     "use strict";

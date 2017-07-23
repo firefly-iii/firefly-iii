@@ -176,7 +176,7 @@ class ImportStorage
      *
      * @return bool
      */
-    private function filterTransferSet(Collection $set, ImportJournal $importJournal)
+    private function filterTransferSet(Collection $set, ImportJournal $importJournal): bool
     {
         $amount      = Steam::positive($importJournal->getAmount());
         $asset       = $importJournal->asset->getAccount();
@@ -216,6 +216,8 @@ class ImportStorage
 
     /**
      * @param ImportJournal $importJournal
+     *
+     * @param Account       $account
      *
      * @return TransactionCurrency
      */
@@ -474,8 +476,7 @@ class ImportStorage
         if ($transactionType->type === TransactionType::TRANSFER) {
             $amount   = Steam::positive($importJournal->getAmount());
             $date     = $importJournal->getDate($this->dateFormat);
-            $set      = TransactionJournal::
-            leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            $set      = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                           ->leftJoin(
                                               'transactions AS source', function (JoinClause $join) {
                                               $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
@@ -498,7 +499,7 @@ class ImportStorage
                                               ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
                                                'source_accounts.name as source_name', 'destination_accounts.name as destination_name']
                                           );
-            $filtered = $this->filterTransferSet($set, $importJournal);
+            return $this->filterTransferSet($set, $importJournal);
         }
 
 

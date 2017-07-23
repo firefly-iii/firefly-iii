@@ -24,8 +24,6 @@ function showHelp(e) {
         specialPage = '';
     }
     $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
-    $('#helpTitle').html('Please hold...');
-
     $('#helpModal').modal('show');
     $('#helpTitle').html('Help for this page');
     $.getJSON('help/' + encodeURI(route)).done(function (data) {

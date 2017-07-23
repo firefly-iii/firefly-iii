@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart */
+/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart, noDataForChart */
 var allCharts = {};
 
 /*
@@ -240,13 +240,14 @@ function pieChart(URI, container) {
  * @param colorData
  */
 function drawAChart(URI, container, chartType, options, colorData) {
-    if ($('#' + container).length === 0) {
+    var containerObj = $('#' + container);
+    if (containerObj.length === 0) {
         return;
     }
 
 
     $.getJSON(URI).done(function (data) {
-        $('#' + container).removeClass('general-chart-error');
+        containerObj.removeClass('general-chart-error');
         if (data.labels.length === 0) {
             // remove the chart container + parent
             var holder = $('#' + container).parent().parent();

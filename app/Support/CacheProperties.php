@@ -18,7 +18,6 @@ use Cache;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences as Prefs;
 
 /**

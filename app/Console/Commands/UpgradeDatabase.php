@@ -36,6 +36,7 @@ use Steam;
 
 /**
  * Class UpgradeDatabase
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it just touches a lot of things.
  *
  * @package FireflyIII\Console\Commands
  */
@@ -80,6 +81,8 @@ class UpgradeDatabase extends Command
 
     /**
      * Moves the currency id info to the transaction instead of the journal.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // cannot be helped.
      */
     private function currencyInfoToTransactions()
     {
@@ -95,7 +98,6 @@ class UpgradeDatabase extends Command
                     $count++;
                 }
             }
-
 
             // read and use the foreign amounts when present.
             if ($journal->hasMeta('foreign_amount')) {
@@ -123,6 +125,8 @@ class UpgradeDatabase extends Command
 
     /**
      *  Migrate budget repetitions to new format.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
      */
     private function migrateRepetitions()
     {
@@ -150,6 +154,8 @@ class UpgradeDatabase extends Command
 
     /**
      * Make sure there are only transfers linked to piggy bank events.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // cannot be helped.
      */
     private function repairPiggyBanks()
     {
@@ -157,6 +163,7 @@ class UpgradeDatabase extends Command
         if (!Schema::hasTable('piggy_bank_events')) {
             return;
         }
+
         $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
         /** @var PiggyBankEvent $event */
         foreach ($set as $event) {
@@ -208,7 +215,7 @@ class UpgradeDatabase extends Command
     }
 
     /**
-     *
+     * Make sure all accounts have proper currency info.
      */
     private function updateAccountCurrencies()
     {
@@ -218,42 +225,38 @@ class UpgradeDatabase extends Command
         /** @var Account $account */
         foreach ($accounts as $account) {
             // get users preference, fall back to system pref.
-            $defaultCurrencyCode    = Preferences::getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
-            $defaultCurrency        = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
-            $accountCurrency        = intval($account->getMeta('currency_id'));
-            $openingBalance         = $account->getOpeningBalance();
-            $openingBalanceCurrency = intval($openingBalance->transaction_currency_id);
+            $defaultCurrencyCode = Preferences::getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+            $defaultCurrency     = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
+            $accountCurrency     = intval($account->getMeta('currency_id'));
+            $openingBalance      = $account->getOpeningBalance();
+            $obCurrency          = intval($openingBalance->transaction_currency_id);
 
             // both 0? set to default currency:
-            if ($accountCurrency === 0 && $openingBalanceCurrency === 0) {
+            if ($accountCurrency === 0 && $obCurrency === 0) {
                 AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $defaultCurrency->id]);
                 $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
                 continue;
             }
 
-            // opening balance 0, account not zero? just continue:
-            if ($accountCurrency > 0 && $openingBalanceCurrency === 0) {
-                continue;
-            }
             // account is set to 0, opening balance is not?
-            if ($accountCurrency === 0 && $openingBalanceCurrency > 0) {
-                AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $openingBalanceCurrency]);
+            if ($accountCurrency === 0 && $obCurrency > 0) {
+                AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
                 $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
                 continue;
             }
 
-            // both are equal, just continue:
-            if ($accountCurrency === $openingBalanceCurrency) {
-                continue;
-            }
             // do not match:
-            if ($accountCurrency !== $openingBalanceCurrency) {
+            if ($accountCurrency !== $obCurrency) {
                 // update opening balance:
                 $openingBalance->transaction_currency_id = $accountCurrency;
                 $openingBalance->save();
                 $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
                 continue;
             }
+
+            // opening balance 0, account not zero? just continue:
+            // both are equal, just continue:
+
         }
 
     }

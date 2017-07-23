@@ -496,7 +496,7 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param string $iban
+     * @param null|string $iban
      *
      * @return null|string
      */

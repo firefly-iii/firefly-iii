@@ -173,7 +173,7 @@ class TransactionController extends Controller
      * @param TransactionJournal     $journal
      * @param JournalTaskerInterface $tasker
      *
-     * @return View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function show(TransactionJournal $journal, JournalTaskerInterface $tasker)
     {

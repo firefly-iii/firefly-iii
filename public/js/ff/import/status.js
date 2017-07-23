@@ -60,6 +60,8 @@ function failedJobImport(jqxhr, textStatus, error) {
 function reportOnJobImport(data) {
 
     switch (data.status) {
+        default:
+            break;
         case "configured":
             // job is ready. Do not check again, just show the start-box. Hide the rest.
             $('.statusbox').hide();
@@ -173,6 +175,7 @@ function updateBar(data) {
     bar.removeClass('progress-bar-success').addClass('progress-bar-info');
     bar.attr('aria-valuenow', 100);
     bar.css('width', '100%');
+    return true;
 }
 
 /**
@@ -214,6 +217,4 @@ function reportOnErrors(data) {
             $('#import-status-error-list').append(item);
         }
     }
-    return;
-
 }

@@ -12,7 +12,6 @@
  Some vars as prep for the map:
  */
 var map;
-var markers = [];
 var setTag = false;
 
 var mapOptions = {

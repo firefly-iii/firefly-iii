@@ -170,7 +170,7 @@ class SingleController extends Controller
      *
      * @param TransactionJournal $journal
      *
-     * @return View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function delete(TransactionJournal $journal)
     {

@@ -195,6 +195,41 @@ class RuleController extends Controller
     }
 
     /**
+     * Execute the given rule on a set of existing transactions
+     *
+     * @param SelectTransactionsRequest  $request
+     * @param AccountRepositoryInterface $repository
+     * @param Rule                       $rule
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @internal param RuleGroup $ruleGroup
+     */
+    public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, Rule $rule)
+    {
+        // Get parameters specified by the user
+        $accounts  = $repository->getAccountsById($request->get('accounts'));
+        $startDate = new Carbon($request->get('start_date'));
+        $endDate   = new Carbon($request->get('end_date'));
+
+        // Create a job to do the work asynchronously
+        $job = new ExecuteRuleOnExistingTransactions($rule);
+
+        // Apply parameters to the job
+        $job->setUser(auth()->user());
+        $job->setAccounts($accounts);
+        $job->setStartDate($startDate);
+        $job->setEndDate($endDate);
+
+        // Dispatch a new job to execute it in a queue
+        $this->dispatch($job);
+
+        // Tell the user that the job is queued
+        Session::flash('success', strval(trans('firefly.applied_rule_selection', ['title' => $rule->title])));
+
+        return redirect()->route('rules.index');
+    }
+
+    /**
      * @param RuleGroupRepositoryInterface $repository
      *
      * @return View
@@ -243,45 +278,12 @@ class RuleController extends Controller
         return Response::json('true');
 
     }
-    /**
-     * Execute the given rule on a set of existing transactions
-     *
-     * @param SelectTransactionsRequest  $request
-     * @param AccountRepositoryInterface $repository
-     * @param RuleGroup                  $ruleGroup
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, Rule $rule)
-    {
-        // Get parameters specified by the user
-        $accounts  = $repository->getAccountsById($request->get('accounts'));
-        $startDate = new Carbon($request->get('start_date'));
-        $endDate   = new Carbon($request->get('end_date'));
-
-        // Create a job to do the work asynchronously
-        $job = new ExecuteRuleOnExistingTransactions($rule);
-
-        // Apply parameters to the job
-        $job->setUser(auth()->user());
-        $job->setAccounts($accounts);
-        $job->setStartDate($startDate);
-        $job->setEndDate($endDate);
-
-        // Dispatch a new job to execute it in a queue
-        $this->dispatch($job);
-
-        // Tell the user that the job is queued
-        Session::flash('success', strval(trans('firefly.applied_rule_selection', ['title' => $rule->title])));
-
-        return redirect()->route('rules.index');
-    }
 
     /**
      * @param AccountRepositoryInterface $repository
-     * @param RuleGroup                  $ruleGroup
+     * @param Rule                       $rule
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function selectTransactions(AccountRepositoryInterface $repository, Rule $rule)
     {
@@ -324,52 +326,6 @@ class RuleController extends Controller
     }
 
     /**
-     * This method allows the user to test a certain set of rule triggers. The rule triggers are grabbed from
-     * the rule itself.
-     *
-     * This method will parse and validate those rules and create a "TransactionMatcher" which will attempt
-     * to find transaction journals matching the users input. A maximum range of transactions to try (range) and
-     * a maximum number of transactions to return (limit) are set as well.
-     *
-     *
-     * @param Rule $rule
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function testTriggersByRule(Rule $rule) {
-
-        $triggers = $rule->ruleTriggers;
-
-        if (count($triggers) === 0) {
-            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
-        }
-
-        $limit = config('firefly.test-triggers.limit');
-        $range = config('firefly.test-triggers.range');
-
-        /** @var TransactionMatcher $matcher */
-        $matcher = app(TransactionMatcher::class);
-        $matcher->setLimit($limit);
-        $matcher->setRange($range);
-        $matcher->setRule($rule);
-        $matchingTransactions = $matcher->findTransactionsByRule();
-
-        // Warn the user if only a subset of transactions is returned
-        $warning = '';
-        if (count($matchingTransactions) === $limit) {
-            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
-        }
-        if (count($matchingTransactions) === 0) {
-            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
-        }
-
-        // Return json response
-        $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
-
-        return Response::json(['html' => $view, 'warning' => $warning]);
-    }
-
-    /**
      * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
      * using the URL parameters (GET), and are usually put there using a Javascript thing.
      *
@@ -399,6 +355,53 @@ class RuleController extends Controller
         $matcher->setRange($range);
         $matcher->setTriggers($triggers);
         $matchingTransactions = $matcher->findTransactionsByTriggers();
+
+        // Warn the user if only a subset of transactions is returned
+        $warning = '';
+        if (count($matchingTransactions) === $limit) {
+            $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
+        }
+        if (count($matchingTransactions) === 0) {
+            $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
+        }
+
+        // Return json response
+        $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+
+        return Response::json(['html' => $view, 'warning' => $warning]);
+    }
+
+    /**
+     * This method allows the user to test a certain set of rule triggers. The rule triggers are grabbed from
+     * the rule itself.
+     *
+     * This method will parse and validate those rules and create a "TransactionMatcher" which will attempt
+     * to find transaction journals matching the users input. A maximum range of transactions to try (range) and
+     * a maximum number of transactions to return (limit) are set as well.
+     *
+     *
+     * @param Rule $rule
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function testTriggersByRule(Rule $rule)
+    {
+
+        $triggers = $rule->ruleTriggers;
+
+        if (count($triggers) === 0) {
+            return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
+        }
+
+        $limit = config('firefly.test-triggers.limit');
+        $range = config('firefly.test-triggers.range');
+
+        /** @var TransactionMatcher $matcher */
+        $matcher = app(TransactionMatcher::class);
+        $matcher->setLimit($limit);
+        $matcher->setRange($range);
+        $matcher->setRule($rule);
+        $matchingTransactions = $matcher->findTransactionsByRule();
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
