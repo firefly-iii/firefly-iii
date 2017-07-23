@@ -80,6 +80,8 @@ return [
     'user_id_is'                                 => 'Ihre Benutzerkennung ist <strong>:user</strong>',
     'field_supports_markdown'                    => 'Diese Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/"> Abschlag </a>.',
     'need_more_help'                             => 'Wenn du hilfe beim bedienen von Firefly III brauchst, <a href="https://github.com/firefly-iii/firefly-iii/issues">erstelle ein Ticket auf Github</a>.',
+    'reenable_intro_text'                        => 'You can also reenable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
+    'intro_boxes_after_refresh'                  => 'The introduction boxes will reappear when you refresh the page.',
     'nothing_to_display'                         => 'Es gibt keine Transaktionen zum Anzeigen',
     'show_all_no_filter'                         => 'Alle Transaktionen anzeigen, ohne diese nach Datum zu gruppieren.',
     'expenses_by_category'                       => 'Ausgaben nach Kategorie',
