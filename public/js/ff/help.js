@@ -36,6 +36,7 @@ function showHelp(e) {
     });
     $('#reenableGuidance').unbind('click').click(function () {
         enableGuidance(route, specialPage);
+        return false;
     });
     return false;
 }
@@ -45,6 +46,6 @@ function enableGuidance(route, specialPage) {
         alert(data.message);
     }).fail(function () {
         alert('Could not re-enable introduction.');
-    })
+    });
 }
 
