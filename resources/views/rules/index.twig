@@ -111,7 +111,7 @@
                                                    title="{{ 'test_rule_triggers'|_ }}"><i data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></i></a>
 
                                                 {# actually execute rule #}
-                                                <a href="{{ route('rules.select-transactions',ruleGroup.id) }}" class="btn btn-default"
+                                                <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default"
                                                    title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}">
                                                     <i class="fa fa-fw fa-power-off "></i></a>
                                             </div>

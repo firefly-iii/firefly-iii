@@ -11,24 +11,23 @@
     <div class="{{ boxClasses }}" id="box_out_holder">
         <div class="info-box">
             <span class="info-box-icon bg-red">
-                <i class="fa fa-upload fa-fw"></i>
+                <a href="{{ route('transactions.index',['withdrawal']) }}"><i class="fa fa-upload fa-fw"></i></a>
             </span>
-
             <div class="info-box-content">
-                <span class="info-box-text">{{ 'moneyOut'|_ }}</span>
-                <span class="info-box-number" id="box-out"></span>
+                <span class="info-box-text"><a href="{{ route('transactions.index',['withdrawal']) }}">{{ 'moneyOut'|_ }}</a></span>
+                <span class="info-box-number"><a href="{{ route('transactions.index',['withdrawal']) }}" id="box-out"></a></span>
             </div>
         </div>
     </div>
     <div class="{{ boxClasses }}">
         <div class="info-box">
             <span class="info-box-icon bg-green">
-                <i class="fa fa-download faw-fw"></i>
+                <a href="{{ route('transactions.index',['deposit']) }}"><i class="fa fa-download faw-fw"></i></a>
             </span>
 
             <div class="info-box-content">
-                <span class="info-box-text">{{ 'moneyIn'|_ }}</span>
-                <span class="info-box-number" id="box-in"></span>
+                <span class="info-box-text"><a href="{{ route('transactions.index',['deposit']) }}">{{ 'moneyIn'|_ }}</a></span>
+                <span class="info-box-number"><a href="{{ route('transactions.index',['deposit']) }}" id="box-in"></a></span>
             </div>
         </div>
     </div>
@@ -38,24 +37,24 @@
         <div class="{{ boxClasses }}">
             <div class="info-box">
             <span class="info-box-icon bg-blue">
-                <i class="fa fa-calendar fa-fw"></i>
+                <a href="{{ route('bills.index') }}"><i class="fa fa-calendar fa-fw"></i></a>
             </span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">{{ 'billsToPay'|_ }}</span>
-                    <span class="info-box-number" id="box-bills-unpaid"></span>
+                    <span class="info-box-text"><a href="{{ route('bills.index') }}">{{ 'billsToPay'|_ }}</a></span>
+                    <span class="info-box-number"><a id="box-bills-unpaid" href="{{ route('bills.index') }}"></a></span>
                 </div>
             </div>
         </div>
         <div class="{{ boxClasses }}">
             <div class="info-box">
             <span class="info-box-icon bg-aqua">
-                <i class="fa fa-line-chart fa-fw"></i>
+                <a href="{{ route('bills.index') }}"><i class="fa fa-line-chart fa-fw"></i></a>
             </span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">{{ 'billsPaid'|_ }}</span>
-                    <span class="info-box-number" id="box-bills-paid"></span>
+                    <span class="info-box-text"><a href="{{ route('bills.index') }}">{{ 'billsPaid'|_ }}</a></span>
+                    <span class="info-box-number"><a id="box-bills-paid" href="{{ route('bills.index') }}"></a></span>
                 </div>
             </div>
         </div>
