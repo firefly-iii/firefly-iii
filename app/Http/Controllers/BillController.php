@@ -175,7 +175,7 @@ class BillController extends Controller
      */
     public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
-        if (intval($bill->active) == 0) {
+        if (intval($bill->active) === 0) {
             $request->session()->flash('warning', strval(trans('firefly.cannot_scan_inactive_bill')));
 
             return redirect(URL::previous());
@@ -206,7 +206,7 @@ class BillController extends Controller
         /** @var Carbon $date */
         $date           = session('start');
         $year           = $date->year;
-        $page           = intval($request->get('page')) == 0 ? 1 : intval($request->get('page'));
+        $page           = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
         $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);

@@ -209,6 +209,13 @@ class ImportCurrency
         $search   = intval($array['mapped']);
         $currency = $this->repository->find($search);
 
+
+        if (is_null($currency->id)) {
+            Log::error(sprintf('There is no currency with id #%d. Invalid mapping will be ignored!', $search));
+
+            return new TransactionCurrency;
+        }
+
         Log::debug(sprintf('Found currency! #%d ("%s"). Return it', $currency->id, $currency->name));
 
         return $currency;

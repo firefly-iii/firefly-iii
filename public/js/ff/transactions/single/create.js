@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: currencyInfo, accountInfo, what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions, convertForeignToNative, convertSourceToDestination, selectsForeignCurrency, accountInfo */
+/** global: currencyInfo, overruleCurrency,useAccountCurrency, accountInfo, what,Modernizr, title, breadcrumbs, middleCrumbName, button, piggiesLength, txt, middleCrumbUrl,exchangeRateInstructions, convertForeignToNative, convertSourceToDestination, selectsForeignCurrency, accountInfo */
 
 $(document).ready(function () {
     "use strict";

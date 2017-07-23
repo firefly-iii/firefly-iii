@@ -32,7 +32,14 @@ use Log;
  */
 trait CreateJournalsTrait
 {
-
+    /**
+     * @param User            $user
+     * @param TransactionType $type
+     * @param array           $data
+     *
+     * @return array
+     */
+    abstract public function storeAccounts(User $user, TransactionType $type, array $data): array;
 
     /**
      *

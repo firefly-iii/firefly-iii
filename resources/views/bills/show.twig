@@ -8,23 +8,10 @@
 
     <div class="row">
         <div class="col-lg-6 col-sm-12 col-md-12">
-            <div class="box">
+            <div class="box" id="billInfo">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ bill.name }}</h3>
 
-                    {% if bill.active %}
-                        <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i>
-                    {% else %}
-                        <i class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></i>
-                    {% endif %}
-
-                    {% if bill.automatch %}
-                        <i class="fa fa-check fa-fw" title="{{ 'auto_match_on'|_ }}"></i>
-                    {% else %}
-                        <i class="fa fa-times fa-fw" title="{{ 'auto_match_off'|_ }}"></i>
-                    {% endif %}
-
-                    <!-- ACTIONS MENU -->
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -48,8 +35,28 @@
                                 {{ 'repeats'|_ }}
                                 {{ trans('firefly.repeat_freq_' ~bill.repeat_freq) }}.
                             </td>
-
                         </tr>
+                        <tr>
+                            <td>{{ 'bill_is_active'|_ }}</td>
+                            <td>
+                                {% if bill.active %}
+                                    <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i> {{ 'yes'|_ }}
+                                {% else %}
+                                    <i class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></i> {{ 'no'|_ }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'bill_will_automatch'|_ }}</td>
+                            <td>
+                                {% if bill.automatch %}
+                                    <i class="fa fa-check fa-fw" title="{{ 'auto_match_on'|_ }}"></i> {{ 'yes'|_ }}
+                                {% else %}
+                                    <i class="fa fa-times fa-fw" title="{{ 'auto_match_off'|_ }}"></i> {{ 'no'|_ }}
+                                {% endif %}
+                            </td>
+                        </tr>
+
                         <tr>
                             <td>{{ 'next_expected_match'|_ }}</td>
                             <td>
@@ -73,7 +80,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-sm-12 col-md-12">
-            <div class="box">
+            <div class="box" id="billButtons">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'more'|_ }}</h3>
                 </div>
@@ -88,7 +95,7 @@
 
     <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12">
-            <div class="box">
+            <div class="box" id="billChart">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'chart'|_ }}</h3>
                 </div>

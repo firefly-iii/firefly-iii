@@ -145,6 +145,18 @@ class ImportJournal
     }
 
     /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        if ($this->description === '') {
+            return '(no description)';
+        }
+
+        return $this->description;
+    }
+
+    /**
      * @param string $hash
      */
     public function setHash(string $hash)
@@ -226,7 +238,7 @@ class ImportJournal
                 $this->date = $array['value'];
                 break;
             case 'description':
-                $this->description = $array['value'];
+                $this->description .= $array['value'];
                 break;
             case 'sepa-ct-op':
             case 'sepa-ct-id':

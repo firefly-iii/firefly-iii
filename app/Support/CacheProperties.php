@@ -18,7 +18,6 @@ use Cache;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences as Prefs;
 
 /**
@@ -75,7 +74,7 @@ class CacheProperties
      */
     public function has(): bool
     {
-        if (getenv('APP_ENV') == 'testing') {
+        if (getenv('APP_ENV') === 'testing') {
             return false;
         }
         $this->md5();
@@ -119,8 +118,6 @@ class CacheProperties
 
             $this->md5 .= json_encode($property);
         }
-        Log::debug(sprintf('Cache string is %s', $this->md5));
         $this->md5 = md5($this->md5);
-        Log::debug(sprintf('Cache MD5 is    %s', $this->md5));
     }
 }

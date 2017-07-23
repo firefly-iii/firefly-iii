@@ -24,7 +24,7 @@ return [
     'edit_bill'         => 'uredi trajnik ":name"',
     'delete_bill'       => 'izbriši trajnik ":name"',
     'reports'           => 'Poročila',
-    'searchResult'      => 'rezultati iskanja za ":query"',
+    'search_result'     => 'Search results for ":query"',
     'withdrawal_list'   => 'stroški',
     'deposit_list'      => 'prihodki',
     'transfer_list'     => 'prenosi',

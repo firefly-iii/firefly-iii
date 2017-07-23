@@ -124,7 +124,7 @@ class BudgetController extends Controller
      */
     public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit)
     {
-        if ($budgetLimit->budget->id != $budget->id) {
+        if ($budgetLimit->budget->id !== $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 

@@ -38,25 +38,6 @@ interface SearchInterface
      */
     public function parseQuery(string $query);
 
-    /**
-     * @return Collection
-     */
-    public function searchAccounts(): Collection;
-
-    /**
-     * @return Collection
-     */
-    public function searchBudgets(): Collection;
-
-    /**
-     * @return Collection
-     */
-    public function searchCategories(): Collection;
-
-    /**
-     * @return Collection
-     */
-    public function searchTags(): Collection;
 
     /**
      * @return Collection

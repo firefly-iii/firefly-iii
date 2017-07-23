@@ -6,16 +6,9 @@
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'rules'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p>
-                        {{ 'rules_explanation'|_ }}
-                    </p>
-                </div>
-            </div>
+            <p>
+                <a href="{{ route('rule-groups.create') }}" id="new_rule_group" class="btn btn-success">{{ 'new_rule_group'|_ }}</a>
+            </p>
         </div>
     </div>
 
@@ -32,18 +25,17 @@
                             {% endif %}
                         </h3>
 
-                        <!-- ACTIONS MENU -->
+
                         <div class="box-tools pull-right">
                             <div class="btn-group">
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
                                             class="fa fa-ellipsis-v"></i></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                                    <li><a href="{{ route('rule-groups.edit',ruleGroup.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                    <li><a href="{{ route('rule-groups.delete',ruleGroup.id) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
                                     <li><a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}"><i
-                                                    class="fa fa-fw fa-anchor"></i> {{ 'execute_on_existing_transactions_short'|_ }}</a></li>
+                                                    class="fa fa-fw fa-power-off"></i> {{ trans('firefly.apply_rule_group_selection', {title: ruleGroup.title}) }}
+                                        </a></li>
                                     {% if ruleGroup.order > 1 %}
                                         <li><a href="{{ route('rule-groups.up',ruleGroup.id) }}"><i
                                                         class="fa fa-fw fa-arrow-up"></i> {{ 'move_rule_group_up'|_ }}</a></li>
@@ -67,7 +59,10 @@
                             <table class="table table-hover table-striped">
                                 <thead>
                                 <tr>
-                                    <th colspan="2">{{ 'rule_name'|_ }}</th>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>{{ 'rule_name'|_ }}</th>
                                     <th class="hidden-xs">{{ 'rule_triggers'|_ }}</th>
                                     <th class="hidden-xs">{{ 'rule_actions'|_ }}</th>
                                 </tr>
@@ -76,7 +71,7 @@
                                 {% for rule in ruleGroup.rules %}
                                     <tr>
                                         <td>
-                                            <div class="btn-group btn-group-xs">
+                                            <div class="btn-group btn-group-xs prio_buttons">
                                                 {% if rule.order > 1 %}
                                                     <a title="{{ 'rule_priority_up'|_ }}"
                                                        href="{{ route('rules.up', rule.id) }}"
@@ -96,6 +91,10 @@
                                                     <a href="#" class="btn btn-default"><span
                                                                 class="fa fa-fw"></span></a>
                                                 {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs edit_buttons">
                                                 <a title="{{ 'edit'|_ }}" href="{{ route('rules.edit', rule.id) }}"
                                                    class="btn btn-default"><span
                                                             class="fa fa-fw fa-pencil"></span></a>
@@ -104,13 +103,18 @@
                                                    class="btn btn-danger"><span
                                                             class="fa fa-fw fa-trash"></span></a>
                                             </div>
-                                            <br/>
-                                            <div class="btn-group btn-group-xs">
-                                                <a href="{{ route('rule-groups.select-transactions',ruleGroup.id) }}" class="btn btn-default"
-                                                   title=" {{ 'execute_on_existing_transactions_short'|_ }}">
-                                                    <i class="fa fa-fw fa-check-circle"></i></a>
-                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs test_buttons">
+                                                {# show which transactions would match #}
+                                                <a href="#" class="btn btn-default test_rule_triggers" data-id="{{ rule.id }}"
+                                                   title="{{ 'test_rule_triggers'|_ }}"><i data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></i></a>
 
+                                                {# actually execute rule #}
+                                                <a href="{{ route('rules.select-transactions',ruleGroup.id) }}" class="btn btn-default"
+                                                   title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}">
+                                                    <i class="fa fa-fw fa-power-off "></i></a>
+                                            </div>
                                         </td>
                                         <td>
                                             {% if rule.active %}
@@ -180,13 +184,15 @@
                         <p>
                             <br/>
                             <a href="{{ route('rules.create', ruleGroup.id) }}"
-                               class="btn btn-success">{{ 'new_rule'|_ }}</a>
+                               class="btn btn-success new_rule">{{ 'new_rule'|_ }}</a>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     {% endfor %}
+
+    {% include '/rules/partials/test-trigger-modal' %}
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">

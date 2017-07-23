@@ -56,7 +56,7 @@ class SetBudget implements ActionInterface
         $budgets = $repository->getActiveBudgets();
         $budget  = $budgets->filter(
             function (Budget $current) use ($search) {
-                return $current->name == $search;
+                return $current->name === $search;
             }
         )->first();
         if (is_null($budget)) {
@@ -65,7 +65,7 @@ class SetBudget implements ActionInterface
             return true;
         }
 
-        if ($journal->transactionType->type == TransactionType::TRANSFER) {
+        if ($journal->transactionType->type === TransactionType::TRANSFER) {
             Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a transfer.', $journal->id, $search));
 
             return true;

@@ -37,6 +37,8 @@ class ImportAccount
     private $accountName = [];
     /** @var array */
     private $accountNumber = [];
+    /** @var int */
+    private $defaultAccountId = 0;
     /** @var string */
     private $expectedType = '';
     /** @var  AccountRepositoryInterface */
@@ -113,6 +115,14 @@ class ImportAccount
     public function setAccountNumber(array $accountNumber)
     {
         $this->accountNumber = $accountNumber;
+    }
+
+    /**
+     * @param int $defaultAccountId
+     */
+    public function setDefaultAccountId(int $defaultAccountId)
+    {
+        $this->defaultAccountId = $defaultAccountId;
     }
 
     /**
@@ -249,13 +259,22 @@ class ImportAccount
         $search  = intval($array['mapped']);
         $account = $this->repository->find($search);
 
-        if ($account->accountType->type !== $this->expectedType) {
+        if (is_null($account->id)) {
+            Log::error(sprintf('There is no account with id #%d. Invalid mapping will be ignored!', $search));
+
+            return new Account;
+        }
+        // must be of the same type
+        // except when mapped is an asset, then it's fair game.
+        // which only shows that user must map very carefully.
+        if ($account->accountType->type !== $this->expectedType && $account->accountType->type !== AccountType::ASSET) {
             Log::error(
                 sprintf(
                     'Mapped account #%d is of type "%s" but we expect a "%s"-account. Mapping will be ignored.', $account->id, $account->accountType->type,
                     $this->expectedType
                 )
             );
+
             return new Account;
         }
 
@@ -296,6 +315,14 @@ class ImportAccount
             return true;
         }
         $this->expectedType = $oldExpectedType;
+
+        // if search for an asset account, fall back to given "default account" (mandatory)
+        if ($this->expectedType === AccountType::ASSET) {
+            $this->account = $this->repository->find($this->defaultAccountId);
+            Log::debug(sprintf('Fall back to default account #%d "%s"', $this->account->id, $this->account->name));
+
+            return true;
+        }
 
         Log::debug(sprintf('Found no account of type %s so must create one ourselves.', $this->expectedType));
 

@@ -180,12 +180,19 @@ class ImportBill
 
         Log::debug('Finding a mapped bill based on', $array);
 
-        $search  = intval($array['mapped']);
-        $account = $this->repository->find($search);
+        $search = intval($array['mapped']);
+        $bill   = $this->repository->find($search);
 
-        Log::debug(sprintf('Found bill! #%d ("%s"). Return it', $account->id, $account->name));
+        if (is_null($bill->id)) {
+            Log::error(sprintf('There is no bill with id #%d. Invalid mapping will be ignored!', $search));
 
-        return $account;
+            return new Bill;
+        }
+
+
+        Log::debug(sprintf('Found bill! #%d ("%s"). Return it', $bill->id, $bill->name));
+
+        return $bill;
     }
 
     /**

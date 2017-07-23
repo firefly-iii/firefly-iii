@@ -236,7 +236,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
         $rule->active          = 1;
-        $rule->stop_processing = intval($data['stop_processing']) == 1;
+        $rule->stop_processing = intval($data['stop_processing']) === 1;
         $rule->title           = $data['title'];
         $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
 
@@ -265,7 +265,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleAction->active          = 1;
         $ruleAction->stop_processing = $values['stopProcessing'];
         $ruleAction->action_type     = $values['action'];
-        $ruleAction->action_value    = $values['value'];
+        $ruleAction->action_value    = is_null($values['value']) ? '' : $values['value'];
         $ruleAction->save();
 
 

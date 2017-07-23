@@ -153,7 +153,7 @@ class AttachmentController extends Controller
         $image = 'images/page_green.png';
 
 
-        if ($attachment->mime == 'application/pdf') {
+        if ($attachment->mime === 'application/pdf') {
             $image = 'images/page_white_acrobat.png';
         }
         $file     = public_path($image);

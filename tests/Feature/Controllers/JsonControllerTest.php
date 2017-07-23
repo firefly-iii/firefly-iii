@@ -208,21 +208,6 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::endTour
-     */
-    public function testEndTour()
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->post(route('json.end-tour'));
-        $response->assertStatus(200);
-        $response->assertExactJson(['true']);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\JsonController::expenseAccounts
      */
     public function testExpenseAccounts()
@@ -278,20 +263,6 @@ class JsonControllerTest extends TestCase
         $response = $this->get(route('json.tags'));
         $response->assertStatus(200);
         $response->assertExactJson([$tag->tag]);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::tour
-     */
-    public function testTour()
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.tour'));
-        $response->assertStatus(200);
     }
 
     /**

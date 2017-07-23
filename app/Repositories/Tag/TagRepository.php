@@ -282,7 +282,7 @@ class TagRepository implements TagRepositoryInterface
          * changed to an advancePayment.
          */
 
-        if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
+        if ($tag->tagMode === 'balancingAct' || $tag->tagMode === 'nothing') {
             foreach ($tag->transactionjournals as $journal) {
                 if ($journal->isTransfer()) {
                     return false;
@@ -394,7 +394,7 @@ class TagRepository implements TagRepositoryInterface
         }
 
         // if already has transaction journals, must match ALL asset account id's:
-        if ($deposits > 0 || $withdrawals == 1) {
+        if ($deposits > 0 || $withdrawals === 1) {
             Log::debug('Need to match all asset accounts.');
 
             return $this->matchAll($journal, $tag);

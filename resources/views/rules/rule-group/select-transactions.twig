@@ -14,12 +14,12 @@
 
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'execute_on_existing_transactions'|_ }}</h3>
+                        <h3 class="box-title">{{ subTitle }}</h3>
                     </div>
                     <div class="box-body">
                         <div id="form-body">
                             <p>
-                                {{ 'execute_on_existing_transactions_intro'|_ }}
+                                {{ trans('firefly.apply_rule_group_selection_intro', {title: ruleGroup.title}) }}
                             </p>
                             <div class="row">
                                 <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">

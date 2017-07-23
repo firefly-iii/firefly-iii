@@ -12,7 +12,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'categories'|_ }}</h3>
 
-                        <!-- ACTIONS MENU -->
+
                         <div class="box-tools pull-right">
                             <div class="btn-group">
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -33,9 +33,12 @@
         {% include 'partials.empty' with {what: 'default', type: 'categories',route: route('categories.create')} %}
     {% endif %}
 {% endblock %}
+
 {% block styles %}
+    <link href="css/bootstrap-sortable.css" type="text/css" rel="stylesheet" media="all">
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
     <script type="text/javascript" src="js/ff/categories/index.js"></script>
 {% endblock %}

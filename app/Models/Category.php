@@ -67,7 +67,7 @@ class Category extends Model
         $set = $query->get(['categories.*']);
         /** @var Category $category */
         foreach ($set as $category) {
-            if ($category->name == $fields['name']) {
+            if ($category->name === $fields['name']) {
                 return $category;
             }
         }
@@ -86,7 +86,7 @@ class Category extends Model
     public static function routeBinder(Category $value)
     {
         if (auth()->check()) {
-            if ($value->user_id == auth()->user()->id) {
+            if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
             }
         }

@@ -27,8 +27,7 @@ return [
     'showEverything'                             => 'Mostrar todo',
     'never'                                      => 'Nunca',
     'search_results_for'                         => 'Resultados de la búsqueda para %{query}',
-    'advanced_search'                            => 'Búsqueda avanzada',
-    'advanced_search_intro'                      => 'Hay varios modificadores que puedes utilizar en tu búsqueda para acotar los resultados. Si usas alguna de estas, la búsqueda regresará <em>sólo</em> las transacciones. Por favor, has clic en el <i class="fa fa-question-circle"></i>-icono para obtener más información.',
+    'no_results_for_empty_search'                => 'Your search was empty, so nothing was found.',
     'bounced_error'                              => 'El mensaje enviado al: correo electrónico no ha sido recibido, así que no hay acceso para usted.',
     'deleted_error'                              => 'Las credenciales no coinciden con los registros.',
     'general_blocked_error'                      => 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.',
@@ -69,13 +68,6 @@ return [
     'two_factor_lost_fix_owner'                  => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
     'warning_much_data'                          => ':days days of data may take a while to load.',
     'registered'                                 => 'You have registered successfully!',
-    'search'                                     => 'Search',
-    'search_found_accounts'                      => 'Found :count account(s) for your query.',
-    'search_found_categories'                    => 'Found :count category(ies) for your query.',
-    'search_found_budgets'                       => 'Found :count budget(s) for your query.',
-    'search_found_tags'                          => 'Found :count tag(s) for your query.',
-    'search_found_transactions'                  => 'Found :count transaction(s) for your query.',
-    'results_limited'                            => 'The results are limited to :count entries.',
     'tagbalancingAct'                            => 'Balancing act',
     'tagadvancePayment'                          => 'Advance payment',
     'tagnothing'                                 => '',
@@ -88,6 +80,8 @@ return [
     'user_id_is'                                 => 'Your user id is <strong>:user</strong>',
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/firefly-iii/firefly-iii/issues">open a ticket on Github</a>.',
+    'reenable_intro_text'                        => 'You can also reenable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
+    'intro_boxes_after_refresh'                  => 'The introduction boxes will reappear when you refresh the page.',
     'nothing_to_display'                         => 'There are no transactions to show you',
     'show_all_no_filter'                         => 'Show all transactions without grouping them by date.',
     'expenses_by_category'                       => 'Expenses by category',
@@ -152,6 +146,15 @@ return [
     'transfer_exchange_rate_instructions'        => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
     'transaction_data'                           => 'Transaction data',
 
+    // search
+    'search'                                     => 'Search',
+    'search_found_transactions'                  => 'Number of transactions found:',
+    'general_search_error'                       => 'An error occured while searching. Please check the log files for more information.',
+    'search_box'                                 => 'Search',
+    'search_box_intro'                           => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
+    'search_error'                               => 'Error while searching',
+    'search_searching'                           => 'Searching ...',
+
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'yearly',
     'repeat_freq_monthly'                        => 'monthly',
@@ -204,7 +207,6 @@ return [
 
     // rules
     'rules'                                      => 'Rules',
-    'rules_explanation'                          => 'Here you can manage rules. Rules are triggered when a transaction is created or updated. Then, if the transaction has certain properties (called "triggers") Firefly will execute the "actions". Combined, you can make Firefly respond in a certain way to new transactions.',
     'rule_name'                                  => 'Name of rule',
     'rule_triggers'                              => 'Rule triggers when',
     'rule_actions'                               => 'Rule will',
@@ -254,14 +256,14 @@ return [
     'warning_transaction_subset'                 => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
     'warning_no_matching_transactions'           => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'                  => 'No valid triggers provided.',
-    'execute_on_existing_transactions'           => 'Execute for existing transactions',
-    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
-    'execute_on_existing_transactions_intro'     => 'When a rule or group has been changed or added, you can execute it for existing transactions',
-    'execute_on_existing_transactions_short'     => 'Existing transactions',
-    'executed_group_on_existing_transactions'    => 'Executed group ":title" for existing transactions',
-    'execute_group_on_existing_transactions'     => 'Execute group ":title" for existing transactions',
+    'apply_rule_selection'                       => 'Apply rule ":title" to a selection of your transactions',
+    'apply_rule_selection_intro'                 => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'         => 'Include transactions from these accounts',
+    'applied_rule_selection'                     => 'Rule ":title" has been applied to your selection.',
     'execute'                                    => 'Execute',
+    'apply_rule_group_selection'                 => 'Apply rule group ":title" to a selection of your transactions',
+    'apply_rule_group_selection_intro'           => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
+    'applied_rule_group_selection'               => 'Rule group ":title" has been applied to your selection.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'User action is ":trigger_value"',
@@ -426,12 +428,6 @@ return [
     'attachment_updated'                         => 'Updated attachment ":name"',
     'upload_max_file_size'                       => 'Maximum file size: :size',
 
-    // tour:
-    'prev'                                       => 'Prev',
-    'next'                                       => 'Next',
-    'end-tour'                                   => 'End tour',
-    'pause'                                      => 'Pause',
-
     // transaction index
     'title_expenses'                             => 'Expenses',
     'title_withdrawal'                           => 'Expenses',
@@ -499,15 +495,6 @@ return [
     'make_default_currency'                      => 'make default',
     'default_currency'                           => 'default',
 
-    // new user:
-    'submit'                                     => 'Submit',
-    'getting_started'                            => 'Getting started',
-    'to_get_started'                             => 'To get started with Firefly, please enter your current bank\'s name, and the balance of your checking account:',
-    'savings_balance_text'                       => 'If you have a savings account, please enter the current balance of your savings account:',
-    'cc_balance_text'                            => 'If you have a credit card, please enter your credit card\'s limit.',
-    'stored_new_account_new_user'                => 'Yay! Your new account has been stored.',
-    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
-
     // forms:
     'mandatoryFields'                            => 'Mandatory fields',
     'optionalFields'                             => 'Optional fields',
@@ -556,6 +543,8 @@ return [
     'average_bill_amount_overall'                => 'Average bill amount (overall)',
     'not_or_not_yet'                             => 'Not (yet)',
     'not_expected_period'                        => 'Not expected this period',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => 'Details for asset account ":name"',
     'details_for_expense'                        => 'Details for expense account ":name"',
@@ -643,6 +632,12 @@ return [
 
     // new user:
     'welcome'                                    => 'Welcome to Firefly!',
+    'submit'                                     => 'Submit',
+    'getting_started'                            => 'Getting started',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
 
     // home page:
     'yourAccounts'                               => 'Your accounts',

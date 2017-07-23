@@ -48,7 +48,7 @@ class OpposingAccountIbans implements MapperInterface
             if (strlen($iban) > 0) {
                 $topList[$account->id] = $account->iban . ' (' . $account->name . ')';
             }
-            if (strlen($iban) == 0) {
+            if (strlen($iban) === 0) {
                 $list[$account->id] = $account->name;
             }
         }

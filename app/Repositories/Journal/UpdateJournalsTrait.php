@@ -73,7 +73,7 @@ trait UpdateJournalsTrait
     protected function updateDestinationTransaction(TransactionJournal $journal, Account $account, array $data)
     {
         $set = $journal->transactions()->where('amount', '>', 0)->get();
-        if ($set->count() != 1) {
+        if ($set->count() !== 1) {
             throw new FireflyException(sprintf('Journal #%d has %d transactions with an amount more than zero.', $journal->id, $set->count()));
         }
         /** @var Transaction $transaction */
@@ -98,7 +98,7 @@ trait UpdateJournalsTrait
     {
         // should be one:
         $set = $journal->transactions()->where('amount', '<', 0)->get();
-        if ($set->count() != 1) {
+        if ($set->count() !== 1) {
             throw new FireflyException(sprintf('Journal #%d has %d transactions with an amount more than zero.', $journal->id, $set->count()));
         }
         /** @var Transaction $transaction */
@@ -140,7 +140,7 @@ trait UpdateJournalsTrait
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
         }
         // if count is zero, delete them all:
-        if (count($ids) == 0) {
+        if (count($ids) === 0) {
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
         }
 

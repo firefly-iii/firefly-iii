@@ -37,8 +37,39 @@ $(function () {
 
           }
       );
+
+      // test rule triggers button:
+    $('.test_rule_triggers').click(testRuleTriggers);
   }
 );
+
+function testRuleTriggers(e) {
+    var obj = $(e.target);
+    var ruleId = parseInt(obj.data('id'));
+
+    // Find a list of existing transactions that match these triggers
+    $.get('rules/test-rule/' + ruleId).done(function (data) {
+        var modal = $("#testTriggerModal");
+
+        // Set title and body
+        modal.find(".transactions-list").html(data.html);
+
+        // Show warning if appropriate
+        if (data.warning) {
+            modal.find(".transaction-warning .warning-contents").text(data.warning);
+            modal.find(".transaction-warning").show();
+        } else {
+            modal.find(".transaction-warning").hide();
+        }
+
+        // Show the modal dialog
+        modal.modal();
+    }).fail(function () {
+        alert('Cannot get transactions for given triggers.');
+    });
+
+    return false;
+}
 
 
 function sortStop(event, ui) {

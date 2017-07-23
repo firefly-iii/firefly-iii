@@ -89,8 +89,6 @@ class JournalCollector implements JournalCollectorInterface
             'account_types.type as account_type',
         ];
     /** @var  bool */
-    private $filterInternalTransfers;
-    /** @var  bool */
     private $filterTransfers = false;
     /** @var array */
     private $filters = [InternalTransferFilter::class];
@@ -508,7 +506,8 @@ class JournalCollector implements JournalCollectorInterface
                             ->where('transaction_journals.user_id', $this->user->id)
                             ->orderBy('transaction_journals.date', 'DESC')
                             ->orderBy('transaction_journals.order', 'ASC')
-                            ->orderBy('transaction_journals.id', 'DESC');
+                            ->orderBy('transaction_journals.id', 'DESC')
+                            ->orderBy('transaction_journals.description', 'DESC');
 
         $this->query = $query;
 

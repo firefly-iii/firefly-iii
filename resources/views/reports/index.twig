@@ -35,8 +35,8 @@
                         <div class="form-group">
                             <label for="inputAccounts" class="col-sm-3 control-label">{{ 'report_included_accounts'|_ }}</label>
 
-                            <div class="col-sm-9">
-                                <select id="inputAccounts" name="accounts[]" multiple="multiple" class="form-control">
+                            <div class="col-sm-9" id="inputAccountsSelect">
+                                <select id="inputAccounts" name="accounts[]" multiple class="form-control">
                                     {% for account in accounts %}
                                         <option
                                                 value="{{ account.id }}"

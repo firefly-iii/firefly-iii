@@ -92,7 +92,7 @@ class ImportController extends Controller
         Log::debug('Now in download()', ['job' => $job->key]);
         $config = $job->configuration;
 
-        // TODO this is CSV import specific:
+        // This is CSV import specific:
         $config['column-roles-complete']   = false;
         $config['column-mapping-complete'] = false;
         $config['initial-config-complete'] = false;

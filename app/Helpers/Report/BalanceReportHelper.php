@@ -244,7 +244,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         foreach ($accounts as $account) {
             $leftEntry = $tagsLeft->filter(
                 function (Tag $tag) use ($account) {
-                    return $tag->account_id == $account->id;
+                    return $tag->account_id === $account->id;
                 }
             );
             $left      = '0';

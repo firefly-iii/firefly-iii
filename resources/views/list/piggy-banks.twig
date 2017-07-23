@@ -34,7 +34,7 @@
             <td>
                 <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.account.name }}">{{ piggyBank.name }}</a>
             </td>
-            <td style="text-align: right;">
+            <td style="text-align: right;" class="piggySaved">
                 <span title="Saved so far" style="text-align:right;">{{ piggyBank.savedSoFar|formatAmount }}</span>
             </td>
             <td class="hidden-sm hidden-xs" style="text-align:right;width:40px;">
@@ -44,7 +44,7 @@
                 {% endif %}
             </td>
 
-            <td class="hidden-sm hidden-xs">
+            <td class="hidden-sm hidden-xs piggyBar">
                 <div class="progress progress" style="margin-bottom:0;">
                     <div
                             {% if piggyBank.percentage == 100 %}

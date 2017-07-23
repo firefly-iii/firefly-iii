@@ -99,10 +99,8 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseAsset(string $range)
     {
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
-        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transactions = factory(Transaction::class, 10)->make();
         $accounts     = factory(Account::class, 10)->make();
@@ -132,11 +130,9 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseCategory(string $range)
     {
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
         $catRepos     = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $transactions = factory(Transaction::class, 10)->make();
         $categories   = factory(Category::class, 10)->make();
@@ -167,16 +163,8 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseExpense(string $range)
     {
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
-        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transactions = factory(Transaction::class, 10)->make();
         $accounts     = factory(Account::class, 10)->make();

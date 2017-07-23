@@ -18,10 +18,13 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Log;
+use Route;
 use Session;
 use URL;
 use View;
@@ -47,21 +50,49 @@ class Controller extends BaseController
      */
     public function __construct()
     {
+        // for transaction lists:
         View::share('hideBudgets', false);
         View::share('hideCategories', false);
         View::share('hideBills', false);
         View::share('hideTags', false);
+
+        // is site a demo site?
         $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
         View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
 
-        // translations:
+
         $this->middleware(
             function ($request, $next) {
+                // translations for specific strings:
                 $this->monthFormat       = (string)trans('config.month');
                 $this->monthAndDayFormat = (string)trans('config.month_and_day');
                 $this->dateTimeFormat    = (string)trans('config.date_time');
+
+                // get shown-intro-preference:
+                if (auth()->check()) {
+                    // some routes have a "what" parameter, which indicates a special page:
+                    $specificPage = is_null(Route::current()->parameter('what')) ? '' : '_' . Route::current()->parameter('what');
+                    $page         = str_replace('.', '_', Route::currentRouteName());
+
+                    // indicator if user has seen the help for this page ( + special page):
+                    $key = 'shown_demo_' . $page . $specificPage;
+                    // is there an intro for this route?
+                    $intro        = config('intro.' . $page);
+                    $specialIntro = config('intro.' . $page . $specificPage);
+                    $shownDemo    = true;
+
+                    // either must be array and either must be > 0
+                    if ((is_array($intro) || is_array($specialIntro)) && (count($intro) > 0 || count($specialIntro) > 0)) {
+                        $shownDemo = Preferences::get($key, false)->data;
+                        Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
+                    }
+
+                    View::share('shownDemo', $shownDemo);
+                    View::share('current_route_name', $page);
+                    View::share('original_route_name', Route::currentRouteName());
+                }
 
                 return $next($request);
             }

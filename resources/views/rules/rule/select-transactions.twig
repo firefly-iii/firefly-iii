@@ -1,0 +1,52 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, rule) }}
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST" action="{{ route('rules.execute', rule.id) }}" accept-charset="UTF-8" class="form-horizontal" id="execute-rule">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ subTitle }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div id="form-body">
+                            <p>
+                                {{ trans('firefly.apply_rule_selection_intro', {title: rule.title}) }}
+                            </p>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+                                    {{ ExpandedForm.date('start_date', first) }}
+                                    {{ ExpandedForm.date('end_date', today) }}
+
+                                    <!-- ACCOUNTS -->
+                                    {{ ExpandedForm.multiCheckbox('accounts',accountList, checkedAccounts, {' class': 'account-checkbox', 'label': trans('firefly.include_transactions_from_accounts') }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ 'execute'|_ }}" id="do-execute-button" class="btn btn-success pull-right"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/ff/rules/select-transactions.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="css/jquery-ui/jquery-ui.structure.min.css" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.theme.min.css" type="text/css" rel="stylesheet" media="all">
+{% endblock %}

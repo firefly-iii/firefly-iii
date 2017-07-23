@@ -10,6 +10,7 @@
  */
 
 declare(strict_types=1);
+
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator as BreadCrumbGenerator;
 use FireflyIII\Exceptions\FireflyException;
@@ -680,7 +681,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'search.index', function (BreadCrumbGenerator $breadcrumbs, $query) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.searchResult', ['query' => e($query)]), route('search.index'));
+    $breadcrumbs->push(trans('breadcrumbs.search_result', ['query' => e($query)]), route('search.index'));
 }
 );
 

@@ -25,6 +25,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
+use Validator;
 
 
 /**
@@ -178,7 +179,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // update the account:
         $account->name            = $data['name'];
-        $account->active          = $data['active'] == '1' ? true : false;
+        $account->active          = $data['active'] === '1' ? true : false;
         $account->virtual_balance = $data['virtualBalance'];
         $account->iban            = $data['iban'];
         $account->save();
@@ -236,7 +237,7 @@ class AccountRepository implements AccountRepositoryInterface
         $data['accountType'] = $data['accountType'] ?? 'invalid';
         $type                = config('firefly.accountTypeByIdentifier.' . $data['accountType']);
         $accountType         = AccountType::whereType($type)->first();
-
+        $data['iban']        = $this->filterIban($data['iban']);
         // verify account type
         if (is_null($accountType)) {
             throw new FireflyException(sprintf('Account type "%s" is invalid. Cannot create account.', $data['accountType']));
@@ -251,16 +252,17 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         // create it:
-        $newAccount = new Account(
-            [
-                'user_id'         => $this->user->id,
-                'account_type_id' => $accountType->id,
-                'name'            => $data['name'],
-                'virtual_balance' => $data['virtualBalance'],
-                'active'          => $data['active'] === true ? true : false,
-                'iban'            => $data['iban'],
-            ]
-        );
+        $databaseData
+                    = [
+            'user_id'         => $this->user->id,
+            'account_type_id' => $accountType->id,
+            'name'            => $data['name'],
+            'virtual_balance' => $data['virtualBalance'],
+            'active'          => $data['active'] === true ? true : false,
+            'iban'            => $data['iban'],
+        ];
+        $newAccount = new Account($databaseData);
+        Log::debug('Final account creation dataset', $databaseData);
         $newAccount->save();
         // verify its creation:
         if (is_null($newAccount->id)) {
@@ -268,6 +270,7 @@ class AccountRepository implements AccountRepositoryInterface
                 sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()), $newAccount->getErrors()->toArray()
             );
             throw new FireflyException(sprintf('Tried to create account named "%s" but failed. The logs have more details.', $data['name']));
+
         }
         Log::debug(sprintf('Created new account #%d named "%s" of type %s.', $newAccount->id, $newAccount->name, $accountType->type));
 
@@ -457,12 +460,12 @@ class AccountRepository implements AccountRepositoryInterface
         // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id == $transaction->account_id) {
+            if ($account->id === $transaction->account_id) {
                 $transaction->amount                  = $amount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
-            if ($account->id != $transaction->account_id) {
+            if ($account->id !== $transaction->account_id) {
                 $transaction->amount                  = bcmul($amount, '-1');
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
@@ -490,5 +493,27 @@ class AccountRepository implements AccountRepositoryInterface
         Log::debug('Array does not have valid opening balance data.');
 
         return false;
+    }
+
+    /**
+     * @param null|string $iban
+     *
+     * @return null|string
+     */
+    private function filterIban(string $iban = null)
+    {
+        if (is_null($iban)) {
+            return null;
+        }
+        $data      = ['iban' => $iban];
+        $rules     = ['iban' => 'required|iban'];
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            Log::error(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
+
+            return null;
+        }
+
+        return $iban;
     }
 }

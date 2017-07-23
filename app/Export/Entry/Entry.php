@@ -88,7 +88,7 @@ final class Entry
         $entry->budget_name              = $object->budget_name ?? '';
 
         // update description when transaction description is different:
-        if (!is_null($object->description) && $object->description != $entry->description) {
+        if (!is_null($object->description) && $object->description !== $entry->description) {
             $entry->description = $entry->description . ' (' . $object->description . ')';
         }
 

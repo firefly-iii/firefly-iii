@@ -7,7 +7,7 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-6">
-            <div class="box">
+            <div class="box" id="piggyChart">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'events'|_ }}</h3>
                 </div>
@@ -21,7 +21,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'details'|_ }}</h3>
 
-                    <!-- ACTIONS MENU -->
+
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="piggyDetails">
                         <tr>
                             <td style="width:40%;">{{ 'account'|_ }}</td>
                             <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
@@ -85,7 +85,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'table'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body table-responsive no-padding" id="piggyEvents">
                     {% include 'list/piggy-bank-events' %}
                 </div>
             </div>

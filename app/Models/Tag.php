@@ -66,7 +66,7 @@ class Tag extends Model
         $set = $query->get(['tags.*']);
         /** @var Tag $tag */
         foreach ($set as $tag) {
-            if ($tag->tag == $fields['tag']) {
+            if ($tag->tag === $fields['tag']) {
                 return $tag;
             }
         }
@@ -87,7 +87,7 @@ class Tag extends Model
     public static function routeBinder(Tag $value)
     {
         if (auth()->check()) {
-            if ($value->user_id == auth()->user()->id) {
+            if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
             }
         }

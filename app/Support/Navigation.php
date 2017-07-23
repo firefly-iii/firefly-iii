@@ -96,7 +96,7 @@ class Navigation
         // if the range is custom, the end of the period
         // is another X days (x is the difference between start)
         // and end added to $theCurrentEnd
-        if ($repeatFreq == 'custom') {
+        if ($repeatFreq === 'custom') {
             /** @var Carbon $tStart */
             $tStart = session('start', Carbon::now()->startOfMonth());
             /** @var Carbon $tEnd */
@@ -393,7 +393,7 @@ class Navigation
 
             return $date;
         }
-        if ($repeatFreq == 'half-year' || $repeatFreq == '6M') {
+        if ($repeatFreq === 'half-year' || $repeatFreq === '6M') {
             $month = $date->month;
             $date->startOfYear();
             if ($month >= 7) {
@@ -496,7 +496,7 @@ class Navigation
 
             return $end;
         }
-        if ($range == '6M') {
+        if ($range === '6M') {
             if ($start->month >= 7) {
                 $end->endOfYear();
 
@@ -532,7 +532,7 @@ class Navigation
 
             return $start;
         }
-        if ($range == '6M') {
+        if ($range === '6M') {
             if ($start->month >= 7) {
                 $start->startOfYear()->addMonths(6);
 

@@ -24,7 +24,7 @@ return [
     'edit_bill'         => 'Editer la facture : ":name"',
     'delete_bill'       => 'Supprimer la facture ":name"',
     'reports'           => 'Rapport',
-    'searchResult'      => 'Résultat de recherche pour ":query"',
+    'search_result'     => 'Search results for ":query"',
     'withdrawal_list'   => 'Dépenses',
     'deposit_list'      => 'Revenu, salaire et versements',
     'transfer_list'     => 'Virements',

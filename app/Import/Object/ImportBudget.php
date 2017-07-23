@@ -180,12 +180,18 @@ class ImportBudget
 
         Log::debug('Finding a mapped budget based on', $array);
 
-        $search  = intval($array['mapped']);
-        $account = $this->repository->find($search);
+        $search = intval($array['mapped']);
+        $budget = $this->repository->find($search);
 
-        Log::debug(sprintf('Found budget! #%d ("%s"). Return it', $account->id, $account->name));
+        if (is_null($budget->id)) {
+            Log::error(sprintf('There is no budget with id #%d. Invalid mapping will be ignored!', $search));
 
-        return $account;
+            return new Budget;
+        }
+
+        Log::debug(sprintf('Found budget! #%d ("%s"). Return it', $budget->id, $budget->name));
+
+        return $budget;
     }
 
     /**

@@ -21,9 +21,11 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
+use Route as RouteFacade;
 use Session;
 use View;
 
@@ -107,7 +109,7 @@ class HomeController extends Controller
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
-        if ($count == 0) {
+        if ($count === 0) {
             return redirect(route('new-user.index'));
         }
 
@@ -120,7 +122,6 @@ class HomeController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end                   = session('end', Carbon::now()->endOfMonth());
-        $showTour              = Preferences::get('tour', true)->data;
         $accounts              = $repository->getAccountsById($frontPage->data);
         $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
 
@@ -137,8 +138,32 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'showTour', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
+            'index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
         );
+    }
+
+    public function routes()
+    {
+        $set    = RouteFacade::getRoutes();
+        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.'];
+        /** @var Route $route */
+        foreach ($set as $route) {
+            $name = $route->getName();
+            if (!is_null($name) && in_array('GET', $route->methods()) && strlen($name) > 0) {
+                $found = false;
+                foreach ($ignore as $string) {
+                    if (strpos($name, $string) !== false) {
+                        $found = true;
+                    }
+                }
+                if (!$found) {
+                    echo 'touch ' . $route->getName() . '.md;';
+                }
+
+            }
+        }
+
+        return '&nbsp;';
     }
 
     /**

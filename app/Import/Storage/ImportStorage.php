@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Rules\Processor;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 use Steam;
@@ -43,6 +44,7 @@ class ImportStorage
 {
     /** @var  Collection */
     public $errors;
+    /** @var Collection */
     public $journals;
     /** @var  CurrencyRepositoryInterface */
     private $currencyRepository;
@@ -96,13 +98,12 @@ class ImportStorage
     }
 
     /**
-     * Do storage of import objects
+     * Do storage of import objects.
      */
     public function store()
     {
         $this->defaultCurrency = Amount::getDefaultCurrencyByUser($this->job->user);
 
-        // routine below consists of 3 steps.
         /**
          * @var int           $index
          * @var ImportJournal $object
@@ -115,8 +116,9 @@ class ImportStorage
                 Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
             }
         }
+        Log::info('ImportStorage has finished.');
 
-
+        return true;
     }
 
     /**
@@ -127,7 +129,6 @@ class ImportStorage
     protected function applyRules(TransactionJournal $journal): bool
     {
         if ($this->rules->count() > 0) {
-
             /** @var Rule $rule */
             foreach ($this->rules as $rule) {
                 Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
@@ -164,13 +165,59 @@ class ImportStorage
             $errorText = join(', ', $transaction->getErrors()->all());
             throw new FireflyException($errorText);
         }
-        Log::debug(sprintf('Created transaction with ID #%d and account #%d', $transaction->id, $accountId));
+        Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $accountId, $amount));
 
         return true;
     }
 
     /**
+     * @param Collection    $set
      * @param ImportJournal $importJournal
+     *
+     * @return bool
+     */
+    private function filterTransferSet(Collection $set, ImportJournal $importJournal): bool
+    {
+        $amount      = Steam::positive($importJournal->getAmount());
+        $asset       = $importJournal->asset->getAccount();
+        $opposing    = $this->getOpposingAccount($importJournal->opposing, $amount);
+        $description = $importJournal->getDescription();
+
+        $filtered = $set->filter(
+            function (TransactionJournal $journal) use ($asset, $opposing, $description) {
+                $match    = true;
+                $original = [app('steam')->tryDecrypt($journal->source_name), app('steam')->tryDecrypt($journal->destination_name)];
+                $compare  = [$asset->name, $opposing->name];
+                sort($original);
+                sort($compare);
+
+                // description does not match? Then cannot be duplicate.
+                if ($journal->description !== $description) {
+                    $match = false;
+                }
+                // not both accounts in journal? Then cannot be duplicate.
+                if ($original !== $compare) {
+                    $match = false;
+                }
+
+                if ($match) {
+                    return $journal;
+                }
+
+                return null;
+            }
+        );
+        if (count($filtered) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ImportJournal $importJournal
+     *
+     * @param Account       $account
      *
      * @return TransactionCurrency
      */
@@ -300,8 +347,8 @@ class ImportStorage
 
     private function storeImportJournal(int $index, ImportJournal $importJournal): bool
     {
-        Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->description));
-
+        Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->getDescription()));
+        $importJournal->asset->setDefaultAccountId($this->job->configuration['import-account']);
         $asset           = $importJournal->asset->getAccount();
         $amount          = $importJournal->getAmount();
         $currency        = $this->getCurrency($importJournal, $asset);
@@ -317,18 +364,30 @@ class ImportStorage
 
         // verify that opposing account is of the correct type:
         if ($opposing->accountType->type === AccountType::EXPENSE && $transactionType->type !== TransactionType::WITHDRAWAL) {
-            Log::error(sprintf('Row #%d is imported as a %s but opposing is an expense account. This cannot be!', $index, $transactionType->type));
+            $message = sprintf('Row #%d is imported as a %s but opposing is an expense account. This cannot be!', $index, $transactionType->type);
+            Log::error($message);
+            throw new FireflyException($message);
+
         }
 
         /*** First step done! */
         $this->job->addStepsDone(1);
+
+        // could be that transfer is double: verify this.
+        if ($this->verifyDoubleTransfer($transactionType, $importJournal)) {
+            // add three steps:
+            $this->job->addStepsDone(3);
+            // throw error
+            throw new FireflyException('Detected a possible duplicate, skip this one.');
+
+        }
 
         // create a journal:
         $journal                          = new TransactionJournal;
         $journal->user_id                 = $this->job->user_id;
         $journal->transaction_type_id     = $transactionType->id;
         $journal->transaction_currency_id = $currency->id;
-        $journal->description             = $importJournal->description;
+        $journal->description             = $importJournal->getDescription();
         $journal->date                    = $date->format('Y-m-d');
         $journal->order                   = 0;
         $journal->tag_count               = 0;
@@ -336,7 +395,9 @@ class ImportStorage
 
         if (!$journal->save()) {
             $errorText = join(', ', $journal->getErrors()->all());
+            // add three steps:
             $this->job->addStepsDone(3);
+            // throw error
             throw new FireflyException($errorText);
         }
 
@@ -371,7 +432,6 @@ class ImportStorage
         // run rules:
         $this->applyRules($journal);
         $this->job->addStepsDone(1);
-
         $this->journals->push($journal);
 
         Log::info(
@@ -400,6 +460,51 @@ class ImportStorage
                 Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));
             }
         }
+    }
+
+    /**
+     * This method checks if the given transaction is a transfer and if so, if it might be a duplicate of an already imported transfer.
+     * This is important for import files that cover multiple accounts (and include both A<>B and B<>A transactions).
+     *
+     * @param TransactionType $transactionType
+     * @param ImportJournal   $importJournal
+     *
+     * @return bool
+     */
+    private function verifyDoubleTransfer(TransactionType $transactionType, ImportJournal $importJournal): bool
+    {
+        if ($transactionType->type === TransactionType::TRANSFER) {
+            $amount = Steam::positive($importJournal->getAmount());
+            $date   = $importJournal->getDate($this->dateFormat);
+            $set    = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                        ->leftJoin(
+                                            'transactions AS source', function (JoinClause $join) {
+                                            $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
+                                        }
+                                        )
+                                        ->leftJoin(
+                                            'transactions AS destination', function (JoinClause $join) {
+                                            $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
+                                                'destination.amount', '>', 0
+                                            );
+                                        }
+                                        )
+                                        ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')
+                                        ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
+                                        ->where('transaction_journals.user_id', $this->job->user_id)
+                                        ->where('transaction_types.type', TransactionType::TRANSFER)
+                                        ->where('transaction_journals.date', $date->format('Y-m-d'))
+                                        ->where('destination.amount', $amount)
+                                        ->get(
+                                            ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
+                                             'source_accounts.name as source_name', 'destination_accounts.name as destination_name']
+                                        );
+
+            return $this->filterTransferSet($set, $importJournal);
+        }
+
+
+        return false;
     }
 
 }

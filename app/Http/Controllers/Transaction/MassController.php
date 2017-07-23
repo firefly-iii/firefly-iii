@@ -86,7 +86,7 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
                 $journal = $repository->find(intval($journalId));
-                if (!is_null($journal->id) && $journalId == $journal->id) {
+                if (!is_null($journal->id) && $journalId === $journal->id) {
                     $set->push($journal);
                 }
             }
@@ -135,8 +135,8 @@ class MassController extends Controller
          * @var TransactionJournal $journal
          */
         foreach ($journals as $index => $journal) {
-            $sources      = $journal->sourceAccountList($journal);
-            $destinations = $journal->destinationAccountList($journal);
+            $sources      = $journal->sourceAccountList();
+            $destinations = $journal->destinationAccountList();
             if ($sources->count() > 1) {
                 $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
@@ -213,11 +213,11 @@ class MassController extends Controller
                 if ($journal) {
                     // get optional fields:
                     $what              = strtolower($journal->transactionTypeStr());
-                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ??  0;
+                    $sourceAccountId   = $request->get('source_account_id')[$journal->id] ?? 0;
                     $sourceAccountName = $request->get('source_account_name')[$journal->id] ?? '';
-                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ??  0;
+                    $destAccountId     = $request->get('destination_account_id')[$journal->id] ?? 0;
                     $destAccountName   = $request->get('destination_account_name')[$journal->id] ?? '';
-                    $budgetId          = $request->get('budget_id')[$journal->id] ??  0;
+                    $budgetId          = $request->get('budget_id')[$journal->id] ?? 0;
                     $category          = $request->get('category')[$journal->id];
                     $tags              = $journal->tags->pluck('tag')->toArray();
                     $amount            = round($request->get('amount')[$journal->id], 12);

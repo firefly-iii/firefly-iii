@@ -174,12 +174,18 @@ class ImportCategory
 
         Log::debug('Finding a mapped category based on', $array);
 
-        $search  = intval($array['mapped']);
-        $account = $this->repository->find($search);
+        $search   = intval($array['mapped']);
+        $category = $this->repository->find($search);
 
-        Log::debug(sprintf('Found category! #%d ("%s"). Return it', $account->id, $account->name));
+        if (is_null($category->id)) {
+            Log::error(sprintf('There is no category with id #%d. Invalid mapping will be ignored!', $search));
 
-        return $account;
+            return new Category;
+        }
+
+        Log::debug(sprintf('Found category! #%d ("%s"). Return it', $category->id, $category->name));
+
+        return $category;
     }
 
     /**

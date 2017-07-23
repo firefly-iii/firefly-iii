@@ -147,13 +147,13 @@ class BalanceLine
         if ($this->getBudget() instanceof BudgetModel && !is_null($this->getBudget()->id)) {
             return $this->getBudget()->name;
         }
-        if ($this->getRole() == self::ROLE_DEFAULTROLE) {
+        if ($this->getRole() === self::ROLE_DEFAULTROLE) {
             return strval(trans('firefly.no_budget'));
         }
-        if ($this->getRole() == self::ROLE_TAGROLE) {
+        if ($this->getRole() === self::ROLE_TAGROLE) {
             return strval(trans('firefly.coveredWithTags'));
         }
-        if ($this->getRole() == self::ROLE_DIFFROLE) {
+        if ($this->getRole() === self::ROLE_DIFFROLE) {
             return strval(trans('firefly.leftUnbalanced'));
         }
 

@@ -11,27 +11,39 @@
 $(function () {
     "use strict";
     $('#help').click(showHelp);
-    $(function () {
 
-        //$('[data-toggle="tooltip"]').tooltip();
-    });
 });
 
 function showHelp(e) {
     "use strict";
     var target = $(e.target);
     var route = target.data('route');
-    //
-    $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
-    $('#helpTitle').html('Please hold...');
+    var specialPage = target.data('extra');
 
+    if (typeof specialPage === 'undefined') {
+        specialPage = '';
+    }
+    $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
     $('#helpModal').modal('show');
     $('#helpTitle').html('Help for this page');
     $.getJSON('help/' + encodeURI(route)).done(function (data) {
-        $('#helpBody').html(data);
+        $('#helpBody').html(data.html);
     }).fail(function () {
         $('#helpBody').html('<p class="text-danger">No help text could be found.</p>');
         $('#helpTitle').html('Apologies');
     });
+    $('#reenableGuidance').unbind('click').click(function () {
+        enableGuidance(route, specialPage);
+        return false;
+    });
     return false;
 }
+
+function enableGuidance(route, specialPage) {
+    $.post('json/intro/enable/' + route + '/' + specialPage).done(function (data) {
+        alert(data.message);
+    }).fail(function () {
+        alert('Could not re-enable introduction.');
+    });
+}
+

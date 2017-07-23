@@ -44,6 +44,7 @@ Route::group(
     Route::get('error', ['uses' => 'HomeController@displayError', 'as' => 'error']);
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
     Route::get('flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+    Route::get('routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
 }
 );
 
@@ -435,7 +436,6 @@ Route::group(
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
     Route::get('budgets', ['uses' => 'JsonController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
-    Route::get('tour', ['uses' => 'JsonController@tour', 'as' => 'tour']);
     Route::get('box/in', ['uses' => 'JsonController@boxIn', 'as' => 'box.in']);
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.unpaid']);
@@ -446,10 +446,13 @@ Route::group(
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
-    Route::post('end-tour', ['uses' => 'JsonController@endTour', 'as' => 'end-tour']);
-
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
+
+    // intro things:
+    Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
+    Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+    Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
 
 }
 );
@@ -606,12 +609,15 @@ Route::group(
     Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'edit']);
     Route::get('delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
     Route::get('test', ['uses' => 'RuleController@testTriggers', 'as' => 'test-triggers']);
+    Route::get('test-rule/{rule}', ['uses' => 'RuleController@testTriggersByRule', 'as' => 'test-triggers-rule']);
+    Route::get('select/{rule}', ['uses' => 'RuleController@selectTransactions', 'as' => 'select-transactions']);
 
     Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
     Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions', 'as' => 'reorder-actions']);
     Route::post('store/{ruleGroup}', ['uses' => 'RuleController@store', 'as' => 'store']);
     Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
     Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'destroy']);
+    Route::post('execute/{rule}', ['uses' => 'RuleController@execute', 'as' => 'execute']);
 
 }
 );
@@ -641,7 +647,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'search', 'as' => 'search.'], function () {
     Route::get('', ['uses' => 'SearchController@index', 'as' => 'index']);
-
+    Route::any('search', ['uses' => 'SearchController@search', 'as' => 'search']);
 }
 );
 

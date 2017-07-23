@@ -24,7 +24,7 @@ return [
     'edit_bill'         => '編輯賬單 ":name"',
     'delete_bill'       => '刪除賬單 ":name"',
     'reports'           => '報表',
-    'searchResult'      => '搜尋 ":query"',
+    'search_result'     => 'Search results for ":query"',
     'withdrawal_list'   => '支出',
     'deposit_list'      => '收入、薪金與存款',
     'transfer_list'     => '轉帳',

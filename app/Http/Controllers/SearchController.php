@@ -15,7 +15,7 @@ namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Response;
 use View;
 
 /**
@@ -51,47 +51,29 @@ class SearchController extends Controller
      */
     public function index(Request $request, SearchInterface $searcher)
     {
-        // yes, hard coded values:
-        $minSearchLen = 1;
-        $limit        = 20;
+        $fullQuery = $request->get('q');
 
-        // ui stuff:
-        $subTitle = '';
+        // parse search terms:
+        $searcher->parseQuery($fullQuery);
+        $query    = $searcher->getWordsAsString();
+        $subTitle = trans('breadcrumbs.search_result', ['query' => $query]);
 
-        // query stuff
-        $query        = null;
-        $result       = [];
-        $rawQuery     = $request->get('q');
-        $hasModifiers = true;
-        $modifiers    = [];
+        return view('search.index', compact('query', 'fullQuery', 'subTitle'));
+    }
 
-        if (!is_null($request->get('q')) && strlen($request->get('q')) >= $minSearchLen) {
-            // parse query, find modifiers:
-            // set limit for search
-            $searcher->setLimit($limit);
-            $searcher->parseQuery($request->get('q'));
+    public function search(Request $request, SearchInterface $searcher)
+    {
+        $fullQuery = $request->get('query');
 
-            $transactions = $searcher->searchTransactions();
-            $accounts     = new Collection;
-            $categories   = new Collection;
-            $tags         = new Collection;
-            $budgets      = new Collection;
+        // parse search terms:
+        $searcher->parseQuery($fullQuery);
+        $searcher->setLimit(20);
+        $transactions = $searcher->searchTransactions();
+        $html         = view('search.search', compact('transactions'))->render();
 
-            // no special search thing?
-            if (!$searcher->hasModifiers()) {
-                $hasModifiers = false;
-                $accounts     = $searcher->searchAccounts();
-                $categories   = $searcher->searchCategories();
-                $budgets      = $searcher->searchBudgets();
-                $tags         = $searcher->searchTags();
-            }
-            $query    = $searcher->getWordsAsString();
-            $subTitle = trans('firefly.search_results_for', ['query' => $query]);
-            $result   = ['transactions' => $transactions, 'accounts' => $accounts, 'categories' => $categories, 'budgets' => $budgets, 'tags' => $tags];
+        return Response::json(['count' => $transactions->count(), 'html' => $html]);
 
-        }
 
-        return view('search.index', compact('rawQuery', 'hasModifiers', 'modifiers', 'subTitle', 'limit', 'query', 'result'));
     }
 
 }
