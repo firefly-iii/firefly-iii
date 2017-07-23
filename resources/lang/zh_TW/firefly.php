@@ -80,6 +80,8 @@ return [
     'user_id_is'                                 => 'Your user id is <strong>:user</strong>',
     'field_supports_markdown'                    => 'This field supports <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'If you need more help using Firefly III, please <a href="https://github.com/firefly-iii/firefly-iii/issues">open a ticket on Github</a>.',
+    'reenable_intro_text'                        => 'You can also reenable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
+    'intro_boxes_after_refresh'                  => 'The introduction boxes will reappear when you refresh the page.',
     'nothing_to_display'                         => 'There are no transactions to show you',
     'show_all_no_filter'                         => 'Show all transactions without grouping them by date.',
     'expenses_by_category'                       => 'Expenses by category',
@@ -205,7 +207,6 @@ return [
 
     // rules
     'rules'                                      => 'Rules',
-    'rules_explanation'                          => 'Here you can manage rules. Rules are triggered when a transaction is created or updated. Then, if the transaction has certain properties (called "triggers") Firefly will execute the "actions". Combined, you can make Firefly respond in a certain way to new transactions.',
     'rule_name'                                  => 'Name of rule',
     'rule_triggers'                              => 'Rule triggers when',
     'rule_actions'                               => 'Rule will',
@@ -255,14 +256,14 @@ return [
     'warning_transaction_subset'                 => 'For performance reasons this list is limited to :max_num_transactions and may only show a subset of matching transactions',
     'warning_no_matching_transactions'           => 'No matching transactions found. Please note that for performance reasons, only the last :num_transactions transactions have been checked.',
     'warning_no_valid_triggers'                  => 'No valid triggers provided.',
-    'execute_on_existing_transactions'           => 'Execute for existing transactions',
-    'rule_group_select_transactions'             => 'Execute rule group ":title" on existing transactions',
-    'execute_on_existing_transactions_intro'     => 'When a rule or group has been changed or added, you can execute it for existing transactions',
-    'execute_on_existing_transactions_short'     => 'Existing transactions',
-    'executed_group_on_existing_transactions'    => 'Executed group ":title" for existing transactions',
-    'execute_group_on_existing_transactions'     => 'Execute group ":title" for existing transactions',
+    'apply_rule_selection'                       => 'Apply rule ":title" to a selection of your transactions',
+    'apply_rule_selection_intro'                 => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'         => 'Include transactions from these accounts',
+    'applied_rule_selection'                     => 'Rule ":title" has been applied to your selection.',
     'execute'                                    => 'Execute',
+    'apply_rule_group_selection'                 => 'Apply rule group ":title" to a selection of your transactions',
+    'apply_rule_group_selection_intro'           => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
+    'applied_rule_group_selection'               => 'Rule group ":title" has been applied to your selection.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'User action is ":trigger_value"',
@@ -427,12 +428,6 @@ return [
     'attachment_updated'                         => 'Updated attachment ":name"',
     'upload_max_file_size'                       => 'Maximum file size: :size',
 
-    // tour:
-    'prev'                                       => 'Prev',
-    'next'                                       => 'Next',
-    'end-tour'                                   => 'End tour',
-    'pause'                                      => 'Pause',
-
     // transaction index
     'title_expenses'                             => 'Expenses',
     'title_withdrawal'                           => 'Expenses',
@@ -500,15 +495,6 @@ return [
     'make_default_currency'                      => 'make default',
     'default_currency'                           => 'default',
 
-    // new user:
-    'submit'                                     => 'Submit',
-    'getting_started'                            => 'Getting started',
-    'to_get_started'                             => '請輸入你的銀行名稱和帳戶餘額，以開始使用 Firefly︰',
-    'savings_balance_text'                       => '如果你有儲蓄帳戶的話，請輸入你的儲蓄帳戶當前的餘額︰',
-    'cc_balance_text'                            => '如果你有信用卡，請輸入你的信用卡限額。',
-    'stored_new_account_new_user'                => 'Yay! Your new account has been stored.',
-    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
-
     // forms:
     'mandatoryFields'                            => 'Mandatory fields',
     'optionalFields'                             => 'Optional fields',
@@ -557,6 +543,8 @@ return [
     'average_bill_amount_overall'                => '平均賬單金額 （總計）',
     'not_or_not_yet'                             => 'Not (yet)',
     'not_expected_period'                        => 'Not expected this period',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => '資產帳戶的詳細資訊 ":name"',
     'details_for_expense'                        => 'Details for expense account ":name"',
@@ -644,6 +632,12 @@ return [
 
     // new user:
     'welcome'                                    => 'Welcome to Firefly!',
+    'submit'                                     => 'Submit',
+    'getting_started'                            => 'Getting started',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Yay! Your new accounts have been stored.',
 
     // home page:
     'yourAccounts'                               => 'Your accounts',

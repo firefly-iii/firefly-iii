@@ -24,7 +24,7 @@ return [
     'edit_bill'         => 'Wijzig contract ":name"',
     'delete_bill'       => 'Verwijder contract ":name"',
     'reports'           => 'Overzichten',
-    'search_result'     => 'Search results for ":query"',
+    'search_result'     => 'Zoekresultaten voor ":query"',
     'withdrawal_list'   => 'Uitgaven',
     'deposit_list'      => 'Inkomsten',
     'transfer_list'     => 'Overschrijvingen',

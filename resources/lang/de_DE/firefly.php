@@ -80,6 +80,8 @@ return [
     'user_id_is'                                 => 'Ihre Benutzerkennung ist <strong>:user</strong>',
     'field_supports_markdown'                    => 'Diese Feld unterstützt <a href="https://en.support.wordpress.com/markdown-quick-reference/"> Abschlag </a>.',
     'need_more_help'                             => 'Wenn du hilfe beim bedienen von Firefly III brauchst, <a href="https://github.com/firefly-iii/firefly-iii/issues">erstelle ein Ticket auf Github</a>.',
+    'reenable_intro_text'                        => 'You can also reenable <a href="#" id="reenableGuidance">the introduction guidance</a>.',
+    'intro_boxes_after_refresh'                  => 'The introduction boxes will reappear when you refresh the page.',
     'nothing_to_display'                         => 'Es gibt keine Transaktionen zum Anzeigen',
     'show_all_no_filter'                         => 'Alle Transaktionen anzeigen, ohne diese nach Datum zu gruppieren.',
     'expenses_by_category'                       => 'Ausgaben nach Kategorie',
@@ -205,7 +207,6 @@ return [
 
     // rules
     'rules'                                      => 'Regeln',
-    'rules_explanation'                          => 'Hier können Sie Regeln verwalten. Regeln werden ausgelöst, wenn eine Überweisung erstellt oder aktualisert wird. Wenn diese Überweisungen bestimmte Merkmale aufweisen (sogenannte "Trigger") wird Firefly eine "Aktion" ausführen. Zusammengenommen kann Firefly so auf eine bestimmte Art und Weise auf neue Überweisungen reagieren.',
     'rule_name'                                  => 'Name der Regel',
     'rule_triggers'                              => 'Regeln wird ausgelöst wenn',
     'rule_actions'                               => 'Regel wird',
@@ -255,14 +256,14 @@ return [
     'warning_transaction_subset'                 => 'Aus Kapazitätgründen ist diese Liste auf :max_num_transactions Überweisungen limitiert und zeigt möglicherweise nur einen Teil dieser an',
     'warning_no_matching_transactions'           => 'Keine übereinstimmenden Überweisungen gefunden. Aus Kapazitätgründen werden nur die letzten :num_transactions Überweisungen überprüft.',
     'warning_no_valid_triggers'                  => 'Keine gültigen Trigger gefunden.',
-    'execute_on_existing_transactions'           => 'Führe für bestehende Überweisungen aus',
-    'rule_group_select_transactions'             => 'Regelgruppe ":title "auf bestehende Buchungen ausführen',
-    'execute_on_existing_transactions_intro'     => 'Wenn eine Regel oder eine Gruppe geändert oder hinzugefügt wurde, können Sie für bestehende Überweisungen ausgeführt werden',
-    'execute_on_existing_transactions_short'     => 'Bestehende Überweisungen',
-    'executed_group_on_existing_transactions'    => 'Regelgruppe ":title" wurde für bestehende Überweisungen ausgeführt',
-    'execute_group_on_existing_transactions'     => 'Regelgruppe ":title" für bestehende Überweisungen ausführen',
+    'apply_rule_selection'                       => 'Apply rule ":title" to a selection of your transactions',
+    'apply_rule_selection_intro'                 => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'         => 'Überweisungen von diesem Konto einbeziehen',
+    'applied_rule_selection'                     => 'Rule ":title" has been applied to your selection.',
     'execute'                                    => 'Ausführen',
+    'apply_rule_group_selection'                 => 'Apply rule group ":title" to a selection of your transactions',
+    'apply_rule_group_selection_intro'           => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
+    'applied_rule_group_selection'               => 'Rule group ":title" has been applied to your selection.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'Die Nutzeraktion ist ":trigger_value"',
@@ -428,12 +429,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'attachment_updated'                         => 'Anhang ":name" aktualisiert',
     'upload_max_file_size'                       => 'Maximale Dateigröße: :size',
 
-    // tour:
-    'prev'                                       => 'Zurück',
-    'next'                                       => 'Vor',
-    'end-tour'                                   => 'Ende der Tour',
-    'pause'                                      => 'Pause',
-
     // transaction index
     'title_expenses'                             => 'Ausgaben',
     'title_withdrawal'                           => 'Ausgaben',
@@ -501,15 +496,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'make_default_currency'                      => 'als Standard festlegen',
     'default_currency'                           => 'Standard',
 
-    // new user:
-    'submit'                                     => 'Bestätigen',
-    'getting_started'                            => 'Erste Schritte',
-    'to_get_started'                             => 'Um mit Firefly zu starten, geben Sie bitte den Namen ihrer Bank sowie den Kontostand ihres Girokontos an:',
-    'savings_balance_text'                       => 'Wenn Sie in Sparkonto besitzen, geben Sie bitte den Kontostand des Kontos an:',
-    'cc_balance_text'                            => 'Wenn Sie eine Kreditkarte besitzen, geben Sie bitte das Limit der Kreditkarte an.',
-    'stored_new_account_new_user'                => 'Yay! Ihr neues Konto wurde gespeichert.',
-    'stored_new_accounts_new_user'               => 'Yay! Ihre neuen Konten wurden gespeichert.',
-
     // forms:
     'mandatoryFields'                            => 'Pflichtfelder',
     'optionalFields'                             => 'Optionale Felder',
@@ -558,6 +544,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'average_bill_amount_overall'                => 'Durchschnittliche Rechnungssumme (gesamt)',
     'not_or_not_yet'                             => '(noch) nicht',
     'not_expected_period'                        => 'Diesen Zeitraum nicht erwartet',
+    'bill_is_active'                             => 'Bill is active',
+    'bill_will_automatch'                        => 'Bill will automatically linked to matching transactions',
     // accounts:
     'details_for_asset'                          => 'Details für Girokonto ":name"',
     'details_for_expense'                        => 'Details für Debitor ":name"',
@@ -645,6 +633,12 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
 
     // new user:
     'welcome'                                    => 'Willkommen bei Firefly!',
+    'submit'                                     => 'Bestätigen',
+    'getting_started'                            => 'Erste Schritte',
+    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
+    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
+    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'stored_new_accounts_new_user'               => 'Yay! Ihre neuen Konten wurden gespeichert.',
 
     // home page:
     'yourAccounts'                               => 'Deine Konten',

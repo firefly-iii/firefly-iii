@@ -27,7 +27,7 @@ return [
     'showEverything'                             => 'Laat alles zien',
     'never'                                      => 'Nooit',
     'search_results_for'                         => 'Zoekresultaten voor ":query"',
-    'no_results_for_empty_search'                => 'Your search was empty, so nothing was found.',
+    'no_results_for_empty_search'                => 'Je zoekopdracht was leeg, dus niets werd gevonden.',
     'bounced_error'                              => 'Het emailtje naar :email kwam nooit aan.',
     'deleted_error'                              => 'Deze gegevens zijn niet correct.',
     'general_blocked_error'                      => 'Je account is uitgeschakeld, je kan helaas niet inloggen.',
@@ -80,6 +80,8 @@ return [
     'user_id_is'                                 => 'Je gebruikersnummer is <strong>:user</strong>',
     'field_supports_markdown'                    => 'Dit veld ondersteunt <a href="https://en.support.wordpress.com/markdown-quick-reference/">Markdown</a>.',
     'need_more_help'                             => 'Als je meer hulp nodig hebt met Firefly III, <a href="https://github.com/firefly-iii/firefly-iii/issues">open dan een ticket op Github</a>.',
+    'reenable_intro_text'                        => 'Je kan de <a href="#" id="reenableGuidance">introductie-popupjes</a> ook weer aan zetten.',
+    'intro_boxes_after_refresh'                  => 'De introductie-popupjes komen tevoorschijn als je de pagina opnieuw laadt.',
     'nothing_to_display'                         => 'Er zijn hier geen transacties te zien',
     'show_all_no_filter'                         => 'Laat alle transacties zien, zonder te groeperen op datum.',
     'expenses_by_category'                       => 'Uitgaven per categorie',
@@ -146,11 +148,11 @@ return [
 
     // search
     'search'                                     => 'Zoeken',
-    'search_found_transactions'                  => 'Number of transactions found:',
-    'general_search_error'                       => 'An error occured while searching. Please check the log files for more information.',
-    'search_box'                                 => 'Search',
-    'search_box_intro'                           => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
-    'search_error'                               => 'Error while searching',
+    'search_found_transactions'                  => 'Aantal gevonden transacties:',
+    'general_search_error'                       => 'Er is een fout opgetreden tijdens het zoeken. Controleer de log-bestanden voor meer informatie.',
+    'search_box'                                 => 'Zoeken',
+    'search_box_intro'                           => 'Welkom bij de zoekfunctie van Firefly III. Voer je zoekopdracht in het vak. Bekijk zeker de help-pagina, want de zoekfunctie is behoorlijk geadvanceerd.',
+    'search_error'                               => 'Fout tijdens het zoeken',
     'search_searching'                           => 'Bezig met zoeken ...',
 
     // repeat frequencies:
@@ -205,7 +207,6 @@ return [
 
     // rules
     'rules'                                      => 'Regels',
-    'rules_explanation'                          => 'Hier kan je regels instellen. Regels worden in werking gesteld als je een bij-, afschrijving of overschrijving maakt (of verandert). Als die transactie bepaalde eigenschappen heeft (zogenaamde "triggers") zal Firefly de bijbehorende "acties" uitvoeren. Gecombineerd kan je Firefly op een bepaalde manier laten reageren op nieuwe transacties.',
     'rule_name'                                  => 'Regelnaam',
     'rule_triggers'                              => 'Regel reageert op',
     'rule_actions'                               => 'Regel zal dan',
@@ -255,14 +256,14 @@ return [
     'warning_transaction_subset'                 => 'Je ziet hier maximaal :max_num_transactions transacties omdat je anders veel te lang moet wachten',
     'warning_no_matching_transactions'           => 'Niks gevonden in je laatste :num_transactions transacties.',
     'warning_no_valid_triggers'                  => 'Geen geldige triggers gevonden.',
-    'execute_on_existing_transactions'           => 'Toepassen op bestaande transacties',
-    'rule_group_select_transactions'             => 'Regelgroep ":title" uitvoeren op bestaande transacties',
-    'execute_on_existing_transactions_intro'     => 'Wanneer een regel of groep is veranderd of toegevoegd, kun je hem hier uitvoeren voor bestaande transacties',
-    'execute_on_existing_transactions_short'     => 'Bestaande transacties',
-    'executed_group_on_existing_transactions'    => 'Regelgroep ":title" is uitgevoerd op bestaande transacties',
-    'execute_group_on_existing_transactions'     => 'Regelgroep uitvoeren op bestaande transacties',
+    'apply_rule_selection'                       => 'Pas regel ":title" toe op een selectie van je transacties',
+    'apply_rule_selection_intro'                 => 'Regels zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je een regels hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
     'include_transactions_from_accounts'         => 'Gebruik transacties van deze rekeningen',
+    'applied_rule_selection'                     => 'Regel ":title" is toegepast op je selectie.',
     'execute'                                    => 'Uitvoeren',
+    'apply_rule_group_selection'                 => 'Pas regelgroep ":title" toe op een selectie van je transacties',
+    'apply_rule_group_selection_intro'           => 'Regelgroepen zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je regels in de groep hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
+    'applied_rule_group_selection'               => 'Regelgroep ":title" is toegepast op je selectie.',
 
     // actions and triggers
     'rule_trigger_user_action'                   => 'Gebruikersactie is ":trigger_value"',
@@ -542,6 +543,8 @@ return [
     'average_bill_amount_overall'                => 'Gemiddeld contractbedrag (gehele periode)',
     'not_or_not_yet'                             => '(nog) niet',
     'not_expected_period'                        => 'Niet verwacht deze periode',
+    'bill_is_active'                             => 'Contract is actief',
+    'bill_will_automatch'                        => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
     // accounts:
     'details_for_asset'                          => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'                        => 'Overzicht voor crediteur ":name"',
@@ -631,9 +634,9 @@ return [
     'welcome'                                    => 'Welkom bij Firefly!',
     'submit'                                     => 'Invoeren',
     'getting_started'                            => 'Aan de start!',
-    'to_get_started'                             => 'It is good to see you have successfully installed Firefly III. To get started with this tool please enter your bank\'s name and the balance of your main checking account. Do not worry yet if you have multiple accounts. You can add those later. It\'s just that Firefly III needs something to start with.',
-    'savings_balance_text'                       => 'Firefly III will automatically create a savings account for you. By default, there will be no money in your savings account, but if you tell Firefly III the balance it will be stored as such.',
-    'finish_up_new_user'                         => 'That\'s it! You can continue by pressing <strong>Submit</strong>. You will be taken to the index of Firefly III.',
+    'to_get_started'                             => 'Het is goed om te zien dat de installatie van Firefly III gelukt is. Voer de naam van je bank in en het saldo van je belangrijkste betaalrekening. Meerdere rekeningen kan je later toevoegen, maar we moeten ergens beginnen natuurlijk.',
+    'savings_balance_text'                       => 'Firefly III maakt automatisch een spaarrekening voor je. Daar zit normaal geen geld in, maar je kan hier opgeven hoeveel er op staat.',
+    'finish_up_new_user'                         => 'That\'s it! Druk op <strong>Opslaan</strong> om door te gaan. Je gaat dan naar de homepage van Firefly III.',
     'stored_new_accounts_new_user'               => 'Hoera! Je nieuwe accounts zijn opgeslagen.',
 
     // home page:
