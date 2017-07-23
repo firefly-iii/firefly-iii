@@ -69,6 +69,7 @@ class IntroController
 
         return in_array('outro', $keys);
     }
+
     /**
      * @param string $route
      * @param string $specialPage
@@ -77,7 +78,8 @@ class IntroController
      */
     public function postEnable(string $route, string $specialPage = '')
     {
-        $key = 'shown_demo_' . $route;
+        $route = str_replace('.', '_', $route);
+        $key   = 'shown_demo_' . $route;
         if ($specialPage !== '') {
             $key .= '_' . $specialPage;
         }
