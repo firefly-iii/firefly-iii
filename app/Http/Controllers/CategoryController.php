@@ -382,7 +382,7 @@ class CategoryController extends Controller
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range);
+        $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
 
         // properties for cache
@@ -468,7 +468,7 @@ class CategoryController extends Controller
         }
         $range   = Preferences::get('viewRange', '1M')->data;
         $first   = Navigation::startOfPeriod($first, $range);
-        $end     = Navigation::endOfX(new Carbon, $range);
+        $end     = Navigation::endOfX(new Carbon, $range, null);
         $entries = new Collection;
 
         // properties for entries with their amounts.

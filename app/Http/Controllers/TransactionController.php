@@ -204,7 +204,7 @@ class TransactionController extends Controller
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range);
+        $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
         $types      = config('firefly.transactionTypesByWhat.' . $what);
 
