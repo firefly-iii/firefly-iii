@@ -78,7 +78,7 @@ class TransactionController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        $path         = '/transactions/' . $what;
+        $path         = route('transactions.index', [$what]);
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -86,14 +86,14 @@ class TransactionController extends Controller
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
             $end      = new Carbon;
-            $path     = '/transactions/' . $what . '/all/';
+            $path     = route('transactions.index', [$what, 'all']);
         }
 
         // prep for "specific date" view.
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $path     = '/transactions/' . $what . '/' . $moment;
+            $path         = route('transactions.index', [$what, $moment]);
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]

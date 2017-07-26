@@ -308,7 +308,7 @@ class BudgetController extends Controller
             $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
                       ->withoutBudget()->withOpposingAccount();
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/budgets/list/no-budget');
+            $journals->setPath(route('budgets.no-budget'));
             $count = $journals->getCollection()->count();
             if ($count === 0 && $loop < 3) {
                 $start->subDay();
@@ -366,7 +366,7 @@ class BudgetController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/budgets/show/' . $budget->id);
+        $journals->setPath(route('budgets.show', [$budget->id]));
 
 
         $subTitle = trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
@@ -404,7 +404,7 @@ class BudgetController extends Controller
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/budgets/show/' . $budget->id . '/' . $budgetLimit->id);
+        $journals->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
 
 
         $start  = session('first', Carbon::create()->startOfYear());

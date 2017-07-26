@@ -214,7 +214,7 @@ class CategoryController extends Controller
             $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount();
             $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/categories/list/no-category');
+            $journals->setPath(route('categories.no-category'));
             $count = $journals->getCollection()->count();
             if ($count === 0 && $loop < 3) {
                 $start->subDay();
@@ -298,7 +298,7 @@ class CategoryController extends Controller
                       ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
             $collector->removeFilter(InternalTransferFilter::class);
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('categories/show/' . $category->id);
+            $journals->setPath(route('categories.show', [$category->id]));
             $count = $journals->getCollection()->count();
             if ($count === 0 && $loop < 3) {
                 $start->subDay();

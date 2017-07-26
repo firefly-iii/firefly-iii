@@ -217,7 +217,7 @@ class BillController extends Controller
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
                   ->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/bills/show/' . $bill->id);
+        $journals->setPath(route('bills.show', [$bill->id]));
 
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;

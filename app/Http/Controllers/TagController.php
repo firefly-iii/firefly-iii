@@ -246,7 +246,7 @@ class TagController extends Controller
         $periods      = new Collection;
         $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
         $sum          = '0';
-        $path         = 'tags/show/' . $tag->id;
+        $path         = route('tags.show', [$tag->id]);
 
 
         // prep for "all" view.
@@ -255,7 +255,7 @@ class TagController extends Controller
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
             $sum      = $repository->sumOfTag($tag);
-            $path     = 'tags/show/' . $tag->id . '/all';
+            $path     = route('tags.show', [$tag->id,'all']);
         }
 
         // prep for "specific date" view.
