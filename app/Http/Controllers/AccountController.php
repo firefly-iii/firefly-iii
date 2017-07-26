@@ -306,7 +306,7 @@ class AccountController extends Controller
                 $collector->setRange($start, $end);
             }
             $journals = $collector->getPaginatedJournals();
-            $journals->setPath('accounts/show/' . $account->id . '/' . $moment);
+            $journals->setPath(route('accounts.show',[$account->id, $moment]));
             $count = $journals->getCollection()->count();
             if ($count === 0 && $loop < 3) {
                 $start->subDay();
@@ -421,7 +421,7 @@ class AccountController extends Controller
         $start      = $repository->oldestJournalDate($account);
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range);
+        $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
 
         // properties for cache
