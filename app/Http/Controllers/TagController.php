@@ -254,7 +254,7 @@ class TagController extends Controller
             $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
-            $sum      = $repository->sumOfTag($tag);
+            $sum      = $repository->sumOfTag($tag, null, null);
             $path     = route('tags.show', [$tag->id,'all']);
         }
 
