@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Converter\Amount;
 use FireflyIII\Import\Converter\ConverterInterface;
+use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -50,6 +51,8 @@ class ImportJournal
     public $notes = '';
     /** @var ImportAccount */
     public $opposing;
+    /** @var array */
+    public $tags = [];
     /** @var string */
     private $amount = '0';
     /** @var  ImportCurrency */
@@ -60,8 +63,6 @@ class ImportJournal
     private $externalId = '';
     /** @var array */
     private $modifiers = [];
-    /** @var array */
-    private $tags = [];
     /** @var  User */
     private $user;
 
@@ -269,7 +270,7 @@ class ImportJournal
                 break;
             case 'tags-comma':
             case 'tags-space':
-                $this->tags[] = $array;
+                $this->setTags($array);
                 break;
             case 'date-interest':
                 $this->metaDates['interest_date'] = $array['value'];
@@ -281,5 +282,19 @@ class ImportJournal
                 $this->metaDates['process_date'] = $array['value'];
                 break;
         }
+    }
+
+    /**
+     * @param array $array
+     */
+    private function setTags(array $array): void
+    {
+        $preProcessorClass = config(sprintf('csv.import_roles.%s.pre-process-mapper', $array['role']));
+        /** @var PreProcessorInterface $preProcessor */
+        $preProcessor = app(sprintf('\FireflyIII\Import\MapperPreProcess\%s', $preProcessorClass));
+        $tags         = $preProcessor->run($array['value']);
+        $this->tags   = array_merge($this->tags, $tags);
+
+        return;
     }
 }

@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Rules\Processor;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -58,6 +59,8 @@ class ImportStorage
     private $objects;
     /** @var Collection */
     private $rules;
+    /** @var  TagRepositoryInterface */
+    private $tagRepository;
 
     /**
      * ImportStorage constructor.
@@ -82,11 +85,17 @@ class ImportStorage
      */
     public function setJob(ImportJob $job)
     {
-        $this->job  = $job;
+        $this->job = $job;
+
         $repository = app(CurrencyRepositoryInterface::class);
         $repository->setUser($job->user);
         $this->currencyRepository = $repository;
-        $this->rules              = $this->getUserRules();
+
+        $repository = app(TagRepositoryInterface::class);
+        $repository->setUser($job->user);
+        $this->tagRepository = $repository;
+
+        $this->rules = $this->getUserRules();
     }
 
     /**
@@ -423,6 +432,9 @@ class ImportStorage
             $journal->setMeta('notes', $importJournal->notes);
         }
 
+        // store tags
+        $this->storeTags($importJournal->tags, $journal);
+
         // set journal completed:
         $journal->completed = true;
         $journal->save();
@@ -460,6 +472,27 @@ class ImportStorage
                 Log::warning(sprintf('Could not parse "%s" into a valid Date object for field %s', $value, $name));
             }
         }
+    }
+
+    /**
+     * @param array              $tags
+     * @param TransactionJournal $journal
+     */
+    private function storeTags(array $tags, TransactionJournal $journal): void
+    {
+        foreach ($tags as $tag) {
+            $dbTag = $this->tagRepository->findByTag($tag);
+            if (is_null($dbTag->id)) {
+                $dbTag = $this->tagRepository->store(
+                    ['tag'       => $tag, 'date' => null, 'description' => null, 'latitude' => null, 'longitude' => null,
+                     'zoomLevel' => null, 'tagMode' => 'nothing']
+                );
+            }
+            $journal->tags()->save($dbTag);
+            Log::debug(sprintf('Linked tag %d ("%s") to journal #%d', $dbTag->id, $dbTag->tag, $journal->id));
+        }
+
+        return;
     }
 
     /**
