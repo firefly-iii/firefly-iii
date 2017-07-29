@@ -27,6 +27,7 @@ use Log;
 use Navigation;
 use Preferences;
 use Response;
+use Session;
 use Steam;
 use View;
 
@@ -136,6 +137,7 @@ class TransactionController extends Controller
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
+            Session::flash('info', trans('firefly.jump_back_in_time'));
         }
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals', 'periods', 'start', 'end', 'moment'));

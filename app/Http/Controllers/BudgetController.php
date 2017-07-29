@@ -34,6 +34,7 @@ use Log;
 use Navigation;
 use Preferences;
 use Response;
+use Session;
 use View;
 
 /**
@@ -323,6 +324,7 @@ class BudgetController extends Controller
                 'firefly.without_budget_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
+            Session::flash('info', trans('firefly.jump_back_in_time'));
         }
 
         return view('budgets.no-budget', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));

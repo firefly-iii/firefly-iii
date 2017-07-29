@@ -29,6 +29,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 use Preferences;
+use Session;
 use Steam;
 use View;
 
@@ -229,6 +230,7 @@ class CategoryController extends Controller
                 'firefly.without_category_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
+            Session::flash('info', trans('firefly.jump_back_in_time'));
         }
 
         return view('categories.no-category', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
@@ -314,6 +316,7 @@ class CategoryController extends Controller
                 ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                  'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
+            Session::flash('info', trans('firefly.jump_back_in_time'));
         }
 
         return view('categories.show', compact('category', 'moment', 'journals', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));

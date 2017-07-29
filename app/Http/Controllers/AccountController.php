@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 use Preferences;
+use Session;
 use Steam;
 use View;
 
@@ -317,10 +318,12 @@ class AccountController extends Controller
         }
 
         if ($moment !== 'all' && $loop > 1) {
+            $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
             $subTitle = trans(
                 'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                            'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
+            Session::flash('info', trans('firefly.jump_back_in_time'));
         }
 
 
