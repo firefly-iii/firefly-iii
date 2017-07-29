@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
 use Response;
+use Session;
 use View;
 
 /**
@@ -230,6 +231,13 @@ class ImportController extends Controller
         }
         $data = $request->all();
         $configurator->configureJob($data);
+
+        // get possible warning from configurator:
+        $warning = $configurator->getWarningMessage();
+
+        if(strlen($warning) > 0) {
+            Session::flash('warning', $warning);
+        }
 
         // return to configure
         return redirect(route('import.configure', [$job->key]));

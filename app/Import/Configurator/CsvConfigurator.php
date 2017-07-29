@@ -26,7 +26,11 @@ use Log;
  */
 class CsvConfigurator implements ConfiguratorInterface
 {
+    /** @var  ImportJob */
     private $job;
+
+    /** @var string */
+    private $warning = '';
 
     /**
      * ConfiguratorInterface constructor.
@@ -50,8 +54,10 @@ class CsvConfigurator implements ConfiguratorInterface
         /** @var ConfigurationInterface $object */
         $object = new $class($this->job);
         $object->setJob($job);
+        $result        = $object->storeConfiguration($data);
+        $this->warning = $object->getWarningMessage();
 
-        return $object->storeConfiguration($data);
+        return $result;
     }
 
     /**
@@ -89,6 +95,16 @@ class CsvConfigurator implements ConfiguratorInterface
         }
 
         throw new FireflyException('No view for state');
+    }
+
+    /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string
+    {
+        return $this->warning;
     }
 
     /**

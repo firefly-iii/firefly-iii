@@ -29,6 +29,9 @@ class Roles implements ConfigurationInterface
     /** @var  ImportJob */
     private $job;
 
+    /** @var string */
+    private $warning = '';
+
     /**
      * Get the data necessary to show the configuration screen.
      *
@@ -66,6 +69,16 @@ class Roles implements ConfigurationInterface
         $this->makeExamplesUnique();
 
         return $this->data;
+    }
+
+    /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string
+    {
+        return $this->warning;
     }
 
     /**
@@ -246,6 +259,10 @@ class Roles implements ConfigurationInterface
             $config['column-roles-complete'] = true;
             $this->job->configuration        = $config;
             $this->job->save();
+            $this->warning = '';
+        }
+        if ($assigned === 0 || !$hasAmount) {
+            $this->warning = trans('csv.roles_warning');
         }
 
         return true;

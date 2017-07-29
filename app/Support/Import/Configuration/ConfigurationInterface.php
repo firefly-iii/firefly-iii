@@ -43,4 +43,11 @@ interface ConfigurationInterface
      */
     public function storeConfiguration(array $data): bool;
 
+    /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string;
+
 }

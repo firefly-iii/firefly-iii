@@ -49,6 +49,13 @@ interface ConfiguratorInterface
     public function getNextView(): string;
 
     /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string;
+
+    /**
      * Returns true when the initial configuration for this job is complete.
      *
      * @return bool

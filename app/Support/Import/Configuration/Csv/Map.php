@@ -268,4 +268,14 @@ class Map implements ConfigurationInterface
 
         return $column;
     }
+
+    /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string
+    {
+        return '';
+    }
 }
