@@ -887,9 +887,6 @@ return [
     'tag_title_nothing'          => 'Standaard tags',
     'tag_title_balancingAct'     => 'Balancerende tags',
     'tag_title_advancePayment'   => 'Vooruitbetaalde tags',
-    'tags_introduction'          => 'Normaal gesproken zijn tags enkele woorden, gebruikt om gerelateerde zaken snel aan elkaar te plakken. <span class="label label-info">dure-aanschaf</span>, <span class="label label-info">rekening</span>, <span class="label label-info">feestje</span>. In Firefly III hebben tags meer betekenis en kan je er een datum, omschrijving en locatie aan geven. Daarmee kan je je transacties op een wat zinvollere manier aan elkaar koppelen. Je kan bijvoorbeeld een tag <span class="label label-success">Kerstdiner</span> maken en informatie over het restaurant meenemen. Zulke tags zijn enkelvoudig; je gebruikt ze maar bij één gelegenheid.',
-    'tags_group'                 => 'Omdat tags transacties groeperen kan je er teruggaves, vergoedingen en andere geldzaken mee aanduiden, zolang de transacties elkaar "opheffen". Hoe je dit aanpakt is aan jou. De gewone manier kan natuurlijk ook.',
-    'tags_start'                 => 'Maak hieronder een tag, of voer nieuwe tags in als je nieuwe transacties maakt.',
 
     'transaction_journal_information'       => 'Transactieinformatie',
     'transaction_journal_meta'              => 'Metainformatie',
