@@ -145,7 +145,6 @@ return [
     'exchange_rate_instructions'                 => 'Betaalrekening "@naam" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
     'transfer_exchange_rate_instructions'        => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name: accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
     'transaction_data'                           => 'Transactiegegevens',
-    'jump_back_in_time'                          => 'The period you selected contains no transactions. Firefly III has skipped this empty period. The dates below may divert from what you have selected.',
 
     // search
     'search'                                     => 'Zoeken',
