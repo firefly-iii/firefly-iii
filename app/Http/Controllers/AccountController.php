@@ -32,7 +32,6 @@ use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 use Preferences;
-use Session;
 use Steam;
 use View;
 
@@ -292,37 +291,14 @@ class AccountController extends Controller
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $count = 0;
-        $loop  = 0;
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            $collector = app(JournalCollectorInterface::class);
-            Log::info('Count is zero, search for journals.');
-            $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-            if (!is_null($start)) {
-                $collector->setRange($start, $end);
-            }
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath(route('accounts.show', [$account->id, $moment]));
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
+        // grab journals:
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+        if (!is_null($start)) {
+            $collector->setRange($start, $end);
         }
-
-        if ($moment !== 'all' && $loop > 1) {
-            $fStart   = $start->formatLocalized($this->monthAndDayFormat);
-            $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
-            $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
-            $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-            Session::flash('info', trans('firefly.jump_back_in_time'));
-        }
-
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath(route('accounts.show', [$account->id, $moment]));
 
         return view(
             'accounts.show',

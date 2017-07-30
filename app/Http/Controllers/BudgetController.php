@@ -34,7 +34,6 @@ use Log;
 use Navigation;
 use Preferences;
 use Response;
-use Session;
 use View;
 
 /**
@@ -297,35 +296,12 @@ class BudgetController extends Controller
         $page     = intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
-        $count = 0;
-        $loop  = 0;
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at no-budget loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info(sprintf('Count is zero, search for journals between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
-                      ->withoutBudget()->withOpposingAccount();
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath(route('budgets.no-budget'));
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
-
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.without_budget_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            Session::flash('info', trans('firefly.jump_back_in_time'));
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
+                  ->withoutBudget()->withOpposingAccount();
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath(route('budgets.no-budget'));
 
         return view('budgets.no-budget', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }

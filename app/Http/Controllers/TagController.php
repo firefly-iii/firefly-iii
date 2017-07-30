@@ -22,7 +22,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Preferences;
 use Session;
@@ -217,8 +216,6 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $count        = 0;
-        $loop         = 0;
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
@@ -260,33 +257,14 @@ class TagController extends Controller
                 ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at tag loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info(sprintf('Count is zero, search for journals between %s and %s (pagesize %d, page %d).', $start, $end, $pageSize, $page));
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                      ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath($path);
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
 
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.journals_in_period_for_tag',
-                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            Session::flash('info', trans('firefly.jump_back_in_time'));
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath($path);
+
 
         return view('tags.show', compact('apiKey', 'tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }

@@ -29,7 +29,6 @@ use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 use Preferences;
-use Session;
 use Steam;
 use View;
 
@@ -165,10 +164,12 @@ class CategoryController extends Controller
     public function noCategory(Request $request, JournalRepositoryInterface $repository, string $moment = '')
     {
         // default values:
-        $range   = Preferences::get('viewRange', '1M')->data;
-        $start   = null;
-        $end     = null;
-        $periods = new Collection;
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $start    = null;
+        $end      = null;
+        $periods  = new Collection;
+        $page     = intval($request->get('page'));
+        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -200,38 +201,13 @@ class CategoryController extends Controller
             );
         }
 
-        $page     = intval($request->get('page'));
-        $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
-        $count = 0;
-        $loop  = 0;
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at no-cat loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info('Count is zero, search for journals.');
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount();
-            $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath(route('categories.no-category'));
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
-
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.without_category_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            Session::flash('info', trans('firefly.jump_back_in_time'));
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount();
+        $collector->removeFilter(InternalTransferFilter::class);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath(route('categories.no-category'));
 
         return view('categories.no-category', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }
@@ -289,35 +265,15 @@ class CategoryController extends Controller
                  'end'  => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at category loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info('Count is zero, search for journals.');
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                      ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
-            $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath(route('categories.show', [$category->id]));
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
 
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.journals_in_period_for_category',
-                ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                 'end'  => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            Session::flash('info', trans('firefly.jump_back_in_time'));
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+                  ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
+        $collector->removeFilter(InternalTransferFilter::class);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath(route('categories.show', [$category->id]));
+
 
         return view('categories.show', compact('category', 'moment', 'journals', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }

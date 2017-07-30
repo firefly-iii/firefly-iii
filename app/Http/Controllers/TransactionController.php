@@ -27,7 +27,6 @@ use Log;
 use Navigation;
 use Preferences;
 use Response;
-use Session;
 use Steam;
 use View;
 
@@ -112,33 +111,14 @@ class TransactionController extends Controller
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at transaction loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info('Count is zero, search for journals.');
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
-            $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath($path);
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
 
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.title_' . $what . '_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            Session::flash('info', trans('firefly.jump_back_in_time'));
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
+        $collector->removeFilter(InternalTransferFilter::class);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath($path);
+
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals', 'periods', 'start', 'end', 'moment'));
 
