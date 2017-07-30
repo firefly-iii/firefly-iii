@@ -215,7 +215,7 @@ class TagController extends Controller
         // default values:
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $count        = 0;
         $loop         = 0;

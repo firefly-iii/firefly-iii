@@ -399,6 +399,10 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function setPage(int $page): JournalCollectorInterface
     {
+        if ($page < 1) {
+            $page = 1;
+        }
+
         $this->page = $page;
 
         if ($page > 0) {

@@ -817,6 +817,7 @@ Breadcrumbs::register(
     }
 
     $breadcrumbs->parent('index');
+
     return;
 }
 );

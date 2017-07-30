@@ -200,7 +200,7 @@ class CategoryController extends Controller
             );
         }
 
-        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         $count = 0;
@@ -249,7 +249,7 @@ class CategoryController extends Controller
         // default values:
         $subTitle     = $category->name;
         $subTitleIcon = 'fa-bar-chart';
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
         $count        = 0;
         $loop         = 0;

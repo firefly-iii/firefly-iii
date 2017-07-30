@@ -235,7 +235,7 @@ class ImportController extends Controller
         // get possible warning from configurator:
         $warning = $configurator->getWarningMessage();
 
-        if(strlen($warning) > 0) {
+        if (strlen($warning) > 0) {
             Session::flash('warning', $warning);
         }
 
