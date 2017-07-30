@@ -34,7 +34,8 @@ class DecryptAttachment extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:decrypt-attachment {id} {name} {directory}';
+    protected $signature = 'firefly:decrypt-attachment {id:The ID of the attachment.} {name:The file name of the attachment.} 
+    {directory:Where the file must be stored.}';
 
 
     /**
