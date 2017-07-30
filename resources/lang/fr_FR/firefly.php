@@ -887,9 +887,6 @@ return [
     'tag_title_nothing'          => 'Tags par défaut',
     'tag_title_balancingAct'     => 'Balancing act tags',
     'tag_title_advancePayment'   => 'Tags de paiement anticipé',
-    'tags_introduction'          => 'Usually tags are singular words, designed to quickly band items together using things like <span class="label label-info">expensive</span>, <span class="label label-info">bill</span> or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties such as a date, description and location. This allows you to join transactions together in a more meaningful way. For example, you could make a tag called <span class="label label-success">Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion, perhaps with multiple transactions.',
-    'tags_group'                 => 'Les tags groupent des opérations ensemble, ce qui permet de stocker des remboursements (dans le cas où vous avancer de l\'argent aux autres) et d\'autres types "d\'équilibres" où résumer les dépenses (les remboursements de votre nouvelle TV) ou quand les dépenses et les dépôts s\'annulent les uns les autres (achat de quelque chose avec de l\'argent mis de coté). C\'est comme vous souhaitez. Utiliser les tags à l\'ancienne est toujours possible.',
-    'tags_start'                 => 'Create a tag to get started or enter tags when creating new transactions.',
 
     'transaction_journal_information'       => 'Transaction information',
     'transaction_journal_meta'              => 'Meta information',
