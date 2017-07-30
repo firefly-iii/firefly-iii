@@ -86,8 +86,6 @@ class TagControllerTest extends TestCase
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('tagAllowAdvance')->once()->andReturn(false);
-        $repository->shouldReceive('tagAllowBalancing')->once()->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('tags.edit', [1]));

@@ -150,6 +150,7 @@ class ImportControllerTest extends TestCase
         $configurator->shouldReceive('setJob')->once();
         $configurator->shouldReceive('isJobConfigured')->once()->andReturn(false);
         $configurator->shouldReceive('configureJob')->once()->andReturn(false);
+        $configurator->shouldReceive('getWarningMessage')->once()->andReturn('');
 
 
         $this->be($this->user());
