@@ -145,7 +145,6 @@ return [
     'exchange_rate_instructions'                 => 'Das Girokonto "@name" akzeptiert nur Transaktionen in @native_currency. Wenn Sie stattdessen @foreign_currency verwenden wollen, sollten Sie sicherstellen, dass der Betrag auch in @native_currency angengeben ist:',
     'transfer_exchange_rate_instructions'        => 'Das Quellkonto "@source_name" akzeptiert nur Transaktionen in @source_currency. Das Zielkonto "@dest_name" akzeptiert nur Transaktionen in @dest_currency. Sie müssen den Betrag in beiden Währungen korrenkt angeben.',
     'transaction_data'                           => 'Transaktionsdaten',
-    'jump_back_in_time'                          => 'The period you selected contains no transactions. Firefly III has skipped this empty period. The dates below may divert from what you have selected.',
 
     // search
     'search'                                     => 'Suche',
