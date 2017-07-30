@@ -89,12 +89,6 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
-        $preFilled = [
-            'tagMode' => 'nothing',
-        ];
-        if (!$request->old('tagMode')) {
-            Session::flash('preFilled', $preFilled);
-        }
         // put previous url in session if not redirect from store (not "create another").
         if (session('tags.create.fromStore') !== true) {
             $this->rememberPreviousUri('tags.create.uri');
@@ -153,26 +147,6 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
-        /*
-         * Default tag options (again)
-         */
-        $tagOptions = $this->tagOptions;
-
-        /*
-         * Can this tag become another type?
-         */
-        $allowAdvance        = $repository->tagAllowAdvance($tag);
-        $allowToBalancingAct = $repository->tagAllowBalancing($tag);
-
-        // edit tag options:
-        if ($allowAdvance === false) {
-            unset($tagOptions['advancePayment']);
-        }
-        if ($allowToBalancingAct === false) {
-            unset($tagOptions['balancingAct']);
-        }
-
-
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (session('tags.edit.fromUpdate') !== true) {
             $this->rememberPreviousUri('tags.edit.uri');
@@ -194,6 +168,8 @@ class TagController extends Controller
         $title         = 'Tags';
         $mainTitleIcon = 'fa-tags';
         $types         = ['nothing', 'balancingAct', 'advancePayment'];
+        $hasTypes      = 0; // which types of tag the user actually has.
+        $counts        = []; // how many of each type?
         $count         = $repository->count();
 
         // loop each types and get the tags, group them by year.
@@ -209,10 +185,13 @@ class TagController extends Controller
                     return strtolower($date . $tag->tag);
                 }
             );
+            if ($tags->count() > 0) {
+                $hasTypes++;
+            }
+            $counts[$type] = $tags->count();
 
             /** @var Tag $tag */
             foreach ($tags as $tag) {
-
                 $year           = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
                 $monthFormatted = is_null($tag->date) ? trans('firefly.no_month') : $tag->date->formatLocalized($this->monthFormat);
 
@@ -220,7 +199,7 @@ class TagController extends Controller
             }
         }
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'collection', 'count'));
+        return view('tags.index', compact('title', 'mainTitleIcon', 'counts', 'hasTypes', 'types', 'collection', 'count'));
     }
 
     /**
@@ -255,7 +234,7 @@ class TagController extends Controller
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
             $sum      = $repository->sumOfTag($tag, null, null);
-            $path     = route('tags.show', [$tag->id,'all']);
+            $path     = route('tags.show', [$tag->id, 'all']);
         }
 
         // prep for "specific date" view.

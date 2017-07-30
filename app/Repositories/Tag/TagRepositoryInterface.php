@@ -136,20 +136,6 @@ interface TagRepositoryInterface
     public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string;
 
     /**
-     * @param Tag $tag
-     *
-     * @return bool
-     */
-    public function tagAllowAdvance(Tag $tag): bool;
-
-    /**
-     * @param Tag $tag
-     *
-     * @return bool
-     */
-    public function tagAllowBalancing(Tag $tag): bool;
-
-    /**
      * Update a tag.
      *
      * @param Tag   $tag
