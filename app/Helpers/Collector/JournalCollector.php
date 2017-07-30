@@ -64,22 +64,22 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.bill_id',
             'bills.name as bill_name',
             'bills.name_encrypted as bill_name_encrypted',
-            'transactions.id as id',
 
+            'transactions.id as id',
             'transactions.description as transaction_description',
             'transactions.account_id',
             'transactions.identifier',
             'transactions.transaction_journal_id',
-
             'transactions.amount as transaction_amount',
-
             'transactions.transaction_currency_id as transaction_currency_id',
+
             'transaction_currencies.code as transaction_currency_code',
             'transaction_currencies.symbol as transaction_currency_symbol',
             'transaction_currencies.decimal_places as transaction_currency_dp',
 
             'transactions.foreign_amount as transaction_foreign_amount',
             'transactions.foreign_currency_id as foreign_currency_id',
+
             'foreign_currencies.code as foreign_currency_code',
             'foreign_currencies.symbol as foreign_currency_symbol',
             'foreign_currencies.decimal_places as foreign_currency_dp',
@@ -673,6 +673,7 @@ class JournalCollector implements JournalCollectorInterface
             $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');
             $this->query->whereNull('opposing.deleted_at');
 
+            $this->fields[]       = 'opposing.id as opposing_id';
             $this->fields[]       = 'opposing.account_id as opposing_account_id';
             $this->fields[]       = 'opposing_accounts.name as opposing_account_name';
             $this->fields[]       = 'opposing_accounts.encrypted as opposing_account_encrypted';
