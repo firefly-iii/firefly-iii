@@ -145,7 +145,6 @@ return [
     'exchange_rate_instructions'                 => 'Premoženjski račun "@name" sprejema samo transakcije v @native_currency. Če želite namesto tega uporabiti @foreign_currency, morate podati tudi znesek v @native_currency:',
     'transfer_exchange_rate_instructions'        => 'Izvorni premoženjski račun "@source_name" sprejema samo transakcije v @source_currency. Ciljni premoženjski račun "@dest_name" sprejema samo transakcije v @dest_currency. Podati morate znesek v obeh valutah.',
     'transaction_data'                           => 'Transaction data',
-    'jump_back_in_time'                          => 'The period you selected contains no transactions. Firefly III has skipped this empty period. The dates below may divert from what you have selected.',
 
     // search
     'search'                                     => 'Search',
