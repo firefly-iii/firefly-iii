@@ -136,7 +136,7 @@ return [
     'all_transfer'                               => 'Tous les transferts',
     'all_journals_for_tag'                       => 'Toutes les transactions pour le tag ":tag"',
     'title_transfer_between'                     => 'Tous les transferts entre :start et :end',
-    'all_journals_for_category'                  => 'All transactions for category :name',
+    'all_journals_for_category'                  => 'Toutes les transactions pour la catégorie :name',
     'all_journals_for_budget'                    => 'All transactions for budget :name',
     'chart_all_journals_for_budget'              => 'Chart of all transactions for budget :name',
     'journals_in_period_for_category'            => 'All transactions for category :name between :start and :end',
