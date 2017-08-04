@@ -20,7 +20,7 @@ return [
     'everything'                                 => 'Tudo',
     'customRange'                                => 'Intervalo Personalizado',
     'apply'                                      => 'Aplicar',
-    'select_date'                                => 'Select date..',
+    'select_date'                                => 'Selecione a data..',
     'cancel'                                     => 'Cancelar',
     'from'                                       => 'De',
     'to'                                         => 'Até',
