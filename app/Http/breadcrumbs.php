@@ -471,16 +471,26 @@ Breadcrumbs::register(
 }
 );
 
+/**
+ * FILE IMPORT
+ */
 Breadcrumbs::register(
-    'import.configure', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
+    'import.file.index', function (BreadCrumbGenerator $breadcrumbs) {
     $breadcrumbs->parent('import.index');
-    $breadcrumbs->push(trans('firefly.import_config_sub_title', ['key' => $job->key]), route('import.configure', [$job->key]));
+    $breadcrumbs->push(trans('firefly.import_file'), route('import.file.index'));
+}
+);
+
+Breadcrumbs::register(
+    'import.file.configure', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
+    $breadcrumbs->parent('import.file.index');
+    $breadcrumbs->push(trans('firefly.import_config_sub_title', ['key' => $job->key]), route('import.file.configure', [$job->key]));
 }
 );
 Breadcrumbs::register(
-    'import.status', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
-    $breadcrumbs->parent('import.index');
-    $breadcrumbs->push(trans('firefly.import_status_bread_crumb', ['key' => $job->key]), route('import.status', [$job->key]));
+    'import.file.status', function (BreadCrumbGenerator $breadcrumbs, ImportJob $job) {
+    $breadcrumbs->parent('import.file.index');
+    $breadcrumbs->push(trans('firefly.import_status_bread_crumb', ['key' => $job->key]), route('import.file.status', [$job->key]));
 }
 );
 

@@ -153,48 +153,6 @@
                             <a href="{{ route('reports.report.audit',[accountList, start.format('Ymd'),'currentMonthEnd']) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>
                     </ul>
-                    {#<h4>{{ ('quick_link_category_report')|_ }}</h4>#}
-
-
-                    {#
-
-                    {% for type in ['default','audit'] %}
-
-
-                        <ul>
-                            <li>
-
-                            </li>
-                            <li>
-                                <a href="{{ route('reports.report.'~type,
-                                [
-                                'currentYearStart',
-                                'currentYearEnd',
-                                accountList
-                                ]) }}">{{ 'report_this_year_quick'|_ }}</a>
-                            </li>
-                            {% if customFiscalYear == 1 %}
-                                <li>
-                                    <a href="{{ route('reports.report.'~type,
-                                    ['default',
-                                    'currentFiscalYearStart',
-                                    'currentFiscalYearEnd',
-                                    accountList
-                                    ]) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
-                                </li>
-                            {% endif %}
-                            <li>
-                                <a href="{{ route('reports.report.'~type,
-                                [
-                                start.format('Ymd'),
-                                'currentMonthEnd',
-                                accountList
-                                ]) }}">{{ 'report_all_time_quick'|_ }}</a>
-                            </li>
-                        </ul>
-                    {% endfor %}
-                    #}
-
                     <p>
                         <em>{{ 'reports_can_bookmark'|_ }}</em>
                     </p>

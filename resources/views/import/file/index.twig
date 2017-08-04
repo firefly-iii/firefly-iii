@@ -1,0 +1,53 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'import_index_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <p>
+                                {{ 'import_index_intro'|_ }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <form method="POST" action="{{ route('import.file.initialize') }}" accept-charset="UTF-8" class="form-horizontal" id="initialize"
+                              enctype="multipart/form-data">
+
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+                            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+
+                                {{ ExpandedForm.file('import_file', {helpText: 'import_index_file'|_}) }}
+                                {{ ExpandedForm.file('configuration_file', {helpText: 'import_index_config'|_|raw}) }}
+                                {{ ExpandedForm.select('import_file_type', importFileTypes, defaultImportType, {'helpText' : 'import_index_type'|_}) }}
+
+                                <div class="form-group" id="import_file_holder">
+                                    <label for="ffInput_submit" class="col-sm-4 control-label">&nbsp;</label>
+                                    <div class="col-sm-8">
+                                        <button type="submit" class="btn pull-right btn-success">
+                                            {{ ('import_index_start')|_ }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}
