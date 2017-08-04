@@ -24,11 +24,15 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Rules\Triggers\TriggerInterface;
+use FireflyIII\Support\Password\Verifier;
 use FireflyIII\User;
 use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Validation\Validator;
+use Log;
+use Requests;
+use Requests_Exception;
 
 /**
  * Class FireflyValidator
@@ -272,6 +276,24 @@ class FireflyValidator extends Validator
         }
 
         return false;
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateSecurePassword($attribute, $value, $parameters): bool
+    {
+        $enabled = env('PASSWORD_SERVICE');
+        if (!$enabled) {
+            return true;
+        }
+        /** @var Verifier $service */
+        $service = app(Verifier::class);
+        return $service->validPassword($value);
     }
 
     /**

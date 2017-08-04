@@ -17,6 +17,7 @@ use Config;
 use FireflyConfig;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\UserRegistrationRequest;
 use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function register(Request $request)
+    public function register(UserRegistrationRequest $request)
     {
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', Config::get('firefly.configuration.single_user_mode'))->data;

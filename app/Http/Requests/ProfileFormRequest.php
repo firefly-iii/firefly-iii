@@ -37,7 +37,7 @@ class ProfileFormRequest extends Request
     {
         return [
             'current_password'          => 'required',
-            'new_password'              => 'required|confirmed',
+            'new_password'              => 'required|confirmed|secure_password',
             'new_password_confirmation' => 'required',
         ];
     }

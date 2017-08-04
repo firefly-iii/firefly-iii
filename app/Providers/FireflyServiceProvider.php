@@ -39,6 +39,8 @@ use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\Navigation;
+use FireflyIII\Support\Password\PwndVerifier;
+use FireflyIII\Support\Password\Verifier;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
@@ -147,6 +149,9 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
         $this->app->bind(BudgetReportHelperInterface::class, BudgetReportHelper::class);
+
+        // password verifier thing
+        $this->app->bind(Verifier::class, PwndVerifier::class);
     }
 
 }
