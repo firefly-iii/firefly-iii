@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Password;
+namespace FireflyIII\Services\Password;
 
 use Log;
 use Requests;
@@ -18,7 +18,7 @@ use Requests_Exception;
 /**
  * Class PwndVerifier
  *
- * @package FireflyIII\Support\Password
+ * @package FireflyIII\Services\Password
  */
 class PwndVerifier implements Verifier
 {

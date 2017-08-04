@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Password;
+namespace FireflyIII\Services\Password;
 
 /**
  * Interface Verifier
  *
- * @package FireflyIII\Support\Password
+ * @package FireflyIII\Services\Password
  */
 interface Verifier
 {
