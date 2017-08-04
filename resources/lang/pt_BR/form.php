@@ -64,7 +64,7 @@ return [
     'expense_account'                => 'Conta de Despesa',
     'revenue_account'                => 'Conta de Receita',
     'decimal_places'                 => 'Casas décimais',
-    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchange_rate_instruction'      => 'Moedas estrangeiras',
     'exchanged_amount'               => 'Exchanged amount',
     'source_amount'                  => 'Amount (source)',
     'destination_amount'             => 'Amount (destination)',
