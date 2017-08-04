@@ -131,7 +131,7 @@ return [
     'title_withdrawal_between'                   => 'All expenses between :start and :end',
     'all_deposit'                                => 'All revenue',
     'title_deposit_between'                      => 'All revenue between :start and :end',
-    'all_transfers'                              => 'All transfers',
+    'all_transfers'                              => 'Tous les transferts',
     'title_transfers_between'                    => 'All transfers between :start and :end',
     'all_transfer'                               => 'All transfers',
     'all_journals_for_tag'                       => 'All transactions for tag ":tag"',
