@@ -88,4 +88,5 @@ return [
     'in_array'                       => 'Le champ :attribute n\'existe pas dans :other.',
     'present'                        => 'Le champs :attribute doit être rempli.',
     'amount_zero'                    => 'Le montant total ne peut pas être zéro',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
 ];
