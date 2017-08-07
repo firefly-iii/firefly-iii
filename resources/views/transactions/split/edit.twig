@@ -247,7 +247,7 @@
                                     <div class="input-group">
                                         <div class="input-group-addon">{{ transaction.transaction_currency_symbol }}</div>
                                         <input type="number" name="transactions[{{ loop.index0 }}][amount]" value="{{ transaction.amount }}"
-                                               class="form-control" autocomplete="off" step="any" min="0.01">
+                                               class="form-control" autocomplete="off" step="any">
                                     </div>
                                     <input type="hidden" name="transactions[{{ loop.index0 }}][transaction_currency_id]"
                                            value="{{ transaction.transaction_currency_id }}">
@@ -259,7 +259,7 @@
                                         <div class="input-group">
                                             <div class="input-group-addon">{{ transaction.foreign_currency_symbol }}</div>
                                             <input type="number" name="transactions[{{ loop.index0 }}][foreign_amount]" value="{{ transaction.foreign_amount }}"
-                                                   class="form-control" autocomplete="off" step="any" min="0.01">
+                                                   class="form-control" autocomplete="off" step="any">
                                         </div>
                                         <input type="hidden"
                                                name="transactions[{{ loop.index0 }}][foreign_currency_id]"
