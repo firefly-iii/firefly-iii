@@ -191,6 +191,9 @@ class JournalTasker implements JournalTaskerInterface
         $journalId   = intval($transaction->transaction_journal_id);
         $identifier  = intval($transaction->identifier);
 
+        // also add the virtual balance to the balance:
+        $virtualBalance = strval($transaction->account->virtual_balance);
+
         // go!
         $sum = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                           ->where('account_id', $transaction->account_id)
@@ -224,6 +227,6 @@ class JournalTasker implements JournalTaskerInterface
                               }
                           )->sum('transactions.amount');
 
-        return strval($sum);
+        return bcadd(strval($sum), $virtualBalance);
     }
 }
