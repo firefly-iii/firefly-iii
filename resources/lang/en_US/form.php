@@ -32,6 +32,7 @@ return [
     'journal_source_account_name'    => 'Revenue account (source)',
     'journal_source_account_id'      => 'Asset account (source)',
     'BIC'                            => 'BIC',
+    'verify_password'                => 'Verify password security',
     'account_from_id'                => 'From account',
     'account_to_id'                  => 'To account',
     'source_account'                 => 'Source account',

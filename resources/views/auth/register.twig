@@ -22,7 +22,7 @@
                 work for one (1) month.</p>
         {% endif %}
 
-        <form role="form" id="register" method="POST" action="{{ URL.to('/register') }}">
+        <form id="register" method="POST" action="{{ URL.to('/register') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group has-feedback">
@@ -35,8 +35,16 @@
                 <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation"/>
             </div>
             <div class="row">
-                <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary pull-right btn-flat">Register</button>
+                <div class="col-xs-8">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="verify_password" value="1"> Verify password
+                            (<a data-toggle="modal" data-target="#passwordModal" href="#passwordModal">what's this?</a>)
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <button class="btn btn-primary pull-right btn-flat">Register</button>
                 </div>
                 <!-- /.col -->
             </div>
@@ -45,5 +53,49 @@
         <a href="{{ URL.to('/login') }}">I want to login</a><br>
         <a href="{{ URL.to('/password/reset') }}">I forgot my password</a>
     </div><!-- /.form-box -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">How to choose a secure password</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        In August 2017 well known security researcher Troy Hunt released a list of 306 million stolen passwords.
+                        These passwords were stolen during breakins at companies like LinkedIn, Adobe and NeoPets (and many more).
+                    </p>
+                    <p>
+                        By checking the box, Firefly III will send the SHA1 hash of your password to
+                        <a href="https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/">the website of Troy Hunt</a>
+                        to see if it is on the list. This will stop you from using unsafe passwords as is recommended in the latest
+                        <a href="https://pages.nist.gov/800-63-3/sp800-63b.html">NIST Special Publication</a> on this subject.
+                    </p>
+                    <h4>But I thought SHA1 was broken?</h4>
+                    <p>
+                        Yes, but not in this context. As you can read on <a href="https://shattered.io/">the website detailing how they broke SHA1</a>, it is now
+                        slightly easier to find a "collision": another string that results in the same SHA1-hash. It now only takes 10,000 years using a single-GPU machine.
+                    </p>
+                    <p>
+                        This collision would not be equal to your password, nor would it be useful on (a site like) Firefly III. This application
+                        does not use SHA1 for password verification. So it is safe to check this box. Your password is hashed and sent over HTTPS.
+                    </p>
+                    <h4>Should I check the box?</h4>
+                    <p>
+                        If you just generated a long, single-use password for Firefly III using some kind of password generator: no.
+                    </p>
+                    <p>
+                        If you just entered the password you always use: <em>Christ yes</em>.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

@@ -284,14 +284,18 @@ class FireflyValidator extends Validator
      */
     public function validateSecurePassword($attribute, $value, $parameters): bool
     {
-        $enabled = env('PASSWORD_SERVICE');
-        if (!$enabled) {
-            return true;
+        $verify = false;
+        if (isset($this->data['verify_password'])) {
+            $verify = intval($this->data['verify_password']) === 1;
         }
-        /** @var Verifier $service */
-        $service = app(Verifier::class);
+        if ($verify) {
+            /** @var Verifier $service */
+            $service = app(Verifier::class);
 
-        return $service->validPassword($value);
+            return $service->validPassword($value);
+        }
+
+        return true;
     }
 
     /**

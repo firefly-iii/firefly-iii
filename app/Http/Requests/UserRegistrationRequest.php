@@ -31,17 +31,6 @@ class UserRegistrationRequest extends Request
     /**
      * @return array
      */
-    public function getUserData(): array
-    {
-        return [
-            'email'    => $this->string('email'),
-            'password' => $this->string('password'),
-        ];
-    }
-
-    /**
-     * @return array
-     */
     public function rules()
     {
         return [
