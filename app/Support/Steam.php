@@ -181,12 +181,12 @@ class Steam
             $modified        = is_null($entry->modified) ? '0' : strval($entry->modified);
             $foreignModified = is_null($entry->modified_foreign) ? '0' : strval($entry->modified_foreign);
             $amount          = '0';
-            if ($currencyId === $entry->transaction_currency_id) {
+            if ($currencyId === $entry->transaction_currency_id || $currencyId === 0) {
                 // use normal amount:
                 $amount = $modified;
             }
             if ($currencyId === $entry->foreign_currency_id) {
-                // use normal amount:
+                // use foreign amount:
                 $amount = $foreignModified;
             }
 
