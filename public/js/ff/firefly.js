@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: moment, accountingConfig, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
+/** global: moment, accountingConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
 
 
 $(function () {
@@ -28,15 +28,6 @@ $(function () {
 
     // when you click on a currency, this happens:
     $('.currency-option').on('click', currencySelect);
-
-    var ranges = {};
-    ranges[dateRangeConfig.currentPeriod] = [moment(dateRangeConfig.ranges.current[0]), moment(dateRangeConfig.ranges.current[1])];
-    ranges[dateRangeConfig.previousPeriod] = [moment(dateRangeConfig.ranges.previous[0]), moment(dateRangeConfig.ranges.previous[1])];
-    ranges[dateRangeConfig.nextPeriod] = [moment(dateRangeConfig.ranges.next[0]), moment(dateRangeConfig.ranges.next[1])];
-
-    // range for everything:
-    ranges[dateRangeConfig.everything] = [dateRangeConfig.firstDate, moment()];
-
 
     // build the data range:
     $('#daterange').text(dateRangeConfig.linkTitle).daterangepicker(
