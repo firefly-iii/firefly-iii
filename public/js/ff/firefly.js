@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: moment, accountingConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
+/** global: moment, dateRangeMeta,dateRangeConfig, accountingConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
 
 
 $(function () {
@@ -30,17 +30,17 @@ $(function () {
     $('.currency-option').on('click', currencySelect);
 
     // build the data range:
-    $('#daterange').text(dateRangeConfig.linkTitle).daterangepicker(
+    $('#daterange').text(dateRangeMeta.title).daterangepicker(
         {
-            ranges: ranges,
+            ranges: dateRangeConfig.ranges,
             opens: 'left',
             locale: {
-                applyLabel: dateRangeConfig.applyLabel,
-                cancelLabel: dateRangeConfig.cancelLabel,
-                fromLabel: dateRangeConfig.fromLabel,
-                toLabel: dateRangeConfig.toLabel,
+                applyLabel: dateRangeMeta.labels.apply,
+                cancelLabel: dateRangeMeta.labels.cancel,
+                fromLabel: dateRangeMeta.labels.from,
+                toLabel: dateRangeMeta.labels.to,
                 weekLabel: 'W',
-                customRangeLabel: dateRangeConfig.customRangeLabel,
+                customRangeLabel: dateRangeMeta.labels.customRange,
                 daysOfWeek: moment.weekdaysMin(),
                 monthNames: moment.monthsShort(),
                 firstDay: moment.localeData()._week.dow
@@ -52,7 +52,7 @@ $(function () {
         function (start, end, label) {
 
             // send post.
-            $.post(dateRangeConfig.URL, {
+            $.post(dateRangeMeta.uri, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
                 label: label
