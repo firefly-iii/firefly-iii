@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers\Import;
 
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
 
 class BankController extends Controller
 {
@@ -22,6 +23,24 @@ class BankController extends Controller
      */
     public function prerequisites(string $bank)
     {
+        $class = config(sprintf('firefly.import_pre.%s', $bank));
+        /** @var PrerequisitesInterface $object */
+        $object = app($class);
+        $object->setUser(auth()->user());
+
+        if ($object->hasPrerequisites()) {
+            $view       = $object->getView();
+            $parameters = $object->getViewParameters();
+            return view($view, $parameters);
+        }
+
+        if (!$object->hasPrerequisites()) {
+            echo 'redirect to import form.';
+        }
+
+    }
+
+    public function postPrerequisites() {
 
     }
 

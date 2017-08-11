@@ -400,6 +400,7 @@ Route::group(
 
     // banks:
     Route::get('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@prerequisites', 'as' => 'bank.prerequisites']);
+    Route::post('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@postPrerequisites', 'as' => 'bank.prerequisites.post']);
 }
 );
 

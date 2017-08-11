@@ -39,6 +39,9 @@ return [
     'import_processors'          => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
     ],
+    'import_pre' => [
+        'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
+    ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
     'bill_periods'               => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
