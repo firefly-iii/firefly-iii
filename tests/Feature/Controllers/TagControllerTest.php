@@ -83,7 +83,6 @@ class TagControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
