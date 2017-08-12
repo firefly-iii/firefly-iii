@@ -43,8 +43,6 @@ class ImportStorage
     private $objects;
     /** @var Collection */
     private $rules;
-    /** @var  TagRepositoryInterface */
-    private $tagRepository;
 
     /** @var  array */
     private $transfers = [];

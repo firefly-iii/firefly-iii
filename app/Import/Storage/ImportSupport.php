@@ -47,7 +47,7 @@ trait ImportSupport
     {
         if ($this->rules->count() > 0) {
             $this->rules->each(
-                function (Rule $rule) {
+                function (Rule $rule) use($journal) {
                     Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
                     $processor = Processor::make($rule);
                     $processor->handleTransactionJournal($journal);
