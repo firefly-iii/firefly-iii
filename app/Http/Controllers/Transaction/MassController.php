@@ -86,7 +86,7 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
                 $journal = $repository->find(intval($journalId));
-                if (!is_null($journal->id) && $journalId === $journal->id) {
+                if (!is_null($journal->id) && intval($journalId) === $journal->id) {
                     $set->push($journal);
                 }
             }
