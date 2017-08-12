@@ -416,6 +416,7 @@ return [
     'password_changed'                           => 'Password changed!',
     'should_change'                              => 'The idea is to change your password.',
     'invalid_password'                           => 'Invalid password!',
+    'what_is_pw_security'                        => 'What is "verify password security"?',
 
 
     // attachments
