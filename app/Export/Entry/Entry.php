@@ -45,11 +45,11 @@ final class Entry
 
     public $transaction_type;
 
-    public $source_account_id;
-    public $source_account_name;
+    public $asset_account_id;
+    public $asset_account_name;
 
-    public $destination_account_id;
-    public $destination_account_name;
+    public $opposing_account_id;
+    public $opposing_account_name;
 
     public $budget_id;
     public $budget_name;
@@ -71,21 +71,21 @@ final class Entry
      */
     public static function fromObject($object): Entry
     {
-        $entry                           = new self;
-        $entry->journal_id               = $object->transaction_journal_id;
-        $entry->description              = Steam::decrypt(intval($object->journal_encrypted), $object->journal_description);
-        $entry->amount                   = $object->amount;
-        $entry->date                     = $object->date;
-        $entry->transaction_type         = $object->transaction_type;
-        $entry->currency_code            = $object->transaction_currency_code;
-        $entry->source_account_id        = $object->account_id;
-        $entry->source_account_name      = Steam::decrypt(intval($object->account_name_encrypted), $object->account_name);
-        $entry->destination_account_id   = $object->opposing_account_id;
-        $entry->destination_account_name = Steam::decrypt(intval($object->opposing_account_encrypted), $object->opposing_account_name);
-        $entry->category_id              = $object->category_id ?? '';
-        $entry->category_name            = $object->category_name ?? '';
-        $entry->budget_id                = $object->budget_id ?? '';
-        $entry->budget_name              = $object->budget_name ?? '';
+        $entry                        = new self;
+        $entry->journal_id            = $object->transaction_journal_id;
+        $entry->description           = Steam::decrypt(intval($object->journal_encrypted), $object->journal_description);
+        $entry->amount                = $object->amount;
+        $entry->date                  = $object->date;
+        $entry->transaction_type      = $object->transaction_type;
+        $entry->currency_code         = $object->transaction_currency_code;
+        $entry->asset_account_id      = $object->account_id;
+        $entry->asset_account_name    = Steam::decrypt(intval($object->account_name_encrypted), $object->account_name);
+        $entry->opposing_account_id   = $object->opposing_account_id;
+        $entry->opposing_account_name = Steam::decrypt(intval($object->opposing_account_encrypted), $object->opposing_account_name);
+        $entry->category_id           = $object->category_id ?? '';
+        $entry->category_name         = $object->category_name ?? '';
+        $entry->budget_id             = $object->budget_id ?? '';
+        $entry->budget_name           = $object->budget_name ?? '';
 
         // update description when transaction description is different:
         if (!is_null($object->description) && $object->description !== $entry->description) {
