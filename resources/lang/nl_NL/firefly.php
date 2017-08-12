@@ -416,6 +416,16 @@ return [
     'password_changed'                           => 'Je wachtwoord is veranderd!',
     'should_change'                              => 'Vul ook echt een ander wachtwoord in.',
     'invalid_password'                           => 'Ongeldig wachtwoord!',
+    'what_is_pw_security'                        => 'What is "verify password security"?',
+    'secure_pw_title'                            => 'How to choose a secure password',
+    'secure_pw_history'                          => 'In August 2017 well known security researcher Troy Hunt released a list of 306 million stolen passwords. These passwords were stolen during breakins at companies like LinkedIn, Adobe and NeoPets (and many more).',
+    'secure_pw_check_box'                        => 'By checking the box, Firefly III will send the SHA1 hash of your password to <a href="https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/">the website of Troy Hunt</a> to see if it is on the list. This will stop you from using unsafe passwords as is recommended in the latest <a href="https://pages.nist.gov/800-63-3/sp800-63b.html">NIST Special Publication</a> on this subject.',
+    'secure_pw_sha1'                             => 'But I thought SHA1 was broken?',
+    'secure_pw_hash_speed'                       => 'Yes, but not in this context. As you can read on <a href="https://shattered.io/">the website detailing how they broke SHA1</a>, it is now slightly easier to find a "collision": another string that results in the same SHA1-hash. It now only takes 10,000 years using a single-GPU machine.',
+    'secure_pw_hash_security'                    => 'This collision would not be equal to your password, nor would it be useful on (a site like) Firefly III. This application does not use SHA1 for password verification. So it is safe to check this box. Your password is hashed and sent over HTTPS.',
+    'secure_pw_should'                           => 'Should I check the box?',
+    'secure_pw_long_password'                    => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
+    'secure_pw_short'                            => 'If you just entered the password you always use: <em>Please yes</em>.',
 
 
     // attachments
@@ -519,7 +529,7 @@ return [
     'update_amount'                              => 'Bedrag bijwerken',
     'update_budget'                              => 'Budget bijwerken',
     'update_budget_amount_range'                 => 'Update het verwacht beschikbare bedrag tussen :start en :end',
-    'budget_period_navigator'                    => 'Period navigator',
+    'budget_period_navigator'                    => 'Periodenavigator',
 
     // bills:
     'matching_on'                                => 'Wordt herkend',
@@ -967,8 +977,8 @@ return [
     // import index page:
     'import_index_title'                    => 'Gegevens importeren in Firefly III',
     'import_index_sub_title'                => 'Index',
-    'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
-    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
+    'import_general_index_intro'            => 'Dit is de import-routine van Firefly. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
+    'import_index_intro'                    => 'Deze pagina\'s helpen je bestanden van je bank te importeren in Firefly III. Gebruik de hulp-pagina\'s linksboven voor meer informatie.',
     'import_index_file'                     => 'Selecteer je bestand',
     'import_index_config'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
     'import_index_type'                     => 'Selecteer het type bestand dat je zal uploaden',
