@@ -88,5 +88,5 @@ return [
     'in_array'                       => 'Het :attribute veld bestaat niet in :other.',
     'present'                        => 'Het :attribute veld moet aanwezig zijn.',
     'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
+    'secure_password'                => 'Dit is geen sterk wachtwoord. Probeer het nog een keer. Zie ook: https://goo.gl/NCh2tN',
 ];
