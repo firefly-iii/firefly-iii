@@ -419,13 +419,13 @@ return [
     'what_is_pw_security'                        => 'Wat is "Bevestig wachtwoordsterkte"?',
     'secure_pw_title'                            => 'Hoe kies je een veilig wachtwoord',
     'secure_pw_history'                          => 'De bekende security onderzoeker Troy Hunt gaf in augustus 2017 een lijst vrij van 306 miljoen gestolen wachtwoorden. Deze wachtwoorden waren gestolen tijdens hacks van bekende bedrijven zoals LinkedIn, Adobe en NeoPets (en vele anderen).',
-    'secure_pw_check_box'                        => 'By checking the box, Firefly III will send the SHA1 hash of your password to <a href="https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/">the website of Troy Hunt</a> to see if it is on the list. This will stop you from using unsafe passwords as is recommended in the latest <a href="https://pages.nist.gov/800-63-3/sp800-63b.html">NIST Special Publication</a> on this subject.',
-    'secure_pw_sha1'                             => 'But I thought SHA1 was broken?',
-    'secure_pw_hash_speed'                       => 'Yes, but not in this context. As you can read on <a href="https://shattered.io/">the website detailing how they broke SHA1</a>, it is now slightly easier to find a "collision": another string that results in the same SHA1-hash. It now only takes 10,000 years using a single-GPU machine.',
-    'secure_pw_hash_security'                    => 'This collision would not be equal to your password, nor would it be useful on (a site like) Firefly III. This application does not use SHA1 for password verification. So it is safe to check this box. Your password is hashed and sent over HTTPS.',
-    'secure_pw_should'                           => 'Should I check the box?',
-    'secure_pw_long_password'                    => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
-    'secure_pw_short'                            => 'If you just entered the password you always use: <em>Please yes</em>.',
+    'secure_pw_check_box'                        => 'Zet het vinkje, en Firefly III stuurt de SHA1-hash van je wachtwoord naar <a href="https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/">de website van Troy Hunt</a> om te zien of-ie op de lijst staat. Dit voorkomt dat je een onveilig wachtwoord gebruikt, zoals is voorgeschreven in <a href="https://pages.nist.gov/800-63-3/sp800-63b.html">een speciale publicatie van het NIST</a> over dit onderwerp.',
+    'secure_pw_sha1'                             => 'Maar SHA1 is toch gebroken?',
+    'secure_pw_hash_speed'                       => 'Ja, maar niet in deze context. Zoals je kan lezen op <a href="https://shattered.io/">de website over SHA1</a> is het nu makkelijker geworden om een "collision" te vinden: twee stukken tekst die dezelfde SHA1-hash opleveren. Dit kan nu in 10.000 jaar op een machine met één grafische kaart.',
+    'secure_pw_hash_security'                    => 'Deze collision is niet gelijk aan jouw wachtwoord, noch is deze te gebruiken op een site (zoals) Firefly III. Deze app gebruikt geen SHA1 voor wachtwoordverificatie. Dat maakt het veilig om de checkbox aan te vinken. Je wachtwoord wordt gehasht en verstuurt over HTTPS.',
+    'secure_pw_should'                           => 'Vinkje zetten of niet?',
+    'secure_pw_long_password'                    => 'Als je net een lang wachtwoord hebt gegenereerd met een password generator tool: <strong>nee</strong>.',
+    'secure_pw_short'                            => 'Gebruik je het wachtwoord dat je altijd gebruikt? <em>Ja, doen!</em>',
 
 
     // attachments
