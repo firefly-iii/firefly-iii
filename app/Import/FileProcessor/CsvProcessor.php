@@ -99,6 +99,7 @@ class CsvProcessor implements FileProcessorInterface
                 $this->job->addStepsDone(1);
             }
         );
+
         return true;
     }
 
@@ -215,6 +216,7 @@ class CsvProcessor implements FileProcessorInterface
             throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));
         }
         $hash = hash('sha256', $json);
+
         return $hash;
     }
 
@@ -238,7 +240,7 @@ class CsvProcessor implements FileProcessorInterface
         $journal->setHash($hash);
 
         /**
-         * @var int $rowIndex
+         * @var int    $rowIndex
          * @var string $value
          */
         foreach ($row as $rowIndex => $value) {
@@ -249,7 +251,8 @@ class CsvProcessor implements FileProcessorInterface
                 $journal->setValue($annotated);
             }
         }
-        Log::debug('ImportJournal complete, returning.');
+        // set some extra info:
+        $journal->asset->setDefaultAccountId($this->job->configuration['import-account']);
 
         return $journal;
     }
@@ -263,12 +266,12 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function rowAlreadyImported(array $array): bool
     {
-        $hash = $this->getRowHash($array);
-        $json   = json_encode($hash);
-        $entry  = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                        ->where('data', $json)
-                                        ->where('name', 'importHash')
-                                        ->first();
+        $hash  = $this->getRowHash($array);
+        $json  = json_encode($hash);
+        $entry = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                       ->where('data', $json)
+                                       ->where('name', 'importHash')
+                                       ->first();
         if (!is_null($entry)) {
             return true;
         }

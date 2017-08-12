@@ -335,7 +335,7 @@ class ImportAccount
         }
         $this->expectedType = $oldExpectedType;
 
-        // if search for an asset account, fall back to given "default account" (mandatory)
+        // 4: if search for an asset account, fall back to given "default account" (mandatory)
         if ($this->expectedType === AccountType::ASSET) {
             $this->account = $this->repository->find($this->defaultAccountId);
             Log::debug(sprintf('Fall back to default account #%d "%s"', $this->account->id, $this->account->name));
@@ -343,6 +343,7 @@ class ImportAccount
             return true;
         }
 
+        // 5: then maybe, create one:
         Log::debug(sprintf('Found no account of type %s so must create one ourselves.', $this->expectedType));
 
         $data = [
