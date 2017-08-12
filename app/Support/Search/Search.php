@@ -113,7 +113,6 @@ class Search implements SearchInterface
             }
             $collector->removeFilter(InternalTransferFilter::class);
             $set   = $collector->getPaginatedJournals()->getCollection();
-            $words = $this->words;
 
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
