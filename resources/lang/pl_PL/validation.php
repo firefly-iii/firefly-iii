@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * validation.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
