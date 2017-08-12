@@ -99,12 +99,11 @@ return [
         'accountStatus' => ['element' => '#accountStatus', 'position' => 'top'],
     ],
     'piggy-banks_create'             => [
-        'name'  => ['element' => '#ffInput_name'],
-        'date'  => ['element' => '#ffInput_targetdate'],
+        'name' => ['element' => '#ffInput_name'],
+        'date' => ['element' => '#ffInput_targetdate'],
 
     ],
     'piggy-banks_show'               => [
-        'intro'        => [],
         'piggyChart'   => ['element' => '#piggyChart'],
         'piggyDetails' => ['element' => '#piggyDetails'],
         'piggyEvents'  => ['element' => '#piggyEvents'],
@@ -146,7 +145,7 @@ return [
     ],
     // preferences: index
     'preferences_index'              => [
-        'tabs'  => ['element' => '.nav-tabs'],
+        'tabs' => ['element' => '.nav-tabs'],
     ],
     // currencies: index, create
     'currencies_index'               => [
@@ -154,6 +153,6 @@ return [
         'default' => ['element' => '.defaultCurrency'],
     ],
     'currencies_create'              => [
-        'code'  => ['element' => '#ffInput_code',],
+        'code' => ['element' => '#ffInput_code',],
     ],
 ];
