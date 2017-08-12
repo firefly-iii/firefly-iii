@@ -32,7 +32,7 @@ return [
     'journal_source_account_name'    => 'Debiteur (bron)',
     'journal_source_account_id'      => 'Betaalrekening (bron)',
     'BIC'                            => 'BIC',
-    'verify_password'                => 'Verify password security',
+    'verify_password'                => 'Bevestig wachtwoordsterkte',
     'account_from_id'                => 'Van account',
     'account_to_id'                  => 'Naar account',
     'source_account'                 => 'Bronrekening',

@@ -17,7 +17,7 @@ return [
     'initial_title'                 => 'Importinstellingen (1/3) - Algemene CVS importinstellingen',
     'initial_text'                  => 'Om je bestand goed te kunnen importeren moet je deze opties verifiëren.',
     'initial_box'                   => 'Algemene CVS importinstellingen',
-    'initial_box_title'             => 'Basic CSV import setup options',
+    'initial_box_title'             => 'Algemene CVS importinstellingen',
     'initial_header_help'           => 'Vink hier als de eerste rij kolomtitels bevat.',
     'initial_date_help'             => 'Datum/tijd formaat in jouw CSV bestand. Volg het formaat zoals ze het <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">op deze pagina</a> uitleggen. Het standaardformaat ziet er zo uit: :dateExample.',
     'initial_delimiter_help'        => 'Kies het veldscheidingsteken dat in jouw bestand wordt gebruikt. Als je het niet zeker weet, is de komma de beste optie.',
@@ -35,7 +35,7 @@ return [
     'roles_column'                  => 'Kolom',
     'roles_no_example_data'         => 'Geen voorbeeldgegevens',
     'roles_submit'                  => 'Ga verder met stap 3/3',
-    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'roles_warning'                 => 'Geef minstens de kolom aan waar het bedrag in staat. Als het even kan, ook een kolom voor de omschrijving, datum en de andere rekening.',
 
     // map data
     'map_title'                     => 'Importinstellingen (3/3) - Link importgegevens aan Firefly III-gegevens',
