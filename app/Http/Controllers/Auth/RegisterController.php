@@ -53,7 +53,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param UserRegistrationRequest|Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */

@@ -72,8 +72,6 @@ class TransactionController extends Controller
         $types        = config('firefly.transactionTypesByWhat.' . $what);
         $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $count        = 0;
-        $loop         = 0;
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;

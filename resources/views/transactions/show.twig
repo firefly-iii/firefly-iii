@@ -221,7 +221,7 @@
                     <div class="box-body">
                         {% if journal.transactionType.type != "Withdrawal" %}
                             <p>
-                                <i class="fa fa-exchange" aria-hidden="true"></i>
+                                <i class="fa fa-exchange fa-fw" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
                                     {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
                                 </a>
@@ -229,7 +229,7 @@
                         {% endif %}
                         {% if journal.transactionType.type != "Deposit" %}
                             <p>
-                                <i class="fa fa-exchange" aria-hidden="true"></i>
+                                <i class="fa fa-exchange fa-fw" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
                                     {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
                                 </a>
@@ -238,21 +238,24 @@
 
                         {% if journal.transactionType.type != "Transfer" %}
                             <p>
-                                <i class="fa fa-exchange" aria-hidden="true"></i>
+                                <i class="fa fa-exchange fa-fw" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
                                     {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
                                 </a>
                             </p>
                         {% endif %}
-                        {% if transactions|length == 1 %}
                             <p>
-                                <i class="fa fa-copy" aria-hidden="true"></i>
+                                <i class="fa fa-copy fa-fw" aria-hidden="true"></i>
                                 <a href="{{ route('transactions.clone', [journal.id]) }}">
                                     {{ ('clone_'~journal.transactionType.type|lower)|_ }}
                                 </a>
                             </p>
-                        {% endif %}
-
+                        <p>
+                            <i class="fa fa-unsorted fa-fw" aria-hidden="true"></i>
+                            <a href="{{ route('transactions.split.edit', journal.id) }}">
+                                {{ ('split_this_'~what)|_ }}
+                            </a>
+                        </p>
                     </div>
                 </div>
             {% endif %}

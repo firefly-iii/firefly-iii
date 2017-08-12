@@ -22,9 +22,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
@@ -62,7 +59,7 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn($collection);
 
         // mock all repositories:
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
@@ -122,7 +119,7 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn($others)->once();
 
         // mock all repositories:
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);

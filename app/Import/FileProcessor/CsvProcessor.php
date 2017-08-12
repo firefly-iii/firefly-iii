@@ -152,20 +152,65 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
+     * Will return string representation of JSON error code.
+     *
+     * @param int $jsonError
+     *
+     * @return string
+     */
+    private function getJsonError(int $jsonError): string
+    {
+        switch ($jsonError) {
+            default:
+                return 'Unknown JSON error';
+            case JSON_ERROR_NONE:
+                return 'No JSON error';
+            case JSON_ERROR_DEPTH:
+                return 'JSON_ERROR_DEPTH';
+            case JSON_ERROR_STATE_MISMATCH:
+                return 'JSON_ERROR_STATE_MISMATCH';
+            case JSON_ERROR_CTRL_CHAR:
+                return 'JSON_ERROR_CTRL_CHAR';
+            case JSON_ERROR_SYNTAX:
+                return 'JSON_ERROR_SYNTAX';
+            case JSON_ERROR_UTF8:
+                return 'JSON_ERROR_UTF8';
+            case JSON_ERROR_RECURSION:
+                return 'JSON_ERROR_RECURSION';
+            case JSON_ERROR_INF_OR_NAN:
+                return 'JSON_ERROR_INF_OR_NAN';
+            case JSON_ERROR_UNSUPPORTED_TYPE:
+                return 'JSON_ERROR_UNSUPPORTED_TYPE';
+            case JSON_ERROR_INVALID_PROPERTY_NAME:
+                return 'JSON_ERROR_INVALID_PROPERTY_NAME';
+            case JSON_ERROR_UTF16:
+                return 'JSON_ERROR_UTF16';
+        }
+    }
+
+    /**
      * Take a row, build import journal by annotating each value and storing it in the import journal.
      *
      * @param int   $index
      * @param array $row
      *
      * @return ImportJournal
+     * @throws FireflyException
      */
     private function importRow(int $index, array $row): ImportJournal
     {
         Log::debug(sprintf('Now at row %d', $index));
-        $row     = $this->specifics($row);
+        $row       = $this->specifics($row);
+        $json      = json_encode($row);
+        $jsonError = json_last_error();
+
+        if ($json === false) {
+            throw new FireflyException(sprintf('Error while encoding JSON: %s', $this->getJsonError($jsonError)));
+        }
+
         $journal = new ImportJournal;
         $journal->setUser($this->job->user);
-        $journal->setHash(hash('sha256', json_encode($row)));
+        $journal->setHash(hash('sha256', $json));
 
         foreach ($row as $rowIndex => $value) {
             $value = trim($value);

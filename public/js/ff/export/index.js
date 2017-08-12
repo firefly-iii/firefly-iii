@@ -78,8 +78,7 @@ function showDownload() {
 
 function showError(text) {
     "use strict";
-    $('#export-error').show();
-    $('#export-error').find('p').text(text);
+    $('#export-error').show().find('p').text(text);
 }
 
 function callExport() {

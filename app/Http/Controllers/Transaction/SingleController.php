@@ -199,10 +199,10 @@ class SingleController extends Controller
     }
 
     /**
-     * @param JournalRepositoryInterface $repository
-     * @param TransactionJournal         $transactionJournal
+     * @param TransactionJournal $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @internal param JournalRepositoryInterface $repository
      */
     public function destroy(TransactionJournal $transactionJournal)
     {
