@@ -188,7 +188,7 @@ class ImportStorage
     {
         $amount      = Steam::positive($importJournal->getAmount());
         $asset       = $importJournal->asset->getAccount();
-        $opposing    = $this->getOpposingAccount($importJournal->opposing, $amount);
+        $opposing    = $this->getOpposingAccount($importJournal->opposing,$asset->id, $amount);
         $description = $importJournal->getDescription();
 
         $filtered = $set->filter(
@@ -288,8 +288,9 @@ class ImportStorage
      *
      * @return Account
      */
-    private function getOpposingAccount(ImportAccount $account, $amount): Account
+    private function getOpposingAccount(ImportAccount $account, int $forbiddenAccount, string $amount): Account
     {
+        $account->setForbiddenAccountId($forbiddenAccount);
         if (bccomp($amount, '0') === -1) {
             Log::debug(sprintf('%s is negative, create opposing expense account.', $amount));
             $account->setExpectedType(AccountType::EXPENSE);

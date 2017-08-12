@@ -20,6 +20,7 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
+ *
  * Class ImportAccount
  *
  * @package FireflyIII\Import\Object
@@ -41,6 +42,14 @@ class ImportAccount
     private $defaultAccountId = 0;
     /** @var string */
     private $expectedType = '';
+    /**
+     * This value is used to indicate the other account ID (the opposing transaction's account),
+     * if it is know. If so, this particular importaccount may never return an Account with this ID.
+     * If it would, this would result in a transaction from-to the same account.
+     *
+     * @var int
+     */
+    private $forbiddenAccountId = 0;
     /** @var  AccountRepositoryInterface */
     private $repository;
     /** @var  User */
@@ -126,6 +135,14 @@ class ImportAccount
     }
 
     /**
+     * @param int $forbiddenAccountId
+     */
+    public function setForbiddenAccountId(int $forbiddenAccountId)
+    {
+        $this->forbiddenAccountId = $forbiddenAccountId;
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -148,7 +165,9 @@ class ImportAccount
         if (count($this->accountId) === 3) {
             Log::debug(sprintf('Finding account of type %d and ID %d', $accountType->id, $this->accountId['value']));
             /** @var Account $account */
-            $account = $this->user->accounts()->where('account_type_id', $accountType->id)->where('id', $this->accountId['value'])->first();
+            $account = $this->user->accounts()->where('id', '!=', $this->forbiddenAccountId)->where('account_type_id', $accountType->id)->where(
+                'id', $this->accountId['value']
+            )->first();
             if (!is_null($account)) {
                 Log::debug(sprintf('Found unmapped %s account by ID (#%d): %s', $this->expectedType, $account->id, $account->name));
 
@@ -164,7 +183,7 @@ class ImportAccount
             Log::debug(sprintf('Finding account of type %d and IBAN %s', $accountType->id, $iban));
             $filtered = $accounts->filter(
                 function (Account $account) use ($iban) {
-                    if ($account->iban === $iban) {
+                    if ($account->iban === $iban && $account->id !== $this->forbiddenAccountId) {
                         Log::debug(
                             sprintf('Found unmapped %s account by IBAN (#%d): %s (%s)', $this->expectedType, $account->id, $account->name, $account->iban)
                         );
@@ -187,7 +206,7 @@ class ImportAccount
             Log::debug(sprintf('Finding account of type %d and name %s', $accountType->id, $name));
             $filtered = $accounts->filter(
                 function (Account $account) use ($name) {
-                    if ($account->name === $name) {
+                    if ($account->name === $name && $account->id !== $this->forbiddenAccountId) {
                         Log::debug(sprintf('Found unmapped %s account by name (#%d): %s', $this->expectedType, $account->id, $account->name));
 
                         return $account;
