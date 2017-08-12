@@ -519,6 +519,7 @@ return [
     'update_amount'                              => 'Atualizar quantia',
     'update_budget'                              => 'Atualizar Orçamento',
     'update_budget_amount_range'                 => 'Atualizar quantia disponível (esperada) entre :start e :end',
+    'budget_period_navigator'                    => 'Period navigator',
 
     // bills:
     'matching_on'                                => 'Corresponde em',
