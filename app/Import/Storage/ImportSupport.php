@@ -226,7 +226,7 @@ trait ImportSupport
         // if opposing is an asset account, it's a transfer:
         if ($account->accountType->type === AccountType::ASSET) {
             Log::debug(sprintf('Opposing account #%d %s is an asset account, make transfer.', $account->id, $account->name));
-            $transactionType = TransactionType::whereType(TransactionType::TRANSFER)->first();
+            $transactionType = TransactionType::TRANSFER;
         }
 
         // verify that opposing account is of the correct type:
