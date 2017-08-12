@@ -17,9 +17,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Converter\Amount;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use Log;
 use Steam;
@@ -41,8 +39,6 @@ class ImportJournal
     public $category;
     /** @var  string */
     public $description = '';
-    /** @var  Collection */
-    public $errors;
     /** @var  string */
     public $hash;
     /** @var array */
@@ -54,9 +50,9 @@ class ImportJournal
     /** @var array */
     public $tags = [];
     /** @var string */
-    private $amount = '0';
+    private $amount;
     /** @var  ImportCurrency */
-    private $currency;
+    public $currency;
     /** @var string */
     private $date = '';
     /** @var string */
@@ -71,7 +67,6 @@ class ImportJournal
      */
     public function __construct()
     {
-        $this->errors   = new Collection;
         $this->asset    = new ImportAccount;
         $this->opposing = new ImportAccount;
         $this->bill     = new ImportBill;
@@ -89,42 +84,26 @@ class ImportJournal
     }
 
     /**
-     * @return TransactionJournal
-     * @throws FireflyException
-     */
-    public function createTransactionJournal(): TransactionJournal
-    {
-        exit('does not work yet');
-    }
-
-    /**
      * @return string
      */
     public function getAmount(): string
     {
-
-        /** @var ConverterInterface $amountConverter */
-        $amountConverter = app(Amount::class);
-        $this->amount    = $amountConverter->convert($this->amount);
-        // modify
-        foreach ($this->modifiers as $modifier) {
-            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
-            /** @var ConverterInterface $converter */
-            $converter = app($class);
-            if ($converter->convert($modifier['value']) === -1) {
-                $this->amount = Steam::negative($this->amount);
+        if (is_null($this->amount)) {
+            /** @var ConverterInterface $amountConverter */
+            $amountConverter = app(Amount::class);
+            $this->amount    = $amountConverter->convert($this->amount);
+            // modify
+            foreach ($this->modifiers as $modifier) {
+                $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
+                /** @var ConverterInterface $converter */
+                $converter = app($class);
+                if ($converter->convert($modifier['value']) === -1) {
+                    $this->amount = Steam::negative($this->amount);
+                }
             }
         }
 
         return $this->amount;
-    }
-
-    /**
-     * @return ImportCurrency
-     */
-    public function getCurrency(): ImportCurrency
-    {
-        return $this->currency;
     }
 
     /**
