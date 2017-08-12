@@ -886,9 +886,6 @@ return [
     'tag_title_nothing'          => 'Domyślne tagi',
     'tag_title_balancingAct'     => 'Balancing act tags',
     'tag_title_advancePayment'   => 'Advance payment tags',
-    'tags_introduction'          => 'Usually tags are singular words, designed to quickly band items together using things like <span class="label label-info">expensive</span>, <span class="label label-info">bill</span> or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties such as a date, description and location. This allows you to join transactions together in a more meaningful way. For example, you could make a tag called <span class="label label-success">Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion, perhaps with multiple transactions.',
-    'tags_group'                 => 'Tags group transactions together, which makes it possible to store reimbursements (in case you front money for others) and other "balancing acts" where expenses are summed up (the payments on your new TV) or where expenses and deposits are cancelling each other out (buying something with saved money). It\'s all up to you. Using tags the old-fashioned way is of course always possible.',
-    'tags_start'                 => 'Create a tag to get started or enter tags when creating new transactions.',
 
     'transaction_journal_information'       => 'Informacje o transakcji',
     'transaction_journal_meta'              => 'Meta informacje',
@@ -969,7 +966,8 @@ return [
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Indeks',
-    'import_index_intro'                    => 'Welcome to Firefly\'s import routine. These pages can help you import data from your bank into Firefly III. Please check out the help pages in the top right corner.',
+    'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
     'import_index_file'                     => 'Wybierz swój plik',
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_index_type'                     => 'Select the type of file you will upload',

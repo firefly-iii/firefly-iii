@@ -886,9 +886,6 @@ return [
     'tag_title_nothing'          => '預設標籤',
     'tag_title_balancingAct'     => '抵銷行為標籤',
     'tag_title_advancePayment'   => '預付款標籤',
-    'tags_introduction'          => 'Usually tags are singular words, designed to quickly band items together using things like <span class="label label-info">expensive</span>, <span class="label label-info">bill</span> or <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties such as a date, description and location. This allows you to join transactions together in a more meaningful way. For example, you could make a tag called <span class="label label-success">Christmas dinner with friends</span> and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion, perhaps with multiple transactions.',
-    'tags_group'                 => '標籤可以把交易進行分組，容許你記錄報銷（你為其他人墊支），或者其他「抵銷行為」——例如分期付款（買電視機的時候），或者支出和收入會互相抵銷（以儲蓄買東西）的交易。當然，你也可以建立普通的標籤，隨你喜歡。',
-    'tags_start'                 => '要開始使用，請新增標籤或在建立新交易紀錄時輸入標籤。',
 
     'transaction_journal_information'       => 'Transaction information',
     'transaction_journal_meta'              => 'Meta information',
@@ -969,7 +966,8 @@ return [
     // import index page:
     'import_index_title'                    => 'Import data into Firefly III',
     'import_index_sub_title'                => 'Index',
-    'import_index_intro'                    => 'Welcome to Firefly\'s import routine. These pages can help you import data from your bank into Firefly III. Please check out the help pages in the top right corner.',
+    'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
     'import_index_file'                     => 'Select your file',
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_index_type'                     => 'Select the type of file you will upload',

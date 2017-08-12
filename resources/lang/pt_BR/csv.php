@@ -17,6 +17,7 @@ return [
     'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
     'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
     'initial_box'                   => 'Basic CSV import setup',
+    'initial_box_title'             => 'Basic CSV import setup options',
     'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
     'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
@@ -34,13 +35,14 @@ return [
     'roles_column'                  => 'Column',
     'roles_no_example_data'         => 'No example data available',
     'roles_submit'                  => 'Continue with step 3/3',
+    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // map data
     'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
     'map_text'                      => 'Nas tabelas a seguir, o valor à esquerda mostra informações encontradas no seu arquivo CSV carregado. É sua tarefa mapear esse valor, se possível, para um valor já presente em seu banco de dados. O Firefly vai se ater a esse mapeamento. Se não há nenhum valor para mapear, ou não quer mapear o valor específico, não selecione nada.',
     'map_field_value'               => 'Field value',
-    'map_field_mapped_to'           => 'Mapped to',
-    'map_do_not_map'                => '(do not map)',
+    'map_field_mapped_to'           => 'Mapeado para',
+    'map_do_not_map'                => '(não mapear)',
     'map_submit'                    => 'Start the import',
 
     // map things.

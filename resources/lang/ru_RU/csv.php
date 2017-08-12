@@ -17,6 +17,7 @@ return [
     'initial_title'                 => 'Импорт данных (1/3) - Подготовка к импорту CSV',
     'initial_text'                  => 'Чтобы импорт данных прошёл успешно, пожалуйста проверьте несколько параметров.',
     'initial_box'                   => 'Основные параметры импорта CSV',
+    'initial_box_title'             => 'Basic CSV import setup options',
     'initial_header_help'           => 'Установите этот флажок, если первая строка CSV-файла содержит заголовки столбцов.',
     'initial_date_help'             => 'Формат даты и времени в вашем CSV-файле. Придерживайтесь формата, описанного <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">на этой</a> странице. По умолчанию дату будут анализироваться на соответствие такому формату: :dateExample.',
     'initial_delimiter_help'        => 'Выберите разделитель полей, который используется в вашем файле. Если вы не уверены, помните, что запятая - это самый безопасный вариант.',
@@ -34,6 +35,7 @@ return [
     'roles_column'                  => 'Column',
     'roles_no_example_data'         => 'No example data available',
     'roles_submit'                  => 'Continue with step 3/3',
+    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // map data
     'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',

@@ -886,9 +886,6 @@ return [
     'tag_title_nothing'          => 'Standaard tags',
     'tag_title_balancingAct'     => 'Balancerende tags',
     'tag_title_advancePayment'   => 'Vooruitbetaalde tags',
-    'tags_introduction'          => 'Normaal gesproken zijn tags enkele woorden, gebruikt om gerelateerde zaken snel aan elkaar te plakken. <span class="label label-info">dure-aanschaf</span>, <span class="label label-info">rekening</span>, <span class="label label-info">feestje</span>. In Firefly III hebben tags meer betekenis en kan je er een datum, omschrijving en locatie aan geven. Daarmee kan je je transacties op een wat zinvollere manier aan elkaar koppelen. Je kan bijvoorbeeld een tag <span class="label label-success">Kerstdiner</span> maken en informatie over het restaurant meenemen. Zulke tags zijn enkelvoudig; je gebruikt ze maar bij één gelegenheid.',
-    'tags_group'                 => 'Omdat tags transacties groeperen kan je er teruggaves, vergoedingen en andere geldzaken mee aanduiden, zolang de transacties elkaar "opheffen". Hoe je dit aanpakt is aan jou. De gewone manier kan natuurlijk ook.',
-    'tags_start'                 => 'Maak hieronder een tag, of voer nieuwe tags in als je nieuwe transacties maakt.',
 
     'transaction_journal_information'       => 'Transactieinformatie',
     'transaction_journal_meta'              => 'Metainformatie',
@@ -969,7 +966,8 @@ return [
     // import index page:
     'import_index_title'                    => 'Gegevens importeren in Firefly III',
     'import_index_sub_title'                => 'Index',
-    'import_index_intro'                    => 'Welkom bij de importroutine van Firefly. Deze pagina\'s helpen je met het importeren van gegevens in Firefly III. Bekijk ook de help-pagina\'s via het icoontje in de rechterbovenhoek.',
+    'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
     'import_index_file'                     => 'Selecteer je bestand',
     'import_index_config'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
     'import_index_type'                     => 'Selecteer het type bestand dat je zal uploaden',

@@ -111,6 +111,7 @@ return [
     'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
 
     // currencies
+    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
     'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
 
     // create currency

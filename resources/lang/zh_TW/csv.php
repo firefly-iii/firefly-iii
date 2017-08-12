@@ -17,6 +17,7 @@ return [
     'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
     'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
     'initial_box'                   => 'Basic CSV import setup',
+    'initial_box_title'             => 'Basic CSV import setup options',
     'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
     'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
@@ -34,6 +35,7 @@ return [
     'roles_column'                  => 'Column',
     'roles_no_example_data'         => 'No example data available',
     'roles_submit'                  => 'Continue with step 3/3',
+    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // map data
     'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
