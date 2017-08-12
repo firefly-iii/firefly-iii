@@ -228,7 +228,8 @@ class Roles implements ConfigurationInterface
      */
     private function processSpecifics(array $row): array
     {
-        foreach ($this->job->configuration['specifics'] as $name => $enabled) {
+        $names = array_keys($this->configuration['specifics']);
+        foreach ($names as $name) {
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
             $row      = $specific->run($row);

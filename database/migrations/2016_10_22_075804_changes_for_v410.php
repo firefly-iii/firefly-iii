@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * 2016_10_22_075804_changes_for_v410.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

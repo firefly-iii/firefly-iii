@@ -18,7 +18,14 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
-
+/**
+ * Class FileControllerTest
+ *
+ * @package Tests\Feature\Controllers\Import
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class FileControllerTest extends TestCase
 {
     /**

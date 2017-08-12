@@ -25,6 +25,14 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class MetaPieChartTest
+ *
+ * @package Tests\Unit\Helpers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class MetaPieChartTest extends TestCase
 {
     /**

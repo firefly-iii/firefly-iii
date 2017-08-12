@@ -17,6 +17,9 @@ use Tests\TestCase;
  * Class HomeControllerTest
  *
  * @package Tests\Feature\Controllers\Admin
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class HomeControllerTest extends TestCase
 {

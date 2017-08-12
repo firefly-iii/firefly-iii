@@ -25,6 +25,9 @@ use Tests\TestCase;
  * Class MassControllerTest
  *
  * @package Tests\Feature\Controllers\Transaction
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MassControllerTest extends TestCase
 {

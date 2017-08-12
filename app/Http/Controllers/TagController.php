@@ -156,7 +156,7 @@ class TagController extends Controller
         Session::flash('gaEventCategory', 'tags');
         Session::flash('gaEventAction', 'edit');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions', 'apiKey'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'apiKey'));
     }
 
     /**

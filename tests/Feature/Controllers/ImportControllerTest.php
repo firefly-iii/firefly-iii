@@ -17,6 +17,9 @@ use Tests\TestCase;
  * Class ImportControllerTest
  *
  * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ImportControllerTest extends TestCase
 {

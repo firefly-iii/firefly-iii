@@ -34,6 +34,9 @@ use Tests\TestCase;
  * Class SingleControllerTest
  *
  * @package Tests\Feature\Controllers\Transaction
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SingleControllerTest extends TestCase
 {

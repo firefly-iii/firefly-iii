@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 /**
  * ExampleTest.php
@@ -14,7 +15,14 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 
-
+/**
+ * Class ExampleTest
+ *
+ * @package Tests\Unit
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ExampleTest extends TestCase
 {
     /**

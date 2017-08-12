@@ -21,6 +21,9 @@ use Tests\TestCase;
  * Class ReportControllerTest
  *
  * @package Tests\Feature\Controllers\Chart
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportControllerTest extends TestCase
 {

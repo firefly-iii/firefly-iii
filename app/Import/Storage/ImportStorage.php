@@ -252,12 +252,11 @@ class ImportStorage
 
     /**
      * @param ImportJournal       $importJournal
-     * @param Account             $account
      * @param TransactionCurrency $localCurrency
      *
      * @return int|null
      */
-    private function getForeignCurrencyId(ImportJournal $importJournal, Account $account, TransactionCurrency $localCurrency): ?int
+    private function getForeignCurrencyId(ImportJournal $importJournal, TransactionCurrency $localCurrency): ?int
     {
         // get journal currency, if any:
         $currency = $importJournal->getCurrency()->getTransactionCurrency();
@@ -394,7 +393,7 @@ class ImportStorage
         $asset             = $importJournal->asset->getAccount();
         $amount            = $importJournal->getAmount();
         $currency          = $this->getCurrency($importJournal, $asset);
-        $foreignCurrencyId = $this->getForeignCurrencyId($importJournal, $asset, $currency);
+        $foreignCurrencyId = $this->getForeignCurrencyId($importJournal, $currency);
         $date              = $importJournal->getDate($this->dateFormat);
         $transactionType   = $this->getTransactionType($amount);
         $opposing          = $this->getOpposingAccount($importJournal->opposing, $amount);

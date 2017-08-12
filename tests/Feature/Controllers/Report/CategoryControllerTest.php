@@ -17,6 +17,14 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
+/**
+ * Class CategoryControllerTest
+ *
+ * @package Tests\Feature\Controllers\Report
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class CategoryControllerTest extends TestCase
 {
     /**

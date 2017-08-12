@@ -25,6 +25,9 @@ use Tests\TestCase;
  * Class RuleGroupControllerTest
  *
  * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RuleGroupControllerTest extends TestCase
 {

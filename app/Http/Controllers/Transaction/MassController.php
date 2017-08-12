@@ -131,10 +131,9 @@ class MassController extends Controller
         $filtered = new Collection;
         $messages = [];
         /**
-         * @var int                $index
          * @var TransactionJournal $journal
          */
-        foreach ($journals as $index => $journal) {
+        foreach ($journals as $journal) {
             $sources      = $journal->sourceAccountList();
             $destinations = $journal->destinationAccountList();
             if ($sources->count() > 1) {

@@ -25,6 +25,14 @@ use Illuminate\Support\Collection;
 use Steam;
 use Tests\TestCase;
 
+/**
+ * Class CategoryControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class CategoryControllerTest extends TestCase
 {
     /**

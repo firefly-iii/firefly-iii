@@ -29,6 +29,9 @@ use Tests\TestCase;
  * Class SplitControllerTest
  *
  * @package Tests\Feature\Controllers\Transaction
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SplitControllerTest extends TestCase
 {

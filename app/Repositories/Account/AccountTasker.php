@@ -206,7 +206,8 @@ class AccountTasker implements AccountTaskerInterface
             $expenses[$opposingId]['count']++;
         }
         // do averages:
-        foreach ($expenses as $key => $entry) {
+        $keys = array_keys($expenses);
+        foreach ($keys as $key) {
             if ($expenses[$key]['count'] > 1) {
                 $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], strval($expenses[$key]['count']));
             }

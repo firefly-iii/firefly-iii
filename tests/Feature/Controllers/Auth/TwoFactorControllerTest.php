@@ -21,6 +21,9 @@ use Tests\TestCase;
  * Class TwoFactorControllerTest
  *
  * @package Tests\Feature\Controllers\Auth
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TwoFactorControllerTest extends TestCase
 {

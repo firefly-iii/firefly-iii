@@ -260,8 +260,8 @@ class CsvProcessor implements FileProcessorInterface
     private function specifics(array $row): array
     {
         $config = $this->job->configuration;
-        //
-        foreach ($config['specifics'] as $name => $enabled) {
+        $names  = array_keys($config['specifics']);
+        foreach ($names as $name) {
 
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));

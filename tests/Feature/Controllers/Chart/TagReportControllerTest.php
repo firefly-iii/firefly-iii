@@ -29,6 +29,9 @@ use Tests\TestCase;
  * Class TagReportControllerTest
  *
  * @package Tests\Feature\Controllers\Chart
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TagReportControllerTest extends TestCase
 {

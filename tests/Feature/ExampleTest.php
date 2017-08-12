@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * ExampleTest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -11,7 +13,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-
+/**
+ * Class ExampleTest
+ *
+ * @package Tests\Feature
+ */
 class ExampleTest extends TestCase
 {
     /**

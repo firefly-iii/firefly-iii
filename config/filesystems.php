@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * filesystems.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

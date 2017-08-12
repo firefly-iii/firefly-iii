@@ -138,7 +138,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions', 'showDepositsFrontpage', 'billCount')
+            'index', compact('count', 'subTitle', 'transactions', 'showDepositsFrontpage', 'billCount')
         );
     }
 

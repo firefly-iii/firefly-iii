@@ -17,6 +17,14 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Tests\TestCase;
 
+/**
+ * Class AttachmentControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class AttachmentControllerTest extends TestCase
 {
     /**

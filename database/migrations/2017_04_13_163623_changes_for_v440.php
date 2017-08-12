@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,6 +25,7 @@ class ChangesForV440 extends Migration
     /**
      * Run the migrations.
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up()

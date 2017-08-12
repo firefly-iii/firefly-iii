@@ -134,7 +134,8 @@ class Initial implements ConfigurationInterface
     {
         // loop specifics.
         if (isset($data['specifics']) && is_array($data['specifics'])) {
-            foreach ($data['specifics'] as $name => $enabled) {
+            $names = array_keys($data['specifics']);
+            foreach ($names as $name) {
                 // verify their content.
                 $className = sprintf('FireflyIII\Import\Specifics\%s', $name);
                 if (class_exists($className)) {

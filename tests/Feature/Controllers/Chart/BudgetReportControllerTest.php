@@ -27,6 +27,14 @@ use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
 
+/**
+ * Class BudgetReportControllerTest
+ *
+ * @package Tests\Feature\Controllers\Chart
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class BudgetReportControllerTest extends TestCase
 {
     /**

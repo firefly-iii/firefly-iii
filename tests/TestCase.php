@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 /**
  * TestCase.php
@@ -23,6 +23,7 @@ use Mockery;
  * Class TestCase
  *
  * @package Tests
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class TestCase extends BaseTestCase
 {

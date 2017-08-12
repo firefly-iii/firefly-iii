@@ -90,10 +90,12 @@ class Map implements ConfigurationInterface
                 }
             }
         }
-        foreach ($this->data as $index => $entry) {
+        $setIndexes = array_keys($this->data);
+        foreach ($setIndexes as $index) {
             $this->data[$index]['values'] = array_unique($this->data[$index]['values']);
             asort($this->data[$index]['values']);
         }
+        unset($setIndexes);
 
         // save number of rows, thus number of steps, in job:
         $steps                      = $rowIndex * 5;
@@ -233,8 +235,8 @@ class Map implements ConfigurationInterface
     {
         // run specifics here:
         // and this is the point where the specifix go to work.
-        foreach ($this->configuration['specifics'] as $name => $enabled) {
-
+        $names = array_keys($this->configuration['specifics']);
+        foreach ($names as $name) {
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
             }

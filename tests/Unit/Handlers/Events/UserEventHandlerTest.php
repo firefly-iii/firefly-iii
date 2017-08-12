@@ -21,6 +21,14 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
+/**
+ * Class UserEventHandlerTest
+ *
+ * @package Tests\Unit\Handlers\Events
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class UserEventHandlerTest extends TestCase
 {
     /**
