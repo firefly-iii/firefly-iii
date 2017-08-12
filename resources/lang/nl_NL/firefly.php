@@ -519,6 +519,7 @@ return [
     'update_amount'                              => 'Bedrag bijwerken',
     'update_budget'                              => 'Budget bijwerken',
     'update_budget_amount_range'                 => 'Update het verwacht beschikbare bedrag tussen :start en :end',
+    'budget_period_navigator'                    => 'Period navigator',
 
     // bills:
     'matching_on'                                => 'Wordt herkend',
