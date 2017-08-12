@@ -520,6 +520,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'update_amount'                              => 'Betrag aktualisieren',
     'update_budget'                              => 'Budget aktualisieren',
     'update_budget_amount_range'                 => 'Aktualisiere (erwarteten) verfügbaren Betrag zwischen :start und :end',
+    'budget_period_navigator'                    => 'Period navigator',
 
     // bills:
     'matching_on'                                => 'Reagiert auf',
