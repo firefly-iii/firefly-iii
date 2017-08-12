@@ -249,6 +249,7 @@ class TagController extends Controller
             );
             $periods  = $this->getPeriodOverview($tag);
             $sum      = $repository->sumOfTag($tag, $start, $end);
+            $path     = route('tags.show', [$tag->id, $moment]);
         }
 
         // prep for current period
