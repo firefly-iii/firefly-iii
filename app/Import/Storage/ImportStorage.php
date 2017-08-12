@@ -154,27 +154,26 @@ class ImportStorage
     }
 
     /**
-     * @param int    $journalId
-     * @param int    $accountId
-     * @param int    $currencyId
-     * @param string $amount
+     * @param array $parameters
      *
      * @return bool
      * @throws FireflyException
      */
-    private function createTransaction(int $journalId, int $accountId, int $currencyId, string $amount): bool
+    private function createTransaction(array $parameters): bool
     {
         $transaction                          = new Transaction;
-        $transaction->account_id              = $accountId;
-        $transaction->transaction_journal_id  = $journalId;
-        $transaction->transaction_currency_id = $currencyId;
-        $transaction->amount                  = $amount;
+        $transaction->account_id              = $parameters['account'];
+        $transaction->transaction_journal_id  = $parameters['id'];
+        $transaction->transaction_currency_id = $parameters['currency'];
+        $transaction->amount                  = $parameters['amount'];
+        $transaction->foreign_currency_id     = $parameters['foreign_currency'];
+        $transaction->foreign_amount          = $parameters['foreign_amount'];
         $transaction->save();
         if (is_null($transaction->id)) {
             $errorText = join(', ', $transaction->getErrors()->all());
             throw new FireflyException($errorText);
         }
-        Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $accountId, $amount));
+        Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $parameters['account'], $parameters['amount']));
 
         return true;
     }
@@ -248,6 +247,39 @@ class ImportStorage
         $currency = $this->defaultCurrency;
 
         return $currency;
+
+    }
+
+    /**
+     * @param ImportJournal       $importJournal
+     * @param Account             $account
+     * @param TransactionCurrency $localCurrency
+     *
+     * @return int|null
+     */
+    private function getForeignCurrencyId(ImportJournal $importJournal, Account $account, TransactionCurrency $localCurrency): ?int
+    {
+        // get journal currency, if any:
+        $currency = $importJournal->getCurrency()->getTransactionCurrency();
+        if (is_null($currency->id)) {
+            Log::debug('getForeignCurrencyId: Journal has no currency, so can\'t be foreign either way.');
+
+            // journal has no currency, so can't be foreign either way:
+            return null;
+        }
+
+        if ($currency->id !== $localCurrency->id) {
+            Log::debug(
+                sprintf('getForeignCurrencyId: journal is %s, but account is %s. Return id of journal currency.', $currency->code, $localCurrency->code)
+            );
+
+            // journal has different currency than account does, return its ID:
+            return $currency->id;
+        }
+
+        Log::debug('getForeignCurrencyId: journal has no foreign currency.');
+        // return null in other cases.
+        return null;
     }
 
     /**
@@ -358,12 +390,13 @@ class ImportStorage
     {
         Log::debug(sprintf('Going to store object #%d with description "%s"', $index, $importJournal->getDescription()));
         $importJournal->asset->setDefaultAccountId($this->job->configuration['import-account']);
-        $asset           = $importJournal->asset->getAccount();
-        $amount          = $importJournal->getAmount();
-        $currency        = $this->getCurrency($importJournal, $asset);
-        $date            = $importJournal->getDate($this->dateFormat);
-        $transactionType = $this->getTransactionType($amount);
-        $opposing        = $this->getOpposingAccount($importJournal->opposing, $amount);
+        $asset             = $importJournal->asset->getAccount();
+        $amount            = $importJournal->getAmount();
+        $currency          = $this->getCurrency($importJournal, $asset);
+        $foreignCurrencyId = $this->getForeignCurrencyId($importJournal, $asset, $currency);
+        $date              = $importJournal->getDate($this->dateFormat);
+        $transactionType   = $this->getTransactionType($amount);
+        $opposing          = $this->getOpposingAccount($importJournal->opposing, $amount);
 
         // if opposing is an asset account, it's a transfer:
         if ($opposing->accountType->type === AccountType::ASSET) {
@@ -395,7 +428,7 @@ class ImportStorage
         $journal                          = new TransactionJournal;
         $journal->user_id                 = $this->job->user_id;
         $journal->transaction_type_id     = $transactionType->id;
-        $journal->transaction_currency_id = $currency->id;
+        $journal->transaction_currency_id = $currency->id;// always currency of account
         $journal->description             = $importJournal->getDescription();
         $journal->date                    = $date->format('Y-m-d');
         $journal->order                   = 0;
@@ -415,8 +448,24 @@ class ImportStorage
         Log::debug(sprintf('Created journal with ID #%d', $journal->id));
 
         // create transactions:
-        $this->createTransaction($journal->id, $asset->id, $currency->id, $amount);
-        $this->createTransaction($journal->id, $opposing->id, $currency->id, Steam::opposite($amount));
+        $one = [
+            'id'               => $journal->id,
+            'account'          => $asset->id,
+            'currency'         => $currency->id,
+            'amount'           => $amount,
+            'foreign_currency' => $foreignCurrencyId,
+            'foreign_amount'   => is_null($foreignCurrencyId) ? null : $amount,
+        ];
+        $two = [
+            'id'               => $journal->id,
+            'account'          => $opposing->id,
+            'currency'         => $currency->id,
+            'amount'           => Steam::opposite($amount),
+            'foreign_currency' => $foreignCurrencyId,
+            'foreign_amount'   => is_null($foreignCurrencyId) ? null : Steam::opposite($amount),
+        ];
+        $this->createTransaction($one);
+        $this->createTransaction($two);
 
         /*** Another step done! */
         $this->job->addStepsDone(1);
