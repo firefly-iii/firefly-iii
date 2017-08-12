@@ -140,7 +140,6 @@ class SplitControllerTest extends TestCase
         $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
 
 
-
         $attachmentRepos = $this->mock(AttachmentHelperInterface::class);
         $attachmentRepos->shouldReceive('saveAttachmentsForModel');
         $attachmentRepos->shouldReceive('getMessages')->andReturn(new MessageBag);
