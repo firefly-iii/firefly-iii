@@ -58,7 +58,7 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * Does the actual job:
+     * Does the actual job.
      *
      * @return bool
      */
@@ -66,34 +66,45 @@ class CsvProcessor implements FileProcessorInterface
     {
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
-        $entries = $this->getImportArray();
-        $index   = 0;
+        $entries = new Collection($this->getImportArray());
         Log::notice('Building importable objects from CSV file.');
-        foreach ($entries as $index => $row) {
-            // verify if not exists already:
-            if ($this->rowAlreadyImported($row)) {
-                $message = sprintf('Row #%d has already been imported.', $index);
-                $this->job->addError($index, $message);
-                $this->job->addStepsDone(5); // all steps.
-                Log::info($message);
-                continue;
+        Log::debug(sprintf('Number of entries: %d', $entries->count()));
+        $notImported = $entries->filter(
+            function (array $row, int $index) {
+                if ($this->rowAlreadyImported($row)) {
+                    $message = sprintf('Row #%d has already been imported.', $index);
+                    $this->job->addError($index, $message);
+                    $this->job->addStepsDone(5); // all steps.
+                    Log::info($message);
+
+                    return null;
+                }
+
+                return $row;
             }
-            $this->objects->push($this->importRow($index, $row));
-            $this->job->addStepsDone(1);
-        }
-        // if job has no step count, set it now:
-        $extended = $this->job->extended_status;
-        if ($extended['steps'] === 0) {
-            $extended['steps']          = $index * 5;
-            $this->job->extended_status = $extended;
-            $this->job->save();
-        }
+        );
+        Log::debug(sprintf('Number of entries left: %d', $notImported->count()));
 
+        // set (new) number of steps:
+        $status                     = $this->job->extended_status;
+        $status['steps']            = $notImported->count() * 5;
+        $this->job->extended_status = $status;
+        $this->job->save();
+        Log::debug(sprintf('Number of steps: %d', $notImported->count() * 5));
 
+        $notImported->each(
+            function (array $row, int $index) {
+                $journal = $this->importRow($index, $row);
+                $this->objects->push($journal);
+                $this->job->addStepsDone(1);
+            }
+        );
         return true;
     }
 
     /**
+     * Set import job for this processor.
+     *
      * @param ImportJob $job
      *
      * @return FileProcessorInterface
@@ -116,7 +127,6 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function annotateValue(int $index, string $value)
     {
-        $value  = trim($value);
         $config = $this->job->configuration;
         $role   = $config['column-roles'][$index] ?? '_ignore';
         $mapped = $config['column-mapping-config'][$index][$value] ?? null;
@@ -189,6 +199,26 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
+     * Hash an array and return the result.
+     *
+     * @param array $array
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    private function getRowHash(array $array): string
+    {
+        $json      = json_encode($array);
+        $jsonError = json_last_error();
+
+        if ($json === false) {
+            throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));
+        }
+        $hash = hash('sha256', $json);
+        return $hash;
+    }
+
+    /**
      * Take a row, build import journal by annotating each value and storing it in the import journal.
      *
      * @param int   $index
@@ -200,18 +230,17 @@ class CsvProcessor implements FileProcessorInterface
     private function importRow(int $index, array $row): ImportJournal
     {
         Log::debug(sprintf('Now at row %d', $index));
-        $row       = $this->specifics($row);
-        $json      = json_encode($row);
-        $jsonError = json_last_error();
-
-        if ($json === false) {
-            throw new FireflyException(sprintf('Error while encoding JSON: %s', $this->getJsonError($jsonError)));
-        }
+        $row  = $this->specifics($row);
+        $hash = $this->getRowHash($row);
 
         $journal = new ImportJournal;
         $journal->setUser($this->job->user);
-        $journal->setHash(hash('sha256', $json));
+        $journal->setHash($hash);
 
+        /**
+         * @var int $rowIndex
+         * @var string $value
+         */
         foreach ($row as $rowIndex => $value) {
             $value = trim($value);
             if (strlen($value) > 0) {
@@ -234,8 +263,7 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function rowAlreadyImported(array $array): bool
     {
-        $string = json_encode($array);
-        $hash   = hash('sha256', json_encode($string));
+        $hash = $this->getRowHash($array);
         $json   = json_encode($hash);
         $entry  = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                         ->where('data', $json)

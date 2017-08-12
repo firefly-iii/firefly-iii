@@ -397,7 +397,7 @@ class ImportStorage
         $foreignCurrencyId = $this->getForeignCurrencyId($importJournal, $currency);
         $date              = $importJournal->getDate($this->dateFormat);
         $transactionType   = $this->getTransactionType($amount);
-        $opposing          = $this->getOpposingAccount($importJournal->opposing, $amount);
+        $opposing          = $this->getOpposingAccount($importJournal->opposing, $asset->id, $amount);
 
         // if opposing is an asset account, it's a transfer:
         if ($opposing->accountType->type === AccountType::ASSET) {
