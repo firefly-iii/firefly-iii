@@ -220,18 +220,24 @@ function resetDivSplits() {
 
 function calculateSum() {
     "use strict";
+    var left = originalSum * -1;
     var sum = 0;
     var set = $('input[name$="][amount]"]');
     for (var i = 0; i < set.length; i++) {
         var current = $(set[i]);
         sum += (current.val() === "" ? 0 : parseFloat(current.val()));
+        left += (current.val() === "" ? 0 : parseFloat(current.val()));
     }
     sum = Math.round(sum * 100) / 100;
+    left = Math.round(left * 100) / 100;
 
     $('.amount-warning').remove();
     if (sum !== originalSum) {
         var holder = $('#journal_amount_holder');
         var par = holder.find('p.form-control-static');
         $('<span>').text(' (' + accounting.formatMoney(sum) + ')').addClass('text-danger amount-warning').appendTo(par);
+        // also add what's left to divide (or vice versa)
+        $('<span>').text(' (' + accounting.formatMoney(left) + ')').addClass('text-danger amount-warning').appendTo(par);
     }
+
 }
