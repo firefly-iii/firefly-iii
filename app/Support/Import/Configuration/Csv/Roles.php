@@ -262,7 +262,7 @@ class Roles implements ConfigurationInterface
             $this->warning = '';
         }
         if ($assigned === 0 || !$hasAmount) {
-            $this->warning = trans('csv.roles_warning');
+            $this->warning = strval(trans('csv.roles_warning'));
         }
 
         return true;

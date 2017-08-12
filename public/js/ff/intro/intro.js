@@ -10,7 +10,7 @@
 
 $(function () {
     "use strict";
-    if(!forceDemoOff) {
+    if (!forceDemoOff) {
         $.getJSON(routeStepsUri).done(setupIntro)
     }
 });

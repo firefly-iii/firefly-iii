@@ -28,6 +28,13 @@ interface ConfigurationInterface
     public function getData(): array;
 
     /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string;
+
+    /**
      * @param ImportJob $job
      *
      * @return ConfigurationInterface
@@ -42,12 +49,5 @@ interface ConfigurationInterface
      * @return bool
      */
     public function storeConfiguration(array $data): bool;
-
-    /**
-     * Return possible warning to user.
-     *
-     * @return string
-     */
-    public function getWarningMessage(): string;
 
 }

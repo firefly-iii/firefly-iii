@@ -78,11 +78,11 @@ class TagController extends Controller
     }
 
     /**
-     * @param Request $request
+     * Create a new tag.
      *
      * @return View
      */
-    public function create(Request $request)
+    public function create()
     {
         $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
@@ -100,6 +100,8 @@ class TagController extends Controller
     }
 
     /**
+     * Delete a tag
+     *
      * @param Tag $tag
      *
      * @return View
@@ -134,13 +136,13 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag                    $tag
+     * Edit a tag
      *
-     * @param TagRepositoryInterface $repository
+     * @param Tag $tag
      *
      * @return View
      */
-    public function edit(Tag $tag, TagRepositoryInterface $repository)
+    public function edit(Tag $tag)
     {
         $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
@@ -158,6 +160,8 @@ class TagController extends Controller
     }
 
     /**
+     * View all tags
+     *
      * @param TagRepositoryInterface $repository
      *
      * @return View

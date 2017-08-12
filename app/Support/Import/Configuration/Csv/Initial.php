@@ -62,6 +62,16 @@ class Initial implements ConfigurationInterface
     }
 
     /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string
+    {
+        return '';
+    }
+
+    /**
      * @param ImportJob $job
      *
      * @return ConfigurationInterface
@@ -134,15 +144,5 @@ class Initial implements ConfigurationInterface
         }
 
         return $config;
-    }
-
-    /**
-     * Return possible warning to user.
-     *
-     * @return string
-     */
-    public function getWarningMessage(): string
-    {
-        return '';
     }
 }

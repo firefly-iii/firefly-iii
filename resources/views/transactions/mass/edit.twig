@@ -50,7 +50,8 @@
                                                 <span class="input-group-addon">{{ journal.currency_symbol }}</span>
                                                 <input name="amount[{{ journal.id }}]" class="form-control" autocomplete="off"
                                                        step="any" type="number" value="{{ journal.amount }}">
-                                                <input type="hidden" name="transaction_currency_id[{{ journal.id }}]" value="{{ journal.transaction_currency_id }}">
+                                                <input type="hidden" name="transaction_currency_id[{{ journal.id }}]"
+                                                       value="{{ journal.transaction_currency_id }}">
                                             </div>
                                             {% if journal.foreign_amount %}
                                                 {# insert foreign data #}

@@ -17,13 +17,6 @@ use FireflyIII\User;
 interface PrerequisitesInterface
 {
     /**
-     * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
-     *
-     * @param User $user
-     */
-    public function setUser(User $user): void;
-
-    /**
      * Returns view name that allows user to fill in prerequisites.
      *
      * @return string
@@ -44,4 +37,11 @@ interface PrerequisitesInterface
      * @return bool
      */
     public function hasPrerequisites(): bool;
+
+    /**
+     * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 }

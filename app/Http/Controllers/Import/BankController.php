@@ -18,6 +18,11 @@ use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
 class BankController extends Controller
 {
 
+    public function postPrerequisites()
+    {
+
+    }
+
     /**
      * @param string $bank
      */
@@ -31,16 +36,13 @@ class BankController extends Controller
         if ($object->hasPrerequisites()) {
             $view       = $object->getView();
             $parameters = $object->getViewParameters();
+
             return view($view, $parameters);
         }
 
         if (!$object->hasPrerequisites()) {
             echo 'redirect to import form.';
         }
-
-    }
-
-    public function postPrerequisites() {
 
     }
 

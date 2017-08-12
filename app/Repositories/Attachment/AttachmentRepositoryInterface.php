@@ -52,7 +52,7 @@ interface AttachmentRepositoryInterface
      *
      * @return Attachment
      */
-    public function findWithoutUser(int $id):Attachment;
+    public function findWithoutUser(int $id): Attachment;
 
     /**
      * @return Collection

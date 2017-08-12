@@ -278,7 +278,7 @@ class SingleControllerTest extends TestCase
     public function testStoreSuccess()
     {
         $this->markTestIncomplete('Mockery cannot yet handle PHP7.1 null argument method things.');
-        
+
         // mock results:
         $repository           = $this->mock(JournalRepositoryInterface::class);
         $journal              = new TransactionJournal();
@@ -293,7 +293,6 @@ class SingleControllerTest extends TestCase
 
         $messages = new MessageBag;
         $messages->add('attachments', 'Fake error');
-
 
 
         // mock attachment helper, trigger an error AND and info thing.

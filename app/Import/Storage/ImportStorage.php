@@ -278,6 +278,7 @@ class ImportStorage
         }
 
         Log::debug('getForeignCurrencyId: journal has no foreign currency.');
+
         // return null in other cases.
         return null;
     }

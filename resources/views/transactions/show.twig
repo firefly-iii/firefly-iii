@@ -244,12 +244,12 @@
                                 </a>
                             </p>
                         {% endif %}
-                            <p>
-                                <i class="fa fa-copy fa-fw" aria-hidden="true"></i>
-                                <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                    {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                                </a>
-                            </p>
+                        <p>
+                            <i class="fa fa-copy fa-fw" aria-hidden="true"></i>
+                            <a href="{{ route('transactions.clone', [journal.id]) }}">
+                                {{ ('clone_'~journal.transactionType.type|lower)|_ }}
+                            </a>
+                        </p>
                         <p>
                             <i class="fa fa-unsorted fa-fw" aria-hidden="true"></i>
                             <a href="{{ route('transactions.split.edit', journal.id) }}">

@@ -56,26 +56,6 @@ class FileController extends Controller
         );
     }
 
-
-    /**
-     * This is step 1. Upload a file.
-     *
-     * @return View
-     */
-    public function index()
-    {
-        $subTitle          = trans('firefly.import_index_sub_title');
-        $subTitleIcon      = 'fa-home';
-        $importFileTypes   = [];
-        $defaultImportType = config('firefly.default_import_format');
-
-        foreach (array_keys(config('firefly.import_formats')) as $type) {
-            $importFileTypes[$type] = trans('firefly.import_file_type_' . $type);
-        }
-
-        return view('import.file.index', compact('subTitle', 'subTitleIcon', 'importFileTypes', 'defaultImportType'));
-    }
-
     /**
      * This is step 3. This repeats until the job is configured.
      *
@@ -140,6 +120,24 @@ class FileController extends Controller
 
     }
 
+    /**
+     * This is step 1. Upload a file.
+     *
+     * @return View
+     */
+    public function index()
+    {
+        $subTitle          = trans('firefly.import_index_sub_title');
+        $subTitleIcon      = 'fa-home';
+        $importFileTypes   = [];
+        $defaultImportType = config('firefly.default_import_format');
+
+        foreach (array_keys(config('firefly.import_formats')) as $type) {
+            $importFileTypes[$type] = trans('firefly.import_file_type_' . $type);
+        }
+
+        return view('import.file.index', compact('subTitle', 'subTitleIcon', 'importFileTypes', 'defaultImportType'));
+    }
 
     /**
      * This is step 2. It creates an Import Job. Stores the import.

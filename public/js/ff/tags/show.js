@@ -40,4 +40,5 @@ function initialize() {
         marker.setMap(map);
     }
 }
+
 google.maps.event.addDomListener(window, 'load', initialize);
