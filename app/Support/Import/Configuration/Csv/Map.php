@@ -235,7 +235,7 @@ class Map implements ConfigurationInterface
     {
         // run specifics here:
         // and this is the point where the specifix go to work.
-        $names = array_keys($this->configuration['specifics']);
+        $names = array_keys($this->job->configuration['specifics']);
         foreach ($names as $name) {
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
