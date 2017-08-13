@@ -17,11 +17,13 @@ return [
             [
                 '4.3'   => 'Make sure you run the migrations and clear your cache. If you need more help, please check Github or the Firefly III website.',
                 '4.6.3' => 'This will be the last version to require PHP7.0. Future versions will require PHP7.1 minimum.',
+                '4.6.4' => 'This version of Firefly III requires PHP7.1.'
             ],
         'install' =>
             [
                 '4.3'   => 'Welcome to Firefly! Make sure you follow the installation guide. If you need more help, please check Github or the Firefly III website. The installation guide has a FAQ which you should check out as well.',
                 '4.6.3' => 'This will be the last version to require PHP7.0. Future versions will require PHP7.1 minimum.',
+                '4.6.4' => 'This version of Firefly III requires PHP7.1.'
             ],
     ],
 ];

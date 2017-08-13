@@ -69,6 +69,7 @@ function removeMoney(e) {
 
     return false;
 }
+
 function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');

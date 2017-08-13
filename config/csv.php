@@ -191,7 +191,7 @@ return [
             'mapper'          => 'Categories',
         ],
         'tags-comma'        => [
-            'mappable'           => true,
+            'mappable'           => false,
             'pre-process-map'    => true,
             'pre-process-mapper' => 'TagsComma',
             'field'              => 'tags',
@@ -199,7 +199,7 @@ return [
             'mapper'             => 'Tags',
         ],
         'tags-space'        => [
-            'mappable'           => true,
+            'mappable'           => false,
             'pre-process-map'    => true,
             'pre-process-mapper' => 'TagsSpace',
             'field'              => 'tags',

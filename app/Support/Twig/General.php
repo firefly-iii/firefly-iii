@@ -147,7 +147,7 @@ class General extends Twig_Extension
     protected function balance(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'balance', function (Account $account = null): string {
+            'balance', function (?Account $account): string {
             if (is_null($account)) {
                 return 'NULL';
             }

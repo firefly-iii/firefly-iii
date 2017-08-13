@@ -21,6 +21,9 @@ use Tests\TestCase;
  * Class BudgetControllerTest
  *
  * @package Tests\Feature\Controllers\Report
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetControllerTest extends TestCase
 {

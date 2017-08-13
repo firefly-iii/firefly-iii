@@ -26,6 +26,9 @@ use Tests\TestCase;
  * Class ConvertControllerTest
  *
  * @package Tests\Feature\Controllers\Transaction
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConvertControllerTest extends TestCase
 {

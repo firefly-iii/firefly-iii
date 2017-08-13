@@ -54,7 +54,6 @@ class TagFormRequest extends Request
             'latitude'    => $latitude,
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,
-            'tagMode'     => $this->string('tagMode'),
         ];
 
         return $data;
@@ -84,7 +83,6 @@ class TagFormRequest extends Request
             'latitude'    => 'numeric|min:-90|max:90',
             'longitude'   => 'numeric|min:-90|max:90',
             'zoomLevel'   => 'numeric|min:0|max:80',
-            'tagMode'     => 'required|in:nothing,balancingAct,advancePayment',
         ];
     }
 }

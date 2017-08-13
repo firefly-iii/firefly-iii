@@ -22,7 +22,7 @@
 
         </div>
     </div>
-    <form action="{{ route('import.process-configuration', job.key) }}" method="post">
+    <form action="{{ route('import.file.process-configuration', job.key) }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
         {% for field in data %}

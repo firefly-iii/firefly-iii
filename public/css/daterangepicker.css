@@ -1,7 +1,7 @@
 .daterangepicker {
     position: absolute;
     color: inherit;
-    background: #fff;
+    background-color: #fff;
     border-radius: 4px;
     width: 278px;
     padding: 4px;
@@ -115,7 +115,7 @@
     border: 1px solid #fff;
     padding: 4px;
     border-radius: 4px;
-    background: #fff;
+    background-color: #fff;
 }
 
 .daterangepicker table {
@@ -274,7 +274,7 @@
 
 .ranges li {
     font-size: 13px;
-    background: #f5f5f5;
+    background-color: #f5f5f5;
     border: 1px solid #f5f5f5;
     border-radius: 4px;
     color: #08c;
@@ -284,13 +284,13 @@
 }
 
 .ranges li:hover {
-    background: #08c;
+    background-color: #08c;
     border: 1px solid #08c;
     color: #fff;
 }
 
 .ranges li.active {
-    background: #08c;
+    background-color: #08c;
     border: 1px solid #08c;
     color: #fff;
 }

@@ -23,6 +23,9 @@ use Tests\TestCase;
  * Class BillControllerTest
  *
  * @package Tests\Feature\Controllers\Chart
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillControllerTest extends TestCase
 {

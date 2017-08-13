@@ -179,7 +179,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // update the account:
         $account->name            = $data['name'];
-        $account->active          = $data['active'] === '1' ? true : false;
+        $account->active          = $data['active'];
         $account->virtual_balance = $data['virtualBalance'];
         $account->iban            = $data['iban'];
         $account->save();
@@ -500,7 +500,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return null|string
      */
-    private function filterIban(string $iban = null)
+    private function filterIban(?string $iban)
     {
         if (is_null($iban)) {
             return null;

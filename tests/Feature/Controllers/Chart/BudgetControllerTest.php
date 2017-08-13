@@ -31,6 +31,9 @@ use Tests\TestCase;
  * Class BudgetControllerTest
  *
  * @package Tests\Feature\Controllers\Chart
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetControllerTest extends TestCase
 {
@@ -130,9 +133,9 @@ class BudgetControllerTest extends TestCase
      */
     public function testExpenseCategory(string $range)
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $catRepos     = $this->mock(CategoryRepositoryInterface::class);
+        $generator = $this->mock(GeneratorInterface::class);
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $catRepos  = $this->mock(CategoryRepositoryInterface::class);
 
         $transactions = factory(Transaction::class, 10)->make();
         $categories   = factory(Category::class, 10)->make();

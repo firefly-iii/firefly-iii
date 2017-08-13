@@ -66,11 +66,11 @@
                                 <div class="btn-group">
                                     <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{ route('transactions.create','withdrawal') }}?account_id={{ data[1].id }}"><i
+                                        <li><a href="{{ route('transactions.create','withdrawal') }}"><i
                                                         class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
-                                        <li><a href="{{ route('transactions.create','deposit') }}?account_id={{ data[1].id }}"><i
+                                        <li><a href="{{ route('transactions.create','deposit') }}"><i
                                                         class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
-                                        <li><a href="{{ route('transactions.create','transfer') }}?account_from_id={{ data[1].id }}"><i
+                                        <li><a href="{{ route('transactions.create','transfer') }}"><i
                                                         class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
                                     </ul>
                                 </div>

@@ -2,10 +2,49 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.4] - 2017-08-13
+### Added
+- PHP7.1 support
+- Routine to decrypt attachments from the command line, for issue #671
+- A routine that can check if your password has been stolen in the past.
+- Split transaction shows amount left to be split
+
+
+### Changed
+- Importer can (potentially) handle new import routines such as banks.
+- Importer can fall back from JSON errors 
+
+### Deprecated
+- Initial release.
+
+### Removed
+- PHP7.0 support
+- Support for extended tag modes
+- Remove "time jumps" to non-empty periods
+
+
+### Fixed
+- #717, reported by @NiceGuyIT
+- #718, reported by @wtercato
+- #722, reported by @simonsmiley
+- #648, reported by @skibbipl
+- #730, reported by @ragnarkarlsson
+- #733, reported by @xpfgsyb
+- #735, reported by @kristophr
+- #739, reported by @skibbipl
+- #515, reported by @schwalberich
+- #743, reported by @simonsmiley
+- #746, reported by @tannie
+- #747, reported by @tannie
+
+### Security
+- Initial release.
+
+
+
 ## [4.6.3.1] - 2017-07-23
 ### Fixed
 - Hotfix to close issue #715
-
 
 ## [4.6.3] - 2017-07-23
 

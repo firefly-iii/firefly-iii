@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -32,6 +34,7 @@ return [
     'journal_source_account_name'    => 'Kreditor (Quelle)',
     'journal_source_account_id'      => 'Girokonto (Quelle)',
     'BIC'                            => 'BIC',
+    'verify_password'                => 'Verify password security',
     'account_from_id'                => 'Vom Konto',
     'account_to_id'                  => 'Auf Konto',
     'source_account'                 => 'Quellkonto',

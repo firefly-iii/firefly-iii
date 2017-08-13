@@ -40,8 +40,6 @@ class ExpandedForm
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
-        $options['min'] = '0.01';
-
         return $this->currencyField($name, 'amount', $value, $options);
     }
 
@@ -54,8 +52,6 @@ class ExpandedForm
      */
     public function amountSmall(string $name, $value = null, array $options = []): string
     {
-        $options['min'] = '0.01';
-
         return $this->currencyField($name, 'amount-small', $value, $options);
     }
 
@@ -279,7 +275,6 @@ class ExpandedForm
         $classes          = $this->getHolderClasses($name);
         $value            = $this->fillFieldValue($name, $value);
         $options['step']  = 'any';
-        $options['min']   = '0.01';
         $selectedCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         unset($options['currency']);
         unset($options['placeholder']);

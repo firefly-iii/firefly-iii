@@ -20,6 +20,9 @@ use Tests\TestCase;
  * Class NewUserControllerTest
  *
  * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NewUserControllerTest extends TestCase
 {
@@ -77,9 +80,9 @@ class NewUserControllerTest extends TestCase
 
 
         $data = [
-            'bank_name'         => 'New bank',
-            'savings_balance'   => '1000',
-            'bank_balance'      => '100',
+            'bank_name'       => 'New bank',
+            'savings_balance' => '1000',
+            'bank_balance'    => '100',
         ];
         $this->be($this->emptyUser());
         $response = $this->post(route('new-user.submit'), $data);

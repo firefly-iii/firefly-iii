@@ -156,14 +156,14 @@
         var budgetID = {{ budget.id }};
         var budgetLimitID = 0;
         {% if budgetLimit.id %}
-            budgetLimitID = {{ budgetLimit.id }};
-            var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
+        budgetLimitID = {{ budgetLimit.id }};
+        var budgetChartUri = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
 
-            var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
-            var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
-            var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
+        var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
+        var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
+        var expenseExpenseUri = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
         {% else %}
-            var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
+        var budgetChartUri = '{{ route('chart.budget.budget', [budget.id] ) }}';
 
         var expenseCategoryUri = '{{ route('chart.budget.expense-category', [budget.id]) }}';
         var expenseAssetUri = '{{ route('chart.budget.expense-asset', [budget.id]) }}';

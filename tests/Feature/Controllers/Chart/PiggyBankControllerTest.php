@@ -22,6 +22,9 @@ use Tests\TestCase;
  * Class PiggyBankControllerTest
  *
  * @package Tests\Feature\Controllers\Chart
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PiggyBankControllerTest extends TestCase
 {

@@ -20,6 +20,9 @@ use Tests\TestCase;
  * Class ConfigurationControllerTest
  *
  * @package Tests\Feature\Controllers\Admin
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConfigurationControllerTest extends TestCase
 {

@@ -15,6 +15,14 @@ namespace Tests\Feature\Controllers\Auth;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Tests\TestCase;
 
+/**
+ * Class ForgotPasswordControllerTest
+ *
+ * @package Tests\Feature\Controllers\Auth
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ForgotPasswordControllerTest extends TestCase
 {
     /**

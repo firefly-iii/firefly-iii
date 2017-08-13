@@ -39,7 +39,7 @@ $(function () {
       );
 
       // test rule triggers button:
-    $('.test_rule_triggers').click(testRuleTriggers);
+      $('.test_rule_triggers').click(testRuleTriggers);
   }
 );
 

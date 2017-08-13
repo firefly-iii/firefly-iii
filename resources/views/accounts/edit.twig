@@ -87,7 +87,7 @@
     <script type="text/javascript">
         var currencies = [];
         {% for currency in allCurrencies %}
-            currencies[{{ currency.id }}] = "{{ currency.symbol }}";
+        currencies[{{ currency.id }}] = "{{ currency.symbol }}";
         {% endfor %}
     </script>
 

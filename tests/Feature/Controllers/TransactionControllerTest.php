@@ -22,6 +22,14 @@ use Illuminate\Support\Collection;
 use Steam;
 use Tests\TestCase;
 
+/**
+ * Class TransactionControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class TransactionControllerTest extends TestCase
 {
 

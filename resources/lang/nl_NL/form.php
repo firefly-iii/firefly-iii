@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -32,6 +34,7 @@ return [
     'journal_source_account_name'    => 'Debiteur (bron)',
     'journal_source_account_id'      => 'Betaalrekening (bron)',
     'BIC'                            => 'BIC',
+    'verify_password'                => 'Bevestig wachtwoordsterkte',
     'account_from_id'                => 'Van account',
     'account_to_id'                  => 'Naar account',
     'source_account'                 => 'Bronrekening',

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console;
 
 use FireflyIII\Console\Commands\CreateImport;
+use FireflyIII\Console\Commands\DecryptAttachment;
 use FireflyIII\Console\Commands\EncryptFile;
 use FireflyIII\Console\Commands\Import;
 use FireflyIII\Console\Commands\ScanAttachments;
@@ -63,6 +64,7 @@ class Kernel extends ConsoleKernel
             ScanAttachments::class,
             UpgradeDatabase::class,
             UseEncryption::class,
+            DecryptAttachment::class,
         ];
 
     /**

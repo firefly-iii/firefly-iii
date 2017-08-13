@@ -41,6 +41,20 @@ interface AttachmentRepositoryInterface
     public function exists(Attachment $attachment): bool;
 
     /**
+     * @param int $id
+     *
+     * @return Attachment
+     */
+    public function find(int $id): Attachment;
+
+    /**
+     * @param int $id
+     *
+     * @return Attachment
+     */
+    public function findWithoutUser(int $id): Attachment;
+
+    /**
      * @return Collection
      */
     public function get(): Collection;

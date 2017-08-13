@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: moment, accountingConfig, dateRangeConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
+/** global: moment, dateRangeMeta,dateRangeConfig, accountingConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
 
 
 $(function () {
@@ -16,8 +16,8 @@ $(function () {
     configAccounting(currencySymbol);
 
     // on submit of form, disable any button in form:
-    $('form.form-horizontal').on('submit',function() {
-        $('button[type="submit"]').prop('disabled',true);
+    $('form.form-horizontal').on('submit', function () {
+        $('button[type="submit"]').prop('disabled', true);
     });
 
     $.ajaxSetup({
@@ -29,27 +29,18 @@ $(function () {
     // when you click on a currency, this happens:
     $('.currency-option').on('click', currencySelect);
 
-    var ranges = {};
-    ranges[dateRangeConfig.currentPeriod] = [moment(dateRangeConfig.ranges.current[0]), moment(dateRangeConfig.ranges.current[1])];
-    ranges[dateRangeConfig.previousPeriod] = [moment(dateRangeConfig.ranges.previous[0]), moment(dateRangeConfig.ranges.previous[1])];
-    ranges[dateRangeConfig.nextPeriod] = [moment(dateRangeConfig.ranges.next[0]), moment(dateRangeConfig.ranges.next[1])];
-
-    // range for everything:
-    ranges[dateRangeConfig.everything] = [dateRangeConfig.firstDate, moment()];
-
-
     // build the data range:
-    $('#daterange').text(dateRangeConfig.linkTitle).daterangepicker(
+    $('#daterange').text(dateRangeMeta.title).daterangepicker(
         {
-            ranges: ranges,
+            ranges: dateRangeConfig.ranges,
             opens: 'left',
             locale: {
-                applyLabel: dateRangeConfig.applyLabel,
-                cancelLabel: dateRangeConfig.cancelLabel,
-                fromLabel: dateRangeConfig.fromLabel,
-                toLabel: dateRangeConfig.toLabel,
+                applyLabel: dateRangeMeta.labels.apply,
+                cancelLabel: dateRangeMeta.labels.cancel,
+                fromLabel: dateRangeMeta.labels.from,
+                toLabel: dateRangeMeta.labels.to,
                 weekLabel: 'W',
-                customRangeLabel: dateRangeConfig.customRangeLabel,
+                customRangeLabel: dateRangeMeta.labels.customRange,
                 daysOfWeek: moment.weekdaysMin(),
                 monthNames: moment.monthsShort(),
                 firstDay: moment.localeData()._week.dow
@@ -61,7 +52,7 @@ $(function () {
         function (start, end, label) {
 
             // send post.
-            $.post(dateRangeConfig.URL, {
+            $.post(dateRangeMeta.uri, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
                 label: label

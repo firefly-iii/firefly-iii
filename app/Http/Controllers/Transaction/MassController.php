@@ -86,7 +86,7 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
                 $journal = $repository->find(intval($journalId));
-                if (!is_null($journal->id) && $journalId === $journal->id) {
+                if (!is_null($journal->id) && intval($journalId) === $journal->id) {
                     $set->push($journal);
                 }
             }
@@ -131,10 +131,9 @@ class MassController extends Controller
         $filtered = new Collection;
         $messages = [];
         /**
-         * @var int                $index
          * @var TransactionJournal $journal
          */
-        foreach ($journals as $index => $journal) {
+        foreach ($journals as $journal) {
             $sources      = $journal->sourceAccountList();
             $destinations = $journal->destinationAccountList();
             if ($sources->count() > 1) {

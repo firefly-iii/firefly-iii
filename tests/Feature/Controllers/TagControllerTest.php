@@ -26,6 +26,9 @@ use Tests\TestCase;
  * Class TagControllerTest
  *
  * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TagControllerTest extends TestCase
 {
@@ -83,11 +86,8 @@ class TagControllerTest extends TestCase
     public function testEdit()
     {
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('tagAllowAdvance')->once()->andReturn(false);
-        $repository->shouldReceive('tagAllowBalancing')->once()->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('tags.edit', [1]));
@@ -132,17 +132,17 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
 
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->times(3);
+        $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setTag')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
 
         $this->be($this->user());
@@ -163,17 +163,17 @@ class TagControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
 
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->times(3);
+        $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setTag')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
 
         $this->be($this->user());
@@ -198,16 +198,16 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
         $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
 
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setTag')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(3);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+        $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setTag')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
 
         $this->be($this->user());

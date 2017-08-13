@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * passwords.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

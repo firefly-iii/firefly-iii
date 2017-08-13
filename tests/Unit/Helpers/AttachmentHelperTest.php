@@ -23,6 +23,9 @@ use Tests\TestCase;
  * Class AttachmentHelperTest
  *
  * @package Tests\Unit\Helpers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AttachmentHelperTest extends TestCase
 {

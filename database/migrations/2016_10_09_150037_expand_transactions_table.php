@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * 2016_10_09_150037_expand_transactions_table.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com

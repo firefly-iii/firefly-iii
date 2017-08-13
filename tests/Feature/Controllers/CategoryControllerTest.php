@@ -25,6 +25,14 @@ use Illuminate\Support\Collection;
 use Steam;
 use Tests\TestCase;
 
+/**
+ * Class CategoryControllerTest
+ *
+ * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class CategoryControllerTest extends TestCase
 {
     /**
@@ -371,19 +379,19 @@ class CategoryControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
 
         $collector = $this->mock(JournalCollectorInterface::class);
-        $collector->shouldReceive('setPage')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setLimit')->andReturnSelf()->times(3);
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(4);
-        $collector->shouldReceive('setRange')->andReturnSelf()->times(4);
+        $collector->shouldReceive('setPage')->andReturnSelf()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->twice();
+        $collector->shouldReceive('setRange')->andReturnSelf()->twice();
         $collector->shouldReceive('setTypes')->andReturnSelf()->times(1);
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->times(4);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->times(3);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(4);
-        $collector->shouldReceive('setCategory')->andReturnSelf()->times(4);
+        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->twice();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->twice();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->twice();
 
         $collector->shouldReceive('getJournals')->andReturn(new Collection)->times(1);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->times(3);
+        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

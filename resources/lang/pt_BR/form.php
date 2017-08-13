@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -32,6 +34,7 @@ return [
     'journal_source_account_name'    => 'Conta de receita (fonte)',
     'journal_source_account_id'      => 'Conta de ativo (fonte)',
     'BIC'                            => 'BIC',
+    'verify_password'                => 'Verify password security',
     'account_from_id'                => 'da conta',
     'account_to_id'                  => 'para conta',
     'source_account'                 => 'Conta de origem',
@@ -64,7 +67,7 @@ return [
     'expense_account'                => 'Conta de Despesa',
     'revenue_account'                => 'Conta de Receita',
     'decimal_places'                 => 'Casas décimais',
-    'exchange_rate_instruction'      => 'Foreign currencies',
+    'exchange_rate_instruction'      => 'Moedas estrangeiras',
     'exchanged_amount'               => 'Exchanged amount',
     'source_amount'                  => 'Amount (source)',
     'destination_amount'             => 'Amount (destination)',

@@ -206,7 +206,7 @@ class BillController extends Controller
         /** @var Carbon $date */
         $date           = session('start');
         $year           = $date->year;
-        $page           = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page           = intval($request->get('page'));
         $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
         $yearAverage    = $repository->getYearAverage($bill, $date);
         $overallAverage = $repository->getOverallAverage($bill);
@@ -217,7 +217,7 @@ class BillController extends Controller
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
                   ->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/bills/show/' . $bill->id);
+        $journals->setPath(route('bills.show', [$bill->id]));
 
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;

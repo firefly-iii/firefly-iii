@@ -58,7 +58,7 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
-     * Does the actual job:
+     * Does the actual job.
      *
      * @return bool
      */
@@ -66,34 +66,46 @@ class CsvProcessor implements FileProcessorInterface
     {
         Log::debug('Now in CsvProcessor run(). Job is now running...');
 
-        $entries = $this->getImportArray();
-        $index   = 0;
+        $entries = new Collection($this->getImportArray());
         Log::notice('Building importable objects from CSV file.');
-        foreach ($entries as $index => $row) {
-            // verify if not exists already:
-            if ($this->rowAlreadyImported($row)) {
-                $message = sprintf('Row #%d has already been imported.', $index);
-                $this->job->addError($index, $message);
-                $this->job->addStepsDone(5); // all steps.
-                Log::info($message);
-                continue;
-            }
-            $this->objects->push($this->importRow($index, $row));
-            $this->job->addStepsDone(1);
-        }
-        // if job has no step count, set it now:
-        $extended = $this->job->extended_status;
-        if ($extended['steps'] === 0) {
-            $extended['steps']          = $index * 5;
-            $this->job->extended_status = $extended;
-            $this->job->save();
-        }
+        Log::debug(sprintf('Number of entries: %d', $entries->count()));
+        $notImported = $entries->filter(
+            function (array $row, int $index) {
+                if ($this->rowAlreadyImported($row)) {
+                    $message = sprintf('Row #%d has already been imported.', $index);
+                    $this->job->addError($index, $message);
+                    $this->job->addStepsDone(5); // all steps.
+                    Log::info($message);
 
+                    return null;
+                }
+
+                return $row;
+            }
+        );
+        Log::debug(sprintf('Number of entries left: %d', $notImported->count()));
+
+        // set (new) number of steps:
+        $status                     = $this->job->extended_status;
+        $status['steps']            = $notImported->count() * 5;
+        $this->job->extended_status = $status;
+        $this->job->save();
+        Log::debug(sprintf('Number of steps: %d', $notImported->count() * 5));
+
+        $notImported->each(
+            function (array $row, int $index) {
+                $journal = $this->importRow($index, $row);
+                $this->objects->push($journal);
+                $this->job->addStepsDone(1);
+            }
+        );
 
         return true;
     }
 
     /**
+     * Set import job for this processor.
+     *
      * @param ImportJob $job
      *
      * @return FileProcessorInterface
@@ -116,7 +128,6 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function annotateValue(int $index, string $value)
     {
-        $value  = trim($value);
         $config = $this->job->configuration;
         $role   = $config['column-roles'][$index] ?? '_ignore';
         $mapped = $config['column-mapping-config'][$index][$value] ?? null;
@@ -152,21 +163,86 @@ class CsvProcessor implements FileProcessorInterface
     }
 
     /**
+     * Will return string representation of JSON error code.
+     *
+     * @param int $jsonError
+     *
+     * @return string
+     */
+    private function getJsonError(int $jsonError): string
+    {
+        switch ($jsonError) {
+            default:
+                return 'Unknown JSON error';
+            case JSON_ERROR_NONE:
+                return 'No JSON error';
+            case JSON_ERROR_DEPTH:
+                return 'JSON_ERROR_DEPTH';
+            case JSON_ERROR_STATE_MISMATCH:
+                return 'JSON_ERROR_STATE_MISMATCH';
+            case JSON_ERROR_CTRL_CHAR:
+                return 'JSON_ERROR_CTRL_CHAR';
+            case JSON_ERROR_SYNTAX:
+                return 'JSON_ERROR_SYNTAX';
+            case JSON_ERROR_UTF8:
+                return 'JSON_ERROR_UTF8';
+            case JSON_ERROR_RECURSION:
+                return 'JSON_ERROR_RECURSION';
+            case JSON_ERROR_INF_OR_NAN:
+                return 'JSON_ERROR_INF_OR_NAN';
+            case JSON_ERROR_UNSUPPORTED_TYPE:
+                return 'JSON_ERROR_UNSUPPORTED_TYPE';
+            case JSON_ERROR_INVALID_PROPERTY_NAME:
+                return 'JSON_ERROR_INVALID_PROPERTY_NAME';
+            case JSON_ERROR_UTF16:
+                return 'JSON_ERROR_UTF16';
+        }
+    }
+
+    /**
+     * Hash an array and return the result.
+     *
+     * @param array $array
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    private function getRowHash(array $array): string
+    {
+        $json      = json_encode($array);
+        $jsonError = json_last_error();
+
+        if ($json === false) {
+            throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));
+        }
+        $hash = hash('sha256', $json);
+
+        return $hash;
+    }
+
+    /**
      * Take a row, build import journal by annotating each value and storing it in the import journal.
      *
      * @param int   $index
      * @param array $row
      *
      * @return ImportJournal
+     * @throws FireflyException
      */
     private function importRow(int $index, array $row): ImportJournal
     {
         Log::debug(sprintf('Now at row %d', $index));
-        $row     = $this->specifics($row);
+        $row  = $this->specifics($row);
+        $hash = $this->getRowHash($row);
+
         $journal = new ImportJournal;
         $journal->setUser($this->job->user);
-        $journal->setHash(hash('sha256', json_encode($row)));
+        $journal->setHash($hash);
 
+        /**
+         * @var int    $rowIndex
+         * @var string $value
+         */
         foreach ($row as $rowIndex => $value) {
             $value = trim($value);
             if (strlen($value) > 0) {
@@ -175,7 +251,8 @@ class CsvProcessor implements FileProcessorInterface
                 $journal->setValue($annotated);
             }
         }
-        Log::debug('ImportJournal complete, returning.');
+        // set some extra info:
+        $journal->asset->setDefaultAccountId($this->job->configuration['import-account']);
 
         return $journal;
     }
@@ -189,13 +266,12 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function rowAlreadyImported(array $array): bool
     {
-        $string = json_encode($array);
-        $hash   = hash('sha256', json_encode($string));
-        $json   = json_encode($hash);
-        $entry  = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                        ->where('data', $json)
-                                        ->where('name', 'importHash')
-                                        ->first();
+        $hash  = $this->getRowHash($array);
+        $json  = json_encode($hash);
+        $entry = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                       ->where('data', $json)
+                                       ->where('name', 'importHash')
+                                       ->first();
         if (!is_null($entry)) {
             return true;
         }
@@ -215,8 +291,8 @@ class CsvProcessor implements FileProcessorInterface
     private function specifics(array $row): array
     {
         $config = $this->job->configuration;
-        //
-        foreach ($config['specifics'] as $name => $enabled) {
+        $names  = array_keys($config['specifics']);
+        foreach ($names as $name) {
 
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));

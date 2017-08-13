@@ -31,7 +31,7 @@
             initialize({});
         }
         else if (options.constructor === Boolean) {
-            initialize({ applyLast: options });
+            initialize({applyLast: options});
         }
         else if (options.sortingHeader !== undefined) {
             sortByColumn(options.sortingHeader);
@@ -128,7 +128,7 @@
             });
 
             var context = lookupSortContext($this),
-                bsSort = context.bsSort;
+                bsSort  = context.bsSort;
 
             $this.find('thead th[data-defaultsort!="disabled"]').each(function (index) {
                 var $header = $(this);
@@ -164,7 +164,7 @@
     function lookupSortContext($table) {
         var context = $table.data("bootstrap-sortable-context");
         if (context === undefined) {
-            context = { bsSort: [], lastSort: undefined };
+            context = {bsSort: [], lastSort: undefined};
             $table.find('thead th[data-defaultsort!="disabled"]').each(function (index) {
                 var $this = $(this);
                 var sortKey = $this.attr('data-sortkey');
@@ -185,8 +185,8 @@
     // Sorting mechanism separated
     function doSort($this, $table) {
         var sortColumn = parseFloat($this.attr('data-sortcolumn')),
-            context = lookupSortContext($table),
-            bsSort = context.bsSort;
+            context    = lookupSortContext($table),
+            bsSort     = context.bsSort;
 
         var colspan = $this.attr('colspan');
         if (colspan) {
@@ -246,7 +246,7 @@
         var fixedRows = [];
         $(rows.filter('[data-disablesort="true"]').get().reverse()).each(function (index, fixedRow) {
             var $fixedRow = $(fixedRow);
-            fixedRows.push({ index: rows.index($fixedRow), row: $fixedRow });
+            fixedRows.push({index: rows.index($fixedRow), row: $fixedRow});
             $fixedRow.remove();
         });
 
@@ -254,7 +254,7 @@
         var rowsToSort = rows.not('[data-disablesort="true"]');
         if (rowsToSort.length != 0) {
             var emptySorting = bsSort[sortKey] === 'asc' ? emptyEnd : false;
-            sortEngine(rowsToSort, { emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value' });
+            sortEngine(rowsToSort, {emptyEnd: emptySorting, selector: 'td:nth-child(' + (sortColumn + 1) + ')', order: bsSort[sortKey], data: 'value'});
         }
 
         // add back the fixed rows
@@ -274,12 +274,16 @@
 
     // jQuery 1.9 removed this object
     if (!$.browser) {
-        $.browser = { chrome: false, mozilla: false, opera: false, msie: false, safari: false };
+        $.browser = {chrome: false, mozilla: false, opera: false, msie: false, safari: false};
         var ua = navigator.userAgent;
         $.each($.browser, function (c) {
             $.browser[c] = ((new RegExp(c, 'i').test(ua))) ? true : false;
-            if ($.browser.mozilla && c === 'mozilla') { $.browser.mozilla = ((new RegExp('firefox', 'i').test(ua))) ? true : false; }
-            if ($.browser.chrome && c === 'safari') { $.browser.safari = false; }
+            if ($.browser.mozilla && c === 'mozilla') {
+                $.browser.mozilla = ((new RegExp('firefox', 'i').test(ua))) ? true : false;
+            }
+            if ($.browser.chrome && c === 'safari') {
+                $.browser.safari = false;
+            }
         });
     }
 

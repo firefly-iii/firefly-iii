@@ -253,7 +253,7 @@ class AccountController extends Controller
         $currencyRepos = app(CurrencyRepositoryInterface::class);
         $range         = Preferences::get('viewRange', '1M')->data;
         $subTitleIcon  = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page          = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page          = intval($request->get('page'));
         $pageSize      = intval(Preferences::get('transactionPageSize', 50)->data);
         $chartUri      = route('chart.account.single', [$account->id]);
         $start         = null;
@@ -274,55 +274,31 @@ class AccountController extends Controller
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                                                           'end'  => $end->formatLocalized($this->monthAndDayFormat)]
-            );
+            $fStart   = $start->formatLocalized($this->monthAndDayFormat);
+            $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
+            $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
             $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d')]);
             $periods  = $this->getPeriodOverview($account);
         }
 
-        // prep for current period
+        // prep for current period view
         if (strlen($moment) === 0) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-            $subTitle = trans(
-                'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                                                           'end'  => $end->formatLocalized($this->monthAndDayFormat)]
-            );
+            $fStart   = $start->formatLocalized($this->monthAndDayFormat);
+            $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
+            $subTitle = trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
             $periods  = $this->getPeriodOverview($account);
         }
 
-        $count = 0;
-        $loop  = 0;
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            $collector = app(JournalCollectorInterface::class);
-            Log::info('Count is zero, search for journals.');
-            $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-            if (!is_null($start)) {
-                $collector->setRange($start, $end);
-            }
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath('accounts/show/' . $account->id . '/' . $moment);
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
+        // grab journals:
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
+        if (!is_null($start)) {
+            $collector->setRange($start, $end);
         }
-
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                                                           'end'  => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
-
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath(route('accounts.show', [$account->id, $moment]));
 
         return view(
             'accounts.show',
@@ -421,7 +397,7 @@ class AccountController extends Controller
         $start      = $repository->oldestJournalDate($account);
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range);
+        $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
 
         // properties for cache

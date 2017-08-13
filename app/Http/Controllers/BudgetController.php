@@ -293,37 +293,15 @@ class BudgetController extends Controller
             );
         }
 
-        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
-        $count = 0;
-        $loop  = 0;
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at no-budget loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info(sprintf('Count is zero, search for journals between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
-                      ->withoutBudget()->withOpposingAccount();
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath('/budgets/list/no-budget');
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
-
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.without_budget_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
+                  ->withoutBudget()->withOpposingAccount();
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath(route('budgets.no-budget'));
 
         return view('budgets.no-budget', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }
@@ -357,7 +335,7 @@ class BudgetController extends Controller
         /** @var Carbon $start */
         $start      = session('first', Carbon::create()->startOfYear());
         $end        = new Carbon;
-        $page       = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page       = intval($request->get('page'));
         $pageSize   = intval(Preferences::get('transactionPageSize', 50)->data);
         $limits     = $this->getLimits($budget, $start, $end);
         $repetition = null;
@@ -366,7 +344,7 @@ class BudgetController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/budgets/show/' . $budget->id);
+        $journals->setPath(route('budgets.show', [$budget->id]));
 
 
         $subTitle = trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
@@ -388,7 +366,7 @@ class BudgetController extends Controller
             throw new FireflyException('This budget limit is not part of this budget.');
         }
 
-        $page     = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page     = intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans(
             'firefly.budget_in_period', [
@@ -404,7 +382,7 @@ class BudgetController extends Controller
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
         $journals = $collector->getPaginatedJournals();
-        $journals->setPath('/budgets/show/' . $budget->id . '/' . $budgetLimit->id);
+        $journals->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
 
 
         $start  = session('first', Carbon::create()->startOfYear());
@@ -567,7 +545,7 @@ class BudgetController extends Controller
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range);
+        $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
 
         // properties for cache

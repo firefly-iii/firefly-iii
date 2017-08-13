@@ -15,8 +15,6 @@ namespace FireflyIII\Support;
 
 
 use Cache;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
@@ -97,25 +95,6 @@ class CacheProperties
     {
         $this->md5 = '';
         foreach ($this->properties as $property) {
-
-            if ($property instanceof Collection || $property instanceof EloquentCollection) {
-                $this->md5 .= json_encode($property->toArray());
-                continue;
-            }
-            if ($property instanceof Carbon) {
-                $this->md5 .= $property->toRfc3339String();
-                continue;
-            }
-            if (is_object($property)) {
-                $this->md5 .= $property->__toString();
-            }
-            if (is_bool($property) && $property === false) {
-                $this->md5 .= 'false';
-            }
-            if (is_bool($property) && $property === true) {
-                $this->md5 .= 'true';
-            }
-
             $this->md5 .= json_encode($property);
         }
         $this->md5 = md5($this->md5);

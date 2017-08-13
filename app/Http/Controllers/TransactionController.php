@@ -70,15 +70,13 @@ class TransactionController extends Controller
         // default values:
         $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
         $types        = config('firefly.transactionTypesByWhat.' . $what);
-        $page         = intval($request->get('page')) === 0 ? 1 : intval($request->get('page'));
+        $page         = intval($request->get('page'));
         $pageSize     = intval(Preferences::get('transactionPageSize', 50)->data);
-        $count        = 0;
-        $loop         = 0;
         $range        = Preferences::get('viewRange', '1M')->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        $path         = '/transactions/' . $what;
+        $path         = route('transactions.index', [$what]);
 
         // prep for "all" view.
         if ($moment === 'all') {
@@ -86,14 +84,14 @@ class TransactionController extends Controller
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
             $end      = new Carbon;
-            $path     = '/transactions/' . $what . '/all/';
+            $path     = route('transactions.index', [$what, 'all']);
         }
 
         // prep for "specific date" view.
         if (strlen($moment) > 0 && $moment !== 'all') {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
-            $path     = '/transactions/' . $what . '/' . $moment;
+            $path     = route('transactions.index', [$what, $moment]);
             $subTitle = trans(
                 'firefly.title_' . $what . '_between',
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -111,32 +109,14 @@ class TransactionController extends Controller
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
-        // grab journals, but be prepared to jump a period back to get the right ones:
-        Log::info('Now at transaction loop start.');
-        while ($count === 0 && $loop < 3) {
-            $loop++;
-            Log::info('Count is zero, search for journals.');
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
-            $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getPaginatedJournals();
-            $journals->setPath($path);
-            $count = $journals->getCollection()->count();
-            if ($count === 0 && $loop < 3) {
-                $start->subDay();
-                $start = Navigation::startOfPeriod($start, $range);
-                $end   = Navigation::endOfPeriod($start, $range);
-                Log::info(sprintf('Count is still zero, go back in time to "%s" and "%s"!', $start->format('Y-m-d'), $end->format('Y-m-d')));
-            }
-        }
 
-        if ($moment !== 'all' && $loop > 1) {
-            $subTitle = trans(
-                'firefly.title_' . $what . '_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
+        $collector->removeFilter(InternalTransferFilter::class);
+        $journals = $collector->getPaginatedJournals();
+        $journals->setPath($path);
+
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals', 'periods', 'start', 'end', 'moment'));
 
@@ -204,7 +184,7 @@ class TransactionController extends Controller
         $start      = $first->date ?? new Carbon;
         $range      = Preferences::get('viewRange', '1M')->data;
         $start      = Navigation::startOfPeriod($start, $range);
-        $end        = Navigation::endOfX(new Carbon, $range);
+        $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
         $types      = config('firefly.transactionTypesByWhat.' . $what);
 

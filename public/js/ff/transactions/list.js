@@ -99,6 +99,7 @@ function checkAll() {
     "use strict";
     $('.select_all_single').prop('checked', true);
 }
+
 function uncheckAll() {
     "use strict";
     $('.select_all_single').prop('checked', false);

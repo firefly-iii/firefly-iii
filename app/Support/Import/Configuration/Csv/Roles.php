@@ -29,6 +29,9 @@ class Roles implements ConfigurationInterface
     /** @var  ImportJob */
     private $job;
 
+    /** @var string */
+    private $warning = '';
+
     /**
      * Get the data necessary to show the configuration screen.
      *
@@ -46,9 +49,11 @@ class Roles implements ConfigurationInterface
         $end   = $start + config('csv.example_rows');
 
         // set data:
+        $roles = $this->getRoles();
+        asort($roles);
         $this->data = [
             'examples' => [],
-            'roles'    => $this->getRoles(),
+            'roles'    => $roles,
             'total'    => 0,
             'headers'  => $config['has-headers'] ? $reader->fetchOne(0) : [],
         ];
@@ -66,6 +71,16 @@ class Roles implements ConfigurationInterface
         $this->makeExamplesUnique();
 
         return $this->data;
+    }
+
+    /**
+     * Return possible warning to user.
+     *
+     * @return string
+     */
+    public function getWarningMessage(): string
+    {
+        return $this->warning;
     }
 
     /**
@@ -215,7 +230,8 @@ class Roles implements ConfigurationInterface
      */
     private function processSpecifics(array $row): array
     {
-        foreach ($this->job->configuration['specifics'] as $name => $enabled) {
+        $names = array_keys($this->job->configuration['specifics']);
+        foreach ($names as $name) {
             /** @var SpecificInterface $specific */
             $specific = app('FireflyIII\Import\Specifics\\' . $name);
             $row      = $specific->run($row);
@@ -246,6 +262,10 @@ class Roles implements ConfigurationInterface
             $config['column-roles-complete'] = true;
             $this->job->configuration        = $config;
             $this->job->save();
+            $this->warning = '';
+        }
+        if ($assigned === 0 || !$hasAmount) {
+            $this->warning = strval(trans('csv.roles_warning'));
         }
 
         return true;

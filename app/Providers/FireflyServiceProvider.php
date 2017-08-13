@@ -35,6 +35,8 @@ use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Services\Password\PwndVerifier;
+use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\FireflyConfig;
@@ -147,6 +149,9 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
         $this->app->bind(BudgetReportHelperInterface::class, BudgetReportHelper::class);
+
+        // password verifier thing
+        $this->app->bind(Verifier::class, PwndVerifier::class);
     }
 
 }

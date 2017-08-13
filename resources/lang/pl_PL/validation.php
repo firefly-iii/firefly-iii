@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * validation.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -88,4 +90,5 @@ return [
     'in_array'                       => 'Pole :attribute nie istnieje w :other.',
     'present'                        => 'Pole :attribute musi być obecne.',
     'amount_zero'                    => 'Całkowita kwota nie może być zerem',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
 ];

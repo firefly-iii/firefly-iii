@@ -1,10 +1,22 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * UseEncryption.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
 namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
+/**
+ * Class UseEncryption
+ */
 class UseEncryption extends Command
 {
     /**

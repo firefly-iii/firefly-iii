@@ -60,7 +60,7 @@
                     </p>
                     <div class="row">
                         <div class="col-lg-4">
-                            <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
+                            <a href="{{ route('import.file.download', [job.key]) }}" class="btn btn-default"><i
                                         class="fa fa-fw fa-download"></i> {{ 'import_status_ready_config'|_ }}</a>
                         </div>
                         <div class="col-lg-4">
@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    {# displays the finished status of the import. #}
+    {# displays the finished status of the import #}
     <div class="row status_finished statusbox" style="display:none;">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
             <div class="box box-default">
@@ -147,8 +147,8 @@
 
 
         var jobKey = '{{ job.key }}';
-        var jobImportUrl = '{{ route('import.json', [job.key]) }}';
-        var jobStartUrl = '{{ route('import.start', [job.key]) }}';
+        var jobImportUrl = '{{ route('import.file.json', [job.key]) }}';
+        var jobStartUrl = '{{ route('import.file.start', [job.key]) }}';
         var token = '{{ csrf_token() }}';
     </script>
     <script type="text/javascript" src="js/ff/import/status.js"></script>

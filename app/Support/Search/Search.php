@@ -113,13 +113,12 @@ class Search implements SearchInterface
             }
             $collector->removeFilter(InternalTransferFilter::class);
             $set   = $collector->getPaginatedJournals()->getCollection();
-            $words = $this->words;
 
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(
-                function (Transaction $transaction) use ($words) {
+                function (Transaction $transaction) {
 
                     if ($this->matchModifiers($transaction)) {
                         return $transaction;
@@ -237,7 +236,7 @@ class Search implements SearchInterface
             return false;
         }
         foreach ($needle as $what) {
-            if (($pos = strpos($haystack, $what)) !== false) {
+            if (strpos($haystack, $what) !== false) {
                 return true;
             }
         }

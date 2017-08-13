@@ -23,6 +23,9 @@ use Tests\TestCase;
  * Class CurrencyControllerTest
  *
  * @package Tests\Feature\Controllers
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CurrencyControllerTest extends TestCase
 {

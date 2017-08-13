@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Amount;
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -19,9 +20,9 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 use Navigation;
 use Preferences;
-use Session;
 
 /**
  * Class JavascriptController
@@ -88,11 +89,6 @@ class JavascriptController extends Controller
      */
     public function variables(Request $request)
     {
-        $picker                    = $this->getDateRangePicker();
-        $start                     = Session::get('start');
-        $end                       = Session::get('end');
-        $linkTitle                 = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
-        $firstDate                 = session('first')->format('Y-m-d');
         $localeconv                = localeconv();
         $accounting                = Amount::getJsConfig($localeconv);
         $localeconv                = localeconv();
@@ -100,15 +96,16 @@ class JavascriptController extends Controller
         $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang                      = $pref->data;
-        $data                      = [
-            'picker'         => $picker,
-            'linkTitle'      => $linkTitle,
-            'firstDate'      => $firstDate,
-            'currencyCode'   => Amount::getCurrencyCode(),
-            'currencySymbol' => Amount::getCurrencySymbol(),
-            'accounting'     => $accounting,
-            'localeconv'     => $localeconv,
-            'language'       => $lang,
+        $dateRange                 = $this->getDateRangeConfig();
+
+        $data = [
+            'currencyCode'    => Amount::getCurrencyCode(),
+            'currencySymbol'  => Amount::getCurrencySymbol(),
+            'accounting'      => $accounting,
+            'localeconv'      => $localeconv,
+            'language'        => $lang,
+            'dateRangeTitle'  => $dateRange['title'],
+            'dateRangeConfig' => $dateRange['configuration'],
         ];
         $request->session()->keep(['two-factor-secret']);
 
@@ -119,40 +116,73 @@ class JavascriptController extends Controller
 
     /**
      * @return array
-     * @throws FireflyException
      */
-    private function getDateRangePicker(): array
+    private function getDateRangeConfig(): array
     {
         $viewRange = Preferences::get('viewRange', '1M')->data;
-        $start     = Session::get('start');
-        $end       = Session::get('end');
+        $start     = session('start');
+        $end       = session('end');
+        $first     = session('first');
+        $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
+        $isCustom  = session('is_custom_range');
+        $ranges    = [
+            // first range is the current range:
+            $title => [$start, $end],
+        ];
+        Log::debug(sprintf('viewRange is %s', $viewRange));
 
-        $prevStart = clone $start;
-        $prevEnd   = clone $start;
-        $nextStart = clone $end;
-        $nextEnd   = clone $end;
-        if ($viewRange === 'custom') {
-            $days = $start->diffInDays($end);
-            $prevStart->subDays($days);
-            $nextEnd->addDays($days);
-            unset($days);
+        // get the format for the ranges:
+        $format = $this->getFormatByRange($viewRange);
+
+        // when current range is a custom range, add the current period as the next range.
+        if ($isCustom) {
+            Log::debug('Custom is true.');
+            $index             = $start->formatLocalized($format);
+            $customPeriodStart = Navigation::startOfPeriod($start, $viewRange);
+            $customPeriodEnd   = Navigation::endOfPeriod($customPeriodStart, $viewRange);
+            $ranges[$index]    = [$customPeriodStart, $customPeriodEnd];
         }
+        // then add previous range and next range
+        $previousDate   = Navigation::subtractPeriod($start, $viewRange);
+        $index          = $previousDate->formatLocalized($format);
+        $previousStart  = Navigation::startOfPeriod($previousDate, $viewRange);
+        $previousEnd    = Navigation::endOfPeriod($previousStart, $viewRange);
+        $ranges[$index] = [$previousStart, $previousEnd];
 
-        if ($viewRange !== 'custom') {
-            $prevStart = Navigation::subtractPeriod($start, $viewRange);// subtract for previous period
-            $prevEnd   = Navigation::endOfPeriod($prevStart, $viewRange);
-            $nextStart = Navigation::addPeriod($start, $viewRange, 0); // add for previous period
-            $nextEnd   = Navigation::endOfPeriod($nextStart, $viewRange);
-        }
+        $nextDate       = Navigation::addPeriod($start, $viewRange, 0);
+        $index          = $nextDate->formatLocalized($format);
+        $nextStart      = Navigation::startOfPeriod($nextDate, $viewRange);
+        $nextEnd        = Navigation::endOfPeriod($nextStart, $viewRange);
+        $ranges[$index] = [$nextStart, $nextEnd];
 
-        $ranges             = [];
-        $ranges['current']  = [$start->format('Y-m-d'), $end->format('Y-m-d')];
-        $ranges['previous'] = [$prevStart->format('Y-m-d'), $prevEnd->format('Y-m-d')];
-        $ranges['next']     = [$nextStart->format('Y-m-d'), $nextEnd->format('Y-m-d')];
+        // everything
+        $index          = strval(trans('firefly.everything'));
+        $ranges[$index] = [$first, new Carbon];
 
+        $return = [
+            'title'         => $title,
+            'configuration' => [
+                'apply'       => strval(trans('firefly.apply')),
+                'cancel'      => strval(trans('firefly.cancel')),
+                'from'        => strval(trans('firefly.from')),
+                'to'          => strval(trans('firefly.to')),
+                'customRange' => strval(trans('firefly.customRange')),
+                'start'       => $start->format('Y-m-d'),
+                'end'         => $end->format('Y-m-d'),
+                'ranges'      => $ranges,
+            ],
+        ];
+
+
+        return $return;
+
+    }
+
+    private function getFormatByRange(string $viewRange): string
+    {
         switch ($viewRange) {
             default:
-                throw new FireflyException('The date picker does not yet support "' . $viewRange . '".'); // @codeCoverageIgnore
+                throw new FireflyException(sprintf('The date picker does not yet support "%s".', $viewRange)); // @codeCoverageIgnore
             case '1D':
             case 'custom':
                 $format = (string)trans('config.month_and_day');
@@ -174,18 +204,6 @@ class JavascriptController extends Controller
                 break;
         }
 
-        $current = $start->formatLocalized($format);
-        $next    = $nextStart->formatLocalized($format);
-        $prev    = $prevStart->formatLocalized($format);
-
-        return [
-            'start'    => $start->format('Y-m-d'),
-            'end'      => $end->format('Y-m-d'),
-            'current'  => $current,
-            'previous' => $prev,
-            'next'     => $next,
-            'ranges'   => $ranges,
-        ];
+        return $format;
     }
-
 }

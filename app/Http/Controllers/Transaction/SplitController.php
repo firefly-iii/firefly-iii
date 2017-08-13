@@ -114,7 +114,7 @@ class SplitController extends Controller
             'transactions.split.edit',
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
-                'preFilled', 'subTitle', 'amount', 'sourceAccounts', 'uploadSize', 'destinationAccounts', 'assetAccounts',
+                'preFilled', 'subTitle', 'uploadSize', 'assetAccounts',
                 'budgets', 'journal'
             )
         );

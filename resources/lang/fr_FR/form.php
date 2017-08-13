@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * form.php
  * Copyright (C) 2016 thegrumpydictator@gmail.com
@@ -32,6 +34,7 @@ return [
     'journal_source_account_name'    => 'Compte de recettes (source)',
     'journal_source_account_id'      => 'Compte d’actif (source)',
     'BIC'                            => 'Code BIC',
+    'verify_password'                => 'Verify password security',
     'account_from_id'                => 'Compte d\'origine',
     'account_to_id'                  => 'Compte de destination',
     'source_account'                 => 'Compte d\'origine',

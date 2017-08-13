@@ -44,7 +44,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function destroy(RuleGroup $ruleGroup, RuleGroup $moveTo = null): bool
+    public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {

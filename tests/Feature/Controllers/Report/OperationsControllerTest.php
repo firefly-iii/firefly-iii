@@ -22,6 +22,9 @@ use Tests\TestCase;
  * Class OperationsControllerTest
  *
  * @package Tests\Feature\Controllers\Report
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class OperationsControllerTest extends TestCase
 {

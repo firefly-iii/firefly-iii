@@ -23,7 +23,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.6.3.1',
+    'version'                    => '4.6.4',
     'maxUploadSize'              => 15242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,
@@ -38,6 +38,9 @@ return [
     ],
     'import_processors'          => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
+    ],
+    'import_pre' => [
+        'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
     ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',

@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart, noDataForChart */
+/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart */
 var allCharts = {};
 
 /*

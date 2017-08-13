@@ -63,6 +63,36 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
+     * @param int $id
+     *
+     * @return Attachment
+     */
+    public function find(int $id): Attachment
+    {
+        $attachment = $this->user->attachments()->find($id);
+        if (is_null($attachment)) {
+            return new Attachment;
+        }
+
+        return $attachment;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Attachment
+     */
+    public function findWithoutUser(int $id): Attachment
+    {
+        $attachment = Attachment::find($id);
+        if (is_null($attachment)) {
+            return new Attachment;
+        }
+
+        return $attachment;
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection

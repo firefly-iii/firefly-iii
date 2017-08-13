@@ -20,6 +20,9 @@ use Tests\TestCase;
  * Class BalanceControllerTest
  *
  * @package Tests\Feature\Controllers\Report
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BalanceControllerTest extends TestCase
 {

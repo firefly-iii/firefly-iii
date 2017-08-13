@@ -29,6 +29,8 @@ class Amount implements ConverterInterface
      * @param $value
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function convert($value): string
     {
