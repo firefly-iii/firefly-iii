@@ -49,9 +49,11 @@ class Roles implements ConfigurationInterface
         $end   = $start + config('csv.example_rows');
 
         // set data:
+        $roles = $this->getRoles();
+        asort($roles);
         $this->data = [
             'examples' => [],
-            'roles'    => $this->getRoles(),
+            'roles'    => $roles,
             'total'    => 0,
             'headers'  => $config['has-headers'] ? $reader->fetchOne(0) : [],
         ];

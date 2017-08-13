@@ -26,6 +26,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Rules\Processor;
@@ -47,7 +48,7 @@ trait ImportSupport
     {
         if ($this->rules->count() > 0) {
             $this->rules->each(
-                function (Rule $rule) use($journal) {
+                function (Rule $rule) use ($journal) {
                     Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
                     $processor = Processor::make($rule);
                     $processor->handleTransactionJournal($journal);
@@ -231,7 +232,7 @@ trait ImportSupport
 
         // verify that opposing account is of the correct type:
         if ($account->accountType->type === AccountType::EXPENSE && $transactionType !== TransactionType::WITHDRAWAL) {
-            $message = sprintf('This row is imported as a %s but opposing is an expense account. This cannot be!', $transactionType);
+            $message = 'This row is imported as a withdrawal but opposing is an expense account. This cannot be!';
             Log::error($message);
             throw new FireflyException($message);
         }
@@ -284,6 +285,28 @@ trait ImportSupport
         }
 
         return $array;
+    }
+
+    /**
+     * Checks if the import journal has not been imported before.
+     *
+     * @param string $hash
+     *
+     * @return bool
+     */
+    private function hashAlreadyImported(string $hash): bool
+    {
+        $json  = json_encode($hash);
+        $entry = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                       ->where('data', $json)
+                                       ->where('name', 'importHash')
+                                       ->first();
+        if (!is_null($entry)) {
+            return true;
+        }
+
+        return false;
+
     }
 
     /**

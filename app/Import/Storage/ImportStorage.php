@@ -15,7 +15,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -140,7 +139,7 @@ class ImportStorage
             'asset'       => $assetAccount->name,
             'opposing'    => $opposingAccount->name,
         ];
-        if ($this->isDoubleTransfer($parameters)) {
+        if ($this->isDoubleTransfer($parameters) || $this->hashAlreadyImported($importJournal->hash)) {
             $this->job->addStepsDone(3);
             // throw error
             throw new FireflyException('Detected a possible duplicate, skip this one.');
@@ -187,12 +186,7 @@ class ImportStorage
         $this->job->addStepsDone(1);
         $this->journals->push($journal);
 
-        Log::info(
-            sprintf(
-                'Imported new journal #%d with description "%s" and amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code,
-                $amount
-            )
-        );
+        Log::info(sprintf('Imported new journal #%d: "%s", amount %s %s.', $journal->id, $journal->description, $journal->transactionCurrency->code, $amount));
 
         return true;
     }
