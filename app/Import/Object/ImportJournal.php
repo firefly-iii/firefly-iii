@@ -37,6 +37,8 @@ class ImportJournal
     public $budget;
     /** @var ImportCategory */
     public $category;
+    /** @var  ImportCurrency */
+    public $currency;
     /** @var  string */
     public $description = '';
     /** @var  string */
@@ -51,8 +53,8 @@ class ImportJournal
     public $tags = [];
     /** @var string */
     private $amount;
-    /** @var  ImportCurrency */
-    public $currency;
+    /** @var  string */
+    private $convertedAmount = null;
     /** @var string */
     private $date = '';
     /** @var string */
@@ -89,25 +91,25 @@ class ImportJournal
      */
     public function getAmount(): string
     {
-        if (is_null($this->amount)) {
+        if (is_null($this->convertedAmount)) {
             /** @var ConverterInterface $amountConverter */
-            $amountConverter = app(Amount::class);
-            $this->amount    = $amountConverter->convert($this->amount);
+            $amountConverter       = app(Amount::class);
+            $this->convertedAmount = $amountConverter->convert($this->amount);
             // modify
             foreach ($this->modifiers as $modifier) {
                 $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
                 /** @var ConverterInterface $converter */
                 $converter = app($class);
                 if ($converter->convert($modifier['value']) === -1) {
-                    $this->amount = Steam::negative($this->amount);
+                    $this->convertedAmount = Steam::negative($this->convertedAmount);
                 }
             }
         }
-        if(bccomp($this->amount,'0') === 0) {
+        if (bccomp($this->convertedAmount, '0') === 0) {
             throw new FireflyException('Amount is zero.');
         }
 
-        return $this->amount;
+        return $this->convertedAmount;
     }
 
     /**
