@@ -17,6 +17,7 @@ use Crypt;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -94,6 +95,40 @@ class VerifyDatabase extends Command
         // report on journals with the wrong types of accounts.
         $this->reportIncorrectJournals();
 
+        // report (and fix) piggy banks
+        $this->repairPiggyBanks();
+
+    }
+
+    /**
+     * Make sure there are only transfers linked to piggy bank events.
+     */
+    private function repairPiggyBanks(): void
+    {
+        $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
+        $set->each(
+            function (PiggyBankEvent $event) {
+                if (is_null($event->transaction_journal_id)) {
+                    return true;
+                }
+                /** @var TransactionJournal $journal */
+                $journal = $event->transactionJournal()->first();
+                if (is_null($journal)) {
+                    return true;
+                }
+
+                $type = $journal->transactionType->type;
+                if ($type !== TransactionType::TRANSFER) {
+                    $event->transaction_journal_id = null;
+                    $event->save();
+                    $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
+                }
+
+                return true;
+            }
+        );
+
+        return;
     }
 
     /**
