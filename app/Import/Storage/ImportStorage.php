@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
 
+use ErrorException;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
@@ -95,7 +97,7 @@ class ImportStorage
             function (ImportJournal $importJournal, int $index) {
                 try {
                     $this->storeImportJournal($index, $importJournal);
-                } catch (FireflyException $e) {
+                } catch (FireflyException | ErrorException | Exception $e) {
                     $this->errors->push($e->getMessage());
                     Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
                 }

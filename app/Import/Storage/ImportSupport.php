@@ -214,7 +214,7 @@ trait ImportSupport
      */
     private function getTransactionType(string $amount, Account $account): string
     {
-        $transactionType = '';
+        $transactionType = TransactionType::WITHDRAWAL;
         // amount is negative, it's a withdrawal, opposing is an expense:
         if (bccomp($amount, '0') === -1) {
             $transactionType = TransactionType::WITHDRAWAL;

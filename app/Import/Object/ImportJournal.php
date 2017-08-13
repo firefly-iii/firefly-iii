@@ -85,6 +85,7 @@ class ImportJournal
 
     /**
      * @return string
+     * @throws FireflyException
      */
     public function getAmount(): string
     {
@@ -101,6 +102,9 @@ class ImportJournal
                     $this->amount = Steam::negative($this->amount);
                 }
             }
+        }
+        if(bccomp($this->amount,'0') === 0) {
+            throw new FireflyException('Amount is zero.');
         }
 
         return $this->amount;
