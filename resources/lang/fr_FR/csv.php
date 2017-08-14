@@ -26,24 +26,24 @@ return [
 
     // roles config
     'roles_title'                   => 'Importer la configuration (1/3) - Définir le rôle de chaque colonne',
-    'roles_text'                    => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
+    'roles_text'                    => 'Chaque colonne de votre fichier CSV contient certaines données. Veuillez indiquer quel type de données, l’importateur doit attendre. L’option de « mapper » les données signifie que vous allez lier chaque entrée trouvée dans la colonne à une valeur dans votre base de données. Souvent une colonne est la colonne contenant l’IBAN du compte opposé. Qui peut être facilement adapté aux IBAN déjà présents dans votre base de données.',
     'roles_table'                   => 'Tableau',
     'roles_column_name'             => 'Nom de colonne',
     'roles_column_example'          => 'Column example data',
     'roles_column_role'             => 'Column data meaning',
-    'roles_do_map_value'            => 'Map these values',
-    'roles_column'                  => 'Column',
-    'roles_no_example_data'         => 'No example data available',
-    'roles_submit'                  => 'Continue with step 3/3',
+    'roles_do_map_value'            => 'Mapper ces valeurs',
+    'roles_column'                  => 'Colonne',
+    'roles_no_example_data'         => 'Pas de données disponibles',
+    'roles_submit'                  => 'Passez à l’étape 3/3',
     'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
     // map data
     'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
     'map_text'                      => 'Dans les tableaux suivants, la valeur gauche vous montre des informations trouvées dans votre fichier CSV téléchargé. C’est votre rôle de mapper cette valeur, si possible, une valeur déjà présente dans votre base de données. Firefly s’en tiendra à ce mappage. Si il n’y a pas de valeur correspondante, ou vous ne souhaitez pas la valeur spécifique de la carte, ne sélectionnez rien.',
-    'map_field_value'               => 'Field value',
-    'map_field_mapped_to'           => 'Mapped to',
-    'map_do_not_map'                => '(do not map)',
-    'map_submit'                    => 'Start the import',
+    'map_field_value'               => 'Valeur du champ',
+    'map_field_mapped_to'           => 'Mappé à',
+    'map_do_not_map'                => '(ne pas mapper)',
+    'map_submit'                    => 'Démarrer l\'importation',
 
     // map things.
     'column__ignore'                => '(ignorer cette colonne)',
