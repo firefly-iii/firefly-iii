@@ -426,8 +426,8 @@ return [
     'secure_pw_hash_speed'                       => 'Oui, mais pas dans ce contexte. Comme vous pouvez le lire sur <a href="https://shattered.io/"> le site Web détaillant comment ils ont cassé SHA1</a>, c’est maintenant légèrement plus facile de trouver une « collision » : une autre chaîne qui aboutit à la même empreinte SHA1. Maintenant, cela prend seulement 10 000 ans, à l’aide d’une machine mono-GPU.',
     'secure_pw_hash_security'                    => 'Cette collision ne serait pas égale à votre mot de passe, et ne serait pas utile sur (un site comme) Firefly III. Cette application n\'utilise pas SHA1 pour la vérification du mot de passe. Il est donc sûr de cocher cette case. Votre mot de passe est haché et envoyé par HTTPS.',
     'secure_pw_should'                           => 'Dois-je cocher la case ?',
-    'secure_pw_long_password'                    => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
-    'secure_pw_short'                            => 'If you just entered the password you always use: <em>Please yes</em>.',
+    'secure_pw_long_password'                    => 'Si vous venez de générer un long mot de passe unique pour Firefly III à l\'aide d\'un type de générateur de mot de passe : <strong>no</strong>.',
+    'secure_pw_short'                            => 'Si vous venez d\'entrer le mot de passe que vous utilisez toujours : <em>S\'il vous plaît, oui</em>.',
 
 
     // attachments
