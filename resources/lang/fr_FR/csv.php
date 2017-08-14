@@ -14,11 +14,11 @@ declare(strict_types=1);
 return [
 
     // initial config
-    'initial_title'                 => 'Importer la configuration (1/3) - Configuration de l\'importation CSV de base',
+    'initial_title'                 => 'Importer la configuration (1/3) - Configuration de l\'importation CSV basique',
     'initial_text'                  => 'Pour pouvoir importer votre fichier correctement, veuillez validez les options ci-dessous.',
     'initial_box'                   => 'Options d’importation CSV basique',
     'initial_box_title'             => 'Options d’importation CSV basique',
-    'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
+    'initial_header_help'           => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes.',
     'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
