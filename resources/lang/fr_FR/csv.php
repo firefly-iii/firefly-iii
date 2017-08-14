@@ -30,12 +30,12 @@ return [
     'roles_table'                   => 'Tableau',
     'roles_column_name'             => 'Nom de colonne',
     'roles_column_example'          => 'Données d’exemple de colonne',
-    'roles_column_role'             => 'Column data meaning',
+    'roles_column_role'             => 'Signification des données de colonne',
     'roles_do_map_value'            => 'Mapper ces valeurs',
     'roles_column'                  => 'Colonne',
     'roles_no_example_data'         => 'Pas de données disponibles',
     'roles_submit'                  => 'Passez à l’étape 3/3',
-    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'roles_warning'                 => 'La moindre des choses, c\'est de marquer une colonne comme colonne-montant. Il est conseillé de sélectionner également une colonne pour la description, la date et le compte opposé.',
 
     // map data
     'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
