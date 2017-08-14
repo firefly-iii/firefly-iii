@@ -19,9 +19,9 @@ return [
     'initial_box'                   => 'Options d’importation CSV basique',
     'initial_box_title'             => 'Options d’importation CSV basique',
     'initial_header_help'           => 'Cochez cette case si la première ligne de votre fichier CSV contient les entêtes des colonnes.',
-    'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
-    'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
+    'initial_date_help'             => 'Le format de la date et de l’heure dans votre fichier CSV. Utiliser le format comme indiqué sur <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">cette page</a>. La valeur par défaut va analyser les dates ressemblant à ceci : :dateExample.',
+    'initial_delimiter_help'        => 'Choisissez le délimiteur de champ qui est utilisé dans votre fichier d’entrée. Si vous n’êtes pas certain, la virgule est l’option la plus sûre.',
+    'initial_import_account_help'   => 'Si votre fichier CSV ne contient AUCUNE information concernant vos compte(s) actif, utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le CSV font référence.',
     'initial_submit'                => 'Passez à l’étape 2/3',
 
     // roles config
@@ -38,7 +38,7 @@ return [
     'roles_warning'                 => 'La moindre des choses, c\'est de marquer une colonne comme colonne-montant. Il est conseillé de sélectionner également une colonne pour la description, la date et le compte opposé.',
 
     // map data
-    'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
+    'map_title'                     => 'Importer la configuration (3/3) - Connecter l\'importation des données aux données de Firefly III',
     'map_text'                      => 'Dans les tableaux suivants, la valeur gauche vous montre des informations trouvées dans votre fichier CSV téléchargé. C’est votre rôle de mapper cette valeur, si possible, une valeur déjà présente dans votre base de données. Firefly s’en tiendra à ce mappage. Si il n’y a pas de valeur correspondante, ou vous ne souhaitez pas la valeur spécifique de la carte, ne sélectionnez rien.',
     'map_field_value'               => 'Valeur du champ',
     'map_field_mapped_to'           => 'Mappé à',
@@ -73,8 +73,8 @@ return [
     'column_opposing-name'          => 'Compte destination (nom)',
     'column_rabo-debet-credit'      => 'Indicateur spécifique débit/crédit à Rabobank',
     'column_ing-debet-credit'       => 'Indicateur spécifique débit/crédit à ING',
-    'column_sepa-ct-id'             => 'SEPA Credit Transfer end-to-end ID',
-    'column_sepa-ct-op'             => 'SEPA Credit Transfer opposing account',
+    'column_sepa-ct-id'             => 'SEPA Transfert Crédit ID de bout en bout',
+    'column_sepa-ct-op'             => 'SEPA Transfert Crédit compte opposé',
     'column_sepa-db'                => 'SEPA débit immédiat',
     'column_tags-comma'             => 'Tags (séparé par des virgules)',
     'column_tags-space'             => 'Tags(séparé par des espaces)',
