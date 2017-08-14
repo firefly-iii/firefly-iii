@@ -77,7 +77,7 @@ return [
     'column_sepa-ct-op'             => 'SEPA Transfert Crédit compte opposé',
     'column_sepa-db'                => 'SEPA débit immédiat',
     'column_tags-comma'             => 'Tags (séparé par des virgules)',
-    'column_tags-space'             => 'Tags(séparé par des espaces)',
+    'column_tags-space'             => 'Tags (séparé par des espaces)',
     'column_account-number'         => 'Compte d’actif (numéro de compte)',
     'column_opposing-number'        => 'Compte destination (numéro de compte)',
 ];
