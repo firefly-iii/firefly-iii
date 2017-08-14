@@ -29,7 +29,7 @@ return [
     'roles_text'                    => 'Chaque colonne de votre fichier CSV contient certaines données. Veuillez indiquer quel type de données, l’importateur doit attendre. L’option de « mapper » les données signifie que vous allez lier chaque entrée trouvée dans la colonne à une valeur dans votre base de données. Souvent une colonne est la colonne contenant l’IBAN du compte opposé. Qui peut être facilement adapté aux IBAN déjà présents dans votre base de données.',
     'roles_table'                   => 'Tableau',
     'roles_column_name'             => 'Nom de colonne',
-    'roles_column_example'          => 'Column example data',
+    'roles_column_example'          => 'Données d’exemple de colonne',
     'roles_column_role'             => 'Column data meaning',
     'roles_do_map_value'            => 'Mapper ces valeurs',
     'roles_column'                  => 'Colonne',
