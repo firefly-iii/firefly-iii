@@ -22,13 +22,13 @@ return [
     'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
-    'initial_submit'                => 'Continue with step 2/3',
+    'initial_submit'                => 'Passez à l’étape 2/3',
 
     // roles config
-    'roles_title'                   => 'Import setup (2/3) - Define each column\'s role',
+    'roles_title'                   => 'Importer la configuration (1/3) - Définir le rôle de chaque colonne',
     'roles_text'                    => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
-    'roles_table'                   => 'Table',
-    'roles_column_name'             => 'Name of column',
+    'roles_table'                   => 'Tableau',
+    'roles_column_name'             => 'Nom de colonne',
     'roles_column_example'          => 'Column example data',
     'roles_column_role'             => 'Column data meaning',
     'roles_do_map_value'            => 'Map these values',
