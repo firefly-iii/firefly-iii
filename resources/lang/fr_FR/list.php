@@ -87,5 +87,5 @@ return [
     'import_jobs_count'     => 'Nombre de travaux importés',
     'budget_count'          => 'Nombre de budgets',
     'rule_and_groups_count' => 'Nombre de règles et de groupes de règles',
-    'tags_count'            => 'Number of tags',
+    'tags_count'            => 'Nombre d’étiquettes',
 ];
