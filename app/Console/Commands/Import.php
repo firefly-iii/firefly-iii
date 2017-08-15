@@ -51,7 +51,7 @@ class Import extends Command
     }
 
     /**
-     *
+     * Run the import routine.
      */
     public function handle()
     {
@@ -91,6 +91,8 @@ class Import extends Command
     }
 
     /**
+     * Check if job is valid to be imported.
+     *
      * @param ImportJob $job
      *
      * @return bool

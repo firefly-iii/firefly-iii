@@ -26,15 +26,14 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Console\Command;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\QueryException;
 use Log;
 use Preferences;
 use Schema;
-use Steam;
 
 /**
  * Class UpgradeDatabase
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it just touches a lot of things.
  *
  * @package FireflyIII\Console\Commands
@@ -74,8 +73,8 @@ class UpgradeDatabase extends Command
         $this->updateTransferCurrencies();
         $this->updateOtherCurrencies();
         $this->info('Firefly III database is up to date.');
-        return;
 
+        return;
 
 
     }
@@ -136,8 +135,7 @@ class UpgradeDatabase extends Command
     }
 
     /**
-     * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon
-     * the account.
+     * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      */
     public function updateAccountCurrencies(): void
     {
@@ -193,7 +191,7 @@ class UpgradeDatabase extends Command
      * Both source and destination must match the respective currency preference of the related asset account.
      * So FF3 must verify all transactions.
      */
-    public function updateOtherCurrencies()
+    public function updateOtherCurrencies(): void
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
@@ -241,6 +239,7 @@ class UpgradeDatabase extends Command
                 $journal->save();
             }
         );
+
         return;
     }
 

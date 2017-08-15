@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 
 /**
  * Class UseEncryption
+ *
+ * @package FireflyIII\Console\Commands
  */
 class UseEncryption extends Command
 {
@@ -46,7 +48,6 @@ class UseEncryption extends Command
      */
     public function handle()
     {
-        //
         $this->handleObjects('Account', 'name', 'encrypted');
         $this->handleObjects('Bill', 'name', 'name_encrypted');
         $this->handleObjects('Bill', 'match', 'match_encrypted');
@@ -57,6 +58,8 @@ class UseEncryption extends Command
     }
 
     /**
+     * Run each object and encrypt them (or not).
+     *
      * @param string $class
      * @param string $field
      * @param string $indicator

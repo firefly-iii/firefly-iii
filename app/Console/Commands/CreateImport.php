@@ -54,6 +54,8 @@ class CreateImport extends Command
     }
 
     /**
+     * Run the command.
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five exactly.
      */
@@ -133,6 +135,8 @@ class CreateImport extends Command
     }
 
     /**
+     * Verify user inserts correct arguments.
+     *
      * @return bool
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five exactly.
      */

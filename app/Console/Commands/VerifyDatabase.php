@@ -204,6 +204,9 @@ class VerifyDatabase extends Command
         }
     }
 
+    /**
+     * Report on journals with bad account types linked to them.
+     */
     private function reportIncorrectJournals()
     {
         $configuration = [
@@ -270,7 +273,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     *
+     * Report on journals without transactions.
      */
     private function reportNoTransactions()
     {
@@ -288,6 +291,7 @@ class VerifyDatabase extends Command
     }
 
     /**
+     * Report on things with no linked journals.
      * @param string $name
      */
     private function reportObject(string $name)
@@ -359,7 +363,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     *
+     * Report on transfers that have budgets.
      */
     private function reportTransfersBudgets()
     {
