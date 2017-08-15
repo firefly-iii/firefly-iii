@@ -91,20 +91,28 @@ class ImportJournal
      */
     public function getAmount(): string
     {
+        Log::debug('Now in getAmount()');
         if (is_null($this->convertedAmount)) {
+            Log::debug('convertedAmount is NULL');
             /** @var ConverterInterface $amountConverter */
             $amountConverter       = app(Amount::class);
             $this->convertedAmount = $amountConverter->convert($this->amount);
+            Log::debug(sprintf('First attempt to convert gives "%s"', $this->convertedAmount));
             // modify
             foreach ($this->modifiers as $modifier) {
                 $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
                 /** @var ConverterInterface $converter */
                 $converter = app($class);
+                Log::debug(sprintf('Now launching converter %s', $class));
                 if ($converter->convert($modifier['value']) === -1) {
                     $this->convertedAmount = Steam::negative($this->convertedAmount);
                 }
+                Log::debug(sprintf('convertedAmount after conversion is  %s', $this->convertedAmount));
             }
+
+            Log::debug(sprintf('After modifiers the result is: "%s"', $this->convertedAmount));
         }
+        Log::debug(sprintf('convertedAmount is: "%s"', $this->convertedAmount));
         if (bccomp($this->convertedAmount, '0') === 0) {
             throw new FireflyException('Amount is zero.');
         }
