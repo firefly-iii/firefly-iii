@@ -455,7 +455,7 @@ return [
     'convert_to_Withdrawal'                      => 'Convertir ":description" vers un retrait',
     'convert_to_Deposit'                         => 'Convertir ":description" vers un dépôt',
     'convert_to_Transfer'                        => 'Convertir ":description" vers un transfert',
-    'convert_options_WithdrawalDeposit'          => 'Convert a withdrawal into a deposit',
+    'convert_options_WithdrawalDeposit'          => 'Convertir un retrait en dépôt',
     'convert_options_WithdrawalTransfer'         => 'Convert a withdrawal into a transfer',
     'convert_options_DepositTransfer'            => 'Convert a deposit into a transfer',
     'convert_options_DepositWithdrawal'          => 'Convert a deposit into a withdrawal',
