@@ -63,27 +63,6 @@ class JsonController extends Controller
     }
 
     /**
-     * Returns a JSON list of all accounts.
-     *
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
-    public function allAccounts(AccountRepositoryInterface $repository)
-    {
-        $return = array_unique(
-            $repository->getAccountsByType(
-                [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]
-            )->pluck('name')->toArray()
-        );
-        sort($return);
-
-        return Response::json($return);
-
-    }
-
-    /**
      * @param JournalCollectorInterface $collector
      *
      * @return \Illuminate\Http\JsonResponse
@@ -230,36 +209,6 @@ class JsonController extends Controller
     public function categories(CategoryRepositoryInterface $repository)
     {
         $return = array_unique($repository->getCategories()->pluck('name')->toArray());
-        sort($return);
-
-        return Response::json($return);
-    }
-
-    /**
-     * Returns a JSON list of all beneficiaries.
-     *
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
-    public function expenseAccounts(AccountRepositoryInterface $repository)
-    {
-        $return = array_unique($repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY])->pluck('name')->toArray());
-        sort($return);
-
-        return Response::json($return);
-    }
-
-    /**
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
-    public function revenueAccounts(AccountRepositoryInterface $repository)
-    {
-        $return = array_unique($repository->getAccountsByType([AccountType::REVENUE])->pluck('name')->toArray());
         sort($return);
 
         return Response::json($return);

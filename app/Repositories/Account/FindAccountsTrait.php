@@ -205,10 +205,12 @@ trait FindAccountsTrait
      */
     public function getCashAccount(): Account
     {
-        $type    = AccountType::where('type', AccountType::CASH)->first();
-        $account = Account::firstOrCreateEncrypted(
-            ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => 'Cash account', 'active' => 1]
+        $type            = AccountType::where('type', AccountType::CASH)->first();
+        $account         = Account::firstOrCreateEncrypted(
+            ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => 'Cash account']
         );
+        $account->active = true;
+        $account->save();
 
         return $account;
     }
