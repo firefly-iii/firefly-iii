@@ -449,9 +449,9 @@ return [
     'title_transfers'                            => 'Transferts',
 
     // convert stuff:
-    'convert_is_already_type_Withdrawal'         => 'This transaction is already a withdrawal',
-    'convert_is_already_type_Deposit'            => 'This transaction is already a deposit',
-    'convert_is_already_type_Transfer'           => 'This transaction is already a transfer',
+    'convert_is_already_type_Withdrawal'         => 'Cette transaction est déjà un retrait',
+    'convert_is_already_type_Deposit'            => 'Cette transaction est déjà un dépôt',
+    'convert_is_already_type_Transfer'           => 'Cette transaction est déjà un transfert',
     'convert_to_Withdrawal'                      => 'Convert ":description" to a withdrawal',
     'convert_to_Deposit'                         => 'Convert ":description" to a deposit',
     'convert_to_Transfer'                        => 'Convert ":description" to a transfer',
@@ -461,7 +461,7 @@ return [
     'convert_options_DepositWithdrawal'          => 'Convert a deposit into a withdrawal',
     'convert_options_TransferWithdrawal'         => 'Convert a transfer into a withdrawal',
     'convert_options_TransferDeposit'            => 'Convert a transfer into a deposit',
-    'transaction_journal_convert_options'        => 'Convert this transaction',
+    'transaction_journal_convert_options'        => 'Convertir cette transaction',
     'convert_Withdrawal_to_deposit'              => 'Convert this withdrawal to a deposit',
     'convert_Withdrawal_to_transfer'             => 'Convert this withdrawal to a transfer',
     'convert_Deposit_to_withdrawal'              => 'Convert this deposit to a withdrawal',
