@@ -14,8 +14,8 @@ declare(strict_types=1);
 return [
 
     // new user:
-    'bank_name'                      => 'Bank name',
-    'bank_balance'                   => 'Balance',
+    'bank_name'                      => 'Banco',
+    'bank_balance'                   => 'Saldo',
     'savings_balance'                => 'Savings balance',
     'credit_card_limit'              => 'Credit card limit',
     'automatch'                      => 'Match automatically',
