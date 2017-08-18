@@ -20,9 +20,12 @@ use Session;
 
 class BankController extends Controller
 {
-
+    /**
+     *
+     */
     public function form()
     {
+
 
     }
 
@@ -40,14 +43,12 @@ class BankController extends Controller
         $object = app($class);
         $object->setUser(auth()->user());
         if (!$object->hasPrerequisites()) {
-            //Log::debug(sprintf('No more prerequisites for %s, move to form.', $bank));
-            //return redirect(route('import.bank.form', [$bank]));
+            Log::debug(sprintf('No more prerequisites for %s, move to form.', $bank));
+            return redirect(route('import.bank.form', [$bank]));
         }
         Log::debug('Going to store entered preprerequisites.');
         // store post data
         $result = $object->storePrerequisites($request);
-        echo 'done with prereq';
-        exit;
 
         if ($result->count() > 0) {
             Session::flash('error', $result->first());
@@ -70,12 +71,12 @@ class BankController extends Controller
         $object = app($class);
         $object->setUser(auth()->user());
 
-        //if ($object->hasPrerequisites()) {
+        if ($object->hasPrerequisites()) {
             $view       = $object->getView();
             $parameters = $object->getViewParameters();
 
             return view($view, $parameters);
-        //}
+        }
 
         if (!$object->hasPrerequisites()) {
             return redirect(route('import.bank.form', [$bank]));

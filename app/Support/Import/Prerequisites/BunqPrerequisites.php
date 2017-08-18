@@ -28,7 +28,7 @@ use Requests;
 use Requests_Exception;
 
 /**
- * Class BunqPrerequisites
+ * This class contains all the routines necessary to connect to Bunq.
  *
  * @package FireflyIII\Support\Import\Prerequisites
  */
@@ -38,7 +38,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     private $user;
 
     /**
-     * Returns view name that allows user to fill in prerequisites.
+     * Returns view name that allows user to fill in prerequisites. Currently asks for the API key.
      *
      * @return string
      */
@@ -59,7 +59,8 @@ class BunqPrerequisites implements PrerequisitesInterface
 
     /**
      * Returns if this import method has any special prerequisites such as config
-     * variables or other things.
+     * variables or other things. The only thing we verify is the presence of the API key. Everything else
+     * tumbles into place: no installation token? Will be requested. No device server? Will be created. Etc.
      *
      * @return bool
      */
@@ -83,6 +84,9 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * This method responds to the user's submission of an API key. It tries to register this instance as a new Firefly III device.
+     * If this fails, the error is returned in a message bag and the user is notified (this is fairly friendly).
+     *
      * @param Request $request
      *
      * @return MessageBag
@@ -93,14 +97,22 @@ class BunqPrerequisites implements PrerequisitesInterface
         Log::debug('Storing bunq API key');
         Preferences::setForUser($this->user, 'bunq_api_key', $apiKey);
         // register Firefly III as a new device.
-        $serverId = $this->registerDevice();
+        $serverId = null;
+        $messages = new MessageBag;
+        try {
+            $serverId = $this->registerDevice();
+            Log::debug(sprintf('Found device server with id %d', $serverId->getId()));
+        } catch (FireflyException $e) {
+            $messages->add('error', $e->getMessage());
+        }
 
-
-        return new MessageBag;
+        return $messages;
     }
 
     /**
-     *
+     * This method creates a new public/private keypair for the user. This isn't really secure, since the key is generated on the fly with
+     * no regards for HSM's, smart cards or other things. It would require some low level programming to get this right. But the private key
+     * is stored encrypted in the database so it's something.
      */
     private function createKeyPair(): void
     {
@@ -129,7 +141,8 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
-     * Get a list of servers and return the one that is this FF instance, if one can be found.
+     * When the device server cannot be registered for some reason (when previous attempts failed to be stored) this method can be used
+     * to try and detect the server ID for this firefly instance.
      *
      * @return DeviceServerId
      * @throws FireflyException
@@ -185,7 +198,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         Preferences::setForUser($this->user, 'bunq_installation_id', $installationId);
         Preferences::setForUser($this->user, 'bunq_server_public_key', $serverPublicKey);
 
-        exit;
+        return $installationToken;
     }
 
     /**
@@ -229,7 +242,10 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
-     * Let's assume this value will not change any time soon.
+     * Request users server remote IP. Let's assume this value will not change any time soon.
+     *
+     * @return string
+     * @throws FireflyException
      */
     private function getRemoteIp(): string
     {
@@ -253,6 +269,8 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Get the public key of the server, necessary to verify server signature.
+     *
      * @return ServerPublicKey
      */
     private function getServerPublicKey(): ServerPublicKey
@@ -304,9 +322,8 @@ class BunqPrerequisites implements PrerequisitesInterface
 
         Preferences::setForUser($this->user, 'bunq_device_server_id', $deviceServerId);
         Log::debug(sprintf('Server ID: %s', serialize($deviceServerId)));
-        var_dump($deviceServerId);
-        var_dump($installationToken);
-        exit;
+
+        return $deviceServerId;
     }
 
 }
