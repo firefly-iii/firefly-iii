@@ -1,15 +1,16 @@
 <?php
-declare(strict_types=1);
-
 
 /**
- * This file is part of the TwigBridge package.
+ * twigbridge.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
  *
- * @copyright Robert Crowe <hello@vivalacrowe.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * See the LICENSE file for details.
  */
+
+declare(strict_types=1);
+
 
 /**
  * Configuration options for Twig.

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /**
  * TestCase.php
@@ -9,6 +8,8 @@ declare(strict_types=1);
  *
  * See the LICENSE file for details.
  */
+
+declare(strict_types=1);
 
 namespace Tests;
 

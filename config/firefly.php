@@ -42,6 +42,9 @@ return [
     'import_pre' => [
         'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
     ],
+    'bunq' => [
+        'server' => 'https://sandbox.public.api.bunq.com',
+    ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
     'bill_periods'               => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
