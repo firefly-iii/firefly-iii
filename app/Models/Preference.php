@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Crypt;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
@@ -56,7 +57,15 @@ class Preference extends Model
                 sprintf('Could not decrypt preference #%d. If this error persists, please run "php artisan cache:clear" on the command line.', $this->id)
             );
         }
-
+        $unserialized = false;
+        try {
+            $unserialized = unserialize($data);
+        } catch (Exception $e) {
+            // don't care, assume is false.
+        }
+        if (!($unserialized === false)) {
+            return $unserialized;
+        }
 
         return json_decode($data, true);
     }
@@ -66,7 +75,7 @@ class Preference extends Model
      */
     public function setDataAttribute($value)
     {
-        $this->attributes['data'] = Crypt::encrypt(json_encode($value));
+        $this->attributes['data'] = Crypt::encrypt(serialize($value));
     }
 
     /**

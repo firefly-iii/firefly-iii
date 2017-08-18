@@ -14,17 +14,54 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
+use Illuminate\Http\Request;
+use Log;
+use Session;
 
 class BankController extends Controller
 {
 
-    public function postPrerequisites()
+    public function form()
     {
 
     }
 
     /**
+     * @param Request $request
+     * @param string  $bank
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function postPrerequisites(Request $request, string $bank)
+    {
+        Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
+        $class = config(sprintf('firefly.import_pre.%s', $bank));
+        /** @var PrerequisitesInterface $object */
+        $object = app($class);
+        $object->setUser(auth()->user());
+        if (!$object->hasPrerequisites()) {
+            //Log::debug(sprintf('No more prerequisites for %s, move to form.', $bank));
+            //return redirect(route('import.bank.form', [$bank]));
+        }
+        Log::debug('Going to store entered preprerequisites.');
+        // store post data
+        $result = $object->storePrerequisites($request);
+        echo 'done with prereq';
+        exit;
+
+        if ($result->count() > 0) {
+            Session::flash('error', $result->first());
+
+            return redirect(route('import.bank.prerequisites', [$bank]));
+        }
+
+        return redirect(route('import.bank.form', [$bank]));
+    }
+
+    /**
      * @param string $bank
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function prerequisites(string $bank)
     {
@@ -33,17 +70,16 @@ class BankController extends Controller
         $object = app($class);
         $object->setUser(auth()->user());
 
-        if ($object->hasPrerequisites()) {
+        //if ($object->hasPrerequisites()) {
             $view       = $object->getView();
             $parameters = $object->getViewParameters();
 
             return view($view, $parameters);
-        }
+        //}
 
         if (!$object->hasPrerequisites()) {
-            echo 'redirect to import form.';
+            return redirect(route('import.bank.form', [$bank]));
         }
-
     }
 
 }

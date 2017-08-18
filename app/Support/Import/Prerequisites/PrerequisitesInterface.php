@@ -13,6 +13,8 @@ namespace FireflyIII\Support\Import\Prerequisites;
 
 
 use FireflyIII\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 
 interface PrerequisitesInterface
 {
@@ -29,6 +31,13 @@ interface PrerequisitesInterface
      * @return array
      */
     public function getViewParameters(): array;
+
+    /**
+     * @param Request $request
+     *
+     * @return MessageBag
+     */
+    public function storePrerequisites(Request $request): MessageBag;
 
     /**
      * Returns if this import method has any special prerequisites such as config
