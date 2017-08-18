@@ -25,6 +25,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -101,17 +102,22 @@ class ExpandedProcessor implements ProcessorInterface
         $notes       = $this->getNotes($ids);
         $tags        = $this->getTags($ids);
         $ibans       = $this->getIbans($assetIds) + $this->getIbans($opposingIds);
+        $currencies  = $this->getAccountCurrencies($ibans);
         $transactions->each(
-            function (Transaction $transaction) use ($notes, $tags, $ibans) {
+            function (Transaction $transaction) use ($notes, $tags, $ibans, $currencies) {
                 $journalId                            = intval($transaction->journal_id);
                 $accountId                            = intval($transaction->account_id);
                 $opposingId                           = intval($transaction->opposing_account_id);
+                $currencyId                           = $ibans[$accountId]['currency_id'] ?? 0;
+                $opposingCurrencyId                   = $ibans[$opposingId]['currency_id'] ?? 0;
                 $transaction->notes                   = $notes[$journalId] ?? '';
                 $transaction->tags                    = join(',', $tags[$journalId] ?? []);
                 $transaction->account_number          = $ibans[$accountId]['accountNumber'] ?? '';
                 $transaction->account_bic             = $ibans[$accountId]['BIC'] ?? '';
+                $transaction->account_currency_code   = $currencies[$currencyId] ?? '';
                 $transaction->opposing_account_number = $ibans[$opposingId]['accountNumber'] ?? '';
                 $transaction->opposing_account_bic    = $ibans[$opposingId]['BIC'] ?? '';
+                $transaction->opposing_currency_code  = $currencies[$opposingCurrencyId] ?? '';
 
             }
         );
@@ -228,6 +234,31 @@ class ExpandedProcessor implements ProcessorInterface
         foreach ($this->getFiles() as $file) {
             $disk->delete($file);
         }
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function getAccountCurrencies(array $array): array
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $return     = [];
+        $ids        = [];
+        $repository->setUser($this->job->user);
+        foreach ($array as $value) {
+            $ids[] = $value['currency_id'] ?? 0;
+        }
+        $ids    = array_unique($ids);
+        $result = $repository->getByIds($ids);
+
+        foreach ($result as $currency) {
+            $return[$currency->id] = $currency->code;
+        }
+
+        return $return;
     }
 
     /**

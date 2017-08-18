@@ -148,13 +148,14 @@ final class Entry
         $entry->asset_account_iban   = $transaction->account_iban;
         $entry->asset_account_number = $transaction->account_number;
         $entry->asset_account_bic    = $transaction->account_bic;
-        // asset_currency_code
+        $entry->asset_currency_code  = $transaction->account_currency_code;
+
         $entry->opposing_account_id     = $transaction->opposing_account_id;
         $entry->opposing_account_name   = app('steam')->tryDecrypt($transaction->opposing_account_name);
         $entry->opposing_account_iban   = $transaction->opposing_account_iban;
         $entry->opposing_account_number = $transaction->opposing_account_number;
         $entry->opposing_account_bic    = $transaction->opposing_account_bic;
-        // opposing currency code
+        $entry->opposing_currency_code  = $transaction->opposing_currency_code;
 
         /** budget */
         $entry->budget_id   = $transaction->transaction_budget_id;

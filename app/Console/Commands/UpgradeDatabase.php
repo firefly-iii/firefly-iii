@@ -27,6 +27,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Schema;
@@ -262,15 +263,23 @@ class UpgradeDatabase extends Command
 
         $set->each(
             function (TransactionJournal $transfer) use ($repository) {
-                /** @var Transaction $transaction */
-                $transaction = $transfer->transactions()->where('amount', '<', 0)->first();
-                $this->updateTransactionCurrency($transaction);
-                $this->updateJournalCurrency($transaction);
+                /** @var Collection $transactions */
+                $transactions = $transfer->transactions()->where('amount', '<', 0)->get();
+                $transactions->each(
+                    function (Transaction $transaction) {
+                        $this->updateTransactionCurrency($transaction);
+                        $this->updateJournalCurrency($transaction);
+                    }
+                );
 
 
-                /** @var Transaction $transaction */
-                $transaction = $transfer->transactions()->where('amount', '>', 0)->first();
-                $this->updateTransactionCurrency($transaction);
+                /** @var Collection $transactions */
+                $transactions = $transfer->transactions()->where('amount', '>', 0)->get();
+                $transactions->each(
+                    function (Transaction $transaction) {
+                        $this->updateTransactionCurrency($transaction);
+                    }
+                );
             }
         );
     }

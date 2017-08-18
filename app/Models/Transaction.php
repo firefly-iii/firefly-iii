@@ -34,12 +34,14 @@ use Watson\Validating\ValidatingTrait;
  * @property string $account_iban
  * @property string $account_number
  * @property string $account_bic
+ * @property string $account_currency_code
  *
  * @property-read int $opposing_account_id
  * @property string $opposing_account_name
  * @property string $opposing_account_iban
  * @property string $opposing_account_number
  * @property string $opposing_account_bic
+ * @property string $opposing_currency_code
  *
  *
  * @property-read int $transaction_budget_id
