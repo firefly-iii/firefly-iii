@@ -22,6 +22,42 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class Transaction
  *
+ * @property-read int $journal_id
+ * @property-read Carbon $date
+ * @property-read string $transaction_description
+ * @property-read string $transaction_amount
+ * @property-read string $transaction_foreign_amount
+ * @property-read string $transaction_type_type
+ *
+ * @property-read int $account_id
+ * @property-read string $account_name
+ * @property string $account_iban
+ * @property string $account_number
+ * @property string $account_bic
+ *
+ * @property-read int $opposing_account_id
+ * @property string $opposing_account_name
+ * @property string $opposing_account_iban
+ * @property string $opposing_account_number
+ * @property string $opposing_account_bic
+ *
+ *
+ * @property-read int $transaction_budget_id
+ * @property-read string $transaction_budget_name
+ * @property-read int $transaction_journal_budget_id
+ * @property-read string $transaction_journal_budget_name
+ *
+ * @property-read int $transaction_category_id
+ * @property-read string $transaction_category_name
+ * @property-read int $transaction_journal_category_id
+ * @property-read string $transaction_journal_category_name
+ *
+ * @property-read int $bill_id
+ * @property string $bill_name
+ *
+ * @property string $notes
+ * @property string $tags
+ *
  * @package FireflyIII\Models
  */
 class Transaction extends Model

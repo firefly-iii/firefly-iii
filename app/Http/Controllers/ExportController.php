@@ -17,6 +17,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Export\ExpandedProcessor;
 use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;
@@ -137,21 +138,25 @@ class ExportController extends Controller
     public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs)
     {
         $job      = $jobs->findByKey($request->get('job'));
+        $accounts = $request->get('accounts') ?? [];
         $settings = [
-            'accounts'           => $repository->getAccountsById($request->get('accounts')),
+            'accounts'           => $repository->getAccountsById($accounts),
             'startDate'          => new Carbon($request->get('export_start_range')),
             'endDate'            => new Carbon($request->get('export_end_range')),
             'exportFormat'       => $request->get('exportFormat'),
-            'includeAttachments' => intval($request->get('include_attachments')) === 1,
-            'includeOldUploads'  => intval($request->get('include_old_uploads')) === 1,
+            'includeAttachments' => $request->boolean('include_attachments'),
+            'includeOldUploads'  => $request->boolean('include_old_uploads'),
             'job'                => $job,
         ];
 
         $jobs->changeStatus($job, 'export_status_make_exporter');
 
         /** @var ProcessorInterface $processor */
-        $processor = app(ProcessorInterface::class);
+        $processor = app(ExpandedProcessor::class);
         $processor->setSettings($settings);
+
+
+
 
         /*
          * Collect journals:
@@ -159,12 +164,14 @@ class ExportController extends Controller
         $jobs->changeStatus($job, 'export_status_collecting_journals');
         $processor->collectJournals();
         $jobs->changeStatus($job, 'export_status_collected_journals');
+
         /*
          * Transform to exportable entries:
          */
         $jobs->changeStatus($job, 'export_status_converting_to_export_format');
         $processor->convertJournals();
         $jobs->changeStatus($job, 'export_status_converted_to_export_format');
+
         /*
          * Transform to (temporary) file:
          */
@@ -179,6 +186,7 @@ class ExportController extends Controller
             $processor->collectAttachments();
             $jobs->changeStatus($job, 'export_status_collected_attachments');
         }
+
 
         /*
          * Collect old uploads

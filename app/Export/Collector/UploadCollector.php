@@ -15,6 +15,7 @@ namespace FireflyIII\Export\Collector;
 
 use Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Log;
 use Storage;
 
@@ -50,14 +51,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     public function run(): bool
     {
         Log::debug('Going to collect attachments', ['key' => $this->job->key]);
-
-        // file names associated with the old import routine.
-        $this->vintageFormat = sprintf('csv-upload-%d-', $this->job->user->id);
-
-        // collect old upload files (names beginning with "csv-upload".
-        $this->collectVintageUploads();
-
-        // then collect current upload files:
         $this->collectModernUploads();
 
         return true;
@@ -70,7 +63,8 @@ class UploadCollector extends BasicCollector implements CollectorInterface
      */
     private function collectModernUploads(): bool
     {
-        $set  = $this->job->user->importJobs()->where('status', 'import_complete')->get(['import_jobs.*']);
+        $set = $this->job->user->importJobs()->whereIn('status', ['import_complete', 'finished'])->get(['import_jobs.*']);
+        Log::debug(sprintf('Found %d import jobs', $set->count()));
         $keys = [];
         if ($set->count() > 0) {
             $keys = $set->pluck('key')->toArray();
@@ -81,59 +75,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         }
 
         return true;
-    }
-
-    /**
-     * This method collects all the uploads that are uploaded using the "old" importer. So from before the summer of 2016.
-     *
-     * @return bool
-     */
-    private function collectVintageUploads(): bool
-    {
-        // grab upload directory.
-        $files = $this->uploadDisk->files();
-
-        foreach ($files as $entry) {
-            $this->processVintageUpload($entry);
-        }
-
-        return true;
-    }
-
-    /**
-     * This method tells you when the vintage upload file was actually uploaded.
-     *
-     * @param string $entry
-     *
-     * @return string
-     */
-    private function getVintageUploadDate(string $entry): string
-    {
-        // this is an original upload.
-        $parts          = explode('-', str_replace(['.csv.encrypted', $this->vintageFormat], '', $entry));
-        $originalUpload = intval($parts[1]);
-        $date           = date('Y-m-d \a\t H-i-s', $originalUpload);
-
-        return $date;
-    }
-
-    /**
-     * Tells you if a file name is a vintage upload.
-     *
-     * @param string $entry
-     *
-     * @return bool
-     */
-    private function isVintageImport(string $entry): bool
-    {
-        $len = strlen($this->vintageFormat);
-        // file is part of the old import routine:
-        if (substr($entry, 0, $len) === $this->vintageFormat) {
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -153,7 +94,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
         $content = '';
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('%s.upload', $key)));
-        } catch (DecryptException $e) {
+        } catch (FileNotFoundException | DecryptException $e) {
             Log::error(sprintf('Could not decrypt old import file "%s". Skipped because: %s', $key, $e->getMessage()));
         }
 
@@ -167,48 +108,5 @@ class UploadCollector extends BasicCollector implements CollectorInterface
 
         return true;
     }
-
-    /**
-     * If the file is a vintage upload, process it.
-     *
-     * @param string $entry
-     *
-     * @return bool
-     */
-    private function processVintageUpload(string $entry): bool
-    {
-        if ($this->isVintageImport($entry)) {
-            $this->saveVintageImportFile($entry);
-
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * This will store the content of the old vintage upload somewhere.
-     *
-     * @param string $entry
-     */
-    private function saveVintageImportFile(string $entry)
-    {
-        $content = '';
-        try {
-            $content = Crypt::decrypt($this->uploadDisk->get($entry));
-        } catch (DecryptException $e) {
-            Log::error('Could not decrypt old CSV import file ' . $entry . '. Skipped because ' . $e->getMessage());
-        }
-
-        if (strlen($content) > 0) {
-            // add to export disk.
-            $date = $this->getVintageUploadDate($entry);
-            $file = $this->job->key . '-Old import dated ' . $date . '.csv';
-            $this->exportDisk->put($file, $content);
-            $this->getEntries()->push($file);
-        }
-    }
-
 
 }

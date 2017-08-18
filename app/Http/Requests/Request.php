@@ -28,7 +28,7 @@ class Request extends FormRequest
      *
      * @return bool
      */
-    protected function boolean(string $field): bool
+    public function boolean(string $field): bool
     {
         return intval($this->input($field)) === 1;
     }

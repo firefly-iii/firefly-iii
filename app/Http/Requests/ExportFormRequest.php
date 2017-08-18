@@ -38,20 +38,19 @@ class ExportFormRequest extends Request
     public function rules()
     {
         $sessionFirst = clone session('first');
-
-        $first   = $sessionFirst->subDay()->format('Y-m-d');
-        $today   = Carbon::create()->addDay()->format('Y-m-d');
-        $formats = join(',', array_keys(config('firefly.export_formats')));
+        $first        = $sessionFirst->subDay()->format('Y-m-d');
+        $today        = Carbon::create()->addDay()->format('Y-m-d');
+        $formats      = join(',', array_keys(config('firefly.export_formats')));
 
         return [
-            'export_start_range'  => 'required|date|after:' . $first,
-            'export_end_range'    => 'required|date|before:' . $today,
-            'accounts'            => 'required',
-            'job'                 => 'required|belongsToUser:export_jobs,key',
-            'accounts.*'          => 'required|exists:accounts,id|belongsToUser:accounts',
-            'include_attachments' => 'in:0,1',
-            'include_config'      => 'in:0,1',
-            'exportFormat'        => 'in:' . $formats,
+//            'export_start_range'  => 'required|date|after:' . $first,
+//            'export_end_range'    => 'required|date|before:' . $today,
+//            'accounts'            => 'required',
+//            'job'                 => 'required|belongsToUser:export_jobs,key',
+//            'accounts.*'          => 'required|exists:accounts,id|belongsToUser:accounts',
+//            'include_attachments' => 'in:0,1',
+//            'include_config'      => 'in:0,1',
+//            'exportFormat'        => 'in:' . $formats,
         ];
     }
 }

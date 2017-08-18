@@ -31,7 +31,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -86,7 +85,9 @@ class JournalCollector implements JournalCollectorInterface
 
             'accounts.name as account_name',
             'accounts.encrypted as account_encrypted',
+            'accounts.iban as account_iban',
             'account_types.type as account_type',
+
         ];
     /** @var  bool */
     private $filterTransfers = false;
@@ -175,12 +176,10 @@ class JournalCollector implements JournalCollectorInterface
                 if (!is_null($transaction->bill_name)) {
                     $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
+                $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
+                $transaction->account_iban          = app('steam')->tryDecrypt($transaction->account_iban);
+                $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
 
-                try {
-                    $transaction->opposing_account_name = Crypt::decrypt($transaction->opposing_account_name);
-                } catch (DecryptException $e) {
-                    // if this fails its already decrypted.
-                }
 
             }
         );
@@ -677,10 +676,12 @@ class JournalCollector implements JournalCollectorInterface
             $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');
             $this->query->whereNull('opposing.deleted_at');
 
-            $this->fields[]       = 'opposing.id as opposing_id';
-            $this->fields[]       = 'opposing.account_id as opposing_account_id';
-            $this->fields[]       = 'opposing_accounts.name as opposing_account_name';
-            $this->fields[]       = 'opposing_accounts.encrypted as opposing_account_encrypted';
+            $this->fields[] = 'opposing.id as opposing_id';
+            $this->fields[] = 'opposing.account_id as opposing_account_id';
+            $this->fields[] = 'opposing_accounts.name as opposing_account_name';
+            $this->fields[] = 'opposing_accounts.encrypted as opposing_account_encrypted';
+            $this->fields[] = 'opposing_accounts.iban as opposing_account_iban';
+
             $this->fields[]       = 'opposing_account_types.type as opposing_account_type';
             $this->joinedOpposing = true;
             Log::debug('joinedOpposing is now true!');

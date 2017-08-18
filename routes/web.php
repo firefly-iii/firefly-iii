@@ -200,7 +200,7 @@ Route::group(
     Route::get('status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
     Route::get('download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'download']);
 
-    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'export']);
+    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'submit']);
 
 }
 );
