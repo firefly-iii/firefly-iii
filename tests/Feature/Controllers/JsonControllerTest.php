@@ -55,21 +55,6 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::allAccounts
-     */
-    public function testAllAccounts()
-    {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]])
-                     ->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.all-accounts'));
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\JsonController::allTransactionJournals()
      */
     public function testAllTransactionJournals()
@@ -210,45 +195,6 @@ class JsonControllerTest extends TestCase
         $response->assertExactJson([$category->name]);
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::expenseAccounts
-     */
-    public function testExpenseAccounts()
-    {
-        // mock stuff
-        $account      = factory(Category::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->once()->andReturn(
-            new Collection([$account])
-        );
-
-        $this->be($this->user());
-        $response = $this->get(route('json.expense-accounts'));
-        $response->assertStatus(200);
-        $response->assertExactJson([$account->name]);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::revenueAccounts
-     */
-    public function testRevenueAccounts()
-    {
-        // mock stuff
-        $account      = factory(Category::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn(
-            new Collection([$account])
-        );
-
-        $this->be($this->user());
-        $response = $this->get(route('json.revenue-accounts'));
-        $response->assertStatus(200);
-        $response->assertExactJson([$account->name]);
-    }
 
     /**
      * @covers \FireflyIII\Http\Controllers\JsonController::tags

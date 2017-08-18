@@ -152,11 +152,8 @@ class ExportController extends Controller
         $jobs->changeStatus($job, 'export_status_make_exporter');
 
         /** @var ProcessorInterface $processor */
-        $processor = app(ExpandedProcessor::class);
+        $processor = app(ProcessorInterface::class);
         $processor->setSettings($settings);
-
-
-
 
         /*
          * Collect journals:

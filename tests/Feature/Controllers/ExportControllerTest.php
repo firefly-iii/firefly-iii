@@ -143,12 +143,15 @@ class ExportControllerTest extends TestCase
         $processor->shouldReceive('collectOldUploads')->once();
         $processor->shouldReceive('collectAttachments')->once();
 
+        $job = new ExportJob;
+        $job->user = $this->user();
+
         $repository->shouldReceive('changeStatus')->andReturn(true);
-        $repository->shouldReceive('findByKey')->andReturn(new ExportJob);
+        $repository->shouldReceive('findByKey')->andReturn($job);
 
         $this->be($this->user());
 
-        $response = $this->post(route('export.export'), $data);
+        $response = $this->post(route('export.submit'), $data);
         $response->assertStatus(200);
         $response->assertSee('ok');
     }

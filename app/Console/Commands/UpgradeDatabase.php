@@ -71,6 +71,7 @@ class UpgradeDatabase extends Command
         $this->setTransactionIdentifier();
         $this->migrateRepetitions();
         $this->updateAccountCurrencies();
+        $this->line('Updating currency information..');
         $this->updateTransferCurrencies();
         $this->updateOtherCurrencies();
         $this->info('Firefly III database is up to date.');
@@ -218,16 +219,10 @@ class UpgradeDatabase extends Command
                         if (is_null($transaction->transaction_currency_id)) {
                             $transaction->transaction_currency_id = $currency->id;
                             $transaction->save();
-                            $this->line(sprintf('Transaction #%d is set to %s', $transaction->id, $currency->code));
                         }
 
                         // when mismatch in transaction:
                         if ($transaction->transaction_currency_id !== $currency->id) {
-                            $this->line(
-                                sprintf(
-                                    'Transaction #%d is set to %s and foreign %s', $transaction->id, $currency->code, $transaction->transactionCurrency->code
-                                )
-                            );
                             $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
                             $transaction->foreign_amount          = $transaction->amount;
                             $transaction->transaction_currency_id = $currency->id;
@@ -372,12 +367,10 @@ class UpgradeDatabase extends Command
         if (is_null($transaction->transaction_currency_id)) {
             $transaction->transaction_currency_id = $currency->id;
             $transaction->save();
-            $this->line(sprintf('Transaction #%d is set to %s', $transaction->id, $currency->code));
         }
 
         // when mismatch in transaction:
         if ($transaction->transaction_currency_id !== $currency->id) {
-            $this->line(sprintf('Transaction #%d is set to %s and foreign %s', $transaction->id, $currency->code, $transaction->transactionCurrency->code));
             $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
             $transaction->foreign_amount          = $transaction->amount;
             $transaction->transaction_currency_id = $currency->id;
