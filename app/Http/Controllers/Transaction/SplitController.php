@@ -18,6 +18,7 @@ use ExpandedForm;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -94,12 +95,21 @@ class SplitController extends Controller
 
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies     = $this->currencies->get();
-        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
+        $accountList    = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $assetAccounts  = ExpandedForm::makeSelectList($accountList);
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = $this->arrayFromJournal($request, $journal);
         $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon   = 'fa-pencil';
+
+        $accountArray = [];
+        // account array to display currency info:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $accountArray[$account->id] = $account;
+        }
+
 
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
@@ -115,7 +125,7 @@ class SplitController extends Controller
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts',
-                'budgets', 'journal'
+                'budgets', 'journal','accountArray'
             )
         );
     }

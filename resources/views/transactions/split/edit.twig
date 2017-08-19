@@ -56,9 +56,16 @@
                         {% endif %}
 
                         {# TOTAL AMOUNT IS STATIC TEXT #}
-                        {# TODO this does not reflect the actual currency (currencies) #}
-                        {{ ExpandedForm.staticText('journal_amount', preFilled.journal_amount|formatAmount ) }}
-                        <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+                        {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
+                            {{ ExpandedForm.staticText('journal_amount', formatAmountByAccount(accountArray[preFilled.journal_source_account_id], preFilled.journal_amount, true) ) }}
+                            <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+                        {% endif %}
+
+                        {% if preFilled.what == 'deposit' %}
+                            {{ ExpandedForm.staticText('journal_amount', formatAmountByAccount(accountArray[preFilled.journal_destination_account_id], preFilled.journal_amount, true) ) }}
+                            <input type="hidden" name="journal_amount" value="{{ preFilled.journal_amount }}"/>
+                        {% endif %}
+
 
                         {# DATE #}
                         {{ ExpandedForm.date('date', journal.date) }}
