@@ -90,6 +90,9 @@ class UserPerson extends BunqObject
      */
     public function __construct(array $data)
     {
+        if (count($data) === 0) {
+            return;
+        }
         $this->id              = intval($data['id']);
         $this->created         = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['created']);
         $this->updated         = Carbon::createFromFormat('Y-m-d H:i:s.u', $data['updated']);

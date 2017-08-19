@@ -99,23 +99,24 @@ abstract class BunqRequest
      * @param string $data
      *
      * @return string
+     * @throws FireflyException
      */
     protected function generateSignature(string $method, string $uri, array $headers, string $data): string
     {
         if (strlen($this->privateKey) === 0) {
-            throw new Exception('No private key present.');
+            throw new FireflyException('No private key present.');
         }
-        if (strtolower($method) === 'get') {
+        if (strtolower($method) === 'get' || strtolower($method) === 'delete') {
             $data = '';
         }
 
         $uri           = str_replace(['https://api.bunq.com', 'https://sandbox.public.api.bunq.com'], '', $uri);
-        $toSign        = strtoupper($method) . ' ' . $uri . "\n";
+        $toSign        = sprintf("%s %s\n", strtoupper($method), $uri);
         $headersToSign = ['Cache-Control', 'User-Agent'];
         ksort($headers);
         foreach ($headers as $name => $value) {
             if (in_array($name, $headersToSign) || substr($name, 0, 7) === 'X-Bunq-') {
-                $toSign .= $name . ': ' . $value . "\n";
+                $toSign .= sprintf("%s: %s\n", $name, $value);
             }
         }
         $toSign    .= "\n" . $data;
@@ -186,6 +187,48 @@ abstract class BunqRequest
 
     /**
      * @param string $uri
+     * @param array  $headers
+     *
+     * @return array
+     * @throws Exception
+     */
+    protected function sendSignedBunqDelete(string $uri, array $headers): array
+    {
+        if (strlen($this->server) === 0) {
+            throw new FireflyException('No bunq server defined');
+        }
+
+        $fullUri                            = $this->server . $uri;
+        $signature                          = $this->generateSignature('delete', $uri, $headers, '');
+        $headers['X-Bunq-Client-Signature'] = $signature;
+        try {
+            $response = Requests::delete($fullUri, $headers);
+        } catch (Requests_Exception $e) {
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+        }
+
+        $body                        = $response->body;
+        $array                       = json_decode($body, true);
+        $responseHeaders             = $response->headers->getAll();
+        $statusCode                  = $response->status_code;
+        $array['ResponseHeaders']    = $responseHeaders;
+        $array['ResponseStatusCode'] = $statusCode;
+
+        Log::debug(sprintf('Response to DELETE %s is %s', $fullUri, $body));
+        if ($this->isErrorResponse($array)) {
+            $this->throwResponseError($array);
+        }
+
+        if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
+            throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
+        }
+
+
+        return $array;
+    }
+
+    /**
+     * @param string $uri
      * @param array  $data
      * @param array  $headers
      *
@@ -208,17 +251,20 @@ abstract class BunqRequest
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
         }
 
-        $body  = $response->body;
-        $array = json_decode($body, true);
+        $body                        = $response->body;
+        $array                       = json_decode($body, true);
+        $responseHeaders             = $response->headers->getAll();
+        $statusCode                  = $response->status_code;
+        $array['ResponseHeaders']    = $responseHeaders;
+        $array['ResponseStatusCode'] = $statusCode;
+
         if ($this->isErrorResponse($array)) {
             $this->throwResponseError($array);
         }
-        $responseHeaders = $response->headers->getAll();
-        $statusCode      = $response->status_code;
+
         if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
             throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
         }
-        $array['ResponseHeaders'] = $responseHeaders;
 
         return $array;
     }
@@ -243,17 +289,49 @@ abstract class BunqRequest
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
         }
 
-        $body  = $response->body;
-        $array = json_decode($body, true);
+        $body                        = $response->body;
+        $array                       = json_decode($body, true);
+        $responseHeaders             = $response->headers->getAll();
+        $statusCode                  = $response->status_code;
+        $array['ResponseHeaders']    = $responseHeaders;
+        $array['ResponseStatusCode'] = $statusCode;
+
         if ($this->isErrorResponse($array)) {
             $this->throwResponseError($array);
         }
-        $responseHeaders = $response->headers->getAll();
-        $statusCode      = $response->status_code;
+
         if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
             throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
         }
-        $array['ResponseHeaders'] = $responseHeaders;
+
+
+        return $array;
+    }
+
+    /**
+     * @param string $uri
+     * @param array  $headers
+     *
+     * @return array
+     */
+    protected function sendUnsignedBunqDelete(string $uri, array $headers): array
+    {
+        $fullUri = $this->server . $uri;
+        try {
+            $response = Requests::delete($fullUri, $headers);
+        } catch (Requests_Exception $e) {
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+        }
+        $body                        = $response->body;
+        $array                       = json_decode($body, true);
+        $responseHeaders             = $response->headers->getAll();
+        $statusCode                  = $response->status_code;
+        $array['ResponseHeaders']    = $responseHeaders;
+        $array['ResponseStatusCode'] = $statusCode;
+
+        if ($this->isErrorResponse($array)) {
+            $this->throwResponseError($array);
+        }
 
         return $array;
     }
@@ -274,13 +352,17 @@ abstract class BunqRequest
         } catch (Requests_Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
         }
-        $body            = $response->body;
-        $responseHeaders = $response->headers->getAll();
-        $array           = json_decode($body, true);
+        $body                        = $response->body;
+        $array                       = json_decode($body, true);
+        $responseHeaders             = $response->headers->getAll();
+        $statusCode                  = $response->status_code;
+        $array['ResponseHeaders']    = $responseHeaders;
+        $array['ResponseStatusCode'] = $statusCode;
+
         if ($this->isErrorResponse($array)) {
             $this->throwResponseError($array);
         }
-        $array['ResponseHeaders'] = $responseHeaders;
+
 
         return $array;
     }
@@ -313,7 +395,7 @@ abstract class BunqRequest
                 $message[] = $error['error_description'];
             }
         }
-        throw new FireflyException(join(', ', $message));
+        throw new FireflyException('Bunq ERROR ' . $response['ResponseStatusCode'] . ': ' . join(', ', $message));
     }
 
     /**

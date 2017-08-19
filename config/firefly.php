@@ -42,6 +42,9 @@ return [
     'import_pre' => [
         'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
     ],
+    'import_info' => [
+        'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
+    ],
     'bunq' => [
         'server' => 'https://sandbox.public.api.bunq.com',
     ],

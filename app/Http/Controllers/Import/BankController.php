@@ -13,6 +13,7 @@ namespace FireflyIII\Http\Controllers\Import;
 
 
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Import\Information\InformationInterface;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
 use Illuminate\Http\Request;
 use Log;
@@ -21,15 +22,36 @@ use Session;
 class BankController extends Controller
 {
     /**
-     *
+     * This method must ask the user all parameters necessary to start importing data. This may not be enough
+     * to finish the import itself (ie. mapping) but it should be enough to begin: accounts to import from,
+     * accounts to import into, data ranges, etc.
      */
-    public function form()
+    public function form(string $bank)
     {
+        $class = config(sprintf('firefly.import_pre.%s', $bank));
+        /** @var PrerequisitesInterface $object */
+        $object = app($class);
+        $object->setUser(auth()->user());
 
+        if ($object->hasPrerequisites()) {
+            return redirect(route('import.banq.prerequisites', [$bank]));
+        }
+        $class = config(sprintf('firefly.import_info.%s', $bank));
+        /** @var InformationInterface $object */
+        $object = app($class);
+        $object->setUser(auth()->user());
+        $remoteAccounts = $object->getAccounts();
 
     }
 
     /**
+     * This method processes the prerequisites the user has entered in the previous step.
+     *
+     * Whatever storePrerequisites does, it should make sure that the system is ready to continue immediately. So
+     * no extra calls or stuff, except maybe to open a session
+     *
+     * @see PrerequisitesInterface::storePrerequisites
+     *
      * @param Request $request
      * @param string  $bank
      *
@@ -60,6 +82,9 @@ class BankController extends Controller
     }
 
     /**
+     * This method shows you, if necessary, a form that allows you to enter any required values, such as API keys,
+     * login passwords or other values.
+     *
      * @param string $bank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -77,10 +102,7 @@ class BankController extends Controller
 
             return view($view, $parameters);
         }
-
-        if (!$object->hasPrerequisites()) {
             return redirect(route('import.bank.form', [$bank]));
-        }
     }
 
 }
