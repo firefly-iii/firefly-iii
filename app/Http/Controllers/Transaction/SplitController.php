@@ -107,7 +107,8 @@ class SplitController extends Controller
         // account array to display currency info:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $accountArray[$account->id] = $account;
+            $accountArray[$account->id]                = $account;
+            $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
         }
 
 
@@ -125,7 +126,7 @@ class SplitController extends Controller
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts',
-                'budgets', 'journal','accountArray'
+                'budgets', 'journal', 'accountArray'
             )
         );
     }

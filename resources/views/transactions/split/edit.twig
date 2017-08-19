@@ -250,7 +250,11 @@
                                     {% endif %}
 
                                     {# amount#}
+                                    {% if transaction.foreign_amount != null %}
                                     <div class="col-lg-1 col-md-5 col-sm-12 col-xs-12">
+                                    {% else %}
+                                    <div class="col-lg-2 col-md-5 col-sm-12 col-xs-12">
+                                    {% endif %}
                                         <div class="input-group">
                                             <div class="input-group-addon">{{ transaction.transaction_currency_symbol }}</div>
                                             <input type="number" name="transactions[{{ loop.index0 }}][amount]" value="{{ transaction.amount }}"
@@ -261,21 +265,20 @@
                                     </div>
 
                                     {# foreign amount #}
+                                    {% if transaction.foreign_amount != null %}
                                     <div class="col-lg-1 col-md-7 col-sm-12 col-xs-12">
-                                        {% if transaction.foreign_amount != null %}
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{ transaction.foreign_currency_symbol }}</div>
+                                            <input type="number" name="transactions[{{ loop.index0 }}][foreign_amount]"
+                                                   value="{{ transaction.foreign_amount }}"
+                                                   class="form-control" autocomplete="off" step="any">
+                                        </div>
+                                        <input type="hidden"
+                                               name="transactions[{{ loop.index0 }}][foreign_currency_id]"
+                                               value="{{ transaction.foreign_currency_id }}">
 
-                                            <div class="input-group">
-                                                <div class="input-group-addon">{{ transaction.foreign_currency_symbol }}</div>
-                                                <input type="number" name="transactions[{{ loop.index0 }}][foreign_amount]"
-                                                       value="{{ transaction.foreign_amount }}"
-                                                       class="form-control" autocomplete="off" step="any">
-                                            </div>
-                                            <input type="hidden"
-                                                   name="transactions[{{ loop.index0 }}][foreign_currency_id]"
-                                                   value="{{ transaction.foreign_currency_id }}">
-
-                                        {% endif %}
                                     </div>
+                                    {% endif %}
 
                                     {# budget #}
                                     {% if preFilled.what == 'withdrawal' %}
@@ -330,7 +333,15 @@
     <link href="css/jquery-ui/jquery-ui.theme.min.css" type="text/css" rel="stylesheet" media="all">
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript" src="{{ route('javascript.currencies') }}?ext=.js"></script>
     <script type="text/javascript">
+        var currencySymbol = 'x';
+        {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
+            currencySymbol = currencyInfo[{{ accountArray[preFilled.journal_source_account_id].currency_id }}].symbol;
+        {% endif %}
+        {% if preFilled.what == 'deposit' %}
+            currencySymbol = currencyInfo[{{ accountArray[preFilled.journal_destination_account_id].currency_id }}].symbol;
+        {% endif %}
         var originalSum = {{ preFilled.journal_amount }};
         var what = "{{ preFilled.what }}";
     </script>
