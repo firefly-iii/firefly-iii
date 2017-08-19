@@ -14,6 +14,7 @@ namespace FireflyIII\Support\Import\Information;
 
 use FireflyIII\Services\Bunq\Request\DeleteDeviceSessionRequest;
 use FireflyIII\Services\Bunq\Request\DeviceSessionRequest;
+use FireflyIII\Services\Bunq\Request\ListUserRequest;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -40,6 +41,7 @@ class BunqInformation implements InformationInterface
     {
         Log::debug('Now in getAccounts()');
         $sessionToken = $this->startSession();
+        $this->getUserInformation($sessionToken);
 
         // get list of Bunq accounts:
 
@@ -76,6 +78,31 @@ class BunqInformation implements InformationInterface
         $request->setServerPublicKey($serverPublicKey);
         $request->setSessionToken($sessionToken);
         $request->call();
+        return;
+    }
+
+    /**
+     * @param SessionToken $sessionToken
+     */
+    private function getUserInformation(SessionToken $sessionToken): void
+    {
+        $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey   = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
+        $server            = config('firefly.bunq.server');
+        $privateKey        = Preferences::getForUser($this->user, 'bunq_private_key')->data;
+        $request = new ListUserRequest;
+        $request->setSessionToken($sessionToken);
+        $request->setSecret($apiKey);
+        $request->setServerPublicKey($serverPublicKey);
+        $request->setServer($server);
+        $request->setPrivateKey($privateKey);
+        $request->call();
+        // return the first that isn't null?
+        // get all objects, try to find ID.
+        var_dump($request->getUserCompany());
+        var_dump($request->getUserLight());
+        var_dump($request->getUserPerson());
+
         return;
     }
 

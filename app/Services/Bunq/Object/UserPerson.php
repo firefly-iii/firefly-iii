@@ -134,4 +134,13 @@ class UserPerson extends BunqObject
         //        echo '</pre>';
     }
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+
 }

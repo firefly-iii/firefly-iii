@@ -19,5 +19,13 @@ namespace FireflyIII\Services\Bunq\Object;
  */
 class MonetaryAccountBank extends BunqObject
 {
+    /**
+     * MonetaryAccountBank constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data) {
+
+    }
 
 }
