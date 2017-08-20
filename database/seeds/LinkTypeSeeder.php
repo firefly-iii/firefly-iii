@@ -52,6 +52,20 @@ class LinkTypeSeeder extends Seeder
         $link->editable = false;
         $link->save();
 
+        $link           = new LinkType;
+        $link->name     = 'Reimbursement';
+        $link->inward   = 'reimburses';
+        $link->outward  = 'is reimbursed by';
+        $link->editable = false;
+        $link->save();
+
+        $link           = new LinkType;
+        $link->name     = 'PartialReimbursement';
+        $link->inward   = 'partially reimburses';
+        $link->outward  = 'is partially reimbursed by';
+        $link->editable = false;
+        $link->save();
+
     }
 
 }
