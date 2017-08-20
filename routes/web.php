@@ -758,6 +758,9 @@ Route::group(
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
     Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
 
+    // journal links manager
+    Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);
+
     // FF configuration:
     Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);
     Route::post('configuration', ['uses' => 'ConfigurationController@postIndex', 'as' => 'configuration.index.post']);

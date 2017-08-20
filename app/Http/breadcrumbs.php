@@ -152,6 +152,14 @@ Breadcrumbs::register(
 );
 
 
+Breadcrumbs::register(
+    'admin.links.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.journal_link_configuration'), route('admin.links.index'));
+}
+);
+
+
 /**
  * ATTACHMENTS
  */
