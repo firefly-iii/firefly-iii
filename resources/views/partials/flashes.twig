@@ -2,7 +2,7 @@
 {% if Session.has('success') %}
     <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
         </button>
         <strong>{{ 'flash_success'|_ }}</strong> {{ session('success') }}
     </div>
@@ -12,7 +12,7 @@
 {% if Session.has('info') %}
     <div class="alert alert-info alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
         </button>
 
         {# MULTIPLE INFO MESSAGE #}
@@ -42,7 +42,7 @@
 {% if Session.has('warning') %}
     <div class="alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
         </button>
         <strong>{{ 'flash_warning'|_ }}</strong> {{ session('warning') }}
     </div>
@@ -52,7 +52,7 @@
 {% if Session.has('error') %}
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
         </button>
 
         {# MULTIPLE ERRORS (BAD) #}

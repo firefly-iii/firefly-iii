@@ -1,9 +1,9 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
             </button>
-            <h4 class="modal-title" id="myModalLabel">
+            <h4 class="modal-title">
                 {{ trans('firefly.update_budget_amount_range',
                 {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
             </h4>

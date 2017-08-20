@@ -13,9 +13,9 @@
         <tr>
             <td>
                 {% if id != 0 %}
-                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [id]) }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [id]) }}"><i class="fa fa-external-link"></i></a>
                 {% else %}
-                    <a class="btn btn-default btn-xs" href="{{ route('categories.no-category') }}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.no-category') }}"><i class="fa fa-external-link"></i></a>
                 {% endif %}
             </td>
             <td data-value="{{ info.name }}">

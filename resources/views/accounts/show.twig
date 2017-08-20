@@ -88,14 +88,14 @@
                     {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true} %}
                     {% if periods.count > 0 %}
                         <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <i class="fa fa-calendar"></i>
                             <a href="{{ route('accounts.show', [account.id, 'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
                     {% else %}
                         <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <i class="fa fa-calendar"></i>
                             <a href="{{ route('accounts.show', [account.id]) }}">
                                 {{ 'show_the_current_period_and_overview'|_ }}
                             </a>
