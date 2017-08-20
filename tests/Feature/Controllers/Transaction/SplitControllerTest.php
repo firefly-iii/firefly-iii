@@ -47,17 +47,19 @@ class SplitControllerTest extends TestCase
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
+        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account            = $destination->account;
         $transactions       = factory(Transaction::class, 3)->make();
         $tasker             = $this->mock(JournalTaskerInterface::class);
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection)->once();
+                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
 
 
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
         $response->assertStatus(200);
@@ -90,15 +92,17 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $transactions       = factory(Transaction::class, 1)->make();
         $tasker             = $this->mock(JournalTaskerInterface::class);
+        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account            = $destination->account;
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $accountRepository->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])
-                          ->andReturn(new Collection)->once();
+                          ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
 
 
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
         $response->assertStatus(200);

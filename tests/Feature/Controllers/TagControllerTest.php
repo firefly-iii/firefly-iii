@@ -102,13 +102,11 @@ class TagControllerTest extends TestCase
     public function testIndex()
     {
         // mock stuff
-        $tag          = factory(Tag::class)->make();
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('count')->andReturn(0);
-        $repository->shouldReceive('getByType')->andReturn(new Collection([$tag]));
-
+        $repository->shouldReceive('tagCloud')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('tags.index'));
