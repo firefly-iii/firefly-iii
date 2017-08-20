@@ -936,6 +936,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'block_code_bounced'                    => 'Email message(s) bounced',
     'block_code_expired'                    => 'Demo-Konto abgelaufen',
     'no_block_code'                         => 'Kein Grund für Block oder Benutzer nicht blockiert',
+    // links
+    'journal_link_configuration'            => 'Transaction links configuration',
 
 
     // split a transaction:
