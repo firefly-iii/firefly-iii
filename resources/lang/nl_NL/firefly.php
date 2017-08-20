@@ -935,6 +935,8 @@ return [
     'block_code_bounced'                    => 'Email kwam niet aan',
     'block_code_expired'                    => 'Demo-account verlopen',
     'no_block_code'                         => 'Geen reden of gebruiker niet geblokkeerd',
+    // links
+    'journal_link_configuration'            => 'Transaction links configuration',
 
 
     // split a transaction:
