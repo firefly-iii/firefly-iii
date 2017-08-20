@@ -935,6 +935,8 @@ return [
     'block_code_bounced'                    => 'Email message(s) bounced',
     'block_code_expired'                    => 'Demonstracyjne konto wygasło',
     'no_block_code'                         => 'No reason for block or user not blocked',
+    // links
+    'journal_link_configuration'            => 'Transaction links configuration',
 
 
     // split a transaction:
