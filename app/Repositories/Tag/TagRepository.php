@@ -253,10 +253,60 @@ class TagRepository implements TagRepositoryInterface
         }
 
         $collector->setAllAssetAccounts()->setTag($tag);
-        $sum = $collector->getJournals()->sum('transaction_amount');
+        $journals = $collector->getJournals();
+        $sum      = '0';
+        foreach ($journals as $journal) {
+            $sum = bcadd($sum, app('steam')->positive(strval($journal->transaction_amount)));
+        }
 
         return strval($sum);
     }
+
+    /**
+     * Generates a tag cloud.
+     *
+     * @param int|null $year
+     *
+     * @return array
+     */
+    public function tagCloud(?int $year): array
+    {
+        $min    = null;
+        $max    = 0;
+        $query  = $this->user->tags();
+        $return = [];
+        if (!is_null($year)) {
+            $start = $year . '-01-01';
+            $end   = $year . '-12-31';
+            $query->where('date', '>=', $start)->where('date', '<=', $end);
+        }
+        if (is_null($year)) {
+            $query->whereNull('date');
+        }
+        $tags      = $query->orderBy('id','desc')->get();
+        $temporary = [];
+        foreach ($tags as $tag) {
+            $amount      = floatval($this->sumOfTag($tag, null, null));
+            $min         = $amount < $min || is_null($min) ? $amount : $min;
+            $max         = $amount > $max ? $amount : $max;
+            $temporary[] = [
+                'amount' => $amount,
+                'tag'    => $tag,
+            ];
+        }
+        /** @var array $entry */
+        foreach ($temporary as $entry) {
+            $scale          = $this->cloudScale([12, 20], $entry['amount'], $min, $max);
+            $tagId          = $entry['tag']->id;
+            $return[$tagId] = [
+                'scale' => $scale,
+                'tag'   => $entry['tag'],
+            ];
+        }
+
+        return $return;
+    }
+
 
     /**
      * @param Tag   $tag
@@ -277,4 +327,21 @@ class TagRepository implements TagRepositoryInterface
         return $tag;
     }
 
+    /**
+     * @param array $range
+     * @param float $amount
+     * @param float $min
+     * @param float $max
+     *
+     * @return int
+     */
+    private function cloudScale(array $range, float $amount, float $min, float $max): int
+    {
+        $amountDiff = $max - $min;
+        $diff       = $range[1] - $range[0];
+        $step       = $amountDiff / $diff;
+        $extra      = round($amount / $step);
+
+        return intval($range[0] + $extra);
+    }
 }

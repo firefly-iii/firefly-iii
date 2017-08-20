@@ -17,6 +17,10 @@
     background: url('/images/error.png') no-repeat center center;
 }
 
+p.tagcloud .label {
+    line-height:2;
+}
+
 .handle {
     cursor: move;
 }

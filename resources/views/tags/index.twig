@@ -8,54 +8,81 @@
     {% if count == 0 %}
         {% include 'partials.empty' with {what: 'default', type: 'tags',route: route('tags.create')} %}
     {% else %}
-        <div class="row">
-            {% for type in types %}
-                {% if counts[type] > 0 %}
-                    <div class="
-                        {% if hasTypes == 1 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}
-                        {% if hasTypes == 2 %}col-lg-6 col-md-6 col-sm-12 col-xs-12{% endif %}
-                        {% if hasTypes == 3 %}col-lg-4 col-md-4 col-sm-12 col-xs-12{% endif %}
-                        ">
-                        <div class="box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">{{ ('tag_title_'~type)|_ }}</h3>
-                            </div>
-                            <div class="box-body">
-                                {% for year,months in collection[type] %}
-                                    <h4>{{ year }}</h4>
-
-                                    {% for month,tags in months %}
-                                        <h5>{{ month }}</h5>
-                                        <p style="line-height: 200%;">
-                                            {% for tag in tags %}
-                                                <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success"
-                                                                                  href="{{ route('tags.show',tag.id) }}">
-                                                {% if tag.tagMode == 'nothing' %}
-                                                    <i class="fa fa-fw fa-tag"></i>
-                                                {% endif %}
-                                                        {% if tag.tagMode == 'balancingAct' %}
-                                                            <i class="fa fa-fw fa-refresh"></i>
-                                                        {% endif %}
-                                                        {% if tag.tagMode == 'advancePayment' %}
-                                                            <i class="fa fa-fw fa-sort-numeric-desc"></i>
-                                                        {% endif %}
-                                                        {{ tag.tag }}</a>
-                                </span>
-                                            {% endfor %}
-                                        </p>
-                                    {% endfor %}
+        {% for period,entries in clouds %}
+            {% if entries|length > 0 %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                {% if period == 'no-date' %}{{ 'without_date'|_ }}{% else %}{{ period }}{% endif %}
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <p class="tagcloud">
+                                {% for tagInfo in entries %}
+                                    <a style="font-size:{{ tagInfo.scale }}px;" class="label label-success" href="{{ route('tags.show',tagInfo.tag.id) }}"><i class="fa fa-fw fa-tag"></i> {{ tagInfo.tag.tag }}</a>
                                 {% endfor %}
-
-
-                            </div>
-                            <div class="box-footer">
-                                <a href="{{ route('tags.create') }}" title="New tag" class="btn btn-info pull-right">{{ 'new_tag'|_ }}</a>
-                            </div>
+                            </p>
                         </div>
                     </div>
+                </div>
+            </div>
                 {% endif %}
-            {% endfor %}
+        {% endfor %}
+        {#
+
+                <div class="row">
+
+                    {% for type in types %}
+                        {% if counts[type] > 0 %}
+                            <div class="
+                                {% if hasTypes == 1 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% endif %}
+                                {% if hasTypes == 2 %}col-lg-6 col-md-6 col-sm-12 col-xs-12{% endif %}
+                                {% if hasTypes == 3 %}col-lg-4 col-md-4 col-sm-12 col-xs-12{% endif %}
+                                ">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">{{ ('tag_title_'~type)|_ }}</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        {% for year,months in collection[type] %}
+                                            <h4>{{ year }}</h4>
+
+                                            {% for month,tags in months %}
+                                                <h5>{{ month }}</h5>
+                                                <p style="line-height: 200%;">
+                                                    {% for tag in tags %}
+                                                        <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success"
+                                                                                          href="{{ route('tags.show',tag.id) }}">
+                                                        {% if tag.tagMode == 'nothing' %}
+                                                            <i class="fa fa-fw fa-tag"></i>
+                                                        {% endif %}
+                                                                {% if tag.tagMode == 'balancingAct' %}
+                                                                    <i class="fa fa-fw fa-refresh"></i>
+                                                                {% endif %}
+                                                                {% if tag.tagMode == 'advancePayment' %}
+                                                                    <i class="fa fa-fw fa-sort-numeric-desc"></i>
+                                                                {% endif %}
+                                                                {{ tag.tag }}</a>
+                                        </span>
+                                                    {% endfor %}
+                                                </p>
+                                            {% endfor %}
+                                        {% endfor %}
+
+
+                                    </div>
+                                    <div class="box-footer">
+                                        <a href="{{ route('tags.create') }}" title="New tag" class="btn btn-info pull-right">{{ 'new_tag'|_ }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
         </div>
+         #}
     {% endif %}
 
 {% endblock %}

@@ -168,41 +168,23 @@ class TagController extends Controller
      */
     public function index(TagRepositoryInterface $repository)
     {
-        $title         = 'Tags';
-        $mainTitleIcon = 'fa-tags';
-        $types         = ['nothing', 'balancingAct', 'advancePayment'];
-        $hasTypes      = 0; // which types of tag the user actually has.
-        $counts        = []; // how many of each type?
-        $count         = $repository->count();
 
-        // loop each types and get the tags, group them by year.
-        $collection = [];
-        foreach ($types as $type) {
+        // collect tags by year:
+        /** @var Carbon $start */
+        $start             = clone(session('first'));
+        $now               = new Carbon;
+        $clouds            = [];
+        $clouds['no-date'] = $repository->tagCloud(null);
+        while ($now > $start) {
+            $year          = $now->year;
+            $clouds[$year] = $repository->tagCloud($year);
 
-            /** @var Collection $tags */
-            $tags = $repository->getByType($type);
-            $tags = $tags->sortBy(
-                function (Tag $tag) {
-                    $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
-
-                    return strtolower($date . $tag->tag);
-                }
-            );
-            if ($tags->count() > 0) {
-                $hasTypes++;
-            }
-            $counts[$type] = $tags->count();
-
-            /** @var Tag $tag */
-            foreach ($tags as $tag) {
-                $year           = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
-                $monthFormatted = is_null($tag->date) ? trans('firefly.no_month') : $tag->date->formatLocalized($this->monthFormat);
-
-                $collection[$type][$year][$monthFormatted][] = $tag;
-            }
+            $now->subYear();
         }
+        $count = $repository->count();
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'counts', 'hasTypes', 'types', 'collection', 'count'));
+
+        return view('tags.index', compact('clouds', 'count'));
     }
 
     /**
@@ -273,7 +255,6 @@ class TagController extends Controller
 
         return view('tags.show', compact('apiKey', 'tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
-
 
     /**
      * @param TagFormRequest $request
@@ -371,4 +352,6 @@ class TagController extends Controller
         return $collection;
 
     }
+
+
 }
