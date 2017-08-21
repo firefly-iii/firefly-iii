@@ -54,7 +54,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}</a>
+                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -141,7 +142,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}</a>
+                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
+                                    </a>
                                 </li>
                             </ul>
                             <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}
@@ -309,12 +311,52 @@
                     </div>
                 </div>
             {% endif %}
+            {% if links.count > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'journal_links'|_ }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            {% for link in links %}
+                                <tr>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ 'this_transaction'|_ }}
+                                         (<a href="{{ route('transactions.show',journal.id) }}">#{{ journal.id }}</a>)
+                                        {% if link.source.id == journal.id %}
+                                            {{ link.linkType.outward }}
+                                            <a href="{{ route('transactions.show',link.destination.id) }}">#{{ link.destination.id }}</a>:
+                                            <a href="{{ route('transactions.show',link.destination.id) }}">{{ link.destination.description }}</a>
+                                            ({{ journalAmount(link.destination) }})
+                                        {% else %}
+                                            {{ link.linkType.inward }}
+                                            <a href="{{ route('transactions.show',link.source.id) }}">#{{ link.source.id }}</a>:
+                                            <a href="{{ route('transactions.show',link.source.id) }}">{{ link.source.description }}</a>
+                                            ({{ journalAmount(link.source) }})
+                                        {% endif %}
+                                        {% if link.comment != "" %}
+                                            <br/><em>{{ link.comment }}</em>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <p>
+
+                </p>
+            {% endif %}
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -398,7 +440,7 @@
                                 <select id="link_type" class="form-control" name="link_type">
                                     {% for linkType in linkTypes %}
                                         <option label="{{ linkType.inward }}" value="{{ linkType.id }}_inward">{{ linkType.inward }}</option>
-                                        <option label="{{ linkType.outward }}" value="{{ linkType.id }}_inward">{{ linkType.outward }}</option>
+                                        <option label="{{ linkType.outward }}" value="{{ linkType.id }}_outward">{{ linkType.outward }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -407,6 +449,7 @@
                             <label for="link_other" class="col-sm-2 control-label">{{ 'transaction'|_ }}</label>
                             <div class="col-sm-10">
                                 <input type="text" name="link_other" autocomplete="off" id="link_other" value="" class="form-control">
+                                <p class="help-block">{{ 'to_link_not_found'|_ }}</p>
                                 <input type="hidden" name="link_journal_id" value="0">
                             </div>
                         </div>

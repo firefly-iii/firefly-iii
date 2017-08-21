@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\LinkType;
 
 use FireflyIII\Models\LinkType;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -49,6 +50,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
             TransactionJournalLink::where('link_type_id', $linkType->id)->update(['link_type_id' => $moveTo->id]);
         }
         $linkType->delete();
+
         return true;
     }
 
@@ -68,11 +70,44 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
+     * Check if link exists between journals.
+     *
+     * @param TransactionJournal $one
+     * @param TransactionJournal $two
+     *
+     * @return bool
+     */
+    public function findLink(TransactionJournal $one, TransactionJournal $two): bool
+    {
+        $count         = TransactionJournalLink::whereDestinationId($one->id)->whereSourceId($two->id)->count();
+        $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
+
+        return ($count + $opposingCount > 0);
+
+
+    }
+
+    /**
      * @return Collection
      */
     public function get(): Collection
     {
         return LinkType::orderBy('name', 'ASC')->get();
+    }
+
+    /**
+     * Return list of existing connections.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getLinks(TransactionJournal $journal): Collection
+    {
+        $outward = TransactionJournalLink::whereSourceId($journal->id)->get();
+        $inward  = TransactionJournalLink::whereDestinationId($journal->id)->get();
+
+        return $outward->merge($inward);
     }
 
     /**

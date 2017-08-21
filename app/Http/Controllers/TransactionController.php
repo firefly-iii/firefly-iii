@@ -161,13 +161,14 @@ class TransactionController extends Controller
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
-        $linkTypes       = $linkTypeRepository->get();
+        $linkTypes    = $linkTypeRepository->get();
+        $links        = $linkTypeRepository->getLinks($journal);
         $events       = $tasker->getPiggyBankEvents($journal);
         $transactions = $tasker->getTransactionsOverview($journal);
         $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes','links'));
 
 
     }

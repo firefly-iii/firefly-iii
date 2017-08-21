@@ -27,28 +27,28 @@ class LinkTypeSeeder extends Seeder
         $link           = new LinkType;
         $link->name     = 'Related';
         $link->inward   = 'relates to';
-        $link->outward  = 'is related to';
+        $link->outward  = 'relates to';
         $link->editable = false;
         $link->save();
 
         $link           = new LinkType;
         $link->name     = 'Refund';
-        $link->inward   = '(partially) refunds';
-        $link->outward  = 'is (partially) refunded by';
+        $link->inward   = 'is (partially) refunded by';
+        $link->outward  = '(partially) refunds';
         $link->editable = false;
         $link->save();
 
         $link           = new LinkType;
         $link->name     = 'Paid';
-        $link->inward   = '(partially) pays for';
-        $link->outward  = 'is (partially) paid for by';
+        $link->inward   = 'is (partially) paid for by';
+        $link->outward  = '(partially) pays for';
         $link->editable = false;
         $link->save();
 
         $link           = new LinkType;
         $link->name     = 'Reimbursement';
-        $link->inward   = '(partially) reimburses';
-        $link->outward  = 'is (partially) reimbursed by';
+        $link->inward   = 'is (partially) reimbursed by';
+        $link->outward  = '(partially) reimburses';
         $link->editable = false;
         $link->save();
 

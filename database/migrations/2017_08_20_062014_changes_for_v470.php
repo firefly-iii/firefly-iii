@@ -40,8 +40,7 @@ class ChangesForV470 extends Migration
                 $table->string('inward');
                 $table->boolean('editable');
 
-                $table->unique(['name']);
-                $table->unique(['outward','inward']);
+                $table->unique(['name', 'outward','inward']);
             }
             );
         }
@@ -54,8 +53,7 @@ class ChangesForV470 extends Migration
                 $table->integer('link_type_id', false, true);
                 $table->integer('source_id', false, true);
                 $table->integer('destination_id', false, true);
-                $table->text('comment');
-                $table->integer('sequence', false, true);
+                $table->text('comment')->nullable();
 
                 $table->foreign('link_type_id')->references('id')->on('link_types')->onDelete('cascade');
                 $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
