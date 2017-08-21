@@ -960,7 +960,7 @@ return [
     'to_link_not_found'                     => 'If the transaction you want to link to is not listed, simply enter its ID.',
     'invalid_link_data'                     => 'Invalid link type selected. Cannot link transaction.',
     'journals_linked'                       => 'Transactions are linked.',
-    'journals_error_linked'                 => 'These journals are already linked.',
+    'journals_error_linked'                 => 'These transactions are already linked.',
     'journal_links'                         => 'Transaction links',
     'this_withdrawal'                       => 'This withdrawal',
     'this_deposit'                          => 'This deposit',
