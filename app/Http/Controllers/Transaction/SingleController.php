@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 
+use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
@@ -115,7 +116,7 @@ class SingleController extends Controller
             'foreign_amount'            => $foreignAmount,
             'native_amount'             => $foreignAmount,
             'amount_currency_id_amount' => $transaction->foreign_currency_id ?? 0,
-            'date'                      => $journal->date->format('Y-m-d'),
+            'date'                      => (new Carbon())->format('Y-m-d'),
             'budget_id'                 => $budgetId,
             'category'                  => $categoryName,
             'tags'                      => $tags,
