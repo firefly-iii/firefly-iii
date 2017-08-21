@@ -340,11 +340,11 @@ class TagRepository implements TagRepositoryInterface
         $amountDiff = $max - $min;
         $diff       = $range[1] - $range[0];
         $step       = 1;
-        if ($diff !== 0) {
+        if ($diff != 0) {
             $step = $amountDiff / $diff;
         }
-
         $extra = round($amount / $step);
+
 
         return intval($range[0] + $extra);
     }
