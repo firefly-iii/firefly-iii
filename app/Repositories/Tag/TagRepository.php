@@ -343,6 +343,9 @@ class TagRepository implements TagRepositoryInterface
         if ($diff != 0) {
             $step = $amountDiff / $diff;
         }
+        if ($step == 0) {
+            $step = 1;
+        }
         $extra = round($amount / $step);
 
 
