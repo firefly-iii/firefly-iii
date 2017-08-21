@@ -283,7 +283,7 @@ class TagRepository implements TagRepositoryInterface
         if (is_null($year)) {
             $query->whereNull('date');
         }
-        $tags      = $query->orderBy('id','desc')->get();
+        $tags      = $query->orderBy('id', 'desc')->get();
         $temporary = [];
         foreach ($tags as $tag) {
             $amount      = floatval($this->sumOfTag($tag, null, null));
@@ -339,8 +339,12 @@ class TagRepository implements TagRepositoryInterface
     {
         $amountDiff = $max - $min;
         $diff       = $range[1] - $range[0];
-        $step       = $amountDiff / $diff;
-        $extra      = round($amount / $step);
+        $step       = 1;
+        if ($diff !== 0) {
+            $step = $amountDiff / $diff;
+        }
+
+        $extra = round($amount / $step);
 
         return intval($range[0] + $extra);
     }
