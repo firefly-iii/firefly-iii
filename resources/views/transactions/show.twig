@@ -326,7 +326,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {{ 'this_transaction'|_ }}
+                                        {{ ('this_'~(what|lower))|_ }}
                                          (<a href="{{ route('transactions.show',journal.id) }}">#{{ journal.id }}</a>)
                                         {% if link.source.id == journal.id %}
                                             {{ link.linkType.outward }}

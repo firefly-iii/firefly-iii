@@ -961,6 +961,11 @@ return [
     'invalid_link_data'                     => 'Invalid link type selected. Cannot link transaction.',
     'journals_linked'                       => 'Transactions are linked.',
     'journals_error_linked'                 => 'These journals are already linked.',
+    'journal_links'                         => 'Transaction links',
+    'this_withdrawal'                       => 'This withdrawal',
+    'this_deposit'                          => 'This deposit',
+    'this_transfer'                         => 'This transfer',
+
 
     // split a transaction:
     'transaction_meta_data'                 => 'Transaction meta-data',
