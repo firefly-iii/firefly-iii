@@ -88,7 +88,7 @@ return [
     'budget_count'           => 'Aantal budgetten',
     'rule_and_groups_count'  => 'Aantal regels en regelgroepen',
     'tags_count'             => 'Aantal tags',
-    'inward'                 => 'Inward description',
-    'outward'                => 'Outward description',
-    'number_of_transactions' => 'Number of transactions',
+    'inward'                 => 'Binnenwaartse beschrijving',
+    'outward'                => 'Buitenwaartse beschrijving',
+    'number_of_transactions' => 'Aantal transacties',
 ];
