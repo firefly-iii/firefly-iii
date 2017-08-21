@@ -20,6 +20,7 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -155,18 +156,18 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function show(TransactionJournal $journal, JournalTaskerInterface $tasker)
+    public function show(TransactionJournal $journal, JournalTaskerInterface $tasker, LinkTypeRepositoryInterface $linkTypeRepository)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
-
+        $linkTypes       = $linkTypeRepository->get();
         $events       = $tasker->getPiggyBankEvents($journal);
         $transactions = $tasker->getTransactionsOverview($journal);
         $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes'));
 
 
     }

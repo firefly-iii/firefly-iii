@@ -383,30 +383,37 @@
 
     {# link journal modal:#}
     <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">
-        <form action="#" method="post" class="form-horizontal">
+        <form action="{{ route('transactions.link.store', [journal.id]) }}" method="post" class="form-horizontal">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Link another transaction</h4>
+                        <h4 class="modal-title">{{ 'link_to_other_transaction'|_ }}</h4>
                     </div>
                     <div class="modal-body" id="helpBody">
-                        <p>Select a transaction to link this transaction to</p>
+                        <p>{{ 'select_transaction_to_link'|_ }}</p>
                         <div class="form-group">
-                            <label for="link_type" class="col-sm-2 control-label">This transaction</label>
+                            <label for="link_type" class="col-sm-2 control-label">{{ 'this_transaction'|_ }}</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="link_type"><option>a</option><option>a</option><option>a</option></select>
+                                <select id="link_type" class="form-control" name="link_type">
+                                    {% for linkType in linkTypes %}
+                                        <option label="{{ linkType.inward }}" value="{{ linkType.id }}_inward">{{ linkType.inward }}</option>
+                                        <option label="{{ linkType.outward }}" value="{{ linkType.id }}_inward">{{ linkType.outward }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="link_type" class="col-sm-2 control-label">Transaction</label>
+                            <label for="link_other" class="col-sm-2 control-label">{{ 'transaction'|_ }}</label>
                             <div class="col-sm-10">
-                                <input type="text" value="" class="form-control">
+                                <input type="text" name="link_other" autocomplete="off" id="link_other" value="" class="form-control">
+                                <input type="hidden" name="link_journal_id" value="0">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="comments" class="col-sm-2 control-label">Comments</label>
+                            <label for="comments" class="col-sm-2 control-label">{{ 'comments'|_ }}</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control"></textarea>
+                                <textarea id="comments" name="comments" class="form-control"></textarea>
                             </div>
                         </div>
 
@@ -414,11 +421,18 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">{{ 'do something'|_ }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'submit'|_ }}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var autoCompleteUri = "{{ route('json.journals-with-id',[journal.id]) }}";
+    </script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/ff/transactions/show.js"></script>
 {% endblock %}

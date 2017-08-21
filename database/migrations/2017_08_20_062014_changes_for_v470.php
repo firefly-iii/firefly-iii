@@ -16,8 +16,9 @@ class ChangesForV470 extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('journal_links');
         Schema::dropIfExists('link_types');
-        Schema::dropIfExists('journal_types');
+
     }
 
     /**
@@ -38,6 +39,9 @@ class ChangesForV470 extends Migration
                 $table->string('outward');
                 $table->string('inward');
                 $table->boolean('editable');
+
+                $table->unique(['name']);
+                $table->unique(['outward','inward']);
             }
             );
         }
@@ -46,11 +50,20 @@ class ChangesForV470 extends Migration
             Schema::create(
                 'journal_links', function (Blueprint $table) {
                 $table->increments('id');
+                $table->timestamps();
                 $table->integer('link_type_id', false, true);
                 $table->integer('source_id', false, true);
                 $table->integer('destination_id', false, true);
                 $table->text('comment');
                 $table->integer('sequence', false, true);
+
+                $table->foreign('link_type_id')->references('id')->on('link_types')->onDelete('cascade');
+                $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                $table->foreign('destination_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+
+                $table->unique(['link_type_id','source_id','destination_id']);
+
+
             }
             );
         }

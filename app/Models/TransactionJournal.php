@@ -373,6 +373,21 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function sourceJournalLinks(): HasMany
+    {
+        return $this->hasMany(TransactionJournalLink::class, 'source_id');
+    }
+    /**
+     * @return HasMany
+     */
+    public function destinationJournalLinks(): HasMany
+    {
+        return $this->hasMany(TransactionJournalLink::class, 'destination_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()

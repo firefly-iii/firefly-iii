@@ -443,6 +443,7 @@ Route::group(
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.unpaid']);
     Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.paid']);
     Route::get('transaction-journals/all', ['uses' => 'JsonController@allTransactionJournals', 'as' => 'all-transaction-journals']);
+    Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
     Route::get('transaction-journals/{what}', ['uses' => 'JsonController@transactionJournals', 'as' => 'transaction-journals']);
     Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
@@ -724,12 +725,21 @@ Route::group(
 );
 
 /**
- * Convert Controller
+ * Transaction Convert Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
     Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
     Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
+}
+);
+
+/**
+ * Transaction Link Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'], function () {
+    Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
 }
 );
 
@@ -760,6 +770,14 @@ Route::group(
 
     // journal links manager
     Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);
+    Route::get('links/create', ['uses' => 'LinkController@create', 'as' => 'links.create']);
+    Route::get('links/edit/{linkType}', ['uses' => 'LinkController@edit', 'as' => 'links.edit']);
+    Route::get('links/delete/{linkType}', ['uses' => 'LinkController@delete', 'as' => 'links.delete']);
+
+
+    Route::post('links/store', ['uses' => 'LinkController@store', 'as' => 'links.store']);
+    Route::post('links/update/{linkType}', ['uses' => 'LinkController@update', 'as' => 'links.update']);
+    Route::post('links/destroy/{linkType}', ['uses' => 'LinkController@destroy', 'as' => 'links.destroy']);
 
     // FF configuration:
     Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);

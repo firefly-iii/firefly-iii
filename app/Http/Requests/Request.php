@@ -85,7 +85,7 @@ class Request extends FormRequest
      *
      * @return string
      */
-    protected function string(string $field): string
+    public function string(string $field): string
     {
         $string  = $this->get($field) ?? '';
         $search  = [

@@ -21,6 +21,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -159,6 +160,26 @@ Breadcrumbs::register(
 }
 );
 
+Breadcrumbs::register(
+    'admin.links.create', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.create_new_link_type'), route('admin.links.create'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.links.edit', function (BreadCrumbGenerator $breadcrumbs, LinkType $linkType) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.edit_link_type', ['name' => $linkType->name]), route('admin.links.edit', [$linkType->id]));
+}
+);
+
+Breadcrumbs::register(
+    'admin.links.delete', function (BreadCrumbGenerator $breadcrumbs, LinkType $linkType) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.delete_link_type', ['name' => $linkType->name]), route('admin.links.delete', [$linkType->id]));
+}
+);
 
 /**
  * ATTACHMENTS

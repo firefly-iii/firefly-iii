@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Response;
 
 /**
@@ -70,6 +73,39 @@ class AutoCompleteController extends Controller
         $return   = array_unique($filtered->pluck('name')->toArray());
 
         sort($return);
+
+        return Response::json($return);
+    }
+
+    /**
+     * @param JournalCollectorInterface $collector
+     *
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except)
+    {
+
+        $cache = new CacheProperties;
+        $cache->addProperty('recent-journals-id');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $collector->setLimit(400)->setPage(1);
+        $set    = $collector->getJournals()->pluck('description', 'journal_id')->toArray();
+        $return = [];
+        foreach ($set as $id => $description) {
+            $id = intval($id);
+            if ($id !== $except->id) {
+                $return[] = [
+                    'id'   => $id,
+                    'name' => $id . ': ' . $description,
+                ];
+            }
+        }
+
+        $cache->store($return);
 
         return Response::json($return);
     }

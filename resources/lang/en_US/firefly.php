@@ -937,6 +937,26 @@ return [
     'no_block_code'                         => 'No reason for block or user not blocked',
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
+    'create_new_link_type'                  => 'Create new link type',
+    'store_new_link_type'                   => 'Store new link type',
+    'update_link_type'                      => 'Update link type',
+    'edit_link_type'                        => 'Edit link type ":name"',
+    'updated_link_type'                     => 'Updated link type ":name"',
+    'delete_link_type'                      => 'Delete link type ":name"',
+    'deleted_link_type'                     => 'Deleted link type ":name"',
+    'stored_new_link_type'                  => 'Store new link type ":name"',
+    'cannot_edit_link_type'                 => 'Cannot edit link type ":name"',
+    'link_type_help_name'                   => 'Ie. "Duplicates"',
+    'link_type_help_inward'                 => 'Ie. "duplicates"',
+    'link_type_help_outward'                => 'Ie. "is duplicated by"',
+    'save_connections_by_moving'            => 'Save the link between these transaction(s) by moving them to another link type:',
+    'do_not_save_connection'                => '(do not save connection)',
+    'link_transaction'                      => 'Link transaction',
+    'link_to_other_transaction'             => 'Link this transaction to another transaction',
+    'select_transaction_to_link'            => 'Select a transaction to link this transaction to',
+    'this_transaction'                      => 'This transaction',
+    'transaction'                           => 'Transaction',
+    'comments'                              => 'Comments',
 
 
     // split a transaction:

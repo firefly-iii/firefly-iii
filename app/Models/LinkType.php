@@ -16,6 +16,7 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $journalCount
  * Class LinkType
  *
  * @package FireflyIII\Models
@@ -34,5 +35,9 @@ class LinkType extends Model
             'deleted_at' => 'date',
             'editable'   => 'boolean',
         ];
+
+    public function transactionJournalLinks() {
+        return $this->hasMany(TransactionJournalLink::class);
+    }
 
 }
