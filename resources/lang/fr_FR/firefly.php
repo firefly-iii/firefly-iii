@@ -797,7 +797,7 @@ return [
     'include_expense_not_in_category'            => 'Les dépenses incluses ne sont pas dans la (les) catégorie(s) sélectionnée(s)',
     'include_income_not_in_category'             => 'Les revenus inclus ne sont pas dans la (les) catégorie(s) sélectionnée(s)',
     'include_income_not_in_account'              => 'Revenus inclus non compris dans le(s) compte(s) sélectionné(s)',
-    'include_income_not_in_tags'                 => 'Included income not in the selected tag(s)',
+    'include_income_not_in_tags'                 => 'Les revenus inclus ne sont pas dans la (les) catégorie(s) sélectionnée(s)',
     'include_expense_not_in_tags'                => 'Included expenses not in the selected tag(s)',
     'everything_else'                            => 'Everything else',
     'income_and_expenses'                        => 'Income and expenses',
