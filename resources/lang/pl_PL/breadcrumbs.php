@@ -26,7 +26,7 @@ return [
     'edit_bill'         => 'Modyfikuj rachunek ":name"',
     'delete_bill'       => 'Usuń rachunek ":name"',
     'reports'           => 'Raporty',
-    'search_result'     => 'Search results for ":query"',
+    'search_result'     => 'Wyniki wyszukiwania dla ":query"',
     'withdrawal_list'   => 'Wydatki',
     'deposit_list'      => 'Przychody, dochody oraz depozyty',
     'transfer_list'     => 'Transfery',
