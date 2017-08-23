@@ -1,0 +1,62 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, linkType) }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('firefly.overview_for_link', {name: linkType.name}) }}</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Source transaction</th>
+                            <th>&nbsp;</th>
+                            <th>Link description</th>
+                            <th>Destination transaction</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for link in links %}
+                            <tr>
+                                <td>
+                                    <div class="btn-group btn-group-xs">
+                                        <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
+                                    </div>
+                                </td>
+                                <td data-value="{{ link.source.description }}">
+                                    <a href="{{ route('transactions.show', [link.source_id]) }}">{{ link.source.description }}</a>
+                                </td>
+                                <td>{{ journalAmount(link.source) }}</td>
+                                <td>{{ linkType.outward }}</td>
+                                <td data-value="{{ link.destination.description }}">
+                                    <a href="{{ route('transactions.show', [link.destination_id]) }}">{{ link.destination.description }}</a>
+                                </td>
+                                <td>
+                                    {{ journalAmount(link.destination) }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+{% endblock %}

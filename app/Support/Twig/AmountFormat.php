@@ -46,6 +46,7 @@ class AmountFormat extends Twig_Extension
     {
         return [
             $this->formatAmountByAccount(),
+            $this->formatAmountBySymbol(),
             $this->transactionAmount(),
             $this->journalAmount(),
             $this->formatDestinationAfter(),
@@ -101,6 +102,26 @@ class AmountFormat extends Twig_Extension
             }
             $currency = app('amount')->getDefaultCurrency();
 
+            return app('amount')->formatAnything($currency, $amount, $coloured);
+
+
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Will format the amount by the currency related to the given account.
+     *
+     * @return Twig_SimpleFunction
+     */
+    protected function formatAmountBySymbol(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'formatAmountBySymbol', function (string $amount, string $symbol, int $decimalPlaces = 2, bool $coloured = true): string {
+
+                $currency = new TransactionCurrency;
+                $currency->symbol = $symbol;
+            $currency->decimal_places = $decimalPlaces;
             return app('amount')->formatAnything($currency, $amount, $coloured);
 
 

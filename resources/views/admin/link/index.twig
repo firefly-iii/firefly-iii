@@ -42,7 +42,7 @@
                                     {{ linkType.outward }}
                                 </td>
                                 <td data-value="{{ linkType.journalCount }}">
-                                    {{ linkType.journalCount }}
+                                    <a href="{{ route('admin.links.show', [linkType.id]) }}">{{ linkType.journalCount }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -55,6 +55,12 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+{% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
 {% endblock %}

@@ -55,6 +55,18 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
+     * @param TransactionJournalLink $link
+     *
+     * @return bool
+     */
+    public function destroyLink(TransactionJournalLink $link): bool
+    {
+        $link->delete();
+
+        return true;
+    }
+
+    /**
      * @param int $id
      *
      * @return LinkType
@@ -133,6 +145,21 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $linkType->save();
 
         return $linkType;
+    }
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return bool
+     */
+    public function switchLink(TransactionJournalLink $link): bool
+    {
+        $source               = $link->source_id;
+        $link->source_id      = $link->destination_id;
+        $link->destination_id = $source;
+        $link->save();
+
+        return true;
     }
 
     /**

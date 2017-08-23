@@ -740,6 +740,11 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'], function () {
     Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
+
+    Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
+    Route::get('switch/{journalLink}', ['uses' => 'LinkController@switch', 'as' => 'switch']);
+
+    Route::post('destroy/{journalLink}', ['uses' => 'LinkController@destroy', 'as' => 'destroy']);
 }
 );
 
@@ -771,6 +776,7 @@ Route::group(
     // journal links manager
     Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);
     Route::get('links/create', ['uses' => 'LinkController@create', 'as' => 'links.create']);
+    Route::get('links/show/{linkType}', ['uses' => 'LinkController@show', 'as' => 'links.show']);
     Route::get('links/edit/{linkType}', ['uses' => 'LinkController@edit', 'as' => 'links.edit']);
     Route::get('links/delete/{linkType}', ['uses' => 'LinkController@delete', 'as' => 'links.delete']);
 

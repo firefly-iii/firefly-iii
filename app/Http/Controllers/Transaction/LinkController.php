@@ -13,16 +13,82 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 
+use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalLinkRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Log;
+use Preferences;
 use Session;
+use URL;
+use View;
 
-class LinkController
+/**
+ * Class LinkController
+ *
+ * @package FireflyIII\Http\Controllers\Transaction
+ */
+class LinkController extends Controller
 {
+
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        // some useful repositories:
+        $this->middleware(
+            function ($request, $next) {
+                View::share('title', trans('firefly.transactions'));
+                View::share('mainTitleIcon', 'fa-repeat');
+
+                return $next($request);
+            }
+        );
+
+    }
+
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function delete(TransactionJournalLink $link)
+    {
+        $subTitleIcon = 'fa-link';
+        $subTitle     = trans('breadcrumbs.delete_journal_link');
+        $this->rememberPreviousUri('journal_links.delete.uri');
+
+        return view('transactions.links.delete', compact('link', 'subTitle', 'subTitleIcon'));
+    }
+
+    /**
+     * @param LinkTypeRepositoryInterface $repository
+     * @param TransactionJournalLink      $link
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
+    {
+        $repository->destroyLink($link);
+
+        Session::flash('success', strval(trans('firefly.deleted_link')));
+        Preferences::mark();
+
+        return redirect(strval(session('journal_links.delete.uri')));
+    }
+
+    public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link) {
+
+        $repository->switchLink($link);
+
+        return redirect(URL::previous());
+    }
 
     /**
      * @param JournalLinkRequest          $request

@@ -1,32 +1,25 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, link) }}
 {% endblock %}
 
 {% block content %}
 
-    <form method="POST" action="{{ route('tags.destroy',tag.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('transactions.link.destroy', [link.id]) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
                 <div class="box box-danger">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ trans('firefly.delete_tag',{tag: tag.tag}) }}</h3>
+                        <h3 class="box-title">{{ trans('firefly.delete_journal_link', {source: link.source.description, destination: link.destination.description, source_link: route('transactions.show', [link.source_id]) , destination_link: route('transactions.show',link.destination_id)})|raw }}</h3>
                     </div>
                     <div class="box-body">
                         <p class="text-danger">
                             {{ trans('form.permDeleteWarning') }}
                         </p>
-
                         <p>
-                            {{ trans('form.tag_areYouSure', {'tag': tag.tag}) }}
-                        </p>
-
-                        <p>
-                            {% if tag.transactionjournals.count > 0 %}
-                                {{ Lang.choice('form.tag_keep_transactions', tag.transactionjournals.count, {count: tag.transactionjournals.count}) }}
-                            {% endif %}
+                            {{ trans('form.journal_link_areYouSure', {source: link.source.description, destination: link.destination.description, source_link: route('transactions.show', [link.source_id]) , destination_link: route('transactions.show',link.destination_id)})|raw }}
                         </p>
                     </div>
                     <div class="box-footer">

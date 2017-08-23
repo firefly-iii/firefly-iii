@@ -153,6 +153,18 @@ class LinkController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show(LinkType $linkType)
+    {
+        $subTitle     = trans('firefly.overview_for_link', ['name' => $linkType->name]);
+        $subTitleIcon = 'fa-link';
+        $links        = $linkType->transactionJournalLinks()->get();
+
+        return view('admin.link.show', compact('subTitle', 'subTitleIcon', 'linkType', 'links'));
+    }
+
+    /**
      * @param LinkTypeFormRequest         $request
      * @param LinkTypeRepositoryInterface $repository
      *

@@ -14,6 +14,7 @@ namespace FireflyIII\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @property int $journalCount
@@ -36,7 +37,25 @@ class LinkType extends Model
             'editable'   => 'boolean',
         ];
 
-    public function transactionJournalLinks() {
+    /**
+     * @param $value
+     *
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder($value)
+    {
+        if (auth()->check()) {
+            $model = self::where('id', $value)->first();
+            if (!is_null($model)) {
+                return $model;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
+
+    public function transactionJournalLinks()
+    {
         return $this->hasMany(TransactionJournalLink::class);
     }
 

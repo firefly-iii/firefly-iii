@@ -14,6 +14,7 @@ namespace FireflyIII\Repositories\LinkType;
 
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use Illuminate\Support\Collection;
 
 /**
@@ -44,6 +45,20 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function find(int $id): LinkType;
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return bool
+     */
+    public function destroyLink(TransactionJournalLink $link):bool;
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return bool
+     */
+    public function switchLink(TransactionJournalLink $link): bool;
 
     /**
      * Check if link exists between journals.

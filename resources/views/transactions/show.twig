@@ -322,21 +322,22 @@
                                 <tr>
                                     <td>
                                         <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
                                         </div>
                                     </td>
                                     <td>
                                         {{ ('this_'~(what|lower))|_ }}
-                                         (<a href="{{ route('transactions.show',journal.id) }}">#{{ journal.id }}</a>)
                                         {% if link.source.id == journal.id %}
                                             {{ link.linkType.outward }}
-                                            <a href="{{ route('transactions.show',link.destination.id) }}">#{{ link.destination.id }}</a>:
-                                            <a href="{{ route('transactions.show',link.destination.id) }}">{{ link.destination.description }}</a>
+                                            <a href="{{ route('transactions.show',link.destination.id) }}">
+                                                #{{ link.destination.id }}: {{ link.destination.description }}
+                                            </a>
                                             ({{ journalAmount(link.destination) }})
                                         {% else %}
                                             {{ link.linkType.inward }}
-                                            <a href="{{ route('transactions.show',link.source.id) }}">#{{ link.source.id }}</a>:
-                                            <a href="{{ route('transactions.show',link.source.id) }}">{{ link.source.description }}</a>
+                                            <a href="{{ route('transactions.show',link.source.id) }}">
+                                                #{{ link.source.id }}: {{ link.source.description }}</a>
                                             ({{ journalAmount(link.source) }})
                                         {% endif %}
                                         {% if link.comment != "" %}
@@ -364,20 +365,20 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>{{ trans('list.description') }}</th>
+                        <th class="hidden-md hidden-sm hidden-xs">{{ trans('list.description') }}</th>
                         <th>{{ trans('list.source_account') }}</th>
-                        <th>&#916;</th>
+                        <th class="hidden-sm hidden-xs">&#916;</th>
                         <th>{{ trans('list.destination_account') }}</th>
-                        <th>&#916;</th>
+                        <th class="hidden-sm hidden-xs">&#916;</th>
                         <th>{{ trans('list.amount') }}</th>
-                        <th>{{ trans('list.budget') }}</th>
-                        <th>{{ trans('list.category') }}</th>
+                        <th class="hidden-md hidden-xs">{{ trans('list.budget') }}</th>
+                        <th class="hidden-md hidden-xs">{{ trans('list.category') }}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for transaction in transactions %}
                         <tr>
-                            <td>
+                            <td class="hidden-md hidden-sm hidden-xs">
                                 {% if transaction.description == "" %}
                                     {{ journal.description }}
                                 {% else %}
@@ -392,7 +393,7 @@
                                 {% endif %}
 
                             </td>
-                            <td>
+                            <td class="hidden-sm hidden-xs">
                                 {{ formatSourceBefore(transaction) }} &rarr; {{ formatSourceAfter(transaction) }}
                             </td>
                             <td>
@@ -403,16 +404,27 @@
                                 {% endif %}
 
                             </td>
-                            <td>
+                            <td class="hidden-sm hidden-xs">
                                 {{ formatDestinationBefore(transaction) }} &rarr; {{ formatDestinationAfter(transaction) }}
                             </td>
                             <td>
-                                {{ journalAmount(journal) }}
+                                {% if journal.transactionType.type == "Withdrawal" %}
+                                    {{ formatAmountBySymbol(transaction.source_amount, transaction.transaction_currency_symbol, transaction.transaction_currency_dp, true) }}
+                                    {% if(transaction.foreign_source_amount) %}
+                                        ({{ formatAmountBySymbol(transaction.foreign_source_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_dp, true) }})
+                                    {% endif %}
+                                {% else %}
+                                    {{ formatAmountBySymbol(transaction.destination_amount, transaction.transaction_currency_symbol,2) }}
+
+                                    {% if(transaction.foreign_source_amount) %}
+                                        ({{ formatAmountBySymbol(transaction.foreign_destination_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_dp, true) }})
+                                    {% endif %}
+                                {% endif %}
                             </td>
-                            <td>
+                            <td class="hidden-md hidden-xs">
                                 {{ transactionIdBudgets(transaction.source_id) }}
                             </td>
-                            <td>
+                            <td class="hidden-md hidden-xs">
                                 {{ transactionIdCategories(transaction.source_id) }}
                             </td>
                         </tr>

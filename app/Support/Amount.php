@@ -300,6 +300,7 @@ class Amount
     public function transactionAmount(TransactionModel $transaction, bool $coloured = true): string
     {
         $amount = bcmul(app('steam')->positive(strval($transaction->transaction_amount)), '-1');
+
         $format = '%s';
 
         if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
@@ -322,7 +323,11 @@ class Amount
 
 
         if (!is_null($transaction->transaction_foreign_amount)) {
-            $amount = strval($transaction->transaction_foreign_amount);
+            $amount = bcmul(app('steam')->positive(strval($transaction->transaction_foreign_amount)), '-1');
+            if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
+                $amount = bcmul($amount, '-1');
+            }
+
 
             if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
                 $amount   = app('steam')->positive($amount);
