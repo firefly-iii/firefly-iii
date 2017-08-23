@@ -148,7 +148,7 @@ return [
     'journal_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer la description de l\'opération ":description" ?',
     'mass_journal_are_you_sure'  => 'Êtes-vous sûr de que vouloir supprimer ces opérations ?',
     'tag_areYouSure'             => 'Êtes-vous sûr de vouloir supprimer le tag ":tag" ?',
-    'journal_link_areYouSure'    => 'Are you sure you want to delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>?',
+    'journal_link_areYouSure'    => 'Êtes-vous sûr de vouloir supprimer le lien entre <a href=":source_link">:source</a> et <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'        => 'Êtes-vous sûr de vouloir supprimer le type de lien ":name" (":inward" / ":outward") ?',
     'permDeleteWarning'          => 'Supprimer quelque chose dans Firefly est permanent et ne peut pas être annulé.',
     'mass_make_selection'        => 'Vous pouvez toujours empêcher des éléments d’être supprimés en décochant la case à cocher.',
