@@ -966,6 +966,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'this_withdrawal'                       => 'This withdrawal',
     'this_deposit'                          => 'This deposit',
     'this_transfer'                         => 'This transfer',
+    'overview_for_link'                     => 'Overview for link type ":name"',
+    'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
+    'deleted_link'                          => 'Deleted link',
 
 
     // split a transaction:
