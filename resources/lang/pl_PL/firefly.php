@@ -913,7 +913,7 @@ return [
     'instance_configuration'                => 'Konfiguracja',
     'firefly_instance_configuration'        => 'Opcje konfiguracji dla Firefly III',
     'setting_single_user_mode'              => 'Tryb pojedynczego użytkownika',
-    'setting_single_user_mode_explain'      => 'By default, Firefly III only accepts one (1) registration: you. This is a security measure, preventing others from using your instance unless you allow them to. Future registrations are blocked. When you uncheck this box, others can use your instance as wel, assuming they can reach it (when it is connected to the internet).',
+    'setting_single_user_mode_explain'      => 'Domyślnie, Firefly III pozwala na jednego (1) użytkownika: Ciebie. Jest to środek bezpieczeństwa uniemożliwiający innym używanie Twojej instalacji, chyba że im pozwolisz. Kolejne rejestracje są zablokowane. Jeżeli odznaczysz to pole, inne osoby będą mogły używać Twojej instalacji Firefly III (zakładając, że jest ona dostępna w Internecie).',
     'store_configuration'                   => 'Zapisz konfigurację',
     'single_user_administration'            => 'User administration for :email',
     'edit_user'                             => 'Modyfikuj użytkownika :email',
@@ -932,7 +932,7 @@ return [
     'setting_is_demo_site_explain'          => 'If you check this box, this installation will behave as if it is the demo site, which can have weird side effects.',
     'setting_send_email_notifications'      => 'Wyślij powiadomienia emailem',
     'setting_send_email_explain'            => 'Firefly III can send you email notifications about certain events. They will be sent to <code>:site_owner</code>. This email address can be set in the <code>.env</code> file.',
-    'block_code_bounced'                    => 'Email message(s) bounced',
+    'block_code_bounced'                    => 'Odrzucony e-mail potwierdzający',
     'block_code_expired'                    => 'Demonstracyjne konto wygasło',
     'no_block_code'                         => 'No reason for block or user not blocked',
     // links
