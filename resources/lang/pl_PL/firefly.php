@@ -1010,18 +1010,18 @@ return [
     'import_index_title'                    => 'Importuj dane do Firefly III',
     'import_index_sub_title'                => 'Indeks',
     'import_general_index_intro'            => 'Witamy w procedurze importu Firefly III. Istnieje kilka sposobów importowania danych do Firefly III.',
-    'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
+    'import_index_intro'                    => 'Ta procedura pomoże Ci zaimportować pliki z Twojego banku do Firefly III. Proszę sprawdzić stronę pomocy w prawym górnym rogu.',
     'import_index_file'                     => 'Wybierz swój plik',
-    'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
-    'import_index_type'                     => 'Select the type of file you will upload',
+    'import_index_config'                   => 'Jeśli wcześniej importowałeś dane do Firefly III, może posiadać plik konfiguracji, który wstępnie ustawi wartości parametrów konfiguracyjnych dla Ciebie. Dla niektórych banków, inni użytkownicy uprzejmie dostarczyli swoje <a href="https://github.com/firefly-iii/import-configurations/wiki">pliki konfiguracji</a>.',
+    'import_index_type'                     => 'Wybierz typ pliku, który będziesz przesyłać',
     'import_index_start'                    => 'Rozpocznij import',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (wartości oddzielone przecinkami)',
 
     // import configuration routine:
-    'import_config_sub_title'               => 'Set up your import file',
-    'import_config_bread_crumb'             => 'Set up your import file',
+    'import_config_sub_title'               => 'Skonfiguruj swój importowany plik',
+    'import_config_bread_crumb'             => 'Skonfiguruj swój plik',
 
     // import status page:
     'import_status_bread_crumb'             => 'Status importu',
@@ -1029,7 +1029,7 @@ return [
     'import_status_wait_title'              => 'Proszę czekać...',
     'import_status_wait_text'               => 'To pole za chwilę zniknie.',
     'import_status_ready_title'             => 'Import jest gotowy do uruchomienia',
-    'import_status_ready_text'              => 'The import is ready to start. All the configuration you needed to do has been done. Please download the configuration file. It will help you with the import should it not go as planned. To actually run the import, you can either execute the following command in your console, or run the web-based import. Depending on your configuration, the console import will give you more feedback.',
+    'import_status_ready_text'              => 'Import jest gotowy do uruchomienia. Wszystkie potrzebne ustawienia zostały skonfigurowane. Pobierz proszę plik konfiguracyjny. Pomoże Ci on gdy import nie pójdzie zgodnie z planem. Aby rzeczywiście uruchomić import, można wykonać następujące polecenie w konsoli lub uruchomić importowanie z poziomu strony www. W zależności od konfiguracji, import przez konsolę da Ci więcej informacji zwrotnych.',
     'import_status_ready_config'            => 'Pobierz konfigurację',
     'import_status_ready_start'             => 'Rozpocznij Importowanie',
     'import_status_ready_share'             => 'Please consider downloading your configuration and sharing it at the <strong><a href="https://github.com/firefly-iii/import-configurations/wiki">import configuration center</a></strong>. This will allow other users of Firefly III to import their files more easily.',
