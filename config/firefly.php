@@ -39,14 +39,14 @@ return [
     'import_processors'          => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
     ],
-    'import_pre' => [
+    'import_pre'                 => [
         'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
     ],
-    'import_info' => [
+    'import_info'                => [
         'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
     ],
-    'bunq' => [
-        'server' => 'https://sandbox.public.api.bunq.com',
+    'bunq'                       => [
+        'server' => 'https://api.bunq.com',
     ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
@@ -146,6 +146,7 @@ return [
         'budget'            => 'FireflyIII\Models\Budget',
         'category'          => 'FireflyIII\Models\Category',
         'transaction_type'  => 'FireflyIII\Models\TransactionType',
+        'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
         'currency'          => 'FireflyIII\Models\TransactionCurrency',
         'fromCurrencyCode'  => 'FireflyIII\Support\Binder\CurrencyCode',
         'toCurrencyCode'    => 'FireflyIII\Support\Binder\CurrencyCode',
