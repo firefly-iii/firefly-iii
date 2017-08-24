@@ -25,34 +25,34 @@ return [
     'accounts_create_asset_virtual'         => 'Soms is het handig om je betaalrekening een virtueel saldo te geven: een extra bedrag dat altijd bij het daadwerkelijke saldo wordt opgeteld.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly can tell you if you have budgeted all available money.',
-    'budgets_index_see_expenses_bar'        => 'Spending money will slowly fill this bar.',
-    'budgets_index_navigate_periods'        => 'Navigate through periods to easily set budgets ahead of time.',
-    'budgets_index_new_budget'              => 'Create new budgets as you see fit.',
-    'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
+    'budgets_index_intro'                   => 'Budgetten worden gebruikt om je financiën te beheren en vormen een van de kernfuncties van Firefly III.',
+    'budgets_index_set_budget'              => 'Stel je totale budget voor elke periode in, zodat Firefly je kan vertellen of je alle beschikbare geld hebt gebudgetteerd.',
+    'budgets_index_see_expenses_bar'        => 'Het besteden van geld zal deze balk langzaam vullen.',
+    'budgets_index_navigate_periods'        => 'Navigeer door periodes heen om je budget vooraf te bepalen.',
+    'budgets_index_new_budget'              => 'Maak nieuwe budgetten naar wens.',
+    'budgets_index_list_of_budgets'         => 'Gebruik deze tabel om de bedragen voor elk budget vast te stellen en te zien hoe je er voor staat.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Use these reports to get detailed insights in your finances.',
-    'reports_index_inputReportType'         => 'Pick a report type. Check out the help pages to see what each report shows you.',
-    'reports_index_inputAccountsSelect'     => 'You can exclude or include asset accounts as you see fit.',
-    'reports_index_inputDateRange'          => 'The selected date range is entirely up to you: from one day to 10 years.',
-    'reports_index_extra-options-box'       => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
+    'reports_index_intro'                   => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',
+    'reports_index_inputReportType'         => 'Kies een rapporttype. Bekijk de helppagina\'s om te zien wat elk rapport laat zien.',
+    'reports_index_inputAccountsSelect'     => 'Je kunt naar keuze betaalrekeningen meenemen (of niet).',
+    'reports_index_inputDateRange'          => 'Kies zelf een datumbereik: van een dag tot tien jaar.',
+    'reports_index_extra-options-box'       => 'Sommige rapporten bieden extra filters en opties. Kies een rapporttype en kijk of hier iets verandert.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
+    'reports_report_default_intro'          => 'Dit rapport geeft je een snel en uitgebreid overzicht van je financiën. Laat het me weten als je hier dingen mist!',
     'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
     'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in or multiple categories.',
+    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
     'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
     'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in or multiple tags.',
+    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
     'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
     'reports_report_tag_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in or multiple budgets.',
+    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
     'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses and income per budget or per account.',
     'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows you how your expenses and income per budget.',
 
@@ -75,7 +75,7 @@ return [
 
     // show piggy
     'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
-    'piggy-banks_show_piggyDetails'                           => 'Some details about your piggy bank',
+    'piggy-banks_show_piggyDetails'                           => 'Enkele details over je spaarpotje',
     'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
 
     // bill index
@@ -97,7 +97,7 @@ return [
     // rules index
     'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
     'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
-    'rules_index_new_rule'                                    => 'Create as many rules as you like.',
+    'rules_index_new_rule'                                    => 'Maak zoveel regels als je wilt.',
     'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
     'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
     'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
