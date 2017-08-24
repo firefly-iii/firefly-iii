@@ -40,5 +40,5 @@ return [
     'createTag'           => '建立新標籤',
     'edit_tag'            => '編輯標籤 ":tag"',
     'delete_tag'          => '刪除標籤 ":tag"',
-    'delete_journal_link' => 'Delete link between journals',
+    'delete_journal_link' => 'Delete link between transactions',
 ];
