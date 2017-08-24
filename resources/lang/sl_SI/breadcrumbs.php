@@ -40,5 +40,5 @@ return [
     'createTag'           => 'ustvari novo značko',
     'edit_tag'            => 'uredi značko ":tag"',
     'delete_tag'          => 'izbriši značko ":tag"',
-    'delete_journal_link' => 'Delete link between journals',
+    'delete_journal_link' => 'Delete link between transactions',
 ];
