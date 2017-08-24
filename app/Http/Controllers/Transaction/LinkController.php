@@ -83,13 +83,6 @@ class LinkController extends Controller
         return redirect(strval(session('journal_links.delete.uri')));
     }
 
-    public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link) {
-
-        $repository->switchLink($link);
-
-        return redirect(URL::previous());
-    }
-
     /**
      * @param JournalLinkRequest          $request
      * @param LinkTypeRepositoryInterface $repository
@@ -127,8 +120,14 @@ class LinkController extends Controller
             $linkJournalId = intval($request->string('link_other'));
         }
 
+
         $opposing = $journalRepository->find($linkJournalId);
-        $result   = $repository->findLink($journal, $opposing);
+        if (is_null($opposing->id)) {
+            Session::flash('error', trans('firefly.invalid_link_data'));
+
+            return redirect(route('transactions.show', $journal->id));
+        }
+        $result = $repository->findLink($journal, $opposing);
         if ($result) {
             Session::flash('error', trans('firefly.journals_error_linked'));
 
@@ -153,6 +152,14 @@ class LinkController extends Controller
         Session::flash('success', trans('firefly.journals_linked'));
 
         return redirect(route('transactions.show', $journal->id));
+    }
+
+    public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
+    {
+
+        $repository->switchLink($link);
+
+        return redirect(URL::previous());
     }
 
 }
