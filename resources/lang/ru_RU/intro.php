@@ -44,15 +44,15 @@ return [
     'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
     'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in or multiple categories.',
+    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
     'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
     'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in or multiple tags.',
+    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
     'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
     'reports_report_tag_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in or multiple budgets.',
+    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
     'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses and income per budget or per account.',
     'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows you how your expenses and income per budget.',
 
