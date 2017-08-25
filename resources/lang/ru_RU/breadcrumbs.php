@@ -40,5 +40,5 @@ return [
     'createTag'           => 'Создать новую метку',
     'edit_tag'            => 'Редактирование метки ":tag"',
     'delete_tag'          => 'Удаление метки ":tag"',
-    'delete_journal_link' => '',
+    'delete_journal_link' => 'Delete link between transactions',
 ];
