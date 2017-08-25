@@ -40,5 +40,5 @@ return [
     'createTag'           => 'Créer un nouveau tag',
     'edit_tag'            => 'Éditer le tag ":tag"',
     'delete_tag'          => 'Supprimer le tag ":tag"',
-    'delete_journal_link' => 'Delete link between transactions',
+    'delete_journal_link' => '',
 ];
