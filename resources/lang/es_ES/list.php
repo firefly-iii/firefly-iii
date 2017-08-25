@@ -88,7 +88,7 @@ return [
     'budget_count'           => 'Número de presupuestos',
     'rule_and_groups_count'  => 'Número de reglas y grupos de reglas',
     'tags_count'             => 'Número de etiquetas',
-    'inward'                 => 'Inward description',
-    'outward'                => 'Outward description',
-    'number_of_transactions' => 'Number of transactions',
+    'inward'                 => '',
+    'outward'                => '',
+    'number_of_transactions' => '',
 ];
