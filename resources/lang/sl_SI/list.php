@@ -88,7 +88,7 @@ return [
     'budget_count'           => 'Število budžetov',
     'rule_and_groups_count'  => 'Število pravil in skupin pravil',
     'tags_count'             => 'Število značk',
-    'inward'                 => '',
-    'outward'                => '',
-    'number_of_transactions' => '',
+    'inward'                 => 'Inward description',
+    'outward'                => 'Outward description',
+    'number_of_transactions' => 'Number of transactions',
 ];
