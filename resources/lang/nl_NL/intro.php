@@ -45,52 +45,52 @@ return [
     'reports_report_audit_optionsBox'       => 'Gebruik deze vinkjes om voor jou interessante kolommen te laten zien of te verbergen.',
 
     'reports_report_category_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere categorieën.',
-    'reports_report_category_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per categorie of per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
+    'reports_report_category_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per categorie of per rekening.',
+    'reports_report_category_incomeAndExpensesChart' => 'Deze grafiek toont je uitgaven en inkomsten per categorie.',
 
     'reports_report_tag_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere tags.',
-    'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
+    'reports_report_tag_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per tag, rekening, categorie of budget.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Deze grafiek toont je uitgaven en inkomsten per tag.',
 
     'reports_report_budget_intro'                             => 'Dit rapport geeft je inzicht in één of meerdere budgetten.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
+    'reports_report_budget_pieCharts'                         => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per budget of per rekening.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Deze grafiek toont je uitgaven per budget.',
 
     // create transaction
     'transactions_create_switch_box'                          => 'Gebruik deze knoppen om snel van transactietype te wisselen.',
     'transactions_create_ffInput_category'                    => 'Je kan in dit veld vrij typen. Eerder gemaakte categorieën komen als suggestie naar boven.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Select a piggy bank and link this transfer to your savings.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Link je uitgave aan een budget voor een beter financieel overzicht.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Gebruik deze dropdown als je uitgave in een andere valuta is.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Gebruik deze dropdown als je inkomsten in een andere valuta zijn.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Selecteer een spaarpotje en link deze overschrijving aan je spaargeld.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
-    'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
-    'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+    'piggy-banks_index_saved'                                 => 'Dit veld laat zien hoeveel geld er in elk spaarpotje zit.',
+    'piggy-banks_index_button'                                => 'Naast deze balk zitten twee knoppen (+ en -) om geld aan je spaarpotje toe te voegen, of er uit te halen.',
+    'piggy-banks_index_accountStatus'                         => 'Voor elke betaalrekening met minstens één spaarpotje zie je hier de status.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
-    'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
+    'piggy-banks_create_name'                                 => 'Wat is je doel? Een nieuwe zithoek, een camera of geld voor noodgevallen?',
+    'piggy-banks_create_date'                                 => 'Je kan een doeldatum of een deadline voor je spaarpot instellen.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
+    'piggy-banks_show_piggyChart'                             => 'Deze grafiek toont de geschiedenis van dit spaarpotje.',
     'piggy-banks_show_piggyDetails'                           => 'Enkele details over je spaarpotje',
-    'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
+    'piggy-banks_show_piggyEvents'                            => 'Eventuele stortingen (van en naar) worden hier ook vermeld.',
 
     // bill index
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_paid_in_period'                              => 'Dit veld geeft aan wanneer het contract het laatst is betaald.',
+    'bills_index_expected_in_period'                          => 'Dit veld geeft aan voor elk contract of en wanneer je hem weer moet betalen.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'Deze tabel bevat wat algemene informatie over dit contract.',
+    'bills_show_billButtons'                                  => 'Gebruik deze knop om oude transacties opnieuw te scannen, zodat ze aan dit contract worden gekoppeld.',
+    'bills_show_billChart'                                    => 'Deze grafiek toont de transacties gekoppeld aan dit contract.',
 
     // create bill
-    'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
-    'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
+    'bills_create_name'                                       => 'Gebruik een beschrijvende naam zoals "huur" of "zorgverzekering".',
+    'bills_create_match'                                      => 'Om transacties te koppelen gebruik je termen uit de transacties of de bijbehorende crediteur. Alle termen moeten overeen komen.',
+    'bills_create_amount_min_holder'                          => 'Stel ook een minimum- en maximumbedrag in.',
     'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
     'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
 
@@ -110,7 +110,7 @@ return [
     'rules_create_actions'                                    => 'Set as many actions as you like.',
 
     // preferences
-    'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
+    'preferences_index_tabs'                                  => 'Meer opties zijn beschikbaar achter deze tabbladen.',
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
