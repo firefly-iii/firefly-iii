@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
     'buttons'               => 'Botões',
     'icon'                  => 'Ícone',
-    'id'                    => 'ID',
+    'id'                    => '',
     'create_date'           => 'Criado em',
     'update_date'           => 'Atualizado em',
     'balance_before'        => 'Saldo Antes',
@@ -79,7 +79,7 @@ return [
     'destination_account'   => 'Conta de destino',
 
     'accounts_count'         => 'Número de Contas',
-    'journals_count'         => 'Number of transactions',
+    'journals_count'         => '',
     'attachments_count'      => 'Número de anexos',
     'bills_count'            => 'Número de contas',
     'categories_count'       => 'Número de categorias',
@@ -88,7 +88,7 @@ return [
     'budget_count'           => 'Número de orçamentos',
     'rule_and_groups_count'  => 'Número de regras e grupos de regras',
     'tags_count'             => 'Número de tags',
-    'inward'                 => 'Inward description',
-    'outward'                => 'Outward description',
-    'number_of_transactions' => 'Number of transactions',
+    'inward'                 => '',
+    'outward'                => '',
+    'number_of_transactions' => '',
 ];
