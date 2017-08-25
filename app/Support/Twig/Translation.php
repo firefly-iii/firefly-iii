@@ -15,6 +15,7 @@ namespace FireflyIII\Support\Twig;
 
 use Twig_Extension;
 use Twig_SimpleFilter;
+use Twig_SimpleFunction;
 
 /**
  *
@@ -41,6 +42,39 @@ class Translation extends Twig_Extension
         );
 
         return $filters;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFunctions(): array
+    {
+        return [
+            $this->journalLinkTranslation(),
+
+        ];
+
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalLinkTranslation(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalLinkTranslation', function (int $linkTypeId, string $direction, string $original) {
+            $key = sprintf('firefly.%d_%s', $linkTypeId, $direction);
+            $translation = trans($key);
+            if($key === $translation) {
+                return $original;
+            }
+
+            return $translation;
+
+
+        }, ['is_safe' => ['html']]
+        );
     }
 
     /**

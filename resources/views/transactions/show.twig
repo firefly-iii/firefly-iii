@@ -329,13 +329,13 @@
                                     <td>
                                         {{ ('this_'~(what|lower))|_ }}
                                         {% if link.source.id == journal.id %}
-                                            {{ link.linkType.outward }}
+                                            {{ journalLinkTranslation(link.link_type_id,'outward', link.linkType.outward) }}
                                             <a href="{{ route('transactions.show',link.destination.id) }}">
                                                 #{{ link.destination.id }}: {{ link.destination.description }}
                                             </a>
                                             ({{ journalAmount(link.destination) }})
                                         {% else %}
-                                            {{ link.linkType.inward }}
+                                            {{ journalLinkTranslation(link.link_type_id,'inward', link.linkType.inward) }}
                                             <a href="{{ route('transactions.show',link.source.id) }}">
                                                 #{{ link.source.id }}: {{ link.source.description }}</a>
                                             ({{ journalAmount(link.source) }})
