@@ -25,7 +25,7 @@ return [
     'belongs_to_user'                => 'O valor de :attribute é desconhecido',
     'accepted'                       => 'O campo :attribute deve ser aceito.',
     'bic'                            => 'Este não é um BIC válido.',
-    'more'                           => '',
+    'more'                           => ':attribute must be larger than zero.',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
     'alpha'                          => 'O campo :attribute deverá conter apenas letras.',
@@ -90,5 +90,5 @@ return [
     'in_array'                       => 'O campo :attribute não existe em :other.',
     'present'                        => 'O campo :attribute deve estar presente.',
     'amount_zero'                    => 'A quantidade total não pode ser zero',
-    'secure_password'                => '',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
 ];
