@@ -41,7 +41,7 @@ return [
     'between.string'                 => ':attribute musi zawierać pomiędzy :min a :max znaków.',
     'between.array'                  => ':attribute musi zawierać pomiędzy :min a :max elementów.',
     'boolean'                        => 'Pole :attribute musi być prawdą albo fałszem.',
-    'confirmed'                      => 'The :attribute confirmation does not match.',
+    'confirmed'                      => 'Pole :attribute i jego potwierdzenie nie pasują do siebie.',
     'date'                           => ':attribute nie jest prawidłową datą.',
     'date_format'                    => ':attribute rożni się od formatu :format.',
     'different'                      => ':attribute oraz :other muszą się różnić.',
@@ -90,5 +90,5 @@ return [
     'in_array'                       => 'Pole :attribute nie istnieje w :other.',
     'present'                        => 'Pole :attribute musi być obecne.',
     'amount_zero'                    => 'Całkowita kwota nie może być zerem',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
+    'secure_password'                => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://goo.gl/NCh2tN',
 ];
