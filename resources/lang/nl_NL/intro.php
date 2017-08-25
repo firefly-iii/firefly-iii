@@ -45,20 +45,20 @@ return [
     'reports_report_audit_optionsBox'       => 'Gebruik deze vinkjes om voor jou interessante kolommen te laten zien of te verbergen.',
 
     'reports_report_category_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere categorieën.',
-    'reports_report_category_pieCharts'              => 'Deze tabellen geven j inzicht in uitgaven en inkomsten per categorie of per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
+    'reports_report_category_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per categorie of per account.',
+    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
+    'reports_report_tag_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere tags.',
     'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per tag.',
+    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses and income per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows you how your expenses and income per budget.',
+    'reports_report_budget_intro'                             => 'Dit rapport geeft je inzicht in één of meerdere budgetten.',
+    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
-    'transactions_create_ffInput_category'                    => 'You can freely type in this field. Previously created categories will be suggested.',
+    'transactions_create_switch_box'                          => 'Gebruik deze knoppen om snel van transactietype te wisselen.',
+    'transactions_create_ffInput_category'                    => 'Je kan in dit veld vrij typen. Eerder gemaakte categorieën komen als suggestie naar boven.',
     'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
     'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
