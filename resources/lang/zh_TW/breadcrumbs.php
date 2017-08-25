@@ -26,7 +26,7 @@ return [
     'edit_bill'           => '編輯賬單 ":name"',
     'delete_bill'         => '刪除賬單 ":name"',
     'reports'             => '報表',
-    'search_result'       => 'Search results for ":query"',
+    'search_result'       => '',
     'withdrawal_list'     => '支出',
     'deposit_list'        => '收入、薪金與存款',
     'transfer_list'       => '轉帳',
@@ -40,5 +40,5 @@ return [
     'createTag'           => '建立新標籤',
     'edit_tag'            => '編輯標籤 ":tag"',
     'delete_tag'          => '刪除標籤 ":tag"',
-    'delete_journal_link' => 'Delete link between transactions',
+    'delete_journal_link' => '',
 ];
