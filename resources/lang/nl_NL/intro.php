@@ -91,31 +91,31 @@ return [
     'bills_create_name'                                       => 'Gebruik een beschrijvende naam zoals "huur" of "zorgverzekering".',
     'bills_create_match'                                      => 'Om transacties te koppelen gebruik je termen uit de transacties of de bijbehorende crediteur. Alle termen moeten overeen komen.',
     'bills_create_amount_min_holder'                          => 'Stel ook een minimum- en maximumbedrag in.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_repeat_freq_holder'                         => 'De meeste contracten herhalen maandelijks, maar dat kan je eventueel veranderen.',
+    'bills_create_skip_holder'                                => 'Als een contract elke twee weken herhaalt, zet je het "skip"-veld op 1 om elke andere week over te slaan.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
-    'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
+    'rules_index_intro'                                       => 'In Firefly III kan je regels maken die automagisch op transacties worden toegepast.',
+    'rules_index_new_rule_group'                              => 'Je kan regels combineren in groepen voor makkelijker beheer.',
     'rules_index_new_rule'                                    => 'Maak zoveel regels als je wilt.',
-    'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
-    'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
-    'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
-    'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
+    'rules_index_prio_buttons'                                => 'Zet ze in elke willekeurige volgorde.',
+    'rules_index_test_buttons'                                => 'Je kan je regels testen of toepassen op bestaande transacties.',
+    'rules_index_rule-triggers'                               => 'Regels hebben "triggers" en "acties" die je kan sorteren met drag-en-drop.',
+    'rules_index_outro'                                       => 'Check ook de helppagina\'s met het (?)-icoontje rechtsboven!',
 
     // create rule:
-    'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
-    'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
-    'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
-    'rules_create_actions'                                    => 'Set as many actions as you like.',
+    'rules_create_mandatory'                                  => 'Kies een beschrijvende titel en wanneer de regel af moet gaan.',
+    'rules_create_ruletriggerholder'                          => 'Voeg zoveel triggers toe als je wilt, maar denk er aan dat ALLE triggers moeten matchen voor de acties worden uitgevoerd.',
+    'rules_create_test_rule_triggers'                         => 'Gebruik deze knop om te zien welke bestaande transacties overeen zouden komen.',
+    'rules_create_actions'                                    => 'Stel zoveel acties in als je wilt.',
 
     // preferences
     'preferences_index_tabs'                                  => 'Meer opties zijn beschikbaar achter deze tabbladen.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
-    'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
+    'currencies_index_intro'                                  => 'Firefly III ondersteunt meerdere valuta, die je op deze pagina kunt wijzigen.',
+    'currencies_index_default'                                => 'Firefly III heeft één standaardvaluta. Je kan natuurlijk altijd wisselen met deze knoppen.',
 
     // create currency
-    'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
+    'currencies_create_code'                                  => 'Deze code moet ISO-compatibel zijn (Google die code voor je nieuwe valuta).',
 ];
