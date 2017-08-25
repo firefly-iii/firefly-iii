@@ -41,11 +41,11 @@ return [
 
     // reports (reports)
     'reports_report_default_intro'          => 'Dit rapport geeft je een snel en uitgebreid overzicht van je financiën. Laat het me weten als je hier dingen mist!',
-    'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
-    'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
+    'reports_report_audit_intro'            => 'Dit rapport geeft je gedetailleerde inzichten in je betaalrekeningen.',
+    'reports_report_audit_optionsBox'       => 'Gebruik deze vinkjes om voor jou interessante kolommen te laten zien of te verbergen.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
-    'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
+    'reports_report_category_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere categorieën.',
+    'reports_report_category_pieCharts'              => 'Deze tabellen geven j inzicht in uitgaven en inkomsten per categorie of per account.',
     'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
 
     'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
