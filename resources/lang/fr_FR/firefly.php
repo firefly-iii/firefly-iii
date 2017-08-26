@@ -310,6 +310,7 @@ return [
     'no_location_set'                            => 'Aucun emplacement défini.',
     'meta_data'                                  => 'Meta-données',
     'location'                                   => 'Emplacement',
+    'without_date'                               => 'Without date',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Comptes de l’écran d’accueil',
