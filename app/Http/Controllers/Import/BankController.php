@@ -34,7 +34,7 @@ class BankController extends Controller
         $object->setUser(auth()->user());
 
         if ($object->hasPrerequisites()) {
-            return redirect(route('import.banq.prerequisites', [$bank]));
+            return redirect(route('import.bank.prerequisites', [$bank]));
         }
         $class = config(sprintf('firefly.import_info.%s', $bank));
         /** @var InformationInterface $object */

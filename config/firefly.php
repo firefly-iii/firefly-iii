@@ -46,7 +46,7 @@ return [
         'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
     ],
     'bunq'                       => [
-        'server' => 'https://api.bunq.com',
+        'server' => 'https://sandbox.public.api.bunq.com',
     ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',

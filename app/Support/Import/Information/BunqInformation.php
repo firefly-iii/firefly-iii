@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Information;
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Services\Bunq\Object\Alias;
+use FireflyIII\Services\Bunq\Object\MonetaryAccountBank;
 use FireflyIII\Services\Bunq\Request\DeleteDeviceSessionRequest;
 use FireflyIII\Services\Bunq\Request\DeviceSessionRequest;
+use FireflyIII\Services\Bunq\Request\ListMonetaryAccountRequest;
 use FireflyIII\Services\Bunq\Request\ListUserRequest;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 use FireflyIII\User;
@@ -35,20 +39,52 @@ class BunqInformation implements InformationInterface
     /**
      * Returns a collection of accounts. Preferrably, these follow a uniform Firefly III format so they can be managed over banks.
      *
-     * @return Collection
+     * The format for these bank accounts is basically this:
+     *
+     * id: bank specific id
+     * name: bank appointed name
+     * number: account number (usually IBAN)
+     * currency: ISO code of currency
+     * balance: current balance
+     *
+     *
+     * any other fields are optional but can be useful:
+     * image: logo or account specific thing
+     * color: any associated color.
+     *
+     * @return array
      */
-    public function getAccounts(): Collection
+    public function getAccounts(): array
     {
         Log::debug('Now in getAccounts()');
         $sessionToken = $this->startSession();
-        $this->getUserInformation($sessionToken);
+        $id           = $this->getUserInformation($sessionToken);
 
         // get list of Bunq accounts:
+        $accounts = $this->getMonetaryAccounts($sessionToken, $id);
+        $return   = [];
+        /** @var MonetaryAccountBank $account */
+        foreach ($accounts as $account) {
+            $current = [
+                'id'       => $account->getId(),
+                'name'     => $account->getDescription(),
+                'currency' => $account->getCurrency(),
+                'balance'  => $account->getBalance()->getValue(),
+                'color'    => $account->getSetting()->getColor(),
 
+            ];
+            /** @var Alias $alias */
+            foreach ($account->getAliases() as $alias) {
+                if ($alias->getType() === 'IBAN') {
+                    $current['number'] = $alias->getValue();
+                }
+            }
+            $return[] = $current;
+        }
 
         $this->closeSession($sessionToken);
 
-        return new Collection;
+        return $return;
     }
 
     /**
@@ -78,19 +114,49 @@ class BunqInformation implements InformationInterface
         $request->setServerPublicKey($serverPublicKey);
         $request->setSessionToken($sessionToken);
         $request->call();
+
         return;
     }
 
     /**
      * @param SessionToken $sessionToken
+     * @param int          $userId
+     *
+     * @return Collection
      */
-    private function getUserInformation(SessionToken $sessionToken): void
+    private function getMonetaryAccounts(SessionToken $sessionToken, int $userId): Collection
     {
-        $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key')->data;
-        $serverPublicKey   = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $server            = config('firefly.bunq.server');
-        $privateKey        = Preferences::getForUser($this->user, 'bunq_private_key')->data;
-        $request = new ListUserRequest;
+        $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
+        $server          = config('firefly.bunq.server');
+        $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
+        $request         = new ListMonetaryAccountRequest;
+
+        $request->setSessionToken($sessionToken);
+        $request->setSecret($apiKey);
+        $request->setServerPublicKey($serverPublicKey);
+        $request->setServer($server);
+        $request->setPrivateKey($privateKey);
+        $request->setUserId($userId);
+        $request->call();
+
+        return $request->getMonetaryAccounts();
+
+    }
+
+    /**
+     * @param SessionToken $sessionToken
+     *
+     * @return int
+     * @throws FireflyException
+     */
+    private function getUserInformation(SessionToken $sessionToken): int
+    {
+        $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
+        $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
+        $server          = config('firefly.bunq.server');
+        $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
+        $request         = new ListUserRequest;
         $request->setSessionToken($sessionToken);
         $request->setSecret($apiKey);
         $request->setServerPublicKey($serverPublicKey);
@@ -98,12 +164,15 @@ class BunqInformation implements InformationInterface
         $request->setPrivateKey($privateKey);
         $request->call();
         // return the first that isn't null?
-        // get all objects, try to find ID.
-        var_dump($request->getUserCompany());
-        var_dump($request->getUserLight());
-        var_dump($request->getUserPerson());
-
-        return;
+        $company = $request->getUserCompany();
+        if ($company->getId() > 0) {
+            return $company->getId();
+        }
+        $user = $request->getUserPerson();
+        if ($user->getId() > 0) {
+            return $user->getId();
+        }
+        throw new FireflyException('Expected user or company from Bunq, but got neither.');
     }
 
     /**

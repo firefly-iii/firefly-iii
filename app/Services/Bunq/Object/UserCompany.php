@@ -94,4 +94,14 @@ class UserCompany extends BunqObject
 
     }
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+
+
 }

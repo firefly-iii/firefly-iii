@@ -33,7 +33,17 @@ interface InformationInterface
     /**
      * Returns a collection of accounts. Preferrably, these follow a uniform Firefly III format so they can be managed over banks.
      *
-     * @return Collection
+     * The format for these bank accounts is basically this:
+     *
+     * id: bank specific id
+     * name: bank appointed name
+     * number: account number (usually IBAN)
+     * currency: ISO code of currency
+     *
+     * any other fields are optional but can be useful:
+     * image: logo or account specific thing
+     *
+     * @return array
      */
-    public function getAccounts(): Collection;
+    public function getAccounts(): array;
 }
