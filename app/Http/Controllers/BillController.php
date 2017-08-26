@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
@@ -129,6 +130,11 @@ class BillController extends Controller
         if (session('bills.edit.fromUpdate') !== true) {
             $this->rememberPreviousUri('bills.edit.uri');
         }
+
+        $currency         = Amount::getDefaultCurrency();
+        $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
+        $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
+
         $request->session()->forget('bills.edit.fromUpdate');
         $request->session()->flash('gaEventCategory', 'bills');
         $request->session()->flash('gaEventAction', 'edit');
