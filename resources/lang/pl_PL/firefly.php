@@ -311,6 +311,7 @@ return [
     'meta_data'                                  => 'Metadane',
     'location'                                   => 'Lokalizacja',
     'without_date'                               => 'Without date',
+    'result'                                     => 'Result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konta na stronie domowej',
