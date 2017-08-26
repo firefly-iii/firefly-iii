@@ -310,6 +310,7 @@ return [
     'no_location_set'                            => 'Kein Ort gesetzt.',
     'meta_data'                                  => 'Metadaten',
     'location'                                   => 'Standort',
+    'without_date'                               => 'Without date',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konten auf dem Startbildschirm',
