@@ -310,6 +310,7 @@ return [
     'no_location_set'                            => 'No location set.',
     'meta_data'                                  => 'Meta data',
     'location'                                   => 'Location',
+    'without_date'                               => 'Without date',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Счета, отображаемые в сводке',
