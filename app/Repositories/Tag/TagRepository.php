@@ -275,17 +275,23 @@ class TagRepository implements TagRepositoryInterface
         $max    = 0;
         $query  = $this->user->tags();
         $return = [];
+        Log::debug('Going to build tag-cloud');
         if (!is_null($year)) {
+            Log::debug(sprintf('Year is not null: %d', $year));
             $start = $year . '-01-01';
             $end   = $year . '-12-31';
             $query->where('date', '>=', $start)->where('date', '<=', $end);
         }
         if (is_null($year)) {
             $query->whereNull('date');
+            Log::debug('Year is NULL');
         }
         $tags      = $query->orderBy('id', 'desc')->get();
         $temporary = [];
+        Log::debug(sprintf('Found %d tags', $tags->count()));
+        /** @var Tag $tag */
         foreach ($tags as $tag) {
+
             $amount      = floatval($this->sumOfTag($tag, null, null));
             $min         = $amount < $min || is_null($min) ? $amount : $min;
             $max         = $amount > $max ? $amount : $max;
@@ -293,6 +299,8 @@ class TagRepository implements TagRepositoryInterface
                 'amount' => $amount,
                 'tag'    => $tag,
             ];
+            Log::debug(sprintf('Now working on tag %s with total amount %s', $tag->tag, $amount));
+            Log::debug(sprintf('Minimum is now %f, maximum is %f', $min, $max));
         }
         /** @var array $entry */
         foreach ($temporary as $entry) {
@@ -303,6 +311,8 @@ class TagRepository implements TagRepositoryInterface
                 'tag'   => $entry['tag'],
             ];
         }
+
+        Log::debug('DONE with tagcloud');
 
         return $return;
     }
@@ -337,7 +347,16 @@ class TagRepository implements TagRepositoryInterface
      */
     private function cloudScale(array $range, float $amount, float $min, float $max): int
     {
+        Log::debug(sprintf('Now in cloudScale with %s as amount and %f min, %f max', $amount, $min, $max));
         $amountDiff = $max - $min;
+        Log::debug(sprintf('AmountDiff is %f', $amountDiff));
+
+        // no difference? Every tag same range:
+        if($amountDiff === 0.0) {
+            Log::debug(sprintf('AmountDiff is zero, return %d', $range[0]));
+            return $range[0];
+        }
+
         $diff       = $range[1] - $range[0];
         $step       = 1;
         if ($diff != 0) {

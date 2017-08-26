@@ -43,9 +43,6 @@ use View;
 class TagController extends Controller
 {
 
-    /** @var array */
-    public $tagOptions = [];
-
     /** @var  TagRepositoryInterface */
     protected $repository;
 
@@ -60,17 +57,8 @@ class TagController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(TagRepositoryInterface::class);
-                $this->tagOptions = [
-                    'nothing'        => trans('firefly.regular_tag'),
-                    'balancingAct'   => trans('firefly.balancing_act'),
-                    'advancePayment' => trans('firefly.advance_payment'),
-                ];
-
-
                 View::share('title', strval(trans('firefly.tags')));
                 View::share('mainTitleIcon', 'fa-tags');
-                View::share('tagOptions', $this->tagOptions);
-
 
                 return $next($request);
             }
