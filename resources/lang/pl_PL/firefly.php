@@ -310,6 +310,7 @@ return [
     'no_location_set'                            => 'Nie ustawiono lokalizacji.',
     'meta_data'                                  => 'Metadane',
     'location'                                   => 'Lokalizacja',
+    'without_date'                               => 'Without date',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konta na stronie domowej',
