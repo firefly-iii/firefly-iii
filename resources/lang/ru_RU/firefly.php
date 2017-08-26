@@ -311,6 +311,7 @@ return [
     'meta_data'                                  => 'Meta data',
     'location'                                   => 'Location',
     'without_date'                               => 'Without date',
+    'result'                                     => 'Result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Счета, отображаемые в сводке',
