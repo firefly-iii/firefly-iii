@@ -311,6 +311,7 @@ return [
     'meta_data'                                  => 'Metadaten',
     'location'                                   => 'Standort',
     'without_date'                               => 'Without date',
+    'result'                                     => 'Result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konten auf dem Startbildschirm',
