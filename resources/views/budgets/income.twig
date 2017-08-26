@@ -12,6 +12,8 @@
         <form style="display: inline;" id="income" action="{{ route('budgets.income.post') }}" method="POST">
             <div class="modal-body">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="start" value="{{ start.format('Y-m-d') }}"/>
+                <input type="hidden" name="end" value="{{ end.format('Y-m-d') }}"/>
 
                 <div class="input-group">
                     <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>

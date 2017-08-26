@@ -136,7 +136,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'budgets', 'as' => 'budgets.'], function () {
-    Route::get('income', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+    Route::get('income/{start_date}/{end_date}', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
     Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
@@ -403,6 +403,7 @@ Route::group(
     Route::post('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@postPrerequisites', 'as' => 'bank.prerequisites.post']);
 
     Route::get('bank/{bank}/form', ['uses' => 'Import\BankController@form', 'as' => 'bank.form']);
+    Route::post('bank/{bank}/form', ['uses' => 'Import\BankController@postForm', 'as' => 'bank.form.post']);
 }
 );
 

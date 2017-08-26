@@ -229,7 +229,11 @@
         // budgeted data:
         var budgeted = {{ budgeted }};
         var available = {{ available }};
-        var budgetIndexURI = "{{ route('budgets.index','REPLACE') }}";
+        var budgetIndexUri = "{{ route('budgets.index','REPLACE') }}";
+        var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";
+        var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}";
+        var periodStart = "{{ start.format('Y-m-d') }}";
+        var periodEnd = "{{ end.format('Y-m-d') }}";
     </script>
     <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
     <script type="text/javascript" src="js/ff/budgets/index.js"></script>
