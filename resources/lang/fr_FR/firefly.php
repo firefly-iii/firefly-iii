@@ -311,6 +311,7 @@ return [
     'meta_data'                                  => 'Meta-données',
     'location'                                   => 'Emplacement',
     'without_date'                               => 'Without date',
+    'result'                                     => 'Result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Comptes de l’écran d’accueil',
