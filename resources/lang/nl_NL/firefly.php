@@ -310,6 +310,7 @@ return [
     'no_location_set'                            => 'Zonder plaats',
     'meta_data'                                  => 'Metagegevens',
     'location'                                   => 'Plaats',
+    'without_date'                               => 'Without date',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
