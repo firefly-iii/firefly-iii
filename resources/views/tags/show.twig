@@ -40,10 +40,12 @@
                     {% if moment == 'all' %}
                         <p>
                             {{ 'total_sum'|_ }}: {{ sum|formatAmount }}<br/>
+                            {{ 'total_result'|_ }}: {{ result|formatAmount }}<br/>
                         </p>
                     {% else %}
                         <p>
                             {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
+                            {{ 'result'|_ }}: {{ result|formatAmount }}<br/>
                         </p>
                     {% endif %}
 

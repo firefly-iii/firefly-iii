@@ -109,6 +109,15 @@ interface TagRepositoryInterface
     public function setUser(User $user);
 
     /**
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return string
+     */
+    public function resultOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string;
+
+    /**
      * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end

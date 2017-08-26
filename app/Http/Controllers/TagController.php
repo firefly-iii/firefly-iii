@@ -171,7 +171,6 @@ class TagController extends Controller
         }
         $count = $repository->count();
 
-
         return view('tags.index', compact('clouds', 'count'));
     }
 
@@ -205,6 +204,7 @@ class TagController extends Controller
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
             $sum      = $repository->sumOfTag($tag, null, null);
+            $result   = $repository->resultOfTag($tag, null, null);
             $path     = route('tags.show', [$tag->id, 'all']);
         }
 
@@ -219,6 +219,7 @@ class TagController extends Controller
             );
             $periods  = $this->getPeriodOverview($tag);
             $sum      = $repository->sumOfTag($tag, $start, $end);
+            $result   = $repository->resultOfTag($tag, $start, $end);
             $path     = route('tags.show', [$tag->id, $moment]);
         }
 
@@ -227,6 +228,8 @@ class TagController extends Controller
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($tag);
+            $sum      = $repository->sumOfTag($tag, $start, $end);
+            $result   = $repository->resultOfTag($tag, $start, $end);
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
                 ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -241,7 +244,7 @@ class TagController extends Controller
         $journals->setPath($path);
 
 
-        return view('tags.show', compact('apiKey', 'tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
+        return view('tags.show', compact('apiKey', 'tag', 'result', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
 
     /**
