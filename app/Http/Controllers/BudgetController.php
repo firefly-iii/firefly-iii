@@ -451,6 +451,7 @@ class BudgetController extends Controller
         $end             = session('end', new Carbon);
         $defaultCurrency = Amount::getDefaultCurrency();
         $available       = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
+        $available       = round($available, $defaultCurrency->decimal_places);
 
 
         return view('budgets.income', compact('available', 'start', 'end'));
