@@ -311,6 +311,7 @@ return [
     'meta_data'                                  => 'Metagegevens',
     'location'                                   => 'Plaats',
     'without_date'                               => 'Without date',
+    'result'                                     => 'Result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
