@@ -53,10 +53,10 @@
                     {% endif %}
                 </a>
                 {{ splitJournalIndicator(transaction.journal_id) }}
-
-                {% if transaction.transactionJournal.attachments|length > 0 %}
+                {% set countAtt = transaction.transactionJournal.attachments.count %}
+                {% if countAtt > 0 %}
                     <i class="fa fa-paperclip"
-                       title="{{ Lang.choice('firefly.nr_of_attachments', journal.attachments|length, {count: journal.attachments|length}) }}"></i>
+                       title="{{ Lang.choice('firefly.nr_of_attachments', countAtt, {count: countAtt}) }}"></i>
                 {% endif %}
 
             </td>
