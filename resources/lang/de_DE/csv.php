@@ -17,7 +17,7 @@ return [
     'initial_title'                 => 'Import Einrichten (1/3) - Grundlegende Einstellungen',
     'initial_text'                  => 'Um Ihre Datei korrekt importieren zu können, überprüfen Sie die folgenden Optionen.',
     'initial_box'                   => 'Standard CSV Importeinstellungen',
-    'initial_box_title'             => 'Basic CSV import setup options',
+    'initial_box_title'             => 'Standard CSV Importoptionen',
     'initial_header_help'           => 'Hier auswählen, wenn die ersten Zeilen der CSV-Datei die Spaltenüberschriften sind.',
     'initial_date_help'             => 'Datumsformat in ihrer CSV-Datei. Geben Sie das Format so an, wie es <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">diese Seite</a> zeigt. Die Standardeinstellung ergibt Daten die so aussehen: :dateExample.',
     'initial_delimiter_help'        => 'Wählen Sie das Trennzeichen, welches in ihrer Datei genutzt wird. Wenn Sie nicht sicher sind ist Komma die sicherste Option.',
