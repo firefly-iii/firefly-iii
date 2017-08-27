@@ -44,7 +44,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
 
-        $data = ['amount' => 200,];
+        $data = ['amount' => 200, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
         $response = $this->post(route('budgets.amount', [1]), $data);
         $response->assertStatus(200);
@@ -61,7 +61,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
 
-        $data = ['amount' => 0,];
+        $data = ['amount' => 0, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
         $response = $this->post(route('budgets.amount', [1]), $data);
         $response->assertStatus(200);
@@ -542,7 +542,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getAvailableBudget')->andReturn('1');
         $repository->shouldReceive('cleanupBudgets');
 
-        $response = $this->get(route('budgets.income', [1]));
+        $response = $this->get(route('budgets.income', ['2017-01-01', '2017-01-31']));
         $response->assertStatus(200);
     }
 

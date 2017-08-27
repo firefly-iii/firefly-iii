@@ -129,6 +129,9 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
+        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
+        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
+
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
 
@@ -160,6 +163,8 @@ class TagControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
+
+        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
@@ -195,6 +200,7 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
         $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
+        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
