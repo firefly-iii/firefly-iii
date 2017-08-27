@@ -54,5 +54,4 @@ class Amount extends BunqObject
     }
 
 
-
 }

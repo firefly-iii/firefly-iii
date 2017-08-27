@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Information;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Bunq\Object\Alias;
 use FireflyIII\Services\Bunq\Object\MonetaryAccountBank;
 use FireflyIII\Services\Bunq\Request\DeleteDeviceSessionRequest;
@@ -20,6 +21,7 @@ use FireflyIII\Services\Bunq\Request\DeviceSessionRequest;
 use FireflyIII\Services\Bunq\Request\ListMonetaryAccountRequest;
 use FireflyIII\Services\Bunq\Request\ListUserRequest;
 use FireflyIII\Services\Bunq\Token\SessionToken;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -56,22 +58,28 @@ class BunqInformation implements InformationInterface
      */
     public function getAccounts(): array
     {
+        // cache for an hour:
+        $cache = new CacheProperties;
+        $cache->addProperty('bunq.get-accounts');
+        $cache->addProperty(date('dmy h'));
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
         Log::debug('Now in getAccounts()');
         $sessionToken = $this->startSession();
         $id           = $this->getUserInformation($sessionToken);
-
         // get list of Bunq accounts:
         $accounts = $this->getMonetaryAccounts($sessionToken, $id);
         $return   = [];
         /** @var MonetaryAccountBank $account */
         foreach ($accounts as $account) {
+
             $current = [
                 'id'       => $account->getId(),
                 'name'     => $account->getDescription(),
                 'currency' => $account->getCurrency(),
                 'balance'  => $account->getBalance()->getValue(),
                 'color'    => $account->getSetting()->getColor(),
-
             ];
             /** @var Alias $alias */
             foreach ($account->getAliases() as $alias) {
@@ -81,6 +89,7 @@ class BunqInformation implements InformationInterface
             }
             $return[] = $current;
         }
+        $cache->store($return);
 
         $this->closeSession($sessionToken);
 
@@ -105,11 +114,9 @@ class BunqInformation implements InformationInterface
         Log::debug('Going to close session');
         $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
         $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $server          = config('firefly.bunq.server');
         $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
         $request         = new DeleteDeviceSessionRequest();
         $request->setSecret($apiKey);
-        $request->setServer($server);
         $request->setPrivateKey($privateKey);
         $request->setServerPublicKey($serverPublicKey);
         $request->setSessionToken($sessionToken);
@@ -128,14 +135,12 @@ class BunqInformation implements InformationInterface
     {
         $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
         $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $server          = config('firefly.bunq.server');
         $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
         $request         = new ListMonetaryAccountRequest;
 
         $request->setSessionToken($sessionToken);
         $request->setSecret($apiKey);
         $request->setServerPublicKey($serverPublicKey);
-        $request->setServer($server);
         $request->setPrivateKey($privateKey);
         $request->setUserId($userId);
         $request->call();
@@ -154,13 +159,11 @@ class BunqInformation implements InformationInterface
     {
         $apiKey          = Preferences::getForUser($this->user, 'bunq_api_key')->data;
         $serverPublicKey = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $server          = config('firefly.bunq.server');
         $privateKey      = Preferences::getForUser($this->user, 'bunq_private_key')->data;
         $request         = new ListUserRequest;
         $request->setSessionToken($sessionToken);
         $request->setSecret($apiKey);
         $request->setServerPublicKey($serverPublicKey);
-        $request->setServer($server);
         $request->setPrivateKey($privateKey);
         $request->call();
         // return the first that isn't null?
@@ -183,13 +186,11 @@ class BunqInformation implements InformationInterface
         Log::debug('Now in startSession.');
         $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key')->data;
         $serverPublicKey   = Preferences::getForUser($this->user, 'bunq_server_public_key')->data;
-        $server            = config('firefly.bunq.server');
         $privateKey        = Preferences::getForUser($this->user, 'bunq_private_key')->data;
         $installationToken = Preferences::getForUser($this->user, 'bunq_installation_token')->data;
         $request           = new DeviceSessionRequest();
         $request->setSecret($apiKey);
         $request->setServerPublicKey($serverPublicKey);
-        $request->setServer($server);
         $request->setPrivateKey($privateKey);
         $request->setInstallationToken($installationToken);
         $request->call();

@@ -27,16 +27,9 @@ class ServerPublicKey extends BunqObject
      *
      * @param array $response
      */
-    public function __construct(array $response) {
-        $this->publicKey = $response['server_public_key'];
-    }
-
-    /**
-     * @param string $publicKey
-     */
-    public function setPublicKey(string $publicKey)
+    public function __construct(array $response)
     {
-        $this->publicKey = $publicKey;
+        $this->publicKey = $response['server_public_key'];
     }
 
     /**
@@ -45,6 +38,14 @@ class ServerPublicKey extends BunqObject
     public function getPublicKey(): string
     {
         return $this->publicKey;
+    }
+
+    /**
+     * @param string $publicKey
+     */
+    public function setPublicKey(string $publicKey)
+    {
+        $this->publicKey = $publicKey;
     }
 
 

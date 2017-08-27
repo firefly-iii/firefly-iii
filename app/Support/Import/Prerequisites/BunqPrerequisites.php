@@ -157,7 +157,6 @@ class BunqPrerequisites implements PrerequisitesInterface
         $request->setInstallationToken($installationToken);
         $request->setServerPublicKey($serverPublicKey);
         $request->setPrivateKey($this->getPrivateKey());
-        $request->setServer(config('firefly.bunq.server'));
         $request->call();
         $devices = $request->getDevices();
         /** @var DeviceServer $device */
@@ -186,7 +185,6 @@ class BunqPrerequisites implements PrerequisitesInterface
         // verify bunq api code:
         $publicKey = $this->getPublicKey();
         $request   = new InstallationTokenRequest;
-        $request->setServer(strval(config('firefly.bunq.server')));
         $request->setPublicKey($publicKey);
         $request->call();
         Log::debug('Sent request');
@@ -301,7 +299,6 @@ class BunqPrerequisites implements PrerequisitesInterface
         $serverPublicKey   = $this->getServerPublicKey();
         $apiKey            = Preferences::getForUser($this->user, 'bunq_api_key', '');
         $request           = new DeviceServerRequest;
-        $request->setServer(strval(config('firefly.bunq.server')));
         $request->setPrivateKey($this->getPrivateKey());
         $request->setDescription('Firefly III v' . config('firefly.version') . ' for ' . $this->user->email);
         $request->setSecret($apiKey->data);

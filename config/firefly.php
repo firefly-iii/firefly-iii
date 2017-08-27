@@ -45,6 +45,9 @@ return [
     'import_info'                => [
         'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
     ],
+    'import_transactions'        => [
+        'bunq' => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
+    ],
     'bunq'                       => [
         'server' => 'https://sandbox.public.api.bunq.com',
     ],

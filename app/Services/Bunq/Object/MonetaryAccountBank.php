@@ -63,56 +63,6 @@ class MonetaryAccountBank extends BunqObject
     private $userId = 0;
 
     /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAliases(): array
-    {
-        return $this->aliases;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrency(): string
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @return Amount
-     */
-    public function getBalance(): Amount
-    {
-        return $this->balance;
-    }
-
-    /**
-     * @return MonetaryAccountSetting
-     */
-    public function getSetting(): MonetaryAccountSetting
-    {
-        return $this->setting;
-    }
-
-
-
-    /**
      * MonetaryAccountBank constructor.
      *
      * @param array $data
@@ -148,6 +98,54 @@ class MonetaryAccountBank extends BunqObject
         }
 
         return;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAliases(): array
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * @return Amount
+     */
+    public function getBalance(): Amount
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return MonetaryAccountSetting
+     */
+    public function getSetting(): MonetaryAccountSetting
+    {
+        return $this->setting;
     }
 
 }

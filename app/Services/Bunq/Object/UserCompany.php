@@ -103,5 +103,4 @@ class UserCompany extends BunqObject
     }
 
 
-
 }

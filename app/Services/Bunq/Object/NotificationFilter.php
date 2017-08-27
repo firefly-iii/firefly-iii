@@ -24,7 +24,8 @@ class NotificationFilter extends BunqObject
      *
      * @param array $data
      */
-    public function __construct(array $data) {
+    public function __construct(array $data)
+    {
         var_dump($data);
         exit;
     }

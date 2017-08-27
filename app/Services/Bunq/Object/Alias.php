@@ -65,5 +65,4 @@ class Alias extends BunqObject
     }
 
 
-
 }

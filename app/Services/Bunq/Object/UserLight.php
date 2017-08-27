@@ -51,7 +51,7 @@ class UserLight extends BunqObject
      */
     public function __construct(array $data)
     {
-        if(count($data) === 0) {
+        if (count($data) === 0) {
             return;
         }
         $this->id             = intval($data['id']);

@@ -45,6 +45,7 @@ abstract class BunqRequest
      */
     public function __construct()
     {
+        $this->server = config('firefly.bunq.server');
     }
 
     /**
@@ -58,14 +59,6 @@ abstract class BunqRequest
     public function getServer(): string
     {
         return $this->server;
-    }
-
-    /**
-     * @param string $server
-     */
-    public function setServer(string $server)
-    {
-        $this->server = $server;
     }
 
     /**

@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
     <div class="row">
-        <form class="form-horizontal" id="report-form" action="{{ route('import.bank.prerequisites.post',['bunq']) }}" method="post">
+        <form class="form-horizontal" action="{{ route('import.bank.prerequisites.post',['bunq']) }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box box-default">

@@ -36,6 +36,7 @@ class MonetaryAccountSetting extends BunqObject
         $this->color               = $data['color'];
         $this->defaultAvatarStatus = $data['default_avatar_status'];
         $this->restrictionChat     = $data['restriction_chat'];
+
         return;
     }
 

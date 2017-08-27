@@ -21,6 +21,7 @@ use Session;
 
 class BankController extends Controller
 {
+
     /**
      * This method must ask the user all parameters necessary to start importing data. This may not be enough
      * to finish the import itself (ie. mapping) but it should be enough to begin: accounts to import from,
@@ -41,6 +42,49 @@ class BankController extends Controller
         $object = app($class);
         $object->setUser(auth()->user());
         $remoteAccounts = $object->getAccounts();
+
+        return view('import.bank.form', compact('remoteAccounts', 'bank'));
+
+    }
+
+    /**
+     * With the information given in the submitted form Firefly III will call upon the bank's classes to return transaction
+     * information as requested. The user will be able to map unknown data and continue. Or maybe, it's put into some kind of
+     * fake CSV file and forwarded to the import routine.
+     *
+     * @param Request $request
+     * @param string  $bank
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function postForm(Request $request, string $bank)
+    {
+
+        $class = config(sprintf('firefly.import_pre.%s', $bank));
+        /** @var PrerequisitesInterface $object */
+        $object = app($class);
+        $object->setUser(auth()->user());
+
+        if ($object->hasPrerequisites()) {
+            return redirect(route('import.bank.prerequisites', [$bank]));
+        }
+        $remoteAccounts = $request->get('do_import');
+        if (!is_array($remoteAccounts) || count($remoteAccounts) === 0) {
+            Session::flash('error', 'Must select accounts');
+
+            return redirect(route('import.bank.form', [$bank]));
+        }
+        $remoteAccounts = array_keys($remoteAccounts);
+
+        $class = config(sprintf('firefly.import_pre.%s', $bank));
+
+        var_dump($remoteAccounts);exit;
+
+        // get import file
+
+        // get import config
+
+
 
     }
 
@@ -66,6 +110,7 @@ class BankController extends Controller
         $object->setUser(auth()->user());
         if (!$object->hasPrerequisites()) {
             Log::debug(sprintf('No more prerequisites for %s, move to form.', $bank));
+
             return redirect(route('import.bank.form', [$bank]));
         }
         Log::debug('Going to store entered preprerequisites.');
@@ -102,7 +147,8 @@ class BankController extends Controller
 
             return view($view, $parameters);
         }
-            return redirect(route('import.bank.form', [$bank]));
+
+        return redirect(route('import.bank.form', [$bank]));
     }
 
 }
