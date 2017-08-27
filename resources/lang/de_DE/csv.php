@@ -35,7 +35,7 @@ return [
     'roles_column'                  => 'Spalte',
     'roles_no_example_data'         => 'Keine Beispieldaten vorhanden',
     'roles_submit'                  => 'Fortfahren mit Schritt 3/3',
-    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'roles_warning'                 => 'Markieren Sie zumindest eine Spalte als Betrags-spalte. Es empfiehlt sich auch, eine Spalte für die Beschreibung, das Datum und das Gegenkonto auszuwählen.',
 
     // map data
     'map_title'                     => 'Import Einrichten (3/3) - Import mit bereits vorhandenen Daten verknüpfen',
