@@ -90,5 +90,5 @@ return [
     'tags_count'             => 'Anzahl Tags',
     'inward'                 => 'Inward description',
     'outward'                => 'Outward description',
-    'number_of_transactions' => 'Number of transactions',
+    'number_of_transactions' => 'Anzahl der Zahlungsvorgänge',
 ];
