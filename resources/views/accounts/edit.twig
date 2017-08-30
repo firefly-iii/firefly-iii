@@ -33,7 +33,11 @@
                 <div class="box-body">
                     {{ ExpandedForm.text('iban') }}
                     {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
-                    {{ ExpandedForm.text('accountNumber') }}
+                    {% if preFilled.accountRole == 'ccAsset' %}
+                        {{ ExpandedForm.text('accountNumber', null , {label:trans('form.creditCardNumber')}) }}
+                    {% else %}
+                        {{ ExpandedForm.text('accountNumber') }}
+                    {% endif %}
 
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
 

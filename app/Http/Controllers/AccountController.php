@@ -194,7 +194,7 @@ class AccountController extends Controller
 
         return view(
             'accounts.edit', compact(
-                               'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles'
+                               'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'
                            )
         );
     }
