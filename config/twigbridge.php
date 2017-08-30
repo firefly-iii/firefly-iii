@@ -158,6 +158,7 @@ return [
             'Lang',
             'Preferences',
             'URL',
+            'Steam',
             'Config',
             'Request',
             'ExpandedForm' => [
