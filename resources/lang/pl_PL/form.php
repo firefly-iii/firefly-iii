@@ -100,6 +100,7 @@ return [
     'code'                       => 'Kod',
     'iban'                       => 'IBAN',
     'accountNumber'              => 'Numer konta',
+    'creditCardNumber'           => 'Credit card number',
     'has_headers'                => 'Nagłówki',
     'date_format'                => 'Format daty',
     'specifix'                   => 'Bank- or file specific fixes',
