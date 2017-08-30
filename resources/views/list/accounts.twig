@@ -6,7 +6,7 @@
         {% if what == 'asset' %}
             <th data-defaultsign="az" class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
         {% endif %}
-        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('list.iban') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.accountNumber') }}</th>
         <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
@@ -33,7 +33,7 @@
                     {% endfor %}
                 </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs">{{ account.iban }}</td>
+            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ account.getMeta('accountNumber') }}{% endif %}</td>
             <td data-value="{{ account.endBalance }}" style="text-align: right;">
                 <span style="margin-right:5px;">
                 {{ formatAmountByAccount(account, account.endBalance) }}
