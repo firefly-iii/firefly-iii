@@ -51,6 +51,20 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * @param JournalCollectorInterface $collector
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function allTransactionJournals(JournalCollectorInterface $collector)
+    {
+        $collector->setLimit(250)->setPage(1);
+        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
+        sort($return);
+
+        return Response::json($return);
+    }
+
+    /**
      * Returns a JSON list of all beneficiaries.
      *
      * @param AccountRepositoryInterface $repository
@@ -129,6 +143,24 @@ class AutoCompleteController extends Controller
             }
         );
         $return   = array_unique($filtered->pluck('name')->toArray());
+        sort($return);
+
+        return Response::json($return);
+    }
+
+    /**
+     * @param JournalCollectorInterface $collector
+     * @param string                    $what
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transactionJournals(JournalCollectorInterface $collector, string $what)
+    {
+        $type  = config('firefly.transactionTypesByWhat.' . $what);
+        $types = [$type];
+
+        $collector->setTypes($types)->setLimit(250)->setPage(1);
+        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
         sort($return);
 
         return Response::json($return);
