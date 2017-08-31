@@ -26,7 +26,7 @@ return [
     'edit_bill'           => 'Bearbeite Rechnung ":name"',
     'delete_bill'         => 'Lösche Rechnung ":name"',
     'reports'             => 'Berichte',
-    'search_result'       => 'Search results for ":query"',
+    'search_result'       => 'Suchergebnisse für ":query"',
     'withdrawal_list'     => 'Ausgaben',
     'deposit_list'        => 'Umsatz, Einkommen und Einlagen',
     'transfer_list'       => 'Überweisungen',
@@ -40,5 +40,5 @@ return [
     'createTag'           => 'Neuen Tag erstellen',
     'edit_tag'            => 'Bearbeite Tag ":tag"',
     'delete_tag'          => 'Lösche Tag ":tag"',
-    'delete_journal_link' => 'Delete link between transactions',
+    'delete_journal_link' => 'Verbindung zwischen Transaktionen löschen',
 ];

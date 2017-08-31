@@ -100,6 +100,7 @@ return [
     'code'                       => 'Код',
     'iban'                       => 'IBAN',
     'accountNumber'              => 'Номер счета',
+    'creditCardNumber'           => 'Credit card number',
     'has_headers'                => 'Заголовки',
     'date_format'                => 'Формат даты',
     'specifix'                   => 'Bank- or file specific fixes',
