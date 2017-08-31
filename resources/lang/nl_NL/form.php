@@ -100,7 +100,7 @@ return [
     'code'                       => 'Code',
     'iban'                       => 'IBAN',
     'accountNumber'              => 'Rekeningnummer',
-    'creditCardNumber'           => 'Credit card number',
+    'creditCardNumber'           => 'Creditcardnummer',
     'has_headers'                => 'Kolomnamen op de eerste rij?',
     'date_format'                => 'Datumformaat',
     'specifix'                   => 'Bank- or of bestandsspecifieke opties',
