@@ -1,0 +1,50 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">multi period table</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Budget</th>
+                            {% for header in headers %}
+                                <th title="{{ header.start_str }} - {{ header.end_str }}">{{ header.name }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for budget in budgets %}
+                            <tr>
+                                <th>{{ budget.name }}</th>
+                                {% for header in headers %}
+                                    <td>
+                                        <input name="{{ budget.id }}_{{ header.date_str }}" id="{{ budget.id }}_{{ header.date_str }}"
+                                               type="number" class="form-control budget-input" data-id="{{ budget.id }}" data-start="{{ budget.start_str }}"
+                                        data-end="{{ budget.end_str }}" value="{{ limits[budget.id][header.key] }}"
+                                        >
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

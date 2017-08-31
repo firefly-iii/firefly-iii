@@ -246,6 +246,54 @@ class BudgetController extends Controller
         );
     }
 
+    public function multiPeriod()
+    {
+        $start = new Carbon;
+        $start->startOfYear();
+        $end = clone $start;
+        $end->endOfYear();
+        $current = clone $start;
+        $headers = [];
+        $range   = Preferences::get('viewRange', '1M')->data;
+        $budgets = $this->repository->getBudgets();
+        $limits  = [];
+        $defaultCurrency    = Amount::getDefaultCurrency();
+
+        while ($current < $end) {
+            $currentEnd = Navigation::endOfPeriod($current, $range);
+            $format     = Navigation::preferredCarbonLocalizedFormat($current, $currentEnd);
+            $name       = Navigation::periodShow($current, $range);
+            $headers[]  = [
+                'start'     => $current,
+                'end'       => $currentEnd,
+                'date_str'  => $current->format('Y_m_d'),
+                'start_str' => $current->formatLocalized($format),
+                'end_str'   => $currentEnd->formatLocalized($format),
+                'name'      => $name,
+                'key'       => $current->format('Y-m-d') . '-' . $currentEnd->format('Y-m-d'),
+            ];
+
+            $current = Navigation::addPeriod($current, $range, 0);
+        }
+
+        // for each budget, get the budget limits
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            /** @var array $header */
+            foreach ($headers as $header) {
+                /** @var BudgetLimit $limit */
+                $limit = $budget->budgetlimits()
+                                ->where('start_date', $header['start']->format('Y-m-d'))
+                                ->where('end_date', $header['end']->format('Y-m-d'))->first(['budget_limits.*']);
+                $key   = $header['start']->format('Y-m-d') . '-' . $header['end']->format('Y-m-d');
+                if (!is_null($limit)) {
+                    $limits[$budget->id][$key] = round($limit->amount, $defaultCurrency->decimal_places);
+                }
+            }
+        }
+        return view('budgets.multi-period', compact('headers', 'budgets','limits'));
+    }
+
     /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
@@ -319,7 +367,7 @@ class BudgetController extends Controller
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         Preferences::mark();
 
-        return redirect(route('budgets.index',[$start->format('Y-m-d')]));
+        return redirect(route('budgets.index', [$start->format('Y-m-d')]));
     }
 
     /**
