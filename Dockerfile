@@ -23,28 +23,18 @@ RUN docker-php-ext-install -j$(nproc) curl gd intl json mcrypt readline tidy zip
 # Generate locales supported by firefly
 RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 
+COPY docker/apache2.conf /etc/apache2/apache2.conf
 # Enable apache mod rewrite..
 RUN a2enmod rewrite
 
 # Setup the Composer installer
-RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer && \
-  curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig && \
-  php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" && \
-  chmod +x /tmp/composer-setup.php && \
-  php /tmp/composer-setup.php && \
-  mv composer.phar /usr/local/bin/composer && \
-  rm -f /tmp/composer-setup.{php,sig}
+run curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-ADD . /var/www/firefly-iii
-RUN chown -R www-data:www-data /var/www/
+RUN cd /var/www && composer create-project grumpydictator/firefly-iii --no-dev --prefer-dist firefly-iii 4.6.4
+COPY docker/entrypoint.sh /var/www/firefly-iii/docker/entrypoint.sh
 ADD docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
-
-USER www-data
+RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www/firefly-iii/storage
 
 WORKDIR /var/www/firefly-iii
-
-RUN composer install --no-scripts --no-dev
-
-USER root
-
+EXPOSE 80
 ENTRYPOINT ["/var/www/firefly-iii/docker/entrypoint.sh"]
