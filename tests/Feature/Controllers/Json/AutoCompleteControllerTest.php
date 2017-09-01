@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Json;
 
 
+use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
@@ -29,6 +30,7 @@ use Tests\TestCase;
 class AutoCompleteControllerTest extends TestCase
 {
 
+
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allAccounts
      */
@@ -41,6 +43,21 @@ class AutoCompleteControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('json.all-accounts'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allTransactionJournals
+     */
+    public function testAllTransactionJournals()
+    {
+        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector->shouldReceive('setLimit')->withArgs([250])->andReturnSelf();
+        $collector->shouldReceive('setPage')->withArgs([1])->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.all-transaction-journals'));
         $response->assertStatus(200);
     }
 
@@ -82,6 +99,26 @@ class AutoCompleteControllerTest extends TestCase
         $response = $this->get(route('json.revenue-accounts'));
         $response->assertStatus(200);
         $response->assertExactJson([$account->name]);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::transactionJournals
+     */
+    public function testTransactionJournals()
+    {
+        // mock stuff
+        $collector    = $this->mock(JournalCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.transaction-journals', ['deposit']));
+        $response->assertStatus(200);
+        $response->assertExactJson([]);
     }
 
 }

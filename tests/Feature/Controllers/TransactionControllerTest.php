@@ -58,8 +58,6 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
 
-        Steam::shouldReceive('positive')->once()->andReturn('1');
-
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['transfer']));
         $response->assertStatus(200);
@@ -118,8 +116,6 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
-
-        Steam::shouldReceive('positive')->once()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index', ['transfer', '2016-01-01']));

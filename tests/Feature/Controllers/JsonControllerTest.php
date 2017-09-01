@@ -55,21 +55,6 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::allTransactionJournals()
-     */
-    public function testAllTransactionJournals()
-    {
-        $collector = $this->mock(JournalCollectorInterface::class);
-        $collector->shouldReceive('setLimit')->withArgs([100])->andReturnSelf();
-        $collector->shouldReceive('setPage')->withArgs([1])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.all-transaction-journals'));
-        $response->assertStatus(200);
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\JsonController::boxBillsPaid
      */
     public function testBoxBillsPaid()
@@ -212,26 +197,6 @@ class JsonControllerTest extends TestCase
         $response = $this->get(route('json.tags'));
         $response->assertStatus(200);
         $response->assertExactJson([$tag->tag]);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::transactionJournals
-     */
-    public function testTransactionJournals()
-    {
-        // mock stuff
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.transaction-journals', ['deposit']));
-        $response->assertStatus(200);
-        $response->assertExactJson([]);
     }
 
     /**
