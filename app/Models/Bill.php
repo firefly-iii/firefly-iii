@@ -28,7 +28,7 @@ use Watson\Validating\ValidatingTrait;
 class Bill extends Model
 {
 
-    use SoftDeletes, ValidatingTrait;
+    use ValidatingTrait;
     /**
      * The attributes that should be casted to native types.
      *

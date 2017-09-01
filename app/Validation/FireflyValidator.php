@@ -387,7 +387,7 @@ class FireflyValidator extends Validator
         $exclude = $parameters[2] ?? 0;
 
         // get entries from table
-        $set = DB::table($table)->where('user_id', auth()->user()->id)->whereNull('deleted_at')
+        $set = DB::table($table)->where('user_id', auth()->user()->id)
                  ->where('id', '!=', $exclude)->get([$field]);
 
         foreach ($set as $entry) {
