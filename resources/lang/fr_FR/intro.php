@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',
+    'index_intro'                           => 'Bienvenue sur la page index de Firefly III. Veuillez prendre le temps de parcourir l\'introduction pour comprendre comment Firefly III fonctionne.',
     'index_accounts-chart'                  => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
     'index_box_out_holder'                  => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
     'index_help'                            => 'If you ever need help with a page or a form, press this button.',
