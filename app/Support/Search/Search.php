@@ -236,7 +236,7 @@ class Search implements SearchInterface
             return false;
         }
         foreach ($needle as $what) {
-            if (strpos($haystack, $what) !== false) {
+            if (stripos($haystack, $what) !== false) {
                 return true;
             }
         }
