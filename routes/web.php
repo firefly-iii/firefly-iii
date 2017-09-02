@@ -144,7 +144,6 @@ Route::group(
     Route::get('show/{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
     Route::get('show/{budget}/{budgetlimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
     Route::get('list/no-budget/{moment?}', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
-    Route::get('multi-period', ['uses' => 'BudgetController@multiPeriod', 'as' => 'multi-period']);
     Route::get('{moment?}', ['uses' => 'BudgetController@index', 'as' => 'index']);
 
 

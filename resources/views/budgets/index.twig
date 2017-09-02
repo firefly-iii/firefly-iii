@@ -111,7 +111,6 @@
                                 <a href="{{ route('budgets.index', [start.format('Y-m-d')]) }}" class="btn btn-default">{{ currentMonth }}</a>
                                 <a href="{{ route('budgets.index', [next.format('Y-m-d')]) }}" class="btn btn-default" title="{{ nextText }}">&rarr;</a>
                             </div>
-                            <div><a href="{{ route('budgets.multi-period') }}">{{ 'multi_period_overview'|_ }}</a></div>
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12 text-right">
                             <select class="form-control selectPeriod" name="next">
