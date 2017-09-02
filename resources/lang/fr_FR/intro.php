@@ -70,7 +70,7 @@ return [
     'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
+    'piggy-banks_create_name'                                 => 'Quel est votre objectif ? Un nouveau divan, une caméra, de l\'argent pour les urgences ?',
     'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
 
     // show piggy
