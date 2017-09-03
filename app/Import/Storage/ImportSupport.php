@@ -296,12 +296,15 @@ trait ImportSupport
      */
     private function hashAlreadyImported(string $hash): bool
     {
-        $json  = json_encode($hash);
+        $json = json_encode($hash);
+        /** @var TransactionJournalMeta $entry */
         $entry = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                        ->where('data', $json)
                                        ->where('name', 'importHash')
                                        ->first();
         if (!is_null($entry)) {
+            Log::debug(sprintf('A journal with hash %s has already been imported (spoiler: it\'s journal #%d)', $hash, $entry->transaction_journal_id));
+
             return true;
         }
 
