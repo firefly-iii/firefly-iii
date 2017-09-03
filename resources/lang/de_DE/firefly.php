@@ -625,6 +625,11 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'perm-delete-many'                           => 'Das Löschen von mehreren Elementen auf einmal kann sich störend auswirken. Bitte seien Sie vorsichtig.',
     'mass_deleted_transactions_success'          => ':amount Überweisung(en) gelöscht.',
     'mass_edited_transactions_success'           => ':amount Überweisung(en) aktualisiert',
+    'opt_group_no_account_type'                  => '(no account type)',
+    'opt_group_defaultAsset'                     => 'Default asset accounts',
+    'opt_group_savingAsset'                      => 'Savings accounts',
+    'opt_group_sharedAsset'                      => 'Shared asset accounts',
+    'opt_group_ccAsset'                          => 'Credit cards',
 
 
     // new user:
