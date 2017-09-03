@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung dieser Email-Adresse nicht zugelassen.',
     'rule_trigger_value'             => 'Dieser Wert ist für den ausgewählten Trigger ungültig.',
     'rule_action_value'              => 'Dieser Wert ist für die gewählte Aktion ungültig.',
-    'invalid_domain'                 => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung von dieser Domain nicht zugelassen.',
     'file_already_attached'          => 'Die hochgeladene Datei ":name" ist diesem Objekt bereits angehängt.',
     'file_attached'                  => 'Datei ":name" erfolgreich hochgeladen.',
     'file_invalid_mime'              => 'Die Datei ":name" ist vom Typ ":mime", welcher nicht zum Upload zugelassen ist.',
