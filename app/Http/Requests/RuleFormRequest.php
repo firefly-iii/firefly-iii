@@ -65,9 +65,9 @@ class RuleFormRequest extends Request
         // some actions require text:
         $contextActions = join(',', config('firefly.rule-actions-text'));
 
-        $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
+        $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
         if (!is_null($repository->find(intval($this->get('id')))->id)) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval($this->get('id'));
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . intval($this->get('id'));
         }
 
         $rules = [
