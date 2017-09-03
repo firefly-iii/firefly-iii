@@ -118,6 +118,7 @@ final class Processor
     {
         $self = new self;
         foreach ($triggers as $entry) {
+            $entry['value'] = is_null($entry['value']) ? '' : $entry['value'];
             $trigger = TriggerFactory::makeTriggerFromStrings($entry['type'], $entry['value'], $entry['stopProcessing']);
             $self->triggers->push($trigger);
         }
