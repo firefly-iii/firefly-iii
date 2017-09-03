@@ -624,6 +624,11 @@ return [
     'perm-delete-many'                           => 'Supprimer de nombreux éléments en une seule fois peut être très problématique. Soyez prudent.',
     'mass_deleted_transactions_success'          => 'Montant des opérations supprimées : :amount.',
     'mass_edited_transactions_success'           => 'Montant des opérations mises à jour : :amount',
+    'opt_group_no_account_type'                  => '(no account type)',
+    'opt_group_defaultAsset'                     => 'Default asset accounts',
+    'opt_group_savingAsset'                      => 'Savings accounts',
+    'opt_group_sharedAsset'                      => 'Shared asset accounts',
+    'opt_group_ccAsset'                          => 'Credit cards',
 
 
     // new user:
