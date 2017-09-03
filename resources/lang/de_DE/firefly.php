@@ -41,7 +41,7 @@ return [
     'new_revenue_account'                        => 'Neuer Kreditor (Geldeingang)',
     'new_budget'                                 => 'Neues Budget',
     'new_bill'                                   => 'Neue Rechnung',
-    'block_account_logout'                       => 'Sie wurden ausgeloggt. Blockierte Benutzerkonten können diese Seite nicht nutzen. Haben Sie eine gültige E-Mailadresse registriert?',
+    'block_account_logout'                       => 'Sie wurden ausgeloggt. Blockierte Benutzerkonten können diese Seite nicht nutzen. Haben Sie sich mit einer gültigen E-Mail Adresse registriert?',
     'flash_success'                              => 'Geschafft!',
     'flash_info'                                 => 'Nachricht',
     'flash_warning'                              => 'Achtung!',
