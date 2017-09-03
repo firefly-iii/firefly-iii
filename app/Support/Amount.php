@@ -130,7 +130,7 @@ class Amount
         $result    = $format->symbol . $space . $formatted;
 
         if (!$precedes) {
-            $result = $space . $formatted . $format->symbol;
+            $result = $formatted . $space . $format->symbol;
         }
 
         if ($coloured === true) {
