@@ -33,7 +33,7 @@ return [
     'roles_column_role'             => 'Znaczenie danych w kolumnie',
     'roles_do_map_value'            => 'Zmapuj te wartości',
     'roles_column'                  => 'Kolumna',
-    'roles_no_example_data'         => 'Brak dostępnych danych przykładowych',
+    'roles_no_example_data'         => 'Brak przykładowych danych',
     'roles_submit'                  => 'Przejdź do kroku 3/3',
     'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
 
