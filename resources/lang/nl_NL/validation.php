@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Je kan je niet registreren met dit e-mailadres.',
     'rule_trigger_value'             => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
     'rule_action_value'              => 'Deze waarde is niet geldig voor de geselecteerde actie.',
-    'invalid_domain'                 => 'Kan niet registereren vanaf dit domein.',
     'file_already_attached'          => 'Het geuploade bestand ":name" is al gelinkt aan deze transactie.',
     'file_attached'                  => 'Bestand met naam ":name" is met succes geuploaded.',
     'file_invalid_mime'              => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',
