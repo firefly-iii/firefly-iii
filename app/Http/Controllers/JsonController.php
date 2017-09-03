@@ -240,6 +240,7 @@ class JsonController extends Controller
                 $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
             }
         }
+        asort($triggers);
 
         $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
 

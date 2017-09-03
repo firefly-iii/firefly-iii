@@ -39,6 +39,7 @@ class Rule extends Twig_Extension
                 $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
             }
             unset($key, $ruleActions);
+            asort($possibleActions);
 
             return $possibleActions;
         }
@@ -75,6 +76,7 @@ class Rule extends Twig_Extension
                 }
             }
             unset($key, $ruleTriggers);
+            asort($possibleTriggers);
 
             return $possibleTriggers;
         }
