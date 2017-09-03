@@ -229,6 +229,7 @@ function updateTriggerInput(selectList) {
     var parent = selectList.parent().parent();
     // the text input we're looking for:
     var input = parent.find('input[name^="rule-trigger-value["]');
+    input.prop('disabled', false);
     switch (selectList.val()) {
         case 'from_account_starts':
         case 'from_account_ends':
@@ -258,6 +259,15 @@ function updateTriggerInput(selectList) {
         case 'description_contains':
         case 'description_is':
             createAutoComplete(input, 'json/transaction-journals/all');
+            break;
+        case 'has_no_category':
+        case 'has_any_category':
+        case 'has_no_budget':
+        case 'has_any_budget':
+        case 'has_no_tag':
+        case 'has_any_tag':
+            input.prop('disabled', true);
+            input.typeahead('destroy');
             break;
         default:
             input.typeahead('destroy');

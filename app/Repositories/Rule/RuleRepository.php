@@ -286,7 +286,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = $values['stopProcessing'];
         $ruleTrigger->trigger_type    = $values['action'];
-        $ruleTrigger->trigger_value   = $values['value'];
+        $ruleTrigger->trigger_value   = is_null($values['value']) ? '' : $values['value'];
         $ruleTrigger->save();
 
         return $ruleTrigger;
