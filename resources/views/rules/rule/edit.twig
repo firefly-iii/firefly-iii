@@ -7,6 +7,7 @@
 {% block content %}
     {{ Form.model(rule, {'class' : 'form-horizontal','id' : 'store','url' : route('rules.update', rule.id)}) }}
     <input type="hidden" name="rule_group_id" value="{{ rule.rule_group_id }}"/>
+    <input type="hidden" name="id" value="{{ rule.id }}"/>
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="box box-primary">
