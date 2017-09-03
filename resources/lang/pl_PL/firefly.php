@@ -461,9 +461,9 @@ return [
     'convert_explanation_withdrawal_deposit'     => 'Jeśli przekonwertujesz tę wypłatę na wpłatę, kwota :amount zostanie wpłacona na konto <a href=":sourceRoute">:sourceName</a> zamiast wypłacona z niego.',
     'convert_explanation_withdrawal_transfer'    => 'Jeśli przekonwertujesz tę wypłatę na transfer, kwota :amount zostanie przelana z konta <a href=":sourceRoute">:sourceName</a> na nowe konto aktywów zamiast płatności dla <a href=":destinationRoute">:destinationName</a>.',
     'convert_explanation_deposit_withdrawal'     => 'Jeśli przekonwertujesz tę wpłatę na wypłatę, kwota :amount zostanie wypłacone z konta <a href=":destinationRoute">:destinationName</a> zamiast wpłacone na nie.',
-    'convert_explanation_deposit_transfer'       => 'If you convert this deposit into a transfer, :amount will be transferred from an asset account of your choice into <a href=":destinationRoute">:destinationName</a>.',
-    'convert_explanation_transfer_withdrawal'    => 'If you convert this transfer into a withdrawal, :amount will go from <a href=":sourceRoute">:sourceName</a> to a new destination as an expense, instead of to <a href=":destinationRoute">:destinationName</a> as a transfer.',
-    'convert_explanation_transfer_deposit'       => 'If you convert this transfer into a deposit, :amount will be deposited into account <a href=":destinationRoute">:destinationName</a> instead of being transferred there.',
+    'convert_explanation_deposit_transfer'       => 'Jeśli przekonwertujesz tę wpłatę na transfer, kwota :amount zostanie przelana z konta aktywów, które wybierzesz na konto <a href=":destinationRoute">:destinationName</a>.',
+    'convert_explanation_transfer_withdrawal'    => 'Jeśli przekonwertujesz ten transfer na wypłatę, kwota :amount zostanie przelana z konta <a href=":sourceRoute">:sourceName</a> na nowe konto docelowe jako wydatek, zamiast dla <a href=":destinationRoute">:destinationName</a> jako transfer.',
+    'convert_explanation_transfer_deposit'       => 'Jeśli przekonwertujesz ten transfer na wpłatę, kwota :amount zostanie zarejestrowana jako wpłata na konto <a href=":destinationRoute">:destinationName</a>, zamiast transferowana na nie.',
     'converted_to_Withdrawal'                    => 'Transakcja została przekonwertowana do wypłaty',
     'converted_to_Deposit'                       => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                      => 'Transakcja została przekonwertowana do transferu',
@@ -484,13 +484,13 @@ return [
     'store_currency'                             => 'Zapisz nową walutę',
     'update_currency'                            => 'Modyfikuj walutę',
     'new_default_currency'                       => ':name jest teraz domyślną walutą.',
-    'cannot_delete_currency'                     => 'Nie można usunąć :name, ponieważ jest on nadal używany.',
+    'cannot_delete_currency'                     => 'Nie można usunąć waluty :name, ponieważ jest ona nadal używana.',
     'deleted_currency'                           => 'Waluta :name została usunięta',
     'created_currency'                           => 'Waluta :name została utworzona',
     'updated_currency'                           => 'Waluta :name została zmodyfikowana',
     'ask_site_owner'                             => 'Poproś :owner aby dodał, usunął lub zmodyfikował waluty.',
     'currencies_intro'                           => 'Firefly III obsługuje różne waluty, które można ustawić i włączyć tutaj.',
-    'make_default_currency'                      => 'ustaw domyślną',
+    'make_default_currency'                      => 'ustaw jako domyślną',
     'default_currency'                           => 'domyślna',
 
     // forms:
@@ -519,7 +519,7 @@ return [
     'budget_period_navigator'                    => 'Period navigator',
 
     // bills:
-    'matching_on'                                => 'Matching on',
+    'matching_on'                                => 'Pasuje do',
     'between_amounts'                            => 'między :low i :high.',
     'repeats'                                    => 'Powtarza się',
     'connected_journals'                         => 'Powiązane transakcje',
