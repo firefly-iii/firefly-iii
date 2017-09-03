@@ -193,7 +193,7 @@ return [
     'due_date'           => 'Termin realizacji',
     'payment_date'       => 'Data płatności',
     'invoice_date'       => 'Data faktury',
-    'internal_reference' => 'Internal reference',
+    'internal_reference' => 'Wewnętrzny numer',
 
     'inward'  => 'Inward description',
     'outward' => 'Outward description',
