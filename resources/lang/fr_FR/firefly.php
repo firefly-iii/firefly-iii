@@ -782,6 +782,9 @@ return [
     'account_role_sharedAsset'                   => 'Compte d\'actif partagé',
     'account_role_savingAsset'                   => 'Compte d’épargne',
     'account_role_ccAsset'                       => 'Carte de crédit',
+    'budget_chart_click'                         => 'Please click on a budget name in the table above to see a chart.',
+    'category_chart_click'                       => 'Please click on a category name in the table above to see a chart.',
+
 
     // charts:
     'chart'                                      => 'Diagramme',
