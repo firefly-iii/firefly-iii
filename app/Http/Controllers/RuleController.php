@@ -523,7 +523,7 @@ class RuleController extends Controller
             $actions[] = view(
                 'rules.partials.action',
                 [
-                    'oldTrigger' => $entry->action_type,
+                    'oldAction'  => $entry->action_type,
                     'oldValue'   => $entry->action_value,
                     'oldChecked' => $entry->stop_processing,
                     'count'      => $count,
