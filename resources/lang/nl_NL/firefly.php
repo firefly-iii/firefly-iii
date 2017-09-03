@@ -624,6 +624,11 @@ return [
     'perm-delete-many'                           => 'Veel items in één keer verwijderen kan zeer storend zijn. Wees voorzichtig.',
     'mass_deleted_transactions_success'          => 'Verwijder :amount transactie(s).',
     'mass_edited_transactions_success'           => 'Wijzig :amount transactie(s)',
+    'opt_group_no_account_type'                  => '(no account type)',
+    'opt_group_defaultAsset'                     => 'Default asset accounts',
+    'opt_group_savingAsset'                      => 'Savings accounts',
+    'opt_group_sharedAsset'                      => 'Shared asset accounts',
+    'opt_group_ccAsset'                          => 'Credit cards',
 
 
     // new user:
