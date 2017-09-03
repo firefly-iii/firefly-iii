@@ -385,6 +385,7 @@ class RuleControllerTest extends TestCase
 
         $data = [
             'rule_group_id'      => 1,
+            'id'                 => 1,
             'title'              => 'Your first default rule',
             'trigger'            => 'store-journal',
             'active'             => 1,
