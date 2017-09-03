@@ -759,7 +759,7 @@ return [
     'income_per_account'                         => 'Dochody wg konta',
     'expense_per_account'                        => 'Wydatki wg konta',
     'expense_per_tag'                            => 'Wydatki wg tagu',
-    'income_per_tag'                             => 'Dochody wg tagów',
+    'income_per_tag'                             => 'Dochody wg tagu',
     'include_expense_not_in_budget'              => 'Uwzględnij wydatki spoza wybranych budżetów',
     'include_expense_not_in_account'             => 'Uwzględnij wydatki spoza wybranych kont',
     'include_expense_not_in_category'            => 'Uwzględnij wydatki spoza wybranych kategorii',
