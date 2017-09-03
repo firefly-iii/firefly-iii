@@ -82,6 +82,14 @@ class HomeController extends Controller
      */
     public function displayError()
     {
+        Log::debug('This is a test message at the DEBUG level.');
+        Log::info('This is a test message at the INFO level.');
+        Log::notice('This is a test message at the NOTICE level.');
+        Log::warning('This is a test message at the WARNING level.');
+        Log::error('This is a test message at the ERROR level.');
+        Log::critical('This is a test message at the CRITICAL level.');
+        Log::alert('This is a test message at the ALERT level.');
+        Log::emergency('This is a test message at the EMERGENCY level.');
         throw new FireflyException('A very simple test error.');
     }
 
