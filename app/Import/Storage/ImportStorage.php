@@ -144,7 +144,10 @@ class ImportStorage
         if ($this->isDoubleTransfer($parameters) || $this->hashAlreadyImported($importJournal->hash)) {
             $this->job->addStepsDone(3);
             // throw error
-            throw new FireflyException('Detected a possible duplicate, skip this one.');
+            $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
+            Log::error($message, $parameters);
+            throw new FireflyException($message);
+
         }
         unset($parameters);
 
