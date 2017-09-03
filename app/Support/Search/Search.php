@@ -107,7 +107,7 @@ class Search implements SearchInterface
         do {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
+            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
             }
