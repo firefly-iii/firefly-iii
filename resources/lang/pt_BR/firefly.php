@@ -624,6 +624,11 @@ return [
     'perm-delete-many'                           => 'Exclusão de muitos itens de uma só vez pode ser muito perturbador. Por favor, seja cauteloso.',
     'mass_deleted_transactions_success'          => 'Excluído :amount de transação(ões).',
     'mass_edited_transactions_success'           => 'Atualizado :amount de transação(ões)',
+    'opt_group_no_account_type'                  => '(no account type)',
+    'opt_group_defaultAsset'                     => 'Default asset accounts',
+    'opt_group_savingAsset'                      => 'Savings accounts',
+    'opt_group_sharedAsset'                      => 'Shared asset accounts',
+    'opt_group_ccAsset'                          => 'Credit cards',
 
 
     // new user:
