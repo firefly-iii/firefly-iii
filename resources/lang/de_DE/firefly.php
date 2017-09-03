@@ -783,6 +783,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'account_role_sharedAsset'                   => 'Shared asset account',
     'account_role_savingAsset'                   => 'Savings account',
     'account_role_ccAsset'                       => 'Kreditkarte',
+    'budget_chart_click'                         => 'Please click on a budget name in the table above to see a chart.',
+    'category_chart_click'                       => 'Please click on a category name in the table above to see a chart.',
+
 
     // charts:
     'chart'                                      => 'Diagram',
