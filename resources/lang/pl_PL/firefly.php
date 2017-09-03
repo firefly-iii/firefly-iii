@@ -782,6 +782,9 @@ return [
     'account_role_sharedAsset'                   => 'Współdzielone konto aktywów',
     'account_role_savingAsset'                   => 'Konto oszczędnościowe',
     'account_role_ccAsset'                       => 'Karta kredytowa',
+    'budget_chart_click'                         => 'Please click on a budget name in the table above to see a chart.',
+    'category_chart_click'                       => 'Please click on a category name in the table above to see a chart.',
+
 
     // charts:
     'chart'                                      => 'Wykres',
