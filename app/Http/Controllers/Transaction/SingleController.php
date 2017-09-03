@@ -144,7 +144,7 @@ class SingleController extends Controller
     {
         $what           = strtolower($what);
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
-        $assetAccounts  = $this->groupedAccountList();
+        $assetAccounts  = $this->groupedActiveAccountList();
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
         $piggies        = ExpandedForm::makeSelectListWithEmpty($piggyBanks);
@@ -413,9 +413,29 @@ class SingleController extends Controller
     /**
      * @return array
      */
-    private function groupedAccountList(): array
+    private function groupedActiveAccountList(): array
     {
         $accounts = $this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $return   = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $type = $account->getMeta('accountRole');
+            if (strlen($type) === 0) {
+                $type = 'no_account_type';
+            }
+            $key                        = strval(trans('firefly.opt_group_' . $type));
+            $return[$key][$account->id] = $account->name;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
+    private function groupedAccountList(): array
+    {
+        $accounts = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $return   = [];
         /** @var Account $account */
         foreach ($accounts as $account) {

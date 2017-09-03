@@ -107,6 +107,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEdit()
     {
@@ -126,6 +127,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditCashDeposit()
     {
@@ -151,6 +153,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditCashWithdrawal()
     {
@@ -176,6 +179,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditRedirect()
     {
@@ -193,6 +197,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditTransferWithForeignAmount()
     {
@@ -221,6 +226,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
      */
     public function testEditWithForeignAmount()
     {
@@ -249,6 +255,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testStoreError()
     {
@@ -277,6 +284,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testStoreSuccess()
     {
