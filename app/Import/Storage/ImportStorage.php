@@ -204,8 +204,9 @@ class ImportStorage
             return false;
         }
 
-        $amount = app('steam')->positive($parameters['amount']);
-        $names  = [$parameters['asset'], $parameters['opposing']];
+        $amount   = app('steam')->positive($parameters['amount']);
+        $names    = [$parameters['asset'], $parameters['opposing']];
+        $transfer = [];
         sort($names);
 
         foreach ($this->transfers as $transfer) {
@@ -222,6 +223,7 @@ class ImportStorage
                 return false;
             }
         }
+        Log::debug('There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]);
 
         return true;
     }
