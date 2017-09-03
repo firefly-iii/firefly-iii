@@ -194,6 +194,12 @@ return [
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
         'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
         'has_attachments'       => 'FireflyIII\Rules\Triggers\HasAttachment',
+        'has_no_category'       => 'FireflyIII\Rules\Triggers\HasNoCategory',
+        'has_any_category'      => 'FireflyIII\Rules\Triggers\HasAnyCategory',
+        'has_no_budget'         => 'FireflyIII\Rules\Triggers\HasNoBudget',
+        'has_any_budget'        => 'FireflyIII\Rules\Triggers\HasAnyBudget',
+        'has_no_tag'            => 'FireflyIII\Rules\Triggers\HasNoTag',
+        'has_any_tag'           => 'FireflyIII\Rules\Triggers\HasAnyTag',
     ],
     'rule-actions'               => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',
