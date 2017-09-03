@@ -624,6 +624,11 @@ return [
     'perm-delete-many'                           => 'Deleting many items in one go can be very disruptive. Please be cautious.',
     'mass_deleted_transactions_success'          => 'Usunięto :amount transakcję(i).',
     'mass_edited_transactions_success'           => 'Zaktualizowano :amount transakcję(i)',
+    'opt_group_no_account_type'                  => '(no account type)',
+    'opt_group_defaultAsset'                     => 'Default asset accounts',
+    'opt_group_savingAsset'                      => 'Savings accounts',
+    'opt_group_sharedAsset'                      => 'Shared asset accounts',
+    'opt_group_ccAsset'                          => 'Credit cards',
 
 
     // new user:
