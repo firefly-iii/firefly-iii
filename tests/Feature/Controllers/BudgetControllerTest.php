@@ -373,7 +373,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('setAvailableBudget');
 
-        $data = ['amount' => '200',];
+        $data = ['amount' => '200','start' => '2017-01-01','end' => '2017-01-31'];
         $this->be($this->user());
         $response = $this->post(route('budgets.income.post'), $data);
         $response->assertStatus(302);
