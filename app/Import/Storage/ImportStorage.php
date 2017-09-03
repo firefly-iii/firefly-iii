@@ -226,7 +226,7 @@ class ImportStorage
                 return false;
             }
         }
-        Log::debug('There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]);
+        Log::error('There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]);
 
         return true;
     }

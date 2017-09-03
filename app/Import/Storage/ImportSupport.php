@@ -303,7 +303,7 @@ trait ImportSupport
                                        ->where('name', 'importHash')
                                        ->first();
         if (!is_null($entry)) {
-            Log::debug(sprintf('A journal with hash %s has already been imported (spoiler: it\'s journal #%d)', $hash, $entry->transaction_journal_id));
+            Log::error(sprintf('A journal with hash %s has already been imported (spoiler: it\'s journal #%d)', $hash, $entry->transaction_journal_id));
 
             return true;
         }
