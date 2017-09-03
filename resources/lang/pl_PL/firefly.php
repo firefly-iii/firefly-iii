@@ -410,10 +410,10 @@ return [
     'secure_pw_check_box'                        => 'Zaznaczając pole, Firefly III wysyła skrót SHA1 Twojego hasła do <a href="https://www.troyhunt.com/introducing-306-million-freely-downloadable-pwned-passwords/">strony internetowej Troy Hunt</a>, aby sprawdzić, czy znajduje się na liście. To powstrzyma Cię przed używaniem niebezpiecznych haseł, co jest zalecane w najnowszej <a href="https://pages.nist.gov/800-63-3/sp800-63b.html">specjalnej publikacji Narodowy Instytut Standaryzacji i Technologii (NIST)</a> na ten temat.',
     'secure_pw_sha1'                             => 'Myślałem, że SHA1 zostało złamane?',
     'secure_pw_hash_speed'                       => 'Tak, ale nie w tym kontekście. Jak można przeczytać na <a href="https://shattered.io/">stronie z wyszczególnieniem sposobu ich złamania SHA1</a>, teraz jest nieco łatwiej znaleźć "kolizję": inny ciąg znaków, który prowadzi do tego samego skrótu SHA1. Teraz trwa to tylko 10 000 lat przy użyciu maszyny z jedną kartą graficzną.',
-    'secure_pw_hash_security'                    => 'This collision would not be equal to your password, nor would it be useful on (a site like) Firefly III. This application does not use SHA1 for password verification. So it is safe to check this box. Your password is hashed and sent over HTTPS.',
-    'secure_pw_should'                           => 'Should I check the box?',
-    'secure_pw_long_password'                    => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
-    'secure_pw_short'                            => 'If you just entered the password you always use: <em>Please yes</em>.',
+    'secure_pw_hash_security'                    => 'Ta kolizja nie byłaby równa Twojemu hasłu ani nie byłaby użyteczna na stronie takiej jak Firefly III. Ta aplikacja nie używa algorytmu SHA1 do weryfikacji hasła. Można więc bezpiecznie zaznaczyć to pole. Twoje hasło jest skracane (mieszane, hashowane) i wysyłane szyfrowanym połączeniem (HTTPS).',
+    'secure_pw_should'                           => 'Czy powinienem zaznaczyć to pole?',
+    'secure_pw_long_password'                    => 'Jeśli wygenerowałeś długie, jednorazowe hasło dla Firefly III, używając pewnego rodzaju generatora haseł: <strong>no</strong>.',
+    'secure_pw_short'                            => 'Jeśli wpisałeś hasło, którego zawsze używasz: <em>tak, proszę</em>.',
 
 
     // attachments
@@ -458,9 +458,9 @@ return [
     'convert_please_set_asset_destination'       => 'Proszę wybierz konto aktywów, do którego będą wychodzić pieniądze.',
     'convert_please_set_expense_destination'     => 'Proszę wybierz konto wydatków, do którego będą wychodzić pieniądze.',
     'convert_please_set_asset_source'            => 'Proszę wybierz konto aktywów, z którego będą przychodzić pieniądze.',
-    'convert_explanation_withdrawal_deposit'     => 'If you convert this withdrawal into a deposit, :amount will be deposited into <a href=":sourceRoute">:sourceName</a> instead of taken from it.',
-    'convert_explanation_withdrawal_transfer'    => 'If you convert this withdrawal into a transfer, :amount will be transferred from <a href=":sourceRoute">:sourceName</a> to a new asset account, instead of being paid to <a href=":destinationRoute">:destinationName</a>.',
-    'convert_explanation_deposit_withdrawal'     => 'If you convert this deposit into a withdrawal, :amount will be removed from <a href=":destinationRoute">:destinationName</a> instead of added to it.',
+    'convert_explanation_withdrawal_deposit'     => 'Jeśli przekonwertujesz tę wypłatę na wpłatę, kwota :amount zostanie wpłacona na konto <a href=":sourceRoute">:sourceName</a> zamiast wypłacona z niego.',
+    'convert_explanation_withdrawal_transfer'    => 'Jeśli przekonwertujesz tę wypłatę na transfer, kwota :amount zostanie przelana z konta <a href=":sourceRoute">:sourceName</a> na nowe konto aktywów zamiast płatności dla <a href=":destinationRoute">:destinationName</a>.',
+    'convert_explanation_deposit_withdrawal'     => 'Jeśli przekonwertujesz tę wpłatę na wypłatę, kwota :amount zostanie wypłacone z konta <a href=":destinationRoute">:destinationName</a> zamiast wpłacone na nie.',
     'convert_explanation_deposit_transfer'       => 'If you convert this deposit into a transfer, :amount will be transferred from an asset account of your choice into <a href=":destinationRoute">:destinationName</a>.',
     'convert_explanation_transfer_withdrawal'    => 'If you convert this transfer into a withdrawal, :amount will go from <a href=":sourceRoute">:sourceName</a> to a new destination as an expense, instead of to <a href=":destinationRoute">:destinationName</a> as a transfer.',
     'convert_explanation_transfer_deposit'       => 'If you convert this transfer into a deposit, :amount will be deposited into account <a href=":destinationRoute">:destinationName</a> instead of being transferred there.',
