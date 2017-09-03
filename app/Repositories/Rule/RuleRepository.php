@@ -57,6 +57,21 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * @param int $ruleId
+     *
+     * @return Rule
+     */
+    public function find(int $ruleId): Rule
+    {
+        $rule = $this->user->rules()->find($ruleId);
+        if (is_null($rule)) {
+            return new Rule;
+        }
+
+        return $rule;
+    }
+
+    /**
      * FIxXME can return null
      *
      * @return RuleGroup
