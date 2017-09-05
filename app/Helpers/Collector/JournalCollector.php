@@ -620,6 +620,8 @@ class JournalCollector implements JournalCollectorInterface
             $this->query->leftJoin('budgets as transaction_journal_budgets', 'transaction_journal_budgets.id', '=', 'budget_transaction_journal.budget_id');
             $this->query->leftJoin('budget_transaction', 'budget_transaction.transaction_id', '=', 'transactions.id');
             $this->query->leftJoin('budgets as transaction_budgets', 'transaction_budgets.id', '=', 'budget_transaction.budget_id');
+            $this->query->whereNull('transaction_journal_budgets.deleted_at');
+            $this->query->whereNull('transaction_budgets.deleted_at');
 
             $this->fields[] = 'budget_transaction_journal.budget_id as transaction_journal_budget_id';
             $this->fields[] = 'transaction_journal_budgets.encrypted as transaction_journal_budget_encrypted';
