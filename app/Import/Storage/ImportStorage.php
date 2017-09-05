@@ -210,24 +210,29 @@ class ImportStorage
         $amount   = app('steam')->positive($parameters['amount']);
         $names    = [$parameters['asset'], $parameters['opposing']];
         $transfer = [];
+        $hit      = false;
         sort($names);
 
         foreach ($this->transfers as $transfer) {
-            if ($parameters['description'] !== $transfer['description']) {
-                return false;
+            if ($parameters['description'] === $transfer['description']) {
+                $hit = true;
             }
-            if ($names !== $transfer['names']) {
-                return false;
+            if ($names === $transfer['names']) {
+                $hit = true;
             }
-            if (bccomp($amount, $transfer['amount']) !== 0) {
-                return false;
+            if (bccomp($amount, $transfer['amount']) === 0) {
+                $hit = true;
             }
-            if ($parameters['date'] !== $transfer['date']) {
-                return false;
+            if ($parameters['date'] === $transfer['date']) {
+                $hit = true;
             }
         }
-        Log::error('There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]);
+        if ($hit === true) {
+            Log::error(
+                'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
+            );
+        }
 
-        return true;
+        return $hit;
     }
 }
