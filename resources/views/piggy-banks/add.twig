@@ -5,24 +5,33 @@
             </button>
             <h4 class="modal-title">{{ trans('firefly.add_money_to_piggy_title', {name: piggyBank.name}) }}</h4>
         </div>
-        <form style="display: inline;" id="add" action="{{ route('piggy-banks.add', piggyBank.id) }}" method="POST">
-            <div class="modal-body">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+        {% if maxAmount > 0 %}
+            <form style="display: inline;" id="add" action="{{ route('piggy-banks.add', piggyBank.id) }}" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-                <p>
-                    {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
-                </p>
+                    <p>
+                        {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
+                    </p>
 
-                <div class="input-group">
-                    <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
-                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}" type="number"/>
+                    <div class="input-group">
+                        <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                        <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}" type="number"/>
+                    </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
+                    <button type="submit" class="btn btn-primary">{{ 'add'|_ }}</button>
+                </div>
+            </form>
+        {% else %}
+            <div class="modal-body">
+                <p class="text-danger">{{ 'no_money_for_piggy'|_ }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
-                <button type="submit" class="btn btn-primary">{{ 'add'|_ }}</button>
             </div>
-        </form>
+        {% endif %}
     </div>
 </div>
 
