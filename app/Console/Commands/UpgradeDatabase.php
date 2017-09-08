@@ -244,6 +244,8 @@ class UpgradeDatabase extends Command
      * For transfers, this is can be a destructive routine since we FORCE them into a currency setting whether they
      * like it or not. Previous routines MUST have set the currency setting for both accounts for this to work.
      *
+     * A transfer always has the
+     *
      * Both source and destination must match the respective currency preference. So FF3 must verify ALL
      * transactions.
      */
@@ -258,6 +260,7 @@ class UpgradeDatabase extends Command
 
         $set->each(
             function (TransactionJournal $transfer) use ($repository) {
+                // select all "source" transactions:
                 /** @var Collection $transactions */
                 $transactions = $transfer->transactions()->where('amount', '<', 0)->get();
                 $transactions->each(
@@ -268,13 +271,13 @@ class UpgradeDatabase extends Command
                 );
 
 
-                /** @var Collection $transactions */
-                $transactions = $transfer->transactions()->where('amount', '>', 0)->get();
-                $transactions->each(
-                    function (Transaction $transaction) {
-                        $this->updateTransactionCurrency($transaction);
-                    }
-                );
+                //                /** @var Collection $transactions */
+                //                $transactions = $transfer->transactions()->where('amount', '>', 0)->get();
+                //                $transactions->each(
+                //                    function (Transaction $transaction) {
+                //                        $this->updateTransactionCurrency($transaction);
+                //                    }
+                //                );
             }
         );
     }
@@ -353,8 +356,10 @@ class UpgradeDatabase extends Command
     }
 
     /**
-     * This method makes sure that the tranaction uses the same currency as the main account does.
+     * This method makes sure that the tranaction uses the same currency as the source account does.
      * If not, the currency is updated to include a reference to its original currency as the "foreign" currency.
+     *
+     * The transaction that is sent to this function MUST be the source transaction (amount negative).
      *
      * @param Transaction $transaction
      */
@@ -364,18 +369,101 @@ class UpgradeDatabase extends Command
         $repository = app(CurrencyRepositoryInterface::class);
         $currency   = $repository->find(intval($transaction->account->getMeta('currency_id')));
 
+        // has no currency ID? Must have, so fill in using account preference:
         if (is_null($transaction->transaction_currency_id)) {
+            $transaction->transaction_currency_id = $currency->id;
+            Log::debug(sprintf('Transaction #%d has no currency setting, now set to %s', $transaction->id, $currency->code));
+            $transaction->save();
+        }
+
+        // does not match the source account (see above)? Can be fixed
+        // when mismatch in transaction and NO foreign amount is set:
+        if ($transaction->transaction_currency_id !== $currency->id && is_null($transaction->foreign_amount)) {
+            Log::debug(
+                sprintf(
+                    'Transaction #%d has a currency setting (#%d) that should be #%d. Amount remains %s, currency is changed.', $transaction->id,
+                    $transaction->transaction_currency_id, $currency->id, $transaction->amount
+                )
+            );
             $transaction->transaction_currency_id = $currency->id;
             $transaction->save();
         }
 
-        // when mismatch in transaction:
-        if ($transaction->transaction_currency_id !== $currency->id) {
-            $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
-            $transaction->foreign_amount          = $transaction->amount;
-            $transaction->transaction_currency_id = $currency->id;
-            $transaction->save();
+        // grab opposing transaction:
+        /** @var TransactionJournal $journal */
+        $journal = $transaction->transactionJournal;
+        /** @var Transaction $opposing */
+        $opposing         = $journal->transactions()->where('amount', '>', 0)->where('identifier', $transaction->identifier)->first();
+        $opposingCurrency = $repository->find(intval($opposing->account->getMeta('currency_id')));
+
+        if (is_null($opposingCurrency->id)) {
+            Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $opposing->account->id, $opposing->account->name));
+
+            return;
         }
+
+        // if the destination account currency is the same, both foreign_amount and foreign_currency_id must be NULL for both transactions:
+        if ($opposingCurrency->id === $currency->id) {
+            // update both transactions to match:
+            $transaction->foreign_amount       = null;
+            $transaction->foreign_currency_id  = null;
+            $opposing->foreign_amount          = null;
+            $opposing->foreign_currency_id     = null;
+            $opposing->transaction_currency_id = $currency->id;
+            $transaction->save();
+            $opposing->save();
+            Log::debug(sprintf('Cleaned up transaction #%d and #%d', $transaction->id, $opposing->id));
+
+            return;
+        }
+        // if destination account currency is different, both transactions must have this currency as foreign currency id.
+        if ($opposingCurrency->id !== $currency->id) {
+            $transaction->foreign_currency_id = $opposingCurrency->id;
+            $opposing->foreign_currency_id    = $opposingCurrency->id;
+            $transaction->save();
+            $opposing->save();
+            Log::debug(sprintf('Verified foreign currency ID of transaction #%d and #%d', $transaction->id, $opposing->id));
+        }
+
+        // if foreign amount of one is null and the other is not, use this to restore:
+        if (is_null($transaction->foreign_amount) && !is_null($opposing->foreign_amount)) {
+            $transaction->foreign_amount = bcmul(strval($opposing->foreign_amount), '-1');
+            $transaction->save();
+            Log::debug(sprintf('Restored foreign amount of transaction (1) #%d to %s', $transaction->id, $transaction->foreign_amount));
+        }
+
+        // if foreign amount of one is null and the other is not, use this to restore (other way around)
+        if (is_null($opposing->foreign_amount) && !is_null($transaction->foreign_amount)) {
+            $opposing->foreign_amount = bcmul(strval($transaction->foreign_amount), '-1');
+            $opposing->save();
+            Log::debug(sprintf('Restored foreign amount of transaction (2) #%d to %s', $opposing->id, $opposing->foreign_amount));
+        }
+
+        // when both are zero, try to grab it from journal:
+        if (is_null($opposing->foreign_amount) && is_null($transaction->foreign_amount)) {
+
+            $foreignAmount = $journal->getMeta('foreign_amount');
+            if (is_null($foreignAmount)) {
+                Log::debug(sprintf('Journal #%d has missing foreign currency data, forced to do 1:1 conversion :(.', $transaction->transaction_journal_id));
+                $transaction->foreign_amount = bcmul(strval($transaction->amount), '-1');
+                $opposing->foreign_amount    = bcmul(strval($opposing->amount), '-1');
+                $transaction->save();
+                $opposing->save();
+
+                return;
+            }
+            $foreignPositive = app('steam')->positive(strval($foreignAmount));
+            Log::debug(
+                sprintf(
+                    'Journal #%d has missing foreign currency info, try to restore from meta-data ("%s").', $transaction->transaction_journal_id, $foreignAmount
+                )
+            );
+            $transaction->foreign_amount = bcmul($foreignPositive, '-1');
+            $opposing->foreign_amount    = $foreignPositive;
+            $transaction->save();
+            $opposing->save();
+        }
+
 
         return;
     }
