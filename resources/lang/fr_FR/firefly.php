@@ -827,6 +827,7 @@ return [
     'add_money_to_piggy_title'                   => 'Ajouter de l’argent à la tirelire ":name"',
     'remove_money_from_piggy_title'              => 'Retirer l’argent de la tirelire ":name"',
     'add'                                        => 'Ajouter',
+    'no_money_for_piggy'                         => 'You have no money to put in this piggy bank.',
 
     'remove'                    => 'Enlever',
     'max_amount_add'            => 'Le montant maximum que vous pouvez ajouter est',
