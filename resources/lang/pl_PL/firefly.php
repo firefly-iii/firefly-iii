@@ -827,7 +827,7 @@ return [
     'add_money_to_piggy_title'                   => 'Dodaj pieniądze do skarbonki ":name"',
     'remove_money_from_piggy_title'              => 'Usuń pieniądze ze skarbonki ":name"',
     'add'                                        => 'Dodaj',
-    'no_money_for_piggy'                         => 'You have no money to put in this piggy bank.',
+    'no_money_for_piggy'                         => 'Nie masz pieniędzy, które mógłbyś umieścić w tej skarbonce.',
 
     'remove'                    => 'Usuń',
     'max_amount_add'            => 'Maksymalną kwotą, którą możesz dodać jest',
