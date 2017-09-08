@@ -827,6 +827,7 @@ return [
     'add_money_to_piggy_title'                   => 'Adicionar dinheiro ao cofrinho ":name"',
     'remove_money_from_piggy_title'              => 'Retire o dinheiro do cofrinho ":name"',
     'add'                                        => 'Adicionar',
+    'no_money_for_piggy'                         => 'You have no money to put in this piggy bank.',
 
     'remove'                    => 'Remover',
     'max_amount_add'            => 'É a quantidade máxima que você pode adicionar é',
