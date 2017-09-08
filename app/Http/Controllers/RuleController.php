@@ -166,10 +166,13 @@ class RuleController extends Controller
      */
     public function edit(Request $request, RuleRepositoryInterface $repository, Rule $rule)
     {
-        $oldTriggers  = $this->getCurrentTriggers($rule);
-        $triggerCount = count($oldTriggers);
-        $oldActions   = $this->getCurrentActions($rule);
-        $actionCount  = count($oldActions);
+        /** @var RuleGroupRepositoryInterface $ruleGroupRepository */
+        $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+        $oldTriggers         = $this->getCurrentTriggers($rule);
+        $triggerCount        = count($oldTriggers);
+        $oldActions          = $this->getCurrentActions($rule);
+        $actionCount         = count($oldActions);
+        $ruleGroups          = ExpandedForm::makeSelectList($ruleGroupRepository->get());
 
         // has old input?
         if ($request->old()) {
@@ -191,7 +194,8 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
+        return view('rules.rule.edit', compact('rule', 'subTitle',
+                                               'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount','ruleGroups'));
     }
 
     /**

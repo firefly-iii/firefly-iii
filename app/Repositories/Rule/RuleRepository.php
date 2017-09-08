@@ -316,6 +316,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:
+        $rule->rule_group_id   = $data['rule_group_id'];
         $rule->active          = $data['active'];
         $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];

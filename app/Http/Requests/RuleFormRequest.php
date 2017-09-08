@@ -39,6 +39,7 @@ class RuleFormRequest extends Request
     {
         return [
             'title'               => $this->string('title'),
+            'rule_group_id'       => $this->integer('rule_group_id'),
             'active'              => $this->boolean('active'),
             'trigger'             => $this->string('trigger'),
             'description'         => $this->string('description'),
