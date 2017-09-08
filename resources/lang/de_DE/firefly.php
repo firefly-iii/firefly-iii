@@ -828,6 +828,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'add_money_to_piggy_title'                   => 'Geld dem Sparschwein ":name" hinzufügen',
     'remove_money_from_piggy_title'              => 'Geld dem Sparschwein ":name" entnehmen',
     'add'                                        => 'Hinzufügen',
+    'no_money_for_piggy'                         => 'You have no money to put in this piggy bank.',
 
     'remove'                    => 'Entfernen',
     'max_amount_add'            => 'Der maximale Betrag, den Sie hinzufügen können ist',
