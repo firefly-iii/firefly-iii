@@ -827,6 +827,7 @@ return [
     'add_money_to_piggy_title'                   => 'Add money to piggy bank ":name"',
     'remove_money_from_piggy_title'              => 'Remove money from piggy bank ":name"',
     'add'                                        => 'Add',
+    'no_money_for_piggy'                         => 'You have no money to put in this piggy bank.',
 
     'remove'                    => 'Remove',
     'max_amount_add'            => 'The maximum amount you can add is',
