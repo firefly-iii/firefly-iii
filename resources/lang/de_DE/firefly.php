@@ -170,8 +170,6 @@ return [
     'export_status_collected_attachments'        => 'Alle Anhänge gesammelt!',
     'export_status_collecting_old_uploads'       => 'Sammeln aller bisherigen Uploads...',
     'export_status_collected_old_uploads'        => 'Alle bisherigen Uploads gesammelt!',
-    'export_status_creating_config_file'         => 'Erstelle eine Konfigurationsdatei...',
-    'export_status_created_config_file'          => 'Konfigurationsdatei erstellt!',
     'export_status_creating_zip_file'            => 'Erstelle eine Zip-Datei...',
     'export_status_created_zip_file'             => 'Zip-Datei erstellt!',
     'export_status_finished'                     => 'Export erfolgreich beendet! Yay!',
@@ -851,9 +849,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'removed_amount_from_piggy' => ':amount von ":name" entfernt',
 
     // tags
-    'regular_tag'               => 'Nur ein normaler Tag.',
-    'balancing_act'             => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-    'advance_payment'           => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
     'delete_tag'                => 'Tag ":tag" entfernen',
     'deleted_tag'               => 'Tag ":tag" entfernt',
     'new_tag'                   => 'Neuen Tag erstellen',
@@ -996,7 +991,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'There are no transactions in this period.',
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',
     'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
     'no_accounts_imperative_asset'          => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
