@@ -55,7 +55,7 @@ class BankController extends Controller
      * @param Request $request
      * @param string  $bank
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|null
      */
     public function postForm(Request $request, string $bank)
     {
