@@ -170,8 +170,6 @@ return [
     'export_status_collected_attachments'        => 'Recolhidos todos os seus anexos!',
     'export_status_collecting_old_uploads'       => 'Recolher todos os seus envios anteriores...',
     'export_status_collected_old_uploads'        => 'Recolhidos todos os seus envios anteriores!',
-    'export_status_creating_config_file'         => 'Criando um arquivo de configuração...',
-    'export_status_created_config_file'          => 'Criado um arquivo de configuração!',
     'export_status_creating_zip_file'            => 'Criando um arquivo zip...',
     'export_status_created_zip_file'             => 'Criado um arquivo zip!',
     'export_status_finished'                     => 'Exportação terminou com sucesso! Yay!',
@@ -850,9 +848,6 @@ return [
     'removed_amount_from_piggy' => 'Removido :amount de ":name"',
 
     // tags
-    'regular_tag'               => 'Apenas uma tag regular.',
-    'balancing_act'             => 'A tag leva no máximo duas transações; um gasto e uma transferência. Eles vão equilibrar um ao outro.',
-    'advance_payment'           => 'A tag aceita uma despesa e qualquer número de depósitos destinados para pagar a despesa original.',
     'delete_tag'                => 'Apagar tag ":tag"',
     'deleted_tag'               => 'Apagar tag ":tag"',
     'new_tag'                   => 'Fazer nova tag',
@@ -995,7 +990,6 @@ return [
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'There are no transactions in this period.',
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',
     'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
     'no_accounts_imperative_asset'          => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
