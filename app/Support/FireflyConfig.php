@@ -100,14 +100,13 @@ class FireflyConfig
             Cache::forget('ff-config-' . $name);
 
             return $item;
-        } else {
-            Log::debug('Exists already ', ['name' => $name]);
-            $config->data = $value;
-            $config->save();
-            Cache::forget('ff-config-' . $name);
-
-            return $config;
         }
+        Log::debug('Exists already ', ['name' => $name]);
+        $config->data = $value;
+        $config->save();
+        Cache::forget('ff-config-' . $name);
+
+        return $config;
 
     }
 

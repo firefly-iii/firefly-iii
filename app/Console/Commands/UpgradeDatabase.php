@@ -251,15 +251,13 @@ class UpgradeDatabase extends Command
      */
     public function updateTransferCurrencies()
     {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
         $set        = TransactionJournal
             ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionType::TRANSFER)
             ->get(['transaction_journals.*']);
 
         $set->each(
-            function (TransactionJournal $transfer) use ($repository) {
+            function (TransactionJournal $transfer) {
                 // select all "source" transactions:
                 /** @var Collection $transactions */
                 $transactions = $transfer->transactions()->where('amount', '<', 0)->get();

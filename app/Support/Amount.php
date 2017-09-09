@@ -137,10 +137,9 @@ class Amount
 
             if ($amount > 0) {
                 return sprintf('<span class="text-success">%s</span>', $result);
-            } else {
-                if ($amount < 0) {
-                    return sprintf('<span class="text-danger">%s</span>', $result);
-                }
+            }
+            if ($amount < 0) {
+                return sprintf('<span class="text-danger">%s</span>', $result);
             }
 
             return sprintf('<span style="color:#999">%s</span>', $result);
@@ -194,14 +193,13 @@ class Amount
         $cache->addProperty('getCurrencySymbol');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
-        } else {
-            $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-            $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
-
-            $cache->store($currency->symbol);
-
-            return $currency->symbol;
         }
+        $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+
+        $cache->store($currency->symbol);
+
+        return $currency->symbol;
     }
 
     /**
