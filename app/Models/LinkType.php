@@ -37,6 +37,9 @@ class LinkType extends Model
             'editable'   => 'boolean',
         ];
 
+    /** @var array */
+    protected $fillable = ['name', 'inward', 'outward', 'editable'];
+
     /**
      * @param $value
      *

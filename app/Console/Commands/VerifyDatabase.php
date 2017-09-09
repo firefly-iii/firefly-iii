@@ -17,6 +17,7 @@ use Crypt;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -98,6 +99,33 @@ class VerifyDatabase extends Command
         // report (and fix) piggy banks
         $this->repairPiggyBanks();
 
+        // create default link types if necessary
+        $this->createLinkTypes();
+
+    }
+
+    /**
+     *
+     */
+    private function createLinkTypes()
+    {
+        $set = [
+            'Relates'       => ['relates to', 'relates to'],
+            'Refund'        => ['(partially) refunds', 'is (partially) refunded by'],
+            'Paid'          => ['(partially) pays for', 'is (partially) paid for by'],
+            'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
+        ];
+        foreach ($set as $name => $values) {
+            $link = LinkType::where('name', $name)->where('outward', $values[0])->where('inward', $values[1])->first();
+            if (is_null($link)) {
+                $link          = new LinkType;
+                $link->name    = $name;
+                $link->outward = $values[0];
+                $link->inward  = $values[1];
+            }
+            $link->editable = false;
+            $link->save();
+        }
     }
 
     /**
