@@ -827,7 +827,7 @@ return [
     'add_money_to_piggy_title'                   => 'Stop geld in spaarpotje ":name"',
     'remove_money_from_piggy_title'              => 'Haal geld uit spaarpotje ":name"',
     'add'                                        => 'Toevoegen',
-    'no_money_for_piggy'                         => 'You have no money to put in this piggy bank.',
+    'no_money_for_piggy'                         => 'Er is geen geld voor dit spaarpotje.',
 
     'remove'                    => 'Verwijderen',
     'max_amount_add'            => 'Hooguit toe te voegen',
