@@ -80,7 +80,7 @@ return [
     'source_account_revenue'      => 'Quellkonto (Ertragskonto)',
     'type'                        => 'Type',
     'convert_Withdrawal'          => 'Ändere zu Abhebung',
-    'convert_Deposit'             => 'Ändere zu Einzahlng',
+    'convert_Deposit'             => 'Ändere zu Einzahlung',
     'convert_Transfer'            => 'Ändere zu Überweisung',
 
 
@@ -152,7 +152,7 @@ return [
     'journal_link_areYouSure'    => 'Bist du sicher, dass du die Verknüpfung zwischen <a href=":source_link">:source</a> und <a href=":destination_link">:destination</a> löschen möchtest?',
     'linkType_areYouSure'        => 'Are you sure you want to delete the link type ":name" (":inward" / ":outward")?',
     'permDeleteWarning'          => 'Das Löschen von Dingen in Firefly ist dauerhaft und kann nicht rückgängig gemacht werden.',
-    'mass_make_selection'        => 'Sie können das Löschen von Elementen verhinden, indem Sie die Checkbox entfernen.',
+    'mass_make_selection'        => 'Sie können das Löschen von Elementen verhindern, indem Sie die Checkbox entfernen.',
     'delete_all_permanently'     => 'Ausgewähltes dauerhaft löschen',
     'update_all_journals'        => 'Diese Transaktionen aktualisieren',
     'also_delete_transactions'   => 'Die einzige Überweisung, die mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Überweisungen, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
@@ -164,7 +164,7 @@ return [
     'category_keep_transactions' => 'Die eine Überweisungen, die mit dieser Kategorie verknüpft ist, wird nicht gelöscht. | Keine der :count Kategorien, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
     'tag_keep_transactions'      => 'Die einzige Überweisung, die mit diesem Tag verknüpft ist, wird nicht gelöscht. | Keiner der :count Tags, die mit dieser Rechnung verknüpft sind, werden gelöscht.',
 
-    'email'                 => 'Email-Addresse',
+    'email'                 => 'E-Mail Adresse',
     'password'              => 'Passwort',
     'password_confirmation' => 'Passwort (nochmal)',
     'blocked'               => 'Ist blockiert?',

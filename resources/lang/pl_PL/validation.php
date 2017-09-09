@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Ze względu na zabezpieczenia nie możesz się zarejestrować używając tego adresu e-mail.',
     'rule_trigger_value'             => 'Ta wartość jest nieprawidłowa dla wybranego wyzwalacza.',
     'rule_action_value'              => 'Ta wartość jest nieprawidłowa dla wybranej akcji.',
-    'invalid_domain'                 => 'Ze względu na zabezpieczenia nie możesz się zarejestrować z tej domeny.',
     'file_already_attached'          => 'Przesłany plik ":name" jest już dołączony do tego obiektu.',
     'file_attached'                  => 'Pomyślnie wgrano plik ":name".',
     'file_invalid_mime'              => 'Plik ":name" jest typu ":mime", który nie jest akceptowany jako nowy plik do przekazania.',

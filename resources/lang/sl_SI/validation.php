@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Iz varnostnih razlogov ne morete ustvariti uporabnika s takim e-poštnim naslovom.',
     'rule_trigger_value'             => 'Ta vrednost je neveljavna za izbrani sprožilec.',
     'rule_action_value'              => 'This value is invalid for the selected action.',
-    'invalid_domain'                 => 'Due to security constraints, you cannot register from this domain.',
     'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'                  => 'Succesfully uploaded file ":name".',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
