@@ -10,6 +10,7 @@
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input type="hidden" name="id" value="{{ journal.id }}"/>
         <input type="hidden" name="what" value="{{ preFilled.what }}"/>
+        <input type="hidden" name="journal_currency_id" value="{{ journal.transaction_currency_id }}"/>
 
         {% if errors.all()|length > 0 %}
             <div class="row">

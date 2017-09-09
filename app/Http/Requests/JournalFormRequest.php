@@ -110,7 +110,7 @@ class JournalFormRequest extends Request
             // foreign currency amounts
             'native_amount'            => 'numeric|more:0',
             'source_amount'            => 'numeric|more:0',
-            'destination_amount'       => 'numeric|more:0',
+            'destination_amount'       => 'numeric',
         ];
 
         // some rules get an upgrade depending on the type of data:
