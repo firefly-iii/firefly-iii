@@ -1,18 +1,5 @@
 <?php
 
-/**
- * cache.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
-declare(strict_types=1);
-
-
-
 return [
 
     /*
@@ -52,36 +39,37 @@ return [
         ],
 
         'database' => [
-            'driver'     => 'database',
-            'table'      => 'cache',
+            'driver' => 'database',
+            'table' => 'cache',
             'connection' => null,
         ],
 
         'file' => [
             'driver' => 'file',
-            'path'   => storage_path('framework/cache'),
+            'path' => storage_path('framework/cache/data'),
         ],
 
         'memcached' => [
-            'driver'        => 'memcached',
+            'driver' => 'memcached',
             'persistent_id' => env('MEMCACHED_PERSISTENT_ID'),
-            'sasl'          => [
+            'sasl' => [
                 env('MEMCACHED_USERNAME'),
                 env('MEMCACHED_PASSWORD'),
             ],
-            'options'       => [
+            'options' => [
+                // Memcached::OPT_CONNECT_TIMEOUT  => 2000,
             ],
-            'servers'       => [
+            'servers' => [
                 [
-                    'host'   => env('MEMCACHED_HOST', '127.0.0.1'),
-                    'port'   => env('MEMCACHED_PORT', 11211),
+                    'host' => env('MEMCACHED_HOST', '127.0.0.1'),
+                    'port' => env('MEMCACHED_PORT', 11211),
                     'weight' => 100,
                 ],
             ],
         ],
 
         'redis' => [
-            'driver'     => 'redis',
+            'driver' => 'redis',
             'connection' => 'default',
         ],
 

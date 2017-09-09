@@ -1,17 +1,5 @@
 <?php
 
-/**
- * services.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
-declare(strict_types=1);
-
-
 return [
 
     /*
@@ -32,7 +20,7 @@ return [
     ],
 
     'ses' => [
-        'key'    => env('SES_KEY'),
+        'key' => env('SES_KEY'),
         'secret' => env('SES_SECRET'),
         'region' => 'us-east-1',
     ],
@@ -42,8 +30,8 @@ return [
     ],
 
     'stripe' => [
-        'model'  => FireflyIII\User::class,
-        'key'    => env('STRIPE_KEY'),
+        'model' => FireflyIII\User::class,
+        'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
 

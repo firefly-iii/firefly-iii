@@ -1,17 +1,5 @@
 <?php
 
-/**
- * queue.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
-declare(strict_types=1);
-
-
 return [
 
     /*
@@ -19,7 +7,7 @@ return [
     | Default Queue Driver
     |--------------------------------------------------------------------------
     |
-    | The Laravel queue API supports a variety of back-ends via an unified
+    | Laravel's queue API supports an assortment of back-ends via a single
     | API, giving you convenient access to each back-end using the same
     | syntax for each one. Here you may set the default queue driver.
     |
@@ -47,32 +35,32 @@ return [
         ],
 
         'database' => [
-            'driver'      => 'database',
-            'table'       => 'jobs',
-            'queue'       => 'default',
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'default',
             'retry_after' => 90,
         ],
 
         'beanstalkd' => [
-            'driver'      => 'beanstalkd',
-            'host'        => 'localhost',
-            'queue'       => 'default',
+            'driver' => 'beanstalkd',
+            'host' => 'localhost',
+            'queue' => 'default',
             'retry_after' => 90,
         ],
 
         'sqs' => [
             'driver' => 'sqs',
-            'key'    => 'your-public-key',
+            'key' => 'your-public-key',
             'secret' => 'your-secret-key',
             'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-            'queue'  => 'your-queue-name',
+            'queue' => 'your-queue-name',
             'region' => 'us-east-1',
         ],
 
         'redis' => [
-            'driver'      => 'redis',
-            'connection'  => 'default',
-            'queue'       => 'default',
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'default',
             'retry_after' => 90,
         ],
 
@@ -91,7 +79,7 @@ return [
 
     'failed' => [
         'database' => env('DB_CONNECTION', 'mysql'),
-        'table'    => 'failed_jobs',
+        'table' => 'failed_jobs',
     ],
 
 ];

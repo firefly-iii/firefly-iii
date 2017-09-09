@@ -1,18 +1,7 @@
 <?php
-/**
- * app.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
-declare(strict_types=1);
 
 return [
-    'name'            => 'Firefly III',
+    'name'            => env('APP_NAME', 'Firefly III'),
     'env'             => env('APP_ENV', 'production'),
     'debug'           => env('APP_DEBUG', false),
     'url'             => env('APP_URL', 'http://localhost'),
@@ -26,8 +15,8 @@ return [
     'providers'       => [
 
         /*
-        * Laravel Framework Service Providers...
-        */
+         * Laravel Framework Service Providers...
+         */
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -46,24 +35,23 @@ return [
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
-        FireflyIII\Providers\FireflySessionProvider::class,
+        Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
 
+        /*
+         * Package Service Providers...
+         */
 
         /*
          * Application Service Providers...
          */
-        FireflyIII\Providers\LogServiceProvider::class,
         FireflyIII\Providers\AppServiceProvider::class,
         FireflyIII\Providers\AuthServiceProvider::class,
         // FireflyIII\Providers\BroadcastServiceProvider::class,
         FireflyIII\Providers\EventServiceProvider::class,
         FireflyIII\Providers\RouteServiceProvider::class,
-        FireflyIII\Providers\FireflyServiceProvider::class,
-
 
         // own stuff:
         //Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
@@ -92,7 +80,8 @@ return [
 
 
     ],
-    'aliases'         => [
+    'aliases' => [
+
         'App'           => Illuminate\Support\Facades\App::class,
         'Artisan'       => Illuminate\Support\Facades\Artisan::class,
         'Auth'          => Illuminate\Support\Facades\Auth::class,
