@@ -210,6 +210,9 @@ class UpgradeDatabase extends Command
                                        ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                        ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                        ->whereIn('account_types.type', [AccountType::DEFAULT, AccountType::ASSET])->first(['transactions.*']);
+                if (is_null($transaction)) {
+                    return;
+                }
                 /** @var Account $account */
                 $account      = $transaction->account;
                 $currency     = $repository->find(intval($account->getMeta('currency_id')));
@@ -251,7 +254,7 @@ class UpgradeDatabase extends Command
      */
     public function updateTransferCurrencies()
     {
-        $set        = TransactionJournal
+        $set = TransactionJournal
             ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionType::TRANSFER)
             ->get(['transaction_journals.*']);
