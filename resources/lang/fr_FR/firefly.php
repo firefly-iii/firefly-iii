@@ -910,6 +910,7 @@ return [
     'comments'                              => 'Commentaires',
     'to_link_not_found'                     => 'If the transaction you want to link to is not listed, simply enter its ID.',
     'invalid_link_data'                     => 'Invalid link type selected. Cannot link transaction.',
+    'invalid_link_selection'                => 'Cannot link these transactions',
     'journals_linked'                       => 'Ces transactions sont liées.',
     'journals_error_linked'                 => 'Ces transactions sont déjà liées.',
     'journal_links'                         => 'Transaction links',
