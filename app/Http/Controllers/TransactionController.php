@@ -17,9 +17,11 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
+use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -27,7 +29,6 @@ use Log;
 use Navigation;
 use Preferences;
 use Response;
-use Steam;
 use View;
 
 /**
@@ -150,23 +151,26 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal     $journal
-     * @param JournalTaskerInterface $tasker
+     * @param TransactionJournal          $journal
+     * @param JournalTaskerInterface      $tasker
+     *
+     * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
-    public function show(TransactionJournal $journal, JournalTaskerInterface $tasker)
+    public function show(TransactionJournal $journal, JournalTaskerInterface $tasker, LinkTypeRepositoryInterface $linkTypeRepository)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
-
+        $linkTypes    = $linkTypeRepository->get();
+        $links        = $linkTypeRepository->getLinks($journal);
         $events       = $tasker->getPiggyBankEvents($journal);
         $transactions = $tasker->getTransactionsOverview($journal);
         $what         = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle     = trans('firefly.' . $what) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions'));
+        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
 
 
     }
@@ -210,41 +214,67 @@ class TransactionController extends Controller
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withOpposingAccount()->setTypes($types);
             $collector->removeFilter(InternalTransferFilter::class);
-            $set      = $collector->getJournals();
-            $sum      = $set->sum('transaction_amount');
-            $journals = $set->count();
+            $journals = $collector->getJournals();
+            $sum      = $journals->sum('transaction_amount');
+
+            // count per currency:
+            $sums     = $this->sumPerCurrency($journals);
             $dateStr  = $end->format('Y-m-d');
             $dateName = Navigation::periodShow($end, $range);
             $array    = [
-                'string'      => $dateStr,
-                'name'        => $dateName,
-                'count'       => $journals,
-                'spent'       => 0,
-                'earned'      => 0,
-                'transferred' => 0,
-                'date'        => clone $end,
+                'string' => $dateStr,
+                'name'   => $dateName,
+                'sum'    => $sum,
+                'sums'   => $sums,
+                'date'   => clone $end,
             ];
             Log::debug(sprintf('What is %s', $what));
-            switch ($what) {
-                case 'withdrawal':
-                    $array['spent'] = $sum;
-                    break;
-                case 'deposit':
-                    $array['earned'] = $sum;
-                    break;
-                case 'transfers':
-                case 'transfer':
-                    $array['transferred'] = Steam::positive($sum);
-                    break;
-
+            if ($journals->count() > 0) {
+                $entries->push($array);
             }
-            $entries->push($array);
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
         Log::debug('End of loop');
         $cache->store($entries);
 
         return $entries;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return array
+     */
+    private function sumPerCurrency(Collection $collection): array
+    {
+        $return = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            $currencyId = $transaction->transaction_currency_id;
+
+            // save currency information:
+            if (!isset($return[$currencyId])) {
+                $currencySymbol      = $transaction->transaction_currency_symbol;
+                $decimalPlaces       = $transaction->transaction_currency_dp;
+                $currencyCode        = $transaction->transaction_currency_code;
+                $return[$currencyId] = [
+                    'currency' => [
+                        'id'     => $currencyId,
+                        'code'   => $currencyCode,
+                        'symbol' => $currencySymbol,
+                        'dp'     => $decimalPlaces,
+                    ],
+                    'sum'      => '0',
+                    'count'    => 0,
+                ];
+            }
+            // save amount:
+            $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $transaction->transaction_amount);
+            $return[$currencyId]['count']++;
+        }
+        asort($return);
+
+        return $return;
     }
 
 }

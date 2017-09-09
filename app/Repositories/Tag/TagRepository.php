@@ -187,6 +187,34 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * Same as sum of tag but substracts income instead of adding it as well.
+     *
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return string
+     */
+    public function resultOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+
+        if (!is_null($start) && !is_null($end)) {
+            $collector->setRange($start, $end);
+        }
+
+        $collector->setAllAssetAccounts()->setTag($tag);
+        $journals = $collector->getJournals();
+        $sum      = '0';
+        foreach ($journals as $journal) {
+            $sum = bcadd($sum, strval($journal->transaction_amount));
+        }
+
+        return strval($sum);
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -253,10 +281,70 @@ class TagRepository implements TagRepositoryInterface
         }
 
         $collector->setAllAssetAccounts()->setTag($tag);
-        $sum = $collector->getJournals()->sum('transaction_amount');
+        $journals = $collector->getJournals();
+        $sum      = '0';
+        foreach ($journals as $journal) {
+            $sum = bcadd($sum, app('steam')->positive(strval($journal->transaction_amount)));
+        }
 
         return strval($sum);
     }
+
+    /**
+     * Generates a tag cloud.
+     *
+     * @param int|null $year
+     *
+     * @return array
+     */
+    public function tagCloud(?int $year): array
+    {
+        $min    = null;
+        $max    = 0;
+        $query  = $this->user->tags();
+        $return = [];
+        Log::debug('Going to build tag-cloud');
+        if (!is_null($year)) {
+            Log::debug(sprintf('Year is not null: %d', $year));
+            $start = $year . '-01-01';
+            $end   = $year . '-12-31';
+            $query->where('date', '>=', $start)->where('date', '<=', $end);
+        }
+        if (is_null($year)) {
+            $query->whereNull('date');
+            Log::debug('Year is NULL');
+        }
+        $tags      = $query->orderBy('id', 'desc')->get();
+        $temporary = [];
+        Log::debug(sprintf('Found %d tags', $tags->count()));
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+
+            $amount      = floatval($this->sumOfTag($tag, null, null));
+            $min         = $amount < $min || is_null($min) ? $amount : $min;
+            $max         = $amount > $max ? $amount : $max;
+            $temporary[] = [
+                'amount' => $amount,
+                'tag'    => $tag,
+            ];
+            Log::debug(sprintf('Now working on tag %s with total amount %s', $tag->tag, $amount));
+            Log::debug(sprintf('Minimum is now %f, maximum is %f', $min, $max));
+        }
+        /** @var array $entry */
+        foreach ($temporary as $entry) {
+            $scale          = $this->cloudScale([12, 20], $entry['amount'], $min, $max);
+            $tagId          = $entry['tag']->id;
+            $return[$tagId] = [
+                'scale' => $scale,
+                'tag'   => $entry['tag'],
+            ];
+        }
+
+        Log::debug('DONE with tagcloud');
+
+        return $return;
+    }
+
 
     /**
      * @param Tag   $tag
@@ -277,4 +365,38 @@ class TagRepository implements TagRepositoryInterface
         return $tag;
     }
 
+    /**
+     * @param array $range
+     * @param float $amount
+     * @param float $min
+     * @param float $max
+     *
+     * @return int
+     */
+    private function cloudScale(array $range, float $amount, float $min, float $max): int
+    {
+        Log::debug(sprintf('Now in cloudScale with %s as amount and %f min, %f max', $amount, $min, $max));
+        $amountDiff = $max - $min;
+        Log::debug(sprintf('AmountDiff is %f', $amountDiff));
+
+        // no difference? Every tag same range:
+        if ($amountDiff === 0.0) {
+            Log::debug(sprintf('AmountDiff is zero, return %d', $range[0]));
+
+            return $range[0];
+        }
+
+        $diff = $range[1] - $range[0];
+        $step = 1;
+        if ($diff != 0) {
+            $step = $amountDiff / $diff;
+        }
+        if ($step == 0) {
+            $step = 1;
+        }
+        $extra = round($amount / $step);
+
+
+        return intval($range[0] + $extra);
+    }
 }

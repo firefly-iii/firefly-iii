@@ -28,6 +28,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
+     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      * @covers \FireflyIII\Http\Controllers\HelpController::__construct
      */
     public function testShow()
@@ -46,6 +47,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
+     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
     public function testShowBackupFromCache()
     {
@@ -74,6 +76,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
+     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
     public function testShowBackupFromGithub()
     {
@@ -102,6 +105,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
+     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
     public function testShowCached()
     {
@@ -118,6 +122,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
+     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
      */
     public function testShowNoRoute()
     {

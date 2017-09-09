@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Converter;
 
+use Log;
+
 /**
  * Class RabobankDebetCredit
  *
@@ -34,31 +36,40 @@ class Amount implements ConverterInterface
      */
     public function convert($value): string
     {
+        Log::debug(sprintf('Start with amount "%s"', $value));
         $len             = strlen($value);
         $decimalPosition = $len - 3;
         $decimal         = null;
 
         if (($len > 2 && $value{$decimalPosition} === '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
             $decimal = '.';
+            Log::debug(sprintf('Decimal character in "%s" seems to be a dot.', $value));
         }
         if ($len > 2 && $value{$decimalPosition} === ',') {
             $decimal = ',';
+            Log::debug(sprintf('Decimal character in "%s" seems to be a comma.', $value));
         }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
         if ($decimal === '.') {
-            $search = [',', ' '];
-            $value  = str_replace($search, '', $value);
+            $search   = [',', ' '];
+            $oldValue = $value;
+            $value    = str_replace($search, '', $value);
+            Log::debug(sprintf('Converted amount from "%s" to "%s".', $oldValue, $value));
         }
         if ($decimal === ',') {
-            $search = ['.', ' '];
-            $value  = str_replace($search, '', $value);
-            $value  = str_replace(',', '.', $value);
+            $search   = ['.', ' '];
+            $oldValue = $value;
+            $value    = str_replace($search, '', $value);
+            $value    = str_replace(',', '.', $value);
+            Log::debug(sprintf('Converted amount from "%s" to "%s".', $oldValue, $value));
         }
         if (is_null($decimal)) {
             // replace all:
-            $search = ['.', ' ', ','];
-            $value  = str_replace($search, '', $value);
+            $search   = ['.', ' ', ','];
+            $oldValue = $value;
+            $value    = str_replace($search, '', $value);
+            Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $oldValue, $value));
         }
 
         return strval(round(floatval($value), 12));

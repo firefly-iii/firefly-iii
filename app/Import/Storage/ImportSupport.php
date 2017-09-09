@@ -214,7 +214,7 @@ trait ImportSupport
      */
     private function getTransactionType(string $amount, Account $account): string
     {
-        $transactionType = '';
+        $transactionType = TransactionType::WITHDRAWAL;
         // amount is negative, it's a withdrawal, opposing is an expense:
         if (bccomp($amount, '0') === -1) {
             $transactionType = TransactionType::WITHDRAWAL;
@@ -296,12 +296,15 @@ trait ImportSupport
      */
     private function hashAlreadyImported(string $hash): bool
     {
-        $json  = json_encode($hash);
+        $json = json_encode($hash);
+        /** @var TransactionJournalMeta $entry */
         $entry = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                        ->where('data', $json)
                                        ->where('name', 'importHash')
                                        ->first();
         if (!is_null($entry)) {
+            Log::error(sprintf('A journal with hash %s has already been imported (spoiler: it\'s journal #%d)', $hash, $entry->transaction_journal_id));
+
             return true;
         }
 

@@ -88,6 +88,7 @@ return [
         FireflyIII\Providers\RuleGroupServiceProvider::class,
         FireflyIII\Providers\SearchServiceProvider::class,
         FireflyIII\Providers\TagServiceProvider::class,
+        FireflyIII\Providers\AdminServiceProvider::class,
 
 
     ],

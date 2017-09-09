@@ -89,7 +89,8 @@ function updateBudgetedAmounts(e) {
         drawBudgetedBar();
 
         // send a post to Firefly to update the amount:
-        $.post('budgets/amount/' + id, {amount: value}).done(function (data) {
+        var newUri = budgetAmountUri.replace("REPLACE", id);
+        $.post(newUri, {amount: value,start: periodStart, end: periodEnd}).done(function (data) {
             // update the link if relevant:
             if (data.repetition > 0) {
                 $('.budget-link[data-id="' + id + '"]').attr('href', 'budgets/show/' + id + '/' + data.repetition);
@@ -120,8 +121,8 @@ $(function () {
     $('.selectPeriod').change(function (e) {
         var sel = $(e.target).val();
         if (sel !== "x") {
-            var newURI = budgetIndexURI.replace("REPLACE", sel);
-            window.location.assign(newURI);
+            var newUri = budgetIndexUri.replace("REPLACE", sel);
+            window.location.assign(newUri);
         }
     });
 
@@ -129,7 +130,7 @@ $(function () {
 
 function updateIncome() {
     "use strict";
-    $('#defaultModal').empty().load('budgets/income', function () {
+    $('#defaultModal').empty().load(updateIncomeUri, function () {
         $('#defaultModal').modal('show');
     });
 

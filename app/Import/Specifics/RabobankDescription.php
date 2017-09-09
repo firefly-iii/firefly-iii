@@ -59,7 +59,8 @@ class RabobankDescription implements SpecificInterface
             );
             $row[6]  = $alternateName;
             $row[10] = '';
-        } else {
+        }
+        if (!(strlen($oppositeAccount) < 1 && strlen($oppositeName) < 1)) {
             Log::debug('Rabobank specific: either opposite account or name are filled.');
         }
 

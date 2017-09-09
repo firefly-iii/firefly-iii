@@ -91,6 +91,13 @@ interface CurrencyRepositoryInterface
     public function get(): Collection;
 
     /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids): Collection;
+
+    /**
      * @param Preference $preference
      *
      * @return TransactionCurrency

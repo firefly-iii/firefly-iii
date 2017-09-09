@@ -141,6 +141,14 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function destinationJournalLinks(): HasMany
+    {
+        return $this->hasMany(TransactionJournalLink::class, 'destination_id');
+    }
+
+    /**
      *
      * @param $value
      *
@@ -370,6 +378,14 @@ class TransactionJournal extends Model
         Preferences::mark();
 
         return $entry;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function sourceJournalLinks(): HasMany
+    {
+        return $this->hasMany(TransactionJournalLink::class, 'source_id');
     }
 
     /**

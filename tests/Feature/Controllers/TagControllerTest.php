@@ -18,7 +18,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 
@@ -102,13 +101,11 @@ class TagControllerTest extends TestCase
     public function testIndex()
     {
         // mock stuff
-        $tag          = factory(Tag::class)->make();
         $repository   = $this->mock(TagRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('count')->andReturn(0);
-        $repository->shouldReceive('getByType')->andReturn(new Collection([$tag]));
-
+        $repository->shouldReceive('tagCloud')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('tags.index'));
@@ -131,6 +128,9 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
+        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
+        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
+
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
 
@@ -162,6 +162,8 @@ class TagControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
+
+        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
@@ -197,6 +199,7 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
         $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
+        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();

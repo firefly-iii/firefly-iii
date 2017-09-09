@@ -109,6 +109,7 @@ function clickCategoryChart(e) {
     "use strict";
     var link = $(e.target);
     var categoryId = link.data('category');
+    $('#category_help').remove();
 
     var URL = 'chart/category/report-period/' + categoryId + '/' + accountIds + '/' + startDate + '/' + endDate;
     var container = 'category_chart';
@@ -120,6 +121,7 @@ function clickBudgetChart(e) {
     "use strict";
     var link = $(e.target);
     var budgetId = link.data('budget');
+    $('#budget_help').remove();
 
     var URL = 'chart/budget/period/' + budgetId + '/' + accountIds + '/' + startDate + '/' + endDate;
     var container = 'budget_chart';

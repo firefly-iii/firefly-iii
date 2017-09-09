@@ -8,7 +8,7 @@
 
 
 
-    <form method="POST" action="{{ route('export.export') }}" accept-charset="UTF-8" class="form-horizontal" id="export">
+    <form method="post" action="{{ route('export.submit') }}" accept-charset="UTF-8" class="form-horizontal" id="export">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input name="job" type="hidden" value="{{ job.key }}">
 
@@ -87,7 +87,9 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input type="submit" name="submit" value="{{ 'do_export'|_ }}" id="do-export-button" class="btn btn-success pull-right"/>
+                        <button type="submit" class="btn pull-right btn-success" id="do-export-button">
+                            {{ 'do_export'|_ }}
+                        </button>
                     </div>
                 </div>
             </div>

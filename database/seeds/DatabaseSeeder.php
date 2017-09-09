@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TransactionCurrencySeeder::class);
         $this->call(TransactionTypeSeeder::class);
         $this->call(PermissionSeeder::class);
+        $this->call(LinkTypeSeeder::class);
 
     }
 }

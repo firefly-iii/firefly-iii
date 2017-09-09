@@ -243,13 +243,12 @@ class RuleControllerTest extends TestCase
     public function testStore()
     {
         // mock stuff
-        $repository     = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
         $repository->shouldReceive('store')->andReturn(new Rule);
+        $repository->shouldReceive('find')->withArgs([0])->andReturn(new Rule)->once();
 
         $this->session(['rules.create.uri' => 'http://localhost']);
         $data = [
@@ -375,16 +374,16 @@ class RuleControllerTest extends TestCase
     public function testUpdate()
     {
         // mock stuff
-        $repository     = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-
+        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $rule         = Rule::find(1);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $ruleGroupRepos->shouldReceive('find')->andReturn(new RuleGroup)->once();
+        $repository->shouldReceive('find')->withArgs([1])->andReturn($rule)->once();
         $repository->shouldReceive('update');
 
         $data = [
             'rule_group_id'      => 1,
+            'id'                 => 1,
             'title'              => 'Your first default rule',
             'trigger'            => 'store-journal',
             'active'             => 1,

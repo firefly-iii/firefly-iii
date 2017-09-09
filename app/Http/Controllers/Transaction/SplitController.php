@@ -18,6 +18,8 @@ use ExpandedForm;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\SplitJournalFormRequest;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -94,12 +96,22 @@ class SplitController extends Controller
 
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $currencies     = $this->currencies->get();
-        $assetAccounts  = ExpandedForm::makeSelectList($this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]));
+        $accountList    = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $assetAccounts  = ExpandedForm::makeSelectList($accountList);
         $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = $this->arrayFromJournal($request, $journal);
         $subTitle       = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon   = 'fa-pencil';
+
+        $accountArray = [];
+        // account array to display currency info:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $accountArray[$account->id]                = $account;
+            $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
+        }
+
 
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
@@ -115,25 +127,24 @@ class SplitController extends Controller
             compact(
                 'subTitleIcon', 'currencies', 'optionalFields',
                 'preFilled', 'subTitle', 'uploadSize', 'assetAccounts',
-                'budgets', 'journal'
+                'budgets', 'journal', 'accountArray', 'previous'
             )
         );
     }
 
 
     /**
-     * @param Request                    $request
+     * @param SplitJournalFormRequest    $request
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
+    public function update(SplitJournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
-
         $data    = $this->arrayFromInput($request);
         $journal = $repository->updateSplitJournal($journal, $data);
         /** @var array $files */
@@ -167,11 +178,11 @@ class SplitController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param SplitJournalFormRequest $request
      *
      * @return array
      */
-    private function arrayFromInput(Request $request): array
+    private function arrayFromInput(SplitJournalFormRequest $request): array
     {
         $array = [
             'journal_description'            => $request->get('journal_description'),
@@ -200,8 +211,8 @@ class SplitController extends Controller
     }
 
     /**
-     * @param Request            $request
-     * @param TransactionJournal $journal
+     * @param SplitJournalFormRequest|Request $request
+     * @param TransactionJournal              $journal
      *
      * @return array
      */
@@ -234,6 +245,8 @@ class SplitController extends Controller
             // transactions.
             'transactions'                   => $this->getTransactionDataFromJournal($journal),
         ];
+        // update transactions array with old request data.
+        $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
 
         return $array;
     }
@@ -282,11 +295,11 @@ class SplitController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param SplitJournalFormRequest|Request $request
      *
      * @return array
      */
-    private function getTransactionDataFromRequest(Request $request): array
+    private function getTransactionDataFromRequest(SplitJournalFormRequest $request): array
     {
         $return       = [];
         $transactions = $request->get('transactions');
@@ -310,6 +323,37 @@ class SplitController extends Controller
         Log::debug(sprintf('Found %d splits in request data.', count($return)));
 
         return $return;
+    }
+
+    /**
+     * @param $array
+     * @param $old
+     *
+     * @return array
+     */
+    private function updateWithPrevious($array, $old): array
+    {
+        if (count($old) === 0 || !isset($old['transactions'])) {
+            return $array;
+        }
+        $old = $old['transactions'];
+        foreach ($old as $index => $row) {
+            if (isset($array[$index])) {
+                $array[$index] = array_merge($array[$index], $row);
+                continue;
+            }
+            // take some info from first transaction, that should at least exist.
+            $array[$index]                                = $row;
+            $array[$index]['transaction_currency_id']     = $array[0]['transaction_currency_id'];
+            $array[$index]['transaction_currency_code']   = $array[0]['transaction_currency_code'];
+            $array[$index]['transaction_currency_symbol'] = $array[0]['transaction_currency_symbol'];
+            $array[$index]['foreign_amount']              = round($array[0]['foreign_destination_amount'] ?? '0', 12);
+            $array[$index]['foreign_currency_id']         = $array[0]['foreign_currency_id'];
+            $array[$index]['foreign_currency_code']       = $array[0]['foreign_currency_code'];
+            $array[$index]['foreign_currency_symbol']     = $array[0]['foreign_currency_symbol'];
+        }
+
+        return $array;
     }
 
 

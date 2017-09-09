@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',
+    'index_intro'                           => 'Bienvenue sur la page index de Firefly III. Veuillez prendre le temps de parcourir l\'introduction pour comprendre comment Firefly III fonctionne.',
     'index_accounts-chart'                  => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
     'index_box_out_holder'                  => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
     'index_help'                            => 'If you ever need help with a page or a form, press this button.',
@@ -44,17 +44,17 @@ return [
     'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
     'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in or multiple categories.',
+    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
     'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
+    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in or multiple tags.',
+    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
     'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per tag.',
+    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses and income per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows you how your expenses and income per budget.',
+    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
+    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
 
     // create transaction
     'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
@@ -70,7 +70,7 @@ return [
     'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
+    'piggy-banks_create_name'                                 => 'Quel est votre objectif ? Un nouveau divan, une caméra, de l\'argent pour les urgences ?',
     'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
 
     // show piggy

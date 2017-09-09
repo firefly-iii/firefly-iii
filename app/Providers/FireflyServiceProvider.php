@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Export\Processor;
+use FireflyIII\Export\ExpandedProcessor;
 use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -138,7 +138,8 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         // other generators
-        $this->app->bind(ProcessorInterface::class, Processor::class);
+        // export:
+        $this->app->bind(ProcessorInterface::class, ExpandedProcessor::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 

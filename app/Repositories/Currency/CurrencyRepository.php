@@ -167,6 +167,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids): Collection
+    {
+        return TransactionCurrency::whereIn('id', $ids)->get();
+    }
+
+    /**
      * @param Preference $preference
      *
      * @return TransactionCurrency

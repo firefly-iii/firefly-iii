@@ -14,21 +14,25 @@
                         <h3 class="box-title">{{ trans('firefly.add_money_to_piggy', {name: piggyBank.name}) }}</h3>
                     </div>
                     <div class="box-body">
+                        {% if maxAmount > 0 %}
+                            <p>
+                                {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
+                            </p>
 
-                        <p>
-                            {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
-                        </p>
-
-                        <div class="input-group">
-                            <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
-                            <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}" type="number"/>
-                        </div>
-                        <p>
-                            &nbsp;
-                        </p>
-                        <button type="submit" class="btn btn-success pull-right">
-                            {{ 'add'|_ }}
-                        </button>
+                            <div class="input-group">
+                                <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                                <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}"
+                                       type="number"/>
+                            </div>
+                            <p>
+                                &nbsp;
+                            </p>
+                            <button type="submit" class="btn btn-success pull-right">
+                                {{ 'add'|_ }}
+                            </button>
+                        {% else %}
+                            <p class="text-danger">{{ 'no_money_for_piggy'|_ }}</p>
+                        {% endif %}
 
 
                     </div>

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 
 /**
  * Class RuleFormRequest
@@ -39,6 +39,7 @@ class RuleFormRequest extends Request
     {
         return [
             'title'               => $this->string('title'),
+            'rule_group_id'       => $this->integer('rule_group_id'),
             'active'              => $this->boolean('active'),
             'trigger'             => $this->string('trigger'),
             'description'         => $this->string('description'),
@@ -57,19 +58,18 @@ class RuleFormRequest extends Request
      */
     public function rules()
     {
-        /** @var RuleGroupRepositoryInterface $repository */
-        $repository    = app(RuleGroupRepositoryInterface::class);
+        /** @var RuleRepositoryInterface $repository */
+        $repository    = app(RuleRepositoryInterface::class);
         $validTriggers = array_keys(config('firefly.rule-triggers'));
         $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some actions require text:
         $contextActions = join(',', config('firefly.rule-actions-text'));
 
-        $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
+        $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
         if (!is_null($repository->find(intval($this->get('id')))->id)) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval($this->get('id'));
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . intval($this->get('id'));
         }
-
         $rules = [
             'title'                => $titleRule,
             'description'          => 'between:1,5000',

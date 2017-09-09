@@ -58,8 +58,12 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
         // get field names for header row:
         $first   = $this->getEntries()->first();
-        $headers = array_keys(get_object_vars($first));
-        $rows[]  = $headers;
+        $headers = [];
+        if (!is_null($first)) {
+            $headers = array_keys(get_object_vars($first));
+        }
+
+        $rows[] = $headers;
 
         /** @var Entry $entry */
         foreach ($this->getEntries() as $entry) {

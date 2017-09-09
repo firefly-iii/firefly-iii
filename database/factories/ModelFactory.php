@@ -210,6 +210,7 @@ $factory->define(
         'id'              => $faker->unique()->numberBetween(1000, 10000),
         'name'            => $faker->words(3, true),
         'account_type_id' => 1,
+        'active'          => true,
     ];
 }
 );

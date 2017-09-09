@@ -107,12 +107,12 @@ class Search implements SearchInterface
         do {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page);
+            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
             }
             $collector->removeFilter(InternalTransferFilter::class);
-            $set   = $collector->getPaginatedJournals()->getCollection();
+            $set = $collector->getPaginatedJournals()->getCollection();
 
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
@@ -236,7 +236,7 @@ class Search implements SearchInterface
             return false;
         }
         foreach ($needle as $what) {
-            if (strpos($haystack, $what) !== false) {
+            if (stripos($haystack, $what) !== false) {
                 return true;
             }
         }

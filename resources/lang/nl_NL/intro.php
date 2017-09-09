@@ -11,111 +11,111 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',
-    'index_accounts-chart'                  => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
-    'index_box_out_holder'                  => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
-    'index_help'                            => 'If you ever need help with a page or a form, press this button.',
-    'index_outro'                           => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
-    'index_sidebar-toggle'                  => 'To create new transactions, accounts or other things, use the menu under this icon.',
+    'index_intro'                           => 'Welkom op de homepage van Firefly III. Neem even de tijd voor deze introductie zodat je Firefly III leert kennen.',
+    'index_accounts-chart'                  => 'Deze grafiek toont het saldo van je betaalrekening(en). Welke rekeningen zichtbaar zijn kan je aangeven bij de instellingen.',
+    'index_box_out_holder'                  => 'Dit vakje en de vakjes er naast geven een snel overzicht van je financiële situatie.',
+    'index_help'                            => 'Als je ooit hulp nodig hebt, klik dan hier.',
+    'index_outro'                           => 'De meeste pagina\'s in Firefly III beginnen met een kleine rondleiding zoals deze. Zoek me op als je vragen of commentaar hebt. Veel plezier!',
+    'index_sidebar-toggle'                  => 'Nieuwe transacties, rekeningen en andere dingen maak je met het menu onder deze knop.',
 
     // create account:
-    'accounts_create_iban'                  => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly.',
-    'accounts_create_asset_currency'        => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
-    'accounts_create_asset_virtual'         => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
+    'accounts_create_iban'                  => 'Geef je rekeningen een geldige IBAN. Dat scheelt met importeren van data.',
+    'accounts_create_asset_opening_balance' => 'Betaalrekeningen kunnen een startsaldo hebben, waarmee het begin van deze rekening in Firefly wordt aangegeven.',
+    'accounts_create_asset_currency'        => 'Firefly III ondersteunt meerdere valuta. Hier stel je de valuta in van je betaalrekening.',
+    'accounts_create_asset_virtual'         => 'Soms is het handig om je betaalrekening een virtueel saldo te geven: een extra bedrag dat altijd bij het daadwerkelijke saldo wordt opgeteld.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly can tell you if you have budgeted all available money.',
-    'budgets_index_see_expenses_bar'        => 'Spending money will slowly fill this bar.',
-    'budgets_index_navigate_periods'        => 'Navigate through periods to easily set budgets ahead of time.',
-    'budgets_index_new_budget'              => 'Create new budgets as you see fit.',
-    'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
+    'budgets_index_intro'                   => 'Budgetten worden gebruikt om je financiën te beheren en vormen een van de kernfuncties van Firefly III.',
+    'budgets_index_set_budget'              => 'Stel je totale budget voor elke periode in, zodat Firefly je kan vertellen of je alle beschikbare geld hebt gebudgetteerd.',
+    'budgets_index_see_expenses_bar'        => 'Het besteden van geld zal deze balk langzaam vullen.',
+    'budgets_index_navigate_periods'        => 'Navigeer door periodes heen om je budget vooraf te bepalen.',
+    'budgets_index_new_budget'              => 'Maak nieuwe budgetten naar wens.',
+    'budgets_index_list_of_budgets'         => 'Gebruik deze tabel om de bedragen voor elk budget vast te stellen en te zien hoe je er voor staat.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Use these reports to get detailed insights in your finances.',
-    'reports_index_inputReportType'         => 'Pick a report type. Check out the help pages to see what each report shows you.',
-    'reports_index_inputAccountsSelect'     => 'You can exclude or include asset accounts as you see fit.',
-    'reports_index_inputDateRange'          => 'The selected date range is entirely up to you: from one day to 10 years.',
-    'reports_index_extra-options-box'       => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
+    'reports_index_intro'                   => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',
+    'reports_index_inputReportType'         => 'Kies een rapporttype. Bekijk de helppagina\'s om te zien wat elk rapport laat zien.',
+    'reports_index_inputAccountsSelect'     => 'Je kunt naar keuze betaalrekeningen meenemen (of niet).',
+    'reports_index_inputDateRange'          => 'Kies zelf een datumbereik: van een dag tot tien jaar.',
+    'reports_index_extra-options-box'       => 'Sommige rapporten bieden extra filters en opties. Kies een rapporttype en kijk of hier iets verandert.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
-    'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
-    'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
+    'reports_report_default_intro'          => 'Dit rapport geeft je een snel en uitgebreid overzicht van je financiën. Laat het me weten als je hier dingen mist!',
+    'reports_report_audit_intro'            => 'Dit rapport geeft je gedetailleerde inzichten in je betaalrekeningen.',
+    'reports_report_audit_optionsBox'       => 'Gebruik deze vinkjes om voor jou interessante kolommen te laten zien of te verbergen.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in or multiple categories.',
-    'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
+    'reports_report_category_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere categorieën.',
+    'reports_report_category_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per categorie of per rekening.',
+    'reports_report_category_incomeAndExpensesChart' => 'Deze grafiek toont je uitgaven en inkomsten per categorie.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in or multiple tags.',
-    'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per tag.',
+    'reports_report_tag_intro'                  => 'Dit rapport geeft je inzicht in één of meerdere tags.',
+    'reports_report_tag_pieCharts'              => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per tag, rekening, categorie of budget.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Deze grafiek toont je uitgaven en inkomsten per tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses and income per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows you how your expenses and income per budget.',
+    'reports_report_budget_intro'                             => 'Dit rapport geeft je inzicht in één of meerdere budgetten.',
+    'reports_report_budget_pieCharts'                         => 'Deze grafieken geven je inzicht in de uitgaven en inkomsten per budget of per rekening.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Deze grafiek toont je uitgaven per budget.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
-    'transactions_create_ffInput_category'                    => 'You can freely type in this field. Previously created categories will be suggested.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Select a piggy bank and link this transfer to your savings.',
+    'transactions_create_switch_box'                          => 'Gebruik deze knoppen om snel van transactietype te wisselen.',
+    'transactions_create_ffInput_category'                    => 'Je kan in dit veld vrij typen. Eerder gemaakte categorieën komen als suggestie naar boven.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Link je uitgave aan een budget voor een beter financieel overzicht.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Gebruik deze dropdown als je uitgave in een andere valuta is.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Gebruik deze dropdown als je inkomsten in een andere valuta zijn.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Selecteer een spaarpotje en link deze overschrijving aan je spaargeld.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
-    'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
-    'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+    'piggy-banks_index_saved'                                 => 'Dit veld laat zien hoeveel geld er in elk spaarpotje zit.',
+    'piggy-banks_index_button'                                => 'Naast deze balk zitten twee knoppen (+ en -) om geld aan je spaarpotje toe te voegen, of er uit te halen.',
+    'piggy-banks_index_accountStatus'                         => 'Voor elke betaalrekening met minstens één spaarpotje zie je hier de status.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
-    'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
+    'piggy-banks_create_name'                                 => 'Wat is je doel? Een nieuwe zithoek, een camera of geld voor noodgevallen?',
+    'piggy-banks_create_date'                                 => 'Je kan een doeldatum of een deadline voor je spaarpot instellen.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
-    'piggy-banks_show_piggyDetails'                           => 'Some details about your piggy bank',
-    'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
+    'piggy-banks_show_piggyChart'                             => 'Deze grafiek toont de geschiedenis van dit spaarpotje.',
+    'piggy-banks_show_piggyDetails'                           => 'Enkele details over je spaarpotje',
+    'piggy-banks_show_piggyEvents'                            => 'Eventuele stortingen (van en naar) worden hier ook vermeld.',
 
     // bill index
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_paid_in_period'                              => 'Dit veld geeft aan wanneer het contract het laatst is betaald.',
+    'bills_index_expected_in_period'                          => 'Dit veld geeft aan voor elk contract of en wanneer je hem weer moet betalen.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'Deze tabel bevat wat algemene informatie over dit contract.',
+    'bills_show_billButtons'                                  => 'Gebruik deze knop om oude transacties opnieuw te scannen, zodat ze aan dit contract worden gekoppeld.',
+    'bills_show_billChart'                                    => 'Deze grafiek toont de transacties gekoppeld aan dit contract.',
 
     // create bill
-    'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
-    'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_name'                                       => 'Gebruik een beschrijvende naam zoals "huur" of "zorgverzekering".',
+    'bills_create_match'                                      => 'Om transacties te koppelen gebruik je termen uit de transacties of de bijbehorende crediteur. Alle termen moeten overeen komen.',
+    'bills_create_amount_min_holder'                          => 'Stel ook een minimum- en maximumbedrag in.',
+    'bills_create_repeat_freq_holder'                         => 'De meeste contracten herhalen maandelijks, maar dat kan je eventueel veranderen.',
+    'bills_create_skip_holder'                                => 'Als een contract elke twee weken herhaalt, zet je het "skip"-veld op 1 om elke andere week over te slaan.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
-    'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
-    'rules_index_new_rule'                                    => 'Create as many rules as you like.',
-    'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
-    'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
-    'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
-    'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
+    'rules_index_intro'                                       => 'In Firefly III kan je regels maken die automagisch op transacties worden toegepast.',
+    'rules_index_new_rule_group'                              => 'Je kan regels combineren in groepen voor makkelijker beheer.',
+    'rules_index_new_rule'                                    => 'Maak zoveel regels als je wilt.',
+    'rules_index_prio_buttons'                                => 'Zet ze in elke willekeurige volgorde.',
+    'rules_index_test_buttons'                                => 'Je kan je regels testen of toepassen op bestaande transacties.',
+    'rules_index_rule-triggers'                               => 'Regels hebben "triggers" en "acties" die je kan sorteren met drag-en-drop.',
+    'rules_index_outro'                                       => 'Check ook de helppagina\'s met het (?)-icoontje rechtsboven!',
 
     // create rule:
-    'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
-    'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
-    'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
-    'rules_create_actions'                                    => 'Set as many actions as you like.',
+    'rules_create_mandatory'                                  => 'Kies een beschrijvende titel en wanneer de regel af moet gaan.',
+    'rules_create_ruletriggerholder'                          => 'Voeg zoveel triggers toe als je wilt, maar denk er aan dat ALLE triggers moeten matchen voor de acties worden uitgevoerd.',
+    'rules_create_test_rule_triggers'                         => 'Gebruik deze knop om te zien welke bestaande transacties overeen zouden komen.',
+    'rules_create_actions'                                    => 'Stel zoveel acties in als je wilt.',
 
     // preferences
-    'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
+    'preferences_index_tabs'                                  => 'Meer opties zijn beschikbaar achter deze tabbladen.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
-    'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
+    'currencies_index_intro'                                  => 'Firefly III ondersteunt meerdere valuta, die je op deze pagina kunt wijzigen.',
+    'currencies_index_default'                                => 'Firefly III heeft één standaardvaluta. Je kan natuurlijk altijd wisselen met deze knoppen.',
 
     // create currency
-    'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
+    'currencies_create_code'                                  => 'Deze code moet ISO-compatibel zijn (Google die code voor je nieuwe valuta).',
 ];

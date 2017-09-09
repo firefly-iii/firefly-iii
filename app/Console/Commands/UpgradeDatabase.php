@@ -20,22 +20,21 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Console\Command;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Schema;
-use Steam;
 
 /**
  * Class UpgradeDatabase
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it just touches a lot of things.
  *
  * @package FireflyIII\Console\Commands
@@ -71,76 +70,26 @@ class UpgradeDatabase extends Command
     {
         $this->setTransactionIdentifier();
         $this->migrateRepetitions();
-        $this->repairPiggyBanks();
         $this->updateAccountCurrencies();
-        $this->updateJournalCurrencies();
-        $this->currencyInfoToTransactions();
-        $this->verifyCurrencyInfo();
+        $this->line('Updating currency information..');
+        $this->updateTransferCurrencies();
+        $this->updateOtherCurrencies();
         $this->info('Firefly III database is up to date.');
+
+        return;
+
+
     }
 
     /**
-     * Moves the currency id info to the transaction instead of the journal.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // cannot be helped.
+     * Migrate budget repetitions to new format where the end date is in the budget limit as well,
+     * making the limit_repetition table obsolete.
      */
-    private function currencyInfoToTransactions()
+    public function migrateRepetitions(): void
     {
-        $count = 0;
-        $set   = TransactionJournal::with('transactions')->get();
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                if (is_null($transaction->transaction_currency_id)) {
-                    $transaction->transaction_currency_id = $journal->transaction_currency_id;
-                    $transaction->save();
-                    $count++;
-                }
-            }
-
-            // read and use the foreign amounts when present.
-            if ($journal->hasMeta('foreign_amount')) {
-                $amount = Steam::positive($journal->getMeta('foreign_amount'));
-
-                // update both transactions:
-                foreach ($journal->transactions as $transaction) {
-                    $transaction->foreign_amount = $amount;
-                    if (bccomp($transaction->amount, '0') === -1) {
-                        // update with negative amount:
-                        $transaction->foreign_amount = bcmul($amount, '-1');
-                    }
-                    // set foreign currency id:
-                    $transaction->foreign_currency_id = intval($journal->getMeta('foreign_currency_id'));
-                    $transaction->save();
-                }
-                $journal->deleteMeta('foreign_amount');
-                $journal->deleteMeta('foreign_currency_id');
-            }
-
-        }
-
-        $this->line(sprintf('Updated currency information for %d transactions', $count));
-    }
-
-    /**
-     *  Migrate budget repetitions to new format.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
-     */
-    private function migrateRepetitions()
-    {
-        if (!Schema::hasTable('budget_limits')) {
-            return;
-        }
-        // get all budget limits with end_date NULL
         $set = BudgetLimit::whereNull('end_date')->get();
-        if ($set->count() > 0) {
-            $this->line(sprintf('Found %d budget limit(s) to update', $set->count()));
-        }
         /** @var BudgetLimit $budgetLimit */
         foreach ($set as $budgetLimit) {
-            // get limit repetition (should be just one):
             /** @var LimitRepetition $repetition */
             $repetition = $budgetLimit->limitrepetitions()->first();
             if (!is_null($repetition)) {
@@ -150,59 +99,30 @@ class UpgradeDatabase extends Command
                 $repetition->delete();
             }
         }
+
+        return;
     }
 
     /**
-     * Make sure there are only transfers linked to piggy bank events.
+     * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
+     * to easier to match to their counterpart. When a journal is split, it has two or three transactions: -3, -4 and -5 for example.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // cannot be helped.
+     * In the database this is reflected as 6 transactions: -3/+3, -4/+4, -5/+5.
+     *
+     * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more often than you would
+     * think. So each set gets a number (1,2,3) to keep them apart.
      */
-    private function repairPiggyBanks()
-    {
-        // if table does not exist, return false
-        if (!Schema::hasTable('piggy_bank_events')) {
-            return;
-        }
-
-        $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
-        /** @var PiggyBankEvent $event */
-        foreach ($set as $event) {
-
-            if (is_null($event->transaction_journal_id)) {
-                continue;
-            }
-            /** @var TransactionJournal $journal */
-            $journal = $event->transactionJournal()->first();
-            if (is_null($journal)) {
-                continue;
-            }
-
-            $type = $journal->transactionType->type;
-            if ($type !== TransactionType::TRANSFER) {
-                $event->transaction_journal_id = null;
-                $event->save();
-                $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
-            }
-        }
-    }
-
-    /**
-     * This is strangely complex, because the HAVING modifier is a no-no. And subqueries in Laravel are weird.
-     */
-    private function setTransactionIdentifier()
+    public function setTransactionIdentifier(): void
     {
         // if table does not exist, return false
         if (!Schema::hasTable('transaction_journals')) {
             return;
         }
-
-
-        $subQuery = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                      ->whereNull('transaction_journals.deleted_at')
-                                      ->whereNull('transactions.deleted_at')
-                                      ->groupBy(['transaction_journals.id'])
-                                      ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
-
+        $subQuery   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                        ->whereNull('transaction_journals.deleted_at')
+                                        ->whereNull('transactions.deleted_at')
+                                        ->groupBy(['transaction_journals.id'])
+                                        ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
         $result     = DB::table(DB::raw('(' . $subQuery->toSql() . ') AS derived'))
                         ->mergeBindings($subQuery->getQuery())
                         ->where('t_count', '>', 2)
@@ -210,55 +130,172 @@ class UpgradeDatabase extends Command
         $journalIds = array_unique($result->pluck('id')->toArray());
 
         foreach ($journalIds as $journalId) {
-            $this->updateJournal(intval($journalId));
+            $this->updateJournalidentifiers(intval($journalId));
         }
+
+        return;
     }
 
     /**
-     * Make sure all accounts have proper currency info.
+     * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      */
-    private function updateAccountCurrencies()
+    public function updateAccountCurrencies(): void
     {
         $accounts = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                            ->whereIn('account_types.type', [AccountType::DEFAULT, AccountType::ASSET])->get(['accounts.*']);
 
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            // get users preference, fall back to system pref.
-            $defaultCurrencyCode = Preferences::getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
-            $defaultCurrency     = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
-            $accountCurrency     = intval($account->getMeta('currency_id'));
-            $openingBalance      = $account->getOpeningBalance();
-            $obCurrency          = intval($openingBalance->transaction_currency_id);
+        $accounts->each(
+            function (Account $account) {
+                // get users preference, fall back to system pref.
+                $defaultCurrencyCode = Preferences::getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+                $defaultCurrency     = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
+                $accountCurrency     = intval($account->getMeta('currency_id'));
+                $openingBalance      = $account->getOpeningBalance();
+                $obCurrency          = intval($openingBalance->transaction_currency_id);
 
-            // both 0? set to default currency:
-            if ($accountCurrency === 0 && $obCurrency === 0) {
-                AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $defaultCurrency->id]);
-                $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
-                continue;
+                // both 0? set to default currency:
+                if ($accountCurrency === 0 && $obCurrency === 0) {
+                    AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $defaultCurrency->id]);
+                    $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
+
+                    return true;
+                }
+
+                // account is set to 0, opening balance is not?
+                if ($accountCurrency === 0 && $obCurrency > 0) {
+                    AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
+                    $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
+
+                    return true;
+                }
+
+                // do not match and opening balance id is not null.
+                if ($accountCurrency !== $obCurrency && $openingBalance->id > 0) {
+                    // update opening balance:
+                    $openingBalance->transaction_currency_id = $accountCurrency;
+                    $openingBalance->save();
+                    $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
+
+                    return true;
+                }
+
+                return true;
             }
+        );
 
-            // account is set to 0, opening balance is not?
-            if ($accountCurrency === 0 && $obCurrency > 0) {
-                AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
-                $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
-                continue;
+        return;
+    }
+
+    /**
+     * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
+     * the accounts they are linked to.
+     *
+     * Both source and destination must match the respective currency preference of the related asset account.
+     * So FF3 must verify all transactions.
+     */
+    public function updateOtherCurrencies(): void
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $set        = TransactionJournal
+            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->whereIn('transaction_types.type', [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE])
+            ->get(['transaction_journals.*']);
+
+        $set->each(
+            function (TransactionJournal $journal) use ($repository) {
+                // get the transaction with the asset account in it:
+                /** @var Transaction $transaction */
+                $transaction = $journal->transactions()
+                                       ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                       ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                       ->whereIn('account_types.type', [AccountType::DEFAULT, AccountType::ASSET])->first(['transactions.*']);
+                /** @var Account $account */
+                $account      = $transaction->account;
+                $currency     = $repository->find(intval($account->getMeta('currency_id')));
+                $transactions = $journal->transactions()->get();
+                $transactions->each(
+                    function (Transaction $transaction) use ($currency) {
+                        if (is_null($transaction->transaction_currency_id)) {
+                            $transaction->transaction_currency_id = $currency->id;
+                            $transaction->save();
+                        }
+
+                        // when mismatch in transaction:
+                        if ($transaction->transaction_currency_id !== $currency->id) {
+                            $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
+                            $transaction->foreign_amount          = $transaction->amount;
+                            $transaction->transaction_currency_id = $currency->id;
+                            $transaction->save();
+                        }
+                    }
+                );
+                // also update the journal, of course:
+                $journal->transaction_currency_id = $currency->id;
+                $journal->save();
             }
+        );
 
-            // do not match:
-            if ($accountCurrency !== $obCurrency) {
-                // update opening balance:
-                $openingBalance->transaction_currency_id = $accountCurrency;
-                $openingBalance->save();
-                $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
-                continue;
+        return;
+    }
+
+    /**
+     * This routine verifies that transfers have the correct currency settings for the accounts they are linked to.
+     * For transfers, this is can be a destructive routine since we FORCE them into a currency setting whether they
+     * like it or not. Previous routines MUST have set the currency setting for both accounts for this to work.
+     *
+     * A transfer always has the
+     *
+     * Both source and destination must match the respective currency preference. So FF3 must verify ALL
+     * transactions.
+     */
+    public function updateTransferCurrencies()
+    {
+        $set        = TransactionJournal
+            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->where('transaction_types.type', TransactionType::TRANSFER)
+            ->get(['transaction_journals.*']);
+
+        $set->each(
+            function (TransactionJournal $transfer) {
+                // select all "source" transactions:
+                /** @var Collection $transactions */
+                $transactions = $transfer->transactions()->where('amount', '<', 0)->get();
+                $transactions->each(
+                    function (Transaction $transaction) {
+                        $this->updateTransactionCurrency($transaction);
+                        $this->updateJournalCurrency($transaction);
+                    }
+                );
             }
+        );
+    }
 
-            // opening balance 0, account not zero? just continue:
-            // both are equal, just continue:
 
+    /**
+     * This method makes sure that the transaction journal uses the currency given in the transaction.
+     *
+     * @param Transaction $transaction
+     */
+    private function updateJournalCurrency(Transaction $transaction): void
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $currency   = $repository->find(intval($transaction->account->getMeta('currency_id')));
+        $journal    = $transaction->transactionJournal;
+
+        if (!(intval($currency->id) === intval($journal->transaction_currency_id))) {
+            $this->line(
+                sprintf(
+                    'Transfer #%d ("%s") has been updated to use %s instead of %s.', $journal->id, $journal->description, $currency->code,
+                    $journal->transactionCurrency->code
+                )
+            );
+            $journal->transaction_currency_id = $currency->id;
+            $journal->save();
         }
 
+        return;
     }
 
     /**
@@ -267,7 +304,7 @@ class UpgradeDatabase extends Command
      *
      * @param int $journalId
      */
-    private function updateJournal(int $journalId)
+    private function updateJournalidentifiers(int $journalId): void
     {
         $identifier   = 0;
         $processed    = [];
@@ -295,121 +332,128 @@ class UpgradeDatabase extends Command
             if (!is_null($opposing)) {
                 // give both a new identifier:
                 $transaction->identifier = $identifier;
+                $opposing->identifier    = $identifier;
                 $transaction->save();
-                $opposing->identifier = $identifier;
                 $opposing->save();
                 $processed[] = $transaction->id;
                 $processed[] = $opposing->id;
             }
             $identifier++;
         }
+
+        return;
     }
 
     /**
-     * Makes sure that withdrawals, deposits and transfers have
-     * a currency setting matching their respective accounts
-     */
-    private function updateJournalCurrencies()
-    {
-        $types        = [
-            TransactionType::WITHDRAWAL => '<',
-            TransactionType::DEPOSIT    => '>',
-        ];
-        $repository   = app(CurrencyRepositoryInterface::class);
-        $notification = '%s #%d uses %s but should use %s. It has been updated. Please verify this in Firefly III.';
-        $transfer     = 'Transfer #%d has been updated to use the correct currencies. Please verify this in Firefly III.';
-        $driver       = DB::connection()->getDriverName();
-        $pgsql        = ['pgsql', 'postgresql'];
-
-        foreach ($types as $type => $operator) {
-            $query = TransactionJournal
-                ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')->leftJoin(
-                    'transactions', function (JoinClause $join) use ($operator) {
-                    $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', $operator, '0');
-                }
-                )
-                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                ->where('transaction_types.type', $type)
-                ->where('account_meta.name', 'currency_id');
-            if (in_array($driver, $pgsql)) {
-                $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('cast(account_meta.data as int)'));
-            }
-            if (!in_array($driver, $pgsql)) {
-                $query->where('transaction_journals.transaction_currency_id', '!=', DB::raw('account_meta.data'));
-            }
-
-            $set = $query->get(['transaction_journals.*', 'account_meta.data as expected_currency_id', 'transactions.amount as transaction_amount']);
-            /** @var TransactionJournal $journal */
-            foreach ($set as $journal) {
-                $expectedCurrency = $repository->find(intval($journal->expected_currency_id));
-                $line             = sprintf($notification, $type, $journal->id, $journal->transactionCurrency->code, $expectedCurrency->code);
-
-                $journal->setMeta('foreign_amount', $journal->transaction_amount);
-                $journal->setMeta('foreign_currency_id', $journal->transaction_currency_id);
-                $journal->transaction_currency_id = $expectedCurrency->id;
-                $journal->save();
-                $this->line($line);
-            }
-        }
-        /*
-         * For transfers it's slightly different. Both source and destination
-         * must match the respective currency preference. So we must verify ALL
-         * transactions.
-         */
-        $set = TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->where('transaction_types.type', TransactionType::TRANSFER)
-            ->get(['transaction_journals.*']);
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $updated = false;
-            /** @var Transaction $sourceTransaction */
-            $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-            $sourceCurrency    = $repository->find(intval($sourceTransaction->account->getMeta('currency_id')));
-
-            if ($sourceCurrency->id !== $journal->transaction_currency_id) {
-                $updated                          = true;
-                $journal->transaction_currency_id = $sourceCurrency->id;
-                $journal->save();
-            }
-
-            // destination
-            $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $destinationCurrency    = $repository->find(intval($destinationTransaction->account->getMeta('currency_id')));
-
-            if ($destinationCurrency->id !== $journal->transaction_currency_id) {
-                $updated = true;
-                $journal->deleteMeta('foreign_amount');
-                $journal->deleteMeta('foreign_currency_id');
-                $journal->setMeta('foreign_amount', $destinationTransaction->amount);
-                $journal->setMeta('foreign_currency_id', $destinationCurrency->id);
-            }
-            if ($updated) {
-                $line = sprintf($transfer, $journal->id);
-                $this->line($line);
-            }
-        }
-    }
-
-    /**
+     * This method makes sure that the tranaction uses the same currency as the source account does.
+     * If not, the currency is updated to include a reference to its original currency as the "foreign" currency.
      *
+     * The transaction that is sent to this function MUST be the source transaction (amount negative).
+     *
+     * @param Transaction $transaction
      */
-    private function verifyCurrencyInfo()
+    private function updateTransactionCurrency(Transaction $transaction): void
     {
-        $count        = 0;
-        $transactions = Transaction::get();
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $currencyId = intval($transaction->transaction_currency_id);
-            $foreignId  = intval($transaction->foreign_currency_id);
-            if ($currencyId === $foreignId) {
-                $transaction->foreign_currency_id = null;
-                $transaction->foreign_amount      = null;
-                $transaction->save();
-                $count++;
-            }
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $currency   = $repository->find(intval($transaction->account->getMeta('currency_id')));
+
+        // has no currency ID? Must have, so fill in using account preference:
+        if (is_null($transaction->transaction_currency_id)) {
+            $transaction->transaction_currency_id = $currency->id;
+            Log::debug(sprintf('Transaction #%d has no currency setting, now set to %s', $transaction->id, $currency->code));
+            $transaction->save();
         }
-        $this->line(sprintf('Updated currency information for %d transactions', $count));
+
+        // does not match the source account (see above)? Can be fixed
+        // when mismatch in transaction and NO foreign amount is set:
+        if ($transaction->transaction_currency_id !== $currency->id && is_null($transaction->foreign_amount)) {
+            Log::debug(
+                sprintf(
+                    'Transaction #%d has a currency setting (#%d) that should be #%d. Amount remains %s, currency is changed.', $transaction->id,
+                    $transaction->transaction_currency_id, $currency->id, $transaction->amount
+                )
+            );
+            $transaction->transaction_currency_id = $currency->id;
+            $transaction->save();
+        }
+
+        // grab opposing transaction:
+        /** @var TransactionJournal $journal */
+        $journal = $transaction->transactionJournal;
+        /** @var Transaction $opposing */
+        $opposing         = $journal->transactions()->where('amount', '>', 0)->where('identifier', $transaction->identifier)->first();
+        $opposingCurrency = $repository->find(intval($opposing->account->getMeta('currency_id')));
+
+        if (is_null($opposingCurrency->id)) {
+            Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $opposing->account->id, $opposing->account->name));
+
+            return;
+        }
+
+        // if the destination account currency is the same, both foreign_amount and foreign_currency_id must be NULL for both transactions:
+        if ($opposingCurrency->id === $currency->id) {
+            // update both transactions to match:
+            $transaction->foreign_amount       = null;
+            $transaction->foreign_currency_id  = null;
+            $opposing->foreign_amount          = null;
+            $opposing->foreign_currency_id     = null;
+            $opposing->transaction_currency_id = $currency->id;
+            $transaction->save();
+            $opposing->save();
+            Log::debug(sprintf('Cleaned up transaction #%d and #%d', $transaction->id, $opposing->id));
+
+            return;
+        }
+        // if destination account currency is different, both transactions must have this currency as foreign currency id.
+        if ($opposingCurrency->id !== $currency->id) {
+            $transaction->foreign_currency_id = $opposingCurrency->id;
+            $opposing->foreign_currency_id    = $opposingCurrency->id;
+            $transaction->save();
+            $opposing->save();
+            Log::debug(sprintf('Verified foreign currency ID of transaction #%d and #%d', $transaction->id, $opposing->id));
+        }
+
+        // if foreign amount of one is null and the other is not, use this to restore:
+        if (is_null($transaction->foreign_amount) && !is_null($opposing->foreign_amount)) {
+            $transaction->foreign_amount = bcmul(strval($opposing->foreign_amount), '-1');
+            $transaction->save();
+            Log::debug(sprintf('Restored foreign amount of transaction (1) #%d to %s', $transaction->id, $transaction->foreign_amount));
+        }
+
+        // if foreign amount of one is null and the other is not, use this to restore (other way around)
+        if (is_null($opposing->foreign_amount) && !is_null($transaction->foreign_amount)) {
+            $opposing->foreign_amount = bcmul(strval($transaction->foreign_amount), '-1');
+            $opposing->save();
+            Log::debug(sprintf('Restored foreign amount of transaction (2) #%d to %s', $opposing->id, $opposing->foreign_amount));
+        }
+
+        // when both are zero, try to grab it from journal:
+        if (is_null($opposing->foreign_amount) && is_null($transaction->foreign_amount)) {
+
+            $foreignAmount = $journal->getMeta('foreign_amount');
+            if (is_null($foreignAmount)) {
+                Log::debug(sprintf('Journal #%d has missing foreign currency data, forced to do 1:1 conversion :(.', $transaction->transaction_journal_id));
+                $transaction->foreign_amount = bcmul(strval($transaction->amount), '-1');
+                $opposing->foreign_amount    = bcmul(strval($opposing->amount), '-1');
+                $transaction->save();
+                $opposing->save();
+
+                return;
+            }
+            $foreignPositive = app('steam')->positive(strval($foreignAmount));
+            Log::debug(
+                sprintf(
+                    'Journal #%d has missing foreign currency info, try to restore from meta-data ("%s").', $transaction->transaction_journal_id, $foreignAmount
+                )
+            );
+            $transaction->foreign_amount = bcmul($foreignPositive, '-1');
+            $opposing->foreign_amount    = $foreignPositive;
+            $transaction->save();
+            $opposing->save();
+        }
+
+
+        return;
     }
 }

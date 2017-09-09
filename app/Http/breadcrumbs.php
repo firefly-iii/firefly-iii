@@ -21,12 +21,14 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -151,6 +153,49 @@ Breadcrumbs::register(
 }
 );
 
+
+Breadcrumbs::register(
+    'admin.links.index', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.index');
+    $breadcrumbs->push(trans('firefly.journal_link_configuration'), route('admin.links.index'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.links.create', function (BreadCrumbGenerator $breadcrumbs) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.create_new_link_type'), route('admin.links.create'));
+}
+);
+
+Breadcrumbs::register(
+    'admin.links.show', function (BreadCrumbGenerator $breadcrumbs, LinkType $linkType) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.overview_for_link', [$linkType->name]), route('admin.links.show', [$linkType->id]));
+}
+);
+
+Breadcrumbs::register(
+    'admin.links.edit', function (BreadCrumbGenerator $breadcrumbs, LinkType $linkType) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.edit_link_type', ['name' => $linkType->name]), route('admin.links.edit', [$linkType->id]));
+}
+);
+
+Breadcrumbs::register(
+    'admin.links.delete', function (BreadCrumbGenerator $breadcrumbs, LinkType $linkType) {
+    $breadcrumbs->parent('admin.links.index');
+    $breadcrumbs->push(trans('firefly.delete_link_type', ['name' => $linkType->name]), route('admin.links.delete', [$linkType->id]));
+}
+);
+
+Breadcrumbs::register(
+    'transactions.link.delete', function (BreadCrumbGenerator $breadcrumbs, TransactionJournalLink $link) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push(trans('breadcrumbs.delete_journal_link'), route('transactions.link.delete', $link->id));
+
+}
+);
 
 /**
  * ATTACHMENTS

@@ -136,7 +136,8 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'budgets', 'as' => 'budgets.'], function () {
-    Route::get('income', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+
+        Route::get('income/{start_date}/{end_date}', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
     Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
@@ -144,6 +145,7 @@ Route::group(
     Route::get('show/{budget}/{budgetlimit}', ['uses' => 'BudgetController@showByBudgetLimit', 'as' => 'show.limit']);
     Route::get('list/no-budget/{moment?}', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
     Route::get('{moment?}', ['uses' => 'BudgetController@index', 'as' => 'index']);
+
 
     Route::post('income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'income.post']);
     Route::post('store', ['uses' => 'BudgetController@store', 'as' => 'store']);
@@ -200,7 +202,7 @@ Route::group(
     Route::get('status/{jobKey}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
     Route::get('download/{jobKey}', ['uses' => 'ExportController@download', 'as' => 'download']);
 
-    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'export']);
+    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'submit']);
 
 }
 );
@@ -401,6 +403,9 @@ Route::group(
     // banks:
     Route::get('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@prerequisites', 'as' => 'bank.prerequisites']);
     Route::post('bank/{bank}/prerequisites', ['uses' => 'Import\BankController@postPrerequisites', 'as' => 'bank.prerequisites.post']);
+
+    Route::get('bank/{bank}/form', ['uses' => 'Import\BankController@form', 'as' => 'bank.form']);
+    Route::post('bank/{bank}/form', ['uses' => 'Import\BankController@postForm', 'as' => 'bank.form.post']);
 }
 );
 
@@ -430,9 +435,9 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'json', 'as' => 'json.'], function () {
-    Route::get('expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'expense-accounts']);
-    Route::get('all-accounts', ['uses' => 'JsonController@allAccounts', 'as' => 'all-accounts']);
-    Route::get('revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'revenue-accounts']);
+    Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'expense-accounts']);
+    Route::get('all-accounts', ['uses' => 'Json\AutoCompleteController@allAccounts', 'as' => 'all-accounts']);
+    Route::get('revenue-accounts', ['uses' => 'Json\AutoCompleteController@revenueAccounts', 'as' => 'revenue-accounts']);
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
     Route::get('budgets', ['uses' => 'JsonController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
@@ -440,8 +445,9 @@ Route::group(
     Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
     Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.unpaid']);
     Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.paid']);
-    Route::get('transaction-journals/all', ['uses' => 'JsonController@allTransactionJournals', 'as' => 'all-transaction-journals']);
-    Route::get('transaction-journals/{what}', ['uses' => 'JsonController@transactionJournals', 'as' => 'transaction-journals']);
+    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
+    Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
+    Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
     Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
@@ -722,12 +728,26 @@ Route::group(
 );
 
 /**
- * Convert Controller
+ * Transaction Convert Controller
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/convert', 'as' => 'transactions.convert.'], function () {
     Route::get('{transaction_type}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
     Route::post('{transaction_type}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
+}
+);
+
+/**
+ * Transaction Link Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'], function () {
+    Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
+
+    Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
+    Route::get('switch/{journalLink}', ['uses' => 'LinkController@switch', 'as' => 'switch']);
+
+    Route::post('destroy/{journalLink}', ['uses' => 'LinkController@destroy', 'as' => 'destroy']);
 }
 );
 
@@ -755,6 +775,18 @@ Route::group(
     Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
     Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
+
+    // journal links manager
+    Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);
+    Route::get('links/create', ['uses' => 'LinkController@create', 'as' => 'links.create']);
+    Route::get('links/show/{linkType}', ['uses' => 'LinkController@show', 'as' => 'links.show']);
+    Route::get('links/edit/{linkType}', ['uses' => 'LinkController@edit', 'as' => 'links.edit']);
+    Route::get('links/delete/{linkType}', ['uses' => 'LinkController@delete', 'as' => 'links.delete']);
+
+
+    Route::post('links/store', ['uses' => 'LinkController@store', 'as' => 'links.store']);
+    Route::post('links/update/{linkType}', ['uses' => 'LinkController@update', 'as' => 'links.update']);
+    Route::post('links/destroy/{linkType}', ['uses' => 'LinkController@destroy', 'as' => 'links.destroy']);
 
     // FF configuration:
     Route::get('configuration', ['uses' => 'ConfigurationController@index', 'as' => 'configuration.index']);

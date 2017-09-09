@@ -75,11 +75,9 @@ class BudgetController extends Controller
      */
     public function amount(Request $request, Budget $budget)
     {
-        $amount = intval($request->get('amount'));
-        /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end         = session('end', Carbon::now()->endOfMonth());
+        $amount      = intval($request->get('amount'));
+        $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
         if ($amount === 0) {
             $budgetLimit = null;
@@ -243,7 +241,7 @@ class BudgetController extends Controller
             compact(
                 'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText',
                 'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
-                'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start'
+                'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
             )
         );
     }
@@ -313,15 +311,15 @@ class BudgetController extends Controller
      */
     public function postUpdateIncome(BudgetIncomeRequest $request)
     {
-        $start           = session('start', new Carbon);
-        $end             = session('end', new Carbon);
+        $start           = Carbon::createFromFormat('Y-m-d', $request->string('start'));
+        $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
         $defaultCurrency = Amount::getDefaultCurrency();
         $amount          = $request->get('amount');
 
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
         Preferences::mark();
 
-        return redirect(route('budgets.index'));
+        return redirect(route('budgets.index', [$start->format('Y-m-d')]));
     }
 
     /**
@@ -443,15 +441,16 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return View
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function updateIncome()
+    public function updateIncome(Carbon $start, Carbon $end)
     {
-        $start           = session('start', new Carbon);
-        $end             = session('end', new Carbon);
         $defaultCurrency = Amount::getDefaultCurrency();
         $available       = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
-
+        $available       = round($available, $defaultCurrency->decimal_places);
 
         return view('budgets.income', compact('available', 'start', 'end'));
     }

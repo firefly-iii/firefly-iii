@@ -84,6 +84,7 @@ class PiggyBank extends Model
             return $this->currentRep;
         }
         // repeating piggy banks are no longer supported.
+        /** @var PiggyBankRepetition $rep */
         $rep = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
         if (is_null($rep)) {
             return new PiggyBankRepetition();

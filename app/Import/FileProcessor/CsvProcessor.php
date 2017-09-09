@@ -151,10 +151,14 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function getImportArray(): Iterator
     {
-        $content = $this->job->uploadFileContents();
-        $config  = $this->job->configuration;
-        $reader  = Reader::createFromString($content);
-        $reader->setDelimiter($config['delimiter']);
+        $content   = $this->job->uploadFileContents();
+        $config    = $this->job->configuration;
+        $reader    = Reader::createFromString($content);
+        $delimiter = $config['delimiter'];
+        if ($delimiter === 'tab') {
+            $delimiter = "\t";
+        }
+        $reader->setDelimiter($delimiter);
         $start   = $config['has-headers'] ? 1 : 0;
         $results = $reader->setOffset($start)->fetch();
         Log::debug(sprintf('Created a CSV reader starting at offset %d', $start));

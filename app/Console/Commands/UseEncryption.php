@@ -1,4 +1,14 @@
 <?php
+
+/**
+ * UseEncryption.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
+
 declare(strict_types=1);
 
 /**
@@ -16,6 +26,8 @@ use Illuminate\Support\Str;
 
 /**
  * Class UseEncryption
+ *
+ * @package FireflyIII\Console\Commands
  */
 class UseEncryption extends Command
 {
@@ -46,7 +58,6 @@ class UseEncryption extends Command
      */
     public function handle()
     {
-        //
         $this->handleObjects('Account', 'name', 'encrypted');
         $this->handleObjects('Bill', 'name', 'name_encrypted');
         $this->handleObjects('Bill', 'match', 'match_encrypted');
@@ -57,6 +68,8 @@ class UseEncryption extends Command
     }
 
     /**
+     * Run each object and encrypt them (or not).
+     *
      * @param string $class
      * @param string $field
      * @param string $indicator

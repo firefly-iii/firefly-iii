@@ -23,7 +23,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.6.4',
+    'version'                    => '4.6.5',
     'maxUploadSize'              => 15242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,
@@ -39,8 +39,17 @@ return [
     'import_processors'          => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
     ],
-    'import_pre' => [
+    'import_pre'                 => [
         'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
+    ],
+    'import_info'                => [
+        'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
+    ],
+    'import_transactions'        => [
+        'bunq' => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
+    ],
+    'bunq'                       => [
+        'server' => 'https://sandbox.public.api.bunq.com',
     ],
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
@@ -140,6 +149,7 @@ return [
         'budget'            => 'FireflyIII\Models\Budget',
         'category'          => 'FireflyIII\Models\Category',
         'transaction_type'  => 'FireflyIII\Models\TransactionType',
+        'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
         'currency'          => 'FireflyIII\Models\TransactionCurrency',
         'fromCurrencyCode'  => 'FireflyIII\Support\Binder\CurrencyCode',
         'toCurrencyCode'    => 'FireflyIII\Support\Binder\CurrencyCode',
@@ -184,6 +194,12 @@ return [
         'budget_is'             => 'FireflyIII\Rules\Triggers\BudgetIs',
         'tag_is'                => 'FireflyIII\Rules\Triggers\TagIs',
         'has_attachments'       => 'FireflyIII\Rules\Triggers\HasAttachment',
+        'has_no_category'       => 'FireflyIII\Rules\Triggers\HasNoCategory',
+        'has_any_category'      => 'FireflyIII\Rules\Triggers\HasAnyCategory',
+        'has_no_budget'         => 'FireflyIII\Rules\Triggers\HasNoBudget',
+        'has_any_budget'        => 'FireflyIII\Rules\Triggers\HasAnyBudget',
+        'has_no_tag'            => 'FireflyIII\Rules\Triggers\HasNoTag',
+        'has_any_tag'           => 'FireflyIII\Rules\Triggers\HasAnyTag',
     ],
     'rule-actions'               => [
         'set_category'        => 'FireflyIII\Rules\Actions\SetCategory',

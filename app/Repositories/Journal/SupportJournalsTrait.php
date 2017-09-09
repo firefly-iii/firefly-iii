@@ -117,8 +117,11 @@ trait SupportJournalsTrait
         if (strlen($data['source_account_name']) > 0) {
             $sourceType    = AccountType::where('type', 'Revenue account')->first();
             $sourceAccount = Account::firstOrCreateEncrypted(
-                ['user_id' => $user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name'], 'active' => 1]
+                ['user_id' => $user->id, 'account_type_id' => $sourceType->id, 'name' => $data['source_account_name']]
             );
+            // always make account active
+            $sourceAccount->active = true;
+            $sourceAccount->save();
 
             Log::debug(sprintf('source account name is "%s", account is %d', $data['source_account_name'], $sourceAccount->id));
 
@@ -132,8 +135,11 @@ trait SupportJournalsTrait
 
         $sourceType    = AccountType::where('type', AccountType::CASH)->first();
         $sourceAccount = Account::firstOrCreateEncrypted(
-            ['user_id' => $user->id, 'account_type_id' => $sourceType->id, 'name' => 'Cash account', 'active' => 1]
+            ['user_id' => $user->id, 'account_type_id' => $sourceType->id, 'name' => 'Cash account']
         );
+        // always make account active
+        $sourceAccount->active = true;
+        $sourceAccount->save();
 
         return [
             'source'      => $sourceAccount,
@@ -161,9 +167,12 @@ trait SupportJournalsTrait
                     'user_id'         => $user->id,
                     'account_type_id' => $destinationType->id,
                     'name'            => $data['destination_account_name'],
-                    'active'          => 1,
                 ]
             );
+
+            // always make account active
+            $destinationAccount->active = true;
+            $destinationAccount->save();
 
             Log::debug(sprintf('destination account name is "%s", account is %d', $data['destination_account_name'], $destinationAccount->id));
 
@@ -175,8 +184,11 @@ trait SupportJournalsTrait
         Log::debug('destination_account_name is empty, so default to cash account!');
         $destinationType    = AccountType::where('type', AccountType::CASH)->first();
         $destinationAccount = Account::firstOrCreateEncrypted(
-            ['user_id' => $user->id, 'account_type_id' => $destinationType->id, 'name' => 'Cash account', 'active' => 1]
+            ['user_id' => $user->id, 'account_type_id' => $destinationType->id, 'name' => 'Cash account']
         );
+        // always make account active
+        $destinationAccount->active = true;
+        $destinationAccount->save();
 
         return [
             'source'      => $sourceAccount,

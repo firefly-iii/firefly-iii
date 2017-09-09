@@ -7,7 +7,7 @@
  */
 
 
-/** global: originalSum, accounting, what, Modernizr */
+/** global: originalSum, accounting, what, Modernizr, currencySymbol */
 
 var destAccounts = {};
 var srcAccounts = {};
@@ -231,13 +231,14 @@ function calculateSum() {
     sum = Math.round(sum * 100) / 100;
     left = Math.round(left * 100) / 100;
 
+
     $('.amount-warning').remove();
     if (sum !== originalSum) {
         var holder = $('#journal_amount_holder');
         var par = holder.find('p.form-control-static');
-        $('<span>').text(' (' + accounting.formatMoney(sum) + ')').addClass('text-danger amount-warning').appendTo(par);
+        $('<span>').text(' (' + accounting.formatMoney(sum, currencySymbol) + ')').addClass('text-danger amount-warning').appendTo(par);
         // also add what's left to divide (or vice versa)
-        $('<span>').text(' (' + accounting.formatMoney(left) + ')').addClass('text-danger amount-warning').appendTo(par);
+        $('<span>').text(' (' + accounting.formatMoney(left, currencySymbol) + ')').addClass('text-danger amount-warning').appendTo(par);
     }
 
 }

@@ -43,9 +43,6 @@ use View;
 class TagController extends Controller
 {
 
-    /** @var array */
-    public $tagOptions = [];
-
     /** @var  TagRepositoryInterface */
     protected $repository;
 
@@ -60,17 +57,8 @@ class TagController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(TagRepositoryInterface::class);
-                $this->tagOptions = [
-                    'nothing'        => trans('firefly.regular_tag'),
-                    'balancingAct'   => trans('firefly.balancing_act'),
-                    'advancePayment' => trans('firefly.advance_payment'),
-                ];
-
-
                 View::share('title', strval(trans('firefly.tags')));
                 View::share('mainTitleIcon', 'fa-tags');
-                View::share('tagOptions', $this->tagOptions);
-
 
                 return $next($request);
             }
@@ -168,41 +156,22 @@ class TagController extends Controller
      */
     public function index(TagRepositoryInterface $repository)
     {
-        $title         = 'Tags';
-        $mainTitleIcon = 'fa-tags';
-        $types         = ['nothing', 'balancingAct', 'advancePayment'];
-        $hasTypes      = 0; // which types of tag the user actually has.
-        $counts        = []; // how many of each type?
-        $count         = $repository->count();
 
-        // loop each types and get the tags, group them by year.
-        $collection = [];
-        foreach ($types as $type) {
+        // collect tags by year:
+        /** @var Carbon $start */
+        $start             = clone(session('first'));
+        $now               = new Carbon;
+        $clouds            = [];
+        $clouds['no-date'] = $repository->tagCloud(null);
+        while ($now > $start) {
+            $year          = $now->year;
+            $clouds[$year] = $repository->tagCloud($year);
 
-            /** @var Collection $tags */
-            $tags = $repository->getByType($type);
-            $tags = $tags->sortBy(
-                function (Tag $tag) {
-                    $date = !is_null($tag->date) ? $tag->date->format('Ymd') : '000000';
-
-                    return strtolower($date . $tag->tag);
-                }
-            );
-            if ($tags->count() > 0) {
-                $hasTypes++;
-            }
-            $counts[$type] = $tags->count();
-
-            /** @var Tag $tag */
-            foreach ($tags as $tag) {
-                $year           = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
-                $monthFormatted = is_null($tag->date) ? trans('firefly.no_month') : $tag->date->formatLocalized($this->monthFormat);
-
-                $collection[$type][$year][$monthFormatted][] = $tag;
-            }
+            $now->subYear();
         }
+        $count = $repository->count();
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'counts', 'hasTypes', 'types', 'collection', 'count'));
+        return view('tags.index', compact('clouds', 'count'));
     }
 
     /**
@@ -235,6 +204,7 @@ class TagController extends Controller
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
             $sum      = $repository->sumOfTag($tag, null, null);
+            $result   = $repository->resultOfTag($tag, null, null);
             $path     = route('tags.show', [$tag->id, 'all']);
         }
 
@@ -249,6 +219,7 @@ class TagController extends Controller
             );
             $periods  = $this->getPeriodOverview($tag);
             $sum      = $repository->sumOfTag($tag, $start, $end);
+            $result   = $repository->resultOfTag($tag, $start, $end);
             $path     = route('tags.show', [$tag->id, $moment]);
         }
 
@@ -257,6 +228,8 @@ class TagController extends Controller
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($tag);
+            $sum      = $repository->sumOfTag($tag, $start, $end);
+            $result   = $repository->resultOfTag($tag, $start, $end);
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
                 ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
@@ -271,9 +244,8 @@ class TagController extends Controller
         $journals->setPath($path);
 
 
-        return view('tags.show', compact('apiKey', 'tag', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
+        return view('tags.show', compact('apiKey', 'tag', 'result', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'sum', 'start', 'end', 'moment'));
     }
-
 
     /**
      * @param TagFormRequest $request
@@ -371,4 +343,6 @@ class TagController extends Controller
         return $collection;
 
     }
+
+
 }

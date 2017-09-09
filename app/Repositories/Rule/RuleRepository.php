@@ -57,6 +57,21 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * @param int $ruleId
+     *
+     * @return Rule
+     */
+    public function find(int $ruleId): Rule
+    {
+        $rule = $this->user->rules()->find($ruleId);
+        if (is_null($rule)) {
+            return new Rule;
+        }
+
+        return $rule;
+    }
+
+    /**
      * FIxXME can return null
      *
      * @return RuleGroup
@@ -286,7 +301,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = $values['stopProcessing'];
         $ruleTrigger->trigger_type    = $values['action'];
-        $ruleTrigger->trigger_value   = $values['value'];
+        $ruleTrigger->trigger_value   = is_null($values['value']) ? '' : $values['value'];
         $ruleTrigger->save();
 
         return $ruleTrigger;
@@ -301,6 +316,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:
+        $rule->rule_group_id   = $data['rule_group_id'];
         $rule->active          = $data['active'];
         $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];

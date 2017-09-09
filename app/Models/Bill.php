@@ -17,6 +17,7 @@ use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
@@ -28,7 +29,7 @@ use Watson\Validating\ValidatingTrait;
 class Bill extends Model
 {
 
-    use ValidatingTrait;
+    use SoftDeletes, ValidatingTrait;
     /**
      * The attributes that should be casted to native types.
      *

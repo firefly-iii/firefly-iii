@@ -40,10 +40,12 @@
                     {% if moment == 'all' %}
                         <p>
                             {{ 'total_sum'|_ }}: {{ sum|formatAmount }}<br/>
+                            {{ 'total_result'|_ }}: {{ result|formatAmount }}<br/>
                         </p>
                     {% else %}
                         <p>
                             {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
+                            {{ 'result'|_ }}: {{ result|formatAmount }}<br/>
                         </p>
                     {% endif %}
 
@@ -109,14 +111,14 @@
 
                     {% if periods.count > 0 %}
                         <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <i class="fa fa-calendar"></i>
                             <a href="{{ route('tags.show', [tag.id,'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
                     {% else %}
                         <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <i class="fa fa-calendar"></i>
                             <a href="{{ route('tags.show', [tag.id]) }}">
                                 {{ 'show_the_current_period_and_overview'|_ }}
                             </a>
@@ -182,4 +184,5 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
     <script src="js/ff/tags/show.js"></script>
+    <script type="text/javascript" src="js/ff/transactions/list.js"></script>
 {% endblock %}

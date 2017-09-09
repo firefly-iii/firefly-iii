@@ -39,6 +39,14 @@ interface RuleRepositoryInterface
     public function destroy(Rule $rule): bool;
 
     /**
+     * @param int $ruleId
+     *
+     * @return Rule
+     */
+    public function find(int $ruleId): Rule;
+
+
+    /**
      * @return RuleGroup
      */
     public function getFirstRuleGroup(): RuleGroup;

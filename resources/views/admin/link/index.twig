@@ -1,0 +1,66 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'journal_link_configuration'|_ }}</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-hover sortable">
+                        <thead>
+                        <tr>
+                            <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
+                            <th data-defaultsign="az">{{ trans('list.name') }}</th>
+                            <th class="hidden-sm hidden-xs" data-defaultsign="az">{{ trans('list.inward') }}</th>
+                            <th class="hidden-sm hidden-xs" data-defaultsign="az">{{ trans('list.outward') }}</th>
+                            <th data-defaultsign="_19">{{ trans('list.number_of_transactions') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for linkType in linkTypes %}
+                            <tr>
+                                <td>
+                                    {% if linkType.editable %}
+                                        <div class="btn-group btn-group-xs">
+                                            <a class="btn btn-default btn-xs" href="{{ route('admin.links.edit',linkType.id) }}"><i class="fa fa-fw fa-pencil"></i></a>
+                                            <a class="btn btn-danger btn-xs" href="{{ route('admin.links.delete',linkType.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ linkType.name }}</strong>
+                                </td>
+                                <td>
+                                    {{ linkType.inward }}
+                                </td>
+                                <td>
+                                    {{ linkType.outward }}
+                                </td>
+                                <td data-value="{{ linkType.journalCount }}">
+                                    <a href="{{ route('admin.links.show', [linkType.id]) }}">{{ linkType.journalCount }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <a href="{{ route('admin.links.create') }}" class="btn btn-success">{{ 'create_new_link_type'|_ }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+{% endblock %}

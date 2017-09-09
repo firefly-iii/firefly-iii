@@ -37,6 +37,8 @@ class ImportJournal
     public $budget;
     /** @var ImportCategory */
     public $category;
+    /** @var  ImportCurrency */
+    public $currency;
     /** @var  string */
     public $description = '';
     /** @var  string */
@@ -51,8 +53,8 @@ class ImportJournal
     public $tags = [];
     /** @var string */
     private $amount;
-    /** @var  ImportCurrency */
-    public $currency;
+    /** @var  string */
+    private $convertedAmount = null;
     /** @var string */
     private $date = '';
     /** @var string */
@@ -85,25 +87,37 @@ class ImportJournal
 
     /**
      * @return string
+     * @throws FireflyException
      */
     public function getAmount(): string
     {
-        if (is_null($this->amount)) {
+        Log::debug('Now in getAmount()');
+        if (is_null($this->convertedAmount)) {
+            Log::debug('convertedAmount is NULL');
             /** @var ConverterInterface $amountConverter */
-            $amountConverter = app(Amount::class);
-            $this->amount    = $amountConverter->convert($this->amount);
+            $amountConverter       = app(Amount::class);
+            $this->convertedAmount = $amountConverter->convert($this->amount);
+            Log::debug(sprintf('First attempt to convert gives "%s"', $this->convertedAmount));
             // modify
             foreach ($this->modifiers as $modifier) {
                 $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
                 /** @var ConverterInterface $converter */
                 $converter = app($class);
+                Log::debug(sprintf('Now launching converter %s', $class));
                 if ($converter->convert($modifier['value']) === -1) {
-                    $this->amount = Steam::negative($this->amount);
+                    $this->convertedAmount = Steam::negative($this->convertedAmount);
                 }
+                Log::debug(sprintf('convertedAmount after conversion is  %s', $this->convertedAmount));
             }
+
+            Log::debug(sprintf('After modifiers the result is: "%s"', $this->convertedAmount));
+        }
+        Log::debug(sprintf('convertedAmount is: "%s"', $this->convertedAmount));
+        if (bccomp($this->convertedAmount, '0') === 0) {
+            throw new FireflyException('Amount is zero.');
         }
 
-        return $this->amount;
+        return $this->convertedAmount;
     }
 
     /**

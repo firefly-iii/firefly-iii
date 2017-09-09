@@ -13,14 +13,12 @@ namespace Tests\Feature\Controllers;
 
 use Amount;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -51,36 +49,6 @@ class JsonControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('json.action'));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::allAccounts
-     */
-    public function testAllAccounts()
-    {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]])
-                     ->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.all-accounts'));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::allTransactionJournals()
-     */
-    public function testAllTransactionJournals()
-    {
-        $collector = $this->mock(JournalCollectorInterface::class);
-        $collector->shouldReceive('setLimit')->withArgs([100])->andReturnSelf();
-        $collector->shouldReceive('setPage')->withArgs([1])->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.all-transaction-journals'));
         $response->assertStatus(200);
     }
 
@@ -210,45 +178,6 @@ class JsonControllerTest extends TestCase
         $response->assertExactJson([$category->name]);
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::expenseAccounts
-     */
-    public function testExpenseAccounts()
-    {
-        // mock stuff
-        $account      = factory(Category::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->once()->andReturn(
-            new Collection([$account])
-        );
-
-        $this->be($this->user());
-        $response = $this->get(route('json.expense-accounts'));
-        $response->assertStatus(200);
-        $response->assertExactJson([$account->name]);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::revenueAccounts
-     */
-    public function testRevenueAccounts()
-    {
-        // mock stuff
-        $account      = factory(Category::class)->make();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn(
-            new Collection([$account])
-        );
-
-        $this->be($this->user());
-        $response = $this->get(route('json.revenue-accounts'));
-        $response->assertStatus(200);
-        $response->assertExactJson([$account->name]);
-    }
 
     /**
      * @covers \FireflyIII\Http\Controllers\JsonController::tags
@@ -266,26 +195,6 @@ class JsonControllerTest extends TestCase
         $response = $this->get(route('json.tags'));
         $response->assertStatus(200);
         $response->assertExactJson([$tag->tag]);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::transactionJournals
-     */
-    public function testTransactionJournals()
-    {
-        // mock stuff
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('json.transaction-journals', ['deposit']));
-        $response->assertStatus(200);
-        $response->assertExactJson([]);
     }
 
     /**

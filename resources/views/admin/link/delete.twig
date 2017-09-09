@@ -1,0 +1,53 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, linkType) }}
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST" action="{{ route('admin.links.destroy',linkType.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('form.delete_link_type', {'name': linkType.name}) }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-danger">
+                            {{ trans('form.permDeleteWarning') }}
+                        </p>
+
+                        <p>
+                            {{ trans('form.linkType_areYouSure', {'name': linkType.name,'inward': linkType.inward,'outward': linkType.outward}) }}
+                        </p>
+
+                        {% if count > 0 %}
+                            <p>
+                                {{ Lang.choice('form.also_delete_connections', count, {count: count}) }}
+                            </p>
+                        {% endif %}
+                        {% if count > 0 %}
+                            <p class="text-success">
+                                {{ 'save_connections_by_moving'|_ }}
+                            </p>
+
+                            <p>
+                                {{ Form.select('move_link_type_before_delete', moveTo, null, {class: 'form-control'}) }}
+                            </p>
+                        {% else %}
+                            <input type="hidden" name="move_link_type_before_delete" value="0"/>
+                        {% endif %}
+
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn pull-right btn-danger"/>
+                        <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}

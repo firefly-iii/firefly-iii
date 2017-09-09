@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
     'rule_action_value'              => 'This value is invalid for the selected action.',
-    'invalid_domain'                 => 'Due to security constraints, you cannot register from this domain.',
     'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
     'file_attached'                  => 'Succesfully uploaded file ":name".',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',

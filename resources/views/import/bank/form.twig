@@ -1,0 +1,69 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ route('import.bank.form.post',[bank]) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('bank.bank_form_title') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <p>
+                                    {{ trans('bank.bank_form_text') }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Account</th>
+                                        <th>Current balance</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for remoteAccount in remoteAccounts %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="do_import[{{ remoteAccount.id }}]" checked id="do_import_{{ remoteAccount.id }}" />
+                                            </td>
+                                            <td>
+                                                <strong {% if remoteAccount.color !='' %} style="color:{{ remoteAccount.color }}"{% endif %}>
+                                                    {{ remoteAccount.name }}
+                                                </strong>
+                                                <br />{{ remoteAccount.number }}
+                                            </td>
+                                            <td>
+                                                {{ remoteAccount.currency }}
+                                                {{ remoteAccount.balance }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn pull-right btn-success">
+                            {{ ('submit')|_ }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

@@ -17,7 +17,7 @@ return [
     'main-content-title'     => 'Willkommen bei Firefly III',
     'main-content-text'      => 'Tun Sie sich selbst einen Gefallen und folgen Sie dieser kurzen Tour, damit Sie wissen wie alles funktioniert.',
     'sidebar-toggle-title'   => 'Sidebar um neuen Dinge zu erstellen',
-    'sidebar-toggle-text'    => 'Versteckt unter dem Plus-Icon sind alle Schaltflächen zum Erstellen von neuen Dingen. Konten, Überweisungen, Alles!',
+    'sidebar-toggle-text'    => 'Versteckt hinter dem Plus-Icon sind alle Schaltflächen zum Erstellen von neuen Dingen. Konten, Überweisungen, Alles!',
     'account-menu-title'     => 'Alle Ihre Konten',
     'account-menu-text'      => 'Hier finden Sie alle Konten, die Sie erstellt haben.',
     'budget-menu-title'      => 'Budget',

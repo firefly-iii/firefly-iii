@@ -84,6 +84,9 @@ class UpgradeFireflyInstructions extends Command
         }
     }
 
+    /**
+     * Render instructions.
+     */
     private function installInstructions()
     {
         /** @var string $version */
@@ -102,7 +105,7 @@ class UpgradeFireflyInstructions extends Command
         $this->boxed('');
         if (is_null($text)) {
 
-            $this->boxed(sprintf('Thank you for installin Firefly III, v%s!', $version));
+            $this->boxed(sprintf('Thank you for installing Firefly III, v%s!', $version));
             $this->boxedInfo('There are no extra installation instructions.');
             $this->boxed('Firefly III should be ready for use.');
             $this->boxed('');
@@ -131,6 +134,9 @@ class UpgradeFireflyInstructions extends Command
 
     }
 
+    /**
+     * Render upgrade instructions.
+     */
     private function updateInstructions()
     {
         /** @var string $version */

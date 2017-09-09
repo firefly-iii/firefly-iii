@@ -61,6 +61,7 @@ class General extends Twig_Extension
             $this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
+
         ];
 
     }

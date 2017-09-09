@@ -13,6 +13,8 @@ namespace FireflyIII\Support\Import\Prerequisites;
 
 
 use FireflyIII\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 
 interface PrerequisitesInterface
 {
@@ -44,4 +46,11 @@ interface PrerequisitesInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param Request $request
+     *
+     * @return MessageBag
+     */
+    public function storePrerequisites(Request $request): MessageBag;
 }

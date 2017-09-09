@@ -11,25 +11,25 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Welcome to the index page of Firefly III. Please take the time to walk through this intro to get a feeling of how Firefly III works.',
-    'index_accounts-chart'                  => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
-    'index_box_out_holder'                  => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
-    'index_help'                            => 'If you ever need help with a page or a form, press this button.',
-    'index_outro'                           => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
-    'index_sidebar-toggle'                  => 'To create new transactions, accounts or other things, use the menu under this icon.',
+    'index_intro'                           => 'Bienvenido a la página de índice de Firefly III. Por favor tómate tu tiempo para revisar esta guía y que puedas hacerte una idea de cómo funciona Firefly III.',
+    'index_accounts-chart'                  => 'Este gráfico muestra el saldo actual de tus cuentas. Puedes seleccionar las cuentas que se muestran en él desde tus preferencias.',
+    'index_box_out_holder'                  => 'Esta pequeña caja y las cajas a continuación te darán una visión rápida de tu situación financiera.',
+    'index_help'                            => 'Si alguna vez necesitas ayuda en una página o formulario, pulsa este botón.',
+    'index_outro'                           => 'La mayoría de las páginas de Firefly III comenzarán con una pequeña introducción como ésta. Por favor, ponte en contacto conmigo si tienes preguntas o comentarios. ¡Disfruta!',
+    'index_sidebar-toggle'                  => 'Para crear nuevas transacciones, cuentas u otros elementos, utiliza el menú bajo este icono.',
 
     // create account:
-    'accounts_create_iban'                  => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly.',
-    'accounts_create_asset_currency'        => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
-    'accounts_create_asset_virtual'         => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
+    'accounts_create_iban'                  => 'Indica un IBAN válido en tus cuentas. Esto facilitará la importación de datos en el futuro.',
+    'accounts_create_asset_opening_balance' => 'Las cuentas pueden tener un "saldo de apertura", que indica el saldo inicial de esta cuenta en Firefly.',
+    'accounts_create_asset_currency'        => 'Firefly III admite múltiples divisas. Las cuentas tienen una divisa principal, que debes indicar aquí.',
+    'accounts_create_asset_virtual'         => 'A veces puede ayudar el darle a tu cuenta un balance virtual: una cantidad extra que se añade o resta siempre del balance real.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly can tell you if you have budgeted all available money.',
-    'budgets_index_see_expenses_bar'        => 'Spending money will slowly fill this bar.',
-    'budgets_index_navigate_periods'        => 'Navigate through periods to easily set budgets ahead of time.',
-    'budgets_index_new_budget'              => 'Create new budgets as you see fit.',
+    'budgets_index_intro'                   => 'Los presupuestos se utilizan para administrar sus finanzas y son una de las funciones básicas de Firefly III.',
+    'budgets_index_set_budget'              => 'Fija tu presupuesto total para cada período, de tal forma que Firefly pueda indicarte si has presupuestado todo el dinero disponible.',
+    'budgets_index_see_expenses_bar'        => 'Gastar dinero irá llenando poco a poco esta barra.',
+    'budgets_index_navigate_periods'        => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
+    'budgets_index_new_budget'              => 'Crea nuevos presupuestos como mejor te parezca.',
     'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
 
     // reports (index)
@@ -44,17 +44,17 @@ return [
     'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
     'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in or multiple categories.',
+    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
     'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per category.',
+    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in or multiple tags.',
+    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
     'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows you how your expenses and income per tag.',
+    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses and income per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows you how your expenses and income per budget.',
+    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
+    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
 
     // create transaction
     'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',

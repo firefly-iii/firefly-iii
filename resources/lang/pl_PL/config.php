@@ -15,7 +15,7 @@ return [
     'locale'          => 'pl, Polish, polski, pl_PL, pl_PL.utf8, pl_PL.UTF-8',
     'month'           => '%B %Y',
     'month_and_day'   => '%e %B %Y',
-    'date_time'       => '%B %e, %Y, @ %T',
+    'date_time'       => '%e %B %Y o %T',
     'specific_day'    => '%e %B %Y',
     'week_in_year'    => 'Tydzień %W, %Y',
     'quarter_of_year' => '%B %Y',

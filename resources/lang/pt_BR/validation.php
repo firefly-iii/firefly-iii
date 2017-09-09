@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Devido a restrições de segurança, você não pode registrar usando este endereço de e-mail.',
     'rule_trigger_value'             => 'Este valor é inválido para o disparo selecionado.',
     'rule_action_value'              => 'Este valor é inválido para a ação selecionada.',
-    'invalid_domain'                 => 'Devido a restrições de segurança, você não pode registrar deste domínio.',
     'file_already_attached'          => 'Arquivo ":name" carregado já está anexado para este objeto.',
     'file_attached'                  => 'Arquivo carregado com sucesso ":name".',
     'file_invalid_mime'              => 'Arquivo ":name" é do tipo ":mime" que não é aceito como um novo upload.',

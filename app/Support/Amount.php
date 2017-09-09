@@ -130,17 +130,16 @@ class Amount
         $result    = $format->symbol . $space . $formatted;
 
         if (!$precedes) {
-            $result = $space . $formatted . $format->symbol;
+            $result = $formatted . $space . $format->symbol;
         }
 
         if ($coloured === true) {
 
             if ($amount > 0) {
                 return sprintf('<span class="text-success">%s</span>', $result);
-            } else {
-                if ($amount < 0) {
-                    return sprintf('<span class="text-danger">%s</span>', $result);
-                }
+            }
+            if ($amount < 0) {
+                return sprintf('<span class="text-danger">%s</span>', $result);
             }
 
             return sprintf('<span style="color:#999">%s</span>', $result);
@@ -194,14 +193,13 @@ class Amount
         $cache->addProperty('getCurrencySymbol');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
-        } else {
-            $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
-            $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
-
-            $cache->store($currency->symbol);
-
-            return $currency->symbol;
         }
+        $currencyPreference = Prefs::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+
+        $cache->store($currency->symbol);
+
+        return $currency->symbol;
     }
 
     /**
@@ -300,6 +298,7 @@ class Amount
     public function transactionAmount(TransactionModel $transaction, bool $coloured = true): string
     {
         $amount = bcmul(app('steam')->positive(strval($transaction->transaction_amount)), '-1');
+
         $format = '%s';
 
         if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
@@ -322,7 +321,11 @@ class Amount
 
 
         if (!is_null($transaction->transaction_foreign_amount)) {
-            $amount = strval($transaction->transaction_foreign_amount);
+            $amount = bcmul(app('steam')->positive(strval($transaction->transaction_foreign_amount)), '-1');
+            if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
+                $amount = bcmul($amount, '-1');
+            }
+
 
             if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
                 $amount   = app('steam')->positive($amount);

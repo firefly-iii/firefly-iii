@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
 
+use ErrorException;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
@@ -95,7 +97,7 @@ class ImportStorage
             function (ImportJournal $importJournal, int $index) {
                 try {
                     $this->storeImportJournal($index, $importJournal);
-                } catch (FireflyException $e) {
+                } catch (FireflyException | ErrorException | Exception $e) {
                     $this->errors->push($e->getMessage());
                     Log::error(sprintf('Cannot import row #%d because: %s', $index, $e->getMessage()));
                 }
@@ -142,7 +144,10 @@ class ImportStorage
         if ($this->isDoubleTransfer($parameters) || $this->hashAlreadyImported($importJournal->hash)) {
             $this->job->addStepsDone(3);
             // throw error
-            throw new FireflyException('Detected a possible duplicate, skip this one.');
+            $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
+            Log::error($message, $parameters);
+            throw new FireflyException($message);
+
         }
         unset($parameters);
 
@@ -202,25 +207,32 @@ class ImportStorage
             return false;
         }
 
-        $amount = app('steam')->positive($parameters['amount']);
-        $names  = [$parameters['asset'], $parameters['opposing']];
+        $amount   = app('steam')->positive($parameters['amount']);
+        $names    = [$parameters['asset'], $parameters['opposing']];
+        $transfer = [];
+        $hit      = false;
         sort($names);
 
         foreach ($this->transfers as $transfer) {
-            if ($parameters['description'] !== $transfer['description']) {
-                return false;
+            if ($parameters['description'] === $transfer['description']) {
+                $hit = true;
             }
-            if ($names !== $transfer['names']) {
-                return false;
+            if ($names === $transfer['names']) {
+                $hit = true;
             }
-            if (bccomp($amount, $transfer['amount']) !== 0) {
-                return false;
+            if (bccomp($amount, $transfer['amount']) === 0) {
+                $hit = true;
             }
-            if ($parameters['date'] !== $transfer['date']) {
-                return false;
+            if ($parameters['date'] === $transfer['date']) {
+                $hit = true;
             }
         }
+        if ($hit === true) {
+            Log::error(
+                'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
+            );
+        }
 
-        return true;
+        return $hit;
     }
 }

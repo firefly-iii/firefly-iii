@@ -17,7 +17,6 @@ return [
     'deleted_user'                   => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous inscrire en utilisant cette adresse e-mail.',
     'rule_trigger_value'             => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
     'rule_action_value'              => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
-    'invalid_domain'                 => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous enregistrer depuis ce domaine.',
     'file_already_attached'          => 'Le fichier téléchargé ":name" est déjà attaché à cet objet.',
     'file_attached'                  => 'Envoi du fichier ":name" avec succès.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
@@ -90,5 +89,5 @@ return [
     'in_array'                       => 'Le champ :attribute n\'existe pas dans :other.',
     'present'                        => 'Le champs :attribute doit être rempli.',
     'amount_zero'                    => 'Le montant total ne peut pas être zéro',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://goo.gl/NCh2tN',
+    'secure_password'                => 'Ce n’est pas un mot de passe sécurisé. S’il vous plaît essayer de nouveau. Pour plus d’informations, visitez https://goo.gl/NCh2tN',
 ];

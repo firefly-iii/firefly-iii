@@ -91,7 +91,7 @@
                     {% include 'list.journals' with {hideBudgets:true, hideBills:true} %}
                     {% if budgetLimit %}
                         <p>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <i class="fa fa-calendar"></i>
                             <a href="{{ route('budgets.show', [budget.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>

@@ -37,6 +37,7 @@ $(document).ready(function () {
 
     // when user selects different currency,
     $('.currency-option').on('click', selectsForeignCurrency);
+    $('#ffInput_description').focus();
 });
 
 /**
@@ -84,6 +85,7 @@ function updateDescription() {
     $.getJSON('json/transaction-journals/' + what).done(function (data) {
         $('input[name="description"]').typeahead('destroy').typeahead({source: data});
     });
+    $('#ffInput_description').focus();
 }
 
 /**

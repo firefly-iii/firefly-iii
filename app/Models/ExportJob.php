@@ -13,11 +13,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ExportJob
+ *
+ * @property User $user
  *
  * @package FireflyIII\Models
  */
