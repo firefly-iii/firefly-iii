@@ -170,8 +170,6 @@ return [
     'export_status_collected_attachments'        => 'Toutes vos pièces jointes sont collectées !',
     'export_status_collecting_old_uploads'       => 'Tous vos précédent upload sont en cours de collecte...',
     'export_status_collected_old_uploads'        => 'Tous vos précédent upload sont collectés !',
-    'export_status_creating_config_file'         => 'Création d’un fichier de configuration...',
-    'export_status_created_config_file'          => 'Fichier de configuration créé !',
     'export_status_creating_zip_file'            => 'Création d’un fichier zip...',
     'export_status_created_zip_file'             => 'Fichier zip créé!',
     'export_status_finished'                     => 'L\'export s\'est terminé avec succès ! Yay !',
@@ -850,9 +848,6 @@ return [
     'removed_amount_from_piggy' => 'Supprimé :amount du ":name"',
 
     // tags
-    'regular_tag'               => 'Juste une balise ordinaire.',
-    'balancing_act'             => 'Un tag prend au maximum deux opérations : une dépense et un transfert. Ils s\'équilibreront mutuellement.',
-    'advance_payment'           => 'Un tag accepte une dépense et un nombre quelconque de dépôts visant à rembourser la dépense originale.',
     'delete_tag'                => 'Supprimer le tag ":tag"',
     'deleted_tag'               => 'Tag ":tag" supprimé',
     'new_tag'                   => 'Créer un nouveau tag',
@@ -995,7 +990,6 @@ return [
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'There are no transactions in this period.',
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',
     'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
     'no_accounts_imperative_asset'          => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
