@@ -2,6 +2,43 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.5] - 2017-09-09
+
+### Added
+- #616, The ability to link transactions
+- #763, as suggested by @tannie
+- #770, as suggested by @skibbipl
+- #780, as suggested by @skibbipl
+- #784, as suggested by @SmilingWorlock
+- Lots of code for future support of automated Bunq imports
+
+### Changed
+- Rewrote the export routine
+- #782, as suggested by @NiceGuyIT
+- #800, as suggested by @jleeong
+
+### Fixed
+- #724, reported by @skibbipl
+- #738, reported by @skibbipl
+- #760, reported by @leander091
+- #764, reported by @tannie
+- #792, reported by @jleeong
+- #793, reported by @nicoschreiner
+- #797, reported by @leander091
+- #801, reported by @pkoziol
+- #803, reported by @pkoziol
+- #805, reported by @pkoziol
+- #806, reported by @pkoziol
+- #807, reported by @pkoziol
+- #808, reported by @pkoziol
+- #809, reported by @pkoziol
+- #814, reported by @nicoschreiner
+- #818, reported by @gavu
+- #819, reported by @DieBauer
+- #820, reported by @simonsmiley 
+- Various other fixes
+
+
 ## [4.6.4] - 2017-08-13
 ### Added
 - PHP7.1 support
