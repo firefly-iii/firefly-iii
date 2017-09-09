@@ -910,6 +910,7 @@ return [
     'comments'                              => 'Opmerkingen',
     'to_link_not_found'                     => 'Als de transactie die je wilt koppelen niet gevonden wordt, voer dan het ID in.',
     'invalid_link_data'                     => 'Ongeldige informatie, de transactie kan niet gekoppeld worden.',
+    'invalid_link_selection'                => 'Cannot link these transactions',
     'journals_linked'                       => 'De transacties zijn gekoppeld.',
     'journals_error_linked'                 => 'Deze transacties zijn al gekoppeld.',
     'journal_links'                         => 'Transactiekoppelingen',
