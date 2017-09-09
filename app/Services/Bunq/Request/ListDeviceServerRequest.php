@@ -35,15 +35,6 @@ class ListDeviceServerRequest extends BunqRequest
     }
 
     /**
-     * @return Collection
-     */
-    public function getDevices(): Collection
-    {
-        return $this->devices;
-    }
-
-
-    /**
      *
      */
     public function call(): void
@@ -62,6 +53,14 @@ class ListDeviceServerRequest extends BunqRequest
         }
 
         return;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
     }
 
     /**

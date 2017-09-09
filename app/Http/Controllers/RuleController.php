@@ -194,8 +194,12 @@ class RuleController extends Controller
         Session::flash('gaEventCategory', 'rules');
         Session::flash('gaEventAction', 'edit-rule');
 
-        return view('rules.rule.edit', compact('rule', 'subTitle',
-                                               'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount','ruleGroups'));
+        return view(
+            'rules.rule.edit', compact(
+            'rule', 'subTitle',
+            'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
+        )
+        );
     }
 
     /**

@@ -15,7 +15,6 @@ namespace FireflyIII\Helpers\Collector;
 
 
 use Carbon\Carbon;
-use Crypt;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Filter\FilterInterface;

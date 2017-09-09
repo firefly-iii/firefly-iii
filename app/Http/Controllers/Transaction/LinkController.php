@@ -101,7 +101,7 @@ class LinkController extends Controller
         if ($alreadyLinked) {
             Session::flash('error', trans('firefly.journals_error_linked'));
 
-            return redirect(route('transactions.show', $journal->id));
+            return redirect(route('transactions.show', [$journal->id]));
         }
         Log::debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
 
@@ -123,9 +123,15 @@ class LinkController extends Controller
         $journalLink->save();
         Session::flash('success', trans('firefly.journals_linked'));
 
-        return redirect(route('transactions.show', $journal->id));
+        return redirect(route('transactions.show', [$journal->id]));
     }
 
+    /**
+     * @param LinkTypeRepositoryInterface $repository
+     * @param TransactionJournalLink      $link
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
     {
 

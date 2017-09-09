@@ -127,11 +127,6 @@ class UserPerson extends BunqObject
         // document front, back attachment
         // customer, customer_limit
         // billing contracts
-
-        //        echo '<pre>';
-        //        print_r($data);
-        //        var_dump($this);
-        //        echo '</pre>';
     }
 
     /**

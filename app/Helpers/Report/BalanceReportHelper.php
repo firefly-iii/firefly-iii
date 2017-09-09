@@ -14,16 +14,12 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use DB;
 use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -74,7 +70,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
             $line = $this->createBalanceLine($budgetLimit, $accounts);
             $balance->addBalanceLine($line);
         }
-        $noBudgetLine       = $this->createNoBudgetLine($accounts, $start, $end);
+        $noBudgetLine = $this->createNoBudgetLine($accounts, $start, $end);
 
         $balance->addBalanceLine($noBudgetLine);
         $balance->setBalanceHeader($header);
@@ -87,7 +83,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         return $balance;
     }
-
 
 
     /**
@@ -140,7 +135,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         return $empty;
     }
-
 
 
     /**

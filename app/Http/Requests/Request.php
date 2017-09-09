@@ -36,53 +36,6 @@ class Request extends FormRequest
     /**
      * @param string $field
      *
-     * @return Carbon|null
-     */
-    protected function date(string $field)
-    {
-        return $this->get($field) ? new Carbon($this->get($field)) : null;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return float
-     */
-    protected function float(string $field): float
-    {
-        return round($this->input($field), 12);
-    }
-
-    /**
-     * @param string $field
-     * @param string $type
-     *
-     * @return array
-     */
-    protected function getArray(string $field, string $type): array
-    {
-        $original = $this->get($field);
-        $return   = [];
-        foreach ($original as $index => $value) {
-            $return[$index] = $this->$type($value);
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return int
-     */
-    protected function integer(string $field): int
-    {
-        return intval($this->get($field));
-    }
-
-    /**
-     * @param string $field
-     *
      * @return string
      */
     public function string(string $field): string
@@ -139,5 +92,52 @@ class Request extends FormRequest
         $string  = str_replace($search, $replace, $string);
 
         return trim($string);
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function date(string $field)
+    {
+        return $this->get($field) ? new Carbon($this->get($field)) : null;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return float
+     */
+    protected function float(string $field): float
+    {
+        return round($this->input($field), 12);
+    }
+
+    /**
+     * @param string $field
+     * @param string $type
+     *
+     * @return array
+     */
+    protected function getArray(string $field, string $type): array
+    {
+        $original = $this->get($field);
+        $return   = [];
+        foreach ($original as $index => $value) {
+            $return[$index] = $this->$type($value);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return int
+     */
+    protected function integer(string $field): int
+    {
+        return intval($this->get($field));
     }
 }

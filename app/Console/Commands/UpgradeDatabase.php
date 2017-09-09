@@ -269,15 +269,6 @@ class UpgradeDatabase extends Command
                         $this->updateJournalCurrency($transaction);
                     }
                 );
-
-
-                //                /** @var Collection $transactions */
-                //                $transactions = $transfer->transactions()->where('amount', '>', 0)->get();
-                //                $transactions->each(
-                //                    function (Transaction $transaction) {
-                //                        $this->updateTransactionCurrency($transaction);
-                //                    }
-                //                );
             }
         );
     }

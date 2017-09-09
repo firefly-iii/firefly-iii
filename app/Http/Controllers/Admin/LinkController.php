@@ -62,7 +62,9 @@ class LinkController extends Controller
     }
 
     /**
-     * @param LinkType $linkType
+     * @param Request                     $request
+     * @param LinkTypeRepositoryInterface $repository
+     * @param LinkType                    $linkType
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
@@ -136,6 +138,8 @@ class LinkController extends Controller
     }
 
     /**
+     * @param LinkTypeRepositoryInterface $repository
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(LinkTypeRepositoryInterface $repository)
@@ -153,6 +157,8 @@ class LinkController extends Controller
     }
 
     /**
+     * @param LinkType $linkType
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(LinkType $linkType)

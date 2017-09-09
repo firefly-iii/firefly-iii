@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
 
-use FireflyIII\Services\Bunq\Token\InstallationToken;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 use Log;
 
@@ -36,6 +35,7 @@ class DeleteDeviceSessionRequest extends BunqRequest
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->sessionToken->getToken();
         $this->sendSignedBunqDelete($uri, $headers);
+
         return;
     }
 

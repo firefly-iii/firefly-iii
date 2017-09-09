@@ -40,25 +40,18 @@ interface LinkTypeRepositoryInterface
     public function destroy(LinkType $linkType, LinkType $moveTo): bool;
 
     /**
+     * @param TransactionJournalLink $link
+     *
+     * @return bool
+     */
+    public function destroyLink(TransactionJournalLink $link): bool;
+
+    /**
      * @param int $id
      *
      * @return LinkType
      */
     public function find(int $id): LinkType;
-
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return bool
-     */
-    public function destroyLink(TransactionJournalLink $link):bool;
-
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return bool
-     */
-    public function switchLink(TransactionJournalLink $link): bool;
 
     /**
      * Check if link exists between journals.
@@ -90,6 +83,13 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function store(array $data): LinkType;
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return bool
+     */
+    public function switchLink(TransactionJournalLink $link): bool;
 
     /**
      * @param LinkType $linkType

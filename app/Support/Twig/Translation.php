@@ -58,15 +58,23 @@ class Translation extends Twig_Extension
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getName(): string
+    {
+        return 'FireflyIII\Support\Twig\Translation';
+    }
+
+    /**
      * @return Twig_SimpleFunction
      */
     public function journalLinkTranslation(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'journalLinkTranslation', function (int $linkTypeId, string $direction, string $original) {
-            $key = sprintf('firefly.%d_%s', $linkTypeId, $direction);
+            $key         = sprintf('firefly.%d_%s', $linkTypeId, $direction);
             $translation = trans($key);
-            if($key === $translation) {
+            if ($key === $translation) {
                 return $original;
             }
 
@@ -75,13 +83,5 @@ class Translation extends Twig_Extension
 
         }, ['is_safe' => ['html']]
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName(): string
-    {
-        return 'FireflyIII\Support\Twig\Translation';
     }
 }

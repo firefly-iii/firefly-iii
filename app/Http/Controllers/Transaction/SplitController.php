@@ -211,8 +211,8 @@ class SplitController extends Controller
     }
 
     /**
-     * @param SplitJournalFormRequest $request
-     * @param TransactionJournal      $journal
+     * @param SplitJournalFormRequest|Request $request
+     * @param TransactionJournal              $journal
      *
      * @return array
      */
@@ -295,7 +295,7 @@ class SplitController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param SplitJournalFormRequest|Request $request
      *
      * @return array
      */

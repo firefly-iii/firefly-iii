@@ -114,14 +114,11 @@ class AmountFormat extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function formatAmountBySymbol(): Twig_SimpleFunction
+    protected function formatAmountByCurrency(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountBySymbol', function (string $amount, string $symbol, int $decimalPlaces = 2, bool $coloured = true): string {
+            'formatAmountByCurrency', function (TransactionCurrency $currency, string $amount, bool $coloured = true): string {
 
-                $currency = new TransactionCurrency;
-                $currency->symbol = $symbol;
-            $currency->decimal_places = $decimalPlaces;
             return app('amount')->formatAnything($currency, $amount, $coloured);
 
 
@@ -134,10 +131,14 @@ class AmountFormat extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function formatAmountByCurrency(): Twig_SimpleFunction
+    protected function formatAmountBySymbol(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountByCurrency', function (TransactionCurrency $currency, string $amount, bool $coloured = true): string {
+            'formatAmountBySymbol', function (string $amount, string $symbol, int $decimalPlaces = 2, bool $coloured = true): string {
+
+            $currency                 = new TransactionCurrency;
+            $currency->symbol         = $symbol;
+            $currency->decimal_places = $decimalPlaces;
 
             return app('amount')->formatAnything($currency, $amount, $coloured);
 

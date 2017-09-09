@@ -26,6 +26,10 @@ class BankController extends Controller
      * This method must ask the user all parameters necessary to start importing data. This may not be enough
      * to finish the import itself (ie. mapping) but it should be enough to begin: accounts to import from,
      * accounts to import into, data ranges, etc.
+     *
+     * @param string $bank
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function form(string $bank)
     {
@@ -77,13 +81,9 @@ class BankController extends Controller
         $remoteAccounts = array_keys($remoteAccounts);
 
         $class = config(sprintf('firefly.import_pre.%s', $bank));
-
-        var_dump($remoteAccounts);exit;
-
         // get import file
 
         // get import config
-
 
 
     }

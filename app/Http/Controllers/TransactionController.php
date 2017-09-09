@@ -151,8 +151,10 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal     $journal
-     * @param JournalTaskerInterface $tasker
+     * @param TransactionJournal          $journal
+     * @param JournalTaskerInterface      $tasker
+     *
+     * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
@@ -198,7 +200,7 @@ class TransactionController extends Controller
         $cache->addProperty('transaction-list-entries');
 
         if ($cache->has()) {
-            // return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         Log::debug(sprintf('Going to get period expenses and incomes between %s and %s.', $start->format('Y-m-d'), $end->format('Y-m-d')));

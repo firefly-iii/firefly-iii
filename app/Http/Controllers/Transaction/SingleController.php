@@ -413,9 +413,9 @@ class SingleController extends Controller
     /**
      * @return array
      */
-    private function groupedActiveAccountList(): array
+    private function groupedAccountList(): array
     {
-        $accounts = $this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $return   = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -433,9 +433,9 @@ class SingleController extends Controller
     /**
      * @return array
      */
-    private function groupedAccountList(): array
+    private function groupedActiveAccountList(): array
     {
-        $accounts = $this->accounts->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts = $this->accounts->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $return   = [];
         /** @var Account $account */
         foreach ($accounts as $account) {

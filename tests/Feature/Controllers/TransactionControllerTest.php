@@ -19,7 +19,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Steam;
 use Tests\TestCase;
 
 /**

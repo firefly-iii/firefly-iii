@@ -292,6 +292,7 @@ class VerifyDatabase extends Command
 
     /**
      * Report on things with no linked journals.
+     *
      * @param string $name
      */
     private function reportObject(string $name)

@@ -94,6 +94,8 @@ class AutoCompleteController extends Controller
     /**
      * @param JournalCollectorInterface $collector
      *
+     * @param TransactionJournal        $except
+     *
      * @return \Illuminate\Http\JsonResponse|mixed
      */
     public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except)

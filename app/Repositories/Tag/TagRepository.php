@@ -187,6 +187,34 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * Same as sum of tag but substracts income instead of adding it as well.
+     *
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return string
+     */
+    public function resultOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+
+        if (!is_null($start) && !is_null($end)) {
+            $collector->setRange($start, $end);
+        }
+
+        $collector->setAllAssetAccounts()->setTag($tag);
+        $journals = $collector->getJournals();
+        $sum      = '0';
+        foreach ($journals as $journal) {
+            $sum = bcadd($sum, strval($journal->transaction_amount));
+        }
+
+        return strval($sum);
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -257,34 +285,6 @@ class TagRepository implements TagRepositoryInterface
         $sum      = '0';
         foreach ($journals as $journal) {
             $sum = bcadd($sum, app('steam')->positive(strval($journal->transaction_amount)));
-        }
-
-        return strval($sum);
-    }
-
-    /**
-     * Same as sum of tag but substracts income instead of adding it as well.
-     *
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return string
-     */
-    public function resultOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-
-        if (!is_null($start) && !is_null($end)) {
-            $collector->setRange($start, $end);
-        }
-
-        $collector->setAllAssetAccounts()->setTag($tag);
-        $journals = $collector->getJournals();
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd($sum, strval($journal->transaction_amount));
         }
 
         return strval($sum);
@@ -380,13 +380,14 @@ class TagRepository implements TagRepositoryInterface
         Log::debug(sprintf('AmountDiff is %f', $amountDiff));
 
         // no difference? Every tag same range:
-        if($amountDiff === 0.0) {
+        if ($amountDiff === 0.0) {
             Log::debug(sprintf('AmountDiff is zero, return %d', $range[0]));
+
             return $range[0];
         }
 
-        $diff       = $range[1] - $range[0];
-        $step       = 1;
+        $diff = $range[1] - $range[0];
+        $step = 1;
         if ($diff != 0) {
             $step = $amountDiff / $diff;
         }

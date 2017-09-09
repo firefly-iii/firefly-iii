@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Information;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Bunq\Object\Alias;
 use FireflyIII\Services\Bunq\Object\MonetaryAccountBank;
 use FireflyIII\Services\Bunq\Request\DeleteDeviceSessionRequest;

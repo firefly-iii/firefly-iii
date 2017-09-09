@@ -141,6 +141,14 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function destinationJournalLinks(): HasMany
+    {
+        return $this->hasMany(TransactionJournalLink::class, 'destination_id');
+    }
+
+    /**
      *
      * @param $value
      *
@@ -378,13 +386,6 @@ class TransactionJournal extends Model
     public function sourceJournalLinks(): HasMany
     {
         return $this->hasMany(TransactionJournalLink::class, 'source_id');
-    }
-    /**
-     * @return HasMany
-     */
-    public function destinationJournalLinks(): HasMany
-    {
-        return $this->hasMany(TransactionJournalLink::class, 'destination_id');
     }
 
     /**

@@ -138,9 +138,11 @@ final class Entry
         $entry->foreign_currency_code = is_null($transaction->foreign_currency_id) ? null : $transaction->foreignCurrency->code;
         $entry->foreign_amount        = is_null($transaction->foreign_currency_id)
             ? null
-            : strval(round(
-                $transaction->transaction_foreign_amount, $transaction->foreignCurrency->decimal_places
-            ));
+            : strval(
+                round(
+                    $transaction->transaction_foreign_amount, $transaction->foreignCurrency->decimal_places
+                )
+            );
 
         $entry->transaction_type     = $transaction->transaction_type_type;
         $entry->asset_account_id     = $transaction->account_id;

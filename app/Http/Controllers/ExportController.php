@@ -17,7 +17,6 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Export\ExpandedProcessor;
 use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Http\Requests\ExportFormRequest;
 use FireflyIII\Models\AccountType;

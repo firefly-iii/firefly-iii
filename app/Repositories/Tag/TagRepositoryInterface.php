@@ -104,11 +104,6 @@ interface TagRepositoryInterface
     public function lastUseDate(Tag $tag): Carbon;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param Tag         $tag
      * @param Carbon|null $start
      * @param Carbon|null $end
@@ -116,6 +111,11 @@ interface TagRepositoryInterface
      * @return string
      */
     public function resultOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 
     /**
      * @param Tag    $tag

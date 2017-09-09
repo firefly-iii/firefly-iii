@@ -31,14 +31,6 @@ class ListMonetaryAccountRequest extends BunqRequest
     private $userId = 0;
 
     /**
-     * @return Collection
-     */
-    public function getMonetaryAccounts(): Collection
-    {
-        return $this->monetaryAccounts;
-    }
-
-    /**
      *
      */
     public function call(): void
@@ -58,6 +50,14 @@ class ListMonetaryAccountRequest extends BunqRequest
         }
 
         return;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getMonetaryAccounts(): Collection
+    {
+        return $this->monetaryAccounts;
     }
 
     /**

@@ -33,13 +33,6 @@ interface PrerequisitesInterface
     public function getViewParameters(): array;
 
     /**
-     * @param Request $request
-     *
-     * @return MessageBag
-     */
-    public function storePrerequisites(Request $request): MessageBag;
-
-    /**
      * Returns if this import method has any special prerequisites such as config
      * variables or other things.
      *
@@ -53,4 +46,11 @@ interface PrerequisitesInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param Request $request
+     *
+     * @return MessageBag
+     */
+    public function storePrerequisites(Request $request): MessageBag;
 }
