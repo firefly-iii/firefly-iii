@@ -34,15 +34,17 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy Apache Configs
 COPY ./docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
 
-WORKDIR /var/www/firefly-iii
+ENV FIREFLY_PATH /var/www/firefly-iii
+
+WORKDIR $FIREFLY_PATH
 
 # The working directory
-COPY . /var/www/firefly-iii/
+COPY . $FIREFLY_PATH
 
-RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www/firefly-iii/storage
+RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
 
 RUN composer install --prefer-dist --no-dev --no-scripts
 
 EXPOSE 80
 
-ENTRYPOINT ["/var/www/firefly-iii/docker/entrypoint.sh"]
+ENTRYPOINT ["docker/entrypoint.sh"]
