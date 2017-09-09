@@ -170,8 +170,6 @@ return [
     'export_status_collected_attachments'        => 'Zebrano wszystkie twoje załączniki!',
     'export_status_collecting_old_uploads'       => 'Collecting all your previous uploads...',
     'export_status_collected_old_uploads'        => 'Collected all your previous uploads!',
-    'export_status_creating_config_file'         => 'Tworzenie pliku konfiguracji...',
-    'export_status_created_config_file'          => 'Utworzono plik konfiguracyjny!',
     'export_status_creating_zip_file'            => 'Tworzenie pliku zip...',
     'export_status_created_zip_file'             => 'Utworzono plik zip!',
     'export_status_finished'                     => 'Eksport został pomyślnie zakończony! Yay!',
@@ -850,9 +848,6 @@ return [
     'removed_amount_from_piggy' => 'Usunięto :amount z ":name"',
 
     // tags
-    'regular_tag'               => 'Po prostu zwykły tag.',
-    'balancing_act'             => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-    'advance_payment'           => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
     'delete_tag'                => 'Usuń tag ":tag"',
     'deleted_tag'               => 'Usunięto tag ":tag"',
     'new_tag'                   => 'Utwórz nowy tag',
@@ -995,7 +990,6 @@ return [
     'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'Nie ma żadnych transakcji w tym okresie.',
     'no_accounts_title_asset'               => 'Stwórzmy konto aktywów!',
     'no_accounts_intro_asset'               => 'Nie masz jeszcze konta nie aktywów. Konta aktywów są twoimi głównymi kontami: konto czekowe, konto oszczędnościowe, wspólne konto lub nawet karta kredytowa.',
     'no_accounts_imperative_asset'          => 'Aby rozpocząć korzystanie z Firefly III należy utworzyć co najmniej jedno konto aktywów. Zróbmy je więc teraz:',
