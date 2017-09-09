@@ -170,8 +170,6 @@ return [
     'export_status_collected_attachments'        => 'Collected all your attachments!',
     'export_status_collecting_old_uploads'       => 'Collecting all your previous uploads...',
     'export_status_collected_old_uploads'        => 'Collected all your previous uploads!',
-    'export_status_creating_config_file'         => 'Creating a configuration file...',
-    'export_status_created_config_file'          => 'Created a configuration file!',
     'export_status_creating_zip_file'            => 'Creating a zip file...',
     'export_status_created_zip_file'             => 'Created a zip file!',
     'export_status_finished'                     => 'Export has succesfully finished! Yay!',
@@ -850,9 +848,6 @@ return [
     'removed_amount_from_piggy' => 'Removed :amount from ":name"',
 
     // tags
-    'regular_tag'               => 'Just a regular tag.',
-    'balancing_act'             => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-    'advance_payment'           => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
     'delete_tag'                => 'Delete tag ":tag"',
     'deleted_tag'               => 'Deleted tag ":tag"',
     'new_tag'                   => 'Make new tag',
@@ -995,7 +990,6 @@ return [
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'There are no transactions in this period.',
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',
     'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
     'no_accounts_imperative_asset'          => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',
