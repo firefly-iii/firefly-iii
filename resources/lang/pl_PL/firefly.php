@@ -910,6 +910,7 @@ return [
     'comments'                              => 'Komentarze',
     'to_link_not_found'                     => 'Jeśli nie widzisz transakcji, którą chcesz powiązać, po prostu wpisz jej identyfikator.',
     'invalid_link_data'                     => 'Wybrano błędny typ powiązania. Nie można powiązać transakcji.',
+    'invalid_link_selection'                => 'Cannot link these transactions',
     'journals_linked'                       => 'Transakcje zostały powiązane.',
     'journals_error_linked'                 => 'Wybrane transakcje są już powiązane.',
     'journal_links'                         => 'Powiązane transakcje',
