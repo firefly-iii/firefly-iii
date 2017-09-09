@@ -284,7 +284,7 @@ class UpgradeDatabase extends Command
         $currency   = $repository->find(intval($transaction->account->getMeta('currency_id')));
         $journal    = $transaction->transactionJournal;
 
-        if ($currency->id !== $journal->transaction_currency_id) {
+        if (!(intval($currency->id) === intval($journal->transaction_currency_id))) {
             $this->line(
                 sprintf(
                     'Transfer #%d ("%s") has been updated to use %s instead of %s.', $journal->id, $journal->description, $currency->code,
