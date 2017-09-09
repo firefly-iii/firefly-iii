@@ -170,8 +170,6 @@ return [
     'export_status_collected_attachments'        => 'Bijlagen verzameld!',
     'export_status_collecting_old_uploads'       => 'Oude uploads verzamelen...',
     'export_status_collected_old_uploads'        => 'Oude uploads verzameld!',
-    'export_status_creating_config_file'         => 'Configuratiebestand maken...',
-    'export_status_created_config_file'          => 'Configuratiebestand gemaakt!',
     'export_status_creating_zip_file'            => 'Zipbestand maken...',
     'export_status_created_zip_file'             => 'Zipbestand gemaakt!',
     'export_status_finished'                     => 'Klaar met exportbestand! Hoera!',
@@ -850,9 +848,6 @@ return [
     'removed_amount_from_piggy' => ':amount uit ":name" gehaald',
 
     // tags
-    'regular_tag'               => 'Een gewone tag.',
-    'balancing_act'             => 'Er kunnen maar twee transacties worden getagged; een uitgaven en inkomsten. Ze balanceren elkaar.',
-    'advance_payment'           => 'Je kan een uitgave taggen en zoveel inkomsten om de uitgave (helemaal) te compenseren.',
     'delete_tag'                => 'Verwijder tag ":tag"',
     'deleted_tag'               => 'Tag ":tag" verwijderd',
     'new_tag'                   => 'Maak nieuwe tag',
@@ -995,7 +990,6 @@ return [
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'Er zijn geen transacties in deze periode.',
     'no_accounts_title_asset'               => 'Je hebt een betaalrekening nodig!',
     'no_accounts_intro_asset'               => 'Je hebt nog geen betaalrekeningen. Betaalrekeningen zijn je meest belangrijke rekeningen: je bankrekening, spaarrekening, gedeelde rekening of zelfs je creditcard.',
     'no_accounts_imperative_asset'          => 'Om Firefly III te gebruiken moet je minstens één betaalrekening hebben. Die kan je nu maken:',
