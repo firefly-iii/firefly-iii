@@ -70,6 +70,7 @@ return [
         FireflyIII\Providers\CategoryServiceProvider::class,
         FireflyIII\Providers\CurrencyServiceProvider::class,
         FireflyIII\Providers\ExportJobServiceProvider::class,
+        FireflyIII\Providers\FireflyServiceProvider::class,
         FireflyIII\Providers\JournalServiceProvider::class,
         FireflyIII\Providers\PiggyBankServiceProvider::class,
         FireflyIII\Providers\RuleServiceProvider::class,
@@ -80,7 +81,7 @@ return [
 
 
     ],
-    'aliases' => [
+    'aliases'         => [
 
         'App'           => Illuminate\Support\Facades\App::class,
         'Artisan'       => Illuminate\Support\Facades\Artisan::class,
@@ -118,15 +119,13 @@ return [
         'Twig'          => TwigBridge\Facade\Twig::class,
         'Form'          => Collective\Html\FormFacade::class,
         'Html'          => Collective\Html\HtmlFacade::class,
-        'Breadcrumbs'   => 'DaveJamesMiller\Breadcrumbs\Facade',
-        'Preferences'   => 'FireflyIII\Support\Facades\Preferences',
-        'FireflyConfig' => 'FireflyIII\Support\Facades\FireflyConfig',
-        'Navigation'    => 'FireflyIII\Support\Facades\Navigation',
-        'Amount'        => 'FireflyIII\Support\Facades\Amount',
-        'Steam'         => 'FireflyIII\Support\Facades\Steam',
-        'ExpandedForm'  => 'FireflyIII\Support\Facades\ExpandedForm',
-        'Entrust'       => 'Zizaco\Entrust\EntrustFacade',
-        'Input'         => 'Illuminate\Support\Facades\Input',
+        'Breadcrumbs'   => DaveJamesMiller\Breadcrumbs\Facade::class,
+        'Preferences'   => \FireflyIII\Support\Facades\Preferences::class,
+        'FireflyConfig' => \FireflyIII\Support\Facades\FireflyConfig::class,
+        'Navigation'    => \FireflyIII\Support\Facades\Navigation::class,
+        'Amount'        => \FireflyIII\Support\Facades\Amount::class,
+        'Steam'         => \FireflyIII\Support\Facades\Steam::class,
+        'ExpandedForm'  => \FireflyIII\Support\Facades\ExpandedForm::class,
         'Google2FA'     => PragmaRX\Google2FA\Vendor\Laravel\Facade::class,
     ],
 
