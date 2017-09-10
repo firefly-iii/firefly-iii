@@ -11,6 +11,9 @@
 |
 */
 
+bcscale(12);
+
+
 $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
