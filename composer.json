@@ -52,7 +52,7 @@
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-zip": "*",
-    "laravel/framework": "5.4.*",
+    "laravel/framework": "5.5.*",
     "davejamesmiller/laravel-breadcrumbs": "3.*",
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
@@ -63,7 +63,8 @@
     "laravelcollective/html": "^5.4",
     "rmccue/requests": "1.*",
     "pragmarx/google2fa": "1.*",
-    "bacon/bacon-qr-code": "1.*"
+    "bacon/bacon-qr-code": "1.*",
+    "fideloper/proxy": "~3.3"
   },
   "require-dev": {
     "filp/whoops": "~2.0",
@@ -105,7 +106,6 @@
       "@php artisan package:discover"
     ],
     "post-update-cmd": [
-      "Illuminate\\Foundation\\ComposerScripts::postUpdate",
       "php artisan firefly:upgrade-database",
       "php artisan firefly:verify",
       "php artisan firefly:instructions update",
