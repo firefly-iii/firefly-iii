@@ -17,6 +17,7 @@ use Amount as Amt;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\MessageBag;
 use Input;
 use RuntimeException;
@@ -332,7 +333,7 @@ class ExpandedForm
         $previousValue = null;
 
         try {
-            $previousValue = Input::old('post_submit_action');
+            $previousValue = request()->old('post_submit_action');
         } catch (RuntimeException $e) {
             // don't care
         }
@@ -488,8 +489,8 @@ class ExpandedForm
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
         try {
-            if (!is_null(Input::old($name))) {
-                $value = Input::old($name);
+            if (!is_null(request()->old($name))) {
+                $value = request()->old($name);
             }
         } catch (RuntimeException $e) {
             // don't care about session errors.

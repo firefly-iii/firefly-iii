@@ -6,7 +6,7 @@ return [
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => env('DB_DATABASE', storage_path('database/database.sqlite')),
             'prefix'   => '',
         ],
         'mysql'  => [
