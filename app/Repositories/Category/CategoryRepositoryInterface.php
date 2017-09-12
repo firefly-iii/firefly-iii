@@ -63,9 +63,9 @@ interface CategoryRepositoryInterface
     /**
      * @param Category $category
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function firstUseDate(Category $category): Carbon;
+    public function firstUseDate(Category $category): ?Carbon;
 
     /**
      * Returns a list of all the categories belonging to a user.
@@ -75,14 +75,14 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
-     * Return most recent transaction(journal) date.
+     * Return most recent transaction(journal) date or null when never used before.
      *
      * @param Category   $category
      * @param Collection $accounts
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function lastUseDate(Category $category, Collection $accounts): Carbon;
+    public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
      * @param Collection $categories

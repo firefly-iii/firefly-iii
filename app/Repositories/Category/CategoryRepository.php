@@ -17,7 +17,6 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -105,33 +104,28 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param Category $category
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function firstUseDate(Category $category): Carbon
+    public function firstUseDate(Category $category): ?Carbon
     {
-        $first = new Carbon;
+        $firstJournalDate     = $this->getFirstJournalDate($category);
+        $firstTransactionDate = $this->getFirstTransactionDate($category);
 
-        /** @var TransactionJournal $firstJournal */
-        $firstJournal = $category->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.date']);
-
-        // if transaction journal exists and date is before $first, then
-        // new date:
-        if (!is_null($firstJournal) && $firstJournal->date->lessThanOrEqualTo($first)) {
-            $first = $firstJournal->date;
+        if (is_null($firstTransactionDate) && is_null($firstJournalDate)) {
+            return null;
+        }
+        if (is_null($firstTransactionDate)) {
+            return $firstJournalDate;
+        }
+        if (is_null($firstJournalDate)) {
+            return $firstTransactionDate;
         }
 
-        // check transactions:
-        $firstTransaction = $category->transactions()
-                                     ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                     ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
-
-
-        // transaction exists, and date is before $first, this date becomes first.
-        if (!is_null($firstTransaction) && Carbon::parse($firstTransaction->date)->lessThanOrEqualTo($first)) {
-            $first = new Carbon($firstTransaction->date);
+        if ($firstTransactionDate < $firstJournalDate) {
+            return $firstTransactionDate;
         }
 
-        return $first;
+        return $firstJournalDate;
     }
 
     /**
@@ -156,26 +150,28 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Category   $category
      * @param Collection $accounts
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function lastUseDate(Category $category, Collection $accounts): Carbon
+    public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
-        $last            = new Carbon('1900-01-01');
-        $lastJournalDate = $this->getLastJournalDate($category, $accounts);
-
-        if ($lastJournalDate->year !== 1900) {
-            $last = clone $lastJournalDate;
-            unset($lastJournalDate);
-        }
-
+        $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
         $lastTransactionDate = $this->getLastTransactionDate($category, $accounts);
 
-        if ($lastTransactionDate->year !== 1900 && $lastTransactionDate < $last) {
-            $last = clone $lastTransactionDate;
-            unset($lastTransactionDate);
+        if (is_null($lastTransactionDate) && is_null($lastJournalDate)) {
+            return null;
+        }
+        if (is_null($lastTransactionDate)) {
+            return $lastJournalDate;
+        }
+        if (is_null($lastJournalDate)) {
+            return $lastTransactionDate;
         }
 
-        return $last;
+        if ($lastTransactionDate < $lastJournalDate) {
+            return $lastTransactionDate;
+        }
+
+        return $lastJournalDate;
     }
 
     /**
@@ -458,11 +454,48 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * @param Category   $category
+     *
+     * @return Carbon|null
+     */
+    private function getFirstJournalDate(Category $category): ?Carbon
+    {
+        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
+        $result = $query->first(['transaction_journals.*']);
+
+        if (!is_null($result)) {
+            return $result->date;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category   $category
+     *
+     * @return Carbon|null
+     */
+    private function getFirstTransactionDate(Category $category): ?Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'DESC');
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (!is_null($lastTransaction)) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category   $category
      * @param Collection $accounts
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    private function getLastJournalDate(Category $category, Collection $accounts): Carbon
+    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
     {
         $query = $category->transactionJournals()->orderBy('date', 'DESC');
 
@@ -477,16 +510,16 @@ class CategoryRepository implements CategoryRepositoryInterface
             return $result->date;
         }
 
-        return new Carbon('1900-01-01');
+        return null;
     }
 
     /**
      * @param Category   $category
      * @param Collection $accounts
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    private function getLastTransactionDate(Category $category, Collection $accounts): Carbon
+    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
     {
         // check transactions:
         $query = $category->transactions()
@@ -502,7 +535,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             return new Carbon($lastTransaction->date);
         }
 
-        return new Carbon('1900-01-01');
+        return null;
     }
 
 }

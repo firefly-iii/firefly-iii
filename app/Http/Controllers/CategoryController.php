@@ -420,7 +420,7 @@ class CategoryController extends Controller
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
-        if ($first->year === 1900) {
+        if (is_null($first)) {
             $first = new Carbon;
         }
         $range   = Preferences::get('viewRange', '1M')->data;
