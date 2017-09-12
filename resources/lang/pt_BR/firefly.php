@@ -942,7 +942,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Você não pode editar transações parceladas #:id com a descrição ":description" porque ele contém várias contas de destino.',
     'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Você não selecionou nenhuma transação válida para editar.',
-    'cannot_convert_split_journl'           => 'Cannot convert a split transaction',
+    'cannot_convert_split_journal'           => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Importar',
