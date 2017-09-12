@@ -942,6 +942,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
     'cannot_edit_opening_balance'           => 'Je kan het startsaldo van een rekening niet wijzigen via dit scherm.',
     'no_edit_multiple_left'                 => 'Je hebt geen geldige transacties geselecteerd.',
+    'cannot_convert_split_journl'           => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
