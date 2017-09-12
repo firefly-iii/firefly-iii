@@ -93,5 +93,5 @@
         var searchQuery = "{{ fullQuery|escape('js') }}";
         var searchUri = "{{ route('search.search') }}";
     </script>
-    <script type="text/javascript" src="js/ff/search/index.js"></script>
+    <script type="text/javascript" src="js/ff/search/index.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

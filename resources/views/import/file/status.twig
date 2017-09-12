@@ -151,7 +151,7 @@
         var jobStartUrl = '{{ route('import.file.start', [job.key]) }}';
         var token = '{{ csrf_token() }}';
     </script>
-    <script type="text/javascript" src="js/ff/import/status.js"></script>
+    <script type="text/javascript" src="js/ff/import/status.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 {% block styles %}
 {% endblock %}

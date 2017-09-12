@@ -125,9 +125,9 @@
     <script type="text/javascript">
         var billUri = '{{ route('chart.bill.single', [bill.id]) }}';
     </script>
-    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
-    <script type="text/javascript" src="js/ff/charts.js"></script>
-    <script type="text/javascript" src="js/ff/bills/show.js"></script>
-    <script type="text/javascript" src="js/ff/transactions/list.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/bills/show.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

@@ -41,9 +41,9 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
-    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/ff/rules/select-transactions.js"></script>
+    <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/rules/select-transactions.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 
 {% block styles %}

@@ -30,8 +30,8 @@
 
     {% block styles %}{% endblock %}
     <!--[if lt IE 9]>
-    <script src="js/lib/html5shiv.min.js"></script>
-    <script src="js/lib/respond.min.js"></script>
+    <script src="js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
+    <script src="js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
     <![endif]-->
     <script type="text/javascript">
         var forceDemoOff = false;
@@ -179,23 +179,23 @@
     </div>
 </div>
 
-<script src="js/lib/jquery-3.1.1.min.js" type="text/javascript"></script>
-<script src="lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/lib/moment.min.js" type="text/javascript"></script>
-<script src="js/lib/daterangepicker.js" type="text/javascript"></script>
-<script src="lib/adminlte/js/app.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="js/lib/accounting.min.js"></script>
-<script src="{{ route('javascript.variables') }}?ext=.js" type="text/javascript"></script>
-<script type="text/javascript" src="js/ff/firefly.js"></script>
-<script type="text/javascript" src="js/ff/help.js"></script>
+<script src="js/lib/jquery-3.1.1.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="lib/bootstrap/js/bootstrap.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="lib/adminlte/js/app.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script type="text/javascript" src="js/lib/accounting.min.js?v={{ FF_VERSION }}"></script>
+<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}" type="text/javascript"></script>
+<script type="text/javascript" src="js/ff/firefly.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript" src="js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}
     <script type="text/javascript">
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
         var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, what|default("")]) }}";
     </script>
-    <script type="text/javascript" src="lib/intro/intro.min.js"></script>
-    <script type="text/javascript" src="js/ff/intro/intro.js"></script>
+    <script type="text/javascript" src="lib/intro/intro.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/intro/intro.js?v={{ FF_VERSION }}"></script>
 {% endif %}
 {% block scripts %}{% endblock %}
 

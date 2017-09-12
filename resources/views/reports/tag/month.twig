@@ -398,10 +398,10 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
-    <script type="text/javascript" src="js/ff/charts.js"></script>
-    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
 
     <script type="text/javascript">
         // to report another URL:
@@ -423,8 +423,8 @@
     </script>
 
 
-    <script type="text/javascript" src="js/ff/reports/tag/all.js"></script>
-    <script type="text/javascript" src="js/ff/reports/tag/month.js"></script>
+    <script type="text/javascript" src="js/ff/reports/tag/all.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/reports/tag/month.js?v={{ FF_VERSION }}"></script>
 
 {% endblock %}
 

@@ -22,8 +22,8 @@
     <link href="css/firefly.css" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
-    <script src="js/lib/html5shiv.min.js"></script>
-    <script src="js/lib/respond.min.js"></script>
+    <script src="js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
+    <script src="js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
     <![endif]-->
 
     {# favicons #}
@@ -38,9 +38,9 @@
     {% block content %}{% endblock %}
 </div>
 <!-- /.login-box -->
-<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/ff/guest.js"></script>
+<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript" src="js/ff/guest.js?v={{ FF_VERSION }}"></script>
 
 {% if env('ANALYTICS_ID','') != '' %}
     <script>

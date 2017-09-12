@@ -239,20 +239,20 @@
     <script type="text/javascript">
         var what = "{{ what }}";
     </script>
-    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
-    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>
-    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
-    <script type="text/javascript" src="javascript/accounts?ext=.js"></script>
-    <script type="text/javascript" src="javascript/currencies?ext=.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="jscript/accounts?ext=.js&amp;v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="jscript/currencies?ext=.js&amp;v={{ FF_VERSION }}"></script>
     <script type="text/javascript">
         var journal = {{ journal.toArray()|json_encode|raw }};
         var journalData = {{ data|json_encode|raw }};
         var exchangeRateInstructions = "{{ 'exchange_rate_instructions'|_|escape('js') }}";
         var transferInstructions = "{{ 'transfer_exchange_rate_instructions'|_|escape('js') }}";
     </script>
-    <script type="text/javascript" src="js/ff/transactions/single/common.js"></script>
-    <script type="text/javascript" src="js/ff/transactions/single/edit.js"></script>
+    <script type="text/javascript" src="js/ff/transactions/single/common.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/transactions/single/edit.js?v={{ FF_VERSION }}"></script>
 
 {% endblock %}
 {% block styles %}
