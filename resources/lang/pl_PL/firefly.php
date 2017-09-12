@@ -942,7 +942,7 @@ return [
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
     'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
-    'cannot_convert_split_journal'           => 'Cannot convert a split transaction',
+    'cannot_convert_split_journal'           => 'Nie można przekonwertować podzielonej transakcji',
 
     // import bread crumbs and titles:
     'import'                                => 'Importuj',
