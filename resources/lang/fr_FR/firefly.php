@@ -942,6 +942,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Vous ne pouvez pas modifier la transaction scindée #:id avec la description ":description" car elle contient plusieurs comptes de destination.',
     'cannot_edit_opening_balance'           => 'Vous ne pouvez pas modifier le solde d\'ouverture d\'un compte.',
     'no_edit_multiple_left'                 => 'Vous n\'avez sélectionné aucune transaction valide à éditer.',
+    'cannot_convert_split_journl'           => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
