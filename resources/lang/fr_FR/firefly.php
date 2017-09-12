@@ -1029,12 +1029,12 @@ return [
     'no_transactions_create_transfers'      => 'Créer un transfert',
     'no_piggies_title_default'              => 'Nous allons créer une tirelire !',
     'no_piggies_intro_default'              => 'Vous n\'avez encore pas de tirelire. Vous pouvez créer des tirelires pour diviser vos économies et garder une trace de ce que vous économisez.',
-    'no_piggies_imperative_default'         => 'Do you have things you\'re saving money for? Create a piggy bank and keep track:',
-    'no_piggies_create_default'             => 'Create a new piggy bank',
-    'no_bills_title_default'                => 'Let\'s create a bill!',
-    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent of insurance.',
-    'no_bills_imperative_default'           => 'Do you have such regular bills? Create a bill and keep track of your payments:',
-    'no_bills_create_default'               => 'Create a bill',
+    'no_piggies_imperative_default'         => 'Avez-vous des choses pour lesquelles vous économisez de l\'argent ? Créer une tirelire et suivez-là :',
+    'no_piggies_create_default'             => 'Créer une nouvelle tirelire',
+    'no_bills_title_default'                => 'Nous allons créer une facture !',
+    'no_bills_intro_default'                => 'Vous n\'avez pas encore de factures. Vous pouvez créer des factures pour suivre les dépenses ordinaires, comme votre loyer d\'assurance.',
+    'no_bills_imperative_default'           => 'Avez-vous des factures régulières ? Créez une facture et suivez vos paiements :',
+    'no_bills_create_default'               => 'Créer une facture',
 
 
 ];
