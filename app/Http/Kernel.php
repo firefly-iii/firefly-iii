@@ -11,7 +11,6 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Http\Middleware\Sandstorm;
-use FireflyIII\Http\Middleware\StartFireflySession;
 use FireflyIII\Http\Middleware\TrimStrings;
 use FireflyIII\Http\Middleware\TrustProxies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
@@ -24,6 +23,7 @@ use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 
@@ -59,7 +59,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -71,7 +71,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -84,7 +84,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -99,7 +99,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -114,7 +114,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -132,7 +132,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
