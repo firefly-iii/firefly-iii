@@ -64,7 +64,7 @@ class JournalLinkRequest extends Request
             $combinations[] = sprintf('%d_outward', $type->id);
         }
         $string = join(',', $combinations);
-
+        // fixed
         return [
             'link_type'       => sprintf('required|in:%s', $string),
             'link_other'      => 'belongsToUser:transaction_journals',

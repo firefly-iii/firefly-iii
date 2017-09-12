@@ -33,6 +33,7 @@ class UserRegistrationRequest extends Request
      */
     public function rules()
     {
+        // fixed
         return [
             'email'    => 'email|required',
             'password' => 'confirmed|secure_password',

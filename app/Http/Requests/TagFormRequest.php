@@ -77,11 +77,11 @@ class TagFormRequest extends Request
         return [
             'tag'         => $tagRule,
             'id'          => $idRule,
-            'description' => 'min:1',
-            'date'        => 'date',
-            'latitude'    => 'numeric|min:-90|max:90',
-            'longitude'   => 'numeric|min:-90|max:90',
-            'zoomLevel'   => 'numeric|min:0|max:80',
+            'description' => 'min:1|nullable',
+            'date'        => 'date|nullable',
+            'latitude'    => 'numeric|min:-90|max:90|nullable',
+            'longitude'   => 'numeric|min:-90|max:90|nullable',
+            'zoomLevel'   => 'numeric|min:0|max:80|nullable',
         ];
     }
 }

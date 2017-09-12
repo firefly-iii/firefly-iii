@@ -36,6 +36,8 @@ class LinkTypeFormRequest extends Request
      */
     public function rules()
     {
+        // fixed
+
         /** @var LinkTypeRepositoryInterface $repository */
         $repository = app(LinkTypeRepositoryInterface::class);
         $nameRule   = 'required|min:1|unique:link_types,name';

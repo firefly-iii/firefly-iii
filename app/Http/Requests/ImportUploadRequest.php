@@ -35,6 +35,7 @@ class ImportUploadRequest extends Request
      */
     public function rules()
     {
+        // fixed
         $types = array_keys(config('firefly.import_formats'));
 
         return [

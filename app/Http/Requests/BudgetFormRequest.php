@@ -47,6 +47,7 @@ class BudgetFormRequest extends Request
      */
     public function rules()
     {
+        // fixed
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $nameRule   = 'required|between:1,100|uniqueObjectForUser:budgets,name';

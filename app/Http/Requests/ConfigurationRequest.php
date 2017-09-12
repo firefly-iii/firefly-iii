@@ -46,6 +46,7 @@ class ConfigurationRequest extends Request
      */
     public function rules()
     {
+        // fixed
         $rules = [
             'single_user_mode' => 'between:0,1|numeric',
             'is_demo_site'     => 'between:0,1|numeric',

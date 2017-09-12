@@ -68,16 +68,16 @@ class SplitJournalFormRequest extends Request
             'journal_source_account_name.*'           => 'between:1,255',
             'journal_currency_id'                     => 'required|exists:transaction_currencies,id',
             'date'                                    => 'required|date',
-            'interest_date'                           => 'date',
-            'book_date'                               => 'date',
-            'process_date'                            => 'date',
+            'interest_date'                           => 'date|nullable',
+            'book_date'                               => 'date|nullable',
+            'process_date'                            => 'date|nullable',
             'transactions.*.description'              => 'required|between:1,255',
             'transactions.*.destination_account_id'   => 'numeric|belongsToUser:accounts,id',
-            'transactions.*.destination_account_name' => 'between:1,255',
+            'transactions.*.destination_account_name' => 'between:1,255|nullable',
             'transactions.*.amount'                   => 'required|numeric',
             'transactions.*.budget_id'                => 'belongsToUser:budgets,id',
-            'transactions.*.category'                 => 'between:1,255',
-            'transactions.*.piggy_bank_id'            => 'between:1,255',
+            'transactions.*.category'                 => 'between:1,255|nullable',
+            'transactions.*.piggy_bank_id'            => 'between:1,255|nullable',
         ];
     }
 

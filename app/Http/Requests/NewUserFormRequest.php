@@ -35,6 +35,7 @@ class NewUserFormRequest extends Request
      */
     public function rules()
     {
+        // fixed
         return [
             'bank_name'                            => 'required|between:1,200',
             'bank_balance'                         => 'required|numeric',

@@ -44,6 +44,7 @@ class ReportFormRequest extends Request
      */
     public function getAccountList(): Collection
     {
+        // fixed
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('accounts');

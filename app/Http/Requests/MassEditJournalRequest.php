@@ -35,6 +35,8 @@ class MassEditJournalRequest extends Request
      */
     public function rules()
     {
+        // fixed
+
         return [
             'description.*'            => 'required|min:1,max:255',
             'source_account_id.*'      => 'numeric|belongsToUser:accounts,id',

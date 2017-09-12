@@ -72,7 +72,7 @@ class RuleFormRequest extends Request
         }
         $rules = [
             'title'                => $titleRule,
-            'description'          => 'between:1,5000',
+            'description'          => 'between:1,5000|nullable',
             'stop_processing'      => 'boolean',
             'rule_group_id'        => 'required|belongsToUser:rule_groups',
             'trigger'              => 'required|in:store-journal,update-journal',

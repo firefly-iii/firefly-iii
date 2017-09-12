@@ -35,6 +35,7 @@ class MassDeleteJournalRequest extends Request
      */
     public function rules()
     {
+        // fixed
         return [
             'confirm_mass_delete.*' => 'required|belongsToUser:transaction_journals,id',
         ];
