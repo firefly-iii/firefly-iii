@@ -61,6 +61,7 @@ class Controller extends BaseController
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
         View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
+        View::share('FF_VERSION', config('firefly.version'));
 
 
         $this->middleware(
@@ -117,7 +118,7 @@ class Controller extends BaseController
         if (!(strpos($identifier, 'delete') === false) && !(strpos($uri, '/show/') === false)) {
             $uri = route('index');
         }
-        if (!(strpos($uri, 'javascript') === false)) {
+        if (!(strpos($uri, 'jscript') === false)) {
             $uri = route('index');
         }
 
