@@ -94,7 +94,7 @@ return [
     'code'                       => 'Code',
     'iban'                       => 'Numéro IBAN',
     'accountNumber'              => 'N° de compte',
-    'creditCardNumber'           => 'Credit card number',
+    'creditCardNumber'           => 'Numéro de carte de crédit',
     'has_headers'                => 'Entêtes ',
     'date_format'                => 'Format de la date',
     'specifix'                   => 'Banque - ou déposer des corrections spécifiques',
