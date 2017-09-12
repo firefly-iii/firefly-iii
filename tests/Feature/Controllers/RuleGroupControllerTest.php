@@ -176,7 +176,7 @@ class RuleGroupControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturn(new RuleGroup);
         $data = [
             'title'       => 'A',
-            'description' => '',
+            'description' => 'No description',
         ];
 
 

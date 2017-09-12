@@ -108,9 +108,9 @@ class JournalFormRequest extends Request
             'piggy_bank_id'            => 'between:1,255',
 
             // foreign currency amounts
-            'native_amount'            => 'numeric|more:0',
-            'source_amount'            => 'numeric|more:0',
-            'destination_amount'       => 'numeric',
+            'native_amount'            => 'numeric|more:0|nullable',
+            'source_amount'            => 'numeric|more:0|nullable',
+            'destination_amount'       => 'numeric|more:0|nullable',
         ];
 
         // some rules get an upgrade depending on the type of data:

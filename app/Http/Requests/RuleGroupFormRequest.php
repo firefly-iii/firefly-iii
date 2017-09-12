@@ -57,7 +57,7 @@ class RuleGroupFormRequest extends Request
 
         return [
             'title'       => $titleRule,
-            'description' => 'between:1,5000',
+            'description' => 'between:1,5000|nullable',
         ];
     }
 }

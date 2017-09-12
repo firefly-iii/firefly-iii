@@ -85,7 +85,7 @@ class ConvertController extends Controller
 
         // cannot convert split.
         if ($journal->transactions()->count() > 2) {
-            Session::flash('error', trans('firefly.cannot_convert_split_journl'));
+            Session::flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -134,7 +134,7 @@ class ConvertController extends Controller
         }
 
         if ($journal->transactions()->count() > 2) {
-            Session::flash('error', trans('firefly.cannot_convert_split_journl'));
+            Session::flash('error', trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -185,7 +185,7 @@ class ConvertController extends Controller
             case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL:
             case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL:
                 // three and five
-                if ($data['destination_account_expense'] === '') {
+                if ($data['destination_account_expense'] === '' || is_null($data['destination_account_expense'])) {
                     // destination is a cash account.
                     $destination = $accountRepository->getCashAccount();
 
@@ -232,7 +232,7 @@ class ConvertController extends Controller
             case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT:
             case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT:
 
-                if ($data['source_account_revenue'] === '') {
+                if ($data['source_account_revenue'] === '' || is_null($data['source_account_revenue'])) {
                     // destination is a cash account.
                     $destination = $accountRepository->getCashAccount();
 
