@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Rules\Processor;
+use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;

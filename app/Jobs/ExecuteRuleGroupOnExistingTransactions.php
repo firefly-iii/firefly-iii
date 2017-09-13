@@ -16,7 +16,7 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Rules\Processor;
+use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;

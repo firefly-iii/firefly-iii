@@ -19,7 +19,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface as JRI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface as PRI;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface as RGRI;
-use FireflyIII\Rules\Processor;
+use FireflyIII\TransactionRules\Processor;
 use FireflyIII\Support\Events\BillScanner;
 use Log;
 

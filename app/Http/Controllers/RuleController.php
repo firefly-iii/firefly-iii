@@ -27,7 +27,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Rules\TransactionMatcher;
+use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Http\Request;
 use Preferences;
 use Response;

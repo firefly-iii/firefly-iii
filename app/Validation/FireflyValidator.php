@@ -23,7 +23,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Rules\Triggers\TriggerInterface;
+use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\User;
 use Google2FA;
