@@ -130,6 +130,8 @@ return [
     'exchange_rate_instructions'                 => 'Betaalrekening "@naam" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
     'transfer_exchange_rate_instructions'        => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name: accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
     'transaction_data'                           => 'Transactiegegevens',
+    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
     'search'                                     => 'Zoeken',
@@ -942,7 +944,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
     'cannot_edit_opening_balance'           => 'Je kan het startsaldo van een rekening niet wijzigen via dit scherm.',
     'no_edit_multiple_left'                 => 'Je hebt geen geldige transacties geselecteerd.',
-    'cannot_convert_split_journal'           => 'Cannot convert a split transaction',
+    'cannot_convert_split_journal'          => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
@@ -986,6 +988,7 @@ return [
     'import_status_finished_title'          => 'Importeren is klaar',
     'import_status_finished_text'           => 'Je gegevensbestand is geïmporteerd.',
     'import_status_finished_job'            => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'The import is running...',
     'import_with_key'                       => 'Import met code \':key\'',
 
     // sandstorm.io errors and messages:
