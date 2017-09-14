@@ -153,6 +153,7 @@ return [
     // export data:
     'import_and_export'                          => 'Importer et Exporter',
     'export_data'                                => 'Exporter les données',
+    'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'À des fins de sauvegarde, lors de la migration vers un autre système ou lors de la migration sur une autre installation de Firefly III.',
     'export_format'                              => 'Format d\'export',
     'export_format_csv'                          => 'Valeurs séparées par des virgules (fichier CSV)',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Emplacement',
     'without_date'                               => 'Sans date',
     'result'                                     => 'Résultat',
+    'total_result'                               => 'Total result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Comptes de l’écran d’accueil',
