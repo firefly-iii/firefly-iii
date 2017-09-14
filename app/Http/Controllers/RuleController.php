@@ -196,9 +196,9 @@ class RuleController extends Controller
 
         return view(
             'rules.rule.edit', compact(
-            'rule', 'subTitle',
-            'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
-        )
+                                 'rule', 'subTitle',
+                                 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
+                             )
         );
     }
 

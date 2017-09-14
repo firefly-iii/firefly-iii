@@ -17,7 +17,6 @@ use Amount as Amt;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\MessageBag;
 use Input;
 use RuntimeException;

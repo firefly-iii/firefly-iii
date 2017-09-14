@@ -205,7 +205,7 @@ class CategoryController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
-            ->setTypes([TransactionType::WITHDRAWAL,TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->removeFilter(InternalTransferFilter::class);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('categories.no-category'));
@@ -363,7 +363,7 @@ class CategoryController extends Controller
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL,TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
             $count = $collector->getJournals()->count();
 
@@ -428,6 +428,7 @@ class CategoryController extends Controller
         $first   = Navigation::startOfPeriod($first, $range);
         $end     = Navigation::endOfX(new Carbon, $range, null);
         $entries = new Collection;
+        $count   = 0;
 
         // properties for entries with their amounts.
         $cache = new CacheProperties();
@@ -439,7 +440,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        while ($end >= $first) {
+        while ($end >= $first && $count < 90) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
             $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
@@ -467,6 +468,7 @@ class CategoryController extends Controller
                 ]
             );
             $end = Navigation::subtractPeriod($end, $range, 1);
+            $count++;
         }
         $cache->store($entries);
 

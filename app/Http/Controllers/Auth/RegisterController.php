@@ -1,11 +1,22 @@
 <?php
+declare(strict_types=1);
+
+
+/**
+ * RegisterController.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * This software may be modified and distributed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International License.
+ *
+ * See the LICENSE file for details.
+ */
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use FireflyIII\User;
 use FireflyIII\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use FireflyIII\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -40,30 +51,36 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-    }
-
-    /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
+     *
      * @return \FireflyIII\User
      */
     protected function create(array $data)
     {
-        return User::create([
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        return User::create(
+            [
+                'email'    => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]
+        );
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make(
+            $data, [
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]
+        );
     }
 }

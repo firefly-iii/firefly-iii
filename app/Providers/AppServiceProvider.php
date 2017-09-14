@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use URL;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * Class AppServiceProvider

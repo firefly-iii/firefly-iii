@@ -453,7 +453,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
+     * @param Category $category
      *
      * @return Carbon|null
      */
@@ -470,7 +470,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
+     * @param Category $category
      *
      * @return Carbon|null
      */

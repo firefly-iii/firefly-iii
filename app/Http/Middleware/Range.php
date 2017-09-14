@@ -101,10 +101,9 @@ class Range
         $moneyResult = setlocale(LC_MONETARY, $locale);
 
         // send error to view if could not set money format
-        if($moneyResult === false) {
+        if ($moneyResult === false) {
             View::share('invalidMonetaryLocale', true);
         }
-
 
 
         // save some formats:

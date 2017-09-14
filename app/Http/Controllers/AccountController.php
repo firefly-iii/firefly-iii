@@ -399,7 +399,7 @@ class AccountController extends Controller
         $start      = Navigation::startOfPeriod($start, $range);
         $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
-
+        $count      = 0;
         // properties for cache
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -412,7 +412,7 @@ class AccountController extends Controller
         }
 
         Log::debug('Going to get period expenses and incomes.');
-        while ($end >= $start) {
+        while ($end >= $start && $count < 90) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
 
@@ -442,7 +442,7 @@ class AccountController extends Controller
                     'date'   => clone $end]
             );
             $end = Navigation::subtractPeriod($end, $range, 1);
-
+            $count++;
         }
         $cache->store($entries);
 

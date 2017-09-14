@@ -184,7 +184,7 @@ class SplitController extends Controller
      */
     private function arrayFromInput(SplitJournalFormRequest $request): array
     {
-        $tags = is_null($request->get('tags')) ? '' : $request->get('tags');
+        $tags  = is_null($request->get('tags')) ? '' : $request->get('tags');
         $array = [
             'journal_description'            => $request->get('journal_description'),
             'journal_source_account_id'      => $request->get('journal_source_account_id'),

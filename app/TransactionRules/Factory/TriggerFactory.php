@@ -15,9 +15,9 @@ namespace FireflyIII\TransactionRules\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Support\Domain;
 use FireflyIII\TransactionRules\Triggers\AbstractTrigger;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
-use FireflyIII\Support\Domain;
 use Log;
 
 /**

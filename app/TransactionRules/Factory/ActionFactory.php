@@ -15,8 +15,8 @@ namespace FireflyIII\TransactionRules\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\TransactionRules\Actions\ActionInterface;
 use FireflyIII\Support\Domain;
+use FireflyIII\TransactionRules\Actions\ActionInterface;
 use Log;
 
 /**
