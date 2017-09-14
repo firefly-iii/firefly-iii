@@ -130,6 +130,8 @@ return [
     'exchange_rate_instructions'                 => 'Premoženjski račun "@name" sprejema samo transakcije v @native_currency. Če želite namesto tega uporabiti @foreign_currency, morate podati tudi znesek v @native_currency:',
     'transfer_exchange_rate_instructions'        => 'Izvorni premoženjski račun "@source_name" sprejema samo transakcije v @source_currency. Ciljni premoženjski račun "@dest_name" sprejema samo transakcije v @dest_currency. Podati morate znesek v obeh valutah.',
     'transaction_data'                           => 'Transaction data',
+    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
     'search'                                     => 'Search',
@@ -942,7 +944,7 @@ return [
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
     'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'You have selected no valid transactions to edit.',
-    'cannot_convert_split_journal'           => 'Cannot convert a split transaction',
+    'cannot_convert_split_journal'          => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
@@ -986,6 +988,7 @@ return [
     'import_status_finished_title'          => 'Import routine finished',
     'import_status_finished_text'           => 'The import routine has imported your file.',
     'import_status_finished_job'            => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'The import is running...',
     'import_with_key'                       => 'Import with key \':key\'',
 
     // sandstorm.io errors and messages:
