@@ -21,6 +21,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Hash;
 use Log;
+use Preferences;
 use Session;
 use View;
 
@@ -84,7 +85,14 @@ class ProfileController extends Controller
         $subTitle = auth()->user()->email;
         $userId   = auth()->user()->id;
 
-        return view('profile.index', compact('subTitle', 'userId'));
+        // get access token or create one.
+        $accessToken = Preferences::get('access_token', null);
+        if (is_null($accessToken)) {
+            $token       = auth()->user()->generateAccessToken();
+            $accessToken = Preferences::set('access_token', $token);
+        }
+
+        return view('profile.index', compact('subTitle', 'userId', 'accessToken'));
     }
 
     /**
@@ -140,6 +148,17 @@ class ProfileController extends Controller
         return redirect(route('index'));
     }
 
+    /**
+     *
+     */
+    function regenerate()
+    {
+        $token = auth()->user()->generateAccessToken();
+        Preferences::set('access_token', $token);
+        Session::flash('success', strval(trans('firefly.token_regenerated')));
+
+        return redirect(route('profile.index'));
+    }
 
     /**
      * @param User   $user

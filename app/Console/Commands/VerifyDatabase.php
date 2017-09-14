@@ -27,6 +27,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
+use Preferences;
 use Schema;
 use stdClass;
 
@@ -102,6 +103,22 @@ class VerifyDatabase extends Command
         // create default link types if necessary
         $this->createLinkTypes();
 
+        // create user access tokens, if not present already.
+        $this->createAccessTokens();
+
+    }
+
+    private function createAccessTokens()
+    {
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            $pref = Preferences::getForUser($user, 'access_token', null);
+            if (is_null($pref)) {
+                $token = $user->generateAccessToken();
+                Preferences::setForUser($user, 'access_token', $token);
+            }
+        }
     }
 
     /**

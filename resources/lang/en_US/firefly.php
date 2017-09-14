@@ -416,7 +416,10 @@ return [
     'secure_pw_should'                           => 'Should I check the box?',
     'secure_pw_long_password'                    => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
     'secure_pw_short'                            => 'If you just entered the password you always use: <em>Please yes</em>.',
-
+    'personal_access_token'                      => 'Personal access token',
+    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_access_token'                    => 'Regenerate access token',
+    'token_regenerated'                          => 'A new token was generated',
 
     // attachments
     'nr_of_attachments'                          => 'One attachment|:count attachments',

@@ -526,6 +526,7 @@ Route::group(
 
     Route::post('delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account.post']);
     Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
+    Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
 }
 );
 
