@@ -82,4 +82,6 @@ return [
     'inward'                 => 'Descripción interna',
     'outward'                => 'Descripción externa',
     'number_of_transactions' => 'Número de transacciones',
+    'total_amount'           => 'Total amount',
+
 ];
