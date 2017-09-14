@@ -416,7 +416,10 @@ return [
     'secure_pw_should'                           => 'Vinkje zetten of niet?',
     'secure_pw_long_password'                    => 'Als je net een lang wachtwoord hebt gegenereerd met een password generator tool: <strong>nee</strong>.',
     'secure_pw_short'                            => 'Gebruik je het wachtwoord dat je altijd gebruikt? <em>Ja, doen!</em>',
-
+    'personal_access_token'                      => 'Personal access token',
+    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_access_token'                    => 'Regenerate access token',
+    'token_regenerated'                          => 'A new token was generated',
 
     // attachments
     'nr_of_attachments'                          => 'Eén bijlage|:count bijlagen',
