@@ -82,4 +82,6 @@ return [
     'inward'                 => 'Binnenwaartse beschrijving',
     'outward'                => 'Buitenwaartse beschrijving',
     'number_of_transactions' => 'Aantal transacties',
+    'total_amount'           => 'Total amount',
+
 ];
