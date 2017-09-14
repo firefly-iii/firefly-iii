@@ -71,7 +71,7 @@ class ImportRoutine
         $this->job->save();
 
         Log::debug('Updated job...');
-
+        Log::debug(sprintf('%d journals in $storage->journals', $storage->journals->count()));
         $this->journals = $storage->journals;
         $this->errors   = $storage->errors;
 
