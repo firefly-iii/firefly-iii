@@ -5,9 +5,6 @@
 {% endblock %}
 
 {% block content %}
-
-
-
     <form method="post" action="{{ route('export.submit') }}" accept-charset="UTF-8" class="form-horizontal" id="export">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <input name="job" type="hidden" value="{{ job.key }}">
@@ -17,7 +14,7 @@
 
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'export_data'|_ }}</h3>
+                        <h3 class="box-title">{{ 'export_and_backup_data'|_ }}</h3>
                     </div>
                     <div class="box-body">
                         <div id="export-loading" style="display:none;">
