@@ -153,6 +153,7 @@ return [
     // export data:
     'import_and_export'                          => 'Импорт и экспорт',
     'export_data'                                => 'Экспорт данных',
+    'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
     'export_format'                              => 'Формат для экспорта',
     'export_format_csv'                          => 'Comma separated values (CSV file)',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Location',
     'without_date'                               => 'Without date',
     'result'                                     => 'Result',
+    'total_result'                               => 'Total result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Счета, отображаемые в сводке',
