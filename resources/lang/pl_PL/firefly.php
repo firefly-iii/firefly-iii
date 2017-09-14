@@ -130,6 +130,8 @@ return [
     'exchange_rate_instructions'                 => 'Konto aktywów "@name" obsługuje tylko transakcje w walucie @native_currency. Jeśli chcesz użyć waluty @foreign_currency, upewnij się, że kwota w @native_currency jest również znana:',
     'transfer_exchange_rate_instructions'        => 'Konto źródłowe "@source_name" obsługuje tylko transakcje w walucie @source_currency. Konto docelowe "@dest_name" obsługuje tylko transakcje w walucie @dest_currency. Musisz podać przelewaną kwotę w obu walutach.',
     'transaction_data'                           => 'Dane transakcji',
+    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
     'search'                                     => 'Szukaj',
@@ -942,7 +944,7 @@ return [
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
     'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
-    'cannot_convert_split_journal'           => 'Nie można przekonwertować podzielonej transakcji',
+    'cannot_convert_split_journal'          => 'Nie można przekonwertować podzielonej transakcji',
 
     // import bread crumbs and titles:
     'import'                                => 'Importuj',
@@ -986,6 +988,7 @@ return [
     'import_status_finished_title'          => 'Importowanie zakończone',
     'import_status_finished_text'           => 'Procedura importu pomyślnie zaimportowała Twój plik.',
     'import_status_finished_job'            => 'Zaimportowane transakcje znajdują się w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'The import is running...',
     'import_with_key'                       => 'Import z kluczem \':key\'',
 
     // sandstorm.io errors and messages:
