@@ -55,8 +55,7 @@ class MailError extends Job implements ShouldQueue
         $this->destination = $destination;
         $this->ipAddress   = $ipAddress;
         $this->exception   = $exceptionData;
-
-        $debug = $exceptionData;
+        $debug             = $exceptionData;
         unset($debug['stackTrace']);
         Log::error('Exception is: ' . json_encode($debug));
     }

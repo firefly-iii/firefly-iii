@@ -2,8 +2,13 @@
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\User;
+use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+
 
 class LoginController extends Controller
 {
@@ -36,5 +41,29 @@ class LoginController extends Controller
     {
         parent::__construct();
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm(Request $request, CookieJar $cookieJar)
+    {
+        // forget 2fa cookie:
+        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'false');
+
+        // is allowed to?
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        $allowRegistration = true;
+        if ($singleUserMode === true && $userCount > 0) {
+            $allowRegistration = false;
+        }
+
+        $email    = $request->old('email');
+        $remember = $request->old('remember');
+
+        return view('auth.login', compact('allowRegistration', 'email', 'remember'))->withCookie($cookie);
     }
 }
