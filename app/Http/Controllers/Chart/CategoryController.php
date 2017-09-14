@@ -67,7 +67,7 @@ class CategoryController extends Controller
 
         $start = $repository->firstUseDate($category);
 
-        if (is_null($first)) {
+        if (is_null($start)) {
             $start = new Carbon;
         }
 
