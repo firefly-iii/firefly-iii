@@ -153,6 +153,7 @@ return [
     // export data:
     'import_and_export'                          => 'Import en export',
     'export_data'                                => 'Exporteren',
+    'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'Om te backuppen, of wanneer je naar een ander systeem verhuist.',
     'export_format'                              => 'Exporteerformaat',
     'export_format_csv'                          => 'Komma-gescheiden bestand (CSV)',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Plaats',
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
+    'total_result'                               => 'Total result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
