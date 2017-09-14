@@ -130,6 +130,8 @@ return [
     'exchange_rate_instructions'                 => 'Compte d’actif "@name" n’accepte que les transactions en @native_currency. Si vous souhaitez utiliser @foreign_currency à la place, assurez-vous que le montant en @native_currency est aussi bien connu :',
     'transfer_exchange_rate_instructions'        => 'Compte d’actif source "@source_name" n’accepte que les transactions en @source_currency. Compte d’actif "@dest_name" de destination n’accepte que les transactions en @dest_currency. Vous devez fournir le montant transféré correctement dans les deux monnaies.',
     'transaction_data'                           => 'Données de transaction',
+    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
     'search'                                     => 'Rechercher',
@@ -942,7 +944,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Vous ne pouvez pas modifier la transaction scindée #:id avec la description ":description" car elle contient plusieurs comptes de destination.',
     'cannot_edit_opening_balance'           => 'Vous ne pouvez pas modifier le solde d\'ouverture d\'un compte.',
     'no_edit_multiple_left'                 => 'Vous n\'avez sélectionné aucune transaction valide à éditer.',
-    'cannot_convert_split_journal'           => 'Cannot convert a split transaction',
+    'cannot_convert_split_journal'          => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
@@ -986,6 +988,7 @@ return [
     'import_status_finished_title'          => 'La routine d\'importation est terminée',
     'import_status_finished_text'           => 'La routine d\'importation a importé votre fichier.',
     'import_status_finished_job'            => 'Les transactions importées se trouvent dans la balise <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'The import is running...',
     'import_with_key'                       => 'Importer avec la touche \':key\'',
 
     // sandstorm.io errors and messages:
