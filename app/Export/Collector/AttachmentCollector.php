@@ -122,6 +122,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     private function getAttachments(): Collection
     {
+        $this->repository->setUser($this->user);
         $attachments = $this->repository->getBetween($this->start, $this->end);
 
         return $attachments;

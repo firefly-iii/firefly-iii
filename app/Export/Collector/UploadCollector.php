@@ -30,8 +30,6 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     private $exportDisk;
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     private $uploadDisk;
-    /** @var string */
-    private $vintageFormat;
 
     /**
      * AttachmentCollector constructor.

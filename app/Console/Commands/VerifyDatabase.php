@@ -108,6 +108,9 @@ class VerifyDatabase extends Command
 
     }
 
+    /**
+     *
+     */
     private function createAccessTokens()
     {
         $users = User::get();
@@ -117,6 +120,7 @@ class VerifyDatabase extends Command
             if (is_null($pref)) {
                 $token = $user->generateAccessToken();
                 Preferences::setForUser($user, 'access_token', $token);
+                $this->line(sprintf('Generated access token for user %s', $user->email));
             }
         }
     }

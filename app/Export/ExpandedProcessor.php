@@ -91,6 +91,7 @@ class ExpandedProcessor implements ProcessorInterface
         // use journal collector thing.
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
+        $collector->setUser($this->job->user);
         $collector->setAccounts($this->accounts)->setRange($this->settings['startDate'], $this->settings['endDate'])
                   ->withOpposingAccount()->withBudgetInformation()->withCategoryInformation()
                   ->removeFilter(InternalTransferFilter::class);
