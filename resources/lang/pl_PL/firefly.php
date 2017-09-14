@@ -153,6 +153,7 @@ return [
     // export data:
     'import_and_export'                          => 'Import / eksport',
     'export_data'                                => 'Eksportuj dane',
+    'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
     'export_format'                              => 'Format eksportu',
     'export_format_csv'                          => 'Wartości oddzielone przecinkami (plik CSV)',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Lokalizacja',
     'without_date'                               => 'Bez daty',
     'result'                                     => 'Wynik',
+    'total_result'                               => 'Total result',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konta na stronie domowej',
