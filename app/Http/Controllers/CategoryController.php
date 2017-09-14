@@ -204,7 +204,8 @@ class CategoryController extends Controller
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount();
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+            ->setTypes([TransactionType::WITHDRAWAL,TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->removeFilter(InternalTransferFilter::class);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('categories.no-category'));
@@ -358,11 +359,11 @@ class CategoryController extends Controller
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
 
-            // count journals without budget in this period:
+            // count journals without category in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()
-                      ->withOpposingAccount();
+                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL,TransactionType::DEPOSIT, TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
             $count = $collector->getJournals()->count();
 
