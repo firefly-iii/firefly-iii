@@ -17,6 +17,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use Steam;
 
 /**
  * Class ImportBill
@@ -26,6 +27,8 @@ use Log;
 class ImportBill
 {
 
+    /** @var string */
+    private $amount = '1';
     /** @var Bill */
     private $bill;
     /** @var array */
@@ -57,6 +60,14 @@ class ImportBill
         }
 
         return $this->bill;
+    }
+
+    /**
+     * @param string $amount
+     */
+    public function setAmount(string $amount)
+    {
+        $this->amount = Steam::positive($amount);
     }
 
     /**
@@ -220,11 +231,21 @@ class ImportBill
             return true;
         }
 
-        Log::debug('Found no bill so must create one ourselves.');
-
         $data = [
-            'name' => $name,
+            'name'        => $name,
+            'match'       => $name,
+            'amount_min'  => bcmul($this->amount, '0.9'),
+            'amount_max'  => bcmul($this->amount, '1.1'),
+            'user_id'     => $this->user->id,
+            'date'        => date('Y-m-d'),
+            'repeat_freq' => 'monthly',
+            'skip'        => '0',
+            'automatch'   => '0',
+            'active'      => '1',
         ];
+
+        Log::debug('Found no bill so must create one ourselves. Assume default values.', $data);
+
 
         $this->bill = $this->repository->store($data);
         Log::debug(sprintf('Successfully stored new bill #%d: %s', $this->bill->id, $this->bill->name));
