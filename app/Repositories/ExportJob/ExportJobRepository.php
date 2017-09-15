@@ -18,6 +18,7 @@ use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
 use Illuminate\Support\Str;
 use Storage;
+use Log;
 
 /**
  * Class ExportJobRepository
@@ -37,6 +38,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function changeStatus(ExportJob $job, string $status): bool
     {
+        Log::debug(sprintf('Change status of job #%d to "%s"', $job->id, $status));
         $job->change($status);
 
         return true;
