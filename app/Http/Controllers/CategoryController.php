@@ -232,12 +232,14 @@ class CategoryController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
+        echo '12';
 
 
         // prep for "all" view.
         if ($moment === 'all') {
             $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
-            $start    = $repository->firstUseDate($category);
+            $first    = $repository->firstUseDate($category);
+            $start    = is_null($first) ? new Carbon : $first;
             $end      = new Carbon;
         }
 
