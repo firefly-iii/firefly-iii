@@ -25,7 +25,9 @@ use Storage;
 
 
 /**
- * Class CreateExportextends
+ * Class CreateExport
+ *
+ * Generates export from the command line.
  *
  * @package FireflyIII\Console\Commands
  */
@@ -61,6 +63,10 @@ class CreateExport extends Command
     }
 
     /**
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      * Execute the console command.
      *
      * @return mixed

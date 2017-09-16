@@ -67,6 +67,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
      * @param  \Exception $exception
      *
      * @return void

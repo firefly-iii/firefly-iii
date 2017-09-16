@@ -34,6 +34,8 @@ use ZipArchive;
 /**
  * Class ExpandedProcessor
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // its doing a lot.
+ *
  * @package FireflyIII\Export
  */
 class ExpandedProcessor implements ProcessorInterface
@@ -84,7 +86,10 @@ class ExpandedProcessor implements ProcessorInterface
     }
 
     /**
+     * Collects all transaction journals.
+     *
      * @return bool
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function collectJournals(): bool
     {
@@ -102,6 +107,7 @@ class ExpandedProcessor implements ProcessorInterface
         $opposingIds = $transactions->pluck('opposing_account_id')->toArray();
         $notes       = $this->getNotes($ids);
         $tags        = $this->getTags($ids);
+        /** @var array $ibans */
         $ibans       = $this->getIbans($assetIds) + $this->getIbans($opposingIds);
         $currencies  = $this->getAccountCurrencies($ibans);
         $transactions->each(

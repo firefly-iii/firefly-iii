@@ -34,6 +34,8 @@ use stdClass;
 /**
  * Class VerifyDatabase
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @package FireflyIII\Console\Commands
  */
 class VerifyDatabase extends Command
@@ -72,44 +74,23 @@ class VerifyDatabase extends Command
         $this->reportObject('budget');
         $this->reportObject('category');
         $this->reportObject('tag');
-
-        // accounts with no transactions.
         $this->reportAccounts();
-        // budgets with no limits
         $this->reportBudgetLimits();
-        // budgets with no transactions
-
-        // sum of transactions is not zero.
         $this->reportSum();
-        //  any deleted transaction journals that have transactions that are NOT deleted:
         $this->reportJournals();
-        // deleted transactions that are connected to a not deleted journal.
         $this->reportTransactions();
-        // deleted accounts that still have not deleted transactions or journals attached to them.
         $this->reportDeletedAccounts();
-
-        // report on journals with no transactions at all.
         $this->reportNoTransactions();
-
-        // transfers with budgets.
         $this->reportTransfersBudgets();
-
-        // report on journals with the wrong types of accounts.
         $this->reportIncorrectJournals();
-
-        // report (and fix) piggy banks
         $this->repairPiggyBanks();
-
-        // create default link types if necessary
         $this->createLinkTypes();
-
-        // create user access tokens, if not present already.
         $this->createAccessTokens();
 
     }
 
     /**
-     *
+     * Create user access tokens, if not present already.
      */
     private function createAccessTokens()
     {
@@ -126,7 +107,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     *
+     * Create default link types if necessary.
      */
     private function createLinkTypes()
     {
@@ -150,7 +131,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     * Make sure there are only transfers linked to piggy bank events.
+     * Eeport (and fix) piggy banks. Make sure there are only transfers linked to piggy bank events.
      */
     private function repairPiggyBanks(): void
     {

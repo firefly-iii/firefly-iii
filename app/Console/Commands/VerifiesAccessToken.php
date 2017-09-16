@@ -16,9 +16,17 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Preferences;
 
+/**
+ * Trait VerifiesAccessToken
+ *
+ * Verifies user access token for sensitive commands.
+ *
+ * @package FireflyIII\Console\Commands
+ */
 trait VerifiesAccessToken
 {
     /**
+     * Abstract method to make sure trait knows about method "option".
      * @param null $key
      *
      * @return mixed
@@ -26,6 +34,8 @@ trait VerifiesAccessToken
     abstract public function option($key = null);
 
     /**
+     * Returns false when given token does not match given user token.
+     *
      * @return bool
      */
     protected function verifyAccessToken(): bool
