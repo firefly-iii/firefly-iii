@@ -141,6 +141,7 @@ return [
     'search_box_intro'                           => 'Welcome to the search function of Firefly III. Enter your search query in the box. Make sure you check out the help file because the search is pretty advanced.',
     'search_error'                               => 'Error while searching',
     'search_searching'                           => 'Searching ...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'ежегодно',
@@ -416,7 +417,10 @@ return [
     'secure_pw_should'                           => 'Should I check the box?',
     'secure_pw_long_password'                    => 'If you just generated a long, single-use password for Firefly III using some kind of password generator: <strong>no</strong>.',
     'secure_pw_short'                            => 'If you just entered the password you always use: <em>Please yes</em>.',
-
+    'personal_access_token'                      => 'Personal access token',
+    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_access_token'                    => 'Regenerate access token',
+    'token_regenerated'                          => 'A new token was generated',
 
     // attachments
     'nr_of_attachments'                          => 'One attachment|:count attachments',
@@ -961,6 +965,7 @@ return [
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_index_type'                     => 'Select the type of file you will upload',
     'import_index_start'                    => 'Start importing',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (comma separated values)',
