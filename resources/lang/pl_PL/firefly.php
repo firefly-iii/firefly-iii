@@ -141,6 +141,7 @@ return [
     'search_box_intro'                           => 'Witamy w funkcji wyszukiwania Firefly III. Wpisz zapytanie w polu. Upewnij się, że sprawdziłeś plik pomocy, ponieważ wyszukiwanie jest dość zaawansowane.',
     'search_error'                               => 'Błąd podczas wyszukiwania',
     'search_searching'                           => 'Wyszukiwanie...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'rocznie',
@@ -416,7 +417,10 @@ return [
     'secure_pw_should'                           => 'Czy powinienem zaznaczyć to pole?',
     'secure_pw_long_password'                    => 'Jeśli wygenerowałeś długie, jednorazowe hasło dla Firefly III, używając pewnego rodzaju generatora haseł: <strong>no</strong>.',
     'secure_pw_short'                            => 'Jeśli wpisałeś hasło, którego zawsze używasz: <em>tak, proszę</em>.',
-
+    'personal_access_token'                      => 'Personal access token',
+    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_access_token'                    => 'Regenerate access token',
+    'token_regenerated'                          => 'A new token was generated',
 
     // attachments
     'nr_of_attachments'                          => 'Jeden załącznik |:count załączników',
@@ -961,6 +965,7 @@ return [
     'import_index_config'                   => 'Jeśli wcześniej importowałeś dane do Firefly III, może posiadać plik konfiguracji, który wstępnie ustawi wartości parametrów konfiguracyjnych dla Ciebie. Dla niektórych banków, inni użytkownicy uprzejmie dostarczyli swoje <a href="https://github.com/firefly-iii/import-configurations/wiki">pliki konfiguracji</a>.',
     'import_index_type'                     => 'Wybierz typ pliku, który będziesz przesyłać',
     'import_index_start'                    => 'Rozpocznij import',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (wartości oddzielone przecinkami)',
