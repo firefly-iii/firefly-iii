@@ -104,7 +104,7 @@ function callExport() {
         // show download
         showDownload();
 
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR) {
         // show error.
         // show form again.
         var response = jqXHR.responseJSON;

@@ -23,6 +23,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -38,6 +39,12 @@ trait ImportSupport
 {
     /** @var int */
     protected $defaultCurrencyId = 1;
+
+    /** @var  Collection */
+    protected $rules;
+
+    /** @var  ImportJob */
+    protected $job;
 
     /**
      * @param TransactionJournal $journal

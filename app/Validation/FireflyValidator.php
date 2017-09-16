@@ -278,11 +278,10 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
-     * @param $parameters
      *
      * @return bool
      */
-    public function validateSecurePassword($attribute, $value, $parameters): bool
+    public function validateSecurePassword($attribute, $value): bool
     {
         $verify = false;
         if (isset($this->data['verify_password'])) {

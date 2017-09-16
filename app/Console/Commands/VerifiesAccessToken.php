@@ -19,6 +19,13 @@ use Preferences;
 trait VerifiesAccessToken
 {
     /**
+     * @param null $key
+     *
+     * @return mixed
+     */
+    abstract public function option($key = null);
+
+    /**
      * @return bool
      */
     protected function verifyAccessToken(): bool

@@ -119,9 +119,9 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         Log::debug('Generate new key pair for user.');
         $keyConfig = [
-            "digest_alg"       => "sha512",
-            "private_key_bits" => 2048,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+            'digest_alg'       => 'sha512',
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
         ];
         // Create the private and public key
         $res = openssl_pkey_new($keyConfig);

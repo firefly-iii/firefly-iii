@@ -29,7 +29,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read string $transaction_foreign_amount
  * @property-read string $transaction_type_type
  *
- * @property-read int    $account_id
+ * @property int    $account_id
  * @property-read string $account_name
  * @property string      $account_iban
  * @property string      $account_number

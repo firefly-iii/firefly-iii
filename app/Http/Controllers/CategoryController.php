@@ -239,6 +239,7 @@ class CategoryController extends Controller
         if ($moment === 'all') {
             $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
             $first    = $repository->firstUseDate($category);
+            /** @var Carbon $start */
             $start    = is_null($first) ? new Carbon : $first;
             $end      = new Carbon;
         }
@@ -257,7 +258,9 @@ class CategoryController extends Controller
 
         // prep for current period
         if (strlen($moment) === 0) {
+            /** @var Carbon $start */
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            /** @var Carbon $end */
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($category);
             $subTitle = trans(

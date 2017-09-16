@@ -225,7 +225,9 @@ class TagController extends Controller
 
         // prep for current period
         if (strlen($moment) === 0) {
+            /** @var Carbon $start */
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            /** @var Carbon $end */
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($tag);
             $sum      = $repository->sumOfTag($tag, $start, $end);

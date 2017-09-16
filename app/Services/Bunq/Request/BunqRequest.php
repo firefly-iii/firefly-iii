@@ -28,14 +28,14 @@ abstract class BunqRequest
 {
     /** @var string */
     protected $secret = '';
+    /** @var  ServerPublicKey */
+    protected $serverPublicKey;
     /** @var string */
     private $privateKey = '';
     /** @var string */
     private $server = '';
-    /** @var  ServerPublicKey */
-    private $serverPublicKey;
     private $upperCaseHeaders
-        = [
+                    = [
             'x-bunq-client-response-id' => 'X-Bunq-Client-Response-Id',
             'x-bunq-client-request-id'  => 'X-Bunq-Client-Request-Id',
         ];
@@ -203,7 +203,7 @@ abstract class BunqRequest
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = $response->status_code;
+        $statusCode                  = intval($response->status_code);
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
@@ -247,7 +247,7 @@ abstract class BunqRequest
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = $response->status_code;
+        $statusCode                  = intval($response->status_code);
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
@@ -285,7 +285,7 @@ abstract class BunqRequest
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = $response->status_code;
+        $statusCode                  = intval($response->status_code);
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
 
