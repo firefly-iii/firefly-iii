@@ -141,6 +141,7 @@ return [
     'search_box_intro'                           => 'Willkommen zur Suchfunktion von Firefly III. Geben Sie Ihre Suchanfrage in das Feld ein. Stellen Sie sicher, dass Sie sich die Hilfedatei ansehen, da die Suche ziemlich fortgeschritten ist.',
     'search_error'                               => 'Fehler beim Suchen',
     'search_searching'                           => 'Suche ...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',
@@ -965,6 +966,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_index_type'                     => 'Select the type of file you will upload',
     'import_index_start'                    => 'Start importing',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (Kommagetrennte Werte)',
