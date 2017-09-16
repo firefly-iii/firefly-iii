@@ -141,6 +141,7 @@ return [
     'search_box_intro'                           => 'Bienvenue à la fonction de recherche de Firefly III. Entrez votre requête de recherche dans la zone. Assurez-vous de consulter le fichier d’aide parce que la recherche est assez avancée.',
     'search_error'                               => 'Erreur lors de la recherche',
     'search_searching'                           => 'Recherche ...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'annuellement',
@@ -964,6 +965,7 @@ return [
     'import_index_config'                   => 'Si vous avez précédemment importé des données dans Firefly III, vous pouvez avoir un fichier de configuration qui définira les valeurs de configuration. Pour certaines banques, les autres utilisateurs ont bien voulu fournir leur fichier <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration</a>.',
     'import_index_type'                     => 'Sélectionnez le type de fichier que vous allez télécharger',
     'import_index_start'                    => 'Démarrer l\'importation',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (valeurs séparées par des virgules)',
