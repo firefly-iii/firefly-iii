@@ -51,7 +51,7 @@ class SearchController extends Controller
      */
     public function index(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = $request->get('q');
+        $fullQuery = strval($request->get('q'));
 
         // parse search terms:
         $searcher->parseQuery($fullQuery);
