@@ -141,6 +141,7 @@ return [
     'search_box_intro'                           => 'Welkom bij de zoekfunctie van Firefly III. Voer je zoekopdracht in het vak. Bekijk zeker de help-pagina, want de zoekfunctie is behoorlijk geadvanceerd.',
     'search_error'                               => 'Fout tijdens het zoeken',
     'search_searching'                           => 'Bezig met zoeken ...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -964,6 +965,7 @@ return [
     'import_index_config'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
     'import_index_type'                     => 'Selecteer het type bestand dat je zal uploaden',
     'import_index_start'                    => 'Start met importeren',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (kommagescheiden waardes)',
