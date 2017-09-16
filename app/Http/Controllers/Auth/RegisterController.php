@@ -13,10 +13,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Session;
 
 class RegisterController extends Controller
 {
@@ -43,11 +47,68 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
+        parent::__construct();
         $this->middleware('guest');
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        // is allowed to?
+        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount      = User::count();
+        if ($singleUserMode === true && $userCount > 0) {
+            $message = 'Registration is currently not available.';
+
+            return view('error', compact('message'));
+        }
+
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        Session::flash('success', strval(trans('firefly.registered')));
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm(Request $request)
+    {
+        // is demo site?
+        $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+
+        // is allowed to?
+        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount      = User::count();
+        if ($singleUserMode === true && $userCount > 0) {
+            $message = 'Registration is currently not available.';
+
+            return view('error', compact('message'));
+        }
+
+        $email = $request->old('email');
+
+
+        return view('auth.register', compact('isDemoSite', 'email'));
     }
 
     /**
@@ -78,9 +139,9 @@ class RegisterController extends Controller
     {
         return Validator::make(
             $data, [
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]
+                     'email'    => 'required|string|email|max:255|unique:users',
+                     'password' => 'required|string|secure_password|confirmed',
+                 ]
         );
     }
 }
