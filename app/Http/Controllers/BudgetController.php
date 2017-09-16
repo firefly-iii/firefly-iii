@@ -40,6 +40,7 @@ use View;
  * Class BudgetController
  *
  * @package FireflyIII\Http\Controllers
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetController extends Controller
 {
@@ -168,6 +169,9 @@ class BudgetController extends Controller
      * @param string|null $moment
      *
      * @return View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) complex because of while loop
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function index(string $moment = null)
     {
@@ -182,7 +186,6 @@ class BudgetController extends Controller
                 $end   = Navigation::endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.
-
             }
         }
         $next = clone $end;
@@ -190,11 +193,7 @@ class BudgetController extends Controller
         $prev = clone $start;
         $prev->subDay();
         $prev = Navigation::startOfPeriod($prev, $range);
-
-
         $this->repository->cleanupBudgets();
-
-
         $budgets           = $this->repository->getActiveBudgets();
         $inactive          = $this->repository->getInactiveBudgets();
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
@@ -252,6 +251,9 @@ class BudgetController extends Controller
      * @param string                     $moment
      *
      * @return View
+     *
+     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *  @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = '')
     {
@@ -461,6 +463,7 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {

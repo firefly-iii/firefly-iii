@@ -39,6 +39,7 @@ use View;
  * Class AccountController
  *
  * @package FireflyIII\Http\Controllers
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountController extends Controller
 {
@@ -141,8 +142,13 @@ class AccountController extends Controller
     }
 
     /**
+     * Edit an account.
+     *
      * @param Request $request
      * @param Account $account
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return View
      */
@@ -237,12 +243,16 @@ class AccountController extends Controller
 
 
     /**
+     * Show an account.
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      * @param Account                    $account
      * @param string                     $moment
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // long and complex but not that excessively so.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
     {
@@ -389,6 +399,8 @@ class AccountController extends Controller
      * @param Account $account The account involved.
      *
      * @return Collection
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getPeriodOverview(Account $account): Collection
     {
@@ -419,17 +431,13 @@ class AccountController extends Controller
             // try a collector for income:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)
-                      ->setTypes([TransactionType::DEPOSIT])
-                      ->withOpposingAccount();
+            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
             $earned = strval($collector->getJournals()->sum('transaction_amount'));
 
             // try a collector for expenses:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)
-                      ->setTypes([TransactionType::WITHDRAWAL])
-                      ->withOpposingAccount();
+            $collector->setAccounts(new Collection([$account]))->setRange($end, $currentEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
             $spent    = strval($collector->getJournals()->sum('transaction_amount'));
             $dateStr  = $end->format('Y-m-d');
             $dateName = Navigation::periodShow($end, $range);

@@ -85,27 +85,27 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts              = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $viewRangePref         = Preferences::get('viewRange', '1M');
-        $viewRange             = $viewRangePref->data;
-        $frontPageAccounts     = Preferences::get('frontPageAccounts', []);
-        $language              = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-        $transactionPageSize   = Preferences::get('transactionPageSize', 50)->data;
-        $customFiscalYear      = Preferences::get('customFiscalYear', 0)->data;
-        $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
-        $fiscalYearStartStr    = Preferences::get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart       = date('Y') . '-' . $fiscalYearStartStr;
-        $tjOptionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $is2faEnabled          = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
-        $has2faSecret          = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
-        $showIncomplete        = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
+        $accounts            = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $viewRangePref       = Preferences::get('viewRange', '1M');
+        $viewRange           = $viewRangePref->data;
+        $frontPageAccounts   = Preferences::get('frontPageAccounts', []);
+        $language            = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
+        $transactionPageSize = Preferences::get('transactionPageSize', 50)->data;
+        $customFiscalYear    = Preferences::get('customFiscalYear', 0)->data;
+        $showDeps            = Preferences::get('showDepositsFrontpage', false)->data;
+        $fiscalYearStartStr  = Preferences::get('fiscalYearStart', '01-01')->data;
+        $fiscalYearStart     = date('Y') . '-' . $fiscalYearStartStr;
+        $tjOptionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
+        $has2faSecret        = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
+        $showIncomplete      = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
 
         return view(
             'preferences.index',
             compact(
                 'language', 'accounts', 'frontPageAccounts', 'tjOptionalFields',
                 'viewRange', 'customFiscalYear', 'transactionPageSize', 'fiscalYearStart', 'is2faEnabled',
-                'has2faSecret', 'showIncomplete', 'showDepositsFrontpage'
+                'has2faSecret', 'showIncomplete', 'showDeps'
             )
         );
     }

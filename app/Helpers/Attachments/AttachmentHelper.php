@@ -169,7 +169,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);
-
         $attachment->uploaded = 1; // update attachment
         $attachment->save();
         $this->attachments->push($attachment);
@@ -180,8 +179,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         // return it.
         return $attachment;
-
-
     }
 
     /**

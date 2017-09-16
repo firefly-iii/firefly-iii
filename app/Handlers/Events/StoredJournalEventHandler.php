@@ -57,11 +57,12 @@ class StoredJournalEventHandler
     /**
      * This method connects a new transfer to a piggy bank.
      *
-     *
-     *
      * @param StoredTransactionJournal $event
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function connectToPiggyBank(StoredTransactionJournal $event): bool
     {

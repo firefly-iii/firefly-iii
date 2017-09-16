@@ -55,11 +55,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $pos_a = ''; // before everything
-        $pos_b = ''; // before currency symbol
-        $pos_c = ''; // after currency symbol
-        $pos_d = ''; // before amount
-        $pos_e = ''; // after everything
+        $posA = ''; // before everything
+        $posB = ''; // before currency symbol
+        $posC = ''; // after currency symbol
+        $posD = ''; // before amount
+        $posE = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -73,32 +73,32 @@ class Amount
             default:
             case 0:
                 // ( and ) around the whole thing
-                $pos_a = '(';
-                $pos_e = ')';
+                $posA = '(';
+                $posE = ')';
                 break;
             case 1:
                 // The sign string precedes the quantity and currency_symbol
-                $pos_a = $sign;
+                $posA = $sign;
                 break;
             case 2:
                 // The sign string succeeds the quantity and currency_symbol
-                $pos_e = $sign;
+                $posE = $sign;
                 break;
             case 3:
                 // The sign string immediately precedes the currency_symbol
-                $pos_b = $sign;
+                $posB = $sign;
                 break;
             case 4:
                 // The sign string immediately succeeds the currency_symbol
-                $pos_c = $sign;
+                $posC = $sign;
         }
 
         // default is amount before currency
-        $format = $pos_a . $pos_d . '%v' . $space . $pos_b . '%s' . $pos_c . $pos_e;
+        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
 
         if ($csPrecedes) {
             // alternative is currency before amount
-            $format = $pos_a . $pos_b . '%s' . $pos_c . $space . $pos_d . '%v' . $pos_e;
+            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
         }
 
         return $format;

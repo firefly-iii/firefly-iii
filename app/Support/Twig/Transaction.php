@@ -119,16 +119,15 @@ class Transaction extends Twig_Extension
         return new Twig_SimpleFunction(
             'transactionDestinationAccount', function (TransactionModel $transaction): string {
 
-            $name = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
-            $id   = intval($transaction->account_id);
-            $type = $transaction->account_type;
+            $name          = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
+            $transactionId = intval($transaction->account_id);
+            $type          = $transaction->account_type;
 
             // name is present in object, use that one:
             if (bccomp($transaction->transaction_amount, '0') === -1 && !is_null($transaction->opposing_account_id)) {
-
-                $name = $transaction->opposing_account_name;
-                $id   = intval($transaction->opposing_account_id);
-                $type = $transaction->opposing_account_type;
+                $name          = $transaction->opposing_account_name;
+                $transactionId = intval($transaction->opposing_account_id);
+                $type          = $transaction->opposing_account_type;
             }
 
             // Find the opposing account and use that one:
@@ -136,21 +135,23 @@ class Transaction extends Twig_Extension
                 // if the amount is negative, find the opposing account and use that one:
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
-                $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                                         ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
-                                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                         ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-                $name  = Steam::decrypt(intval($other->encrypted), $other->name);
-                $id    = $other->account_id;
-                $type  = $other->type;
+                $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
+                                                 ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
+                        'identifier', $transaction->identifier
+                    )
+                                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                                 ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                                 ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+                $name          = Steam::decrypt(intval($other->encrypted), $other->name);
+                $transactionId = $other->account_id;
+                $type          = $other->type;
             }
 
             if ($type === AccountType::CASH) {
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$id]));
+            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
 
         }, ['is_safe' => ['html']]
         );
@@ -193,36 +194,37 @@ class Transaction extends Twig_Extension
             'transactionSourceAccount', function (TransactionModel $transaction): string {
 
             // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
-            $name = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
-            $id   = intval($transaction->account_id);
-            $type = $transaction->account_type;
+            $name          = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
+            $transactionId = intval($transaction->account_id);
+            $type          = $transaction->account_type;
 
             // name is present in object, use that one:
             if (bccomp($transaction->transaction_amount, '0') === 1 && !is_null($transaction->opposing_account_id)) {
-
-                $name = $transaction->opposing_account_name;
-                $id   = intval($transaction->opposing_account_id);
-                $type = $transaction->opposing_account_type;
+                $name          = $transaction->opposing_account_name;
+                $transactionId = intval($transaction->opposing_account_id);
+                $type          = $transaction->opposing_account_type;
             }
             // Find the opposing account and use that one:
             if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
                 $journalId = $transaction->journal_id;
                 /** @var TransactionModel $other */
-                $other = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                                         ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where('identifier', $transaction->identifier)
-                                         ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                         ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-                $name  = Steam::decrypt(intval($other->encrypted), $other->name);
-                $id    = $other->account_id;
-                $type  = $other->type;
+                $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
+                                                 ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
+                        'identifier', $transaction->identifier
+                    )
+                                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                                 ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                                                 ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
+                $name          = Steam::decrypt(intval($other->encrypted), $other->name);
+                $transactionId = $other->account_id;
+                $type          = $other->type;
             }
 
             if ($type === AccountType::CASH) {
                 return '<span class="text-success">(cash)</span>';
             }
 
-            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$id]));
+            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
 
         }, ['is_safe' => ['html']]
         );
