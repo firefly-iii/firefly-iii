@@ -43,7 +43,7 @@ class ImportStorage
     /** @var Collection */
     private $objects;
     /** @var Collection */
-    private $rules;
+    protected $rules;
 
     /** @var  array */
     private $transfers = [];
