@@ -30,7 +30,7 @@ RUN a2enmod rewrite
 # Setup the Composer installer
 run curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN cd /var/www && composer create-project grumpydictator/firefly-iii --no-dev --prefer-dist firefly-iii 4.6.4
+RUN cd /var/www && composer create-project grumpydictator/firefly-iii --no-dev --prefer-dist firefly-iii 4.6.5
 COPY docker/entrypoint.sh /var/www/firefly-iii/docker/entrypoint.sh
 ADD docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
 RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www/firefly-iii/storage
