@@ -28,6 +28,9 @@ COPY ./docker/apache2.conf /etc/apache2/apache2.conf
 # Enable apache mod rewrite..
 RUN a2enmod rewrite
 
+# Enable apache mod ssl..
+RUN a2enmod ssl
+
 # Setup the Composer installer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
