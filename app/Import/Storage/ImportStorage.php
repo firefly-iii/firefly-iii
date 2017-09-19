@@ -39,7 +39,7 @@ class ImportStorage
     /** @var string */
     private $dateFormat = 'Ymd'; // yes, hard coded
     /** @var  ImportJob */
-    private $job;
+    protected $job;
     /** @var Collection */
     private $objects;
     /** @var Collection */
