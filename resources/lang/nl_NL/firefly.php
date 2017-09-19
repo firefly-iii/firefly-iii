@@ -141,7 +141,7 @@ return [
     'search_box_intro'                           => 'Welkom bij de zoekfunctie van Firefly III. Voer je zoekopdracht in het vak. Bekijk zeker de help-pagina, want de zoekfunctie is behoorlijk geadvanceerd.',
     'search_error'                               => 'Fout tijdens het zoeken',
     'search_searching'                           => 'Bezig met zoeken ...',
-    'search_results'                             => 'Search results',
+    'search_results'                             => 'Zoekresultaten',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -154,7 +154,7 @@ return [
     // export data:
     'import_and_export'                          => 'Import en export',
     'export_data'                                => 'Exporteren',
-    'export_and_backup_data'                     => 'Export and backup',
+    'export_and_backup_data'                     => 'Exporteren en backup',
     'export_data_intro'                          => 'Om te backuppen, of wanneer je naar een ander systeem verhuist.',
     'export_format'                              => 'Exporteerformaat',
     'export_format_csv'                          => 'Komma-gescheiden bestand (CSV)',
@@ -328,7 +328,7 @@ return [
     'location'                                   => 'Plaats',
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
-    'total_result'                               => 'Total result',
+    'total_result'                               => 'Totaalresultaat',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
@@ -417,10 +417,10 @@ return [
     'secure_pw_should'                           => 'Vinkje zetten of niet?',
     'secure_pw_long_password'                    => 'Als je net een lang wachtwoord hebt gegenereerd met een password generator tool: <strong>nee</strong>.',
     'secure_pw_short'                            => 'Gebruik je het wachtwoord dat je altijd gebruikt? <em>Ja, doen!</em>',
-    'personal_access_token'                      => 'Personal access token',
-    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
-    'regenerate_access_token'                    => 'Regenerate access token',
-    'token_regenerated'                          => 'A new token was generated',
+    'personal_access_token'                      => 'Persoonlijk toegangstoken',
+    'explain_access_token'                       => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je toegangstoken niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
+    'regenerate_access_token'                    => 'Genereer nieuw token',
+    'token_regenerated'                          => 'Er is een nieuw token gegenereerd',
 
     // attachments
     'nr_of_attachments'                          => 'Eén bijlage|:count bijlagen',
@@ -965,7 +965,7 @@ return [
     'import_index_config'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
     'import_index_type'                     => 'Selecteer het type bestand dat je zal uploaden',
     'import_index_start'                    => 'Start met importeren',
-    'import_file'                           => 'Import a file',
+    'import_file'                           => 'Importeer een bestand',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (kommagescheiden waardes)',
