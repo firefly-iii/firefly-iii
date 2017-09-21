@@ -186,7 +186,7 @@ return [
     'payment_date'       => 'Betalingsdatum',
     'invoice_date'       => 'Factuurdatum',
     'internal_reference' => 'Interne verwijzing',
-
-    'inward'  => 'Binnenwaartse beschrijving',
-    'outward' => 'Buitenwaartse beschrijving',
+    'inward'             => 'Binnenwaartse beschrijving',
+    'outward'            => 'Buitenwaartse beschrijving',
+    'rule_group_id'      => 'Rule group',
 ];
