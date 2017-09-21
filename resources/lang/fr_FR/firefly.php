@@ -473,7 +473,7 @@ return [
     'converted_to_Withdrawal'                    => 'La transaction a été convertie en retrait',
     'converted_to_Deposit'                       => 'La transaction a été convertie en dépôt',
     'converted_to_Transfer'                      => 'La transaction a été convertie en transfert',
-
+    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Creer un nouveau retrait',
