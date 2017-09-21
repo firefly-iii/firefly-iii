@@ -474,7 +474,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'converted_to_Withdrawal'                    => 'Die Transaktion wurde in eine Ausgabe konvertiert',
     'converted_to_Deposit'                       => 'Die Transaktion wurde in eine Einzahlung konvertiert',
     'converted_to_Transfer'                      => 'Die Transaktion wurde in eine Überweisung konvertiert',
-
+    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Erstelle eine neue Ausgabe',
