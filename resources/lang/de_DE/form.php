@@ -186,7 +186,7 @@ return [
     'payment_date'       => 'Zahlungsdatum',
     'invoice_date'       => 'Rechnungsdatum',
     'internal_reference' => 'Interner Verweis',
-
-    'inward'  => 'Inward description',
-    'outward' => 'Outward description',
+    'inward'             => 'Inward description',
+    'outward'            => 'Outward description',
+    'rule_group_id'      => 'Rule group',
 ];
