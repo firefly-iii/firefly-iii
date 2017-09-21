@@ -186,7 +186,7 @@ return [
     'payment_date'       => 'Payment date',
     'invoice_date'       => 'Invoice date',
     'internal_reference' => 'Internal reference',
-
-    'inward'  => 'Inward description',
-    'outward' => 'Outward description',
+    'inward'             => 'Inward description',
+    'outward'            => 'Outward description',
+    'rule_group_id'      => 'Rule group',
 ];
