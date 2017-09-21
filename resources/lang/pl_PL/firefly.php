@@ -473,7 +473,7 @@ return [
     'converted_to_Withdrawal'                    => 'Transakcja została przekonwertowana do wypłaty',
     'converted_to_Deposit'                       => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                      => 'Transakcja została przekonwertowana do transferu',
-
+    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Utwórz nową wypłatę',
