@@ -196,7 +196,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->save();
 
         // store stuff:
-        $this->storeCategoryWithJournal($journal, $data['category']);
+        $this->storeCategoryWithJournal($journal, strval($data['category']));
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
 
         // store two transactions:
@@ -271,7 +271,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->categories()->detach();
         $journal->budgets()->detach();
 
-        $this->storeCategoryWithJournal($journal, $data['category']);
+        $this->storeCategoryWithJournal($journal, strval($data['category']));
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
 
         // negative because source loses money.
