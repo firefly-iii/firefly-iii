@@ -473,7 +473,7 @@ return [
     'converted_to_Withdrawal'                    => 'De transactie is veranderd in een uitgave',
     'converted_to_Deposit'                       => 'De transactie is veranderd in inkomsten',
     'converted_to_Transfer'                      => 'De transactie is veranderd in een overschrijving',
-
+    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Nieuwe uitgave',
