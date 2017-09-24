@@ -35,6 +35,11 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 
+/**
+ * Trait ImportSupport
+ *
+ * @package FireflyIII\Import\Storage
+ */
 trait ImportSupport
 {
     /** @var int */
