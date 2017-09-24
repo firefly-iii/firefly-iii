@@ -26,34 +26,56 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body">
-
-                    {% if tag.description %}
-                        <p class="text-info">
-                            {{ tag.description }}
-                        </p>
-                    {% endif %}
-
-                    {% if tag.date %}
-                        <p>{{ 'date'|_ }}: {{ tag.date.formatLocalized(monthAndDayFormat) }}</p>
-                    {% endif %}
-                    {% if moment == 'all' %}
-                        <p>
-                            {{ 'total_sum'|_ }}: {{ sum|formatAmount }}<br/>
-                            {{ 'total_result'|_ }}: {{ result|formatAmount }}<br/>
-                        </p>
-                    {% else %}
-                        <p>
-                            {{ 'sum'|_ }}: {{ sum|formatAmount }}<br/>
-                            {{ 'result'|_ }}: {{ result|formatAmount }}<br/>
-                        </p>
-                    {% endif %}
-                    <div class="btn-group">
-                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-default">
-                            <i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}</a>
-                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><i
-                                        class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a>
+                <div class="box-body no-padding">
+                    <table class="table table-bordered">
+                        {% if tag.description %}
+                        <tr>
+                            <td>
+                                {{ trans('list.description') }}
+                            </td>
+                            <td>{{ tag.description }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if tag.date %}
+                        <tr>
+                            <td>
+                                {{ trans('list.date') }}
+                            </td>
+                            <td>
+                                {{ tag.date.formatLocalized(monthAndDayFormat) }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>{{ trans('list.sum') }}</td>
+                            <td> {{ (sums.Withdrawal + sums.Transfer + sums.Deposit)|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.sum_excluding_transfers') }}</td>
+                            <td> {{ (sums.Withdrawal + sums.Deposit)|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.sum_withdrawals') }}</td>
+                            <td> {{ sums.Withdrawal|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.sum_deposits') }}</td>
+                            <td> {{ sums.Deposit|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.sum_transfers') }}</td>
+                            <td> {{ sums.Transfer|formatAmount }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i></a>
+                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i></a>
                     </div>
+                    <p class="text-muted">
+                        <small>{{ 'sums_apply_to_range'|_ }}</small>
+                    </p>
                 </div>
             </div>
         </div>
