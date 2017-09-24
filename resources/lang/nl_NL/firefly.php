@@ -329,6 +329,7 @@ return [
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
     'total_result'                               => 'Totaalresultaat',
+    'sums_apply_to_range'                        => 'All sums apply to the selected range',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
@@ -473,7 +474,7 @@ return [
     'converted_to_Withdrawal'                    => 'De transactie is veranderd in een uitgave',
     'converted_to_Deposit'                       => 'De transactie is veranderd in inkomsten',
     'converted_to_Transfer'                      => 'De transactie is veranderd in een overschrijving',
-    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
+    'invalid_convert_selection'                  => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Nieuwe uitgave',
