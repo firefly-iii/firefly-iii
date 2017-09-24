@@ -329,6 +329,7 @@ return [
     'without_date'                               => 'Without date',
     'result'                                     => 'Result',
     'total_result'                               => 'Total result',
+    'sums_apply_to_range'                        => 'All sums apply to the selected range',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Cuentas de la pantalla de inicio',
