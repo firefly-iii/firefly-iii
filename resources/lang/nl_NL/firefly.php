@@ -329,7 +329,7 @@ return [
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
     'total_result'                               => 'Totaalresultaat',
-    'sums_apply_to_range'                        => 'All sums apply to the selected range',
+    'sums_apply_to_range'                        => 'Alle sommen gelden voor het geselecteerde bereik',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
