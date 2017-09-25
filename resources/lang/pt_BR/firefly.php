@@ -319,6 +319,8 @@ return [
     'rule_action_set_source_account'             => 'Definir a conta de origem para :action_value',
     'rule_action_set_destination_account_choice' => 'Definir a conta de destino...',
     'rule_action_set_destination_account'        => 'Definir a conta de destino :action_value',
+    'rules_have_read_warning'                    => 'Have you read the warning?',
+    'apply_rule_warning'                         => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
     // tags
     'store_new_tag'                              => 'Armazenar nova tag',
