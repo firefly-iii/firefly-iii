@@ -17,7 +17,6 @@ namespace FireflyIII\Repositories\Tag;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;

@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -119,6 +120,12 @@ class TagControllerTest extends TestCase
      */
     public function testShow()
     {
+        $amounts = [
+            TransactionType::WITHDRAWAL => '0',
+            TransactionType::TRANSFER   => '0',
+            TransactionType::DEPOSIT    => '0',
+        ];
+
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -128,8 +135,7 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
-        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
-        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
+        $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
@@ -163,10 +169,7 @@ class TagControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
 
-        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
-
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
-        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
@@ -176,6 +179,13 @@ class TagControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+
+        $amounts = [
+            TransactionType::WITHDRAWAL => '0',
+            TransactionType::TRANSFER   => '0',
+            TransactionType::DEPOSIT    => '0',
+        ];
+        $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
 
         $this->be($this->user());
@@ -198,8 +208,6 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
-        $repository->shouldReceive('sumOfTag')->andReturn('1')->once();
-        $repository->shouldReceive('resultOfTag')->andReturn('1')->once();
 
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
@@ -211,6 +219,13 @@ class TagControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+
+        $amounts = [
+            TransactionType::WITHDRAWAL => '0',
+            TransactionType::TRANSFER   => '0',
+            TransactionType::DEPOSIT    => '0',
+        ];
+        $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
 
         $this->be($this->user());

@@ -232,8 +232,6 @@ class CategoryController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        echo '12';
-
 
         // prep for "all" view.
         if ($moment === 'all') {
