@@ -17,6 +17,7 @@ namespace FireflyIII\Repositories\Tag;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -268,7 +269,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return string
+     * @return array
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
@@ -279,7 +280,7 @@ class TagRepository implements TagRepositoryInterface
             $collector->setRange($start, $end);
         }
 
-        $collector->setAllAssetAccounts()->setTag($tag);
+        $collector->setAllAssetAccounts()->setTag($tag)->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
         $journals = $collector->getJournals();
 
