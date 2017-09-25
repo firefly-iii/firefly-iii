@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-/** global: Modernizr */
+/** global: Modernizr, askReadWarning */
 
 $(document).ready(function () {
     "use strict";
@@ -17,4 +17,7 @@ $(document).ready(function () {
             }
         );
     }
+    $('form.form-horizontal').on('submit', function () {
+        return confirm(askReadWarning);
+    });
 });

@@ -40,7 +40,7 @@ final class Processor
     public $rule;
     /** @var Collection */
     public $triggers;
-
+    /** @var int  */
     protected $foundTriggers = 0;
 
     /**
@@ -170,8 +170,13 @@ final class Processor
         // get all triggers:
         $triggered = $this->triggered();
         if ($triggered) {
+            Log::debug('Rule is triggered, go to actions.');
             if ($this->actions->count() > 0) {
+                Log::debug('Has more than zero actions.');
                 $this->actions();
+            }
+            if ($this->actions->count() === 0) {
+                Log::info('Rule has no actions!');
             }
 
             return true;
