@@ -6,21 +6,31 @@
 
 [![The useful financial reports of Firefly III](https://i.nder.be/h7sk6nb7/400)](https://i.nder.be/ccn0u2mp) [![Even more useful reports in Firefly III](https://i.nder.be/g237hr35/400)](https://i.nder.be/gm8hbh7z)
 
-"Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared  household accounts and savings accounts! It's pretty fancy. You should use it to save and organise money.
+"Firefly III" is a financial manager for your personal finances.
+It can help you keep track of your expenses and income.
+Firefly III supports the use of budgets. You can categorize and tag your transactions.
+It also supports credit cards, shared  household accounts and savings accounts.
+There are many financial reports available.
 
 ## Try it out!
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
-Firefly III can be run on Heroku. Register for a free Heroku account and instantly run Firefly III on your very own cloud instance. There is also a [demo site](https://firefly-iii.nder.be) with an example financial administration already present. 
+Firefly III can be run on Heroku.
+Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
+There is also a [demo site](https://firefly-iii.nder.be) with an example financial administration already present. 
 
 ## Getting started
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line. Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
+To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line.
+Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
+At the moment, installation is fairly complex. I hope to improve this in the future. If you need support, please open a ticket.
 
 ## More about Firefly III
 
-Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards, others try to increase their current cashflow. There are tons of ways to save and earn money.
+Personal financial management is pretty difficult, and everybody has their own approach to it.
+Some people make budgets, other people limit their cashflow by throwing away their credit cards, 
+others try to increase their current cashflow. There are tons of ways to save and earn money.
 
 Firefly works on the principle that if you know where you're money is going, you can stop it from going there.
 
@@ -31,7 +41,8 @@ Firefly works on the principle that if you know where you're money is going, you
 - Firefly has lots of features without being fancy or bloated.
 - If you feel you're missing something you can just ask me and I'll add it!
 
-Firefly is pretty awesome. [You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
+Firefly III has become pretty awesome over the years! (but please excuse me for bragging, it's just that I'm proud of it).
+[You can read more about Firefly III, and its features, on the Github Pages](https://firefly-iii.github.io/).
 
 ### Contributing
 
