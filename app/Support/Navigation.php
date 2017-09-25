@@ -62,6 +62,13 @@ class Navigation
         $function = $functionMap[$repeatFreq];
         $date->$function($add);
 
+        // if period is 1M and diff in month is 2 and new DOM = 1, sub a day:
+        $months     = ['1M', 'month', 'monthly'];
+        $difference = $date->month - $theDate->month;
+        if (in_array($repeatFreq, $months) && $difference === 2 && $date->day === 1) {
+            $date->subDay();
+        }
+
         return $date;
     }
 
