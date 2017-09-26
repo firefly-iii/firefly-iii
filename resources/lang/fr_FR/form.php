@@ -67,6 +67,8 @@ return [
     'source_amount'                  => 'Montant (source)',
     'destination_amount'             => 'Montant (destination)',
     'native_amount'                  => 'Montant natif',
+    'new_email_address'              => 'New email address',
+    'verification'                   => 'Verification',
 
     'source_account_asset'        => 'Compte source (compte d\'actif)',
     'destination_account_expense' => 'Compte de destination (compte de dépenses)',
