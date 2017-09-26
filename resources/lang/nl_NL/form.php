@@ -67,6 +67,8 @@ return [
     'source_amount'                  => 'Bronbedrag',
     'destination_amount'             => 'Doelbedrag',
     'native_amount'                  => 'Origineel bedrag',
+    'new_email_address'              => 'New email address',
+    'verification'                   => 'Verification',
 
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
     'destination_account_expense' => 'Doelrekening (crediteur)',
