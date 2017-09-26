@@ -425,6 +425,11 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
     'regenerate_access_token'                    => 'Regenerate access token',
     'token_regenerated'                          => 'A new token was generated',
+    'change_your_email'                          => 'Change your email address',
+    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. You can test this in the <a href="/admin">Administration</a>.',
+    'email_changed_logout'                       => 'Until you verify your email address, you cannot login.',
+    'login_with_new_email'                       => 'You can now login with your new email address.',
+    'login_with_old_email'                       => 'You can now login with your old email address again.',
 
     // attachments
     'nr_of_attachments'                          => 'Ein Anhang |:count Anhänge',
