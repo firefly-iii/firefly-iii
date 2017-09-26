@@ -67,6 +67,8 @@ return [
     'source_amount'                  => 'Kwota (źródło)',
     'destination_amount'             => 'Kwota (przeznaczenie)',
     'native_amount'                  => 'Źródłowa kwota',
+    'new_email_address'              => 'New email address',
+    'verification'                   => 'Verification',
 
     'source_account_asset'        => 'Konto źródłowe (konto aktywów)',
     'destination_account_expense' => 'Konto docelowe (konto wydatków)',
