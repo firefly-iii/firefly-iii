@@ -431,6 +431,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'login_with_new_email'                       => 'You can now login with your new email address.',
     'login_with_old_email'                       => 'You can now login with your old email address again.',
 
+
     // attachments
     'nr_of_attachments'                          => 'Ein Anhang |:count Anhänge',
     'attachments'                                => 'Anhänge',
@@ -903,6 +904,13 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'block_code_bounced'                    => 'Email message(s) bounced',
     'block_code_expired'                    => 'Demo-Konto abgelaufen',
     'no_block_code'                         => 'Kein Grund für Block oder Benutzer nicht blockiert',
+    'block_code_email_changed'              => 'User has not yet confirmed new email address',
+    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
+    'update_user'                           => 'Update user',
+    'updated_user'                          => 'User data has been changed.',
+    'delete_user'                           => 'Delete user :email',
+    'user_deleted'                          => 'The user has been deleted',
+
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
     'create_new_link_type'                  => 'Create new link type',
