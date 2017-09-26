@@ -430,6 +430,7 @@ return [
     'login_with_new_email'                       => 'You can now login with your new email address.',
     'login_with_old_email'                       => 'You can now login with your old email address again.',
 
+
     // attachments
     'nr_of_attachments'                          => 'One attachment|:count attachments',
     'attachments'                                => 'Attachments',
@@ -902,6 +903,13 @@ return [
     'block_code_bounced'                    => 'Email message(s) bounced',
     'block_code_expired'                    => 'Demo account expired',
     'no_block_code'                         => 'No reason for block or user not blocked',
+    'block_code_email_changed'              => 'User has not yet confirmed new email address',
+    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
+    'update_user'                           => 'Update user',
+    'updated_user'                          => 'User data has been changed.',
+    'delete_user'                           => 'Delete user :email',
+    'user_deleted'                          => 'The user has been deleted',
+
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
     'create_new_link_type'                  => 'Create new link type',
