@@ -430,6 +430,7 @@ return [
     'login_with_new_email'                       => 'You can now login with your new email address.',
     'login_with_old_email'                       => 'You can now login with your old email address again.',
 
+
     // attachments
     'nr_of_attachments'                          => 'Eén bijlage|:count bijlagen',
     'attachments'                                => 'Bijlagen',
@@ -902,6 +903,13 @@ return [
     'block_code_bounced'                    => 'Email kwam niet aan',
     'block_code_expired'                    => 'Demo-account verlopen',
     'no_block_code'                         => 'Geen reden of gebruiker niet geblokkeerd',
+    'block_code_email_changed'              => 'User has not yet confirmed new email address',
+    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
+    'update_user'                           => 'Update user',
+    'updated_user'                          => 'User data has been changed.',
+    'delete_user'                           => 'Delete user :email',
+    'user_deleted'                          => 'The user has been deleted',
+
     // links
     'journal_link_configuration'            => 'Instellingen voor transactiekoppelingen',
     'create_new_link_type'                  => 'Maak nieuw koppeltype',
