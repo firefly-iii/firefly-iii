@@ -424,6 +424,11 @@ return [
     'explain_access_token'                       => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je toegangstoken niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
     'regenerate_access_token'                    => 'Genereer nieuw token',
     'token_regenerated'                          => 'Er is een nieuw token gegenereerd',
+    'change_your_email'                          => 'Change your email address',
+    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. You can test this in the <a href="/admin">Administration</a>.',
+    'email_changed_logout'                       => 'Until you verify your email address, you cannot login.',
+    'login_with_new_email'                       => 'You can now login with your new email address.',
+    'login_with_old_email'                       => 'You can now login with your old email address again.',
 
     // attachments
     'nr_of_attachments'                          => 'Eén bijlage|:count bijlagen',
