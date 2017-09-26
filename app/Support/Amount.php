@@ -288,6 +288,58 @@ class Amount
     }
 
     /**
+     * @param TransactionJournal $journal
+     * @param bool               $coloured
+     *
+     * @return string
+     */
+    public function journalTotalAmount(TransactionJournal $journal, bool $coloured = true): string
+    {
+        $transactions = $journal->transactions()->where('amount', '>', 0)->get();
+        $totals       = [];
+        $type         = $journal->transactionType->type;
+        /** @var TransactionModel $transaction */
+        foreach ($transactions as $transaction) {
+            // model some fields to fit "transactionAmount()":
+            $currencyId = $transaction->transaction_currency_id;
+
+            if (!isset($totals[$currencyId])) {
+                $totals[$currencyId] = [
+                    'amount' => '0',
+                    'symbol' => $transaction->transactionCurrency->symbol,
+                    'dp'     => $transaction->transactionCurrency->decimal_places,
+                ];
+            }
+            $totals[$currencyId]['amount'] = bcadd($transaction->amount, $totals[$currencyId]['amount']);
+
+            if (!is_null($transaction->foreign_currency_id)) {
+                $foreignId = $transaction->foreign_currency_id;
+                if (!isset($totals[$foreignId])) {
+                    $totals[$foreignId] = [
+                        'amount' => '0',
+                        'symbol' => $transaction->foreignCurrency->symbol,
+                        'dp'     => $transaction->foreignCurrency->decimal_places,
+                    ];
+                }
+                $totals[$foreignId]['amount'] = bcadd($transaction->foreign_amount, $totals[$foreignId]['amount']);
+            }
+        }
+        $array = [];
+        foreach ($totals as $total) {
+            $currency                 = new TransactionCurrency;
+            $currency->symbol         = $total['symbol'];
+            $currency->decimal_places = $total['dp'];
+            if ($type === TransactionType::WITHDRAWAL) {
+                $total['amount'] = bcmul($total['amount'], '-1');
+            }
+            $array[] = $this->formatAnything($currency, $total['amount']);
+        }
+
+        return join(' / ', $array);
+
+    }
+
+    /**
      * This formats a transaction, IF that transaction has been "collected" using the JournalCollector.
      *
      * @param TransactionModel $transaction

@@ -89,6 +89,10 @@
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
                                 {{ journalAmount(journal) }}
+
+                                {% if transactions|length > 1 %}
+                                    ({{ journalTotalAmount(journal) }})
+                                {% endif %}
                             </td>
                         </tr>
                         <tr>
