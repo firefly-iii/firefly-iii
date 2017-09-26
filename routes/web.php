@@ -779,8 +779,11 @@ Route::group(
     // user manager
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);
     Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);
+    Route::get('users/delete/{user}', ['uses' => 'UserController@delete', 'as' => 'users.delete']);
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
+
     Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
+    Route::post('users/destroy/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
 
     // journal links manager
     Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);

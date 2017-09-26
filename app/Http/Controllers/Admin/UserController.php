@@ -51,6 +51,32 @@ class UserController extends Controller
     /**
      * @param User $user
      *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function delete(User $user)
+    {
+        $subTitle = trans('firefly.delete_user', ['email' => $user->email]);
+
+        return view('admin.users.delete', compact('user', 'subTitle'));
+    }
+
+    /**
+     * @param User                    $user
+     * @param UserRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy(User $user, UserRepositoryInterface $repository)
+    {
+        $repository->destroy($user);
+        Session::flash('success', strval(trans('firefly.user_deleted')));
+
+        return redirect(route('admin.users'));
+    }
+
+    /**
+     * @param User $user
+     *
      * @return View
      */
     public function edit(User $user)
@@ -64,9 +90,10 @@ class UserController extends Controller
         $subTitle     = strval(trans('firefly.edit_user', ['email' => $user->email]));
         $subTitleIcon = 'fa-user-o';
         $codes        = [
-            ''        => strval(trans('firefly.no_block_code')),
-            'bounced' => strval(trans('firefly.block_code_bounced')),
-            'expired' => strval(trans('firefly.block_code_expired')),
+            ''              => strval(trans('firefly.no_block_code')),
+            'bounced'       => strval(trans('firefly.block_code_bounced')),
+            'expired'       => strval(trans('firefly.block_code_expired')),
+            'email_changed' => strval(trans('firefly.block_code_email_changed')),
         ];
 
         return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes'));
@@ -143,6 +170,7 @@ class UserController extends Controller
         }
 
         $repository->changeStatus($user, $data['blocked'], $data['blocked_code']);
+        $repository->updateEmail($user, $data['email']);
 
         Session::flash('success', strval(trans('firefly.updated_user', ['email' => $user->email])));
         Preferences::mark();

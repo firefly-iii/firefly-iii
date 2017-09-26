@@ -17,7 +17,7 @@
                     <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.text('email') }}
+                    {{ ExpandedForm.text('email',null,{'helpText': trans('firefly.admin_update_email')}) }}
                     {{ ExpandedForm.password('password') }}
                     {{ ExpandedForm.password('password_confirmation') }}
                     {{ ExpandedForm.checkbox('blocked') }}

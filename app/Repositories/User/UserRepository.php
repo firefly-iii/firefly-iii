@@ -53,8 +53,13 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * This updates the users email address and records some things so it can be confirmed or undone later.
+     * The user is blocked until the change is confirmed.
+     *
      * @param User   $user
      * @param string $newEmail
+     *
+     * @see updateEmail
      *
      * @return bool
      */
@@ -211,5 +216,30 @@ class UserRepository implements UserRepositoryInterface
     public function hasRole(User $user, string $role): bool
     {
         return $user->hasRole($role);
+    }
+
+    /**
+     * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.
+     * The user is NOT blocked.
+     *
+     * @param User   $user
+     * @param string $newEmail
+     *
+     * @see changeEmail
+     *
+     * @return bool
+     */
+    public function updateEmail(User $user, string $newEmail): bool
+    {
+        $oldEmail = $user->email;
+
+        // save old email as pref
+        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail);
+        Preferences::setForUser($user, 'admin_previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+
+        $user->email = $newEmail;
+        $user->save();
+
+        return true;
     }
 }

@@ -1,0 +1,37 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, user) }}
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST" action="{{ route('admin.users.destroy',user.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('form.delete_user', {'email': user.email}) }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-danger">
+                            {{ trans('form.permDeleteWarning') }}
+                        </p>
+
+                        <p>
+                            {{ trans('form.user_areYouSure', {'email': user.email}) }}
+                        </p>
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" onclick="return confirm('{{ trans('firefly.are_you_sure')|escape('js') }}');" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                        <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

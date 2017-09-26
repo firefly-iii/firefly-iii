@@ -138,6 +138,12 @@ Breadcrumbs::register(
     $breadcrumbs->push(trans('firefly.edit_user', ['email' => $user->email]), route('admin.users.edit', [$user->id]));
 }
 );
+Breadcrumbs::register(
+    'admin.users.delete', function (BreadCrumbGenerator $breadcrumbs, User $user) {
+    $breadcrumbs->parent('admin.users');
+    $breadcrumbs->push(trans('firefly.delete_user', ['email' => $user->email]), route('admin.users.delete', [$user->id]));
+}
+);
 
 Breadcrumbs::register(
     'admin.users.domains', function (BreadCrumbGenerator $breadcrumbs) {

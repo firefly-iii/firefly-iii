@@ -43,8 +43,13 @@ interface UserRepositoryInterface
     public function attachRole(User $user, string $role): bool;
 
     /**
+     * This updates the users email address and records some things so it can be confirmed or undone later.
+     * The user is blocked until the change is confirmed.
+     *
      * @param User   $user
      * @param string $newEmail
+     *
+     * @see updateEmail
      *
      * @return bool
      */
@@ -111,4 +116,17 @@ interface UserRepositoryInterface
      * @return bool
      */
     public function hasRole(User $user, string $role): bool;
+
+    /**
+     * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.
+     * The user is NOT blocked.
+     *
+     * @param User   $user
+     * @param string $newEmail
+     *
+     * @see changeEmail
+     *
+     * @return bool
+     */
+    public function updateEmail(User $user, string $newEmail): bool;
 }
