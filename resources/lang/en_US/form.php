@@ -67,6 +67,8 @@ return [
     'source_amount'                  => 'Amount (source)',
     'destination_amount'             => 'Amount (destination)',
     'native_amount'                  => 'Native amount',
+    'new_email_address'              => 'New email address',
+    'verification'                   => 'Verification',
 
     'source_account_asset'        => 'Source account (asset account)',
     'destination_account_expense' => 'Destination account (expense account)',

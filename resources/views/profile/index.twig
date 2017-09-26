@@ -16,6 +16,7 @@
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
                     <ul>
+                        <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
                         <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
                         <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
                     </ul>

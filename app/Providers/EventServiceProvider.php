@@ -36,26 +36,35 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            // new event handlers:
-            'FireflyIII\Events\RegisteredUser'            => // is a User related event.
+            // is a User related event.
+            'FireflyIII\Events\RegisteredUser'            =>
                 [
                     'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                     'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
                 ],
-            'FireflyIII\Events\RequestedNewPassword'      => [ // is a User related event.
-                                                               'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
+            // is a User related event.
+            'FireflyIII\Events\RequestedNewPassword'      => [
+                'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
-            'FireflyIII\Events\StoredTransactionJournal'  => // is a Transaction Journal related event.
+            // is a User related event.
+            'FireflyIII\Events\UserChangedEmail'          => [
+                'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
+                'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
+            ],
+            // is a Transaction Journal related event.
+            'FireflyIII\Events\StoredTransactionJournal'  =>
                 [
                     'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
                     'FireflyIII\Handlers\Events\StoredJournalEventHandler@connectToPiggyBank',
                     'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
                 ],
-            'FireflyIII\Events\UpdatedTransactionJournal' => // is a Transaction Journal related event.
+            // is a Transaction Journal related event.
+            'FireflyIII\Events\UpdatedTransactionJournal' =>
                 [
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
                     'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
                 ],
+
         ];
 
     /**

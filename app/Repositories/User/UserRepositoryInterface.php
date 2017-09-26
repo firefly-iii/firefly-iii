@@ -44,6 +44,14 @@ interface UserRepositoryInterface
 
     /**
      * @param User   $user
+     * @param string $newEmail
+     *
+     * @return bool
+     */
+    public function changeEmail(User $user, string $newEmail): bool;
+
+    /**
+     * @param User   $user
      * @param string $password
      *
      * @return mixed
@@ -79,6 +87,13 @@ interface UserRepositoryInterface
      * @return User
      */
     public function find(int $userId): User;
+
+    /**
+     * @param string $email
+     *
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User;
 
     /**
      * Return basic user information.

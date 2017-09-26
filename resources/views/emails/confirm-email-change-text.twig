@@ -1,0 +1,9 @@
+{% include 'emails.header-text' %}
+You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.
+
+The old email addres was: {{ oldEmail }}
+
+The new email address is: {{ newEmail }}
+
+You cannot use Firefly III until you confirm this change. Please follow the link to do so: {{ uri }}
+{% include 'emails.footer-text' %}

@@ -32,6 +32,9 @@ Route::group(
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
+    // Change email routes:
+    Route::get('profile/confirm-email-change/{token}', ['uses' => 'ProfileController@confirmEmailChange', 'as' => 'profile.confirm-email-change']);
+    Route::get('profile/undo-email-change/{token}/{oldAddressHash}', ['uses' => 'ProfileController@undoEmailChange', 'as' => 'profile.undo-email-change']);
 
 }
 );
@@ -521,11 +524,13 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'profile', 'as' => 'profile.'], function () {
 
     Route::get('', ['uses' => 'ProfileController@index', 'as' => 'index']);
+    Route::get('change-email', ['uses' => 'ProfileController@changeEmail', 'as' => 'change-email']);
     Route::get('change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
     Route::get('delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
 
     Route::post('delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account.post']);
     Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
+    Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
     Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
 }
 );

@@ -54,6 +54,33 @@ class UserRepository implements UserRepositoryInterface
 
     /**
      * @param User   $user
+     * @param string $newEmail
+     *
+     * @return bool
+     */
+    public function changeEmail(User $user, string $newEmail): bool
+    {
+        $oldEmail = $user->email;
+
+        // save old email as pref
+        Preferences::setForUser($user, 'previous_email_latest', $oldEmail);
+        Preferences::setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+
+        // set undo and confirm token:
+        Preferences::setForUser($user, 'email_change_undo_token', strval(bin2hex(random_bytes(16))));
+        Preferences::setForUser($user, 'email_change_confirm_token', strval(bin2hex(random_bytes(16))));
+        // update user
+
+        $user->email        = $newEmail;
+        $user->blocked      = 1;
+        $user->blocked_code = 'email_changed';
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * @param User   $user
      * @param string $password
      *
      * @return bool
@@ -117,6 +144,16 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return new User;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
     }
 
     /**

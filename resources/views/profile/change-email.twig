@@ -1,0 +1,47 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('profile.change-email.post') }}" accept-charset="UTF-8" class="form-horizontal" id="change-password">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'change_your_email'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+
+                        {% if errors|length > 0 %}
+                            <ul>
+                                {% for error in errors.all %}
+                                    <li class="text-danger">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+
+                        {% endif %}
+
+
+                        <div class="form-group">
+                            <label for="email" class="col-sm-4 control-label">{{ trans('form.new_email_address') }}</label>
+                            <div class="col-sm-8">
+                                <input type="email" class="form-control" id="email" placeholder="{{ 'new_email_address'|_ }}"
+                                       value="{{ old('email')|default(email) }}"
+                                       name="email">
+                            </div>
+                        </div>
+                        {{ ExpandedForm.staticText('verification',trans('firefly.email_verification')) }}
+
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success pull-right">{{ 'change_your_email'|_ }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
