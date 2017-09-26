@@ -132,6 +132,8 @@ return [
     'delete_rule'                => 'Lösche Regel ":title"',
     'delete_rule_group'          => 'Lösche Regelgruppe ":title"',
     'delete_link_type'           => 'Delete link type ":name"',
+    'delete_user'                => 'Delete user ":email"',
+    'user_areYouSure'            => 'If you delete user ":email", everything will be gone. There is no undo, undelete or anything. If you delete yourself, you will lose access to this instance of Firefly III.',
     'attachment_areYouSure'      => 'Sind Sie sicher, dass Sie den Anhang ":name" löschen möchten?',
     'account_areYouSure'         => 'Sind Sie sicher, dass Sie das Konto ":name" löschen möchten?',
     'bill_areYouSure'            => 'Sind Sie sicher, dass Sie die Rechnung ":name" löschen möchten?',
