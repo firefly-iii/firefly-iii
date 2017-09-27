@@ -662,10 +662,6 @@ return [
     'newWithdrawal'                              => 'Nieuwe uitgave',
     'newDeposit'                                 => 'Nieuwe inkomsten',
     'newTransfer'                                => 'Nieuwe overschrijving',
-    'moneyIn'                                    => 'Inkomsten',
-    'moneyOut'                                   => 'Uitgaven',
-    'billsToPay'                                 => 'Openstaande contracten',
-    'billsPaid'                                  => 'Betaalde contracten',
     'bills_to_pay'                               => 'Bills to pay',
     'per_day'                                    => 'Per day',
 
@@ -946,15 +942,6 @@ return [
     'overview_for_link'                     => 'Overzicht voor koppeltype ":name"',
     'delete_journal_link'                   => 'Verwijder de koppeling tussen <a href=":source_link">:source</a> en <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Koppeling verwijderd',
-    '1_outward'                             => 'is gerelateerd aan',
-    '2_outward'                             => 'is een (gedeeltelijke) terugbetaling voor',
-    '3_outward'                             => 'betaalt (deels voor)',
-    '4_outward'                             => 'vergoedt (deels)',
-    '1_inward'                              => 'is gerelateerd aan',
-    '2_inward'                              => 'wordt (deels) terugbetaald door',
-    '3_inward'                              => 'wordt (deels) betaald door',
-    '4_inward'                              => 'wordt (deels) vergoed door',
-
 
     // split a transaction:
     'splits'                                => 'Splitten',
