@@ -425,7 +425,7 @@ return [
     'regenerate_access_token'                    => 'Regenerate access token',
     'token_regenerated'                          => 'A new token was generated',
     'change_your_email'                          => 'Change your email address',
-    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. You can test this in the <a href="/admin">Administration</a>.',
+    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
     'email_changed_logout'                       => 'Until you verify your email address, you cannot login.',
     'login_with_new_email'                       => 'You can now login with your new email address.',
     'login_with_old_email'                       => 'You can now login with your old email address again.',
@@ -907,6 +907,10 @@ return [
     'updated_user'                          => 'User data has been changed.',
     'delete_user'                           => 'Delete user :email',
     'user_deleted'                          => 'The user has been deleted',
+    'send_test_email'                       => 'Send test email message',
+    'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
+    'send_message'                          => 'Send message',
+    'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
 
     // links
     'journal_link_configuration'            => 'Configuration des liens de transaction',
