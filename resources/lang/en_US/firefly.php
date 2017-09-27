@@ -662,10 +662,6 @@ return [
     'newWithdrawal'                              => 'New expense',
     'newDeposit'                                 => 'New deposit',
     'newTransfer'                                => 'New transfer',
-    'moneyIn'                                    => 'Money in',
-    'moneyOut'                                   => 'Money out',
-    'billsToPay'                                 => 'Bills to pay',
-    'billsPaid'                                  => 'Bills paid',
     'bills_to_pay'                               => 'Bills to pay',
     'per_day'                                    => 'Per day',
 

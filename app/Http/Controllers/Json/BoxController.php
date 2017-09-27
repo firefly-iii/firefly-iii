@@ -164,19 +164,16 @@ class BoxController extends Controller
      */
     public function netWorth(AccountRepositoryInterface $repository)
     {
-        $start = session('start', Carbon::now()->startOfMonth());
-        $end   = session('end', Carbon::now()->endOfMonth());
-
+        $today = new Carbon(date('Y-m-d')); // needed so its per day.
         $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
+        $cache->addProperty($today);
         $cache->addProperty('box-net-worth');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $currency = app('amount')->getDefaultCurrency();
-        $balances = app('steam')->balancesByAccounts($accounts, new Carbon);
+        $balances = app('steam')->balancesByAccounts($accounts, $today);
         $sum      = '0';
         foreach ($balances as $entry) {
             $sum = bcadd($sum, $entry);
