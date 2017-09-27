@@ -666,6 +666,8 @@ return [
     'moneyOut'                                   => 'Dinheiro sai',
     'billsToPay'                                 => 'Faturas a pagar',
     'billsPaid'                                  => 'Faturas pagas',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Moeda',
