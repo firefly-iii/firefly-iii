@@ -18,14 +18,14 @@
     </title>
     <base href="{{ route('index') }}/">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/adminlte/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
-    <link href="lib/adminlte/css/skins/skin-blue-light.min.css" rel="stylesheet" type="text/css"/>
-    <link href="css/daterangepicker.css" rel="stylesheet" type="text/css"/>
-    <link href="css/firefly.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/bootstrap/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/font-awesome/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     {% if not shownDemo %}
-        <link href="lib/intro/introjs.min.css" rel="stylesheet" type="text/css"/>
+        <link href="lib/intro/introjs.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     {% endif %}
 
     {% block styles %}{% endblock %}
