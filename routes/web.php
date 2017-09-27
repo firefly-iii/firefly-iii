@@ -777,6 +777,7 @@ Route::group(
 
     // admin home
     Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
+    Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);
 
     // user manager
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);

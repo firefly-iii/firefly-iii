@@ -51,6 +51,10 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
+            // admin related
+            'FireflyIII\Events\AdminRequestedTestMessage' => [
+                'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
+            ],
             // is a Transaction Journal related event.
             'FireflyIII\Events\StoredTransactionJournal'  =>
                 [
