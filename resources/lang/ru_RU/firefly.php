@@ -666,6 +666,8 @@ return [
     'moneyOut'                                   => 'Расходы',
     'billsToPay'                                 => 'Счета к оплате',
     'billsPaid'                                  => 'Оплаченные счета',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Валюта',
