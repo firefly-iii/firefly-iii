@@ -662,10 +662,6 @@ return [
     'newWithdrawal'                              => 'Nouvelle dépense',
     'newDeposit'                                 => 'Nouveau dépôt',
     'newTransfer'                                => 'Nouveau transfert',
-    'moneyIn'                                    => 'Argent entrant',
-    'moneyOut'                                   => 'Argent sortant',
-    'billsToPay'                                 => 'Factures à payer',
-    'billsPaid'                                  => 'Factures payées',
     'bills_to_pay'                               => 'Bills to pay',
     'per_day'                                    => 'Per day',
 
@@ -946,15 +942,6 @@ return [
     'overview_for_link'                     => 'Aperçu pour le type de lien ":name"',
     'delete_journal_link'                   => 'Supprimez le lien entre <a href=":source_link">:source</a> et <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Lien supprimé',
-    '1_outward'                             => 'lié à',
-    '2_outward'                             => 'remboursements (partiellement)',
-    '3_outward'                             => '(partiellement) paie pour',
-    '4_outward'                             => '(partiellement) remboursé',
-    '1_inward'                              => 'se rapporte à',
-    '2_inward'                              => 'est (partiellement) remboursé par',
-    '3_inward'                              => 'est (partiellement) payé par',
-    '4_inward'                              => 'est (partiellement) remboursé par',
-
 
     // split a transaction:
     'splits'                                => 'Scinder',
