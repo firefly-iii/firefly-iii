@@ -666,6 +666,8 @@ return [
     'moneyOut'                                   => 'Money out',
     'billsToPay'                                 => 'Bills to pay',
     'billsPaid'                                  => 'Bills paid',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Currency',
