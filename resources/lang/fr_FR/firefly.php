@@ -666,6 +666,8 @@ return [
     'moneyOut'                                   => 'Argent sortant',
     'billsToPay'                                 => 'Factures à payer',
     'billsPaid'                                  => 'Factures payées',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Devise',
