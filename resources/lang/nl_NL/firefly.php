@@ -666,6 +666,8 @@ return [
     'moneyOut'                                   => 'Uitgaven',
     'billsToPay'                                 => 'Openstaande contracten',
     'billsPaid'                                  => 'Betaalde contracten',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Valuta',
