@@ -667,6 +667,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'moneyOut'                                   => 'Geldausgang',
     'billsToPay'                                 => 'Rechnungen zu bezahlen',
     'billsPaid'                                  => 'Rechnungen bezahlt',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Währung',
