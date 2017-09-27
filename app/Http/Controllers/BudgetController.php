@@ -198,7 +198,7 @@ class BudgetController extends Controller
         $inactive          = $this->repository->getInactiveBudgets();
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $budgetInformation = $this->collectBudgetInformation($budgets, $start, $end);
+        $budgetInformation = $this->repository->collectBudgetInformation($budgets, $start, $end);
         $defaultCurrency   = Amount::getDefaultCurrency();
         $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
@@ -252,8 +252,8 @@ class BudgetController extends Controller
      *
      * @return View
      *
-     *  @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *  @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function noBudget(Request $request, JournalRepositoryInterface $repository, string $moment = '')
     {
@@ -455,50 +455,6 @@ class BudgetController extends Controller
         $available       = round($available, $defaultCurrency->decimal_places);
 
         return view('budgets.income', compact('available', 'start', 'end'));
-    }
-
-    /**
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
-    {
-        // get account information
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-        $return            = [];
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $budgetId          = $budget->id;
-            $return[$budgetId] = [
-                'spent'      => $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
-                'budgeted'   => '0',
-                'currentRep' => false,
-            ];
-            $budgetLimits      = $this->repository->getBudgetLimits($budget, $start, $end);
-            $otherLimits       = new Collection;
-
-            // get all the budget limits relevant between start and end and examine them:
-            /** @var BudgetLimit $limit */
-            foreach ($budgetLimits as $limit) {
-                if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
-                ) {
-                    $return[$budgetId]['currentLimit'] = $limit;
-                    $return[$budgetId]['budgeted']     = $limit->amount;
-                    continue;
-                }
-                // otherwise it's just one of the many relevant repetitions:
-                $otherLimits->push($limit);
-            }
-            $return[$budgetId]['otherLimits'] = $otherLimits;
-        }
-
-        return $return;
     }
 
     /**

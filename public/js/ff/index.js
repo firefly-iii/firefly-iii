@@ -28,9 +28,61 @@ function drawChart() {
     columnChart(accountExpenseUri, 'expense-accounts-chart');
     columnChart(accountRevenueUri, 'revenue-accounts-chart');
 
+    // get balance box:
+    getBalanceBox();
+    getBillsBox();
+    getAvailableBox();
+    getNetWorthBox();
 
-    getBoxAmounts();
+    //getBoxAmounts();
 }
+
+function getNetWorthBox() {
+    // box-net-worth
+    $.getJSON('json/box/net-worth').done(function(data) {
+        $('#box-net-worth').html(data.net_worth);
+    });
+}
+
+/**
+ *
+ */
+function getAvailableBox() {
+    // box-left-to-spend
+    // box-left-per-day
+    $.getJSON('json/box/available').done(function(data) {
+        $('#box-left-to-spend').html(data.left);
+        $('#box-left-per-day').html(data.perDay);
+    });
+}
+
+/**
+ *
+ */
+function getBillsBox() {
+    // box-bills-unpaid
+    // box-bills-paid
+    $.getJSON('json/box/bills').done(function(data) {
+        $('#box-bills-paid').html(data.paid);
+        $('#box-bills-unpaid').html(data.unpaid);
+    });
+}
+
+/**
+ *
+ */
+function getBalanceBox() {
+    // box-balance-total
+    // box-balance-out
+    // box-balance-in
+    $.getJSON('json/box/balance').done(function(data) {
+        $('#box-balance-total').html(data.combined);
+        $('#box-balance-in').html(data.income);
+        $('#box-balance-out').html(data.expense);
+    });
+}
+
+
 
 function getBoxAmounts() {
     "use strict";

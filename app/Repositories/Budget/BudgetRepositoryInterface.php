@@ -33,6 +33,18 @@ interface BudgetRepositoryInterface
     public function cleanupBudgets(): bool;
 
     /**
+     * This method collects various info on budgets, used on the budget page and on the index.
+     *
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
+
+    /**
      * @param Budget $budget
      *
      * @return bool

@@ -67,8 +67,10 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
-            $line = $this->createBalanceLine($budgetLimit, $accounts);
-            $balance->addBalanceLine($line);
+            if (!is_null($budgetLimit->budget)) {
+                $line = $this->createBalanceLine($budgetLimit, $accounts);
+                $balance->addBalanceLine($line);
+            }
         }
         $noBudgetLine = $this->createNoBudgetLine($accounts, $start, $end);
 
