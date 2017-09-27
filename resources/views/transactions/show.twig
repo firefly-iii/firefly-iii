@@ -315,6 +315,7 @@
                     </div>
                 </div>
             {% endif %}
+            {# show links: #}
             {% if links.count > 0 %}
                 <div class="box">
                     <div class="box-header with-border">
@@ -333,13 +334,13 @@
                                     <td>
                                         {{ ('this_'~(what|lower))|_ }}
                                         {% if link.source.id == journal.id %}
-                                            {{ journalLinkTranslation(link.link_type_id,'outward', link.linkType.outward) }}
+                                            {{ journalLinkTranslation('outward', link.linkType.outward) }}
                                             <a href="{{ route('transactions.show',link.destination.id) }}">
                                                 #{{ link.destination.id }}: {{ link.destination.description }}
                                             </a>
                                             ({{ journalAmount(link.destination) }})
                                         {% else %}
-                                            {{ journalLinkTranslation(link.link_type_id,'inward', link.linkType.inward) }}
+                                            {{ journalLinkTranslation('inward', link.linkType.inward) }}
                                             <a href="{{ route('transactions.show',link.source.id) }}">
                                                 #{{ link.source.id }}: {{ link.source.description }}</a>
                                             ({{ journalAmount(link.source) }})

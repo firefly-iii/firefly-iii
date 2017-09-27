@@ -942,15 +942,6 @@ return [
     'overview_for_link'                     => 'Overview for link type ":name"',
     'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Deleted link',
-    '1_outward'                             => 'relates to',
-    '2_outward'                             => '(partially) refunds',
-    '3_outward'                             => '(partially) pays for',
-    '4_outward'                             => '(partially) reimburses',
-    '1_inward'                              => 'relates to',
-    '2_inward'                              => 'is (partially) refunded by',
-    '3_inward'                              => 'is (partially) paid for by',
-    '4_inward'                              => 'is (partially) reimbursed by',
-
 
     // split a transaction:
     'splits'                                => 'Splits',

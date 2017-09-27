@@ -112,7 +112,7 @@ class VerifyDatabase extends Command
     private function createLinkTypes()
     {
         $set = [
-            'Relates'       => ['relates to', 'relates to'],
+            'Related'       => ['relates to', 'relates to'],
             'Refund'        => ['(partially) refunds', 'is (partially) refunded by'],
             'Paid'          => ['(partially) pays for', 'is (partially) paid for by'],
             'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
