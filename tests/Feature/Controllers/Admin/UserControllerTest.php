@@ -84,6 +84,7 @@ class UserControllerTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword')->once();
         $repository->shouldReceive('changeStatus')->once();
+        $repository->shouldReceive('updateEmail')->once();
         $data = [
             'id'                    => 1,
             'email'                 => 'test@example.com',
