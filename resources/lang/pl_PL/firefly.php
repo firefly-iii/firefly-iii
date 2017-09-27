@@ -666,6 +666,8 @@ return [
     'moneyOut'                                   => 'Obciążenia',
     'billsToPay'                                 => 'Rachunki do zapłacenia',
     'billsPaid'                                  => 'Zapłacone rachunki',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Waluta',
