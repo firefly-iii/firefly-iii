@@ -68,7 +68,6 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
 
-
         return ($apiKey->data === false || is_null($apiKey->data));
     }
 

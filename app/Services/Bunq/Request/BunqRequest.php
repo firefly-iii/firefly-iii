@@ -41,6 +41,15 @@ abstract class BunqRequest
         ];
 
     /**
+     * @return ServerPublicKey
+     */
+    public function getServerPublicKey(): ServerPublicKey
+    {
+        return $this->serverPublicKey;
+    }
+
+
+    /**
      * BunqRequest constructor.
      */
     public function __construct()
