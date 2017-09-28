@@ -947,6 +947,17 @@ return [
     'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Deleted link',
 
+    // link translations:
+    'relates to_inward'                     => 'relates to',
+    'is (partially) refunded by_inward'     => 'is (partially) refunded by',
+    'is (partially) paid for by_inward'     => 'is (partially) paid for by',
+    'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
+    'relates to_outward'                    => 'relates to',
+    '(partially) refunds_outward'           => '(partially) refunds',
+    '(partially) pays for_outward'          => '(partially) pays for',
+    '(partially) reimburses_outward'        => '(partially) reimburses',
+
+
     // split a transaction:
     'splits'                                => 'Splits',
     'add_another_split'                     => 'Add another split',
