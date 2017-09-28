@@ -69,6 +69,7 @@ return [
     'native_amount'                  => 'Native amount',
     'new_email_address'              => 'New email address',
     'verification'                   => 'Verification',
+    'api_key'                        => 'API key',
 
     'source_account_asset'        => 'Source account (asset account)',
     'destination_account_expense' => 'Destination account (expense account)',
