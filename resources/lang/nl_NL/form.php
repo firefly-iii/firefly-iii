@@ -69,6 +69,7 @@ return [
     'native_amount'                  => 'Origineel bedrag',
     'new_email_address'              => 'New email address',
     'verification'                   => 'Verification',
+    'api_key'                        => 'API key',
 
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
     'destination_account_expense' => 'Doelrekening (crediteur)',
