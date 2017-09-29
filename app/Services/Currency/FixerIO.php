@@ -18,6 +18,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Log;
 use Requests;
+use Requests_Exception;
 
 /**
  * Class FixerIO
@@ -31,16 +32,26 @@ class FixerIO implements ExchangeRateInterface
 
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
     {
-        $uri     = sprintf('https://api.fixer.io/%s?base=%s&symbols=%s', $date->format('Y-m-d'), $fromCurrency->code, $toCurrency->code);
-        $result  = Requests::get($uri);
+        $uri        = sprintf('https://api.fixer.io/%s?base=%s&symbols=%s', $date->format('Y-m-d'), $fromCurrency->code, $toCurrency->code);
+        $statusCode = -1;
+        $body       = '';
+        try {
+            $result     = Requests::get($uri);
+            $statusCode = $result->status_code;
+            $body       = $result->body;
+        } catch (Requests_Exception $e) {
+            // don't care about error
+            $body = sprintf('Requests_Exception: %s', $e->getMessage());
+        }
+        // Requests_Exception
         $rate    = 1.0;
         $content = null;
-        if ($result->status_code !== 200) {
-            Log::error(sprintf('Something went wrong. Received error code %d and body "%s" from FixerIO.', $result->status_code, $result->body));
+        if ($statusCode !== 200) {
+            Log::error(sprintf('Something went wrong. Received error code %d and body "%s" from FixerIO.', $statusCode, $body));
         }
         // get rate from body:
-        if ($result->status_code === 200) {
-            $content = json_decode($result->body, true);
+        if ($statusCode === 200) {
+            $content = json_decode($body, true);
         }
         if (!is_null($content)) {
             $code = $toCurrency->code;
