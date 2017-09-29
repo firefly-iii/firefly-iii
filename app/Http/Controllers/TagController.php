@@ -53,6 +53,7 @@ class TagController extends Controller
     {
         parent::__construct();
         View::share('hideTags', true);
+        $this->redirectUri = route('tags.index');
 
         $this->middleware(
             function ($request, $next) {
