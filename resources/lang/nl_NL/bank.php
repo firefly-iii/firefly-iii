@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'bunq_prerequisites_title' => 'Prerequisites for an import from bunq',
-    'bunq_prerequisites_text'  => 'In order to import from bunq, you need to obtain an API key. You can do this through the app.',
+    'bunq_prerequisites_title' => 'Voorwaarden voor een import van bunq',
+    'bunq_prerequisites_text'  => 'Om transacties bij bunq te importeren heb je een API sleutel nodig. Dit kan via de app.',
 ];
