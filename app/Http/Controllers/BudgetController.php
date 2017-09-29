@@ -246,6 +246,59 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function infoIncome(Carbon $start, Carbon $end)
+    {
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('info-income');
+
+        if ($cache->has()) {
+            $result = $cache->get(); // @codeCoverageIgnore
+        }
+        if (!$cache->has()) {
+            $result   = [
+                'available' => '0',
+                'earned'    => '0',
+                'suggested' => '0',
+            ];
+            $currency = Amount::getDefaultCurrency();
+            $range    = Preferences::get('viewRange', '1M')->data;
+            $begin    = Navigation::subtractPeriod($start, $range, 3);
+
+            // get average amount available.
+            $total        = '0';
+            $count        = 0;
+            $currentStart = clone $begin;
+            while ($currentStart < $start) {
+                $currentEnd   = Navigation::endOfPeriod($currentStart, $range);
+                $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
+                $currentStart = Navigation::addPeriod($currentStart, $range, 0);
+                $count++;
+            }
+            $result['available'] = bcdiv($total, strval($count));
+
+            // amount earned in this period:
+            $subDay = clone $end;
+            $subDay->subDay();
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
+            $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')),strval($count));
+            $cache->store($result);
+        }
+
+
+        return view('budgets.info', compact('result', 'begin', 'currentEnd'));
+    }
+
+    /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      * @param string                     $moment

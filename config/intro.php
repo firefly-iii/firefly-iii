@@ -42,6 +42,7 @@ return [
         'navigate_periods' => ['element' => '#periodNavigator'],
         'new_budget'       => ['element' => '#createBudgetBox'],
         'list_of_budgets'  => ['element' => '#budgetList'],
+        'outro'            => [],
 
     ],
     // reports: index, default report, audit, budget, cat, tag

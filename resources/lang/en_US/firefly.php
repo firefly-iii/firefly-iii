@@ -532,6 +532,13 @@ return [
     'update_budget'                              => 'Update budget',
     'update_budget_amount_range'                 => 'Update (expected) available amount between :start and :end',
     'budget_period_navigator'                    => 'Period navigator',
+    'info_on_available_amount'                   => 'What do I have available?',
+    'available_amount_indication'                => 'Use these amounts to get an indication of what your total budget could be.',
+    'amount_budgeted'                            => 'Amount budgeted',
+    'amount_earned'                              => 'Amount earned',
+    'suggested'                                  => 'Suggested',
+    'average_between'                            => 'Average between :start and :end',
+
 
     // bills:
     'matching_on'                                => 'Matching on',

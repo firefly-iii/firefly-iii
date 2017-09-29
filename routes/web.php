@@ -140,7 +140,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'budgets', 'as' => 'budgets.'], function () {
 
-        Route::get('income/{start_date}/{end_date}', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+    Route::get('income/{start_date}/{end_date}', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+    Route::get('info/{start_date}/{end_date}', ['uses' => 'BudgetController@infoIncome', 'as' => 'income.info']);
     Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
