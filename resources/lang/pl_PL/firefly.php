@@ -83,11 +83,9 @@ return [
     'cannot_redirect_to_account'                 => 'Firefly III nie może Cię przekierować na właściwą stronę. Przepraszamy.',
     'sum_of_expenses'                            => 'Suma wydatków',
     'sum_of_income'                              => 'Suma dochodów',
-    'total_sum'                                  => 'Suma ogółem',
     'spent_in_specific_budget'                   => 'Wydatki w budżecie ":budget"',
     'sum_of_expenses_in_budget'                  => 'Wydano łącznie w budżecie ":budget"',
     'left_in_budget_limit'                       => 'Możliwe do wydania wg budżetu',
-    'cannot_reset_demo_user'                     => 'Nie można zresetować hasła do konta demonstracyjnego',
     'current_period'                             => 'Bieżący okres',
     'show_the_current_period_and_overview'       => 'Pokaż bieżący okres oraz przegląd',
     'pref_languages_locale'                      => 'For a language other than English to work properly, your operating system must be equipped with the correct locale-information. If these are not present, currency data, dates and amounts may be formatted wrong.',
@@ -130,6 +128,8 @@ return [
     'exchange_rate_instructions'                 => 'Konto aktywów "@name" obsługuje tylko transakcje w walucie @native_currency. Jeśli chcesz użyć waluty @foreign_currency, upewnij się, że kwota w @native_currency jest również znana:',
     'transfer_exchange_rate_instructions'        => 'Konto źródłowe "@source_name" obsługuje tylko transakcje w walucie @source_currency. Konto docelowe "@dest_name" obsługuje tylko transakcje w walucie @dest_currency. Musisz podać przelewaną kwotę w obu walutach.',
     'transaction_data'                           => 'Dane transakcji',
+    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
     'search'                                     => 'Szukaj',
@@ -139,6 +139,7 @@ return [
     'search_box_intro'                           => 'Witamy w funkcji wyszukiwania Firefly III. Wpisz zapytanie w polu. Upewnij się, że sprawdziłeś plik pomocy, ponieważ wyszukiwanie jest dość zaawansowane.',
     'search_error'                               => 'Błąd podczas wyszukiwania',
     'search_searching'                           => 'Wyszukiwanie...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'rocznie',
@@ -151,11 +152,11 @@ return [
     // export data:
     'import_and_export'                          => 'Import / eksport',
     'export_data'                                => 'Eksportuj dane',
+    'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
     'export_format'                              => 'Format eksportu',
     'export_format_csv'                          => 'Wartości oddzielone przecinkami (plik CSV)',
     'export_format_mt940'                        => 'Format kompatybilny z MT940',
-    'export_included_accounts'                   => 'Eksportuj transakcje z tych kont',
     'include_old_uploads_help'                   => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
     'do_export'                                  => 'Eksportuj',
     'export_status_never_started'                => 'Eksport nie został jeszcze rozpoczęty',
@@ -170,8 +171,6 @@ return [
     'export_status_collected_attachments'        => 'Zebrano wszystkie twoje załączniki!',
     'export_status_collecting_old_uploads'       => 'Collecting all your previous uploads...',
     'export_status_collected_old_uploads'        => 'Collected all your previous uploads!',
-    'export_status_creating_config_file'         => 'Tworzenie pliku konfiguracji...',
-    'export_status_created_config_file'          => 'Utworzono plik konfiguracyjny!',
     'export_status_creating_zip_file'            => 'Tworzenie pliku zip...',
     'export_status_created_zip_file'             => 'Utworzono plik zip!',
     'export_status_finished'                     => 'Eksport został pomyślnie zakończony! Yay!',
@@ -317,6 +316,8 @@ return [
     'rule_action_set_source_account'             => 'Ustaw konto źródłowe na :action_value',
     'rule_action_set_destination_account_choice' => 'Ustaw konto docelowe na...',
     'rule_action_set_destination_account'        => 'Ustaw konto docelowe na :action_value',
+    'rules_have_read_warning'                    => 'Have you read the warning?',
+    'apply_rule_warning'                         => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
     // tags
     'store_new_tag'                              => 'Zachowaj nowy tag',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Lokalizacja',
     'without_date'                               => 'Bez daty',
     'result'                                     => 'Wynik',
+    'sums_apply_to_range'                        => 'All sums apply to the selected range',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konta na stronie domowej',
@@ -414,6 +416,15 @@ return [
     'secure_pw_should'                           => 'Czy powinienem zaznaczyć to pole?',
     'secure_pw_long_password'                    => 'Jeśli wygenerowałeś długie, jednorazowe hasło dla Firefly III, używając pewnego rodzaju generatora haseł: <strong>no</strong>.',
     'secure_pw_short'                            => 'Jeśli wpisałeś hasło, którego zawsze używasz: <em>tak, proszę</em>.',
+    'personal_access_token'                      => 'Personal access token',
+    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_access_token'                    => 'Regenerate access token',
+    'token_regenerated'                          => 'A new token was generated',
+    'change_your_email'                          => 'Change your email address',
+    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
+    'email_changed_logout'                       => 'Until you verify your email address, you cannot login.',
+    'login_with_new_email'                       => 'You can now login with your new email address.',
+    'login_with_old_email'                       => 'You can now login with your old email address again.',
 
 
     // attachments
@@ -447,7 +458,6 @@ return [
     'convert_options_DepositWithdrawal'          => 'Konwertuj wpłatę na wypłatę',
     'convert_options_TransferWithdrawal'         => 'Konwertuj transfer na wypłatę',
     'convert_options_TransferDeposit'            => 'Konwertuj transfer na wpłatę',
-    'transaction_journal_convert_options'        => 'Konwertuj tę transakcję',
     'convert_Withdrawal_to_deposit'              => 'Konwertuj tę wypłatę na wpłatę',
     'convert_Withdrawal_to_transfer'             => 'Konwertuj tę wypłatę na transfer',
     'convert_Deposit_to_withdrawal'              => 'Konwertuj tę wpłatę na wypłatę',
@@ -467,7 +477,7 @@ return [
     'converted_to_Withdrawal'                    => 'Transakcja została przekonwertowana do wypłaty',
     'converted_to_Deposit'                       => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                      => 'Transakcja została przekonwertowana do transferu',
-
+    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Utwórz nową wypłatę',
@@ -517,6 +527,11 @@ return [
     'update_budget'                              => 'Aktualizuj budżet',
     'update_budget_amount_range'                 => 'Update (expected) available amount between :start and :end',
     'budget_period_navigator'                    => 'Period navigator',
+    'info_on_available_amount'                   => 'What do I have available?',
+    'available_amount_indication'                => 'Use these amounts to get an indication of what your total budget could be.',
+    'suggested'                                  => 'Suggested',
+    'average_between'                            => 'Average between :start and :end',
+
 
     // bills:
     'matching_on'                                => 'Pasuje do',
@@ -647,10 +662,8 @@ return [
     'newWithdrawal'                              => 'Nowy wydatek',
     'newDeposit'                                 => 'Nowa wpłata',
     'newTransfer'                                => 'Nowy transfer',
-    'moneyIn'                                    => 'Uznania',
-    'moneyOut'                                   => 'Obciążenia',
-    'billsToPay'                                 => 'Rachunki do zapłacenia',
-    'billsPaid'                                  => 'Zapłacone rachunki',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Waluta',
@@ -850,9 +863,6 @@ return [
     'removed_amount_from_piggy' => 'Usunięto :amount z ":name"',
 
     // tags
-    'regular_tag'               => 'Po prostu zwykły tag.',
-    'balancing_act'             => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-    'advance_payment'           => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
     'delete_tag'                => 'Usuń tag ":tag"',
     'deleted_tag'               => 'Usunięto tag ":tag"',
     'new_tag'                   => 'Utwórz nowy tag',
@@ -891,6 +901,17 @@ return [
     'block_code_bounced'                    => 'Odrzucony e-mail potwierdzający',
     'block_code_expired'                    => 'Demonstracyjne konto wygasło',
     'no_block_code'                         => 'Brak powody blokady lub użytkownik niezablokowany',
+    'block_code_email_changed'              => 'User has not yet confirmed new email address',
+    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
+    'update_user'                           => 'Update user',
+    'updated_user'                          => 'User data has been changed.',
+    'delete_user'                           => 'Delete user :email',
+    'user_deleted'                          => 'The user has been deleted',
+    'send_test_email'                       => 'Send test email message',
+    'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
+    'send_message'                          => 'Send message',
+    'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
+
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
     'create_new_link_type'                  => 'Create new link type',
@@ -914,8 +935,8 @@ return [
     'transaction'                           => 'Transakcja',
     'comments'                              => 'Komentarze',
     'to_link_not_found'                     => 'Jeśli nie widzisz transakcji, którą chcesz powiązać, po prostu wpisz jej identyfikator.',
-    'invalid_link_data'                     => 'Wybrano błędny typ powiązania. Nie można powiązać transakcji.',
-    'journals_linked'                       => 'Transakcje są powiązane.',
+    'invalid_link_selection'                => 'Nie można powiązać tych transakcji',
+    'journals_linked'                       => 'Transakcje zostały powiązane.',
     'journals_error_linked'                 => 'Wybrane transakcje są już powiązane.',
     'journal_links'                         => 'Powiązane transakcje',
     'this_withdrawal'                       => 'Ta wypłata',
@@ -924,14 +945,16 @@ return [
     'overview_for_link'                     => 'Overview for link type ":name"',
     'delete_journal_link'                   => 'Usuń powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Usunięto powiązanie',
-    '1_outward'                             => 'relates to',
-    '2_outward'                             => '(partially) refunds',
-    '3_outward'                             => '(partially) pays for',
-    '4_outward'                             => '(partially) reimburses',
-    '1_inward'                              => 'relates to',
-    '2_inward'                              => 'is (partially) refunded by',
-    '3_inward'                              => 'is (partially) paid for by',
-    '4_inward'                              => 'is (partially) reimbursed by',
+
+    // link translations:
+    'relates to_inward'                     => 'relates to',
+    'is (partially) refunded by_inward'     => 'is (partially) refunded by',
+    'is (partially) paid for by_inward'     => 'is (partially) paid for by',
+    'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
+    'relates to_outward'                    => 'relates to',
+    '(partially) refunds_outward'           => '(partially) refunds',
+    '(partially) pays for_outward'          => '(partially) pays for',
+    '(partially) reimburses_outward'        => '(partially) reimburses',
 
 
     // split a transaction:
@@ -946,6 +969,7 @@ return [
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
     'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'Nie wybrałeś żadnych poprawnych transakcji do edycji.',
+    'cannot_convert_split_journal'          => 'Nie można przekonwertować podzielonej transakcji',
 
     // import bread crumbs and titles:
     'import'                                => 'Importuj',
@@ -960,6 +984,7 @@ return [
     'import_index_config'                   => 'Jeśli wcześniej importowałeś dane do Firefly III, może posiadać plik konfiguracji, który wstępnie ustawi wartości parametrów konfiguracyjnych dla Ciebie. Dla niektórych banków, inni użytkownicy uprzejmie dostarczyli swoje <a href="https://github.com/firefly-iii/import-configurations/wiki">pliki konfiguracji</a>.',
     'import_index_type'                     => 'Wybierz typ pliku, który będziesz przesyłać',
     'import_index_start'                    => 'Rozpocznij import',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (wartości oddzielone przecinkami)',
@@ -989,13 +1014,13 @@ return [
     'import_status_finished_title'          => 'Importowanie zakończone',
     'import_status_finished_text'           => 'Procedura importu pomyślnie zaimportowała Twój plik.',
     'import_status_finished_job'            => 'Zaimportowane transakcje znajdują się w tagu <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'The import is running...',
     'import_with_key'                       => 'Import z kluczem \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Ta funkcja nie jest dostępna, gdy używasz Firefly III w środowisku Sandstorm.io.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'Nie ma żadnych transakcji w tym okresie.',
     'no_accounts_title_asset'               => 'Stwórzmy konto aktywów!',
     'no_accounts_intro_asset'               => 'Nie masz jeszcze konta nie aktywów. Konta aktywów są twoimi głównymi kontami: konto czekowe, konto oszczędnościowe, wspólne konto lub nawet karta kredytowa.',
     'no_accounts_imperative_asset'          => 'Aby rozpocząć korzystanie z Firefly III należy utworzyć co najmniej jedno konto aktywów. Zróbmy je więc teraz:',

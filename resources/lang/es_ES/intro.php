@@ -31,6 +31,7 @@ return [
     'budgets_index_navigate_periods'        => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
     'budgets_index_new_budget'              => 'Crea nuevos presupuestos como mejor te parezca.',
     'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
+    'budgets_index_outro'                   => 'To learn more about budgeting, checkout the help icon in the top right corner.',
 
     // reports (index)
     'reports_index_intro'                   => 'Use these reports to get detailed insights in your finances.',

@@ -83,11 +83,9 @@ return [
     'cannot_redirect_to_account'                 => 'Firefly III kan je niet naar de goede pagina doorsturen. Sorry!',
     'sum_of_expenses'                            => 'Som van uitgaven',
     'sum_of_income'                              => 'Som van inkomsten',
-    'total_sum'                                  => 'Totaalbedrag',
     'spent_in_specific_budget'                   => 'Uitgegeven in budget ":budget"',
     'sum_of_expenses_in_budget'                  => 'Totaal uitgegeven in budget ":budget"',
     'left_in_budget_limit'                       => 'Nog uit te geven volgens budgettering',
-    'cannot_reset_demo_user'                     => 'Je kan het wachtwoord van de demonstratie-account niet resetten',
     'current_period'                             => 'Huidige periode',
     'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
     'pref_languages_locale'                      => 'Als je hier een andere taal dan Engels hebt geselecteerd, zorg er dan voor dat je besturingssysteem ook in staat is om valuta, data en bedragen in die taal weer te geven.',
@@ -130,6 +128,8 @@ return [
     'exchange_rate_instructions'                 => 'Betaalrekening "@naam" accepteert alleen boekingen in @native_currency. Als je @foreign_currency wilt gebruiken moet je ook het bedrag in @native_currency opgeven:',
     'transfer_exchange_rate_instructions'        => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name: accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
     'transaction_data'                           => 'Transactiegegevens',
+    'invalid_server_configuration'               => 'Ongeldige serverconfiguratie',
+    'invalid_locale_settings'                    => 'Firefly III kan geldbedragen niet goed weergeven omdat je server de vereiste software mist. Er zijn <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructies hoe dit te doen</a>.',
 
     // search
     'search'                                     => 'Zoeken',
@@ -139,6 +139,7 @@ return [
     'search_box_intro'                           => 'Welkom bij de zoekfunctie van Firefly III. Voer je zoekopdracht in het vak. Bekijk zeker de help-pagina, want de zoekfunctie is behoorlijk geadvanceerd.',
     'search_error'                               => 'Fout tijdens het zoeken',
     'search_searching'                           => 'Bezig met zoeken ...',
+    'search_results'                             => 'Zoekresultaten',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
@@ -151,11 +152,11 @@ return [
     // export data:
     'import_and_export'                          => 'Import en export',
     'export_data'                                => 'Exporteren',
+    'export_and_backup_data'                     => 'Exporteren en backup',
     'export_data_intro'                          => 'Om te backuppen, of wanneer je naar een ander systeem verhuist.',
     'export_format'                              => 'Exporteerformaat',
     'export_format_csv'                          => 'Komma-gescheiden bestand (CSV)',
     'export_format_mt940'                        => 'MT940 bestand',
-    'export_included_accounts'                   => 'Exporteer transacties van deze rekeningen',
     'include_old_uploads_help'                   => 'Firefly III gooit je oude geïmporteerde CSV bestanden niet weg. Je kan ze meenemen in je exportbestand.',
     'do_export'                                  => 'Exporteren',
     'export_status_never_started'                => 'Het exporteren is nog niet begonnen',
@@ -170,8 +171,6 @@ return [
     'export_status_collected_attachments'        => 'Bijlagen verzameld!',
     'export_status_collecting_old_uploads'       => 'Oude uploads verzamelen...',
     'export_status_collected_old_uploads'        => 'Oude uploads verzameld!',
-    'export_status_creating_config_file'         => 'Configuratiebestand maken...',
-    'export_status_created_config_file'          => 'Configuratiebestand gemaakt!',
     'export_status_creating_zip_file'            => 'Zipbestand maken...',
     'export_status_created_zip_file'             => 'Zipbestand gemaakt!',
     'export_status_finished'                     => 'Klaar met exportbestand! Hoera!',
@@ -317,6 +316,8 @@ return [
     'rule_action_set_source_account'             => 'Verander bronrekening naar ":action_value"',
     'rule_action_set_destination_account_choice' => 'Verander doelrekening naar...',
     'rule_action_set_destination_account'        => 'Verander doelrekening naar ":action_value"',
+    'rules_have_read_warning'                    => 'Heb je de waarschuwing gelezen?',
+    'apply_rule_warning'                         => 'Let op! Het kan heel lang duren voor een regel(groep) is toegepast op een grote selectie transacties. Er kan een time-out optreden. Als dat gebeurt is de regel(groep) niet toegepast op alle transacties, en dat kan je administratie behoorlijk verprutsen. Wees dus voorzichtig.',
 
     // tags
     'store_new_tag'                              => 'Sla tag op',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Plaats',
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
+    'sums_apply_to_range'                        => 'Alle sommen gelden voor het geselecteerde bereik',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
@@ -414,6 +416,15 @@ return [
     'secure_pw_should'                           => 'Vinkje zetten of niet?',
     'secure_pw_long_password'                    => 'Als je net een lang wachtwoord hebt gegenereerd met een password generator tool: <strong>nee</strong>.',
     'secure_pw_short'                            => 'Gebruik je het wachtwoord dat je altijd gebruikt? <em>Ja, doen!</em>',
+    'personal_access_token'                      => 'Persoonlijk toegangstoken',
+    'explain_access_token'                       => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je toegangstoken niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
+    'regenerate_access_token'                    => 'Genereer nieuw token',
+    'token_regenerated'                          => 'Er is een nieuw token gegenereerd',
+    'change_your_email'                          => 'Verander je emailadres',
+    'email_verification'                         => 'Het systeem verstuurt een mailtje naar je oude EN nieuwe emailadres. Uit veiligheidsoverwegingen ben je zometeen uitgelogd en kan je pas weer inloggen als je je emailadres hebt bevestigd. Doe dit niet als je niet zeker weet of je Firefly III installatie wel mail kan versturen. Als je een admin bent, test dit dan eerst in de <a href="/admin">administratie</a>.',
+    'email_changed_logout'                       => 'Je kan niet inloggen tot je je emailadres bevestigd.',
+    'login_with_new_email'                       => 'Je kan nu inloggen met je nieuwe emailadres.',
+    'login_with_old_email'                       => 'Je kan nu weer inloggen met je oude emailadres.',
 
 
     // attachments
@@ -447,7 +458,6 @@ return [
     'convert_options_DepositWithdrawal'          => 'Verander inkomsten in een uitgave',
     'convert_options_TransferWithdrawal'         => 'Verander een overschrijving in een uitgave',
     'convert_options_TransferDeposit'            => 'Verander een overschrijving in inkomsten',
-    'transaction_journal_convert_options'        => 'Verander deze transactie',
     'convert_Withdrawal_to_deposit'              => 'Verander deze uitgave in inkomsten',
     'convert_Withdrawal_to_transfer'             => 'Verander deze uitgave in een overschrijving',
     'convert_Deposit_to_withdrawal'              => 'Verander deze inkomsten in een uitgave',
@@ -467,7 +477,7 @@ return [
     'converted_to_Withdrawal'                    => 'De transactie is veranderd in een uitgave',
     'converted_to_Deposit'                       => 'De transactie is veranderd in inkomsten',
     'converted_to_Transfer'                      => 'De transactie is veranderd in een overschrijving',
-
+    'invalid_convert_selection'                  => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Nieuwe uitgave',
@@ -517,6 +527,11 @@ return [
     'update_budget'                              => 'Budget bijwerken',
     'update_budget_amount_range'                 => 'Update het verwacht beschikbare bedrag tussen :start en :end',
     'budget_period_navigator'                    => 'Periodenavigator',
+    'info_on_available_amount'                   => 'Wat heb ik beschikbaar?',
+    'available_amount_indication'                => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
+    'suggested'                                  => 'Gesuggereerd',
+    'average_between'                            => 'Gemiddelde tussen :start en :end',
+
 
     // bills:
     'matching_on'                                => 'Wordt herkend',
@@ -647,10 +662,8 @@ return [
     'newWithdrawal'                              => 'Nieuwe uitgave',
     'newDeposit'                                 => 'Nieuwe inkomsten',
     'newTransfer'                                => 'Nieuwe overschrijving',
-    'moneyIn'                                    => 'Inkomsten',
-    'moneyOut'                                   => 'Uitgaven',
-    'billsToPay'                                 => 'Openstaande contracten',
-    'billsPaid'                                  => 'Betaalde contracten',
+    'bills_to_pay'                               => 'Openstaande contracten',
+    'per_day'                                    => 'Per dag',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Valuta',
@@ -850,9 +863,6 @@ return [
     'removed_amount_from_piggy' => ':amount uit ":name" gehaald',
 
     // tags
-    'regular_tag'               => 'Een gewone tag.',
-    'balancing_act'             => 'Er kunnen maar twee transacties worden getagged; een uitgaven en inkomsten. Ze balanceren elkaar.',
-    'advance_payment'           => 'Je kan een uitgave taggen en zoveel inkomsten om de uitgave (helemaal) te compenseren.',
     'delete_tag'                => 'Verwijder tag ":tag"',
     'deleted_tag'               => 'Tag ":tag" verwijderd',
     'new_tag'                   => 'Maak nieuwe tag',
@@ -891,6 +901,17 @@ return [
     'block_code_bounced'                    => 'Email kwam niet aan',
     'block_code_expired'                    => 'Demo-account verlopen',
     'no_block_code'                         => 'Geen reden of gebruiker niet geblokkeerd',
+    'block_code_email_changed'              => 'De gebruiker heeft zijn nieuwe emailadres nog niet bevestigd',
+    'admin_update_email'                    => 'Integendeel tot de profielpagina krijgt de gebruiker hier geen notificatie van!',
+    'update_user'                           => 'Gebruiker bijwerken',
+    'updated_user'                          => 'Gebruikersgegevens zijn gewijzigd.',
+    'delete_user'                           => 'Verwijder gebruiker :email',
+    'user_deleted'                          => 'De gebruiker is verwijderd',
+    'send_test_email'                       => 'Stuur testmail',
+    'send_test_email_text'                  => 'Druk op deze knop om te zien of je installatie mail kan versturen. Je ziet hier geen foutmeldingen (als ze er zijn), deze <strong>vind je in de logboeken</strong>. Je kan deze knop zo vaak indrukken als je wilt. Er is geen optie die spam voorkomt. Het testbericht wordt verstuurd naar <code>:email</code> en zou vrij vlot aan moeten komen.',
+    'send_message'                          => 'Verstuur bericht',
+    'send_test_triggered'                   => 'Testmail verstuurd. Check je inbox en de logboeken.',
+
     // links
     'journal_link_configuration'            => 'Instellingen voor transactiekoppelingen',
     'create_new_link_type'                  => 'Maak nieuw koppeltype',
@@ -914,7 +935,7 @@ return [
     'transaction'                           => 'Transactie',
     'comments'                              => 'Opmerkingen',
     'to_link_not_found'                     => 'Als de transactie die je wilt koppelen niet gevonden wordt, voer dan het ID in.',
-    'invalid_link_data'                     => 'Ongeldige informatie, de transactie kan niet gekoppeld worden.',
+    'invalid_link_selection'                => 'Deze transacties kunnen niet worden gekoppeld',
     'journals_linked'                       => 'De transacties zijn gekoppeld.',
     'journals_error_linked'                 => 'Deze transacties zijn al gekoppeld.',
     'journal_links'                         => 'Transactiekoppelingen',
@@ -924,14 +945,16 @@ return [
     'overview_for_link'                     => 'Overzicht voor koppeltype ":name"',
     'delete_journal_link'                   => 'Verwijder de koppeling tussen <a href=":source_link">:source</a> en <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Koppeling verwijderd',
-    '1_outward'                             => 'is gerelateerd aan',
-    '2_outward'                             => 'is een (gedeeltelijke) terugbetaling voor',
-    '3_outward'                             => 'betaalt (deels voor)',
-    '4_outward'                             => 'vergoedt (deels)',
-    '1_inward'                              => 'is gerelateerd aan',
-    '2_inward'                              => 'wordt (deels) terugbetaald door',
-    '3_inward'                              => 'wordt (deels) betaald door',
-    '4_inward'                              => 'wordt (deels) vergoed door',
+
+    // link translations:
+    'relates to_inward'                     => 'gerelateerd aan',
+    'is (partially) refunded by_inward'     => 'wordt (deels) terugbetaald door',
+    'is (partially) paid for by_inward'     => 'wordt (deels) betaald door',
+    'is (partially) reimbursed by_inward'   => 'wordt (deels) vergoed door',
+    'relates to_outward'                    => 'gerelateerd aan',
+    '(partially) refunds_outward'           => 'is een (gedeeltelijke) terugbetaling voor',
+    '(partially) pays for_outward'          => 'betaalt (deels) voor',
+    '(partially) reimburses_outward'        => 'vergoedt (deels)',
 
 
     // split a transaction:
@@ -946,6 +969,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Je kan transactie #:id met omschrijving ":description" niet wijzigen, want deze bevat meerdere doelrekeningen.',
     'cannot_edit_opening_balance'           => 'Je kan het startsaldo van een rekening niet wijzigen via dit scherm.',
     'no_edit_multiple_left'                 => 'Je hebt geen geldige transacties geselecteerd.',
+    'cannot_convert_split_journal'          => 'Kan geen gesplitste transactie omzetten',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
@@ -960,6 +984,7 @@ return [
     'import_index_config'                   => 'Als je eerder gegevens hebt geïmporteerd in Firefly III, heb je wellicht een configuratiebestand, dat een aantal zaken alvast voor je kan instellen. Voor bepaalde banken hebben andere gebruikers uit de liefde van hun hart het benodigde <a href="https://github.com/firefly-iii/import-configurations/wiki">configuratiebestand</a> gedeeld.',
     'import_index_type'                     => 'Selecteer het type bestand dat je zal uploaden',
     'import_index_start'                    => 'Start met importeren',
+    'import_file'                           => 'Importeer een bestand',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (kommagescheiden waardes)',
@@ -989,13 +1014,13 @@ return [
     'import_status_finished_title'          => 'Importeren is klaar',
     'import_status_finished_text'           => 'Je gegevensbestand is geïmporteerd.',
     'import_status_finished_job'            => 'De geimporteerde transacties kan je vinden onder tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'De import is bezig...',
     'import_with_key'                       => 'Import met code \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'Deze functie werkt niet als je Firefly III gebruikt in combinatie met Sandstorm.IO.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'Er zijn geen transacties in deze periode.',
     'no_accounts_title_asset'               => 'Je hebt een betaalrekening nodig!',
     'no_accounts_intro_asset'               => 'Je hebt nog geen betaalrekeningen. Betaalrekeningen zijn je meest belangrijke rekeningen: je bankrekening, spaarrekening, gedeelde rekening of zelfs je creditcard.',
     'no_accounts_imperative_asset'          => 'Om Firefly III te gebruiken moet je minstens één betaalrekening hebben. Die kan je nu maken:',
