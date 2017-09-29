@@ -83,11 +83,9 @@ return [
     'cannot_redirect_to_account'                 => 'Firefly III kan je niet naar de goede pagina doorsturen. Sorry!',
     'sum_of_expenses'                            => 'Som van uitgaven',
     'sum_of_income'                              => 'Som van inkomsten',
-    'total_sum'                                  => 'Totaalbedrag',
     'spent_in_specific_budget'                   => 'Uitgegeven in budget ":budget"',
     'sum_of_expenses_in_budget'                  => 'Totaal uitgegeven in budget ":budget"',
     'left_in_budget_limit'                       => 'Nog uit te geven volgens budgettering',
-    'cannot_reset_demo_user'                     => 'Je kan het wachtwoord van de demonstratie-account niet resetten',
     'current_period'                             => 'Huidige periode',
     'show_the_current_period_and_overview'       => 'Bekijk de huidige periode en overzicht',
     'pref_languages_locale'                      => 'Als je hier een andere taal dan Engels hebt geselecteerd, zorg er dan voor dat je besturingssysteem ook in staat is om valuta, data en bedragen in die taal weer te geven.',
@@ -159,7 +157,6 @@ return [
     'export_format'                              => 'Exporteerformaat',
     'export_format_csv'                          => 'Komma-gescheiden bestand (CSV)',
     'export_format_mt940'                        => 'MT940 bestand',
-    'export_included_accounts'                   => 'Exporteer transacties van deze rekeningen',
     'include_old_uploads_help'                   => 'Firefly III gooit je oude geïmporteerde CSV bestanden niet weg. Je kan ze meenemen in je exportbestand.',
     'do_export'                                  => 'Exporteren',
     'export_status_never_started'                => 'Het exporteren is nog niet begonnen',
@@ -319,8 +316,8 @@ return [
     'rule_action_set_source_account'             => 'Verander bronrekening naar ":action_value"',
     'rule_action_set_destination_account_choice' => 'Verander doelrekening naar...',
     'rule_action_set_destination_account'        => 'Verander doelrekening naar ":action_value"',
-    'rules_have_read_warning'                    => 'Have you read the warning?',
-    'apply_rule_warning'                         => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
+    'rules_have_read_warning'                    => 'Heb je de waarschuwing gelezen?',
+    'apply_rule_warning'                         => 'Let op! Het kan heel lang duren voor een regel(groep) is toegepast op een grote selectie transacties. Er kan een time-out optreden. Als dat gebeurt is de regel(groep) niet toegepast op alle transacties, en dat kan je administratie behoorlijk verprutsen. Wees dus voorzichtig.',
 
     // tags
     'store_new_tag'                              => 'Sla tag op',
@@ -330,7 +327,6 @@ return [
     'location'                                   => 'Plaats',
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
-    'total_result'                               => 'Totaalresultaat',
     'sums_apply_to_range'                        => 'Alle sommen gelden voor het geselecteerde bereik',
 
     // preferences
@@ -424,11 +420,11 @@ return [
     'explain_access_token'                       => 'Je hebt dit token nodig als je commando\'s op de commandline draait, zoals het invoeren of uitvoeren van data. Zonder dit token werken zulke gevoelige opdrachten niet. Deel je toegangstoken niet. Niemand zal hier naar vragen, zelfs ik niet. Als je bang bent dat-ie op straat ligt, genereer dan een nieuw token.',
     'regenerate_access_token'                    => 'Genereer nieuw token',
     'token_regenerated'                          => 'Er is een nieuw token gegenereerd',
-    'change_your_email'                          => 'Change your email address',
-    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
-    'email_changed_logout'                       => 'Until you verify your email address, you cannot login.',
-    'login_with_new_email'                       => 'You can now login with your new email address.',
-    'login_with_old_email'                       => 'You can now login with your old email address again.',
+    'change_your_email'                          => 'Verander je emailadres',
+    'email_verification'                         => 'Het systeem verstuurt een mailtje naar je oude EN nieuwe emailadres. Uit veiligheidsoverwegingen ben je zometeen uitgelogd en kan je pas weer inloggen als je je emailadres hebt bevestigd. Doe dit niet als je niet zeker weet of je Firefly III installatie wel mail kan versturen. Als je een admin bent, test dit dan eerst in de <a href="/admin">administratie</a>.',
+    'email_changed_logout'                       => 'Je kan niet inloggen tot je je emailadres bevestigd.',
+    'login_with_new_email'                       => 'Je kan nu inloggen met je nieuwe emailadres.',
+    'login_with_old_email'                       => 'Je kan nu weer inloggen met je oude emailadres.',
 
 
     // attachments
@@ -462,7 +458,6 @@ return [
     'convert_options_DepositWithdrawal'          => 'Verander inkomsten in een uitgave',
     'convert_options_TransferWithdrawal'         => 'Verander een overschrijving in een uitgave',
     'convert_options_TransferDeposit'            => 'Verander een overschrijving in inkomsten',
-    'transaction_journal_convert_options'        => 'Verander deze transactie',
     'convert_Withdrawal_to_deposit'              => 'Verander deze uitgave in inkomsten',
     'convert_Withdrawal_to_transfer'             => 'Verander deze uitgave in een overschrijving',
     'convert_Deposit_to_withdrawal'              => 'Verander deze inkomsten in een uitgave',
@@ -532,12 +527,10 @@ return [
     'update_budget'                              => 'Budget bijwerken',
     'update_budget_amount_range'                 => 'Update het verwacht beschikbare bedrag tussen :start en :end',
     'budget_period_navigator'                    => 'Periodenavigator',
-    'info_on_available_amount'                   => 'What do I have available?',
-    'available_amount_indication'                => 'Use these amounts to get an indication of what your total budget could be.',
-    'amount_budgeted'                            => 'Amount budgeted',
-    'amount_earned'                              => 'Amount earned',
-    'suggested'                                  => 'Suggested',
-    'average_between'                            => 'Average between :start and :end',
+    'info_on_available_amount'                   => 'Wat heb ik beschikbaar?',
+    'available_amount_indication'                => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
+    'suggested'                                  => 'Gesuggereerd',
+    'average_between'                            => 'Gemiddelde tussen :start en :end',
 
 
     // bills:
@@ -669,8 +662,8 @@ return [
     'newWithdrawal'                              => 'Nieuwe uitgave',
     'newDeposit'                                 => 'Nieuwe inkomsten',
     'newTransfer'                                => 'Nieuwe overschrijving',
-    'bills_to_pay'                               => 'Bills to pay',
-    'per_day'                                    => 'Per day',
+    'bills_to_pay'                               => 'Openstaande contracten',
+    'per_day'                                    => 'Per dag',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Valuta',
@@ -942,7 +935,6 @@ return [
     'transaction'                           => 'Transactie',
     'comments'                              => 'Opmerkingen',
     'to_link_not_found'                     => 'Als de transactie die je wilt koppelen niet gevonden wordt, voer dan het ID in.',
-    'invalid_link_data'                     => 'Ongeldige informatie, de transactie kan niet gekoppeld worden.',
     'invalid_link_selection'                => 'Deze transacties kunnen niet worden gekoppeld',
     'journals_linked'                       => 'De transacties zijn gekoppeld.',
     'journals_error_linked'                 => 'Deze transacties zijn al gekoppeld.',
