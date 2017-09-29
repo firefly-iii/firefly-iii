@@ -290,7 +290,19 @@ class BudgetController extends Controller
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-            $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')),strval($count));
+            $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
+
+            // amount spent in period
+            /** @var JournalCollectorInterface $collector */
+            $collector = app(JournalCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
+            $result['spent'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
+            // suggestion starts with the amount spent
+            $result['suggested'] = bcmul($result['spent'], '-1');
+            $result['suggested'] = bccomp($result['suggested'], $result['earned']) === 1 ? $result['earned'] : $result['suggested'];
+            // unless it's more than you earned. So min() of suggested/earned
+
+
             $cache->store($result);
         }
 

@@ -32,7 +32,9 @@ use Response;
 class BoxController extends Controller
 {
     /**
+     * @param BudgetRepositoryInterface $repository
      *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function available(BudgetRepositoryInterface $repository)
     {
@@ -61,7 +63,7 @@ class BoxController extends Controller
         if (bccomp($left, '0') === -1) {
             $left = '0';
         }
-        $days   = $today->diffInDays($end);
+        $days   = $today->diffInDays($end) + 1;
         $perDay = '0';
         if ($days !== 0) {
             $perDay = bcdiv($left, strval($days));
