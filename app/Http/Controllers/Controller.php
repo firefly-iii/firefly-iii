@@ -44,6 +44,8 @@ class Controller extends BaseController
     protected $monthAndDayFormat;
     /** @var string */
     protected $monthFormat;
+    /** @var string  */
+    protected $redirectUri = '/';
 
     /**
      * Controller constructor.
@@ -116,10 +118,10 @@ class Controller extends BaseController
     {
         $uri = strval(session($identifier));
         if (!(strpos($identifier, 'delete') === false) && !(strpos($uri, '/show/') === false)) {
-            $uri = route('index');
+            $uri = $this->redirectUri;
         }
         if (!(strpos($uri, 'jscript') === false)) {
-            $uri = route('index');
+            $uri = $this->redirectUri;
         }
 
         return $uri;
