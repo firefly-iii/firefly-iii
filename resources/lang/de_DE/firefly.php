@@ -533,6 +533,13 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'update_budget'                              => 'Budget aktualisieren',
     'update_budget_amount_range'                 => 'Aktualisiere (erwarteten) verfügbaren Betrag zwischen :start und :end',
     'budget_period_navigator'                    => 'Zeitraum-navigator',
+    'info_on_available_amount'                   => 'What do I have available?',
+    'available_amount_indication'                => 'Use these amounts to get an indication of what your total budget could be.',
+    'amount_budgeted'                            => 'Amount budgeted',
+    'amount_earned'                              => 'Amount earned',
+    'suggested'                                  => 'Suggested',
+    'average_between'                            => 'Average between :start and :end',
+
 
     // bills:
     'matching_on'                                => 'Reagiert auf',
