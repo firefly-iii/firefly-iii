@@ -48,7 +48,7 @@ return [
     'budget_id'                      => 'Budget',
     'openingBalance'                 => 'Startsaldo',
     'tagMode'                        => 'Tag modus',
-    'tagPosition'                    => 'Tag locatie',
+    'tag_position'                    => 'Tag location',
     'virtualBalance'                 => 'Virtuele saldo',
     'targetamount'                   => 'Doelbedrag',
     'accountRole'                    => 'Rol van rekening',
