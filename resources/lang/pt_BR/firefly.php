@@ -328,6 +328,8 @@ return [
     'without_date'                               => 'Without date',
     'result'                                     => 'Result',
     'sums_apply_to_range'                        => 'All sums apply to the selected range',
+    'press_tag_location'                         => 'Right click or long press to set the tag\'s location.',
+    'clear_location'                             => 'Clear location',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Conta da tela inicial',
