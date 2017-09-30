@@ -2,6 +2,45 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.6] - 2015-05-25
+### Added
+- #826, reported by @pkoziol.
+- #855, by @ms32035
+- #786, by @SmilingWorlock
+- #875, by @gavu
+- #834, by @gavu (and others)
+
+
+### Changed
+- Upgraded to Laravel 5.5
+- Add version parameter to CSS and JS files
+- #823, #824 fixed Docker config by @DieBauer
+
+### Fixed
+- #830
+- #822, reported by @gazben
+- #827, reported by @pkoziol
+- #835, reported by @gavu
+- #836, reported by @pkoziol
+- #838, reported by @gavu
+- #839, reported by @gavu
+- #843, reported by @gavu
+- #837, reported by @gavu
+- #845, reported by @gavu
+- #846, reported by @gavu
+- #848, reported by @gavu
+- #854, reported by @gavu
+- #866, reported by @pkoziol
+- #847, reported by @gavu
+- #853, reported by @gavu
+- #857, reported by @pkoziol
+- #865, reported by @simonsmiley
+- #826, reported by @pkoziol
+- #856, reported by @ms32035
+- #860, reported by @gavu
+- #861, reported by @gavu
+- #870, reported by @gavu
+
 ## [4.6.5] - 2017-09-09
 
 ### Added
