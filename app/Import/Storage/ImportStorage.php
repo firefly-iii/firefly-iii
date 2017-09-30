@@ -35,16 +35,15 @@ class ImportStorage
     /** @var Collection */
     public $journals;
     /** @var  int */
-    protected $defaultCurrencyId = 1;
-    /** @var string */
-    private $dateFormat = 'Ymd'; // yes, hard coded
+    protected $defaultCurrencyId = 1; // yes, hard coded
     /** @var  ImportJob */
     protected $job;
     /** @var Collection */
-    private $objects;
-    /** @var Collection */
     protected $rules;
-
+    /** @var string */
+    private $dateFormat = 'Ymd';
+    /** @var Collection */
+    private $objects;
     /** @var  array */
     private $transfers = [];
 
@@ -214,29 +213,31 @@ class ImportStorage
         $amount   = app('steam')->positive($parameters['amount']);
         $names    = [$parameters['asset'], $parameters['opposing']];
         $transfer = [];
-        $hit      = false;
+        $hits     = 0;
         sort($names);
 
         foreach ($this->transfers as $transfer) {
             if ($parameters['description'] === $transfer['description']) {
-                $hit = true;
+                $hits++;
             }
             if ($names === $transfer['names']) {
-                $hit = true;
+                $hits++;
             }
             if (bccomp($amount, $transfer['amount']) === 0) {
-                $hit = true;
+                $hits++;
             }
             if ($parameters['date'] === $transfer['date']) {
-                $hit = true;
+                $hits++;
             }
         }
-        if ($hit === true) {
+        if ($hits === 4) {
             Log::error(
                 'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
             );
+
+            return true;
         }
 
-        return $hit;
+        return false;
     }
 }
