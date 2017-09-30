@@ -104,6 +104,11 @@ interface TagRepositoryInterface
     public function lastUseDate(Tag $tag): Carbon;
 
     /**
+     * @return Tag|null
+     */
+    public function oldestTag(): ?Tag;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
@@ -116,17 +121,6 @@ interface TagRepositoryInterface
      * @return string
      */
     public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string;
-
-    /**
-     * Calculates various amounts in tag.
-     *
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return array
-     */
-    public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
 
     /**
      * This method stores a tag.
@@ -145,6 +139,17 @@ interface TagRepositoryInterface
      * @return string
      */
     public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string;
+
+    /**
+     * Calculates various amounts in tag.
+     *
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return array
+     */
+    public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
 
     /**
      * Generates a tag cloud.

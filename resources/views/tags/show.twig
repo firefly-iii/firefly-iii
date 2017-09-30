@@ -99,7 +99,7 @@
                 </div>
                 <div class="box-body">
                     {% if tag.latitude and tag.longitude and tag.zoomLevel %}
-                        <div id="map-canvas" style="width:100%;height:300px;"></div>
+                        <div id="tag_location_map" style="width:100%;height:300px;"></div>
                     {% else %}
                         <p>{{ 'no_location_set'|_ }}</p>
                     {% endif %}
@@ -195,6 +195,9 @@
     {% endif %}
 
 {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css?v={{ FF_VERSION }}" />
+{% endblock %}
 {% block scripts %}
     <script type="text/javascript">
         var latitude = {{ tag.latitude|default("52.3167") }};
@@ -207,9 +210,11 @@
         var doPlaceMarker = false;
         {% endif %}
 
-        var apiKey = "{{ apiKey }}";
+        // token for Mapbox:
+        var mapboxToken = "{{ env('MAPBOX_API_KEY','') }}";
+
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
+    <script src="lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
     <script src="js/ff/tags/show.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

@@ -188,6 +188,14 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @return Tag
+     */
+    public function oldestTag(): ?Tag
+    {
+        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -330,7 +338,6 @@ class TagRepository implements TagRepositoryInterface
         Log::debug(sprintf('Found %d tags', $tags->count()));
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-
             $amount      = floatval($this->sumOfTag($tag, null, null));
             $min         = $amount < $min || is_null($min) ? $amount : $min;
             $max         = $amount > $max ? $amount : $max;
@@ -355,7 +362,6 @@ class TagRepository implements TagRepositoryInterface
 
         return $return;
     }
-
 
     /**
      * @param Tag   $tag

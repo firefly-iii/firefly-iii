@@ -157,10 +157,19 @@ class TagController extends Controller
      */
     public function index(TagRepositoryInterface $repository)
     {
-
-        // collect tags by year:
+        // start with oldest tag
+        $oldestTag = $repository->oldestTag();
         /** @var Carbon $start */
-        $start             = clone(session('first'));
+        $start = new Carbon;
+        if (!is_null($oldestTag)) {
+            /** @var Carbon $start */
+            $start = $oldestTag->date;
+        }
+        if (is_null($oldestTag)) {
+            /** @var Carbon $start */
+            $start = clone(session('first'));
+        }
+
         $now               = new Carbon;
         $clouds            = [];
         $clouds['no-date'] = $repository->tagCloud(null);

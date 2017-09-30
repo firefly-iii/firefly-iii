@@ -40,10 +40,11 @@ class TagFormRequest extends Request
         $latitude  = null;
         $longitude = null;
         $zoomLevel = null;
-        if ($this->get('setTag') === 'true') {
-            $latitude  = $this->string('latitude');
-            $longitude = $this->string('longitude');
-            $zoomLevel = $this->integer('zoomLevel');
+
+        if ($this->get('tag_position_has_tag') === 'true') {
+            $latitude  = $this->string('tag_position_latitude');
+            $longitude = $this->string('tag_position_longitude');
+            $zoomLevel = $this->integer('tag_position_zoomlevel');
         }
 
         $data = [
