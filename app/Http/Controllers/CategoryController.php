@@ -204,7 +204,8 @@ class CategoryController extends Controller
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount();
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->removeFilter(InternalTransferFilter::class);
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('categories.no-category'));
@@ -232,11 +233,12 @@ class CategoryController extends Controller
         $end          = null;
         $periods      = new Collection;
 
-
         // prep for "all" view.
         if ($moment === 'all') {
             $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
-            $start    = $repository->firstUseDate($category);
+            $first    = $repository->firstUseDate($category);
+            /** @var Carbon $start */
+            $start    = is_null($first) ? new Carbon : $first;
             $end      = new Carbon;
         }
 
@@ -254,7 +256,9 @@ class CategoryController extends Controller
 
         // prep for current period
         if (strlen($moment) === 0) {
+            /** @var Carbon $start */
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            /** @var Carbon $end */
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($category);
             $subTitle = trans(
@@ -358,11 +362,11 @@ class CategoryController extends Controller
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
 
-            // count journals without budget in this period:
+            // count journals without category in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutCategory()
-                      ->withOpposingAccount();
+                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
             $count = $collector->getJournals()->count();
 
@@ -420,13 +424,14 @@ class CategoryController extends Controller
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
-        if ($first->year === 1900) {
+        if (is_null($first)) {
             $first = new Carbon;
         }
         $range   = Preferences::get('viewRange', '1M')->data;
         $first   = Navigation::startOfPeriod($first, $range);
         $end     = Navigation::endOfX(new Carbon, $range, null);
         $entries = new Collection;
+        $count   = 0;
 
         // properties for entries with their amounts.
         $cache = new CacheProperties();
@@ -438,7 +443,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        while ($end >= $first) {
+        while ($end >= $first && $count < 90) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
             $spent      = $repository->spentInPeriod(new Collection([$category]), $accounts, $end, $currentEnd);
@@ -466,6 +471,7 @@ class CategoryController extends Controller
                 ]
             );
             $end = Navigation::subtractPeriod($end, $range, 1);
+            $count++;
         }
         $cache->store($entries);
 

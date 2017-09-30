@@ -99,7 +99,6 @@ class AttachmentController extends Controller
     public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
     {
 
-
         if ($repository->exists($attachment)) {
             $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));

@@ -58,7 +58,8 @@ function hideForm() {
 function showForm() {
     "use strict";
     $('#form-body').show();
-    $('#do-export-button').show();
+    $('#do-export-button').show().prop('disabled', false);
+    // enable button again:
 }
 
 function showLoading() {
@@ -88,7 +89,7 @@ function callExport() {
     // call status, keep calling it until response is "finished"?
     intervalId = window.setInterval(checkStatus, 500);
 
-    $.post('export/submit', data).done(function () {
+    $.post('export/submit', data, null, 'json').done(function () {
         // stop polling:
         window.clearTimeout(intervalId);
 
@@ -103,18 +104,13 @@ function callExport() {
         // show download
         showDownload();
 
-    }).fail(function (data) {
+    }).fail(function (jqXHR) {
         // show error.
         // show form again.
-
+        var response = jqXHR.responseJSON;
         var errorText = 'The export failed. Please check the log files to find out why.';
-        if (typeof data.responseJSON === 'object') {
-            errorText = '';
-            for (var propt in data.responseJSON) {
-                if (data.responseJSON.hasOwnProperty(propt)) {
-                    errorText += propt + ': ' + data.responseJSON[propt][0];
-                }
-            }
+        if (typeof response === 'object') {
+            errorText =response.message;
         }
 
         showError(errorText);

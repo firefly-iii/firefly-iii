@@ -30,6 +30,7 @@ use Monolog\Formatter\LineFormatter;
  */
 class CreateImport extends Command
 {
+    use VerifiesAccessToken;
     /**
      * The console command description.
      *
@@ -42,7 +43,13 @@ class CreateImport extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:create-import {file} {configuration} {--user=1} {--type=csv} {--start}';
+    protected $signature = 'firefly:create-import
+                            {file : The file to import.}
+                            {configuration : The configuration file to use for the import/}
+                            {--type=csv : The file type of the import.}
+                            {--user= : The user ID that the import should import for.}
+                            {--token= : The user\'s access token.}
+                            {--start : Starts the job immediately.}';
 
     /**
      * Create a new command instance.
@@ -61,6 +68,11 @@ class CreateImport extends Command
      */
     public function handle()
     {
+        if (!$this->verifyAccessToken()) {
+            $this->error('Invalid access token.');
+
+            return;
+        }
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = app(UserRepositoryInterface::class);
         $file           = $this->argument('file');
@@ -150,12 +162,12 @@ class CreateImport extends Command
         $cwd            = getcwd();
         $validTypes     = array_keys(config('firefly.import_formats'));
         $type           = strtolower($this->option('type'));
-
         if (is_null($user->id)) {
             $this->error(sprintf('There is no user with ID %d.', $this->option('user')));
 
             return false;
         }
+
         if (!in_array($type, $validTypes)) {
             $this->error(sprintf('Cannot import file of type "%s"', $type));
 

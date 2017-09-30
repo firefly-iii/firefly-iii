@@ -16,6 +16,7 @@ namespace FireflyIII\Support;
 use Cache;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Session;
 
 /**
@@ -26,12 +27,25 @@ use Session;
 class Preferences
 {
     /**
+     * @param User   $user
+     * @param string $search
+     *
+     * @return Collection
+     */
+    public function beginsWith(User $user, string $search): Collection
+    {
+        $set = Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
+
+        return $set;
+    }
+
+    /**
      * @param $name
      *
      * @return bool
      * @throws \Exception
      */
-    public function delete($name): bool
+    public function delete(string $name): bool
     {
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
@@ -40,6 +54,18 @@ class Preferences
         Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
 
         return true;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Collection
+     */
+    public function findByName(string $name): Collection
+    {
+        $set = Preference::where('name', $name)->get();
+
+        return $set;
     }
 
     /**

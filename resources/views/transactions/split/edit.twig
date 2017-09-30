@@ -329,12 +329,12 @@
 
 {% endblock %}
 {% block styles %}
-    <link href="css/bootstrap-tagsinput.css" type="text/css" rel="stylesheet" media="all">
-    <link href="css/jquery-ui/jquery-ui.structure.min.css" type="text/css" rel="stylesheet" media="all">
-    <link href="css/jquery-ui/jquery-ui.theme.min.css" type="text/css" rel="stylesheet" media="all">
+    <link href="css/bootstrap-tagsinput.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="{{ route('javascript.currencies') }}?ext=.js"></script>
+    <script type="text/javascript" src="{{ route('javascript.currencies') }}?ext=.js&amp;v={{ FF_VERSION }}"></script>
     <script type="text/javascript">
         var currencySymbol = 'x';
         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
@@ -346,9 +346,9 @@
         var originalSum = {{ preFilled.journal_amount }};
         var what = "{{ preFilled.what }}";
     </script>
-    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js"></script>
-    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js"></script>
-    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
-    <script type="text/javascript" src="js/ff/transactions/split/edit.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/transactions/split/edit.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

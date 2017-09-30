@@ -94,7 +94,12 @@ class LinkController extends Controller
     public function store(
         JournalLinkRequest $request, LinkTypeRepositoryInterface $repository, JournalRepositoryInterface $journalRepository, TransactionJournal $journal
     ) {
-        $linkInfo      = $request->getLinkInfo();
+        $linkInfo = $request->getLinkInfo();
+        if ($linkInfo['transaction_journal_id'] === 0) {
+            Session::flash('error', trans('firefly.invalid_link_selection'));
+
+            return redirect(route('transactions.show', [$journal->id]));
+        }
         $linkType      = $repository->find($linkInfo['link_type_id']);
         $other         = $journalRepository->find($linkInfo['transaction_journal_id']);
         $alreadyLinked = $repository->findLink($journal, $other);

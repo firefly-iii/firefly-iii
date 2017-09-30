@@ -14,12 +14,13 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Rule;
-use FireflyIII\Rules\Processor;
+use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class ExecuteRuleOnExistingTransactions
@@ -128,18 +129,27 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     {
         // Lookup all journals that match the parameters specified
         $transactions = $this->collectJournals();
-        $processor    = Processor::make($this->rule);
-
+        $processor    = Processor::make($this->rule, true);
+        $hits = 0;
+        $misses = 0;
+        $total = 0;
         // Execute the rules for each transaction
         foreach ($transactions as $transaction) {
-
-            $processor->handleTransaction($transaction);
-
+            $total++;
+            $result = $processor->handleTransaction($transaction);
+            if($result) {
+                $hits++;
+            }
+            if(!$result) {
+                $misses++;
+            }
+            Log::info(sprintf('Current progress: %d Transactions. Hits: %d, misses: %d', $total, $hits, $misses));
             // Stop processing this group if the rule specifies 'stop_processing'
             if ($processor->getRule()->stop_processing) {
                 break;
             }
         }
+        Log::info(sprintf('Total transactions: %d. Hits: %d, misses: %d', $total, $hits, $misses));
 
     }
 

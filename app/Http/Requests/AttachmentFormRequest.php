@@ -47,11 +47,11 @@ class AttachmentFormRequest extends Request
      */
     public function rules()
     {
-
+        // fixed
         return [
-            'title'       => 'between:1,255',
-            'description' => 'between:1,65536',
-            'notes'       => 'between:1,65536',
+            'title'       => 'between:1,255|nullable',
+            'description' => 'between:1,65536|nullable',
+            'notes'       => 'between:1,65536|nullable',
         ];
     }
 }

@@ -43,6 +43,9 @@ use Steam;
  * Class JournalCollector
  *
  * @package FireflyIII\Helpers\Collector
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class JournalCollector implements JournalCollectorInterface
 {
@@ -413,10 +416,10 @@ class JournalCollector implements JournalCollectorInterface
             $this->offset = $offset;
             $this->query->skip($offset);
             Log::debug(sprintf('Changed offset to %d', $offset));
+
+            return $this;
         }
-        if (is_null($this->limit)) {
-            Log::debug('The limit is zero, cannot set the page.');
-        }
+        Log::debug('The limit is zero, cannot set the page.');
 
         return $this;
     }

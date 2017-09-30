@@ -30,8 +30,6 @@ class InstallationTokenRequest extends BunqRequest
     private $installationToken;
     /** @var string */
     private $publicKey = '';
-    /** @var  ServerPublicKey */
-    private $serverPublicKey;
 
     /**
      *
@@ -85,22 +83,6 @@ class InstallationTokenRequest extends BunqRequest
     public function setPublicKey(string $publicKey)
     {
         $this->publicKey = $publicKey;
-    }
-
-    /**
-     * @return ServerPublicKey
-     */
-    public function getServerPublicKey(): ServerPublicKey
-    {
-        return $this->serverPublicKey;
-    }
-
-    /**
-     * @param bool $fake
-     */
-    public function setFake(bool $fake)
-    {
-        $this->fake = $fake;
     }
 
     /**

@@ -6,57 +6,83 @@
     {% set boxClasses = 'col-lg-4 col-md-4 col-sm-6 col-xs-12' %}
 {% endif %}
 
-<!-- Info boxes -->
+
 <div class="row hidden-sm hidden-xs">
-    <div class="{{ boxClasses }}" id="box_out_holder">
-        <div class="info-box">
-            <span class="info-box-icon bg-red">
-                <a href="{{ route('transactions.index',['withdrawal']) }}"><i class="fa fa-upload fa-fw"></i></a>
-            </span>
-            <div class="info-box-content">
-                <span class="info-box-text"><a href="{{ route('transactions.index',['withdrawal']) }}">{{ 'moneyOut'|_ }}</a></span>
-                <span class="info-box-number"><a href="{{ route('transactions.index',['withdrawal']) }}" id="box-out"></a></span>
-            </div>
-        </div>
-    </div>
+
+    {# box for in and out#}
     <div class="{{ boxClasses }}">
-        <div class="info-box">
-            <span class="info-box-icon bg-green">
-                <a href="{{ route('transactions.index',['deposit']) }}"><i class="fa fa-download faw-fw"></i></a>
-            </span>
+        <div class="info-box bg-aqua-gradient">
+            <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text"><a href="{{ route('transactions.index',['deposit']) }}">{{ 'moneyIn'|_ }}</a></span>
-                <span class="info-box-number"><a href="{{ route('transactions.index',['deposit']) }}" id="box-in"></a></span>
+                <span class="info-box-text">{{ 'balance'|_ }}</span>
+                <span class="info-box-number" id="box-balance-total"></span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                <span class="progress-description">
+                    <span title="{{ 'expenses'|_ }}" id="box-balance-out"></span> / <span title="{{ 'income'|_ }}" id="box-balance-in"></span>
+                  </span>
             </div>
         </div>
     </div>
-    {% if billCount > 0 %}
-        <div class="clearfix visible-sm-block"></div>
 
-        <div class="{{ boxClasses }}">
-            <div class="info-box">
-            <span class="info-box-icon bg-blue">
-                <a href="{{ route('bills.index') }}"><i class="fa fa-calendar fa-fw"></i></a>
-            </span>
+    {# box for bills #}
+    <div class="{{ boxClasses }}">
+        <div class="info-box bg-teal-gradient">
+            <span class="info-box-icon"><i class="fa fa-calendar-o"></i></span>
 
-                <div class="info-box-content">
-                    <span class="info-box-text"><a href="{{ route('bills.index') }}">{{ 'billsToPay'|_ }}</a></span>
-                    <span class="info-box-number"><a id="box-bills-unpaid" href="{{ route('bills.index') }}"></a></span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'bills_to_pay'|_ }}</span>
+                <span class="info-box-number" id="box-bills-unpaid"></span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0%"></div>
                 </div>
+                <span class="progress-description">
+                    {{ 'paid'|_ }}:
+                    <span title="{{ 'bills_paid'|_ }}" id="box-bills-paid"></span>
+                  </span>
             </div>
         </div>
-        <div class="{{ boxClasses }}">
-            <div class="info-box">
-            <span class="info-box-icon bg-aqua">
-                <a href="{{ route('bills.index') }}"><i class="fa fa-line-chart fa-fw"></i></a>
-            </span>
+    </div>
 
-                <div class="info-box-content">
-                    <span class="info-box-text"><a href="{{ route('bills.index') }}">{{ 'billsPaid'|_ }}</a></span>
-                    <span class="info-box-number"><a id="box-bills-paid" href="{{ route('bills.index') }}"></a></span>
+    {#  available to spend total / per day #}
+    <div class="{{ boxClasses }}">
+        <div class="info-box bg-green-gradient">
+            <span class="info-box-icon"><i class="fa fa-money"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'left_to_spend'|_ }}</span>
+                <span class="info-box-number" id="box-left-to-spend"></span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0%"></div>
                 </div>
+                <span class="progress-description">
+                    {{ 'per_day'|_ }}:
+                    <span title="{{ 'left_to_spend_per_day'|_ }}" id="box-left-per-day"></span>
+                  </span>
             </div>
         </div>
-    {% endif %}
+    </div>
+
+    {# net worth #}
+    <div class="{{ boxClasses }}">
+        <div class="info-box bg-blue-gradient">
+            <span class="info-box-icon"><i class="fa fa-line-chart"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'net_worth'|_ }}</span>
+                <span class="info-box-number" id="box-net-worth"></span>
+
+                <div class="progress">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                <span class="progress-description">
+                    <span title="{{ 'net_worth'|_ }}" id="box-clear"></span>
+                  </span>
+            </div>
+        </div>
+    </div>
 </div>

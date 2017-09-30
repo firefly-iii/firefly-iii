@@ -137,6 +137,16 @@ class User extends Authenticatable
     }
 
     /**
+     * @return string
+     */
+    public function generateAccessToken(): string
+    {
+        $bytes = random_bytes(16);
+
+        return strval(bin2hex($bytes));
+    }
+
+    /**
      * Checks if the user has a role by its name.
      *
      * Full credit goes to: https://github.com/Zizaco/entrust

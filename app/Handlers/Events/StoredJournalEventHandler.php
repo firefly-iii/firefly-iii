@@ -19,8 +19,8 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface as JRI;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface as PRI;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface as RGRI;
-use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
+use FireflyIII\TransactionRules\Processor;
 use Log;
 
 /**
@@ -57,11 +57,12 @@ class StoredJournalEventHandler
     /**
      * This method connects a new transfer to a piggy bank.
      *
-     *
-     *
      * @param StoredTransactionJournal $event
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function connectToPiggyBank(StoredTransactionJournal $event): bool
     {

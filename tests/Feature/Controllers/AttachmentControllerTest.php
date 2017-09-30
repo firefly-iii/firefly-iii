@@ -138,8 +138,8 @@ class AttachmentControllerTest extends TestCase
         $this->session(['attachments.edit.uri' => 'http://localhost']);
         $data = [
             'title'       => 'Some updated title ' . rand(1000, 9999),
-            'notes'       => '',
-            'description' => '',
+            'notes'       => 'A',
+            'description' => 'B',
         ];
 
         $this->be($this->user());

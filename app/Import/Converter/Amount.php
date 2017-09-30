@@ -36,6 +36,10 @@ class Amount implements ConverterInterface
      */
     public function convert($value): string
     {
+        if(is_null($value)) {
+            return '0';
+        }
+        $value = strval($value);
         Log::debug(sprintf('Start with amount "%s"', $value));
         $len             = strlen($value);
         $decimalPosition = $len - 3;

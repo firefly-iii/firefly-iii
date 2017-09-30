@@ -16,6 +16,7 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -187,34 +188,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * Same as sum of tag but substracts income instead of adding it as well.
-     *
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return string
-     */
-    public function resultOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-
-        if (!is_null($start) && !is_null($end)) {
-            $collector->setRange($start, $end);
-        }
-
-        $collector->setAllAssetAccounts()->setTag($tag);
-        $journals = $collector->getJournals();
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd($sum, strval($journal->transaction_amount));
-        }
-
-        return strval($sum);
-    }
-
-    /**
      * @param User $user
      */
     public function setUser(User $user)
@@ -288,6 +261,44 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return strval($sum);
+    }
+
+    /**
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return array
+     */
+    public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
+    {
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+
+        if (!is_null($start) && !is_null($end)) {
+            $collector->setRange($start, $end);
+        }
+
+        $collector->setAllAssetAccounts()->setTag($tag)->withOpposingAccount();
+        $collector->removeFilter(InternalTransferFilter::class);
+        $journals = $collector->getJournals();
+
+        $sums = [
+            TransactionType::WITHDRAWAL => '0',
+            TransactionType::DEPOSIT    => '0',
+            TransactionType::TRANSFER   => '0',
+        ];
+
+        foreach ($journals as $journal) {
+            $amount = app('steam')->positive(strval($journal->transaction_amount));
+            $type   = $journal->transaction_type_type;
+            if ($type === TransactionType::WITHDRAWAL) {
+                $amount = bcmul($amount, '-1');
+            }
+            $sums[$type] = bcadd($sums[$type], $amount);
+        }
+
+        return $sums;
     }
 
     /**

@@ -68,7 +68,6 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
 
-
         return ($apiKey->data === false || is_null($apiKey->data));
     }
 
@@ -119,9 +118,9 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         Log::debug('Generate new key pair for user.');
         $keyConfig = [
-            "digest_alg"       => "sha512",
-            "private_key_bits" => 2048,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+            'digest_alg'       => 'sha512',
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
         ];
         // Create the private and public key
         $res = openssl_pkey_new($keyConfig);
@@ -258,10 +257,10 @@ class BunqPrerequisites implements PrerequisitesInterface
             if ($response->status_code !== 200) {
                 throw new FireflyException(sprintf('Could not retrieve external IP: %d %s', $response->status_code, $response->body));
             }
-            $ip = $response->body;
-            Preferences::setForUser($this->user, 'external_ip', $ip);
+            $serverIp = $response->body;
+            Preferences::setForUser($this->user, 'external_ip', $serverIp);
 
-            return $ip;
+            return $serverIp;
         }
 
         return $preference->data;

@@ -16,10 +16,7 @@
     {% for entry in bills %}
         <tr>
             <td class="hidden-sm hidden-xs">
-                <div class="btn-group btn-group-xs">
-                    <a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
-                    <a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
-                </div>
+                <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a><a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
             <td data-value="{{ entry.name }}">
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>

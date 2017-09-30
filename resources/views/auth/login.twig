@@ -13,6 +13,16 @@
         </div>
     {% endif %}
 
+    {# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
+    {% if Session.has('success') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            </button>
+            <strong>{{ 'flash_success'|_ }}</strong> {{ session('success') }}
+        </div>
+    {% endif %}
+
     {% if errors.has('email') %}
         <div class="row">
             <div class="col-lg-12">

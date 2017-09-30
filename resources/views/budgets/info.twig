@@ -1,0 +1,54 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            </button>
+            <h4 class="modal-title">
+                {{ trans('firefly.info_on_available_amount',
+                {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+            </h4>
+        </div>
+
+            <div class="modal-body">
+                <p>
+                    {{ 'available_amount_indication'|_ }}
+                </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>
+                            {{ 'budgeted'|_ }}
+                            <small><br />
+                                {{ trans('firefly.average_between', {start:begin.formatLocalized(monthAndDayFormat), end:currentEnd.formatLocalized(monthAndDayFormat)}) }}
+                        </td>
+                        <td>
+                            <span class="pull-right">{{ result.available|formatAmount }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'earned'|_ }}
+                            <small><br />
+                                {{ trans('firefly.average_between', {start:begin.formatLocalized(monthAndDayFormat), end:currentEnd.formatLocalized(monthAndDayFormat)}) }}
+                            </small>
+                        </td>
+                        <td><span class="pull-right">{{ result.earned|formatAmount }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'spent'|_ }}
+                            <small><br />
+                                {{ trans('firefly.average_between', {start:begin.formatLocalized(monthAndDayFormat), end:currentEnd.formatLocalized(monthAndDayFormat)}) }}
+                            </small>
+                        </td>
+                        <td><span class="pull-right">{{ result.spent|formatAmount }}</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>{{ 'suggested'|_ }}</strong></td>
+                        <td><span class="pull-right">{{ result.suggested|formatAmount }}</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
+            </div>
+    </div>
+</div>
+

@@ -48,6 +48,7 @@ class RuleGroupFormRequest extends Request
      */
     public function rules()
     {
+        // fixed
         /** @var RuleGroupRepositoryInterface $repository */
         $repository = app(RuleGroupRepositoryInterface::class);
         $titleRule  = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
@@ -57,7 +58,7 @@ class RuleGroupFormRequest extends Request
 
         return [
             'title'       => $titleRule,
-            'description' => 'between:1,5000',
+            'description' => 'between:1,5000|nullable',
         ];
     }
 }

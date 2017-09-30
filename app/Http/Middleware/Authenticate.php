@@ -44,8 +44,13 @@ class Authenticate
             return redirect()->guest('login');
         }
         if (intval(auth()->user()->blocked) === 1) {
+            $message = strval(trans('firefly.block_account_logout'));
+            if (auth()->user()->blocked_code === 'email_changed') {
+                $message = strval(trans('firefly.email_changed_logout'));
+            }
+
+            Session::flash('logoutMessage', $message);
             Auth::guard($guard)->logout();
-            Session::flash('logoutMessage', trans('firefly.block_account_logout'));
 
             return redirect()->guest('login');
         }

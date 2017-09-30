@@ -61,7 +61,7 @@ class BillFormRequest extends Request
             $nameRule  .= ',' . intval($this->get('id'));
             $matchRule .= ',' . intval($this->get('id'));
         }
-
+        // is OK
         $rules = [
             'name'                          => $nameRule,
             'match'                         => $matchRule,

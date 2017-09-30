@@ -1,14 +1,15 @@
 <?php
+declare(strict_types=1);
+
+
 /**
  * Kernel.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  * This software may be modified and distributed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International License.
  *
  * See the LICENSE file for details.
  */
-declare(strict_types=1);
 
 namespace FireflyIII\Http;
 
@@ -21,42 +22,24 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Http\Middleware\Sandstorm;
-use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Http\Middleware\TrimStrings;
+use FireflyIII\Http\Middleware\TrustProxies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-/**
- * Class Kernel
- *
- * @package FireflyIII\Http
- */
+
 class Kernel extends HttpKernel
 {
-
-    /**
-     * The bootstrap classes for the application.
-     *
-     * Next upgrade verify these are the same.
-     *
-     * @var array
-     */
-    protected $bootstrappers
-        = [
-            'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
-            'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            'Illuminate\Foundation\Bootstrap\HandleExceptions',
-            'Illuminate\Foundation\Bootstrap\RegisterFacades',
-            'Illuminate\Foundation\Bootstrap\RegisterProviders',
-            'Illuminate\Foundation\Bootstrap\BootProviders',
-        ];
-
     /**
      * The application's global HTTP middleware stack.
      *
@@ -67,6 +50,10 @@ class Kernel extends HttpKernel
     protected $middleware
         = [
             CheckForMaintenanceMode::class,
+            ValidatePostSize::class,
+            TrimStrings::class,
+            ConvertEmptyStringsToNull::class,
+            TrustProxies::class,
         ];
 
     /**
@@ -83,7 +70,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -95,7 +82,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -108,7 +95,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -123,7 +110,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -138,7 +125,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -156,7 +143,7 @@ class Kernel extends HttpKernel
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
+                StartSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -174,6 +161,7 @@ class Kernel extends HttpKernel
             ],
         ];
 
+
     /**
      * The application's route middleware.
      *
@@ -189,6 +177,5 @@ class Kernel extends HttpKernel
             'can'        => Authorize::class,
             'guest'      => RedirectIfAuthenticated::class,
             'throttle'   => ThrottleRequests::class,
-            'range'      => Range::class,
         ];
 }

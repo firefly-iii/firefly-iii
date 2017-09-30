@@ -18,8 +18,8 @@ use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Rules\Processor;
 use FireflyIII\Support\Events\BillScanner;
+use FireflyIII\TransactionRules\Processor;
 
 /**
  * @codeCoverageIgnore

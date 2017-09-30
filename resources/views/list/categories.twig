@@ -23,7 +23,7 @@
             <td data-value="{{ category.name }}">
                 <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
             </td>
-            {% if category.lastActivity.year != "1900" %}
+            {% if category.lastActivity %}
                 <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('Y-m-d H-i-s') }}">
                     {{ category.lastActivity.formatLocalized(monthAndDayFormat) }}
                 </td>

@@ -1,3 +1,13 @@
+{# LOCALE ERROR MESSAGE #}
+{% if invalidMonetaryLocale %}
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+        <strong>{{ 'invalid_server_configuration'|_ }}:</strong> <i class="fa fa-money"></i> {{ 'invalid_locale_settings'|_ }}
+    </div>
+{% endif %}
+
 {# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
 {% if Session.has('success') %}
     <div class="alert alert-success alert-dismissible" role="alert">
@@ -80,3 +90,4 @@
 
     </div>
 {% endif %}
+

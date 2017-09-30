@@ -17,6 +17,7 @@ use Crypt;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -26,11 +27,14 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
+use Preferences;
 use Schema;
 use stdClass;
 
 /**
  * Class VerifyDatabase
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @package FireflyIII\Console\Commands
  */
@@ -70,38 +74,64 @@ class VerifyDatabase extends Command
         $this->reportObject('budget');
         $this->reportObject('category');
         $this->reportObject('tag');
-
-        // accounts with no transactions.
         $this->reportAccounts();
-        // budgets with no limits
         $this->reportBudgetLimits();
-        // budgets with no transactions
-
-        // sum of transactions is not zero.
         $this->reportSum();
-        //  any deleted transaction journals that have transactions that are NOT deleted:
         $this->reportJournals();
-        // deleted transactions that are connected to a not deleted journal.
         $this->reportTransactions();
-        // deleted accounts that still have not deleted transactions or journals attached to them.
         $this->reportDeletedAccounts();
-
-        // report on journals with no transactions at all.
         $this->reportNoTransactions();
-
-        // transfers with budgets.
         $this->reportTransfersBudgets();
-
-        // report on journals with the wrong types of accounts.
         $this->reportIncorrectJournals();
-
-        // report (and fix) piggy banks
         $this->repairPiggyBanks();
+        $this->createLinkTypes();
+        $this->createAccessTokens();
 
     }
 
     /**
-     * Make sure there are only transfers linked to piggy bank events.
+     * Create user access tokens, if not present already.
+     */
+    private function createAccessTokens()
+    {
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            $pref = Preferences::getForUser($user, 'access_token', null);
+            if (is_null($pref)) {
+                $token = $user->generateAccessToken();
+                Preferences::setForUser($user, 'access_token', $token);
+                $this->line(sprintf('Generated access token for user %s', $user->email));
+            }
+        }
+    }
+
+    /**
+     * Create default link types if necessary.
+     */
+    private function createLinkTypes()
+    {
+        $set = [
+            'Related'       => ['relates to', 'relates to'],
+            'Refund'        => ['(partially) refunds', 'is (partially) refunded by'],
+            'Paid'          => ['(partially) pays for', 'is (partially) paid for by'],
+            'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
+        ];
+        foreach ($set as $name => $values) {
+            $link = LinkType::where('name', $name)->where('outward', $values[0])->where('inward', $values[1])->first();
+            if (is_null($link)) {
+                $link          = new LinkType;
+                $link->name    = $name;
+                $link->outward = $values[0];
+                $link->inward  = $values[1];
+            }
+            $link->editable = false;
+            $link->save();
+        }
+    }
+
+    /**
+     * Eeport (and fix) piggy banks. Make sure there are only transfers linked to piggy bank events.
      */
     private function repairPiggyBanks(): void
     {

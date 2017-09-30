@@ -188,10 +188,10 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
-    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
-    <script type="text/javascript" src="js/ff/charts.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript">
         var year = '{{ start.year }}';
 
@@ -218,10 +218,10 @@
 
     </script>
 
-    <script type="text/javascript" src="js/ff/reports/default/all.js"></script>
-    <script type="text/javascript" src="js/ff/reports/default/year.js"></script>
+    <script type="text/javascript" src="js/ff/reports/default/all.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/reports/default/year.js?v={{ FF_VERSION }}"></script>
 
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
 {% endblock %}

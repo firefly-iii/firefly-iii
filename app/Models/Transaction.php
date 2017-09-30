@@ -23,13 +23,15 @@ use Watson\Validating\ValidatingTrait;
  * Class Transaction
  *
  * @property-read int    $journal_id
- * @property-read Carbon $date
+ * @property Carbon      $date
  * @property-read string $transaction_description
- * @property-read string $transaction_amount
- * @property-read string $transaction_foreign_amount
- * @property-read string $transaction_type_type
+ * @property string      $transaction_amount
+ * @property string      $transaction_foreign_amount
+ * @property string      $transaction_type_type
+ * @property string      $foreign_currency_symbol
+ * @property int $foreign_currency_dp
  *
- * @property-read int    $account_id
+ * @property int         $account_id
  * @property-read string $account_name
  * @property string      $account_iban
  * @property string      $account_number

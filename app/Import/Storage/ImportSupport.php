@@ -23,21 +23,33 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Rules\Processor;
+use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 
+/**
+ * Trait ImportSupport
+ *
+ * @package FireflyIII\Import\Storage
+ */
 trait ImportSupport
 {
     /** @var int */
     protected $defaultCurrencyId = 1;
+
+    /** @var  Collection */
+    protected $rules;
+
+    /** @var  ImportJob */
+    protected $job;
 
     /**
      * @param TransactionJournal $journal

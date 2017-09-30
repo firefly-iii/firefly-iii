@@ -54,6 +54,7 @@ class CategoryFormRequest extends Request
             $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval($this->get('id'));
         }
 
+        // fixed
         return [
             'name' => $nameRule,
         ];

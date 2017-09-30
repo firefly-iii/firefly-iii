@@ -15,6 +15,7 @@ namespace FireflyIII\Export\Collector;
 
 
 use FireflyIII\Models\ExportJob;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -26,6 +27,8 @@ class BasicCollector
 {
     /** @var ExportJob */
     protected $job;
+    /** @var  User */
+    protected $user;
     /** @var Collection */
     private $entries;
 
@@ -58,7 +61,16 @@ class BasicCollector
      */
     public function setJob(ExportJob $job)
     {
-        $this->job = $job;
+        $this->job  = $job;
+        $this->user = $job->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
 

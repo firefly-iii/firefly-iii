@@ -83,11 +83,9 @@ return [
     'cannot_redirect_to_account'                 => 'Entschuldigung. Firefly III kann Sie nicht zur richtigen Seite weiterleiten.',
     'sum_of_expenses'                            => 'Summe von Ausgaben',
     'sum_of_income'                              => 'Summe von Einnahmen',
-    'total_sum'                                  => 'Gesamtsumme',
     'spent_in_specific_budget'                   => 'Ausgegeben in Budget ":budget"',
     'sum_of_expenses_in_budget'                  => 'Vollkommen ausgegeben in Budget ":budget"',
     'left_in_budget_limit'                       => 'Übrig zum ausgeben aufgrund der Budgetierung',
-    'cannot_reset_demo_user'                     => 'Sie können nicht das Kennwort des Demo-Kontos zurücksetzen',
     'current_period'                             => 'Aktuelle Periode',
     'show_the_current_period_and_overview'       => 'Zeigen Sie die aktuelle Periode und die Übersicht',
     'pref_languages_locale'                      => 'Damit eine andere Sprache als Englisch richtig funktioniert muss Ihr Betriebssystem mit den korrekten Gebietsschema-Informationen ausgestattet werden. Wenn diese nicht vorhanden sind, können die Währungsdaten, Terminen und Mengen falsch formatiert.',
@@ -130,6 +128,8 @@ return [
     'exchange_rate_instructions'                 => 'Das Girokonto "@name" akzeptiert nur Transaktionen in @native_currency. Wenn Sie stattdessen @foreign_currency verwenden wollen, sollten Sie sicherstellen, dass der Betrag auch in @native_currency angegeben ist:',
     'transfer_exchange_rate_instructions'        => 'Das Quellkonto "@source_name" akzeptiert nur Transaktionen in @source_currency. Das Zielkonto "@dest_name" akzeptiert nur Transaktionen in @dest_currency. Sie müssen den Betrag in beiden Währungen korrekt angeben.',
     'transaction_data'                           => 'Transaktionsdaten',
+    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
     'search'                                     => 'Suche',
@@ -139,6 +139,7 @@ return [
     'search_box_intro'                           => 'Willkommen zur Suchfunktion von Firefly III. Geben Sie Ihre Suchanfrage in das Feld ein. Stellen Sie sicher, dass Sie sich die Hilfedatei ansehen, da die Suche ziemlich fortgeschritten ist.',
     'search_error'                               => 'Fehler beim Suchen',
     'search_searching'                           => 'Suche ...',
+    'search_results'                             => 'Search results',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',
@@ -151,11 +152,11 @@ return [
     // export data:
     'import_and_export'                          => 'Import und Export',
     'export_data'                                => 'Daten exportieren',
+    'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'Zum Backup, zum Migrieren auf ein anderes System oder zum Migrieren in eine andere Firefly III Installation.',
     'export_format'                              => 'Export-Format',
     'export_format_csv'                          => 'Durch Komma getrennte Werte (CSV-Datei)',
     'export_format_mt940'                        => 'MT940 kompatibles Format',
-    'export_included_accounts'                   => 'Exportiere die Überweisungen von diesem Konto',
     'include_old_uploads_help'                   => 'Firefly III löscht nicht die originalen CSV-Dateien, welche zuvor importiert wurden. Sie können dem Export hinzugefügt werden.',
     'do_export'                                  => 'Export',
     'export_status_never_started'                => 'Der Export hat noch nicht begonnen',
@@ -170,8 +171,6 @@ return [
     'export_status_collected_attachments'        => 'Alle Anhänge gesammelt!',
     'export_status_collecting_old_uploads'       => 'Sammeln aller bisherigen Uploads...',
     'export_status_collected_old_uploads'        => 'Alle bisherigen Uploads gesammelt!',
-    'export_status_creating_config_file'         => 'Erstelle eine Konfigurationsdatei...',
-    'export_status_created_config_file'          => 'Konfigurationsdatei erstellt!',
     'export_status_creating_zip_file'            => 'Erstelle eine Zip-Datei...',
     'export_status_created_zip_file'             => 'Zip-Datei erstellt!',
     'export_status_finished'                     => 'Export erfolgreich beendet! Yay!',
@@ -317,6 +316,8 @@ return [
     'rule_action_set_source_account'             => 'Lege Quellkonto als :action_value fest',
     'rule_action_set_destination_account_choice' => 'Zielkonto festlegen...',
     'rule_action_set_destination_account'        => 'Lege Zielkonto als :action_value fest',
+    'rules_have_read_warning'                    => 'Have you read the warning?',
+    'apply_rule_warning'                         => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
     // tags
     'store_new_tag'                              => 'Neuen Tag speichern',
@@ -326,6 +327,7 @@ return [
     'location'                                   => 'Standort',
     'without_date'                               => 'Ohne Datum',
     'result'                                     => 'Ergebnis',
+    'sums_apply_to_range'                        => 'All sums apply to the selected range',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Konten auf dem Startbildschirm',
@@ -415,6 +417,15 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'secure_pw_should'                           => 'Should I check the box?',
     'secure_pw_long_password'                    => 'Wenn du gerade ein langes, Single-Use-Passwort für Firefly III mit einem Kennwortgenerator generiert hast: <strong>Nein</strong>.',
     'secure_pw_short'                            => 'Wenn Sie gerade das Passwort eingegeben haben, welches Sie immer verwenden: <em>Bitte ja</em>.',
+    'personal_access_token'                      => 'Personal access token',
+    'explain_access_token'                       => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'regenerate_access_token'                    => 'Regenerate access token',
+    'token_regenerated'                          => 'A new token was generated',
+    'change_your_email'                          => 'Change your email address',
+    'email_verification'                         => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
+    'email_changed_logout'                       => 'Until you verify your email address, you cannot login.',
+    'login_with_new_email'                       => 'You can now login with your new email address.',
+    'login_with_old_email'                       => 'You can now login with your old email address again.',
 
 
     // attachments
@@ -448,7 +459,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'convert_options_DepositWithdrawal'          => 'Konvertieren Sie eine Einzahlung in eine Ausgabe',
     'convert_options_TransferWithdrawal'         => 'Konvertieren Sie eine Überweisung in eine Ausgabe',
     'convert_options_TransferDeposit'            => 'Konvertieren Sie eine Überweisung in eine Einzahlung',
-    'transaction_journal_convert_options'        => 'Diese Transaktion umwandeln',
     'convert_Withdrawal_to_deposit'              => 'Konvertieren Sie diese Ausgabe zu einer Einzahlung',
     'convert_Withdrawal_to_transfer'             => 'Konvertieren Sie diese Ausgabe zu einer Überweisung',
     'convert_Deposit_to_withdrawal'              => 'Konvertieren Sie diese Einzahlung zu einer Ausgabe',
@@ -468,7 +478,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'converted_to_Withdrawal'                    => 'Die Transaktion wurde in eine Ausgabe konvertiert',
     'converted_to_Deposit'                       => 'Die Transaktion wurde in eine Einzahlung konvertiert',
     'converted_to_Transfer'                      => 'Die Transaktion wurde in eine Überweisung konvertiert',
-
+    'invalid_convert_selection'                  => 'The account you have selected is already used in this transaction or does not exist.',
 
     // create new stuff:
     'create_new_withdrawal'                      => 'Erstelle eine neue Ausgabe',
@@ -518,6 +528,11 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'update_budget'                              => 'Budget aktualisieren',
     'update_budget_amount_range'                 => 'Aktualisiere (erwarteten) verfügbaren Betrag zwischen :start und :end',
     'budget_period_navigator'                    => 'Zeitraum-navigator',
+    'info_on_available_amount'                   => 'What do I have available?',
+    'available_amount_indication'                => 'Use these amounts to get an indication of what your total budget could be.',
+    'suggested'                                  => 'Suggested',
+    'average_between'                            => 'Average between :start and :end',
+
 
     // bills:
     'matching_on'                                => 'Reagiert auf',
@@ -648,10 +663,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'newWithdrawal'                              => 'Neue Ausgabe',
     'newDeposit'                                 => 'Neue Einnahme',
     'newTransfer'                                => 'Neue Überweisung',
-    'moneyIn'                                    => 'Geldeingang',
-    'moneyOut'                                   => 'Geldausgang',
-    'billsToPay'                                 => 'Rechnungen zu bezahlen',
-    'billsPaid'                                  => 'Rechnungen bezahlt',
+    'bills_to_pay'                               => 'Bills to pay',
+    'per_day'                                    => 'Per day',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                   => 'Währung',
@@ -851,9 +864,6 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'removed_amount_from_piggy' => ':amount von ":name" entfernt',
 
     // tags
-    'regular_tag'               => 'Nur ein normaler Tag.',
-    'balancing_act'             => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-    'advance_payment'           => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
     'delete_tag'                => 'Tag ":tag" entfernen',
     'deleted_tag'               => 'Tag ":tag" entfernt',
     'new_tag'                   => 'Neuen Tag erstellen',
@@ -892,6 +902,17 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'block_code_bounced'                    => 'Email message(s) bounced',
     'block_code_expired'                    => 'Demo-Konto abgelaufen',
     'no_block_code'                         => 'Kein Grund für Block oder Benutzer nicht blockiert',
+    'block_code_email_changed'              => 'User has not yet confirmed new email address',
+    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
+    'update_user'                           => 'Update user',
+    'updated_user'                          => 'User data has been changed.',
+    'delete_user'                           => 'Delete user :email',
+    'user_deleted'                          => 'The user has been deleted',
+    'send_test_email'                       => 'Send test email message',
+    'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
+    'send_message'                          => 'Send message',
+    'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
+
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
     'create_new_link_type'                  => 'Create new link type',
@@ -915,7 +936,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'transaction'                           => 'Transaction',
     'comments'                              => 'Comments',
     'to_link_not_found'                     => 'If the transaction you want to link to is not listed, simply enter its ID.',
-    'invalid_link_data'                     => 'Invalid link type selected. Cannot link transaction.',
+    'invalid_link_selection'                => 'Cannot link these transactions',
     'journals_linked'                       => 'Transactions are linked.',
     'journals_error_linked'                 => 'These transactions are already linked.',
     'journal_links'                         => 'Transaction links',
@@ -925,14 +946,16 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'overview_for_link'                     => 'Overview for link type ":name"',
     'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Deleted link',
-    '1_outward'                             => 'relates to',
-    '2_outward'                             => '(partially) refunds',
-    '3_outward'                             => '(partially) pays for',
-    '4_outward'                             => '(partially) reimburses',
-    '1_inward'                              => 'relates to',
-    '2_inward'                              => 'is (partially) refunded by',
-    '3_inward'                              => 'is (partially) paid for by',
-    '4_inward'                              => 'is (partially) reimbursed by',
+
+    // link translations:
+    'relates to_inward'                     => 'relates to',
+    'is (partially) refunded by_inward'     => 'is (partially) refunded by',
+    'is (partially) paid for by_inward'     => 'is (partially) paid for by',
+    'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
+    'relates to_outward'                    => 'relates to',
+    '(partially) refunds_outward'           => '(partially) refunds',
+    '(partially) pays for_outward'          => '(partially) pays for',
+    '(partially) reimburses_outward'        => '(partially) reimburses',
 
 
     // split a transaction:
@@ -947,6 +970,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'cannot_edit_multiple_dest'             => 'You cannot edit splitted transaction #:id with description ":description" because it contains multiple destination accounts.',
     'cannot_edit_opening_balance'           => 'You cannot edit the opening balance of an account.',
     'no_edit_multiple_left'                 => 'You have selected no valid transactions to edit.',
+    'cannot_convert_split_journal'          => 'Cannot convert a split transaction',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
@@ -961,6 +985,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_index_type'                     => 'Select the type of file you will upload',
     'import_index_start'                    => 'Start importing',
+    'import_file'                           => 'Import a file',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (Kommagetrennte Werte)',
@@ -990,13 +1015,13 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'import_status_finished_title'          => 'Import routine finished',
     'import_status_finished_text'           => 'The import routine has imported your file.',
     'import_status_finished_job'            => 'The transactions imported can be found in tag <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
+    'import_status_job_running'             => 'The import is running...',
     'import_with_key'                       => 'Import with key \':key\'',
 
     // sandstorm.io errors and messages:
     'sandstorm_not_available'               => 'This function is not available when you are using Firefly III within a Sandstorm.io environment.',
 
     // empty lists? no objects? instructions:
-    'no_transactions_in_period'             => 'There are no transactions in this period.',
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',
     'no_accounts_intro_asset'               => 'You have no asset accounts yet. Asset accounts are your main accounts: your checking account, savings account, shared account or even your credit card.',
     'no_accounts_imperative_asset'          => 'To start using Firefly III you must create at least one asset account. Let\'s do so now:',

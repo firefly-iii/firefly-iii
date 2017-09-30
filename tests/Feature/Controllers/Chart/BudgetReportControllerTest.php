@@ -24,7 +24,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 use Tests\TestCase;
 
 /**
@@ -103,8 +102,6 @@ class BudgetReportControllerTest extends TestCase
         $transaction->destination_amount  = '-100';
         $transaction->amount              = '-100';
         $transaction->opposing_account_id = 8;
-
-        Log::debug('Transaction', $transaction->toArray());
 
         $budgetRepos->shouldReceive('getAllBudgetLimits')->andReturn(new Collection([$one, $two]))->once();
 

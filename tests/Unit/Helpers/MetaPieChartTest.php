@@ -62,6 +62,8 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('setUser')->andReturnSelf()->once();
         $collector->shouldReceive('setAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
+        $collector->shouldReceive('setBudgets')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategories')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
         $collector->shouldReceive('getJournals')->andReturn($collection);
@@ -119,6 +121,8 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('setUser')->andReturnSelf()->twice();
         $collector->shouldReceive('setAccounts')->andReturnSelf()->twice();
         $collector->shouldReceive('setRange')->andReturnSelf()->twice();
+        $collector->shouldReceive('setBudgets')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategories')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
         $collector->shouldReceive('getJournals')->andReturn($collection)->once();

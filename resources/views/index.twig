@@ -115,7 +115,7 @@
                 </div>
             </div>
             {# OPTIONAL REVENUE ACCOUNTS #}
-            {% if showDepositsFrontpage %}
+            {% if showDeps %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'revenue_accounts'|_ }}</h3>
@@ -138,10 +138,10 @@
         var accountExpenseUri = '{{ route('chart.account.expense') }}';
     </script>
 
-    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
-    <script type="text/javascript" src="js/ff/charts.js"></script>
-    <script type="text/javascript" src="js/ff/index.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/index.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 {% block styles %}
 {% endblock %}

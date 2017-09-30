@@ -52,7 +52,7 @@ class UserFormRequest extends Request
             'id'           => 'required|exists:users,id',
             'email'        => 'email|required',
             'password'     => 'confirmed|secure_password',
-            'blocked_code' => 'between:0,30',
+            'blocked_code' => 'between:0,30|nullable',
             'blocked'      => 'between:0,1|numeric',
         ];
     }

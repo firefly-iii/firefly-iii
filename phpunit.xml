@@ -1,39 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ phpunit.xml
-  ~ Copyright (c) 2017 thegrumpydictator@gmail.com
-  ~ This software may be modified and distributed under the terms of the
-  ~ Creative Commons Attribution-ShareAlike 4.0 International License.
-  ~
-  ~ See the LICENSE file for details.
-  -->
-
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="bootstrap/autoload.php"
+         bootstrap="vendor/autoload.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         beStrictAboutOutputDuringTests="true"
          stopOnFailure="true">
     <testsuites>
-        <testsuite name="Feature Tests">
+        <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
 
-        <testsuite name="Unit Tests">
+        <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
         </whitelist>
-        <blacklist>
-            <directory>vendor/</directory>
-        </blacklist>
     </filter>
     <php>
         <env name="APP_ENV" value="testing"/>

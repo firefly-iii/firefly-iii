@@ -39,11 +39,11 @@ class ImportStorage
     /** @var string */
     private $dateFormat = 'Ymd'; // yes, hard coded
     /** @var  ImportJob */
-    private $job;
+    protected $job;
     /** @var Collection */
     private $objects;
     /** @var Collection */
-    private $rules;
+    protected $rules;
 
     /** @var  array */
     private $transfers = [];
@@ -173,6 +173,10 @@ class ImportStorage
         // store meta object things:
         $this->storeCategory($journal, $importJournal->category->getCategory());
         $this->storeBudget($journal, $importJournal->budget->getBudget());
+
+        // to save bill, also give it the amount:
+        $importJournal->bill->setAmount($amount);
+
         $this->storeBill($journal, $importJournal->bill->getBill());
         $this->storeMeta($journal, $importJournal->metaDates);
         $journal->setMeta('notes', $importJournal->notes);

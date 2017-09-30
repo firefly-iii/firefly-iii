@@ -55,11 +55,11 @@ class Amount
 
         // there are five possible positions for the "+" or "-" sign (if it is even used)
         // pos_a and pos_e could be the ( and ) symbol.
-        $pos_a = ''; // before everything
-        $pos_b = ''; // before currency symbol
-        $pos_c = ''; // after currency symbol
-        $pos_d = ''; // before amount
-        $pos_e = ''; // after everything
+        $posA = ''; // before everything
+        $posB = ''; // before currency symbol
+        $posC = ''; // after currency symbol
+        $posD = ''; // before amount
+        $posE = ''; // after everything
 
         // format would be (currency before amount)
         // AB%sC_D%vE
@@ -73,32 +73,32 @@ class Amount
             default:
             case 0:
                 // ( and ) around the whole thing
-                $pos_a = '(';
-                $pos_e = ')';
+                $posA = '(';
+                $posE = ')';
                 break;
             case 1:
                 // The sign string precedes the quantity and currency_symbol
-                $pos_a = $sign;
+                $posA = $sign;
                 break;
             case 2:
                 // The sign string succeeds the quantity and currency_symbol
-                $pos_e = $sign;
+                $posE = $sign;
                 break;
             case 3:
                 // The sign string immediately precedes the currency_symbol
-                $pos_b = $sign;
+                $posB = $sign;
                 break;
             case 4:
                 // The sign string immediately succeeds the currency_symbol
-                $pos_c = $sign;
+                $posC = $sign;
         }
 
         // default is amount before currency
-        $format = $pos_a . $pos_d . '%v' . $space . $pos_b . '%s' . $pos_c . $pos_e;
+        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
 
         if ($csPrecedes) {
             // alternative is currency before amount
-            $format = $pos_a . $pos_b . '%s' . $pos_c . $space . $pos_d . '%v' . $pos_e;
+            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
         }
 
         return $format;
@@ -284,6 +284,58 @@ class Amount
         }
 
         return join(' / ', $amounts);
+
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool               $coloured
+     *
+     * @return string
+     */
+    public function journalTotalAmount(TransactionJournal $journal, bool $coloured = true): string
+    {
+        $transactions = $journal->transactions()->where('amount', '>', 0)->get();
+        $totals       = [];
+        $type         = $journal->transactionType->type;
+        /** @var TransactionModel $transaction */
+        foreach ($transactions as $transaction) {
+            // model some fields to fit "transactionAmount()":
+            $currencyId = $transaction->transaction_currency_id;
+
+            if (!isset($totals[$currencyId])) {
+                $totals[$currencyId] = [
+                    'amount' => '0',
+                    'symbol' => $transaction->transactionCurrency->symbol,
+                    'dp'     => $transaction->transactionCurrency->decimal_places,
+                ];
+            }
+            $totals[$currencyId]['amount'] = bcadd($transaction->amount, $totals[$currencyId]['amount']);
+
+            if (!is_null($transaction->foreign_currency_id)) {
+                $foreignId = $transaction->foreign_currency_id;
+                if (!isset($totals[$foreignId])) {
+                    $totals[$foreignId] = [
+                        'amount' => '0',
+                        'symbol' => $transaction->foreignCurrency->symbol,
+                        'dp'     => $transaction->foreignCurrency->decimal_places,
+                    ];
+                }
+                $totals[$foreignId]['amount'] = bcadd($transaction->foreign_amount, $totals[$foreignId]['amount']);
+            }
+        }
+        $array = [];
+        foreach ($totals as $total) {
+            $currency                 = new TransactionCurrency;
+            $currency->symbol         = $total['symbol'];
+            $currency->decimal_places = $total['dp'];
+            if ($type === TransactionType::WITHDRAWAL) {
+                $total['amount'] = bcmul($total['amount'], '-1');
+            }
+            $array[] = $this->formatAnything($currency, $total['amount']);
+        }
+
+        return join(' / ', $array);
 
     }
 

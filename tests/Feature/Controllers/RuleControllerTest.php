@@ -18,7 +18,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Rules\TransactionMatcher;
+use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 

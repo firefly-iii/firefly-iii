@@ -14,7 +14,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 
+use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Session;
+use Log;
 
 /**
  * Class HomeController
@@ -32,6 +36,20 @@ class HomeController extends Controller
         $mainTitleIcon = 'fa-hand-spock-o';
 
         return view('admin.index', compact('title', 'mainTitleIcon'));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function testMessage(Request $request)
+    {
+        $ipAddress = $request->ip();
+        Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
+        event(new AdminRequestedTestMessage(auth()->user(), $ipAddress));
+        Session::flash('info', strval(trans('firefly.send_test_triggered')));
+        return redirect(route('admin.index'));
     }
 
 }

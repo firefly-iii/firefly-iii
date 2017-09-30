@@ -184,6 +184,7 @@ class SplitController extends Controller
      */
     private function arrayFromInput(SplitJournalFormRequest $request): array
     {
+        $tags  = is_null($request->get('tags')) ? '' : $request->get('tags');
         $array = [
             'journal_description'            => $request->get('journal_description'),
             'journal_source_account_id'      => $request->get('journal_source_account_id'),
@@ -200,7 +201,7 @@ class SplitController extends Controller
             'invoice_date'                   => $request->get('invoice_date'),
             'internal_reference'             => $request->get('internal_reference'),
             'notes'                          => $request->get('notes'),
-            'tags'                           => explode(',', $request->get('tags')),
+            'tags'                           => explode(',', $tags),
 
             // transactions.
             'transactions'                   => $this->getTransactionDataFromRequest($request),

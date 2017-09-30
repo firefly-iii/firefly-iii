@@ -93,8 +93,9 @@ class MonetaryAccountBank extends BunqObject
         foreach ($data['alias'] as $alias) {
             $this->aliases[] = new Alias($alias);
         }
+        /** @var array $filter */
         foreach ($data['notification_filters'] as $filter) {
-            $this->notificationFilters = new NotificationFilter($filter);
+            $this->notificationFilters[] = new NotificationFilter($filter);
         }
 
         return;

@@ -31,6 +31,7 @@ use Steam;
  *
  * Class Entry
  * @SuppressWarnings(PHPMD.LongVariable)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  *
  * @package FireflyIII\Export\Entry
  */
@@ -85,38 +86,10 @@ final class Entry
     }
 
     /**
-     * @param $object
-     *
-     * @return Entry
-     */
-    public static function fromObject($object): Entry
-    {
-        $entry                        = new self;
-        $entry->journal_id            = $object->transaction_journal_id;
-        $entry->description           = Steam::decrypt(intval($object->journal_encrypted), $object->journal_description);
-        $entry->amount                = $object->amount;
-        $entry->date                  = $object->date;
-        $entry->transaction_type      = $object->transaction_type;
-        $entry->currency_code         = $object->transaction_currency_code;
-        $entry->asset_account_id      = $object->account_id;
-        $entry->asset_account_name    = Steam::decrypt(intval($object->account_name_encrypted), $object->account_name);
-        $entry->opposing_account_id   = $object->opposing_account_id;
-        $entry->opposing_account_name = Steam::decrypt(intval($object->opposing_account_encrypted), $object->opposing_account_name);
-        $entry->category_id           = $object->category_id ?? '';
-        $entry->category_name         = $object->category_name ?? '';
-        $entry->budget_id             = $object->budget_id ?? '';
-        $entry->budget_name           = $object->budget_name ?? '';
-
-        // update description when transaction description is different:
-        if (!is_null($object->description) && $object->description !== $entry->description) {
-            $entry->description = $entry->description . ' (' . $object->description . ')';
-        }
-
-        return $entry;
-    }
-
-    /**
      * Converts a given transaction (as collected by the collector) into an export entry.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // complex but little choice.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped
      *
      * @param Transaction $transaction
      *

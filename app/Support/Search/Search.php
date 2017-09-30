@@ -204,8 +204,8 @@ class Search implements SearchInterface
         // first "modifier" is always the text of the search:
         // check descr of journal:
         if (count($this->words) > 0
-            && !$this->strpos_arr(strtolower(strval($transaction->description)), $this->words)
-            && !$this->strpos_arr(strtolower(strval($transaction->transaction_description)), $this->words)
+            && !$this->strposArray(strtolower(strval($transaction->description)), $this->words)
+            && !$this->strposArray(strtolower(strval($transaction->transaction_description)), $this->words)
         ) {
             Log::debug('Description does not match', $this->words);
 
@@ -230,7 +230,7 @@ class Search implements SearchInterface
      *
      * @return bool
      */
-    private function strpos_arr(string $haystack, array $needle)
+    private function strposArray(string $haystack, array $needle)
     {
         if (strlen($haystack) === 0) {
             return false;

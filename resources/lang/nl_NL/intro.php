@@ -31,6 +31,7 @@ return [
     'budgets_index_navigate_periods'        => 'Navigeer door periodes heen om je budget vooraf te bepalen.',
     'budgets_index_new_budget'              => 'Maak nieuwe budgetten naar wens.',
     'budgets_index_list_of_budgets'         => 'Gebruik deze tabel om de bedragen voor elk budget vast te stellen en te zien hoe je er voor staat.',
+    'budgets_index_outro'                   => 'Om meer te leren over budgetteren, klik dan op het help-icoontje rechtsboven.',
 
     // reports (index)
     'reports_index_intro'                   => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',

@@ -81,7 +81,13 @@
     <tfoot>
     <tr>
         <td colspan="2" style="text-align: right;"><em>{{ 'sum'|_ }}:</em></td>
-        <td>{{ sum|formatAmount }}</td>
+        <td>
+            {% if inverseAmount %}
+                {{ (sum*-1)|formatAmount }}
+            {% else %}
+                {{ sum|formatAmount }}
+            {% endif %}
+        </td>
     </tr>
     </tfoot>
 </table>

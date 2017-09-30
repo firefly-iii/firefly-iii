@@ -35,6 +35,7 @@ class BudgetIncomeRequest extends Request
      */
     public function rules()
     {
+        // fixed
         return [
             'amount' => 'numeric|required|min:0',
             'start'  => 'required|date|before:end',

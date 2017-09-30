@@ -175,32 +175,24 @@ class CsvProcessor implements FileProcessorInterface
      */
     private function getJsonError(int $jsonError): string
     {
-        switch ($jsonError) {
-            default:
-                return 'Unknown JSON error';
-            case JSON_ERROR_NONE:
-                return 'No JSON error';
-            case JSON_ERROR_DEPTH:
-                return 'JSON_ERROR_DEPTH';
-            case JSON_ERROR_STATE_MISMATCH:
-                return 'JSON_ERROR_STATE_MISMATCH';
-            case JSON_ERROR_CTRL_CHAR:
-                return 'JSON_ERROR_CTRL_CHAR';
-            case JSON_ERROR_SYNTAX:
-                return 'JSON_ERROR_SYNTAX';
-            case JSON_ERROR_UTF8:
-                return 'JSON_ERROR_UTF8';
-            case JSON_ERROR_RECURSION:
-                return 'JSON_ERROR_RECURSION';
-            case JSON_ERROR_INF_OR_NAN:
-                return 'JSON_ERROR_INF_OR_NAN';
-            case JSON_ERROR_UNSUPPORTED_TYPE:
-                return 'JSON_ERROR_UNSUPPORTED_TYPE';
-            case JSON_ERROR_INVALID_PROPERTY_NAME:
-                return 'JSON_ERROR_INVALID_PROPERTY_NAME';
-            case JSON_ERROR_UTF16:
-                return 'JSON_ERROR_UTF16';
+        $messages = [
+            JSON_ERROR_NONE                  => 'No JSON error',
+            JSON_ERROR_DEPTH                 => 'The maximum stack depth has been exceeded.',
+            JSON_ERROR_STATE_MISMATCH        => 'Invalid or malformed JSON.',
+            JSON_ERROR_CTRL_CHAR             => 'Control character error, possibly incorrectly encoded.',
+            JSON_ERROR_SYNTAX                => 'Syntax error.',
+            JSON_ERROR_UTF8                  => 'Malformed UTF-8 characters, possibly incorrectly encoded.',
+            JSON_ERROR_RECURSION             => 'One or more recursive references in the value to be encoded.',
+            JSON_ERROR_INF_OR_NAN            => 'One or more NAN or INF values in the value to be encoded.',
+            JSON_ERROR_UNSUPPORTED_TYPE      => 'A value of a type that cannot be encoded was given.',
+            JSON_ERROR_INVALID_PROPERTY_NAME => 'A property name that cannot be encoded was given.',
+            JSON_ERROR_UTF16                 => 'Malformed UTF-16 characters, possibly incorrectly encoded.',
+        ];
+        if (isset($messages[$jsonError])) {
+            return $messages[$jsonError];
         }
+
+        return 'Unknown JSON error';
     }
 
     /**

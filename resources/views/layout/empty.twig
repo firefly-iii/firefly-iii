@@ -7,13 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" type="text/css" media="all"/>
-    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" type="text/css" media="all"/>
-    <link href="lib/adminlte/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+    <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
-    <script src="js/lib/html5shiv.min.js"></script>
-    <script src="js/lib/respond.min.js"></script>
+    <script src="js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
+    <script src="js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
     <![endif]-->
 
     {# favicons #}
@@ -28,8 +28,8 @@
     {% block content %}{% endblock %}
 </div>
 <!-- /.login-box -->
-<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery-3.1.1.min.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js?v={{ FF_VERSION }}"></script>
 
 {% if env('ANALYTICS_ID','') != '' %}
     <script>

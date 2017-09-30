@@ -98,7 +98,12 @@ class Range
         $locale = array_map('trim', $locale);
 
         setlocale(LC_TIME, $locale);
-        setlocale(LC_MONETARY, $locale);
+        $moneyResult = setlocale(LC_MONETARY, $locale);
+
+        // send error to view if could not set money format
+        if ($moneyResult === false) {
+            View::share('invalidMonetaryLocale', true);
+        }
 
 
         // save some formats:

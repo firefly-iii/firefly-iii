@@ -48,7 +48,7 @@ class CurrencyFormRequest extends Request
      */
     public function rules()
     {
-
+        // fixed
         $rules = [
             'name'           => 'required|max:48|min:1|unique:transaction_currencies,name',
             'code'           => 'required|min:3|max:3|unique:transaction_currencies,code',

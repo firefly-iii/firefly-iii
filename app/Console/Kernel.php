@@ -1,54 +1,26 @@
 <?php
+declare(strict_types=1);
+
+
 /**
  * Kernel.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  * This software may be modified and distributed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International License.
  *
  * See the LICENSE file for details.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Console;
 
-use FireflyIII\Console\Commands\CreateImport;
-use FireflyIII\Console\Commands\DecryptAttachment;
-use FireflyIII\Console\Commands\EncryptFile;
-use FireflyIII\Console\Commands\Import;
-use FireflyIII\Console\Commands\ScanAttachments;
-use FireflyIII\Console\Commands\UpgradeDatabase;
-use FireflyIII\Console\Commands\UpgradeFireflyInstructions;
-use FireflyIII\Console\Commands\UseEncryption;
-use FireflyIII\Console\Commands\VerifyDatabase;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /**
- * Class Kernel
- *
- * @package FireflyIII\Console
+ * File to make sure commnds work.
  */
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The bootstrap classes for the application.
-     *
-     * Next upgrade verify these are the same.
-     *
-     * @var array
-     */
-    protected $bootstrappers
-        = [
-            'Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables',
-            'Illuminate\Foundation\Bootstrap\LoadConfiguration',
-            'Illuminate\Foundation\Bootstrap\HandleExceptions',
-            'Illuminate\Foundation\Bootstrap\RegisterFacades',
-            'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
-            'Illuminate\Foundation\Bootstrap\RegisterProviders',
-            'Illuminate\Foundation\Bootstrap\BootProviders',
-        ];
-
     /**
      * The Artisan commands provided by your application.
      *
@@ -56,24 +28,29 @@ class Kernel extends ConsoleKernel
      */
     protected $commands
         = [
-            UpgradeFireflyInstructions::class,
-            VerifyDatabase::class,
-            Import::class,
-            CreateImport::class,
-            EncryptFile::class,
-            ScanAttachments::class,
-            UpgradeDatabase::class,
-            UseEncryption::class,
-            DecryptAttachment::class,
+            //
         ];
 
     /**
-     * Register the Closure based commands for the application.
+     * Register the commands for the application.
      *
      * @return void
      */
     protected function commands()
     {
+        $this->load(__DIR__ . '/Commands');
+
         require base_path('routes/console.php');
+    }
+
+    /**
+     * Define the application's command schedule.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function schedule(Schedule $schedule)
+    {
     }
 }

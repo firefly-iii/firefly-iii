@@ -88,29 +88,29 @@ class JournalFormRequest extends Request
             'date'                     => 'required|date',
 
             // then, custom fields:
-            'interest_date'            => 'date',
-            'book_date'                => 'date',
-            'process_date'             => 'date',
-            'due_date'                 => 'date',
-            'payment_date'             => 'date',
-            'invoice_date'             => 'date',
-            'internal_reference'       => 'min:1,max:255',
-            'notes'                    => 'min:1,max:50000',
+            'interest_date'            => 'date|nullable',
+            'book_date'                => 'date|nullable',
+            'process_date'             => 'date|nullable',
+            'due_date'                 => 'date|nullable',
+            'payment_date'             => 'date|nullable',
+            'invoice_date'             => 'date|nullable',
+            'internal_reference'       => 'min:1,max:255|nullable',
+            'notes'                    => 'min:1,max:50000|nullable',
             // and then transaction rules:
             'description'              => 'required|between:1,255',
             'amount'                   => 'numeric|required|more:0',
-            'budget_id'                => 'mustExist:budgets,id|belongsToUser:budgets,id',
-            'category'                 => 'between:1,255',
-            'source_account_id'        => 'numeric|belongsToUser:accounts,id',
-            'source_account_name'      => 'between:1,255',
-            'destination_account_id'   => 'numeric|belongsToUser:accounts,id',
-            'destination_account_name' => 'between:1,255',
-            'piggy_bank_id'            => 'between:1,255',
+            'budget_id'                => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
+            'category'                 => 'between:1,255|nullable',
+            'source_account_id'        => 'numeric|belongsToUser:accounts,id|nullable',
+            'source_account_name'      => 'between:1,255|nullable',
+            'destination_account_id'   => 'numeric|belongsToUser:accounts,id|nullable',
+            'destination_account_name' => 'between:1,255|nullable',
+            'piggy_bank_id'            => 'between:1,255|nullable',
 
             // foreign currency amounts
-            'native_amount'            => 'numeric|more:0',
-            'source_amount'            => 'numeric|more:0',
-            'destination_amount'       => 'numeric',
+            'native_amount'            => 'numeric|more:0|nullable',
+            'source_amount'            => 'numeric|more:0|nullable',
+            'destination_amount'       => 'numeric|more:0|nullable',
         ];
 
         // some rules get an upgrade depending on the type of data:
@@ -133,10 +133,10 @@ class JournalFormRequest extends Request
         switch ($what) {
             case strtolower(TransactionType::WITHDRAWAL):
                 $rules['source_account_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
-                $rules['destination_account_name'] = 'between:1,255';
+                $rules['destination_account_name'] = 'between:1,255|nullable';
                 break;
             case strtolower(TransactionType::DEPOSIT):
-                $rules['source_account_name']    = 'between:1,255';
+                $rules['source_account_name']    = 'between:1,255|nullable';
                 $rules['destination_account_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
                 break;
             case strtolower(TransactionType::TRANSFER):

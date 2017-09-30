@@ -15,11 +15,15 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
+use FireflyIII\Mail\UndoEmailChangeMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mail;
+use Preferences;
 use Swift_TransportException;
 
 /**
@@ -51,6 +55,54 @@ class UserEventHandler
             $repository->attachRole($event->user, 'owner');
         }
 
+        return true;
+    }
+
+    /**
+     * @param UserChangedEmail $event
+     *
+     * @return bool
+     */
+    public function sendEmailChangeConfirmMail(UserChangedEmail $event): bool
+    {
+        $newEmail  = $event->newEmail;
+        $oldEmail  = $event->oldEmail;
+        $user      = $event->user;
+        $ipAddress = $event->ipAddress;
+        $token     = Preferences::getForUser($user, 'email_change_confirm_token', 'invalid');
+        $uri       = route('profile.confirm-email-change', [$token->data]);
+        try {
+            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
+            // @codeCoverageIgnoreStart
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        // @codeCoverageIgnoreEnd
+        return true;
+    }
+
+    /**
+     * @param UserChangedEmail $event
+     *
+     * @return bool
+     */
+    public function sendEmailChangeUndoMail(UserChangedEmail $event): bool
+    {
+        $newEmail  = $event->newEmail;
+        $oldEmail  = $event->oldEmail;
+        $user      = $event->user;
+        $ipAddress = $event->ipAddress;
+        $token     = Preferences::getForUser($user, 'email_change_undo_token', 'invalid');
+        $uri       = route('profile.undo-email-change', [$token->data, hash('sha256', $oldEmail)]);
+        try {
+            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
+            // @codeCoverageIgnoreStart
+        } catch (Swift_TransportException $e) {
+            Log::error($e->getMessage());
+        }
+
+        // @codeCoverageIgnoreEnd
         return true;
     }
 

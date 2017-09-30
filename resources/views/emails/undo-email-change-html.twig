@@ -1,0 +1,18 @@
+{% include 'emails.header-html' %}
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    You or somebody with access to your Firefly III account has changed your email address.
+    If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!
+</p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    If you initiated this change, you may safely ignore this message.
+</p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    The old email addres was: <strong>{{ oldEmail }}</strong>
+</p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    The new email address is: {{ newEmail }}
+</p>
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    To undo the change, follow this link: <a href="{{ uri }}">{{ uri }}</a>
+</p>
+{% include 'emails.footer-html' %}

@@ -42,6 +42,8 @@ class ExportFormRequest extends Request
         $today        = Carbon::create()->addDay()->format('Y-m-d');
         $formats      = join(',', array_keys(config('firefly.export_formats')));
 
+        // fixed
+
         return [
             'export_start_range'  => 'required|date|after:' . $first,
             'export_end_range'    => 'required|date|before:' . $today,

@@ -9,16 +9,41 @@
         <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Options</h3>
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     <p>
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
                     <ul>
+                        <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
                         <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
                         <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'personal_access_token'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'explain_access_token'|_ }}
+                    </p>
+                    <p>
+                        <input id="token" type="text" class="form-control" name="token" value="{{ accessToken.data }}" size="32" maxlength="32" readonly />
+
+                    </p>
+                    <p>
+                        <form action="{{ route('profile.regenerate') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-refresh"></i> {{ 'regenerate_access_token'|_ }}</button>
+                    </form>
+                    </p>
                 </div>
             </div>
         </div>

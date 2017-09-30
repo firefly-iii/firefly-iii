@@ -35,6 +35,7 @@ class ProfileFormRequest extends Request
      */
     public function rules()
     {
+        // fixed
         return [
             'current_password'          => 'required',
             'new_password'              => 'required|confirmed|secure_password',

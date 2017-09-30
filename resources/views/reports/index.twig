@@ -166,7 +166,7 @@
 {% endblock %}
 
 {% block styles %}
-    <link href="css/bootstrap-multiselect.css" rel="stylesheet" type="text/css"/>
+    <link href="css/bootstrap-multiselect.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block scripts %}
@@ -177,6 +177,6 @@
         var allSelectedText = "{{ 'multi_select_all_selected'|_ }}";
         var filterPlaceholder = "{{ 'multi_select_filter_placeholder'|_ }}";
     </script>
-    <script type="text/javascript" src="js/lib/bootstrap-multiselect.js"></script>
-    <script type="text/javascript" src="js/ff/reports/index.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/reports/index.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

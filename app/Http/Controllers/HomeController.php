@@ -129,9 +129,9 @@ class HomeController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end                   = session('end', Carbon::now()->endOfMonth());
-        $accounts              = $repository->getAccountsById($frontPage->data);
-        $showDepositsFrontpage = Preferences::get('showDepositsFrontpage', false)->data;
+        $end      = session('end', Carbon::now()->endOfMonth());
+        $accounts = $repository->getAccountsById($frontPage->data);
+        $showDeps = Preferences::get('showDepositsFrontpage', false)->data;
 
         // zero bills? Hide some elements from view.
         /** @var BillRepositoryInterface $billRepository */
@@ -146,7 +146,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'subTitle', 'transactions', 'showDepositsFrontpage', 'billCount')
+            'index', compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
         );
     }
 

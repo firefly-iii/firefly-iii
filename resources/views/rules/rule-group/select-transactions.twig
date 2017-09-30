@@ -21,6 +21,9 @@
                             <p>
                                 {{ trans('firefly.apply_rule_group_selection_intro', {title: ruleGroup.title}) }}
                             </p>
+                            <p class="text-danger">
+                                {{ 'apply_rule_warning'|_ }}
+                            </p>
                             <div class="row">
                                 <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
                                     {{ ExpandedForm.date('start_date', first) }}
@@ -41,12 +44,15 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/modernizr-custom.js"></script>
-    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/ff/rules/select-transactions.js"></script>
+    <script type="text/javascript">
+        var askReadWarning = "{{ trans('firefly.rules_have_read_warning')|escape('js') }}";
+    </script>
+    <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/rules/select-transactions.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link href="css/jquery-ui/jquery-ui.structure.min.css" type="text/css" rel="stylesheet" media="all">
-    <link href="css/jquery-ui/jquery-ui.theme.min.css" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
 {% endblock %}

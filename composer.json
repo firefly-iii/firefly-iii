@@ -52,7 +52,7 @@
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-zip": "*",
-    "laravel/framework": "5.4.*",
+    "laravel/framework": "5.5.*",
     "davejamesmiller/laravel-breadcrumbs": "3.*",
     "watson/validating": "3.*",
     "doctrine/dbal": "^2.5",
@@ -63,21 +63,21 @@
     "laravelcollective/html": "^5.4",
     "rmccue/requests": "1.*",
     "pragmarx/google2fa": "1.*",
-    "bacon/bacon-qr-code": "1.*"
+    "bacon/bacon-qr-code": "1.*",
+    "fideloper/proxy": "~3.3"
   },
   "require-dev": {
+    "filp/whoops": "~2.0",
     "fzaninotto/faker": "~1.4",
     "mockery/mockery": "0.9.*",
-    "phpunit/phpunit": "~5.0",
-    "symfony/css-selector": "3.1.*",
-    "symfony/dom-crawler": "3.1.*",
+    "phpunit/phpunit": "~6.0",
     "barryvdh/laravel-debugbar": "2.*",
-    "barryvdh/laravel-ide-helper": "2.*",
-    "satooshi/php-coveralls": "^1.0"
+    "barryvdh/laravel-ide-helper": "2.*"
   },
   "autoload": {
     "classmap": [
-      "database"
+      "database/seeds",
+      "database/factories"
     ],
     "psr-4": {
       "FireflyIII\\": "app/"
@@ -88,30 +88,37 @@
       "Tests\\": "tests/"
     }
   },
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+      ]
+    }
+  },
   "scripts": {
     "post-root-package-install": [
-      "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "post-create-project-cmd": [
-      "php artisan key:generate --force"
+      "@php artisan key:generate"
     ],
-    "post-install-cmd": [
-      "Illuminate\\Foundation\\ComposerScripts::postInstall",
-      "php artisan optimize",
-      "php artisan firefly:instructions install"
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover"
     ],
     "post-update-cmd": [
-      "Illuminate\\Foundation\\ComposerScripts::postUpdate",
       "php artisan firefly:upgrade-database",
       "php artisan firefly:verify",
       "php artisan firefly:instructions update",
       "php artisan optimize"
     ],
-    "compile": [
-      "php artisan migrate:refresh --seed --force"
+    "post-install-cmd": [
+      "php artisan optimize",
+      "php artisan firefly:instructions install"
     ]
   },
   "config": {
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
   }
 }

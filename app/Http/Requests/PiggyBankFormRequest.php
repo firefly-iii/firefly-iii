@@ -53,8 +53,7 @@ class PiggyBankFormRequest extends Request
     public function rules()
     {
 
-        $nameRule       = 'required|between:1,255|uniquePiggyBankForUser';
-        $targetDateRule = 'date';
+        $nameRule = 'required|between:1,255|uniquePiggyBankForUser';
         if (intval($this->get('id'))) {
             $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval($this->get('id'));
         }
@@ -66,7 +65,7 @@ class PiggyBankFormRequest extends Request
             'targetamount'                    => 'required|numeric|more:0',
             'amount_currency_id_targetamount' => 'required|exists:transaction_currencies,id',
             'startdate'                       => 'date',
-            'targetdate'                      => $targetDateRule,
+            'targetdate'                      => 'date|nullable',
             'order'                           => 'integer|min:1',
 
         ];

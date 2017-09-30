@@ -32,6 +32,8 @@ use Steam;
  * Class MetaPieChart
  *
  * @package FireflyIII\Helpers\Chart
+ *
+ *
  */
 class MetaPieChart implements MetaPieChartInterface
 {
@@ -83,12 +85,15 @@ class MetaPieChart implements MetaPieChartInterface
      * @param string $group
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function generate(string $direction, string $group): array
     {
         $transactions = $this->getTransactions($direction);
         $grouped      = $this->groupByFields($transactions, $this->grouping[$group]);
         $chartData    = $this->organizeByType($group, $grouped);
+        $key          = strval(trans('firefly.everything_else'));
 
         // also collect all other transactions
         if ($this->collectOtherObjects && $direction === 'expense') {
@@ -96,11 +101,12 @@ class MetaPieChart implements MetaPieChartInterface
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcmul($sum, '-1');
-            $sum                                                 = bcsub($sum, $this->total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
+
+            $journals        = $collector->getJournals();
+            $sum             = strval($journals->sum('transaction_amount'));
+            $sum             = bcmul($sum, '-1');
+            $sum             = bcsub($sum, $this->total);
+            $chartData[$key] = $sum;
         }
 
         if ($this->collectOtherObjects && $direction === 'income') {
@@ -108,10 +114,10 @@ class MetaPieChart implements MetaPieChartInterface
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
-            $journals                                            = $collector->getJournals();
-            $sum                                                 = strval($journals->sum('transaction_amount'));
-            $sum                                                 = bcsub($sum, $this->total);
-            $chartData[strval(trans('firefly.everything_else'))] = $sum;
+            $journals        = $collector->getJournals();
+            $sum             = strval($journals->sum('transaction_amount'));
+            $sum             = bcsub($sum, $this->total);
+            $chartData[$key] = $sum;
         }
 
         return $chartData;
@@ -258,12 +264,9 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->removeFilter(TransferFilter::class);
         }
 
-        if ($this->budgets->count() > 0) {
-            $collector->setBudgets($this->budgets);
-        }
-        if ($this->categories->count() > 0) {
-            $collector->setCategories($this->categories);
-        }
+        $collector->setBudgets($this->budgets);
+        $collector->setCategories($this->categories);
+
         if ($this->tags->count() > 0) {
             $collector->setTags($this->tags);
             $collector->withCategoryInformation();
@@ -278,6 +281,9 @@ class MetaPieChart implements MetaPieChartInterface
      * @param array      $fields
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     protected function groupByFields(Collection $set, array $fields): array
     {

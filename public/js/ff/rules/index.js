@@ -44,12 +44,25 @@ $(function () {
 );
 
 function testRuleTriggers(e) {
+
     var obj = $(e.target);
     var ruleId = parseInt(obj.data('id'));
+    var icon = obj;
+    if(obj.prop("tagName") === 'A') {
+        icon = $('i', obj);
+    }
+    // change icon:
+    icon.addClass('fa-spinner fa-spin').removeClass('fa-flask');
+
+    var modal = $("#testTriggerModal");
+    // respond to modal:
+    modal.on('hide.bs.modal', function (e) {
+        disableRuleSpinners();
+    });
 
     // Find a list of existing transactions that match these triggers
     $.get('rules/test-rule/' + ruleId).done(function (data) {
-        var modal = $("#testTriggerModal");
+
 
         // Set title and body
         modal.find(".transactions-list").html(data.html);
@@ -66,9 +79,14 @@ function testRuleTriggers(e) {
         modal.modal();
     }).fail(function () {
         alert('Cannot get transactions for given triggers.');
+        disableRuleSpinners();
     });
 
     return false;
+}
+
+function disableRuleSpinners() {
+    $('i.test_rule_triggers').removeClass('fa-spin fa-spinner').addClass('fa-flask');
 }
 
 

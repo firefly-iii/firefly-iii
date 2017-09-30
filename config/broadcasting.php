@@ -1,14 +1,4 @@
 <?php
-
-/**
- * broadcasting.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
 declare(strict_types=1);
 
 
@@ -43,17 +33,17 @@ return [
     'connections' => [
 
         'pusher' => [
-            'driver'  => 'pusher',
-            'key'     => env('PUSHER_KEY'),
-            'secret'  => env('PUSHER_SECRET'),
-            'app_id'  => env('PUSHER_APP_ID'),
+            'driver' => 'pusher',
+            'key' => env('PUSHER_APP_KEY'),
+            'secret' => env('PUSHER_APP_SECRET'),
+            'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 //
             ],
         ],
 
         'redis' => [
-            'driver'     => 'redis',
+            'driver' => 'redis',
             'connection' => 'default',
         ],
 

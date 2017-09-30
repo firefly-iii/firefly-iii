@@ -151,6 +151,13 @@ class BudgetControllerTest extends TestCase
         // set budget limit to current month:
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
+        $budgetInfo              = [
+            $budget->id => [
+                'spent'      => '0',
+                'budgeted'   => '0',
+                'currentRep' => false,
+            ],
+        ];
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -163,6 +170,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
+        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
 
 
@@ -187,6 +195,13 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
+        $budgetInfo              = [
+            $budget->id => [
+                'spent'      => '0',
+                'budgeted'   => '0',
+                'currentRep' => false,
+            ],
+        ];
 
         // set budget limit to current month:
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
@@ -204,6 +219,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
 
 
         $this->be($this->user());
@@ -231,6 +247,13 @@ class BudgetControllerTest extends TestCase
         // set budget limit to current month:
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
+        $budgetInfo              = [
+            $budget->id => [
+                'spent'      => '0',
+                'budgeted'   => '0',
+                'currentRep' => false,
+            ],
+        ];
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -244,6 +267,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
+        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
 
 
         $this->be($this->user());
@@ -373,7 +397,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('setAvailableBudget');
 
-        $data = ['amount' => '200','start' => '2017-01-01','end' => '2017-01-31'];
+        $data = ['amount' => '200', 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
         $response = $this->post(route('budgets.income.post'), $data);
         $response->assertStatus(302);

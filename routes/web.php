@@ -32,6 +32,9 @@ Route::group(
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
+    // Change email routes:
+    Route::get('profile/confirm-email-change/{token}', ['uses' => 'ProfileController@confirmEmailChange', 'as' => 'profile.confirm-email-change']);
+    Route::get('profile/undo-email-change/{token}/{oldAddressHash}', ['uses' => 'ProfileController@undoEmailChange', 'as' => 'profile.undo-email-change']);
 
 }
 );
@@ -137,7 +140,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'budgets', 'as' => 'budgets.'], function () {
 
-        Route::get('income/{start_date}/{end_date}', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+    Route::get('income/{start_date}/{end_date}', ['uses' => 'BudgetController@updateIncome', 'as' => 'income']);
+    Route::get('info/{start_date}/{end_date}', ['uses' => 'BudgetController@infoIncome', 'as' => 'income.info']);
     Route::get('create', ['uses' => 'BudgetController@create', 'as' => 'create']);
     Route::get('edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'edit']);
     Route::get('delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
@@ -423,7 +427,7 @@ Route::group(
  * Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'prefix' => 'javascript', 'as' => 'javascript.'], function () {
+    ['middleware' => 'user-full-auth', 'prefix' => 'jscript', 'as' => 'javascript.'], function () {
     Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
     Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
     Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
@@ -441,10 +445,12 @@ Route::group(
     Route::get('categories', ['uses' => 'JsonController@categories', 'as' => 'categories']);
     Route::get('budgets', ['uses' => 'JsonController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'JsonController@tags', 'as' => 'tags']);
-    Route::get('box/in', ['uses' => 'JsonController@boxIn', 'as' => 'box.in']);
-    Route::get('box/out', ['uses' => 'JsonController@boxOut', 'as' => 'box.out']);
-    Route::get('box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'box.unpaid']);
-    Route::get('box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'box.paid']);
+
+    Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
+    Route::get('box/bills', ['uses' => 'Json\BoxController@bills', 'as' => 'box.bills']);
+    Route::get('box/available', ['uses' => 'Json\BoxController@available', 'as' => 'box.available']);
+    Route::get('box/net-worth', ['uses' => 'Json\BoxController@netWorth', 'as' => 'box.net-worth']);
+
     Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
     Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
     Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
@@ -521,11 +527,14 @@ Route::group(
     ['middleware' => 'user-full-auth', 'prefix' => 'profile', 'as' => 'profile.'], function () {
 
     Route::get('', ['uses' => 'ProfileController@index', 'as' => 'index']);
+    Route::get('change-email', ['uses' => 'ProfileController@changeEmail', 'as' => 'change-email']);
     Route::get('change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
     Route::get('delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
 
     Route::post('delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account.post']);
     Route::post('change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password.post']);
+    Route::post('change-email', ['uses' => 'ProfileController@postChangeEmail', 'as' => 'change-email.post']);
+    Route::post('regenerate', ['uses' => 'ProfileController@regenerate', 'as' => 'regenerate']);
 }
 );
 
@@ -769,12 +778,16 @@ Route::group(
 
     // admin home
     Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
+    Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);
 
     // user manager
     Route::get('users', ['uses' => 'UserController@index', 'as' => 'users']);
     Route::get('users/edit/{user}', ['uses' => 'UserController@edit', 'as' => 'users.edit']);
+    Route::get('users/delete/{user}', ['uses' => 'UserController@delete', 'as' => 'users.delete']);
     Route::get('users/show/{user}', ['uses' => 'UserController@show', 'as' => 'users.show']);
+
     Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
+    Route::post('users/destroy/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
 
     // journal links manager
     Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);

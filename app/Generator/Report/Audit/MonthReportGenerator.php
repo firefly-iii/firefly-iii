@@ -145,6 +145,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param Carbon  $date
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // not that long
+     *
      */
     private function getAuditReport(Account $account, Carbon $date): array
     {
@@ -175,9 +178,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $transaction->currency = $currency;
         }
 
-        /*
-         * Reverse set again.
-         */
         $return = [
             'journals'         => $journals->reverse(),
             'exists'           => $journals->count() > 0,

@@ -27,7 +27,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Rules\TransactionMatcher;
+use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Http\Request;
 use Preferences;
 use Response;
@@ -196,9 +196,9 @@ class RuleController extends Controller
 
         return view(
             'rules.rule.edit', compact(
-            'rule', 'subTitle',
-            'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
-        )
+                                 'rule', 'subTitle',
+                                 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
+                             )
         );
     }
 

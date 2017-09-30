@@ -44,6 +44,8 @@ class Controller extends BaseController
     protected $monthAndDayFormat;
     /** @var string */
     protected $monthFormat;
+    /** @var string  */
+    protected $redirectUri = '/';
 
     /**
      * Controller constructor.
@@ -61,6 +63,7 @@ class Controller extends BaseController
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
         View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
+        View::share('FF_VERSION', config('firefly.version'));
 
 
         $this->middleware(
@@ -115,10 +118,10 @@ class Controller extends BaseController
     {
         $uri = strval(session($identifier));
         if (!(strpos($identifier, 'delete') === false) && !(strpos($uri, '/show/') === false)) {
-            $uri = route('index');
+            $uri = $this->redirectUri;
         }
-        if (!(strpos($uri, 'javascript') === false)) {
-            $uri = route('index');
+        if (!(strpos($uri, 'jscript') === false)) {
+            $uri = $this->redirectUri;
         }
 
         return $uri;

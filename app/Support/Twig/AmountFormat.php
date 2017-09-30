@@ -49,6 +49,7 @@ class AmountFormat extends Twig_Extension
             $this->formatAmountBySymbol(),
             $this->transactionAmount(),
             $this->journalAmount(),
+            $this->journalTotalAmount(),
             $this->formatDestinationAfter(),
             $this->formatDestinationBefore(),
             $this->formatSourceAfter(),
@@ -257,6 +258,19 @@ class AmountFormat extends Twig_Extension
 
             return app('amount')->formatAnything($format, $transaction['source_account_before'], true);
 
+        }, ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function journalTotalAmount(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalTotalAmount', function (TransactionJournal $journal): string {
+
+            return app('amount')->journalTotalAmount($journal, true);
         }, ['is_safe' => ['html']]
         );
     }

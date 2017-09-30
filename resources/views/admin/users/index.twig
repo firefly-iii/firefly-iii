@@ -30,6 +30,7 @@
                                 <td class="hidden-xs" data-value="{{ user.id }}">
                                     <div class="btn-group btn-group-xs">
                                         <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><i class="fa fa-pencil"></i></a>
+                                        <a class="btn btn-danger" href="{{ route('admin.users.delete',user.id) }}"><i class="fa fa-trash"></i></a>
                                     </div>
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
@@ -85,8 +86,8 @@
     </div>
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
+    <link rel="stylesheet" href="css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/bootstrap-sortable.js"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

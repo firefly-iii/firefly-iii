@@ -107,8 +107,7 @@
                                         <td>
                                             <div class="btn-group btn-group-xs test_buttons">
                                                 {# show which transactions would match #}
-                                                <a href="#" class="btn btn-default test_rule_triggers" data-id="{{ rule.id }}"
-                                                   title="{{ 'test_rule_triggers'|_ }}"><i data-id="{{ rule.id }}" class="fa fa-fw fa-flask"></i></a>
+                                                <a href="#" class="btn btn-default test_rule_triggers" data-id="{{ rule.id }}" title="{{ 'test_rule_triggers'|_ }}"><i data-id="{{ rule.id }}" class="test_rule_triggers fa fa-fw fa-flask"></i></a>
 
                                                 {# actually execute rule #}
                                                 <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default"
@@ -202,6 +201,6 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="js/lib/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/ff/rules/index.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/rules/index.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

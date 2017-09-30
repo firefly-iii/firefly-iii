@@ -8,7 +8,38 @@
  * See the LICENSE file for details.
  */
 
-/** global: spent, budgeted, available, currencySymbol, budgetIndexURI, accounting */
+/** global: spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
+
+/**
+ *
+ */
+$(function () {
+    "use strict";
+
+    $('.updateIncome').on('click', updateIncome);
+    $('.infoIncome').on('click', infoIncome);
+
+    /*
+     On start, fill the "spent"-bar using the content from the page.
+     */
+    drawSpentBar();
+    drawBudgetedBar();
+
+    /*
+     When the input changes, update the percentages for the budgeted bar:
+     */
+    $('input[type="number"]').on('input', updateBudgetedAmounts);
+
+    //
+    $('.selectPeriod').change(function (e) {
+        var sel = $(e.target).val();
+        if (sel !== "x") {
+            var newUri = budgetIndexUri.replace("REPLACE", sel);
+            window.location.assign(newUri);
+        }
+    });
+
+});
 
 function drawSpentBar() {
     "use strict";
@@ -55,6 +86,10 @@ function drawBudgetedBar() {
     }
 }
 
+/**
+ *
+ * @param e
+ */
 function updateBudgetedAmounts(e) {
     "use strict";
     var target = $(e.target);
@@ -90,7 +125,7 @@ function updateBudgetedAmounts(e) {
 
         // send a post to Firefly to update the amount:
         var newUri = budgetAmountUri.replace("REPLACE", id);
-        $.post(newUri, {amount: value,start: periodStart, end: periodEnd}).done(function (data) {
+        $.post(newUri, {amount: value, start: periodStart, end: periodEnd}).done(function (data) {
             // update the link if relevant:
             if (data.repetition > 0) {
                 $('.budget-link[data-id="' + id + '"]').attr('href', 'budgets/show/' + id + '/' + data.repetition);
@@ -101,36 +136,21 @@ function updateBudgetedAmounts(e) {
     }
 }
 
-$(function () {
-    "use strict";
-
-    $('.updateIncome').on('click', updateIncome);
-
-    /*
-     On start, fill the "spent"-bar using the content from the page.
-     */
-    drawSpentBar();
-    drawBudgetedBar();
-
-    /*
-     When the input changes, update the percentages for the budgeted bar:
-     */
-    $('input[type="number"]').on('input', updateBudgetedAmounts);
-
-    //
-    $('.selectPeriod').change(function (e) {
-        var sel = $(e.target).val();
-        if (sel !== "x") {
-            var newUri = budgetIndexUri.replace("REPLACE", sel);
-            window.location.assign(newUri);
-        }
-    });
-
-});
-
+/**
+ *
+ * @returns {boolean}
+ */
 function updateIncome() {
     "use strict";
     $('#defaultModal').empty().load(updateIncomeUri, function () {
+        $('#defaultModal').modal('show');
+    });
+
+    return false;
+}
+
+function infoIncome() {
+    $('#defaultModal').empty().load(infoIncomeUri, function () {
         $('#defaultModal').modal('show');
     });
 

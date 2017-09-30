@@ -135,9 +135,9 @@
         var everything = '{{ route('chart.category.all', [category.id]) }}';
         var specific = '{{ route('chart.category.specific', [category.id, start.format('Ymd')]) }}';
     </script>
-    <script type="text/javascript" src="js/lib/Chart.bundle.min.js"></script>
-    <script type="text/javascript" src="js/ff/charts.defaults.js"></script>
-    <script type="text/javascript" src="js/ff/charts.js"></script>
-    <script type="text/javascript" src="js/ff/categories/show.js"></script>
-    <script type="text/javascript" src="js/ff/transactions/list.js"></script>
+    <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/charts.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/categories/show.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

@@ -35,8 +35,10 @@ use Schema;
 /**
  * Class UpgradeDatabase
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it just touches a lot of things.
+ * Upgrade user database.
  *
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it just touches a lot of things.
  * @package FireflyIII\Console\Commands
  */
 class UpgradeDatabase extends Command
@@ -138,6 +140,9 @@ class UpgradeDatabase extends Command
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's seven but it can't really be helped.
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateAccountCurrencies(): void
     {
@@ -192,6 +197,8 @@ class UpgradeDatabase extends Command
      *
      * Both source and destination must match the respective currency preference of the related asset account.
      * So FF3 must verify all transactions.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateOtherCurrencies(): void
     {
@@ -210,6 +217,9 @@ class UpgradeDatabase extends Command
                                        ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                        ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                        ->whereIn('account_types.type', [AccountType::DEFAULT, AccountType::ASSET])->first(['transactions.*']);
+                if (is_null($transaction)) {
+                    return;
+                }
                 /** @var Account $account */
                 $account      = $transaction->account;
                 $currency     = $repository->find(intval($account->getMeta('currency_id')));
@@ -251,7 +261,7 @@ class UpgradeDatabase extends Command
      */
     public function updateTransferCurrencies()
     {
-        $set        = TransactionJournal
+        $set = TransactionJournal
             ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionType::TRANSFER)
             ->get(['transaction_journals.*']);
@@ -349,6 +359,12 @@ class UpgradeDatabase extends Command
      * If not, the currency is updated to include a reference to its original currency as the "foreign" currency.
      *
      * The transaction that is sent to this function MUST be the source transaction (amount negative).
+     *
+     * Method is long and complex bit I'm taking it for granted.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @param Transaction $transaction
      */
