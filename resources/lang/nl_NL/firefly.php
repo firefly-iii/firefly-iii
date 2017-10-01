@@ -328,8 +328,8 @@ return [
     'without_date'                               => 'Zonder datum',
     'result'                                     => 'Resultaat',
     'sums_apply_to_range'                        => 'Alle sommen gelden voor het geselecteerde bereik',
-    'press_tag_location'                         => 'Right click or long press to set the tag\'s location.',
-    'clear_location'                             => 'Clear location',
+    'press_tag_location'                         => 'Klik met de rechtermuisknop of druk lang om de locatie van de tag in te stellen.',
+    'clear_location'                             => 'Wis locatie',
 
     // preferences
     'pref_home_screen_accounts'                  => 'Voorpaginarekeningen',
