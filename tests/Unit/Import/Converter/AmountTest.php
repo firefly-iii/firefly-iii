@@ -18,24 +18,12 @@ use Tests\TestCase;
 /**
  * Class AmountTest
  *
- * 0, 0.0, 0.1, 0.01
- * 1, 1.0, 1.1, 1.12, 1.10
- * 12, 12.3, 12.34
- *  123, 123.4, 123.45
- * 1234, 1234.5, 1234.56
- * 1 234, 1 234.5, 1 234.56
- * 1.234, 1.234.5, 1.234.56
- *
- *
- *
- *
- *
  * @package Tests\Unit\Import\Converter
  */
 class AmountTest extends TestCase
 {
     /**
-     *
+     * @covers \FireflyIII\Import\Converter\Amount::convert()
      */
     public function testConvert()
     {
@@ -91,8 +79,16 @@ class AmountTest extends TestCase
             $result    = $converter->convert($value);
             $this->assertEquals($expected, $result);
         }
+    }
 
-
+    /**
+     * @covers \FireflyIII\Import\Converter\Amount::convert()
+     */
+    public function testConvertNull()
+    {
+        $converter = new Amount;
+        $result    = $converter->convert(null);
+        $this->assertEquals('0', $result);
     }
 
 
