@@ -153,7 +153,15 @@ class HomeController extends Controller
     public function routes()
     {
         $set    = RouteFacade::getRoutes();
-        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.'];
+        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.','attachments.download', 'attachments.preview',
+                   'bills.rescan','budgets.income','currencies.def','error','flush','help.show','import.file',
+                   'login','logout','password.reset','profile.confirm-email-change','profile.undo-email-change',
+                   'register','report.options','routes','rule-groups.down','rule-groups.up','rules.up','rules.down',
+                   'rules.select','search.search','test-flash','transactions.link.delete','transactions.link.switch',
+                   'two-factor.lost','report.options'
+
+        ];
+
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
