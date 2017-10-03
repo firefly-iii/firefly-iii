@@ -134,11 +134,9 @@
 
             </td>
             <td class="hide-notes">
-
-                {% if transaction.transactionJournal.hasMeta('notes') %}
-                    {{ transaction.transactionJournal.getMeta('notes')|nl2br }}
+                {% if transaction.transactionJournal.notes.count == 1 %}
+                    {{ transaction.transactionJournal.notes.first.text }}
                 {% endif %}
-
             </td>
 
             <td class="hide-create_date">

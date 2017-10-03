@@ -34,7 +34,7 @@ class JournalRepository implements JournalRepositoryInterface
     /** @var User */
     private $user;
     /** @var array */
-    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference', 'notes'];
+    private $validMetaFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', 'internal_reference'];
 
     /**
      * @param TransactionJournal $journal
@@ -235,6 +235,9 @@ class JournalRepository implements JournalRepositoryInterface
             $this->saveTags($journal, $data['tags']);
         }
 
+        // update note:
+        $this->updateNote($journal, $data['notes']);
+
         foreach ($data as $key => $value) {
             if (in_array($key, $this->validMetaFields)) {
                 $journal->setMeta($key, $value);
@@ -287,6 +290,9 @@ class JournalRepository implements JournalRepositoryInterface
             $this->updateTags($journal, $data['tags']);
         }
 
+        // update note:
+        $this->updateNote($journal, $data['notes']);
+
         // update meta fields:
         $result = $journal->save();
         if ($result) {
@@ -323,6 +329,9 @@ class JournalRepository implements JournalRepositoryInterface
         // unlink all categories:
         $journal->categories()->detach();
         $journal->budgets()->detach();
+
+        // update note:
+        $this->updateNote($journal, $data['notes']);
 
         // update meta fields:
         $result = $journal->save();

@@ -16,6 +16,7 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -178,8 +179,13 @@ class ImportStorage
 
         $this->storeBill($journal, $importJournal->bill->getBill());
         $this->storeMeta($journal, $importJournal->metaDates);
-        $journal->setMeta('notes', $importJournal->notes);
         $this->storeTags($importJournal->tags, $journal);
+
+        // set notes for journal:
+        $dbNote = new Note();
+        $dbNote->noteable()->associate($journal);
+        $dbNote->text = trim($importJournal->notes);
+        $dbNote->save();
 
         // set journal completed:
         $journal->completed = true;

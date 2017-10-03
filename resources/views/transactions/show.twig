@@ -235,13 +235,11 @@
                                 <td>{{ journal.getMeta('internal_reference') }}</td>
                             </tr>
                         {% endif %}
-
-                        {% if journal.hasMeta('notes') and journal.getMeta('notes') != "" %}
+                        {% if journal.notes.count == 1 %}
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td>{{ journal.getMeta('notes')|nl2br }}</td>
+                                <td>{{ journal.notes.first.markdown|raw }}</td>
                             </tr>
-
                         {% endif %}
 
                         {% if journal.bill %}

@@ -48,7 +48,8 @@ class Note extends Model
     }
 
     /**
-     * Get all of the owning noteable models. Currently only piggy bank
+     * Get all of the owning noteable models. Currently piggy bank and
+     * transaction journal
      */
     public function noteable()
     {
