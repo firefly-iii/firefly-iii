@@ -689,6 +689,8 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'newTransfer'                              => 'Neue Überweisung',
     'bills_to_pay'                             => 'Bills to pay',
     'per_day'                                  => 'Per day',
+    'left_to_spend_per_day'                    => 'Left to spend per day',
+    'bills_paid'                               => 'Bills paid',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                 => 'Währung',
