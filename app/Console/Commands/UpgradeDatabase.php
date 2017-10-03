@@ -20,9 +20,11 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Console\Command;
@@ -76,6 +78,8 @@ class UpgradeDatabase extends Command
         $this->line('Updating currency information..');
         $this->updateTransferCurrencies();
         $this->updateOtherCurrencies();
+        $this->line('Done updating currency information..');
+        $this->migrateNotes();
         $this->info('Firefly III database is up to date.');
 
         return;
@@ -279,6 +283,29 @@ class UpgradeDatabase extends Command
                 );
             }
         );
+    }
+
+    /**
+     * Move all the journal_meta notes to their note object counter parts.
+     */
+    private function migrateNotes(): void
+    {
+        $set = TransactionJournalMeta::whereName('notes')->get();
+        /** @var TransactionJournalMeta $meta */
+        foreach ($set as $meta) {
+            $journal = $meta->transactionJournal;
+            $note    = $journal->notes()->first();
+            if (is_null($note)) {
+                $note = new Note;
+                $note->noteable()->associate($journal);
+            }
+
+            $note->text = $meta->data;
+            $note->save();
+            Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
+            $meta->delete();
+
+        }
     }
 
 
