@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -44,9 +45,14 @@ class SetNotes implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
-        $oldNotes = $journal->getMeta('notes');
-
-        $journal->setMeta('notes', $this->action->action_value);
+        $dbNote = $journal->notes()->first();
+        if (is_null($dbNote)) {
+            $dbNote = new Note;
+            $dbNote->noteable()->associate($journal);
+        }
+        $oldNotes     = $dbNote->text;
+        $dbNote->text = $this->action->action_value;
+        $dbNote->save();
         $journal->save();
 
         Log::debug(sprintf('RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".', $journal->id, $oldNotes, $this->action->action_value));

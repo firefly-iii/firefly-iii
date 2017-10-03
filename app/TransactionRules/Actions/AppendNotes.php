@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -44,10 +45,16 @@ class AppendNotes implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
-        $notes = $journal->getMeta('notes');
+        $dbNote = $journal->notes()->first();
+        if (is_null($dbNote)) {
+            $dbNote = new Note;
+            $dbNote->noteable()->associate($journal);
+        }
+        $notes = $dbNote->text;
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $notes));
-        $notes = $notes . $this->action->action_value;
-        $journal->setMeta('notes', $notes);
+        $notes        = $notes . $this->action->action_value;
+        $dbNote->text = $notes;
+        $dbNote->save();
         $journal->save();
 
         return true;
