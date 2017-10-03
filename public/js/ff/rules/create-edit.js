@@ -194,6 +194,7 @@ function updateActionInput(selectList) {
             break;
         case 'clear_category':
         case 'clear_budget':
+        case 'clear_notes':
         case 'remove_all_tags':
             input.attr('disabled', 'disabled');
             break;
@@ -265,6 +266,8 @@ function updateTriggerInput(selectList) {
         case 'has_no_budget':
         case 'has_any_budget':
         case 'has_no_tag':
+        case 'no_notes':
+        case 'any_notes':
         case 'has_any_tag':
             input.prop('disabled', true);
             input.typeahead('destroy');
