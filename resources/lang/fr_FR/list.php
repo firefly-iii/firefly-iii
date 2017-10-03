@@ -17,6 +17,7 @@ return [
     'id'                      => 'Identifiant',
     'create_date'             => 'Créé le',
     'update_date'             => 'Mis à jour le',
+    'updated_at'             => 'Updated at',
     'balance_before'          => 'Solde avant',
     'balance_after'           => 'Solde après',
     'name'                    => 'Nom',
