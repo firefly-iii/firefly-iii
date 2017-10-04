@@ -105,18 +105,18 @@ return [
     'rules_index_outro'                                       => 'Pensez à consulter les pages d\'aide en utilisant l\'icône (?) En haut à droite!',
 
     // create rule:
-    'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
-    'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
-    'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
-    'rules_create_actions'                                    => 'Set as many actions as you like.',
+    'rules_create_mandatory'                                  => 'Choisissez un titre parlant et définissez quand est-ce que la règle doit être déclenchée.',
+    'rules_create_ruletriggerholder'                          => 'Ajoutez autant de déclencheurs que vous le souhaitez, mais n\'oubliez pas que TOUS les déclencheurs doivent correspondre avant que les actions ne soient déclenchées.',
+    'rules_create_test_rule_triggers'                         => 'Utilisez ce bouton pour voir quelles transactions correspondent à votre règle.',
+    'rules_create_actions'                                    => 'Définissez autant d\'actions que vous le souhaitez.',
 
     // preferences
-    'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
+    'preferences_index_tabs'                                  => 'Plus d\'options sont disponibles derrière ces onglets.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
-    'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
+    'currencies_index_intro'                                  => 'Firefly III prend en charge plusieurs devises, que vous pouvez modifier sur cette page.',
+    'currencies_index_default'                                => 'Firefly III a une devise par défaut. Vous pouvez toujours en changer de l\'aide à ces boutons, bien entendu.',
 
     // create currency
-    'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
+    'currencies_create_code'                                  => 'Ce code devrait être conforme à l\'ISO (recherchez-le sur google votre nouvelle devise).',
 ];
