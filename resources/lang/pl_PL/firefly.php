@@ -100,7 +100,7 @@ return [
     'multi_select_no_selection'                  => 'Nie wybrano',
     'multi_select_all_selected'                  => 'Wybrano wszystko',
     'multi_select_filter_placeholder'            => 'Znajdź...',
-    'between_dates_breadcrumb'                   => 'Pomiędzy :start and :end',
+    'between_dates_breadcrumb'                   => 'Pomiędzy :start a :end',
     'all_journals_without_budget'                => 'Wszystkie transakcje bez budżetu',
     'journals_without_budget'                    => 'Transakcje bez budżetu',
     'all_journals_without_category'              => 'Wszystkie transakcje bez kategorii',
@@ -551,10 +551,10 @@ return [
     'update_budget'                            => 'Aktualizuj budżet',
     'update_budget_amount_range'               => 'Update (expected) available amount between :start and :end',
     'budget_period_navigator'                  => 'Period navigator',
-    'info_on_available_amount'                 => 'What do I have available?',
-    'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
-    'suggested'                                => 'Suggested',
-    'average_between'                          => 'Average between :start and :end',
+    'info_on_available_amount'                 => 'Co mam do dyspozycji?',
+    'available_amount_indication'              => 'Skorzystaj z tych kwot, aby uzyskać wskazówkę ile może wynosić Twój całkowity budżet.',
+    'suggested'                                => 'Sugerowane',
+    'average_between'                          => 'Średnia pomiędzy :start a :end',
 
 
     // bills:
@@ -973,13 +973,13 @@ return [
     'deleted_link'                          => 'Usunięto powiązanie',
 
     // link translations:
-    'relates to_inward'                     => 'jest powiązana z',
+    'relates to_inward'                     => 'relates to',
     'is (partially) refunded by_inward'     => 'is (partially) refunded by',
-    'is (partially) paid for by_inward'     => 'jest (częściowo) opłacona przez',
+    'is (partially) paid for by_inward'     => 'is (partially) paid for by',
     'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
-    'relates to_outward'                    => 'jest powiązana z',
+    'relates to_outward'                    => 'relates to',
     '(partially) refunds_outward'           => '(partially) refunds',
-    '(partially) pays for_outward'          => '(częściowo) płaci za',
+    '(partially) pays for_outward'          => '(partially) pays for',
     '(partially) reimburses_outward'        => '(partially) reimburses',
 
 
