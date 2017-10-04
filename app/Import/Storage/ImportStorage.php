@@ -214,7 +214,7 @@ class ImportStorage
     {
         Log::debug('Check if is a double transfer.');
         if ($parameters['type'] !== TransactionType::TRANSFER) {
-            Log::debug(sprintf('Is a %s, not a transfer so no.' . $parameters['type']));
+            Log::debug(sprintf('Is a %s, not a transfer so no.', $parameters['type']));
 
             return false;
         }
