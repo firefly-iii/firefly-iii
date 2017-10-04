@@ -12,9 +12,9 @@ declare(strict_types=1);
 return [
     // index
     'index_intro'                           => 'Bienvenue sur la page index de Firefly III. Veuillez prendre le temps de parcourir l\'introduction pour comprendre comment Firefly III fonctionne.',
-    'index_accounts-chart'                  => 'This chart shows the current balance of your asset accounts. You can select the accounts visible here in your preferences.',
-    'index_box_out_holder'                  => 'This little box and the boxes next to this one will give you a quick overview of your financial situation.',
-    'index_help'                            => 'If you ever need help with a page or a form, press this button.',
+    'index_accounts-chart'                  => 'Ce tableau montre le solde actuel de vos comptes d\'actifs. Vous pouvez sélectionner les comptes visibles ici dans vos préférences.',
+    'index_box_out_holder'                  => 'Cette petite boîte et les cases à côté de celle-ci vous donneront un rapide aperçu de votre situation financière.',
+    'index_help'                            => 'Si vous avez besoin d’aide avec une page ou un formulaire, appuyez sur ce bouton.',
     'index_outro'                           => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
     'index_sidebar-toggle'                  => 'To create new transactions, accounts or other things, use the menu under this icon.',
 
