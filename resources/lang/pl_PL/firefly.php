@@ -973,13 +973,13 @@ return [
     'deleted_link'                          => 'Usunięto powiązanie',
 
     // link translations:
-    'relates to_inward'                     => 'relates to',
+    'relates to_inward'                     => 'jest powiązana z',
     'is (partially) refunded by_inward'     => 'is (partially) refunded by',
-    'is (partially) paid for by_inward'     => 'is (partially) paid for by',
+    'is (partially) paid for by_inward'     => 'jest (częściowo) opłacona przez',
     'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
-    'relates to_outward'                    => 'relates to',
+    'relates to_outward'                    => 'jest powiązana z',
     '(partially) refunds_outward'           => '(partially) refunds',
-    '(partially) pays for_outward'          => '(partially) pays for',
+    '(partially) pays for_outward'          => '(częściowo) płaci za',
     '(partially) reimburses_outward'        => '(partially) reimburses',
 
 
