@@ -935,9 +935,9 @@ return [
     'delete_user'                           => 'Supprimer l\'utilisateur :email',
     'user_deleted'                          => 'L\'utilisateur a été supprimé',
     'send_test_email'                       => 'Envoyer le message de test',
-    'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
-    'send_message'                          => 'Send message',
-    'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
+    'send_test_email_text'                  => 'Pour vérifier que votre installation est capable d\'envoyer des email, utilisez ce bouton. Vous ne verrez pas d\'erreur ici (s\'il y en a), <strong>elles seront reflérées dans les logs</strong>. Utilisez ce bouton autant de fois que vous le voulez, il n\'y a pas de contrôle de spam. Le message sera envoyé à <code>:email</code> et devrait arriver sous peu.',
+    'send_message'                          => 'Envoyer le message',
+    'send_test_triggered'                   => 'Le test a été initié. Vérifiez votre boîte de réception et les logs.',
 
     // links
     'journal_link_configuration'            => 'Configuration des liens de transaction',
@@ -974,14 +974,14 @@ return [
     'deleted_link'                          => 'Lien supprimé',
 
     // link translations:
-    'relates to_inward'                     => 'relates to',
-    'is (partially) refunded by_inward'     => 'is (partially) refunded by',
-    'is (partially) paid for by_inward'     => 'is (partially) paid for by',
-    'is (partially) reimbursed by_inward'   => 'is (partially) reimbursed by',
-    'relates to_outward'                    => 'relates to',
-    '(partially) refunds_outward'           => '(partially) refunds',
-    '(partially) pays for_outward'          => '(partially) pays for',
-    '(partially) reimburses_outward'        => '(partially) reimburses',
+    'relates to_inward'                     => 'se rapporte à',
+    'is (partially) refunded by_inward'     => 'est (partiellement) remboursé par',
+    'is (partially) paid for by_inward'     => 'est (partiellement) payé par',
+    'is (partially) reimbursed by_inward'   => 'est (partiellement) remboursé par',
+    'relates to_outward'                    => 'se rapporte à',
+    '(partially) refunds_outward'           => 'rembourse (partiellement)',
+    '(partially) pays for_outward'          => 'paye (partiellement) pour',
+    '(partially) reimburses_outward'        => 'rembourse (partiellement)',
 
 
     // split a transaction:
@@ -996,7 +996,7 @@ return [
     'cannot_edit_multiple_dest'             => 'Vous ne pouvez pas modifier la transaction scindée #:id avec la description ":description" car elle contient plusieurs comptes de destination.',
     'cannot_edit_opening_balance'           => 'Vous ne pouvez pas modifier le solde d\'ouverture d\'un compte.',
     'no_edit_multiple_left'                 => 'Vous n\'avez sélectionné aucune transaction valide à éditer.',
-    'cannot_convert_split_journal'          => 'Cannot convert a split transaction',
+    'cannot_convert_split_journal'          => 'Vous ne pouvez pas convertir une transaction ventilée',
 
     // import bread crumbs and titles:
     'import'                                => 'Import',
@@ -1011,7 +1011,7 @@ return [
     'import_index_config'                   => 'Si vous avez précédemment importé des données dans Firefly III, vous pouvez avoir un fichier de configuration qui définira les valeurs de configuration. Pour certaines banques, les autres utilisateurs ont bien voulu fournir leur fichier <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration</a>.',
     'import_index_type'                     => 'Sélectionnez le type de fichier que vous allez télécharger',
     'import_index_start'                    => 'Démarrer l\'importation',
-    'import_file'                           => 'Import a file',
+    'import_file'                           => 'Importer un fichier',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (valeurs séparées par des virgules)',
@@ -1041,7 +1041,7 @@ return [
     'import_status_finished_title'          => 'La routine d\'importation est terminée',
     'import_status_finished_text'           => 'La routine d\'importation a importé votre fichier.',
     'import_status_finished_job'            => 'Les transactions importées se trouvent dans la balise <a href=":link" class="label label-success" style="font-size:100%;font-weight:normal;">:tag</a>.',
-    'import_status_job_running'             => 'The import is running...',
+    'import_status_job_running'             => 'L\'import est en cours d\'exécution...',
     'import_with_key'                       => 'Importer avec la touche \':key\'',
 
     // sandstorm.io errors and messages:
