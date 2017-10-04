@@ -17,6 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Ustvarjeno',
     'update_date'             => 'Posodobljeno',
+    'updated_at'             => 'Updated at',
     'balance_before'          => 'Stanje prej',
     'balance_after'           => 'Stanje potem',
     'name'                    => 'ime',
