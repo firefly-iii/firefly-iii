@@ -139,7 +139,7 @@ return [
     'search_box_intro'                           => 'Witamy w funkcji wyszukiwania Firefly III. Wpisz zapytanie w polu. Upewnij się, że sprawdziłeś plik pomocy, ponieważ wyszukiwanie jest dość zaawansowane.',
     'search_error'                               => 'Błąd podczas wyszukiwania',
     'search_searching'                           => 'Wyszukiwanie...',
-    'search_results'                             => 'Search results',
+    'search_results'                             => 'Wyniki wyszukiwania',
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'rocznie',
@@ -338,7 +338,7 @@ return [
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
 
-    'rules_have_read_warning'                  => 'Have you read the warning?',
+    'rules_have_read_warning'                  => 'Czy przeczytałeś ostrzeżenie?',
     'apply_rule_warning'                       => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
     // tags
@@ -349,7 +349,7 @@ return [
     'location'                                 => 'Lokalizacja',
     'without_date'                             => 'Bez daty',
     'result'                                   => 'Wynik',
-    'sums_apply_to_range'                      => 'All sums apply to the selected range',
+    'sums_apply_to_range'                      => 'Wszystkie sumy mają zastosowanie do wybranego zakresu',
     'press_tag_location'                       => 'Right click or long press to set the tag\'s location.',
     'clear_location'                           => 'Clear location',
 
@@ -441,7 +441,7 @@ return [
     'secure_pw_long_password'                  => 'Jeśli wygenerowałeś długie, jednorazowe hasło dla Firefly III, używając pewnego rodzaju generatora haseł: <strong>no</strong>.',
     'secure_pw_short'                          => 'Jeśli wpisałeś hasło, którego zawsze używasz: <em>tak, proszę</em>.',
     'personal_access_token'                    => 'Osobisty kod dostępowy',
-    'explain_access_token'                     => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
+    'explain_access_token'                     => 'Potrzebujesz tego kodu aby wykonywać operacje (takie jak importowanie lub eksportowanie danych) za pomocą wiersza poleceń. Bez niego takie wrażliwe polecenia nie będą działać. Nie udostępniaj nikomu swojego kodu dostępowego. Nikt nie zapyta Cię o ten kod, nawet ja. Jeżeli obawiasz się, że straciłeś go lub jesteś paranoikiem, wygeneruj nowy kod używając przycisku.',
     'regenerate_access_token'                  => 'Wygeneruj nowy kod',
     'token_regenerated'                        => 'Nowy kod dostępowy został wygenerowany',
     'change_your_email'                        => 'Change your email address',
@@ -501,7 +501,7 @@ return [
     'converted_to_Withdrawal'                  => 'Transakcja została przekonwertowana do wypłaty',
     'converted_to_Deposit'                     => 'Transakcja została przekonwertowana do wpłaty',
     'converted_to_Transfer'                    => 'Transakcja została przekonwertowana do transferu',
-    'invalid_convert_selection'                => 'The account you have selected is already used in this transaction or does not exist.',
+    'invalid_convert_selection'                => 'Wybrane konto jest już używane w tej transakcji lub nie istnieje.',
 
     // create new stuff:
     'create_new_withdrawal'                    => 'Utwórz nową wypłatę',
@@ -1010,7 +1010,7 @@ return [
     'import_index_config'                   => 'Jeśli wcześniej importowałeś dane do Firefly III, może posiadać plik konfiguracji, który wstępnie ustawi wartości parametrów konfiguracyjnych dla Ciebie. Dla niektórych banków, inni użytkownicy uprzejmie dostarczyli swoje <a href="https://github.com/firefly-iii/import-configurations/wiki">pliki konfiguracji</a>.',
     'import_index_type'                     => 'Wybierz typ pliku, który będziesz przesyłać',
     'import_index_start'                    => 'Rozpocznij import',
-    'import_file'                           => 'Import a file',
+    'import_file'                           => 'Importuj plik',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (wartości oddzielone przecinkami)',
