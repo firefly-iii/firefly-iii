@@ -212,37 +212,47 @@ class ImportStorage
      */
     private function isDoubleTransfer(array $parameters): bool
     {
+        Log::debug('Check if is a double transfer.');
         if ($parameters['type'] !== TransactionType::TRANSFER) {
+            Log::debug(sprintf('Is a %s, not a transfer so no.' . $parameters['type']));
+
             return false;
         }
 
         $amount   = app('steam')->positive($parameters['amount']);
         $names    = [$parameters['asset'], $parameters['opposing']];
         $transfer = [];
-        $hits     = 0;
+
         sort($names);
 
         foreach ($this->transfers as $transfer) {
+            $hits = 0;
             if ($parameters['description'] === $transfer['description']) {
                 $hits++;
+                Log::debug(sprintf('Description "%s" equals "%s", hits = %d', $parameters['description'], $transfer['description'], $hits));
             }
             if ($names === $transfer['names']) {
                 $hits++;
+                Log::debug(sprintf('Involved accounts, "%s" equals "%s", hits = %d', join(',', $names), join(',', $transfer['names']), $hits));
             }
             if (bccomp($amount, $transfer['amount']) === 0) {
                 $hits++;
+                Log::debug(sprintf('Amount %s equals %s, hits = %d', $amount, $transfer['amount'], $hits));
             }
             if ($parameters['date'] === $transfer['date']) {
                 $hits++;
+                Log::debug(sprintf('Date %s equals %s, hits = %d', $parameters['date'], $transfer['date'], $hits));
+            }
+            // number of hits is 4? Then it's a match
+            if ($hits === 4) {
+                Log::error(
+                    'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
+                );
+
+                return true;
             }
         }
-        if ($hits === 4) {
-            Log::error(
-                'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
-            );
 
-            return true;
-        }
 
         return false;
     }
