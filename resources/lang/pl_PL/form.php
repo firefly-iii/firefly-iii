@@ -193,5 +193,5 @@ return [
     'internal_reference' => 'Wewnętrzny numer',
     'inward'             => 'Inward description',
     'outward'            => 'Outward description',
-    'rule_group_id'      => 'Rule group',
+    'rule_group_id'      => 'Grupa reguł',
 ];
