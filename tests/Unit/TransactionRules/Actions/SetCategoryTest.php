@@ -14,7 +14,7 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Actions\SetBudget;
+use FireflyIII\TransactionRules\Actions\SetCategory;
 use Tests\TestCase;
 
 /**
@@ -25,8 +25,8 @@ use Tests\TestCase;
 class SetCategoryTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetBudget::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetBudget::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetCategory::__construct()
+     * @covers \FireflyIII\TransactionRules\Actions\SetCategory::act()
      */
     public function testAct()
     {
@@ -39,7 +39,7 @@ class SetCategoryTest extends TestCase
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $category->name;
-        $action                   = new SetBudget($ruleAction);
+        $action                   = new SetCategory($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
         $this->assertEquals(1, $journal->categories()->count());

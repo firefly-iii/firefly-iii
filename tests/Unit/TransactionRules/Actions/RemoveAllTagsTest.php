@@ -38,7 +38,7 @@ class RemoveAllTagsTest extends TestCase
             $journal->tags()->save($tag);
             $journal->save();
         }
-        $this->assertEquals($tags->count(), $journal->tags()->count());
+        $this->assertGreaterThan(0, $journal->tags()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;
