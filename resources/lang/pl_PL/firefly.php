@@ -350,8 +350,8 @@ return [
     'without_date'                             => 'Bez daty',
     'result'                                   => 'Wynik',
     'sums_apply_to_range'                      => 'Wszystkie sumy mają zastosowanie do wybranego zakresu',
-    'press_tag_location'                       => 'Right click or long press to set the tag\'s location.',
-    'clear_location'                           => 'Clear location',
+    'press_tag_location'                       => 'Kliknij prawym przyciskiem myszy lub naciśnij i przytrzymaj aby ustawić lokalizację taga.',
+    'clear_location'                           => 'Wyczyść lokalizację',
 
     // preferences
     'pref_home_screen_accounts'                => 'Konta na stronie domowej',
@@ -688,8 +688,8 @@ return [
     'newTransfer'                              => 'Nowy transfer',
     'bills_to_pay'                             => 'Rachunki do zapłacenia',
     'per_day'                                  => 'Dziennie',
-    'left_to_spend_per_day'                    => 'Left to spend per day',
-    'bills_paid'                               => 'Bills paid',
+    'left_to_spend_per_day'                    => 'Kwota możliwa do wydania codziennie',
+    'bills_paid'                               => 'Zapłacone rachunki',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                 => 'Waluta',
