@@ -23,7 +23,7 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.6.6',
+    'version'                    => '4.6.7',
     'maxUploadSize'              => 15242880,
     'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
     'list_length'                => 10,
@@ -117,7 +117,7 @@ return [
     'languages'                  => [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => true],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => false],
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => true],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish ', 'complete' => false],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
