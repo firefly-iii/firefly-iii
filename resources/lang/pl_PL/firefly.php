@@ -129,7 +129,7 @@ return [
     'transfer_exchange_rate_instructions'        => 'Konto źródłowe "@source_name" obsługuje tylko transakcje w walucie @source_currency. Konto docelowe "@dest_name" obsługuje tylko transakcje w walucie @dest_currency. Musisz podać przelewaną kwotę w obu walutach.',
     'transaction_data'                           => 'Dane transakcji',
     'invalid_server_configuration'               => 'Nieprawidłowa konfiguracja serwera',
-    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
+    'invalid_locale_settings'                    => 'Firefly III nie może sformatować kwot, ponieważ brakuje wymaganych pakietów na Twoim serwerze. Sprawdź<a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instrukcje jak je zainstalować</a> (po angielsku).',
 
     // search
     'search'                                     => 'Szukaj',
@@ -152,7 +152,7 @@ return [
     // export data:
     'import_and_export'                          => 'Import / eksport',
     'export_data'                                => 'Eksportuj dane',
-    'export_and_backup_data'                     => 'Export and backup',
+    'export_and_backup_data'                     => 'Eksport i kopia zapasowa',
     'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
     'export_format'                              => 'Format eksportu',
     'export_format_csv'                          => 'Wartości oddzielone przecinkami (plik CSV)',
@@ -440,10 +440,10 @@ return [
     'secure_pw_should'                         => 'Czy powinienem zaznaczyć to pole?',
     'secure_pw_long_password'                  => 'Jeśli wygenerowałeś długie, jednorazowe hasło dla Firefly III, używając pewnego rodzaju generatora haseł: <strong>no</strong>.',
     'secure_pw_short'                          => 'Jeśli wpisałeś hasło, którego zawsze używasz: <em>tak, proszę</em>.',
-    'personal_access_token'                    => 'Personal access token',
+    'personal_access_token'                    => 'Osobisty kod dostępowy',
     'explain_access_token'                     => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
-    'regenerate_access_token'                  => 'Regenerate access token',
-    'token_regenerated'                        => 'A new token was generated',
+    'regenerate_access_token'                  => 'Wygeneruj nowy kod',
+    'token_regenerated'                        => 'Nowy kod dostępowy został wygenerowany',
     'change_your_email'                        => 'Change your email address',
     'email_verification'                       => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
     'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
