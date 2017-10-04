@@ -339,7 +339,7 @@ return [
 
 
     'rules_have_read_warning'                  => 'Czy przeczytałeś ostrzeżenie?',
-    'apply_rule_warning'                       => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
+    'apply_rule_warning'                       => 'Ostrzeżenie: uruchomienie reguły (lub grupy reguł) na dużej liczbie transakcji może potrwać wieki i może przekroczyć limit czasu. W takiej sytuacji reguła (lub grupa reguł) zostanie zastosowana do nieznanego podzbioru Twoich transakcji. To może zostawić Twoją administrację finansową w strzępach. Proszę, bądź ostrożny.',
 
     // tags
     'store_new_tag'                            => 'Zachowaj nowy tag',
@@ -444,11 +444,11 @@ return [
     'explain_access_token'                     => 'Potrzebujesz tego kodu aby wykonywać operacje (takie jak importowanie lub eksportowanie danych) za pomocą wiersza poleceń. Bez niego takie wrażliwe polecenia nie będą działać. Nie udostępniaj nikomu swojego kodu dostępowego. Nikt nie zapyta Cię o ten kod, nawet ja. Jeżeli obawiasz się, że straciłeś go lub jesteś paranoikiem, wygeneruj nowy kod używając przycisku.',
     'regenerate_access_token'                  => 'Wygeneruj nowy kod',
     'token_regenerated'                        => 'Nowy kod dostępowy został wygenerowany',
-    'change_your_email'                        => 'Change your email address',
+    'change_your_email'                        => 'Zmień swój adres e-mail',
     'email_verification'                       => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
-    'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
-    'login_with_new_email'                     => 'You can now login with your new email address.',
-    'login_with_old_email'                     => 'You can now login with your old email address again.',
+    'email_changed_logout'                     => 'Dopóki nie zweryfikujesz swojego adresu e-mail, nie możesz się zalogować.',
+    'login_with_new_email'                     => 'Teraz możesz logować się nowym adresem e-mail.',
+    'login_with_old_email'                     => 'Teraz ponownie możesz logować się starym adresem e-mail.',
 
 
     // attachments
@@ -686,8 +686,8 @@ return [
     'newWithdrawal'                            => 'Nowy wydatek',
     'newDeposit'                               => 'Nowa wpłata',
     'newTransfer'                              => 'Nowy transfer',
-    'bills_to_pay'                             => 'Bills to pay',
-    'per_day'                                  => 'Per day',
+    'bills_to_pay'                             => 'Rachunki do zapłacenia',
+    'per_day'                                  => 'Dziennie',
     'left_to_spend_per_day'                    => 'Left to spend per day',
     'bills_paid'                               => 'Bills paid',
 
@@ -927,12 +927,12 @@ return [
     'block_code_bounced'                    => 'Odrzucony e-mail potwierdzający',
     'block_code_expired'                    => 'Demonstracyjne konto wygasło',
     'no_block_code'                         => 'Brak powody blokady lub użytkownik niezablokowany',
-    'block_code_email_changed'              => 'User has not yet confirmed new email address',
-    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
-    'update_user'                           => 'Update user',
-    'updated_user'                          => 'User data has been changed.',
-    'delete_user'                           => 'Delete user :email',
-    'user_deleted'                          => 'The user has been deleted',
+    'block_code_email_changed'              => 'Użytkownik nie potwierdził jeszcze nowego adresu e-mail',
+    'admin_update_email'                    => 'W przeciwieństwie do strony "Profil", użytkownik NIE zostanie powiadomiony o zmianie adresu e-mail!',
+    'update_user'                           => 'Modyfikuj użytkownika',
+    'updated_user'                          => 'Dane użytkownika zostały zmienione.',
+    'delete_user'                           => 'Usuń użytkownika :email',
+    'user_deleted'                          => 'Użytkownik został usunięty',
     'send_test_email'                       => 'Send test email message',
     'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
     'send_message'                          => 'Send message',
