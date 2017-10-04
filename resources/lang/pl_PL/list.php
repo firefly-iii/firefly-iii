@@ -83,7 +83,7 @@ return [
     'inward'                  => 'Inward description',
     'outward'                 => 'Outward description',
     'number_of_transactions'  => 'Liczba transakcji',
-    'total_amount'            => 'Total amount',
+    'total_amount'            => 'Łączna kwota',
     'sum'                     => 'Sum',
     'sum_excluding_transfers' => 'Sum (excluding transfers)',
     'sum_withdrawals'         => 'Sum of withdrawals',
