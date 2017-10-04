@@ -66,7 +66,7 @@ class SetSourceAccount implements ActionInterface
         if ($count > 2) {
             Log::error(sprintf('Cannot change source account of journal #%d because it is a split journal.', $journal->id));
 
-            return true;
+            return false;
         }
 
         // journal type:
@@ -80,7 +80,7 @@ class SetSourceAccount implements ActionInterface
                 )
             );
 
-            return true;
+            return false;
         }
 
         // if this is a deposit, the new source account must be a revenue account and may be created:

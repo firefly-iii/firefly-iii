@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -45,8 +46,11 @@ class ClearNotes implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         Log::debug(sprintf('RuleAction ClearNotes removed all notes.'));
-        $journal->deleteMeta('notes');
-        $journal->save();
+        $notes = $journal->notes()->get();
+        /** @var Note $note */
+        foreach ($notes as $note) {
+            $note->delete();
+        }
 
         return true;
     }

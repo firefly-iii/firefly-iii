@@ -45,8 +45,7 @@ class SetDescription implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
-        $oldDescription = $journal->description;
-
+        $oldDescription       = $journal->description;
         $journal->description = $this->action->action_value;
         $journal->save();
 
