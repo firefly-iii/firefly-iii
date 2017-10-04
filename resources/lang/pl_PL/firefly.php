@@ -128,7 +128,7 @@ return [
     'exchange_rate_instructions'                 => 'Konto aktywów "@name" obsługuje tylko transakcje w walucie @native_currency. Jeśli chcesz użyć waluty @foreign_currency, upewnij się, że kwota w @native_currency jest również znana:',
     'transfer_exchange_rate_instructions'        => 'Konto źródłowe "@source_name" obsługuje tylko transakcje w walucie @source_currency. Konto docelowe "@dest_name" obsługuje tylko transakcje w walucie @dest_currency. Musisz podać przelewaną kwotę w obu walutach.',
     'transaction_data'                           => 'Dane transakcji',
-    'invalid_server_configuration'               => 'Invalid server configuration',
+    'invalid_server_configuration'               => 'Nieprawidłowa konfiguracja serwera',
     'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
 
     // search
