@@ -50,59 +50,59 @@ return [
     'reports_report_category_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par catégorie.',
 
     'reports_report_tag_intro'                  => 'Ce rapport vous donnera un aperçu d\'une ou de plusieurs étiquettes.',
-    'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
+    'reports_report_tag_pieCharts'              => 'Ces tableaux vous donneront un aperçu des dépenses et du revenu par étiquette, catégorie, ou budget.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par étiquette.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
+    'reports_report_budget_intro'                             => 'Ce rapport vous donnera un aperçu d\'un ou plusieurs budgets.',
+    'reports_report_budget_pieCharts'                         => 'Ces tableaux vous donneront un aperçu des dépenses par budget ou par compte.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Ce graphique montre vos dépenses par budget.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
-    'transactions_create_ffInput_category'                    => 'You can freely type in this field. Previously created categories will be suggested.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Select a piggy bank and link this transfer to your savings.',
+    'transactions_create_switch_box'                          => 'Utilisez ces boutons pour changer rapidement le type de transaction que vous souhaitez enregistrer.',
+    'transactions_create_ffInput_category'                    => 'Vous pouvez saisir librement ce champ. Les catégories créées précédemment seront suggérées.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Reliez votre retrait à un budget pour un meilleur contrôle financier.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Utilisez ce menu déroulant lorsque votre retrait est dans une autre devise.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Utilisez ce menu déroulant lorsque votre dépôt est dans une autre devise.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Sélectionnez une tirelire et reliez ce transfert à vos économies.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
-    'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
-    'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+    'piggy-banks_index_saved'                                 => 'Ce champ vous montre combien vous avez enregistré dans chaque tirelire.',
+    'piggy-banks_index_button'                                => 'À côté de cette barre de progression sont deux boutons (+ et -) pour ajouter ou retirer de l’argent de chaque tirelire.',
+    'piggy-banks_index_accountStatus'                         => 'Pour chaque compte d\'actif avec au moins une tirelire, le statut est indiqué dans ce tableau.',
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Quel est votre objectif ? Un nouveau divan, une caméra, de l\'argent pour les urgences ?',
-    'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
+    'piggy-banks_create_date'                                 => 'Vous pouvez définir une date butoir ou une date limite pour votre tirelire.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
-    'piggy-banks_show_piggyDetails'                           => 'Some details about your piggy bank',
-    'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
+    'piggy-banks_show_piggyChart'                             => 'Ce tableau montrera l\'historique de cette tirelire.',
+    'piggy-banks_show_piggyDetails'                           => 'Quelques détails sur votre tirelire',
+    'piggy-banks_show_piggyEvents'                            => 'Des ajouts ou suppressions sont également répertoriées ici.',
 
     // bill index
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_paid_in_period'                              => 'Ce champ indique quand la facture a été payée pour la dernière fois.',
+    'bills_index_expected_in_period'                          => 'Ce champ indique pour chaque facture si et quand la prochaine facture devrait frapper.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'Ce tableau présente des informations générales sur cette facture.',
+    'bills_show_billButtons'                                  => 'Utilisez ce bouton pour réexaminer les anciennes transactions afin qu\'elles correspondent à cette facture.',
+    'bills_show_billChart'                                    => 'Ce tableau montre les transactions liées à cette facture.',
 
     // create bill
-    'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
-    'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_name'                                       => 'Utilisez un nom équivoque tel que "Loyer" ou "Assurance maladie".',
+    'bills_create_match'                                      => 'Pour faire correspondre les transactions, utilisez les termes de ces transactions ou le compte de dépenses impliqué. Tous les mots doivent correspondre.',
+    'bills_create_amount_min_holder'                          => 'Sélectionnez un montant minimum et maximum pour cette facture.',
+    'bills_create_repeat_freq_holder'                         => 'La plupart des factures sont mensuelles, mais vous pouvez définir une autre fréquence ici.',
+    'bills_create_skip_holder'                                => 'Si une facture se répète toutes les 2 semaines par exemple, le champ "sauter" doit être réglé sur "1" pour sauter une semaine sur deux.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
-    'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
-    'rules_index_new_rule'                                    => 'Create as many rules as you like.',
-    'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
-    'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
-    'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
-    'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
+    'rules_index_intro'                                       => 'Firefly III vous permet de gérer les règles, qui seront automagiquement appliquées à toute transaction que vous créez ou modifiez.',
+    'rules_index_new_rule_group'                              => 'Vous pouvez rassembler les règles en groupes pour une gestion plus facile.',
+    'rules_index_new_rule'                                    => 'Créez autant de règles que vous le souhaitez.',
+    'rules_index_prio_buttons'                                => 'Mettez-les dans l\'ordre que vous jugez convenable.',
+    'rules_index_test_buttons'                                => 'Vous pouvez tester vos règles ou les appliquer aux transactions existantes.',
+    'rules_index_rule-triggers'                               => 'Les règles ont des "déclencheurs" et des "actions" que vous pouvez ordonner en glisser-déposer.',
+    'rules_index_outro'                                       => 'Pensez à consulter les pages d\'aide en utilisant l\'icône (?) En haut à droite!',
 
     // create rule:
     'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
