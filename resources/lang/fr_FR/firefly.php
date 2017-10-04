@@ -128,8 +128,8 @@ return [
     'exchange_rate_instructions'                 => 'Compte d’actif "@name" n’accepte que les transactions en @native_currency. Si vous souhaitez utiliser @foreign_currency à la place, assurez-vous que le montant en @native_currency est aussi bien connu :',
     'transfer_exchange_rate_instructions'        => 'Compte d’actif source "@source_name" n’accepte que les transactions en @source_currency. Compte d’actif "@dest_name" de destination n’accepte que les transactions en @dest_currency. Vous devez fournir le montant transféré correctement dans les deux monnaies.',
     'transaction_data'                           => 'Données de transaction',
-    'invalid_server_configuration'               => 'Invalid server configuration',
-    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
+    'invalid_server_configuration'               => 'Configuration de serveur invalide',
+    'invalid_locale_settings'                    => 'Firefly III ne parvient pas à formater les montants monétaires car il manque des paquets logiciels sur votre serveur. Voici <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">des insctructions sur comment procéder</a>.',
 
     // search
     'search'                                     => 'Rechercher',
