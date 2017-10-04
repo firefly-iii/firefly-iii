@@ -446,10 +446,10 @@ return [
     'regenerate_access_token'                  => 'Régénérer le token d\'accès',
     'token_regenerated'                        => 'Un nouveau token a été généré',
     'change_your_email'                        => 'Changer votre adresse e-mail',
-    'email_verification'                       => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
-    'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
-    'login_with_new_email'                     => 'You can now login with your new email address.',
-    'login_with_old_email'                     => 'You can now login with your old email address again.',
+    'email_verification'                       => 'Un e-mail sera envoyé à votre ancienne ET votre nouvelle adresse. Pour des raisons de sécurité, vous ne serez pas capable de vous connecter jusqu\'à ce que vous vérifiez votre nouvelle adresse. Si vous n\'êtes pas certain que votre installation de Firefly III soit capable d\'envoyer un e-mail, s\'il vous plait n\'utilisez pas cette fonctionnalité. Si vous êtes un administrateur, vous pouvez tester cela en allant à <a href="/admin">Administration</a>.',
+    'email_changed_logout'                     => 'Vous ne pouvez pas vous connecter tant que vous n\'aurez pas vérifié votre adresse e-mail.',
+    'login_with_new_email'                     => 'Vous pouvez désormais vous connecter avec votre nouvelle adresse e-mail.',
+    'login_with_old_email'                     => 'Vous pouvez à nouveau vous connecter à l\'aide de votre ancienne adresse e-mail.',
 
 
     // attachments
@@ -502,7 +502,7 @@ return [
     'converted_to_Withdrawal'                  => 'La transaction a été convertie en retrait',
     'converted_to_Deposit'                     => 'La transaction a été convertie en dépôt',
     'converted_to_Transfer'                    => 'La transaction a été convertie en transfert',
-    'invalid_convert_selection'                => 'The account you have selected is already used in this transaction or does not exist.',
+    'invalid_convert_selection'                => 'Le compte que vous avez sélectionné est déjà utilisé dans cette transaction ou n\'existe pas.',
 
     // create new stuff:
     'create_new_withdrawal'                    => 'Creer un nouveau retrait',
@@ -552,10 +552,10 @@ return [
     'update_budget'                            => 'Mettre à jour le budget',
     'update_budget_amount_range'               => 'Mettre à jour le montant disponible (prévu) entre le :start et le :end',
     'budget_period_navigator'                  => 'Navigateur d\'époque',
-    'info_on_available_amount'                 => 'What do I have available?',
-    'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
-    'suggested'                                => 'Suggested',
-    'average_between'                          => 'Average between :start and :end',
+    'info_on_available_amount'                 => 'Qu\'est-ce que j\'ai de disponible ?',
+    'available_amount_indication'              => 'Utilisez ces montants pour avoir une indication de ce que pourrait être votre budget total.',
+    'suggested'                                => 'Suggéré',
+    'average_between'                          => 'Moyenne entre :start et :end',
 
 
     // bills:
@@ -687,10 +687,10 @@ return [
     'newWithdrawal'                            => 'Nouvelle dépense',
     'newDeposit'                               => 'Nouveau dépôt',
     'newTransfer'                              => 'Nouveau transfert',
-    'bills_to_pay'                             => 'Bills to pay',
-    'per_day'                                  => 'Per day',
-    'left_to_spend_per_day'                    => 'Left to spend per day',
-    'bills_paid'                               => 'Bills paid',
+    'bills_to_pay'                             => 'Facture à payer',
+    'per_day'                                  => 'Par jour',
+    'left_to_spend_per_day'                    => 'Reste à dépenser par jour',
+    'bills_paid'                               => 'Factures payées',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                 => 'Devise',
@@ -928,13 +928,13 @@ return [
     'block_code_bounced'                    => 'Rebond des messages emails',
     'block_code_expired'                    => 'Compte démo expiré',
     'no_block_code'                         => 'Aucune raison pour le blocage ou utilisateur non bloqué',
-    'block_code_email_changed'              => 'User has not yet confirmed new email address',
-    'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
-    'update_user'                           => 'Update user',
-    'updated_user'                          => 'User data has been changed.',
-    'delete_user'                           => 'Delete user :email',
-    'user_deleted'                          => 'The user has been deleted',
-    'send_test_email'                       => 'Send test email message',
+    'block_code_email_changed'              => 'L\'utilisateur n\'a pas encore confirmé sa nouvelle adresse e-mail',
+    'admin_update_email'                    => 'Contrairement à la page de profil, l\'utilisateur NE SERA PAS informé que son adresse email a changé!',
+    'update_user'                           => 'Utilisateur mis à jour',
+    'updated_user'                          => 'Les données utilisateur ont bien été modifiées.',
+    'delete_user'                           => 'Supprimer l\'utilisateur :email',
+    'user_deleted'                          => 'L\'utilisateur a été supprimé',
+    'send_test_email'                       => 'Envoyer le message de test',
     'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
     'send_message'                          => 'Send message',
     'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
