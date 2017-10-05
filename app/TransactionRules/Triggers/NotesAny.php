@@ -51,7 +51,7 @@ final class NotesAny extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $notes  = $journal->getMeta('notes') ?? '';
+        $notes = $journal->getMeta('notes') ?? '';
 
         if (strlen($notes) > 0) {
 

@@ -265,12 +265,12 @@ class AmountFormat extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function journalTotalAmount(): Twig_SimpleFunction
+    protected function journalAmount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'journalTotalAmount', function (TransactionJournal $journal): string {
+            'journalAmount', function (TransactionJournal $journal): string {
 
-            return app('amount')->journalTotalAmount($journal, true);
+            return app('amount')->journalAmount($journal, true);
         }, ['is_safe' => ['html']]
         );
     }
@@ -278,12 +278,12 @@ class AmountFormat extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function journalAmount(): Twig_SimpleFunction
+    protected function journalTotalAmount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'journalAmount', function (TransactionJournal $journal): string {
+            'journalTotalAmount', function (TransactionJournal $journal): string {
 
-            return app('amount')->journalAmount($journal, true);
+            return app('amount')->journalTotalAmount($journal, true);
         }, ['is_safe' => ['html']]
         );
     }

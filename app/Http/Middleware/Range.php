@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Amount;
 use App;
 use Carbon\Carbon;
 use Closure;
@@ -109,7 +108,7 @@ class Range
         // save some formats:
         $monthAndDayFormat = (string)trans('config.month_and_day');
         $dateTimeFormat    = (string)trans('config.date_time');
-        $defaultCurrency   = Amount::getDefaultCurrency();
+        $defaultCurrency   = app('amount')->getDefaultCurrency();
 
         View::share('monthAndDayFormat', $monthAndDayFormat);
         View::share('dateTimeFormat', $dateTimeFormat);

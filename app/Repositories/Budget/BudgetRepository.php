@@ -53,6 +53,52 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * This method collects various info on budgets, used on the budget page and on the index.
+     *
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
+    {
+        // get account information
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $return            = [];
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetId          = $budget->id;
+            $return[$budgetId] = [
+                'spent'      => $this->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
+                'budgeted'   => '0',
+                'currentRep' => false,
+            ];
+            $budgetLimits      = $this->getBudgetLimits($budget, $start, $end);
+            $otherLimits       = new Collection;
+
+            // get all the budget limits relevant between start and end and examine them:
+            /** @var BudgetLimit $limit */
+            foreach ($budgetLimits as $limit) {
+                if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
+                ) {
+                    $return[$budgetId]['currentLimit'] = $limit;
+                    $return[$budgetId]['budgeted']     = $limit->amount;
+                    continue;
+                }
+                // otherwise it's just one of the many relevant repetitions:
+                $otherLimits->push($limit);
+            }
+            $return[$budgetId]['otherLimits'] = $otherLimits;
+        }
+
+        return $return;
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return bool
@@ -221,53 +267,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $set;
     }
-
-    /**
-     * This method collects various info on budgets, used on the budget page and on the index.
-     *
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
-    {
-        // get account information
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-        $return            = [];
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $budgetId          = $budget->id;
-            $return[$budgetId] = [
-                'spent'      => $this->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
-                'budgeted'   => '0',
-                'currentRep' => false,
-            ];
-            $budgetLimits      = $this->getBudgetLimits($budget, $start, $end);
-            $otherLimits       = new Collection;
-
-            // get all the budget limits relevant between start and end and examine them:
-            /** @var BudgetLimit $limit */
-            foreach ($budgetLimits as $limit) {
-                if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
-                ) {
-                    $return[$budgetId]['currentLimit'] = $limit;
-                    $return[$budgetId]['budgeted']     = $limit->amount;
-                    continue;
-                }
-                // otherwise it's just one of the many relevant repetitions:
-                $otherLimits->push($limit);
-            }
-            $return[$budgetId]['otherLimits'] = $otherLimits;
-        }
-
-        return $return;
-    }
-
 
     /**
      * @param TransactionCurrency $currency

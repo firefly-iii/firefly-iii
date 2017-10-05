@@ -68,7 +68,6 @@ class NewUserControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\NewUserController::submit
      * @covers \FireflyIII\Http\Controllers\NewUserController::createAssetAccount
      * @covers \FireflyIII\Http\Controllers\NewUserController::createSavingsAccount
-     * @covers \FireflyIII\Http\Controllers\NewUserController::storeCreditCard
      */
     public function testSubmit()
     {

@@ -17,8 +17,8 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Session;
 use Log;
+use Session;
 
 /**
  * Class HomeController
@@ -49,6 +49,7 @@ class HomeController extends Controller
         Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
         event(new AdminRequestedTestMessage(auth()->user(), $ipAddress));
         Session::flash('info', strval(trans('firefly.send_test_triggered')));
+
         return redirect(route('admin.index'));
     }
 

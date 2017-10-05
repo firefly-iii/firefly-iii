@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyConfig;
-use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;

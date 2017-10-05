@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Amount;
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Exceptions\FireflyException;
@@ -73,7 +72,7 @@ class AccountController extends Controller
         $repository         = app(CurrencyRepositoryInterface::class);
         $allCurrencies      = $repository->get();
         $currencySelectList = ExpandedForm::makeSelectList($allCurrencies);
-        $defaultCurrency    = Amount::getDefaultCurrency();
+        $defaultCurrency    = app('amount')->getDefaultCurrency();
         $subTitleIcon       = config('firefly.subIconsByIdentifier.' . $what);
         $subTitle           = trans('firefly.make_new_' . $what . '_account');
         $roles              = [];
@@ -244,6 +243,7 @@ class AccountController extends Controller
 
     /**
      * Show an account.
+     *
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      * @param Account                    $account
