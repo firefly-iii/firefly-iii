@@ -133,6 +133,7 @@ return [
 
     // search
     'search'                                     => 'Szukaj',
+    'search_query'                               => 'Query',
     'search_found_transactions'                  => 'Liczba znalezionych transakcji:',
     'general_search_error'                       => 'Wystąpił błąd podczas wyszukiwania. Aby uzyskać więcej informacji proszę sprawdzić logi aplikacji.',
     'search_box'                                 => 'Szukaj',
