@@ -133,6 +133,7 @@ return [
 
     // search
     'search'                                     => 'Suche',
+    'search_query'                               => 'Query',
     'search_found_transactions'                  => 'Anzahl der gefundenen Transaktionen:',
     'general_search_error'                       => 'Bei der Suche ist ein Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien für weitere Informationen.',
     'search_box'                                 => 'Suche',
