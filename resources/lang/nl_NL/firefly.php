@@ -133,6 +133,7 @@ return [
 
     // search
     'search'                                     => 'Zoeken',
+    'search_query'                               => 'Query',
     'search_found_transactions'                  => 'Aantal gevonden transacties:',
     'general_search_error'                       => 'Er is een fout opgetreden tijdens het zoeken. Controleer de log-bestanden voor meer informatie.',
     'search_box'                                 => 'Zoeken',
