@@ -21,6 +21,7 @@ return [
         'IngDescription'      => 'FireflyIII\Import\Specifics\IngDescription',
         'RabobankDescription' => 'FireflyIII\Import\Specifics\RabobankDescription',
         'AbnAmroDescription'  => 'FireflyIII\Import\Specifics\AbnAmroDescription',
+        'SnsDescription'      => 'FireflyIII\Import\Specifics\SnsDescription',
         'PresidentsChoice'    => 'FireflyIII\Import\Specifics\PresidentsChoice',
     ],
 
