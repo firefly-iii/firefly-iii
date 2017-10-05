@@ -133,6 +133,7 @@ return [
 
     // search
     'search'                                     => 'Поиск',
+    'search_query'                               => 'Query',
     'search_found_transactions'                  => 'Количество транзакций найдено:',
     'general_search_error'                       => 'Произошла ошибка при поиске. Пожалуйста, проверьте файлы журнала для получения дополнительной информации.',
     'search_box'                                 => 'Поиск',
