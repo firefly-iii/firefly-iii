@@ -123,7 +123,7 @@ return [
     'all_journals_for_budget'                    => 'Wszystkie transakcje dla budżetu :name',
     'chart_all_journals_for_budget'              => 'Wykres wszystkich transakcji dla budżetu :name',
     'journals_in_period_for_category'            => 'Wszystkie transakcje dla kategorii :name od :start do :end',
-    'journals_in_period_for_tag'                 => 'Wszystkie transakcje dla tagu :name od :start do :end',
+    'journals_in_period_for_tag'                 => 'Wszystkie transakcje dla tagu :tag od :start do :end',
     'not_available_demo_user'                    => 'Funkcja, do której próbujesz uzyskać dostęp nie jest dostępna dla użytkowników demo.',
     'exchange_rate_instructions'                 => 'Konto aktywów "@name" obsługuje tylko transakcje w walucie @native_currency. Jeśli chcesz użyć waluty @foreign_currency, upewnij się, że kwota w @native_currency jest również znana:',
     'transfer_exchange_rate_instructions'        => 'Konto źródłowe "@source_name" obsługuje tylko transakcje w walucie @source_currency. Konto docelowe "@dest_name" obsługuje tylko transakcje w walucie @dest_currency. Musisz podać przelewaną kwotę w obu walutach.',
