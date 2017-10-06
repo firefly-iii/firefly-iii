@@ -38,6 +38,7 @@ class AbstractTrigger
 
     /**
      * AbstractTrigger constructor.
+     * @codeCoverageIgnore
      */
     private function __construct()
     {
@@ -45,6 +46,7 @@ class AbstractTrigger
     }
 
     /**
+     * @codeCoverageIgnore
      * @param string $triggerValue
      * @param bool   $stopProcessing
      *
@@ -60,6 +62,7 @@ class AbstractTrigger
     }
 
     /**
+     * @codeCoverageIgnore
      * @param RuleTrigger $trigger
      *
      * @return AbstractTrigger
@@ -74,21 +77,8 @@ class AbstractTrigger
         return $self;
     }
 
-
     /**
-     * @param RuleTrigger        $trigger
-     * @param TransactionJournal $journal
-     */
-    public static function makeFromTriggerAndJournal(RuleTrigger $trigger, TransactionJournal $journal)
-    {
-        $self                 = new static;
-        $self->trigger        = $trigger;
-        $self->triggerValue   = $trigger->trigger_value;
-        $self->stopProcessing = $trigger->stop_processing;
-        $self->journal        = $journal;
-    }
-
-    /**
+     * @codeCoverageIgnore
      * @param string $triggerValue
      *
      * @return AbstractTrigger
@@ -102,6 +92,7 @@ class AbstractTrigger
     }
 
     /**
+     * @codeCoverageIgnore
      * @return RuleTrigger
      */
     public function getTrigger(): RuleTrigger
@@ -110,6 +101,7 @@ class AbstractTrigger
     }
 
     /**
+     * @codeCoverageIgnore
      * @return string
      */
     public function getTriggerValue(): string

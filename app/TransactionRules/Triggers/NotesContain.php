@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Triggers;
 
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -63,18 +64,31 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $search = strtolower($this->triggerValue);
-        $notes  = strtolower($journal->getMeta('notes') ?? '');
+        $search = trim(strtolower($this->triggerValue));
 
-        $strpos = strpos($notes, $search);
+        if (strlen($search) === 0) {
+            Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" is empty, return false.', $journal->id, $search));
+
+            return false;
+        }
+
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        $text = '';
+        if (!is_null($note)) {
+            $text = strtolower($note->text);
+        }
+
+
+        $strpos = strpos($text, $search);
         if (!($strpos === false)) {
 
-            Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" contains "%s", return true.', $journal->id, $notes, $search));
+            Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" contains "%s", return true.', $journal->id, $text, $search));
 
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" does NOT contain "%s", return false.', $journal->id, $notes, $search));
+        Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" does NOT contain "%s", return false.', $journal->id, $text, $search));
 
         return false;
 

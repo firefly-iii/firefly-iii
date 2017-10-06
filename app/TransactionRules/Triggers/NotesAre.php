@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -57,17 +58,22 @@ final class NotesAre extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $notes  = strtolower($journal->getMeta('notes') ?? '');
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        $text = '';
+        if (!is_null($note)) {
+            $text = strtolower($note->text);
+        }
         $search = strtolower($this->triggerValue);
 
-        if ($notes === $search) {
+        if ($text === $search && strlen($text) > 0) {
 
-            Log::debug(sprintf('RuleTrigger NotesAre for journal #%d: "%s" is "%s", return true.', $journal->id, $notes, $search));
+            Log::debug(sprintf('RuleTrigger NotesAre for journal #%d: "%s" is "%s", return true.', $journal->id, $text, $search));
 
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger NotesAre for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $notes, $search));
+        Log::debug(sprintf('RuleTrigger NotesAre for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $text, $search));
 
         return false;
     }

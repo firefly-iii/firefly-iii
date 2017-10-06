@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -62,28 +63,34 @@ final class NotesEnd extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $notes        = strtolower($journal->getMeta('notes') ?? '');
-        $notesLength  = strlen($notes);
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        $text = '';
+        if (!is_null($note)) {
+            $text = strtolower($note->text);
+        }
+        $notesLength  = strlen($text);
         $search       = strtolower($this->triggerValue);
         $searchLength = strlen($search);
 
         // if the string to search for is longer than the description,
-        // shorten the search string.
+        // return false
         if ($searchLength > $notesLength) {
-            $search       = substr($search, ($notesLength * -1));
-            $searchLength = strlen($search);
+            Log::debug(sprintf('RuleTrigger NotesEnd for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $text, $search));
+
+            return false;
         }
 
-        $part = substr($notes, $searchLength * -1);
+        $part = substr($text, $searchLength * -1);
 
         if ($part === $search) {
 
-            Log::debug(sprintf('RuleTrigger NotesEnd for journal #%d: "%s" ends with "%s", return true.', $journal->id, $notes, $search));
+            Log::debug(sprintf('RuleTrigger NotesEnd for journal #%d: "%s" ends with "%s", return true.', $journal->id, $text, $search));
 
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger NotesEnd for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $notes, $search));
+        Log::debug(sprintf('RuleTrigger NotesEnd for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $text, $search));
 
         return false;
     }

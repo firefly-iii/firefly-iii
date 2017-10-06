@@ -69,10 +69,11 @@ final class DescriptionEnds extends AbstractTrigger implements TriggerInterface
         $searchLength      = strlen($search);
 
         // if the string to search for is longer than the description,
-        // shorten the search string.
+        // return false.
         if ($searchLength > $descriptionLength) {
-            $search       = substr($search, ($descriptionLength * -1));
-            $searchLength = strlen($search);
+            Log::debug(sprintf('RuleTrigger DescriptionEnds for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $description, $search));
+
+            return false;
         }
 
         $part = substr($description, $searchLength * -1);

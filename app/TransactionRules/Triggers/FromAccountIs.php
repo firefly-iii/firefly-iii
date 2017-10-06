@@ -44,7 +44,12 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
     public static function willMatchEverything($value = null)
     {
         if (!is_null($value)) {
-            return false;
+            $res = strval($value) === '';
+            if ($res === true) {
+                Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
+            }
+
+            return $res;
         }
         Log::error(sprintf('Cannot use %s with a null value.', self::class));
 

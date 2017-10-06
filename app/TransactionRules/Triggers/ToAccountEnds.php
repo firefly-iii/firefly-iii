@@ -75,10 +75,11 @@ final class ToAccountEnds extends AbstractTrigger implements TriggerInterface
         $searchLength        = strlen($search);
 
         // if the string to search for is longer than the account name,
-        // shorten the search string.
+        // return false
         if ($searchLength > $toAccountNameLength) {
-            $search       = substr($search, ($toAccountNameLength * -1));
-            $searchLength = strlen($search);
+            Log::debug(sprintf('RuleTrigger ToAccountEnds for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $toAccountName, $search));
+
+            return false;
         }
 
 

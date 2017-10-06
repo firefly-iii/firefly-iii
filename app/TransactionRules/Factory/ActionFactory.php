@@ -20,9 +20,10 @@ use FireflyIII\TransactionRules\Actions\ActionInterface;
 use Log;
 
 /**
- * Interface ActionInterface
+ * @codeCoverageIgnore
+ * Class ActionFactory
  *
- * @package FireflyIII\TransactionRules\Actions
+ * @package FireflyIII\TransactionRules\Factory
  */
 class ActionFactory
 {
