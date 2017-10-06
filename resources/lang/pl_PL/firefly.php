@@ -780,7 +780,7 @@ return [
     'shared'                                   => 'Udostępnione',
     'fiscal_year'                              => 'Rok podatkowy',
     'income_entry'                             => 'Income from account ":name" between :start and :end',
-    'expense_entry'                            => 'Expenses to account ":name" between :start and :end',
+    'expense_entry'                            => 'Wydatki na konto ":name" między :start a :end',
     'category_entry'                           => 'Wydatki w kategorii ":name" między :start i :end',
     'budget_spent_amount'                      => 'Wydatki w budżecie ":budget" między :start i :end',
     'balance_amount'                           => 'Expenses in budget ":budget" paid from account ":account" between :start and :end',
@@ -940,7 +940,7 @@ return [
     'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
 
     // links
-    'journal_link_configuration'            => 'Konfiguracja powiązań między transakcjami',
+    'journal_link_configuration'            => 'Konfiguracja łączy między transakcjami',
     'create_new_link_type'                  => 'Utwórz nowy typ łącza',
     'store_new_link_type'                   => 'Zapisz nowy typ łącza',
     'update_link_type'                      => 'Modyfikuj typ łącza',
@@ -953,8 +953,8 @@ return [
     'link_type_help_name'                   => 'Np. "Duplikaty"',
     'link_type_help_inward'                 => 'Np. "duplikuje"',
     'link_type_help_outward'                => 'Np. "jest zduplikowana przez"',
-    'save_connections_by_moving'            => 'Zapisz te powiązania miedzy transakcjami, przenosząc je do innego typu łącza:',
-    'do_not_save_connection'                => '(do not save connection)',
+    'save_connections_by_moving'            => 'Zapisz powiązania miedzy tymi transakcjami, przenosząc je do innego typu łącza:',
+    'do_not_save_connection'                => '(nie zapisuj powiązań)',
     'link_transaction'                      => 'Powiąż transakcje',
     'link_to_other_transaction'             => 'Powiąż aktualną transakcję z inną transakcją',
     'select_transaction_to_link'            => 'Wybierz transakcję, którą chcesz powiązać z tą transakcją',
