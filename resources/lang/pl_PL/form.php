@@ -172,7 +172,7 @@ return [
     // admin
     'domain'                => 'Domena',
     'single_user_mode'      => 'Tryb pojedynczego użytkownika',
-    'is_demo_site'          => 'Is demo site',
+    'is_demo_site'          => 'Jest stroną demo',
 
 
     // import
