@@ -132,7 +132,7 @@ return [
     'delete_attachment'          => 'Usuń załącznik ":name"',
     'delete_rule'                => 'Usuń regułę ":title"',
     'delete_rule_group'          => 'Usuń grupę reguł ":title"',
-    'delete_link_type'           => 'Delete link type ":name"',
+    'delete_link_type'           => 'Usuń typ łącza ":name"',
     'delete_user'                => 'Usuń użytkownika ":email"',
     'user_areYouSure'            => 'Jeśli usuniesz użytkownika ":email", wszystko zniknie. Nie ma cofania, przywracania ani czegokolwiek. Jeśli usuniesz siebie, stracisz dostęp do tej instalacji Firefly III.',
     'attachment_areYouSure'      => 'Czy na pewno chcesz usunąć załącznik o nazwie ":name"?',
