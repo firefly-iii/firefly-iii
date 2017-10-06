@@ -17,7 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Utworzono',
     'update_date'             => 'Zaktualizowano',
-    'updated_at'             => 'Updated at',
+    'updated_at'             => 'Zaktualizowano',
     'balance_before'          => 'Saldo przed',
     'balance_after'           => 'Saldo po',
     'name'                    => 'Nazwa',
