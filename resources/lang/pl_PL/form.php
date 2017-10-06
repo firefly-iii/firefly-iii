@@ -148,7 +148,7 @@ return [
     'mass_journal_are_you_sure'  => 'Czy na pewno chcesz usunąć te transakcje?',
     'tag_areYouSure'             => 'Czy na pewno chcesz usunąć tag ":tag"?',
     'journal_link_areYouSure'    => 'Czy na pewno chcesz usunąć powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
-    'linkType_areYouSure'        => 'Are you sure you want to delete the link type ":name" (":inward" / ":outward")?',
+    'linkType_areYouSure'        => 'Czy na pewno chcesz usunąć typ łącza ":name" (":inward" / ":outward")?',
     'permDeleteWarning'          => 'Usuwanie rzeczy z Firefly jest trwałe i nie można tego cofnąć.',
     'mass_make_selection'        => 'You can still prevent items from being deleted by removing the checkbox.',
     'delete_all_permanently'     => 'Trwale usuń zaznaczone',
@@ -191,7 +191,7 @@ return [
     'payment_date'       => 'Data płatności',
     'invoice_date'       => 'Data faktury',
     'internal_reference' => 'Wewnętrzny numer',
-    'inward'             => 'Inward description',
-    'outward'            => 'Outward description',
+    'inward'             => 'Opis wewnętrzny',
+    'outward'            => 'Opis zewnętrzny',
     'rule_group_id'      => 'Grupa reguł',
 ];
