@@ -14,13 +14,13 @@ declare(strict_types=1);
 return [
 
     // initial config
-    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
-    'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
-    'initial_box'                   => 'Basic CSV import setup',
-    'initial_box_title'             => 'Basic CSV import setup options',
-    'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
-    'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
-    'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
+    'initial_title'                 => 'Pengaturan impor (1/3) - Pengaturan dasar impor CSV',
+    'initial_text'                  => 'Untuk dapat mengimpor file Anda dengan benar, mohon periksa pilihan-pilihan di bawah ini.',
+    'initial_box'                   => 'Pengaturan dasar impor CSV',
+    'initial_box_title'             => 'Opsi pengaturan dasar impor CSV',
+    'initial_header_help'           => 'Centang kotak ini jika baris pertama file CSV Anda adalah judul kolom.',
+    'initial_date_help'             => 'Format tanggal dan waktu dalam CSV Anda. Ikuti format seperti ditunjukkan pada <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">halaman ini</a>. Nilai default akan membaca tanggal yang serupa dengan ini: :dateExample.',
+    'initial_delimiter_help'        => 'Pilih pembatas kolom yang digunakan dalam file masukan Anda. Jika tidak yakin, koma adalah pilihan teraman.',
     'initial_import_account_help'   => 'If your CSV file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the CSV belong to.',
     'initial_submit'                => 'Continue with step 2/3',
 
