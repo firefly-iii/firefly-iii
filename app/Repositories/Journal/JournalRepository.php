@@ -236,7 +236,9 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // update note:
-        $this->updateNote($journal, $data['notes']);
+        if (isset($data['notes'])) {
+            $this->updateNote($journal, $data['notes']);
+        }
 
         foreach ($data as $key => $value) {
             if (in_array($key, $this->validMetaFields)) {
@@ -291,7 +293,9 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // update note:
-        $this->updateNote($journal, $data['notes']);
+        if (isset($data['notes'])) {
+            $this->updateNote($journal, $data['notes']);
+        }
 
         // update meta fields:
         $result = $journal->save();
