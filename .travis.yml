@@ -22,7 +22,7 @@ script:
   - phpunit -c phpunit.coverage.xml
 
 after_success:
-  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
+  - travis_retry php vendor/bin/coveralls -x storage/build/clover-all.xml
 
 # safelist
 branches:
