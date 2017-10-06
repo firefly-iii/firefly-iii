@@ -21,8 +21,8 @@ install:
 script:
   - phpunit -c phpunit.xml
 
-#after_success:
-#  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
+after_success:
+  - travis_retry php vendor/bin/coveralls -x storage/build/clover.xml
 
 # safelist
 branches:
