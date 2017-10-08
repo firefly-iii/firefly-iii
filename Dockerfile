@@ -48,8 +48,6 @@ RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
 
 RUN composer install --prefer-dist --no-dev --no-scripts
 RUN composer dump-autoload
-RUN php artisan firefly:upgrade-database
-RUN php artisan firefly:verify
 RUN php artisan firefly:instructions install
 RUN php artisan optimize
 
