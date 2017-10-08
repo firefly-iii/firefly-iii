@@ -314,6 +314,7 @@ class JournalCollector implements JournalCollectorInterface
             return $this;
         }
         $this->joinBudgetTables();
+        Log::debug('Journal collector will filter for budgets', $budgetIds);
 
         $this->query->where(
             function (EloquentBuilder $q) use ($budgetIds) {
@@ -433,8 +434,11 @@ class JournalCollector implements JournalCollectorInterface
     public function setRange(Carbon $start, Carbon $end): JournalCollectorInterface
     {
         if ($start <= $end) {
-            $this->query->where('transaction_journals.date', '>=', $start->format('Y-m-d'));
-            $this->query->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+            $startStr = $start->format('Y-m-d');
+            $endStr   = $end->format('Y-m-d');
+            $this->query->where('transaction_journals.date', '>=', $startStr);
+            $this->query->where('transaction_journals.date', '<=', $endStr);
+            Log::debug(sprintf('JournalCollector range is now %s - %s (inclusive)', $startStr, $endStr));
         }
 
         return $this;
