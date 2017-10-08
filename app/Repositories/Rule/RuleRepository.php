@@ -349,7 +349,7 @@ class RuleRepository implements RuleRepositoryInterface
     {
         $order = 1;
         foreach ($data['rule-actions'] as $index => $action) {
-            $value          = $data['rule-action-values'][$index];
+            $value          = $data['rule-action-values'][$index] ?? '';
             $stopProcessing = isset($data['rule-action-stop'][$index]) ? true : false;
 
             $actionValues = [
