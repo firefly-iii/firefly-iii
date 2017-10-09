@@ -112,7 +112,7 @@ echo "clear caches and what-not.."
 php artisan cache:clear
 php artisan config:clear
 php artisan route:clear
-php artisan twig:clean
+# php artisan twig:clean
 php artisan view:clear
 
 # run PHPUnit
