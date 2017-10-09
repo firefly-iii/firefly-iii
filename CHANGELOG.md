@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.7] - 2017-10-09
+### Added
+- #872, reported @gavu
+
+### Fixed
+- #878, fixed by @Findus23
+- #881, reported by @nicoschreiner
+- #884, by @gavu
+- #840, reported by @MacPaille
+- #882, reported by @nicoschreiner
+- #891, #892, reported by @nicoschreiner
+- #891, reported by @gavu
+- #827, fixed by @pkoziol
+- #903, fixed by @hduijn
+- #904, reported by @gavu
+- #910, reported by @gavu
+- #911, reported by @gavu
+- #915, reported by @TomWis97
+- #917, reported by @Wr0ngName
+
 ## [4.6.6] - 2017-09-30
 ### Added
 - #826, reported by @pkoziol.
