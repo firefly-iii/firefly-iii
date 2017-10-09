@@ -17,7 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Aangemaakt op',
     'update_date'             => 'Bijgewerkt op',
-    'updated_at'             => 'Updated at',
+    'updated_at'             => 'Bijgewerkt op',
     'balance_before'          => 'Saldo voor',
     'balance_after'           => 'Saldo na',
     'name'                    => 'Naam',

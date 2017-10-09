@@ -133,6 +133,7 @@ return [
 
     // search
     'search'                                     => 'Rechercher',
+    'search_query'                               => 'Requête',
     'search_found_transactions'                  => 'Nombre de transactions trouvées :',
     'general_search_error'                       => 'Une erreur s’est produite lors de la recherche. S’il vous plaît vérifiez les fichiers de log pour plus d’informations.',
     'search_box'                                 => 'Chercher',
@@ -970,6 +971,9 @@ return [
     'this_deposit'                          => 'Ce dépôt',
     'this_transfer'                         => 'Ce transfert',
     'overview_for_link'                     => 'Aperçu pour le type de lien ":name"',
+    'source_transaction'                    => 'Source transaction',
+    'link_description'                      => 'Link description',
+    'destination_transaction'               => 'Destination transaction',
     'delete_journal_link'                   => 'Supprimez le lien entre <a href=":source_link">:source</a> et <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Lien supprimé',
 

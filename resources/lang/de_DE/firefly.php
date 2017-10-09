@@ -133,6 +133,7 @@ return [
 
     // search
     'search'                                     => 'Suche',
+    'search_query'                               => 'Query',
     'search_found_transactions'                  => 'Anzahl der gefundenen Transaktionen:',
     'general_search_error'                       => 'Bei der Suche ist ein Fehler aufgetreten. Bitte überprüfen Sie die Protokolldateien für weitere Informationen.',
     'search_box'                                 => 'Suche',
@@ -970,6 +971,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'this_deposit'                          => 'This deposit',
     'this_transfer'                         => 'This transfer',
     'overview_for_link'                     => 'Overview for link type ":name"',
+    'source_transaction'                    => 'Source transaction',
+    'link_description'                      => 'Link description',
+    'destination_transaction'               => 'Destination transaction',
     'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Deleted link',
 
