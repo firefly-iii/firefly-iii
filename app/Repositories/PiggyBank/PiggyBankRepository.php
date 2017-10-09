@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
-use Amount;
 use Carbon\Carbon;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
@@ -240,12 +239,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanksWithAmount(): Collection
     {
-        $currency = Amount::getDefaultCurrency();
+        $currency = app('amount')->getDefaultCurrency();
         $set      = $this->getPiggyBanks();
         foreach ($set as $piggy) {
             $currentAmount = $piggy->currentRelevantRep()->currentamount ?? '0';
 
-            $piggy->name = $piggy->name . ' (' . Amount::formatAnything($currency, $currentAmount, false) . ')';
+            $piggy->name = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
         }
 
         return $set;

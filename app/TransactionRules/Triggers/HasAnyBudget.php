@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -57,6 +58,20 @@ final class HasAnyBudget extends AbstractTrigger implements TriggerInterface
 
             return true;
         }
+
+        // perhaps transactions have budget?
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            $count = $transaction->budgets()->count();
+            if ($count > 0) {
+                Log::debug(
+                    sprintf('RuleTrigger HasAnyBudget for journal #%d (transaction #%d): count is %d, return true.', $journal->id, $transaction->id, $count)
+                );
+
+                return true;
+            }
+        }
+
         Log::debug(sprintf('RuleTrigger HasAnyBudget for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;

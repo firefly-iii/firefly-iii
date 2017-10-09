@@ -63,7 +63,7 @@ class JavascriptControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangePicker
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
      *
      * @param string $range
      *

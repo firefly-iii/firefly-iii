@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace FireflyIII\Export\Entry;
 
 use FireflyIII\Models\Transaction;
-use Steam;
 
 /**
  * To extend the exported object, in case of new features in Firefly III for example,

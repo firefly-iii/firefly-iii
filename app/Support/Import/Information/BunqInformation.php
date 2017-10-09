@@ -66,7 +66,7 @@ class BunqInformation implements InformationInterface
         }
         Log::debug('Now in getAccounts()');
         $sessionToken = $this->startSession();
-        $userId           = $this->getUserInformation($sessionToken);
+        $userId       = $this->getUserInformation($sessionToken);
         // get list of Bunq accounts:
         $accounts = $this->getMonetaryAccounts($sessionToken, $userId);
         $return   = [];

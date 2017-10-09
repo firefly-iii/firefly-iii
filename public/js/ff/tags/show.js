@@ -11,34 +11,25 @@
 /*
  Some vars as prep for the map:
  */
-var map;
-var setTag = false;
-
-var mapOptions = {
-    zoom: zoomLevel,
-    center: new google.maps.LatLng(latitude, longitude),
-    disableDefaultUI: true,
-    zoomControl: false,
-    scaleControl: true,
-    draggable: false
-};
-
-
-function initialize() {
+$(function () {
     "use strict";
     if (doPlaceMarker === true) {
         /*
          Create new map:
          */
-        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-        var myLatlng = new google.maps.LatLng(latitude, longitude);
-        var marker = new google.maps.Marker({
-                                                position: myLatlng,
-                                                map: map
-                                            });
-        marker.setMap(map);
+        // make map:
+       var mymap = L.map('tag_location_map', {zoomControl: false, touchZoom: false, doubleClickZoom: false, scrollWheelZoom: false, boxZoom: false, dragging: false}).setView([latitude, longitude], zoomLevel);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: mapboxToken
+        }).addTo(mymap);
+
+        if(doPlaceMarker) {
+            var marker = L.marker([latitude, longitude]).addTo(mymap);
+        }
     }
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);
+});

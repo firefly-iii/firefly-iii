@@ -43,7 +43,8 @@ class CreateImport extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:create-import
+    protected $signature
+        = 'firefly:create-import
                             {file : The file to import.}
                             {configuration : The configuration file to use for the import/}
                             {--type=csv : The file type of the import.}

@@ -66,10 +66,8 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
     {
         $search = strtolower($this->triggerValue);
         $source = strtolower($journal->description ?? '');
-
-        $strpos = strpos($source, $search);
+        $strpos = stripos($source, $search);
         if (!($strpos === false)) {
-
             Log::debug(sprintf('RuleTrigger DescriptionContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $source, $search));
 
             return true;

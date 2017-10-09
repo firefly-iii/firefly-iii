@@ -25,7 +25,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class TransactionCurrency extends Model
 {
-    use SoftDeletes, ValidatingTrait;
+    use SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
@@ -41,13 +41,6 @@ class TransactionCurrency extends Model
         ];
     protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'date'];
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
-    protected $rules
-                        = [
-            'name'           => 'required|between:1,48',
-            'code'           => 'required|between:3,3',
-            'symbol'         => 'required|between:1,8',
-            'decimal_places' => 'required|min:0|max:12|numeric',
-        ];
 
     /**
      * @param TransactionCurrency $currency

@@ -72,8 +72,11 @@ function updateNativeCurrency(useAccountCurrency) {
 
     $('.currency-option[data-id="' + nativeCurrencyId + '"]').click();
     $('[data-toggle="dropdown"]').parent().removeClass('open');
-    if (what !== 'transfer') {
+    if (what === 'withdrawal') {
         $('select[name="source_account_id"]').focus();
+    }
+    if (what === 'deposit') {
+        $('select[name="destination_account_id"]').focus();
     }
     validateCurrencyForTransfer();
 }

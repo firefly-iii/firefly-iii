@@ -44,12 +44,10 @@ trait ImportSupport
 {
     /** @var int */
     protected $defaultCurrencyId = 1;
-
-    /** @var  Collection */
-    protected $rules;
-
     /** @var  ImportJob */
     protected $job;
+    /** @var  Collection */
+    protected $rules;
 
     /**
      * @param TransactionJournal $journal

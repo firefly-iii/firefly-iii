@@ -44,7 +44,7 @@ class Controller extends BaseController
     protected $monthAndDayFormat;
     /** @var string */
     protected $monthFormat;
-    /** @var string  */
+    /** @var string */
     protected $redirectUri = '/';
 
     /**

@@ -17,6 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Создан',
     'update_date'             => 'Обновлён',
+    'updated_at'             => 'Updated at',
     'balance_before'          => 'Баланс до',
     'balance_after'           => 'Баланс после',
     'name'                    => 'Имя',

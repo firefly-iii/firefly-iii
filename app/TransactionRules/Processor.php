@@ -40,7 +40,7 @@ final class Processor
     public $rule;
     /** @var Collection */
     public $triggers;
-    /** @var int  */
+    /** @var int */
     protected $foundTriggers = 0;
 
     /**

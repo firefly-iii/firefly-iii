@@ -66,7 +66,7 @@ class SetDestinationAccount implements ActionInterface
         if ($count > 2) {
             Log::error(sprintf('Cannot change destination account of journal #%d because it is a split journal.', $journal->id));
 
-            return true;
+            return false;
         }
 
         // journal type:
@@ -81,7 +81,7 @@ class SetDestinationAccount implements ActionInterface
                 )
             );
 
-            return true;
+            return false;
         }
 
         // if this is a withdrawal, the new destination account must be a expense account and may be created:

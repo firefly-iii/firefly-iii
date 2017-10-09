@@ -48,7 +48,7 @@ return [
     'budget_id'                      => 'Budżet',
     'openingBalance'                 => 'Bilans otwarcia',
     'tagMode'                        => 'Tag mode',
-    'tagPosition'                    => 'Lokalizacja taga',
+    'tag_position'                    => 'Lokalizacja taga',
     'virtualBalance'                 => 'Wirtualne saldo',
     'targetamount'                   => 'Kwota docelowa',
     'accountRole'                    => 'Rola konta',
@@ -67,9 +67,9 @@ return [
     'source_amount'                  => 'Kwota (źródło)',
     'destination_amount'             => 'Kwota (przeznaczenie)',
     'native_amount'                  => 'Źródłowa kwota',
-    'new_email_address'              => 'New email address',
-    'verification'                   => 'Verification',
-    'api_key'                        => 'API key',
+    'new_email_address'              => 'Nowy adres e-mail',
+    'verification'                   => 'Weryfikacja',
+    'api_key'                        => 'Klucz API',
 
     'source_account_asset'        => 'Konto źródłowe (konto aktywów)',
     'destination_account_expense' => 'Konto docelowe (konto wydatków)',
@@ -132,9 +132,9 @@ return [
     'delete_attachment'          => 'Usuń załącznik ":name"',
     'delete_rule'                => 'Usuń regułę ":title"',
     'delete_rule_group'          => 'Usuń grupę reguł ":title"',
-    'delete_link_type'           => 'Delete link type ":name"',
-    'delete_user'                => 'Delete user ":email"',
-    'user_areYouSure'            => 'If you delete user ":email", everything will be gone. There is no undo, undelete or anything. If you delete yourself, you will lose access to this instance of Firefly III.',
+    'delete_link_type'           => 'Usuń typ łącza ":name"',
+    'delete_user'                => 'Usuń użytkownika ":email"',
+    'user_areYouSure'            => 'Jeśli usuniesz użytkownika ":email", wszystko zniknie. Nie ma cofania, przywracania ani czegokolwiek. Jeśli usuniesz siebie, stracisz dostęp do tej instalacji Firefly III.',
     'attachment_areYouSure'      => 'Czy na pewno chcesz usunąć załącznik o nazwie ":name"?',
     'account_areYouSure'         => 'Czy na pewno chcesz usunąć konto o nazwie ":name"?',
     'bill_areYouSure'            => 'Czy na pewno chcesz usunąć rachunek o nazwie ":name"?',
@@ -148,7 +148,7 @@ return [
     'mass_journal_are_you_sure'  => 'Czy na pewno chcesz usunąć te transakcje?',
     'tag_areYouSure'             => 'Czy na pewno chcesz usunąć tag ":tag"?',
     'journal_link_areYouSure'    => 'Czy na pewno chcesz usunąć powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
-    'linkType_areYouSure'        => 'Are you sure you want to delete the link type ":name" (":inward" / ":outward")?',
+    'linkType_areYouSure'        => 'Czy na pewno chcesz usunąć typ łącza ":name" (":inward" / ":outward")?',
     'permDeleteWarning'          => 'Usuwanie rzeczy z Firefly jest trwałe i nie można tego cofnąć.',
     'mass_make_selection'        => 'You can still prevent items from being deleted by removing the checkbox.',
     'delete_all_permanently'     => 'Trwale usuń zaznaczone',
@@ -172,7 +172,7 @@ return [
     // admin
     'domain'                => 'Domena',
     'single_user_mode'      => 'Tryb pojedynczego użytkownika',
-    'is_demo_site'          => 'Is demo site',
+    'is_demo_site'          => 'Jest stroną demo',
 
 
     // import
@@ -191,7 +191,7 @@ return [
     'payment_date'       => 'Data płatności',
     'invoice_date'       => 'Data faktury',
     'internal_reference' => 'Wewnętrzny numer',
-    'inward'             => 'Inward description',
-    'outward'            => 'Outward description',
-    'rule_group_id'      => 'Rule group',
+    'inward'             => 'Opis wewnętrzny',
+    'outward'            => 'Opis zewnętrzny',
+    'rule_group_id'      => 'Grupa reguł',
 ];

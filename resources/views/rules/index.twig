@@ -78,8 +78,8 @@
                                                        class="btn btn-default"><span
                                                                 class="fa fa-fw fa-arrow-up"></span></a>
                                                 {% else %}
-                                                    <a href="#" class="btn btn-default"><span
-                                                                class="fa fa-fw"></span></a>
+                                                    <button disabled="disabled" class="btn btn-default"><span
+                                                                class="fa fa-fw"></span></button>
                                                 {% endif %}
                                                 {% if rule.order < ruleGroup.rules.count %}
                                                     <a title="{{ 'rule_priority_down'|_ }}"
@@ -88,8 +88,8 @@
                                                                 class="fa fa-fw fa-arrow-down"></span>
                                                     </a>
                                                 {% else %}
-                                                    <a href="#" class="btn btn-default"><span
-                                                                class="fa fa-fw"></span></a>
+                                                    <button disabled="disabled" class="btn btn-default"><span
+                                                                class="fa fa-fw"></span></button>
                                                 {% endif %}
                                             </div>
                                         </td>

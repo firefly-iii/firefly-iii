@@ -21,6 +21,7 @@ use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use Log;
 
 /**
+ * @codeCoverageIgnore
  * Interface TriggerInterface
  *
  * @package FireflyIII\TransactionRules\Triggers

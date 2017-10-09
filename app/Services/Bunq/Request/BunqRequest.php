@@ -41,15 +41,6 @@ abstract class BunqRequest
         ];
 
     /**
-     * @return ServerPublicKey
-     */
-    public function getServerPublicKey(): ServerPublicKey
-    {
-        return $this->serverPublicKey;
-    }
-
-
-    /**
      * BunqRequest constructor.
      */
     public function __construct()
@@ -71,6 +62,22 @@ abstract class BunqRequest
     }
 
     /**
+     * @return ServerPublicKey
+     */
+    public function getServerPublicKey(): ServerPublicKey
+    {
+        return $this->serverPublicKey;
+    }
+
+    /**
+     * @param ServerPublicKey $serverPublicKey
+     */
+    public function setServerPublicKey(ServerPublicKey $serverPublicKey)
+    {
+        $this->serverPublicKey = $serverPublicKey;
+    }
+
+    /**
      * @param string $privateKey
      */
     public function setPrivateKey(string $privateKey)
@@ -84,14 +91,6 @@ abstract class BunqRequest
     public function setSecret(string $secret)
     {
         $this->secret = $secret;
-    }
-
-    /**
-     * @param ServerPublicKey $serverPublicKey
-     */
-    public function setServerPublicKey(ServerPublicKey $serverPublicKey)
-    {
-        $this->serverPublicKey = $serverPublicKey;
     }
 
     /**

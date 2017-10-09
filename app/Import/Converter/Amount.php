@@ -36,13 +36,14 @@ class Amount implements ConverterInterface
      */
     public function convert($value): string
     {
-        if(is_null($value)) {
+        if (is_null($value)) {
             return '0';
         }
         $value = strval($value);
         Log::debug(sprintf('Start with amount "%s"', $value));
         $len             = strlen($value);
         $decimalPosition = $len - 3;
+        $altPosition     = $len - 2;
         $decimal         = null;
 
         if (($len > 2 && $value{$decimalPosition} === '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
@@ -52,6 +53,11 @@ class Amount implements ConverterInterface
         if ($len > 2 && $value{$decimalPosition} === ',') {
             $decimal = ',';
             Log::debug(sprintf('Decimal character in "%s" seems to be a comma.', $value));
+        }
+        // decimal character is null? find out if "0.1" or ".1" or "0,1" or ",1"
+        if ($len > 1 && ($value{$altPosition} === '.' || $value{$altPosition} === ',')) {
+            $decimal = $value{$altPosition};
+            Log::debug(sprintf('Alternate search resulted in "%s" for decimal sign.', $decimal));
         }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)

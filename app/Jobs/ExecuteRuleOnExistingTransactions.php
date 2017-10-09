@@ -130,17 +130,17 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
         // Lookup all journals that match the parameters specified
         $transactions = $this->collectJournals();
         $processor    = Processor::make($this->rule, true);
-        $hits = 0;
-        $misses = 0;
-        $total = 0;
+        $hits         = 0;
+        $misses       = 0;
+        $total        = 0;
         // Execute the rules for each transaction
         foreach ($transactions as $transaction) {
             $total++;
             $result = $processor->handleTransaction($transaction);
-            if($result) {
+            if ($result) {
                 $hits++;
             }
-            if(!$result) {
+            if (!$result) {
                 $misses++;
             }
             Log::info(sprintf('Current progress: %d Transactions. Hits: %d, misses: %d', $total, $hits, $misses));

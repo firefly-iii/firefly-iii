@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Amount;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -199,7 +198,7 @@ class BudgetController extends Controller
         $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
         $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
         $budgetInformation = $this->repository->collectBudgetInformation($budgets, $start, $end);
-        $defaultCurrency   = Amount::getDefaultCurrency();
+        $defaultCurrency   = app('amount')->getDefaultCurrency();
         $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $spent             = array_sum(array_column($budgetInformation, 'spent'));
         $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
@@ -268,7 +267,7 @@ class BudgetController extends Controller
                 'earned'    => '0',
                 'suggested' => '0',
             ];
-            $currency = Amount::getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency();
             $range    = Preferences::get('viewRange', '1M')->data;
             $begin    = Navigation::subtractPeriod($start, $range, 3);
 
@@ -380,7 +379,7 @@ class BudgetController extends Controller
     {
         $start           = Carbon::createFromFormat('Y-m-d', $request->string('start'));
         $end             = Carbon::createFromFormat('Y-m-d', $request->string('end'));
-        $defaultCurrency = Amount::getDefaultCurrency();
+        $defaultCurrency = app('amount')->getDefaultCurrency();
         $amount          = $request->get('amount');
 
         $this->repository->setAvailableBudget($defaultCurrency, $start, $end, $amount);
@@ -515,7 +514,7 @@ class BudgetController extends Controller
      */
     public function updateIncome(Carbon $start, Carbon $end)
     {
-        $defaultCurrency = Amount::getDefaultCurrency();
+        $defaultCurrency = app('amount')->getDefaultCurrency();
         $available       = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
         $available       = round($available, $defaultCurrency->decimal_places);
 

@@ -108,8 +108,8 @@ class ExpandedProcessor implements ProcessorInterface
         $notes       = $this->getNotes($ids);
         $tags        = $this->getTags($ids);
         /** @var array $ibans */
-        $ibans       = $this->getIbans($assetIds) + $this->getIbans($opposingIds);
-        $currencies  = $this->getAccountCurrencies($ibans);
+        $ibans      = $this->getIbans($assetIds) + $this->getIbans($opposingIds);
+        $currencies = $this->getAccountCurrencies($ibans);
         $transactions->each(
             function (Transaction $transaction) use ($notes, $tags, $ibans, $currencies) {
                 $journalId                            = intval($transaction->journal_id);

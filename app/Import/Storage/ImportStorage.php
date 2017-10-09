@@ -16,6 +16,7 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -35,16 +36,15 @@ class ImportStorage
     /** @var Collection */
     public $journals;
     /** @var  int */
-    protected $defaultCurrencyId = 1;
-    /** @var string */
-    private $dateFormat = 'Ymd'; // yes, hard coded
+    protected $defaultCurrencyId = 1; // yes, hard coded
     /** @var  ImportJob */
     protected $job;
     /** @var Collection */
-    private $objects;
-    /** @var Collection */
     protected $rules;
-
+    /** @var string */
+    private $dateFormat = 'Ymd';
+    /** @var Collection */
+    private $objects;
     /** @var  array */
     private $transfers = [];
 
@@ -179,8 +179,13 @@ class ImportStorage
 
         $this->storeBill($journal, $importJournal->bill->getBill());
         $this->storeMeta($journal, $importJournal->metaDates);
-        $journal->setMeta('notes', $importJournal->notes);
         $this->storeTags($importJournal->tags, $journal);
+
+        // set notes for journal:
+        $dbNote = new Note();
+        $dbNote->noteable()->associate($journal);
+        $dbNote->text = trim($importJournal->notes);
+        $dbNote->save();
 
         // set journal completed:
         $journal->completed = true;
@@ -207,36 +212,48 @@ class ImportStorage
      */
     private function isDoubleTransfer(array $parameters): bool
     {
+        Log::debug('Check if is a double transfer.');
         if ($parameters['type'] !== TransactionType::TRANSFER) {
+            Log::debug(sprintf('Is a %s, not a transfer so no.', $parameters['type']));
+
             return false;
         }
 
         $amount   = app('steam')->positive($parameters['amount']);
         $names    = [$parameters['asset'], $parameters['opposing']];
         $transfer = [];
-        $hit      = false;
+
         sort($names);
 
         foreach ($this->transfers as $transfer) {
+            $hits = 0;
             if ($parameters['description'] === $transfer['description']) {
-                $hit = true;
+                $hits++;
+                Log::debug(sprintf('Description "%s" equals "%s", hits = %d', $parameters['description'], $transfer['description'], $hits));
             }
             if ($names === $transfer['names']) {
-                $hit = true;
+                $hits++;
+                Log::debug(sprintf('Involved accounts, "%s" equals "%s", hits = %d', join(',', $names), join(',', $transfer['names']), $hits));
             }
             if (bccomp($amount, $transfer['amount']) === 0) {
-                $hit = true;
+                $hits++;
+                Log::debug(sprintf('Amount %s equals %s, hits = %d', $amount, $transfer['amount'], $hits));
             }
             if ($parameters['date'] === $transfer['date']) {
-                $hit = true;
+                $hits++;
+                Log::debug(sprintf('Date %s equals %s, hits = %d', $parameters['date'], $transfer['date'], $hits));
+            }
+            // number of hits is 4? Then it's a match
+            if ($hits === 4) {
+                Log::error(
+                    'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
+                );
+
+                return true;
             }
         }
-        if ($hit === true) {
-            Log::error(
-                'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
-            );
-        }
 
-        return $hit;
+
+        return false;
     }
 }

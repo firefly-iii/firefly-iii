@@ -79,7 +79,7 @@ class BankController extends Controller
             return redirect(route('import.bank.form', [$bank]));
         }
         $remoteAccounts = array_keys($remoteAccounts);
-        $class = config(sprintf('firefly.import_pre.%s', $bank));
+        $class          = config(sprintf('firefly.import_pre.%s', $bank));
         // get import file
 
         // get import config

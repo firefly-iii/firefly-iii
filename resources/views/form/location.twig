@@ -1,15 +1,120 @@
 <div class="{{ classes }}" id="{{ name }}_holder">
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
-
     <div class="col-sm-8">
-        <div id="map-canvas" style="width:100%;height:300px;"></div>
-        <p class="help-block">Right-click to set the tag's location.
-            <a href="#" id="clearLocation">Clear location</a>
+        {% if env('MAPBOX_API_KEY','') == '' %}
+            <p class="text-danger">
+                To use map, get an API key from <a href="https://www.mapbox.com/">Mapbox</a>.
+                Open your <code>.env</code> file en enter this code after <code>MAPBOX_API_KEY=</code>.
+            </p>
+        {% else %}
+        <div id="{{ name }}_map" style="width:100%;height:300px;"></div>
+        <div id="map-canvas" ></div>
+        <p class="help-block">
+            {{ 'press_tag_location'|_ }}
+            <a href="#" id="{{ name }}_clear_location">{{ 'clear_location'|_ }}</a>
         </p>
-        <input type="hidden" name="latitude" value=""/>
-        <input type="hidden" name="longitude" value=""/>
-        <input type="hidden" name="zoomLevel" value="6"/>
-        <input type="hidden" name="setTag" value=""/>
+            {# latitude #}
+            {% if old(name~'_latitude') %}
+                <input type="hidden" name="{{ name }}_latitude" value="{{ old('tag_position_latitude') }}"/>
+            {% else %}
+                <input type="hidden" name="{{ name }}_latitude" value="{{ tag.latitude }}"/>
+            {% endif %}
+
+            {# longitude #}
+            {% if old('tag_position_longitude') %}
+                <input type="hidden" name="{{ name }}_longitude" value="{{ old('tag_position_longitude') }}"/>
+            {% else %}
+                <input type="hidden" name="{{ name }}_longitude" value="{{ tag.longitude }}"/>
+            {% endif %}
+
+            {# zoomlevel #}
+            {% if old('tag_position_zoomlevel') %}
+                <input type="hidden" name="{{ name }}_zoomlevel" value="{{ old('tag_position_zoomlevel') }}"/>
+            {% else %}
+                <input type="hidden" name="{{ name }}_zoomlevel" value="{{ tag.zoomLevel }}"/>
+            {% endif %}
+            {% if tag.zoomLevel and tag.longitude and tag.latitude %}
+                <input type="hidden" name="{{ name }}_has_tag" value="true"/>
+            {% else %}
+                <input type="hidden" name="{{ name }}_has_tag" value="false"/>
+            {% endif %}
         {% include 'form/feedback' %}
+        {% endif %}
     </div>
 </div>
+
+{% if env('MAPBOX_API_KEY','') != '' %}
+{% set latitudevar = name~'_latitude' %}
+{% set longitudevar = name~'_longitude' %}
+{% set zoomlevelvar = name~'_zoomlevel' %}
+{% set hastagvar = name~'_has_tag' %}
+{% set settagvar = name~'_set_tag' %}
+{% set clearvar = name~'_clear_location' %}
+
+<script type="text/javascript">
+    var mymap;
+    var marker;
+    if(typeof {{ latitudevar }} === "undefined") {
+        var {{ latitudevar }} = "52.3167";
+    }
+    if(typeof {{ longitudevar }} === "undefined") {
+        var {{ longitudevar }} = "5.5500";
+    }
+    if(typeof {{ zoomlevelvar }} === "undefined") {
+        var {{ zoomlevelvar }} = "6";
+    }
+
+    if(typeof mapboxToken === 'undefined') {
+        var mapboxToken = 'invalid';
+    }
+    //
+    document.getElementById('{{ clearvar }}').addEventListener('click', function() {
+        if (typeof marker !== 'undefined') {
+            marker.remove();
+            $('input[name="{{ hastagvar }}"]').val('false');
+        }
+        return false;
+    });
+
+    // set location thing:
+    function setTagLocation(e) {
+        $('input[name="{{ latitudevar }}"]').val(e.latlng.lat);
+        $('input[name="{{ longitudevar }}"]').val(e.latlng.lng);
+        $('input[name="{{ zoomlevelvar }}"]').val(mymap.getZoom());
+        $('input[name="{{ hastagvar }}"]').val('true');
+
+        // remove existing marker:
+        if(typeof marker !== 'undefined') {
+            marker.remove();
+        }
+        // new marker
+        marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(mymap);
+    }
+
+
+
+    console.log({{ longitudevar }});
+
+    document.addEventListener("DOMContentLoaded", function() {
+        "use strict";
+
+        // make map:
+        mymap = L.map('{{ name }}_map').setView([{{ latitudevar }}, {{ longitudevar }}], {{ zoomlevelvar }});
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: mapboxToken
+        }).addTo(mymap);
+
+        mymap.on('contextmenu', setTagLocation);
+
+        // add marker
+        if(typeof {{ settagvar }} !== 'undefined' && {{ settagvar }} === true) {
+            marker = L.marker([{{ latitudevar }}, {{ longitudevar }}]).addTo(mymap);
+        }
+
+    });
+</script>
+{% endif %}

@@ -14,6 +14,7 @@ namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -195,4 +196,31 @@ trait CreateJournalsTrait
 
     }
 
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $note
+     *
+     * @return bool
+     */
+    protected function updateNote(TransactionJournal $journal, string $note): bool
+    {
+        if (strlen($note) === 0) {
+            $dbNote = $journal->notes()->first();
+            if (!is_null($dbNote)) {
+                $dbNote->delete();
+            }
+
+            return true;
+        }
+        $dbNote = $journal->notes()->first();
+        if (is_null($dbNote)) {
+            $dbNote = new Note();
+            $dbNote->noteable()->associate($journal);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
+    }
 }

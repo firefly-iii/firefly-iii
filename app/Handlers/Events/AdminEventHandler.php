@@ -49,6 +49,7 @@ class AdminEventHandler
             Session::flash('error', 'Possible email error: ' . $e->getMessage());
         }
         Log::debug('If no error above this line, message was sent.');
+
         // @codeCoverageIgnoreEnd
         return true;
     }

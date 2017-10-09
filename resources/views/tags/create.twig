@@ -28,7 +28,7 @@
                     <div class="box-body">
                         {{ ExpandedForm.date('date') }}
                         {{ ExpandedForm.textarea('description') }}
-                        {{ ExpandedForm.location('tagPosition') }}
+                        {{ ExpandedForm.location('tag_position') }}
                     </div>
                 </div>
 
@@ -53,41 +53,45 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var latitude;
-        {% if Input.old('latitude') %}
-        latitude = "{{ Input.old('latitude') }}";
+        // pre-set latitude:
+        {% if old('tag_position_latitude') %}
+        var tag_position_latitude = "{{ old('tag_position_latitude') }}";
         {% else %}
-        latitude = "52.3167";
+        var tag_position_latitude = "52.3167";
         {% endif %}
 
-        var doPlaceMarker;
-        {% if Input.old('latitude') and Input.old('longitude') and Input.old('zoomLevel') %}
-        doPlaceMarker = true;
+        // pre-set longitude
+        {% if old('tag_position_longitude') %}
+        var tag_position_longitude = "{{ old('tag_position_longitude') }}";
         {% else %}
-        doPlaceMarker = false;
+        var tag_position_longitude = "5.5500";
         {% endif %}
 
-        {% if Input.old('longitude') %}
-        var longitude = "{{ Input.old('longitude') }}";
+        // pre-set zoom level
+        {% if old('tag_position_zoomlevel') %}
+        var tag_position_zoomlevel = "{{ old('tag_position_zoomlevel') }}";
         {% else %}
-        var longitude = "5.5500";
+        var tag_position_zoomlevel = "6";
         {% endif %}
 
-        {% if Input.old('zoomLevel') %}
-        var zoomLevel = {{ Input.old('zoomLevel') }};
+        // must draw a tag?
+        {% if old('tag_position_latitude') and old('tag_position_longitude') and old('tag_position_zoomlevel') %}
+        var tag_position_set_tag = true;
         {% else %}
-        var zoomLevel = 6;
+        var tag_position_set_tag = false;
         {% endif %}
 
-        var apiKey = "{{ apiKey }}";
+        // token for Mapbox:
+        var mapboxToken = "{{ env('MAPBOX_API_KEY','') }}";
 
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key={{ apiKey }}"></script>
+    <script src="lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
     <script src="js/ff/tags/create-edit.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
 {% block styles %}
+    <link rel="stylesheet" href="lib/leaflet/leaflet.css?v={{ FF_VERSION }}" />
     <link href="css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
     <link href="css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
 {% endblock %}

@@ -97,7 +97,7 @@ class TagController extends Controller
      */
     public function delete(Tag $tag)
     {
-        $subTitle = trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]);
+        $subTitle = trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
 
         // put previous url in session
         $this->rememberPreviousUri('tags.delete.uri');
@@ -157,10 +157,19 @@ class TagController extends Controller
      */
     public function index(TagRepositoryInterface $repository)
     {
-
-        // collect tags by year:
+        // start with oldest tag
+        $oldestTag = $repository->oldestTag();
         /** @var Carbon $start */
-        $start             = clone(session('first'));
+        $start = new Carbon;
+        if (!is_null($oldestTag)) {
+            /** @var Carbon $start */
+            $start = $oldestTag->date;
+        }
+        if (is_null($oldestTag)) {
+            /** @var Carbon $start */
+            $start = clone(session('first'));
+        }
+
         $now               = new Carbon;
         $clouds            = [];
         $clouds['no-date'] = $repository->tagCloud(null);

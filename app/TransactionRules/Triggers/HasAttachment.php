@@ -13,6 +13,7 @@ namespace FireflyIII\TransactionRules\Triggers;
 
 
 use FireflyIII\Models\TransactionJournal;
+use Log;
 
 class HasAttachment extends AbstractTrigger implements TriggerInterface
 {
@@ -50,11 +51,18 @@ class HasAttachment extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $minimum     = intval($this->triggerValue);
+        $minimum = intval($this->triggerValue);
         $attachments = $journal->attachments()->count();
         if ($attachments >= $minimum) {
+            Log::debug(
+                sprintf(
+                    'RuleTrigger HasAttachment for journal #%d: count is %d, is more than or equal to %d, return true.', $journal->id, $attachments, $minimum
+                )
+            );
+
             return true;
         }
+        Log::debug(sprintf('RuleTrigger HasAttachment for journal #%d: count is %d, is less than %d, return true.', $journal->id, $attachments, $minimum));
 
         return false;
     }

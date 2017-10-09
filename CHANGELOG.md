@@ -2,7 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.6.6] - 2015-05-25
+## [4.6.7] - 2017-10-09
+### Added
+- #872, reported @gavu
+
+### Fixed
+- #878, fixed by @Findus23
+- #881, reported by @nicoschreiner
+- #884, by @gavu
+- #840, reported by @MacPaille
+- #882, reported by @nicoschreiner
+- #891, #892, reported by @nicoschreiner
+- #891, reported by @gavu
+- #827, fixed by @pkoziol
+- #903, fixed by @hduijn
+- #904, reported by @gavu
+- #910, reported by @gavu
+- #911, reported by @gavu
+- #915, reported by @TomWis97
+- #917, reported by @Wr0ngName
+
+## [4.6.6] - 2017-09-30
 ### Added
 - #826, reported by @pkoziol.
 - #855, by @ms32035
@@ -369,7 +389,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 ### Security
 - #519, thanks to [xpfgsyb](https://github.com/xpfgsyb)
 
-## [4.3.0] - 2015-12-26
+## [4.3.0] - 2016-12-26
 ### Added
 - New method of keeping track of available budget, see issue #489
 - Support for Spanish
@@ -562,7 +582,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - #336
 - #338 found by [roberthorlings](https://github.com/roberthorlings)
 
-## [4.0.0] - 2015-09-26
+## [4.0.0] - 2016-09-26
 ### Added
 - Upgraded to Laravel 5.3, most other libraries upgraded as well.
 - Added GBP as currency, thanks to [Mortalife](https://github.com/Mortalife)
@@ -577,7 +597,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Various bugs, thanks to [fuf](https://github.com/fuf), [sandermulders](https://github.com/sandermulders) and [vissert](https://github.com/vissert)
 - Various queries optimized for MySQL 5.7
 
-## [3.10.4] - 2015-09-14
+## [3.10.4] - 2016-09-14
 ### Fixed
 - Migration fix by [sandermulders](https://github.com/sandermulders)
 - Tricky import bug fix thanks to [vissert](https://github.com/vissert)
@@ -641,7 +661,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Fixed various bugs in the piggy banks pages.
 - Fixed a bug in the `firefly:verify` routine
 
-## [3.10] - 2015-05-25
+## [3.10] - 2016-08-12
 ### Added
 - New charts in year report
 - Can add / remove money from piggy bank on mobile device.
@@ -668,11 +688,11 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Bulk update problems, #280, thanks [stickgrinder](https://github.com/stickgrinder)
 - Fixed various problems with amount reporting of split transactions.
 
-## [3.9.1]
+## [3.9.1] - 2016-06-06
 ### Fixed
 - Fixed a bug where removing money from a piggy bank would not work. See issue #265 and #269
 
-## [3.9.0]
+## [3.9.0] - 2016-05-22
 ### Added
 - [zjean](https://github.com/zjean) has added code that allows you to force "https://"-URL's.
 - [tonicospinelli](https://github.com/tonicospinelli) has added Portuguese (Brazil) translations.

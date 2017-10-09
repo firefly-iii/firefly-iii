@@ -23,6 +23,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -128,8 +129,15 @@ class SingleController extends Controller
             'payment_date'              => $journal->getMeta('payment_date'),
             'invoice_date'              => $journal->getMeta('invoice_date'),
             'internal_reference'        => $journal->getMeta('internal_reference'),
-            'notes'                     => $journal->getMeta('notes'),
+            'notes'                     => '',
         ];
+
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        if (!is_null($note)) {
+            $preFilled['notes'] = $note->text;
+        }
+
         Session::flash('preFilled', $preFilled);
 
         return redirect(route('transactions.create', [strtolower($journal->transactionType->type)]));
@@ -270,7 +278,7 @@ class SingleController extends Controller
             'payment_date'             => $journal->dateAsString('payment_date'),
             'invoice_date'             => $journal->dateAsString('invoice_date'),
             'interal_reference'        => $journal->getMeta('internal_reference'),
-            'notes'                    => $journal->getMeta('notes'),
+            'notes'                    => '',
 
             // amount fields
             'amount'                   => $pTransaction->amount,
@@ -283,6 +291,11 @@ class SingleController extends Controller
             'foreign_currency'         => $foreignCurrency,
             'destination_currency'     => $foreignCurrency,
         ];
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        if (!is_null($note)) {
+            $preFilled['notes'] = $note->text;
+        }
 
         // amounts for withdrawals and deposits:
         // amount, native_amount, source_amount, destination_amount

@@ -107,6 +107,7 @@ class TagControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('count')->andReturn(0);
         $repository->shouldReceive('tagCloud')->andReturn([]);
+        $repository->shouldReceive('oldestTag')->andReturn(null)->once();
 
         $this->be($this->user());
         $response = $this->get(route('tags.index'));
@@ -137,9 +138,7 @@ class TagControllerTest extends TestCase
         $repository->shouldReceive('earnedInPeriod')->andReturn('1')->once();
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
-
         $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
-
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setPage')->andReturnSelf()->once();

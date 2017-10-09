@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -90,17 +89,17 @@ class JavascriptController extends Controller
     public function variables(Request $request)
     {
         $localeconv                = localeconv();
-        $accounting                = Amount::getJsConfig($localeconv);
+        $accounting                = app('amount')->getJsConfig($localeconv);
         $localeconv                = localeconv();
-        $defaultCurrency           = Amount::getDefaultCurrency();
+        $defaultCurrency           = app('amount')->getDefaultCurrency();
         $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang                      = $pref->data;
         $dateRange                 = $this->getDateRangeConfig();
 
         $data = [
-            'currencyCode'    => Amount::getCurrencyCode(),
-            'currencySymbol'  => Amount::getCurrencySymbol(),
+            'currencyCode'    => app('amount')->getCurrencyCode(),
+            'currencySymbol'  => app('amount')->getCurrencySymbol(),
             'accounting'      => $accounting,
             'localeconv'      => $localeconv,
             'language'        => $lang,

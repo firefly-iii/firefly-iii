@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -52,6 +53,13 @@ final class HasNoCategory extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal): bool
     {
         $count = $journal->categories()->count();
+
+        // perhaps transactions have category?
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            $count += $transaction->categories()->count();
+        }
+
         if ($count === 0) {
             Log::debug(sprintf('RuleTrigger HasNoCategory for journal #%d: count is %d, return true.', $journal->id, $count));
 

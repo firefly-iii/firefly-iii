@@ -63,7 +63,7 @@ class SearchController extends Controller
 
     public function search(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = $request->get('query');
+        $fullQuery = strval($request->get('query'));
 
         // parse search terms:
         $searcher->parseQuery($fullQuery);

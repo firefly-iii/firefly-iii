@@ -261,6 +261,14 @@ class TransactionJournal extends Model
     }
 
     /**
+     * Get all of the notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents(): HasMany
