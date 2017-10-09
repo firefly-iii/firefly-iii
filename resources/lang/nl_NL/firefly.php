@@ -970,9 +970,9 @@ return [
     'this_deposit'                          => 'Deze inkomsten',
     'this_transfer'                         => 'Deze overschrijving',
     'overview_for_link'                     => 'Overzicht voor koppeltype ":name"',
-    'source_transaction'                    => 'Source transaction',
-    'link_description'                      => 'Link description',
-    'destination_transaction'               => 'Destination transaction',
+    'source_transaction'                    => 'Brontransactie',
+    'link_description'                      => 'Beschrijving van koppeling',
+    'destination_transaction'               => 'Doeltransactie',
     'delete_journal_link'                   => 'Verwijder de koppeling tussen <a href=":source_link">:source</a> en <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Koppeling verwijderd',
 
