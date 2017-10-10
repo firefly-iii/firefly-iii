@@ -35,15 +35,15 @@ return [
     'roles_column'                  => 'Stolpec',
     'roles_no_example_data'         => 'primerov podatkov ni na voljo',
     'roles_submit'                  => 'Nadaljujte s korakom 2/3',
-    'roles_warning'                 => 'At the very least, mark one column as the amount-column. It is advisable to also select a column for the description, date and the opposing account.',
+    'roles_warning'                 => 'Čisto na koncu določite stolpec z zneskom. Priporočljivo je da izberete tudi stolpce z opisom, datumom in protiračunom.',
 
     // map data
-    'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
+    'map_title'                     => 'Uvozna nastavitev (3/3) - Povežite uvozne podatke s podatki v Firefly III',
     'map_text'                      => 'Vrednosti na levi v spodnji tabeli prikazujejo podatke iz naložene CSV datoteke. Vaša naloga je, da jim, če je možno, določite obtoječio vrednost iz podatkovne baze. Firefly bo to upošteval pri uvozu. Če v podatkovni bazi ni ustrezne vrednosti, ali vrednosti ne želite določiti ničesar, potem pustite prazno.',
-    'map_field_value'               => 'Field value',
-    'map_field_mapped_to'           => 'Mapped to',
-    'map_do_not_map'                => '(do not map)',
-    'map_submit'                    => 'Start the import',
+    'map_field_value'               => 'podatek',
+    'map_field_mapped_to'           => 'povezan z',
+    'map_do_not_map'                => '(ne poveži)',
+    'map_submit'                    => 'Začnite uvoz',
 
     // map things.
     'column__ignore'                => '(ignoriraj ta stolpec)',
