@@ -30,30 +30,30 @@ return [
     'budgets_index_see_expenses_bar'        => 'Dieser Balken wird sich langsam füllen, wenn Sie Geld ausgeben.',
     'budgets_index_navigate_periods'        => 'Navigieren Sie durch Zeiträume, um die Budgets im Voraus zu setzen.',
     'budgets_index_new_budget'              => 'Erstellen Sie neue Budgets, wie Sie es für richtig halten.',
-    'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
-    'budgets_index_outro'                   => 'To learn more about budgeting, checkout the help icon in the top right corner.',
+    'budgets_index_list_of_budgets'         => 'Verwenden Sie diese Tabelle, um die Beträge für jedes Budget festzulegen und einen Überblick zu erhalten.',
+    'budgets_index_outro'                   => 'Um mehr über die Budgetierung zu erfahren, klicken Sie auf das Hilfesymbol in der oberen rechten Ecke.',
 
     // reports (index)
-    'reports_index_intro'                   => 'Use these reports to get detailed insights in your finances.',
-    'reports_index_inputReportType'         => 'Pick a report type. Check out the help pages to see what each report shows you.',
-    'reports_index_inputAccountsSelect'     => 'You can exclude or include asset accounts as you see fit.',
-    'reports_index_inputDateRange'          => 'The selected date range is entirely up to you: from one day to 10 years.',
-    'reports_index_extra-options-box'       => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
+    'reports_index_intro'                   => 'Verwenden Sie diese Reports, um detaillierte Einblicke in Ihre Finanzen zu erhalten.',
+    'reports_index_inputReportType'         => 'Wählen Sie einen Berichtstyp aus. Sehen Sie sich die Hilfeseiten an, um zu sehen, was jeder Bericht Ihnen zeigt.',
+    'reports_index_inputAccountsSelect'     => 'Sie können Anlagekonten ausschließen oder einbeziehen, wie Sie es für richtig halten.',
+    'reports_index_inputDateRange'          => 'Der gewählte Datumsbereich liegt ganz bei Ihnen: von einem Tag bis 10 Jahre.',
+    'reports_index_extra-options-box'       => 'Abhängig von dem ausgewählten Bericht können Sie hier zusätzliche Filter und Optionen auswählen. Sehen Sie sich dieses Feld an, wenn Sie Berichtstypen ändern.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
-    'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
-    'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
+    'reports_report_default_intro'          => 'Dieser Bericht gibt Ihnen einen schnellen und umfassenden Überblick über Ihre Finanzen. Wenn Sie etwas anderes sehen möchten, kontaktieren Sie mich bitte nicht!',
+    'reports_report_audit_intro'            => 'In diesem Bericht erhalten Sie detaillierte Einblicke in Ihre Bestandskonten.',
+    'reports_report_audit_optionsBox'       => 'Verwenden Sie diese Kontrollkästchen, um die Spalten anzuzeigen oder auszublenden, an denen Sie interessiert sind.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
-    'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
+    'reports_report_category_intro'                  => 'Dieser Bericht gibt Ihnen Einblick in eine oder mehrere Kategorien.',
+    'reports_report_category_pieCharts'              => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen pro Kategorie oder pro Konto.',
+    'reports_report_category_incomeAndExpensesChart' => 'Diese Tabelle zeigt Ihre Ausgaben und Einnahmen pro Kategorie.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
-    'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
+    'reports_report_tag_intro'                  => 'Dieser Bericht gibt Ihnen Einblick in eine oder mehrere Tags.',
+    'reports_report_tag_pieCharts'              => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen pro Tag, Konto, Kategorie oder budget.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Diese Tabelle zeigt Ihre Ausgaben und Einnahmen pro Tag.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
+    'reports_report_budget_intro'                             => 'Dieser Bericht gibt Ihnen Einblick in eine oder mehrere Budgets.',
     'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
     'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
 
