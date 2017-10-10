@@ -71,12 +71,12 @@ return [
     'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
-    'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
+    'piggy-banks_create_name'                                 => 'Was ist Ihr Ziel? Eine neue Couch, eine Kamera, Geld für Notfälle?',
+    'piggy-banks_create_date'                                 => 'Sie können ein Zieldatum oder einen Termin für Ihr Sparschwein festlegen.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
-    'piggy-banks_show_piggyDetails'                           => 'Some details about your piggy bank',
+    'piggy-banks_show_piggyChart'                             => 'Diese Grafik zeigt die Historie dieses Sparschweins.',
+    'piggy-banks_show_piggyDetails'                           => 'Einige Details über Ihr Sparschwein',
     'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
 
     // bill index
