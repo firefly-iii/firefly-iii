@@ -14,10 +14,10 @@ declare(strict_types=1);
 return [
 
     // initial config
-    'initial_title'                 => 'Import setup (1/3) - Basic CSV import setup',
-    'initial_text'                  => 'To be able to import your file correctly, please validate the options below.',
-    'initial_box'                   => 'Basic CSV import setup',
-    'initial_box_title'             => 'Basic CSV import setup options',
+    'initial_title'                 => 'Nastavitve uvoza (1/3) - Osnovne nastavitve',
+    'initial_text'                  => 'Če želite pravilno uvoziti svojo datoteko, preverite spodnje nastavitve.',
+    'initial_box'                   => 'Osnovne nastavitve uvoza CSV',
+    'initial_box_title'             => 'Osnovne nastavitve uvoza CSV',
     'initial_header_help'           => 'Check this box if the first row of your CSV file are the column titles.',
     'initial_date_help'             => 'Date time format in your CSV. Follow the format like <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'initial_delimiter_help'        => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
