@@ -54,20 +54,20 @@ return [
     'reports_report_tag_incomeAndExpensesChart' => 'Diese Tabelle zeigt Ihre Ausgaben und Einnahmen pro Tag.',
 
     'reports_report_budget_intro'                             => 'Dieser Bericht gibt Ihnen Einblick in eine oder mehrere Budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
+    'reports_report_budget_pieCharts'                         => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen pro Budget oder pro Konto.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Diese Tabelle zeigt Ihre Ausgaben und Einnahmen pro Budget.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
-    'transactions_create_ffInput_category'                    => 'You can freely type in this field. Previously created categories will be suggested.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Select a piggy bank and link this transfer to your savings.',
+    'transactions_create_switch_box'                          => 'Verwenden Sie diese Schaltflächen, um schnell den Typ der Transaktion zu ändern, die Sie speichern möchten.',
+    'transactions_create_ffInput_category'                    => 'Dies ist ein Freitextfeld. Zuvor erstellte Kategorien werden vorgeschlagen.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Verbinden Sie Ihre Abhebung mit einem Budget für eine bessere Kontrolle Ihrer Finanzen.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Verwenden Sie dieses Dropdown, wenn ihre Abbuchung in einer anderen Währung ist.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Verwenden Sie dieses Dropdown, wenn ihre Einzahlung in einer anderen Währung ist.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Wählen Sie ein Sparschwein aus und verbinden Sie diese Überweisung mit Ihren Ersparnissen.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
-    'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
+    'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',
+    'piggy-banks_index_button'                                => 'Neben diesem Fortschrittsbalken befinden sich zwei Buttons (+ und -), um Geld von jedem Sparschwein hinzuzufügen oder zu entfernen.',
     'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
 
     // create piggy
