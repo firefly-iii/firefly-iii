@@ -971,9 +971,9 @@ return [
     'this_deposit'                          => 'Ce dépôt',
     'this_transfer'                         => 'Ce transfert',
     'overview_for_link'                     => 'Aperçu pour le type de lien ":name"',
-    'source_transaction'                    => 'Source transaction',
-    'link_description'                      => 'Link description',
-    'destination_transaction'               => 'Destination transaction',
+    'source_transaction'                    => 'Source de la transaction',
+    'link_description'                      => 'Description du lien',
+    'destination_transaction'               => 'Destination de la transaction',
     'delete_journal_link'                   => 'Supprimez le lien entre <a href=":source_link">:source</a> et <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Lien supprimé',
 
