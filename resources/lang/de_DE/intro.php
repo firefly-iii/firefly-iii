@@ -68,7 +68,7 @@ return [
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',
     'piggy-banks_index_button'                                => 'Neben diesem Fortschrittsbalken befinden sich zwei Buttons (+ und -), um Geld von jedem Sparschwein hinzuzufügen oder zu entfernen.',
-    'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Anlagenkonten aufgeführt, die mindestens mit einem Sparschwein verbunden sind.',
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Was ist Ihr Ziel? Eine neue Couch, eine Kamera, Geld für Notfälle?',
@@ -92,12 +92,12 @@ return [
     'bills_create_name'                                       => 'Verwenden Sie einen aussagekräftigen Namen wie "Miete" oder "Krankenversicherung".',
     'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Wählen Sie einen Mindest- und Höchstbetrag für diese Rechnung aus.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
+    'bills_create_repeat_freq_holder'                         => 'Die meisten Rechnungen wiederholen sich monatlich, aber Sie können hier eine andere Frequenz einstellen.',
     'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
-    'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
+    'rules_index_intro'                                       => 'Mit Firefly III können Sie Regeln verwalten, die automatisch auf alle Transaktionen angewendet werden, die Sie erstellen oder bearbeiten.',
+    'rules_index_new_rule_group'                              => 'Sie können Regeln in Gruppen kombinieren, um die Verwaltung zu vereinfachen.',
     'rules_index_new_rule'                                    => 'Erstellen Sie so viele Regeln, wie Sie möchten.',
     'rules_index_prio_buttons'                                => 'Sortieren Sie sie, wie Sie es für richtig halten.',
     'rules_index_test_buttons'                                => 'Sie können Ihre Regeln testen oder sie auf vorhandene Transaktionen anwenden.',
@@ -115,7 +115,7 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III unterstützt mehrere Währungen, die Sie auf dieser Seite ändern können.',
-    'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
+    'currencies_index_default'                                => 'Firefly III besitzt eine Standardwährung, die mit diesen Buttons gewechselt werden können.',
 
     // create currency
     'currencies_create_code'                                  => 'Dieser Code sollte ISO-konform sein (Für eine neue Währung googlen).',
