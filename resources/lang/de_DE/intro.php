@@ -81,42 +81,42 @@ return [
 
     // bill index
     'bills_index_paid_in_period'                              => 'Dieses Feld zeigt an, wann die Rechnung zuletzt bezahlt wurde.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_expected_in_period'                          => 'Dieses Feld zeigt für jede Rechnung an, ob und wann die nächste Rechnung erwartet wird.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'Diese Tabelle enthält allgemeine Informationen über diese Rechnung.',
+    'bills_show_billButtons'                                  => 'Verwenden Sie diese Schaltfläche, um alte Transaktionen erneut zu scannen, sodass sie mit dieser Rechnung verglichen werden.',
+    'bills_show_billChart'                                    => 'Diese Grafik zeigt die mit dieser Rechnung verknüpften Transaktionen.',
 
     // create bill
-    'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
+    'bills_create_name'                                       => 'Verwenden Sie einen aussagekräftigen Namen wie "Miete" oder "Krankenversicherung".',
     'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
+    'bills_create_amount_min_holder'                          => 'Wählen Sie einen Mindest- und Höchstbetrag für diese Rechnung aus.',
     'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
     'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks for example, the "skip"-field should be set to "1" to skip every other week.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
     'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
-    'rules_index_new_rule'                                    => 'Create as many rules as you like.',
-    'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
-    'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
-    'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
+    'rules_index_new_rule'                                    => 'Erstellen Sie so viele Regeln, wie Sie möchten.',
+    'rules_index_prio_buttons'                                => 'Sortieren Sie sie, wie Sie es für richtig halten.',
+    'rules_index_test_buttons'                                => 'Sie können Ihre Regeln testen oder sie auf vorhandene Transaktionen anwenden.',
+    'rules_index_rule-triggers'                               => 'Regeln haben "Auslöser" und "Aktionen", die Sie per Drag-and-Drop sortieren können.',
     'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
 
     // create rule:
     'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
     'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
     'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
-    'rules_create_actions'                                    => 'Set as many actions as you like.',
+    'rules_create_actions'                                    => 'Legen Sie so viele Aktionen fest, wie Sie möchten.',
 
     // preferences
-    'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
+    'preferences_index_tabs'                                  => 'Weitere Optionen sind hinter diesen Registerkarten verfügbar.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
+    'currencies_index_intro'                                  => 'Firefly III unterstützt mehrere Währungen, die Sie auf dieser Seite ändern können.',
     'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
 
     // create currency
-    'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
+    'currencies_create_code'                                  => 'Dieser Code sollte ISO-konform sein (Für eine neue Währung googlen).',
 ];
