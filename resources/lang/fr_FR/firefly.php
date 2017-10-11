@@ -836,7 +836,7 @@ return [
     'left_to_spend'                            => 'Restant à dépenser',
     'earned'                                   => 'Gagné',
     'overspent'                                => 'Trop dépensé',
-    'left'                                     => 'Restant',
+    'left'                                     => 'Reste',
     'no_budget'                                => '(pas de budget)',
     'max-amount'                               => 'Montant maximum',
     'min-amount'                               => 'Montant minimum',
