@@ -77,10 +77,10 @@ return [
     // show piggy
     'piggy-banks_show_piggyChart'                             => 'Diese Grafik zeigt die Historie dieses Sparschweins.',
     'piggy-banks_show_piggyDetails'                           => 'Einige Details über Ihr Sparschwein',
-    'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
+    'piggy-banks_show_piggyEvents'                            => 'Hinzufügungen oder Entfernungen sind hier ebenfalls aufgeführt.',
 
     // bill index
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
+    'bills_index_paid_in_period'                              => 'Dieses Feld zeigt an, wann die Rechnung zuletzt bezahlt wurde.',
     'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
 
     // show bill
