@@ -46,7 +46,12 @@ COPY . $FIREFLY_PATH
 
 RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
 
-RUN composer install --prefer-dist --no-dev --no-scripts && cat .env.docker | envsubst > .env && composer dump-autoload && php artisan firefly:instructions install && php artisan optimize
+RUN cat .env.docker | envsubst > .env
+RUN composer install --prefer-dist --no-dev
+RUN composer dump-autoload
+RUN php artisan optimize
+RUN php artisan package:discover
+RUN php artisan firefly:instructions install
 
 EXPOSE 80
 
