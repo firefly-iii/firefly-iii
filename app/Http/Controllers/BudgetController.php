@@ -406,7 +406,7 @@ class BudgetController extends Controller
         // collector:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('budgets.show', [$budget->id]));
 
@@ -444,7 +444,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
-                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
 
