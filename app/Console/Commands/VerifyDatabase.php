@@ -402,7 +402,7 @@ class VerifyDatabase extends Command
                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                  ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
                                  ->whereIn('transaction_types.type', [TransactionType::TRANSFER, TransactionType::DEPOSIT])
-                                 ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.id']);
+                                 ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*']);
 
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {
