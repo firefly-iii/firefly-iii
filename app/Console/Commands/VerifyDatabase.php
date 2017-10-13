@@ -401,15 +401,15 @@ class VerifyDatabase extends Command
         $set = TransactionJournal::distinct()
                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                  ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
-                                 ->where('transaction_types.type', TransactionType::TRANSFER)
+                                 ->whereIn('transaction_types.type', [TransactionType::TRANSFER, TransactionType::DEPOSIT])
                                  ->whereNotNull('budget_transaction_journal.budget_id')->get(['transaction_journals.id']);
 
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {
             $this->error(
                 sprintf(
-                    'Error: Transaction journal #%d is a transfer, but has a budget. Edit it without changing anything, so the budget will be removed.',
-                    $entry->id
+                    'Error: Transaction journal #%d is a %s, but has a budget. Edit it without changing anything, so the budget will be removed.',
+                    $entry->id, $entry->transactionType->type
                 )
             );
         }
