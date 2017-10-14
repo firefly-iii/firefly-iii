@@ -59,7 +59,7 @@
     "laravel/framework": "5.5.*",
     "laravelcollective/html": "^5.4",
     "league/commonmark": "0.15.*",
-    "league/csv": "8.*"
+    "league/csv": "8.*",
     "pragmarx/google2fa": "1.*",
     "rcrowe/twigbridge": "0.9.*",
     "rmccue/requests": "1.*",
