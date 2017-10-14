@@ -492,7 +492,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setBudgets($budgets);
+        $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);

@@ -175,7 +175,7 @@ class BudgetController extends Controller
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget);
+        $collector->setAllAssetAccounts()->setBudget($budget);
         if (!is_null($budgetLimit->id)) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
@@ -220,7 +220,7 @@ class BudgetController extends Controller
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withCategoryInformation();
+        $collector->setAllAssetAccounts()->setBudget($budget)->withCategoryInformation();
         if (!is_null($budgetLimit->id)) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
@@ -244,7 +244,6 @@ class BudgetController extends Controller
 
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
-
         return Response::json($data);
 
     }
@@ -439,7 +438,7 @@ class BudgetController extends Controller
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE]);
+        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::CASH]);
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $accountId) {
