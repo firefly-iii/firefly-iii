@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.8] - 2017-10-15
+### Added
+- Verify routine will check if deposits have a budget (they shouldn't).
+- New translations!
+
+### Changed
+- Changed docker files for [issue 919](https://github.com/firefly-iii/firefly-iii/issues/919) and [issue 915](https://github.com/firefly-iii/firefly-iii/issues/915)
+
+### Fixed
+- [Issue 917](https://github.com/firefly-iii/firefly-iii/issues/917), as reported by [Wr0ngName](https://github.com/Wr0ngName)
+- Rules can no longer set a budget for a transfer or a deposit ([issue 916](https://github.com/firefly-iii/firefly-iii/issues/916))
+- Fixed [issue 925](https://github.com/firefly-iii/firefly-iii/issues/925), [issue 928](https://github.com/firefly-iii/firefly-iii/issues/928) as reported by [dzaikos](https://github.com/dzaikos) and [DeltaKiloz](https://github.com/DeltaKiloz)
+- A fix for [issue 926](https://github.com/firefly-iii/firefly-iii/issues/926), as reported by [Aquariu](https://github.com/Aquariu)
+
 ## [4.6.7] - 2017-10-09
 ### Added
 - [Issue 872](https://github.com/firefly-iii/firefly-iii/issues/872), reported [gavu](https://github.com/gavu)
@@ -19,7 +33,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 904](https://github.com/firefly-iii/firefly-iii/issues/904), reported by [gavu](https://github.com/gavu)
 - [Issue 910](https://github.com/firefly-iii/firefly-iii/issues/910), reported by [gavu](https://github.com/gavu)
 - [Issue 911](https://github.com/firefly-iii/firefly-iii/issues/911), reported by [gavu](https://github.com/gavu)
-- [Issue 915](https://github.com/firefly-iii/firefly-iii/issues/915), reported by @TomWis97
+- [Issue 915](https://github.com/firefly-iii/firefly-iii/issues/915), reported by [TomWis97](https://github.com/TomWis97)
 - [Issue 917](https://github.com/firefly-iii/firefly-iii/issues/917), reported by [Wr0ngName](https://github.com/Wr0ngName)
 
 ## [4.6.6] - 2017-09-30
