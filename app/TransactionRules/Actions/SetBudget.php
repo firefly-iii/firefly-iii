@@ -65,8 +65,8 @@ class SetBudget implements ActionInterface
             return true;
         }
 
-        if ($journal->transactionType->type === TransactionType::TRANSFER) {
-            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a transfer.', $journal->id, $search));
+        if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
+            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.', $journal->id, $search, $journal->transactionType->type));
 
             return true;
         }

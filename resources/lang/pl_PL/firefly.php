@@ -970,9 +970,9 @@ return [
     'this_deposit'                          => 'Ta wpłata',
     'this_transfer'                         => 'Ten transfer',
     'overview_for_link'                     => 'Przegląd dla typu łącza ":name"',
-    'source_transaction'                    => 'Source transaction',
-    'link_description'                      => 'Link description',
-    'destination_transaction'               => 'Destination transaction',
+    'source_transaction'                    => 'Transakcja źródłowa',
+    'link_description'                      => 'Opis łącza',
+    'destination_transaction'               => 'Transakcja docelowa',
     'delete_journal_link'                   => 'Usuń powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Usunięto powiązanie',
 

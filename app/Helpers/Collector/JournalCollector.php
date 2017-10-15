@@ -91,8 +91,6 @@ class JournalCollector implements JournalCollectorInterface
             'account_types.type as account_type',
 
         ];
-    /** @var  bool */
-    private $filterTransfers = false;
     /** @var array */
     private $filters = [InternalTransferFilter::class];
 
@@ -125,7 +123,7 @@ class JournalCollector implements JournalCollectorInterface
     public function addFilter(string $filter): JournalCollectorInterface
     {
         $interfaces = class_implements($filter);
-        if (in_array(FilterInterface::class, $interfaces)) {
+        if (in_array(FilterInterface::class, $interfaces) && !in_array($filter, $this->filters) ) {
             Log::debug(sprintf('Enabled filter %s', $filter));
             $this->filters[] = $filter;
         }
@@ -237,7 +235,6 @@ class JournalCollector implements JournalCollectorInterface
 
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
-            $this->filterTransfers = true;
         }
 
 
@@ -261,7 +258,6 @@ class JournalCollector implements JournalCollectorInterface
 
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
-            $this->filterTransfers = true;
         }
 
         return $this;

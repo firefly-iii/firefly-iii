@@ -20,6 +20,7 @@ services:
       - FF_DB_USER=firefly_db
       - FF_DB_PASSWORD=firefly_db_secret
       - FF_APP_KEY=SomeRandomStringOf32CharsExactly
+      - FF_APP_ENV=production
     ports:
       - "80:80"
     links:

@@ -66,7 +66,7 @@ return [
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Sélectionnez une tirelire et reliez ce transfert à vos économies.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'Ce champ vous montre combien vous avez enregistré dans chaque tirelire.',
+    'piggy-banks_index_saved'                                 => 'Ce champ vous montre combien vous avez mis de côté dans chaque tirelire.',
     'piggy-banks_index_button'                                => 'À côté de cette barre de progression sont deux boutons (+ et -) pour ajouter ou retirer de l’argent de chaque tirelire.',
     'piggy-banks_index_accountStatus'                         => 'Pour chaque compte d\'actif avec au moins une tirelire, le statut est indiqué dans ce tableau.',
 

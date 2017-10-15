@@ -17,13 +17,12 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -406,7 +405,7 @@ class BudgetController extends Controller
         // collector:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('budgets.show', [$budget->id]));
 
@@ -444,11 +443,9 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
-                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
-
-
         $start  = session('first', Carbon::create()->startOfYear());
         $end    = new Carbon;
         $limits = $this->getLimits($budget, $start, $end);
@@ -541,15 +538,12 @@ class BudgetController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-        $set               = $this->repository->getBudgetLimits($budget, $start, $end);
-        $limits            = new Collection();
+        $set    = $this->repository->getBudgetLimits($budget, $start, $end);
+        $limits = new Collection();
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $entry->spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
+            $entry->spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
             $limits->push($entry);
         }
         $cache->store($limits);
