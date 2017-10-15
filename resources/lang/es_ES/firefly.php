@@ -155,7 +155,7 @@ return [
     'export_data'                                => 'Exportar datos',
     'export_and_backup_data'                     => 'Export and backup',
     'export_data_intro'                          => 'For backup purposes, when migrating to another system or when migrating to another Firefly III installation.',
-    'export_format'                              => 'Export format',
+    'export_format'                              => 'Formato de exportación',
     'export_format_csv'                          => 'Comma separated values (CSV file)',
     'export_format_mt940'                        => 'MT940 compatible format',
     'include_old_uploads_help'                   => 'Firefly III does not throw away the original CSV files you have imported in the past. You can include them in your export.',
