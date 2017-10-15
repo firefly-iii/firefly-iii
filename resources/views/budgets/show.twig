@@ -121,6 +121,7 @@
                                 <td style="width:33%;">{{ 'spent'|_ }}</td>
                                 <td>{{ limit.spent|formatAmount }}</td>
                             </tr>
+                            {% if limit.spent > 0 %}
                             <tr>
                                 <td colspan="2">
                                     {% set overspent = limit.amount + limit.spent < 0 %}
@@ -142,6 +143,7 @@
                                     {% endif %}
                                 </td>
                             </tr>
+                            {% endif %}
                         </table>
                     </div>
                 </div>
