@@ -4,97 +4,97 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.6.7] - 2017-10-09
 ### Added
-- [issue 872](https://github.com/firefly-iii/firefly-iii/issues/872), reported [gavu](https://github.com/gavu)
+- [Issue 872](https://github.com/firefly-iii/firefly-iii/issues/872), reported [gavu](https://github.com/gavu)
 
 ### Fixed
-- [issue 878](https://github.com/firefly-iii/firefly-iii/issues/878), fixed by [Findus23](https://github.com/Findus23)
-- [issue 881](https://github.com/firefly-iii/firefly-iii/issues/881), reported by [nicoschreiner](https://github.com/nicoschreiner)
-- [issue 884](https://github.com/firefly-iii/firefly-iii/issues/884), by [gavu](https://github.com/gavu)
-- [issue 840](https://github.com/firefly-iii/firefly-iii/issues/840), reported by [MacPaille](https://github.com/MacPaille)
-- [issue 882](https://github.com/firefly-iii/firefly-iii/issues/882), reported by [nicoschreiner](https://github.com/nicoschreiner)
-- [issue 891](https://github.com/firefly-iii/firefly-iii/issues/891), [issue 892](https://github.com/firefly-iii/firefly-iii/issues/892), reported by [nicoschreiner](https://github.com/nicoschreiner)
-- [issue 891](https://github.com/firefly-iii/firefly-iii/issues/891), reported by [gavu](https://github.com/gavu)
-- [issue 827](https://github.com/firefly-iii/firefly-iii/issues/827), fixed by [pkoziol](https://github.com/pkoziol)
-- [issue 903](https://github.com/firefly-iii/firefly-iii/issues/903), fixed by [hduijn](https://github.com/hduijn)
-- [issue 904](https://github.com/firefly-iii/firefly-iii/issues/904), reported by [gavu](https://github.com/gavu)
-- [issue 910](https://github.com/firefly-iii/firefly-iii/issues/910), reported by [gavu](https://github.com/gavu)
-- [issue 911](https://github.com/firefly-iii/firefly-iii/issues/911), reported by [gavu](https://github.com/gavu)
-- [issue 915](https://github.com/firefly-iii/firefly-iii/issues/915), reported by @TomWis97
-- [issue 917](https://github.com/firefly-iii/firefly-iii/issues/917), reported by [Wr0ngName](https://github.com/Wr0ngName)
+- [Issue 878](https://github.com/firefly-iii/firefly-iii/issues/878), fixed by [Findus23](https://github.com/Findus23)
+- [Issue 881](https://github.com/firefly-iii/firefly-iii/issues/881), reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 884](https://github.com/firefly-iii/firefly-iii/issues/884), by [gavu](https://github.com/gavu)
+- [Issue 840](https://github.com/firefly-iii/firefly-iii/issues/840), reported by [MacPaille](https://github.com/MacPaille)
+- [Issue 882](https://github.com/firefly-iii/firefly-iii/issues/882), reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 891](https://github.com/firefly-iii/firefly-iii/issues/891), [issue 892](https://github.com/firefly-iii/firefly-iii/issues/892), reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 891](https://github.com/firefly-iii/firefly-iii/issues/891), reported by [gavu](https://github.com/gavu)
+- [Issue 827](https://github.com/firefly-iii/firefly-iii/issues/827), fixed by [pkoziol](https://github.com/pkoziol)
+- [Issue 903](https://github.com/firefly-iii/firefly-iii/issues/903), fixed by [hduijn](https://github.com/hduijn)
+- [Issue 904](https://github.com/firefly-iii/firefly-iii/issues/904), reported by [gavu](https://github.com/gavu)
+- [Issue 910](https://github.com/firefly-iii/firefly-iii/issues/910), reported by [gavu](https://github.com/gavu)
+- [Issue 911](https://github.com/firefly-iii/firefly-iii/issues/911), reported by [gavu](https://github.com/gavu)
+- [Issue 915](https://github.com/firefly-iii/firefly-iii/issues/915), reported by @TomWis97
+- [Issue 917](https://github.com/firefly-iii/firefly-iii/issues/917), reported by [Wr0ngName](https://github.com/Wr0ngName)
 
 ## [4.6.6] - 2017-09-30
 ### Added
-- [issue 826](https://github.com/firefly-iii/firefly-iii/issues/826), reported by [pkoziol](https://github.com/pkoziol).
-- [issue 855](https://github.com/firefly-iii/firefly-iii/issues/855), by [ms32035](https://github.com/ms32035)
-- [issue 786](https://github.com/firefly-iii/firefly-iii/issues/786), by [SmilingWorlock](https://github.com/SmilingWorlock)
-- [issue 875](https://github.com/firefly-iii/firefly-iii/issues/875), by [gavu](https://github.com/gavu)
-- [issue 834](https://github.com/firefly-iii/firefly-iii/issues/834), by [gavu](https://github.com/gavu) (and others)
+- [Issue 826](https://github.com/firefly-iii/firefly-iii/issues/826), reported by [pkoziol](https://github.com/pkoziol).
+- [Issue 855](https://github.com/firefly-iii/firefly-iii/issues/855), by [ms32035](https://github.com/ms32035)
+- [Issue 786](https://github.com/firefly-iii/firefly-iii/issues/786), by [SmilingWorlock](https://github.com/SmilingWorlock)
+- [Issue 875](https://github.com/firefly-iii/firefly-iii/issues/875), by [gavu](https://github.com/gavu)
+- [Issue 834](https://github.com/firefly-iii/firefly-iii/issues/834), by [gavu](https://github.com/gavu) (and others)
 
 
 ### Changed
 - Upgraded to Laravel 5.5
 - Add version parameter to CSS and JS files
-- [issue 823](https://github.com/firefly-iii/firefly-iii/issues/823), [issue 824](https://github.com/firefly-iii/firefly-iii/issues/824) fixed Docker config by [DieBauer](https://github.com/DieBauer)
+- [Issue 823](https://github.com/firefly-iii/firefly-iii/issues/823), [issue 824](https://github.com/firefly-iii/firefly-iii/issues/824) fixed Docker config by [DieBauer](https://github.com/DieBauer)
 
 ### Fixed
-- [issue 830](https://github.com/firefly-iii/firefly-iii/issues/830)
-- [issue 822](https://github.com/firefly-iii/firefly-iii/issues/822), reported by [gazben](https://github.com/gazben)
-- [issue 827](https://github.com/firefly-iii/firefly-iii/issues/827), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 835](https://github.com/firefly-iii/firefly-iii/issues/835), reported by [gavu](https://github.com/gavu)
-- [issue 836](https://github.com/firefly-iii/firefly-iii/issues/836), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 838](https://github.com/firefly-iii/firefly-iii/issues/838), reported by [gavu](https://github.com/gavu)
-- [issue 839](https://github.com/firefly-iii/firefly-iii/issues/839), reported by [gavu](https://github.com/gavu)
-- [issue 843](https://github.com/firefly-iii/firefly-iii/issues/843), reported by [gavu](https://github.com/gavu)
-- [issue 837](https://github.com/firefly-iii/firefly-iii/issues/837), reported by [gavu](https://github.com/gavu)
-- [issue 845](https://github.com/firefly-iii/firefly-iii/issues/845), reported by [gavu](https://github.com/gavu)
-- [issue 846](https://github.com/firefly-iii/firefly-iii/issues/846), reported by [gavu](https://github.com/gavu)
-- [issue 848](https://github.com/firefly-iii/firefly-iii/issues/848), reported by [gavu](https://github.com/gavu)
-- [issue 854](https://github.com/firefly-iii/firefly-iii/issues/854), reported by [gavu](https://github.com/gavu)
-- [issue 866](https://github.com/firefly-iii/firefly-iii/issues/866), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 847](https://github.com/firefly-iii/firefly-iii/issues/847), reported by [gavu](https://github.com/gavu)
-- [issue 853](https://github.com/firefly-iii/firefly-iii/issues/853), reported by [gavu](https://github.com/gavu)
-- [issue 857](https://github.com/firefly-iii/firefly-iii/issues/857), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 865](https://github.com/firefly-iii/firefly-iii/issues/865), reported by [simonsmiley](https://github.com/simonsmiley)
-- [issue 826](https://github.com/firefly-iii/firefly-iii/issues/826), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 856](https://github.com/firefly-iii/firefly-iii/issues/856), reported by [ms32035](https://github.com/ms32035)
-- [issue 860](https://github.com/firefly-iii/firefly-iii/issues/860), reported by [gavu](https://github.com/gavu)
-- [issue 861](https://github.com/firefly-iii/firefly-iii/issues/861), reported by [gavu](https://github.com/gavu)
-- [issue 870](https://github.com/firefly-iii/firefly-iii/issues/870), reported by [gavu](https://github.com/gavu)
+- [Issue 830](https://github.com/firefly-iii/firefly-iii/issues/830)
+- [Issue 822](https://github.com/firefly-iii/firefly-iii/issues/822), reported by [gazben](https://github.com/gazben)
+- [Issue 827](https://github.com/firefly-iii/firefly-iii/issues/827), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 835](https://github.com/firefly-iii/firefly-iii/issues/835), reported by [gavu](https://github.com/gavu)
+- [Issue 836](https://github.com/firefly-iii/firefly-iii/issues/836), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 838](https://github.com/firefly-iii/firefly-iii/issues/838), reported by [gavu](https://github.com/gavu)
+- [Issue 839](https://github.com/firefly-iii/firefly-iii/issues/839), reported by [gavu](https://github.com/gavu)
+- [Issue 843](https://github.com/firefly-iii/firefly-iii/issues/843), reported by [gavu](https://github.com/gavu)
+- [Issue 837](https://github.com/firefly-iii/firefly-iii/issues/837), reported by [gavu](https://github.com/gavu)
+- [Issue 845](https://github.com/firefly-iii/firefly-iii/issues/845), reported by [gavu](https://github.com/gavu)
+- [Issue 846](https://github.com/firefly-iii/firefly-iii/issues/846), reported by [gavu](https://github.com/gavu)
+- [Issue 848](https://github.com/firefly-iii/firefly-iii/issues/848), reported by [gavu](https://github.com/gavu)
+- [Issue 854](https://github.com/firefly-iii/firefly-iii/issues/854), reported by [gavu](https://github.com/gavu)
+- [Issue 866](https://github.com/firefly-iii/firefly-iii/issues/866), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 847](https://github.com/firefly-iii/firefly-iii/issues/847), reported by [gavu](https://github.com/gavu)
+- [Issue 853](https://github.com/firefly-iii/firefly-iii/issues/853), reported by [gavu](https://github.com/gavu)
+- [Issue 857](https://github.com/firefly-iii/firefly-iii/issues/857), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 865](https://github.com/firefly-iii/firefly-iii/issues/865), reported by [simonsmiley](https://github.com/simonsmiley)
+- [Issue 826](https://github.com/firefly-iii/firefly-iii/issues/826), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 856](https://github.com/firefly-iii/firefly-iii/issues/856), reported by [ms32035](https://github.com/ms32035)
+- [Issue 860](https://github.com/firefly-iii/firefly-iii/issues/860), reported by [gavu](https://github.com/gavu)
+- [Issue 861](https://github.com/firefly-iii/firefly-iii/issues/861), reported by [gavu](https://github.com/gavu)
+- [Issue 870](https://github.com/firefly-iii/firefly-iii/issues/870), reported by [gavu](https://github.com/gavu)
 
 ## [4.6.5] - 2017-09-09
 
 ### Added
-- [issue 616](https://github.com/firefly-iii/firefly-iii/issues/616), The ability to link transactions
-- [issue 763](https://github.com/firefly-iii/firefly-iii/issues/763), as suggested by [tannie](https://github.com/tannie)
-- [issue 770](https://github.com/firefly-iii/firefly-iii/issues/770), as suggested by [skibbipl](https://github.com/skibbipl)
-- [issue 780](https://github.com/firefly-iii/firefly-iii/issues/780), as suggested by [skibbipl](https://github.com/skibbipl)
-- [issue 784](https://github.com/firefly-iii/firefly-iii/issues/784), as suggested by [SmilingWorlock](https://github.com/SmilingWorlock)
+- [Issue 616](https://github.com/firefly-iii/firefly-iii/issues/616), The ability to link transactions
+- [Issue 763](https://github.com/firefly-iii/firefly-iii/issues/763), as suggested by [tannie](https://github.com/tannie)
+- [Issue 770](https://github.com/firefly-iii/firefly-iii/issues/770), as suggested by [skibbipl](https://github.com/skibbipl)
+- [Issue 780](https://github.com/firefly-iii/firefly-iii/issues/780), as suggested by [skibbipl](https://github.com/skibbipl)
+- [Issue 784](https://github.com/firefly-iii/firefly-iii/issues/784), as suggested by [SmilingWorlock](https://github.com/SmilingWorlock)
 - Lots of code for future support of automated Bunq imports
 
 ### Changed
 - Rewrote the export routine
-- [issue 782](https://github.com/firefly-iii/firefly-iii/issues/782), as suggested by [NiceGuyIT](https://github.com/NiceGuyIT)
-- [issue 800](https://github.com/firefly-iii/firefly-iii/issues/800), as suggested by [jleeong](https://github.com/jleeong)
+- [Issue 782](https://github.com/firefly-iii/firefly-iii/issues/782), as suggested by [NiceGuyIT](https://github.com/NiceGuyIT)
+- [Issue 800](https://github.com/firefly-iii/firefly-iii/issues/800), as suggested by [jleeong](https://github.com/jleeong)
 
 ### Fixed
-- [issue 724](https://github.com/firefly-iii/firefly-iii/issues/724), reported by [skibbipl](https://github.com/skibbipl)
-- [issue 738](https://github.com/firefly-iii/firefly-iii/issues/738), reported by [skibbipl](https://github.com/skibbipl)
-- [issue 760](https://github.com/firefly-iii/firefly-iii/issues/760), reported by [leander091](https://github.com/leander091)
-- [issue 764](https://github.com/firefly-iii/firefly-iii/issues/764), reported by [tannie](https://github.com/tannie)
-- [issue 792](https://github.com/firefly-iii/firefly-iii/issues/792), reported by [jleeong](https://github.com/jleeong)
-- [issue 793](https://github.com/firefly-iii/firefly-iii/issues/793), reported by [nicoschreiner](https://github.com/nicoschreiner)
-- [issue 797](https://github.com/firefly-iii/firefly-iii/issues/797), reported by [leander091](https://github.com/leander091)
-- [issue 801](https://github.com/firefly-iii/firefly-iii/issues/801), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 803](https://github.com/firefly-iii/firefly-iii/issues/803), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 805](https://github.com/firefly-iii/firefly-iii/issues/805), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 806](https://github.com/firefly-iii/firefly-iii/issues/806), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 807](https://github.com/firefly-iii/firefly-iii/issues/807), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 808](https://github.com/firefly-iii/firefly-iii/issues/808), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 809](https://github.com/firefly-iii/firefly-iii/issues/809), reported by [pkoziol](https://github.com/pkoziol)
-- [issue 814](https://github.com/firefly-iii/firefly-iii/issues/814), reported by [nicoschreiner](https://github.com/nicoschreiner)
-- [issue 818](https://github.com/firefly-iii/firefly-iii/issues/818), reported by [gavu](https://github.com/gavu)
-- [issue 819](https://github.com/firefly-iii/firefly-iii/issues/819), reported by [DieBauer](https://github.com/DieBauer)
-- [issue 820](https://github.com/firefly-iii/firefly-iii/issues/820), reported by [simonsmiley](https://github.com/simonsmiley) 
+- [Issue 724](https://github.com/firefly-iii/firefly-iii/issues/724), reported by [skibbipl](https://github.com/skibbipl)
+- [Issue 738](https://github.com/firefly-iii/firefly-iii/issues/738), reported by [skibbipl](https://github.com/skibbipl)
+- [Issue 760](https://github.com/firefly-iii/firefly-iii/issues/760), reported by [leander091](https://github.com/leander091)
+- [Issue 764](https://github.com/firefly-iii/firefly-iii/issues/764), reported by [tannie](https://github.com/tannie)
+- [Issue 792](https://github.com/firefly-iii/firefly-iii/issues/792), reported by [jleeong](https://github.com/jleeong)
+- [Issue 793](https://github.com/firefly-iii/firefly-iii/issues/793), reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 797](https://github.com/firefly-iii/firefly-iii/issues/797), reported by [leander091](https://github.com/leander091)
+- [Issue 801](https://github.com/firefly-iii/firefly-iii/issues/801), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 803](https://github.com/firefly-iii/firefly-iii/issues/803), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 805](https://github.com/firefly-iii/firefly-iii/issues/805), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 806](https://github.com/firefly-iii/firefly-iii/issues/806), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 807](https://github.com/firefly-iii/firefly-iii/issues/807), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 808](https://github.com/firefly-iii/firefly-iii/issues/808), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 809](https://github.com/firefly-iii/firefly-iii/issues/809), reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 814](https://github.com/firefly-iii/firefly-iii/issues/814), reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 818](https://github.com/firefly-iii/firefly-iii/issues/818), reported by [gavu](https://github.com/gavu)
+- [Issue 819](https://github.com/firefly-iii/firefly-iii/issues/819), reported by [DieBauer](https://github.com/DieBauer)
+- [Issue 820](https://github.com/firefly-iii/firefly-iii/issues/820), reported by [simonsmiley](https://github.com/simonsmiley) 
 - Various other fixes
 
 
@@ -117,18 +117,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
-- [issue 717](https://github.com/firefly-iii/firefly-iii/issues/717), reported by [NiceGuyIT](https://github.com/NiceGuyIT)
-- [issue 718](https://github.com/firefly-iii/firefly-iii/issues/718), reported by [wtercato](https://github.com/wtercato)
-- [issue 722](https://github.com/firefly-iii/firefly-iii/issues/722), reported by [simonsmiley](https://github.com/simonsmiley)
-- [issue 648](https://github.com/firefly-iii/firefly-iii/issues/648), reported by [skibbipl](https://github.com/skibbipl)
-- [issue 730](https://github.com/firefly-iii/firefly-iii/issues/730), reported by [ragnarkarlsson](https://github.com/ragnarkarlsson)
-- [issue 733](https://github.com/firefly-iii/firefly-iii/issues/733), reported by [xpfgsyb](https://github.com/xpfgsyb)
-- [issue 735](https://github.com/firefly-iii/firefly-iii/issues/735), reported by [kristophr](https://github.com/kristophr)
-- [issue 739](https://github.com/firefly-iii/firefly-iii/issues/739), reported by [skibbipl](https://github.com/skibbipl)
-- [issue 515](https://github.com/firefly-iii/firefly-iii/issues/515), reported by [schwalberich](https://github.com/schwalberich)
-- [issue 743](https://github.com/firefly-iii/firefly-iii/issues/743), reported by [simonsmiley](https://github.com/simonsmiley)
-- [issue 746](https://github.com/firefly-iii/firefly-iii/issues/746), reported by [tannie](https://github.com/tannie)
-- [issue 747](https://github.com/firefly-iii/firefly-iii/issues/747), reported by [tannie](https://github.com/tannie)
+- [Issue 717](https://github.com/firefly-iii/firefly-iii/issues/717), reported by [NiceGuyIT](https://github.com/NiceGuyIT)
+- [Issue 718](https://github.com/firefly-iii/firefly-iii/issues/718), reported by [wtercato](https://github.com/wtercato)
+- [Issue 722](https://github.com/firefly-iii/firefly-iii/issues/722), reported by [simonsmiley](https://github.com/simonsmiley)
+- [Issue 648](https://github.com/firefly-iii/firefly-iii/issues/648), reported by [skibbipl](https://github.com/skibbipl)
+- [Issue 730](https://github.com/firefly-iii/firefly-iii/issues/730), reported by [ragnarkarlsson](https://github.com/ragnarkarlsson)
+- [Issue 733](https://github.com/firefly-iii/firefly-iii/issues/733), reported by [xpfgsyb](https://github.com/xpfgsyb)
+- [Issue 735](https://github.com/firefly-iii/firefly-iii/issues/735), reported by [kristophr](https://github.com/kristophr)
+- [Issue 739](https://github.com/firefly-iii/firefly-iii/issues/739), reported by [skibbipl](https://github.com/skibbipl)
+- [Issue 515](https://github.com/firefly-iii/firefly-iii/issues/515), reported by [schwalberich](https://github.com/schwalberich)
+- [Issue 743](https://github.com/firefly-iii/firefly-iii/issues/743), reported by [simonsmiley](https://github.com/simonsmiley)
+- [Issue 746](https://github.com/firefly-iii/firefly-iii/issues/746), reported by [tannie](https://github.com/tannie)
+- [Issue 747](https://github.com/firefly-iii/firefly-iii/issues/747), reported by [tannie](https://github.com/tannie)
 
 
 ## [4.6.3.1] - 2017-07-23
@@ -176,8 +176,8 @@ This will be the last release to support PHP 7.0.
 - Revamped import routine. Will be buggy.
 
 ### Fixed
-- [issue 667](https://github.com/firefly-iii/firefly-iii/issues/667), postgresql reported by [skibbipl](https://github.com/skibbipl).
-- [issue 680](https://github.com/firefly-iii/firefly-iii/issues/680), fixed by [Xeli](https://github.com/Xeli)
+- [Issue 667](https://github.com/firefly-iii/firefly-iii/issues/667), postgresql reported by [skibbipl](https://github.com/skibbipl).
+- [Issue 680](https://github.com/firefly-iii/firefly-iii/issues/680), fixed by [Xeli](https://github.com/Xeli)
 - Fixed [issue 660](https://github.com/firefly-iii/firefly-iii/issues/660)
 - Fixes [issue 672](https://github.com/firefly-iii/firefly-iii/issues/672), reported by [dzaikos](https://github.com/dzaikos)
 - Fix a bug where the balance routine forgot to account for accounts without a currency preference.
@@ -208,7 +208,7 @@ This will be the last release to support PHP 7.0.
 - The journal collector, an internal piece of code to collect transactions, now uses a slightly different method of collecting journals. This may cause problems.
 
 ### Fixed
-- [issue 638](https://github.com/firefly-iii/firefly-iii/issues/638) as reported by [worldworm](https://github.com/worldworm).
+- [Issue 638](https://github.com/firefly-iii/firefly-iii/issues/638) as reported by [worldworm](https://github.com/worldworm).
 - Possible fix for [issue 624](https://github.com/firefly-iii/firefly-iii/issues/624)
 
 ## [4.4.2] - 2017-04-27
@@ -237,12 +237,12 @@ This will be the last release to support PHP 7.0.
 
 ### Added
 - Better overview / show pages.
-- [issue 628](https://github.com/firefly-iii/firefly-iii/issues/628), as reported by [xzaz](https://github.com/xzaz).
+- [Issue 628](https://github.com/firefly-iii/firefly-iii/issues/628), as reported by [xzaz](https://github.com/xzaz).
 - Greatly expanded test coverage
 
 ### Fixed
-- [issue 619](https://github.com/firefly-iii/firefly-iii/issues/619), as reported by [dfiel](https://github.com/dfiel).
-- [issue 620](https://github.com/firefly-iii/firefly-iii/issues/620), as reported by [forcaeluz](https://github.com/forcaeluz).
+- [Issue 619](https://github.com/firefly-iii/firefly-iii/issues/619), as reported by [dfiel](https://github.com/dfiel).
+- [Issue 620](https://github.com/firefly-iii/firefly-iii/issues/620), as reported by [forcaeluz](https://github.com/forcaeluz).
 - Attempt to fix [issue 624](https://github.com/firefly-iii/firefly-iii/issues/624), as reported by [TheSerenin](https://github.com/TheSerenin).
 - Favicon link is relative now, fixed by [welbert](https://github.com/welbert).
 - Some search bugs
@@ -267,18 +267,18 @@ This will be the last release to support PHP 7.0.
 - Force key generation during installation.
 - The `date` function takes the fieldname where a date is stored, not the literal date by [Zsub](https://github.com/Zsub)
 - Improved budget frontpage chart, as suggested by [skibbipl](https://github.com/skibbipl)
-- [issue 602](https://github.com/firefly-iii/firefly-iii/issues/602) and [issue 607](https://github.com/firefly-iii/firefly-iii/issues/607), as reported by [skibbipl](https://github.com/skibbipl) and [dzaikos](https://github.com/dzaikos).
-- [issue 605](https://github.com/firefly-iii/firefly-iii/issues/605), as reported by [Zsub](https://github.com/Zsub).
-- [issue 599](https://github.com/firefly-iii/firefly-iii/issues/599), as reported by [leander091](https://github.com/leander091).
-- [issue 610](https://github.com/firefly-iii/firefly-iii/issues/610), as reported by [skibbipl](https://github.com/skibbipl).
-- [issue 611](https://github.com/firefly-iii/firefly-iii/issues/611), as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
-- [issue 612](https://github.com/firefly-iii/firefly-iii/issues/612), as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
-- [issue 614](https://github.com/firefly-iii/firefly-iii/issues/614), as reported by [worldworm](https://github.com/worldworm).
+- [Issue 602](https://github.com/firefly-iii/firefly-iii/issues/602) and [issue 607](https://github.com/firefly-iii/firefly-iii/issues/607), as reported by [skibbipl](https://github.com/skibbipl) and [dzaikos](https://github.com/dzaikos).
+- [Issue 605](https://github.com/firefly-iii/firefly-iii/issues/605), as reported by [Zsub](https://github.com/Zsub).
+- [Issue 599](https://github.com/firefly-iii/firefly-iii/issues/599), as reported by [leander091](https://github.com/leander091).
+- [Issue 610](https://github.com/firefly-iii/firefly-iii/issues/610), as reported by [skibbipl](https://github.com/skibbipl).
+- [Issue 611](https://github.com/firefly-iii/firefly-iii/issues/611), as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
+- [Issue 612](https://github.com/firefly-iii/firefly-iii/issues/612), as reported by [ragnarkarlsson](https://github.com/ragnarkarlsson).
+- [Issue 614](https://github.com/firefly-iii/firefly-iii/issues/614), as reported by [worldworm](https://github.com/worldworm).
 - Various other bug fixes.
 
 ## [4.3.6] - 2017-02-20
 ### Fixed
-- [issue 578](https://github.com/firefly-iii/firefly-iii/issues/578), reported by [xpfgsyb](https://github.com/xpfgsyb).
+- [Issue 578](https://github.com/firefly-iii/firefly-iii/issues/578), reported by [xpfgsyb](https://github.com/xpfgsyb).
 
 ## [4.3.5] - 2017-02-19
 ### Added
@@ -295,14 +295,14 @@ This will be the last release to support PHP 7.0.
 - Smooth curves, improved by [elamperti](https://github.com/elamperti).
 
 ### Fixed
-- [issue 549](https://github.com/firefly-iii/firefly-iii/issues/549)
-- [issue 553](https://github.com/firefly-iii/firefly-iii/issues/553)
+- [Issue 549](https://github.com/firefly-iii/firefly-iii/issues/549)
+- [Issue 553](https://github.com/firefly-iii/firefly-iii/issues/553)
 - Fixed [issue 559](https://github.com/firefly-iii/firefly-iii/issues/559) reported by [elamperti](https://github.com/elamperti).
-- [issue 565](https://github.com/firefly-iii/firefly-iii/issues/565), as reported by a user over the mail
-- [issue 566](https://github.com/firefly-iii/firefly-iii/issues/566), as reported by [dspeckmann](https://github.com/dspeckmann)
-- [issue 567](https://github.com/firefly-iii/firefly-iii/issues/567), as reported by [winsomniak](https://github.com/winsomniak)
-- [issue 569](https://github.com/firefly-iii/firefly-iii/issues/569), as reported by [winsomniak](https://github.com/winsomniak)
-- [issue 572](https://github.com/firefly-iii/firefly-iii/issues/572), as reported by [zjean](https://github.com/zjean)
+- [Issue 565](https://github.com/firefly-iii/firefly-iii/issues/565), as reported by a user over the mail
+- [Issue 566](https://github.com/firefly-iii/firefly-iii/issues/566), as reported by [dspeckmann](https://github.com/dspeckmann)
+- [Issue 567](https://github.com/firefly-iii/firefly-iii/issues/567), as reported by [winsomniak](https://github.com/winsomniak)
+- [Issue 569](https://github.com/firefly-iii/firefly-iii/issues/569), as reported by [winsomniak](https://github.com/winsomniak)
+- [Issue 572](https://github.com/firefly-iii/firefly-iii/issues/572), as reported by [zjean](https://github.com/zjean)
 - Many issues with the transaction filters which will fix reports (they tended to display the wrong amount).
 
 ## [4.3.4] - 2017-02-02
@@ -346,10 +346,10 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 
 ### Fixed
 - The password reset routine was broken.
-- [issue 522](https://github.com/firefly-iii/firefly-iii/issues/522), thanks to [xpfgsyb](https://github.com/xpfgsyb)
-- [issue 524](https://github.com/firefly-iii/firefly-iii/issues/524), thanks to [worldworm](https://github.com/worldworm)
-- [issue 526](https://github.com/firefly-iii/firefly-iii/issues/526), thanks to [worldworm](https://github.com/worldworm)
-- [issue 528](https://github.com/firefly-iii/firefly-iii/issues/528), thanks to [skibbipl](https://github.com/skibbipl)
+- [Issue 522](https://github.com/firefly-iii/firefly-iii/issues/522), thanks to [xpfgsyb](https://github.com/xpfgsyb)
+- [Issue 524](https://github.com/firefly-iii/firefly-iii/issues/524), thanks to [worldworm](https://github.com/worldworm)
+- [Issue 526](https://github.com/firefly-iii/firefly-iii/issues/526), thanks to [worldworm](https://github.com/worldworm)
+- [Issue 528](https://github.com/firefly-iii/firefly-iii/issues/528), thanks to [skibbipl](https://github.com/skibbipl)
 - Various other fixes.
 
 ## [4.3.1] - 2017-01-04
@@ -363,18 +363,18 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 ### Changed
 - **[New Github repository!](github.com/firefly-iii/firefly-iii)**
 - Better category overview.
-- [issue 502](https://github.com/firefly-iii/firefly-iii/issues/502), thanks to [zjean](https://github.com/zjean)
+- [Issue 502](https://github.com/firefly-iii/firefly-iii/issues/502), thanks to [zjean](https://github.com/zjean)
 
 ### Removed
 - Removed a lot of administration functions.
 - Removed ability to activate users.
 
 ### Fixed
-- [issue 501](https://github.com/firefly-iii/firefly-iii/issues/501), thanks to [zjean](https://github.com/zjean)
-- [issue 513](https://github.com/firefly-iii/firefly-iii/issues/513), thanks to [skibbipl](https://github.com/skibbipl) 
+- [Issue 501](https://github.com/firefly-iii/firefly-iii/issues/501), thanks to [zjean](https://github.com/zjean)
+- [Issue 513](https://github.com/firefly-iii/firefly-iii/issues/513), thanks to [skibbipl](https://github.com/skibbipl) 
 
 ### Security
-- [issue 519](https://github.com/firefly-iii/firefly-iii/issues/519), thanks to [xpfgsyb](https://github.com/xpfgsyb)
+- [Issue 519](https://github.com/firefly-iii/firefly-iii/issues/519), thanks to [xpfgsyb](https://github.com/xpfgsyb)
 
 ## [4.3.0] - 2016-12-26
 ### Added
@@ -407,7 +407,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 
 ### Fixed
 - Various bugs
-- [issue 472](https://github.com/firefly-iii/firefly-iii/issues/472) thanks to [zjean](https://github.com/zjean)
+- [Issue 472](https://github.com/firefly-iii/firefly-iii/issues/472) thanks to [zjean](https://github.com/zjean)
 
 ## [4.2.1] - 2016-12-09
 ### Added
@@ -433,11 +433,11 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Made some fonts local
 
 ### Fixed
-- [issue 408](https://github.com/firefly-iii/firefly-iii/issues/408)
+- [Issue 408](https://github.com/firefly-iii/firefly-iii/issues/408)
 - Various issues with split journals
-- [issue 414](https://github.com/firefly-iii/firefly-iii/issues/414), thx [zjean](https://github.com/zjean)
-- [issue 419](https://github.com/firefly-iii/firefly-iii/issues/419), thx [schwalberich](https://github.com/schwalberich) 
-- [issue 422](https://github.com/firefly-iii/firefly-iii/issues/422), thx [xzaz](https://github.com/xzaz)
+- [Issue 414](https://github.com/firefly-iii/firefly-iii/issues/414), thx [zjean](https://github.com/zjean)
+- [Issue 419](https://github.com/firefly-iii/firefly-iii/issues/419), thx [schwalberich](https://github.com/schwalberich) 
+- [Issue 422](https://github.com/firefly-iii/firefly-iii/issues/422), thx [xzaz](https://github.com/xzaz)
 - Various import bugs, such as [issue 416](https://github.com/firefly-iii/firefly-iii/issues/416) ([zjean](https://github.com/zjean))
 
 ## [4.1.7] - 2016-11-19
@@ -473,9 +473,9 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Rebuilt seach engine.
 
 ### Fixed
-- [issue 375](https://github.com/firefly-iii/firefly-iii/issues/375), thanks to [schoentoon](https://github.com/schoentoon) which made it impossible to resurrect currencies.
-- [issue 370](https://github.com/firefly-iii/firefly-iii/issues/370) thanks to [ksmolder](https://github.com/ksmolder)
-- [issue 378](https://github.com/firefly-iii/firefly-iii/issues/378), thanks to [HomelessAvatar](https://github.com/HomelessAvatar)
+- [Issue 375](https://github.com/firefly-iii/firefly-iii/issues/375), thanks to [schoentoon](https://github.com/schoentoon) which made it impossible to resurrect currencies.
+- [Issue 370](https://github.com/firefly-iii/firefly-iii/issues/370) thanks to [ksmolder](https://github.com/ksmolder)
+- [Issue 378](https://github.com/firefly-iii/firefly-iii/issues/378), thanks to [HomelessAvatar](https://github.com/HomelessAvatar)
 
 ## [4.1.5] - 2016-11-01
 ### Changed
@@ -484,7 +484,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Help content is translated through Crowdin.
 
 ### Fixed
-- [issue 370](https://github.com/firefly-iii/firefly-iii/issues/370)
+- [Issue 370](https://github.com/firefly-iii/firefly-iii/issues/370)
 
 ## [4.1.4] - 2016-10-30
 ### Added
@@ -501,10 +501,10 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Change error message to refer to solution.
 
 ### Fixed
-- [issue 367](https://github.com/firefly-iii/firefly-iii/issues/367) thanks to [HungryFeline](https://github.com/HungryFeline)
-- [issue 366](https://github.com/firefly-iii/firefly-iii/issues/366) thanks to [3mz3t](https://github.com/3mz3t)
-- [issue 362](https://github.com/firefly-iii/firefly-iii/issues/362) and [issue 341](https://github.com/firefly-iii/firefly-iii/issues/341) thanks to [bnw](https://github.com/bnw)
-- [issue 355](https://github.com/firefly-iii/firefly-iii/issues/355) thanks to [roberthorlings](https://github.com/roberthorlings)
+- [Issue 367](https://github.com/firefly-iii/firefly-iii/issues/367) thanks to [HungryFeline](https://github.com/HungryFeline)
+- [Issue 366](https://github.com/firefly-iii/firefly-iii/issues/366) thanks to [3mz3t](https://github.com/3mz3t)
+- [Issue 362](https://github.com/firefly-iii/firefly-iii/issues/362) and [issue 341](https://github.com/firefly-iii/firefly-iii/issues/341) thanks to [bnw](https://github.com/bnw)
+- [Issue 355](https://github.com/firefly-iii/firefly-iii/issues/355) thanks to [roberthorlings](https://github.com/roberthorlings)
 
 ## [4.1.3] - 2016-10-22
 ### Fixed
@@ -535,7 +535,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Lots of old code
 
 ### Fixed
-- [issue 357](https://github.com/firefly-iii/firefly-iii/issues/357), where non utf-8 files would break Firefly.
+- [Issue 357](https://github.com/firefly-iii/firefly-iii/issues/357), where non utf-8 files would break Firefly.
 - Tab delimiter is not properly loaded from import configuration ([roberthorlings](https://github.com/roberthorlings))
 - System response to yearly bills
 
@@ -548,7 +548,7 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Updated all copyright notices to refer to the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
 - Fixed [issue 344](https://github.com/firefly-iii/firefly-iii/issues/344)
 - Fixed [issue 346](https://github.com/firefly-iii/firefly-iii/issues/346), thanks to [SanderKleykens](https://github.com/SanderKleykens)
-- [issue 351](https://github.com/firefly-iii/firefly-iii/issues/351)
+- [Issue 351](https://github.com/firefly-iii/firefly-iii/issues/351)
 - Did some internal remodelling.
 
 ### Fixed
@@ -564,10 +564,10 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 
 ### Fixed
 - Fixed a bug where incoming transactions would not be properly filtered in several reports.
-- [issue 334](https://github.com/firefly-iii/firefly-iii/issues/334) by [cyberkov](https://github.com/cyberkov)
-- [issue 337](https://github.com/firefly-iii/firefly-iii/issues/337)
-- [issue 336](https://github.com/firefly-iii/firefly-iii/issues/336)
-- [issue 338](https://github.com/firefly-iii/firefly-iii/issues/338) found by [roberthorlings](https://github.com/roberthorlings)
+- [Issue 334](https://github.com/firefly-iii/firefly-iii/issues/334) by [cyberkov](https://github.com/cyberkov)
+- [Issue 337](https://github.com/firefly-iii/firefly-iii/issues/337)
+- [Issue 336](https://github.com/firefly-iii/firefly-iii/issues/336)
+- [Issue 338](https://github.com/firefly-iii/firefly-iii/issues/338) found by [roberthorlings](https://github.com/roberthorlings)
 
 ## [4.0.0] - 2016-09-26
 ### Added
@@ -662,11 +662,11 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 - Rewrote all migrations. [issue 272](https://github.com/firefly-iii/firefly-iii/issues/272)
 
 ### Fixed
-- [issue 264](https://github.com/firefly-iii/firefly-iii/issues/264)
-- [issue 265](https://github.com/firefly-iii/firefly-iii/issues/265)
+- [Issue 264](https://github.com/firefly-iii/firefly-iii/issues/264)
+- [Issue 265](https://github.com/firefly-iii/firefly-iii/issues/265)
 - Fixed amount calculation problems, [issue 266](https://github.com/firefly-iii/firefly-iii/issues/266), thanks [xzaz](https://github.com/xzaz)
-- [issue 271](https://github.com/firefly-iii/firefly-iii/issues/271)
-- [issue 278](https://github.com/firefly-iii/firefly-iii/issues/278), [issue 273](https://github.com/firefly-iii/firefly-iii/issues/273), thanks [StevenReitsma](https://github.com/StevenReitsma) and [rubella](https://github.com/rubella)
+- [Issue 271](https://github.com/firefly-iii/firefly-iii/issues/271)
+- [Issue 278](https://github.com/firefly-iii/firefly-iii/issues/278), [issue 273](https://github.com/firefly-iii/firefly-iii/issues/273), thanks [StevenReitsma](https://github.com/StevenReitsma) and [rubella](https://github.com/rubella)
 - Bug in attachment download routine would report the wrong size to the user's browser.
 - Various NULL errors fixed.
 - Various strict typing errors fixed.
