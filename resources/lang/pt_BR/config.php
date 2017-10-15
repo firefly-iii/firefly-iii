@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 return [
     'locale'          => 'pt-br, pt_BR, pt_BR.utf8, pt_BR.UTF-8',
-    'month'           => '%B %Yü',
-    'month_and_day'   => '%B %e, %Y',
+    'month'           => '%B %Y',
+    'month_and_day'   => '%e de %B de %Y',
     'date_time'       => '%B %e, %Y, @ %T',
     'specific_day'    => '%e %B %Y',
     'week_in_year'    => 'Semana %W, %Y',
