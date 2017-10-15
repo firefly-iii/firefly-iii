@@ -104,17 +104,12 @@ class BudgetControllerTest extends TestCase
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transactions = factory(Transaction::class, 10)->make();
-        $accounts     = factory(Account::class, 10)->make();
 
         $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();
         $collector->shouldReceive('setBudget')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transactions);
-
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn($accounts)->once();
 
         $generator->shouldReceive('pieChart')->once()->andReturn([]);
 
@@ -141,7 +136,6 @@ class BudgetControllerTest extends TestCase
         $categories   = factory(Category::class, 10)->make();
 
         $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->once()->andReturnSelf();
         $collector->shouldReceive('setBudget')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();

@@ -297,7 +297,6 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $date = new Carbon();
@@ -332,7 +331,6 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn(new Collection);
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
@@ -369,7 +367,6 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withoutBudget')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $date = new Carbon();
@@ -422,8 +419,8 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
@@ -488,7 +485,7 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setBudget')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
 
