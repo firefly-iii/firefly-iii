@@ -39,9 +39,9 @@ return [
 
     // map data
     'map_title'                     => 'Import setup (3/3) - Connect import data to Firefly III data',
-    'map_text'                      => 'In the following tables, the left value shows you information found in your uploaded CSV file. It is your task to map this value, if possible, to a value already present in your database. Firefly will stick to this mapping. If there is no value to map to, or you do not wish to map the specific value, select nothing.',
+    'map_text'                      => 'Nas tabelas a seguir, o valor à esquerda mostra informações encontradas no seu arquivo CSV carregado. É sua tarefa mapear esse valor, se possível, para um valor já presente em seu banco de dados. O Firefly vai se ater a esse mapeamento. Se não há nenhum valor para mapear, ou não quer mapear o valor específico, não selecione nada.',
     'map_field_value'               => 'Field value',
-    'map_field_mapped_to'           => 'Mapped to',
+    'map_field_mapped_to'           => 'Mapeado para',
     'map_do_not_map'                => '(não mapear)',
     'map_submit'                    => 'Start the import',
 
