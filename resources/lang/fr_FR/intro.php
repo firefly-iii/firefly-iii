@@ -96,7 +96,7 @@ return [
     'bills_create_skip_holder'                                => 'Si une facture se répète toutes les 2 semaines par exemple, le champ "sauter" doit être réglé sur "1" pour sauter une semaine sur deux.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III vous permet de gérer les règles, qui seront automagiquement appliquées à toute transaction que vous créez ou modifiez.',
+    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
     'rules_index_new_rule_group'                              => 'Vous pouvez rassembler les règles en groupes pour une gestion plus facile.',
     'rules_index_new_rule'                                    => 'Créez autant de règles que vous le souhaitez.',
     'rules_index_prio_buttons'                                => 'Mettez-les dans l\'ordre que vous jugez convenable.',
