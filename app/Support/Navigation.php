@@ -215,14 +215,15 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $date
+     * @param \Carbon\Carbon $theDate
      * @param                $repeatFrequency
      *
      * @return string
      * @throws FireflyException
      */
-    public function periodShow(Carbon $date, string $repeatFrequency): string
+    public function periodShow(Carbon $theDate, string $repeatFrequency): string
     {
+        $date = clone $theDate;
         $formatMap = [
             '1D'      => trans('config.specific_day'),
             'daily'   => trans('config.specific_day'),

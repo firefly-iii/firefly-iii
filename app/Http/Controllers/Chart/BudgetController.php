@@ -74,17 +74,17 @@ class BudgetController extends Controller
      */
     public function budget(Budget $budget)
     {
-        $first = $this->repository->firstUseDate($budget);
-        $range = Preferences::get('viewRange', '1M')->data;
-        $last  = session('end', new Carbon);
-
-        $cache = new CacheProperties();
+        $first        = $this->repository->firstUseDate($budget);
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $currentStart = Navigation::startOfPeriod($first, $range);
+        $last         = session('end', new Carbon);
+        $cache        = new CacheProperties();
         $cache->addProperty($first);
         $cache->addProperty($last);
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;
@@ -92,17 +92,16 @@ class BudgetController extends Controller
         $budgetCollection = new Collection([$budget]);
         $last             = Navigation::endOfX($last, $range, $final); // not to overshoot.
         $entries          = [];
-        while ($first < $last) {
-
+        while ($currentStart < $last) {
             // periodspecific dates:
-            $currentStart = Navigation::startOfPeriod($first, $range);
-            $currentEnd   = Navigation::endOfPeriod($first, $range);
+            $currentEnd = Navigation::endOfPeriod($currentStart, $range);
             // sub another day because reasons.
             $currentEnd->subDay();
             $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
-            $format           = Navigation::periodShow($first, $range);
+            $format           = Navigation::periodShow($currentStart, $range);
             $entries[$format] = bcmul($spent, '-1');
-            $first            = Navigation::addPeriod($first, $range, 0);
+            $currentStart     = clone $currentEnd;
+            $currentStart->addDays(2);
         }
 
         $data = $this->generator->singleSet(strval(trans('firefly.spent')), $entries);
@@ -244,6 +243,7 @@ class BudgetController extends Controller
 
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
+
         return Response::json($data);
 
     }
