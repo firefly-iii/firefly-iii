@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
     // general stuff:
     'close'                                      => 'Fechar',
-    'actions'                                    => 'Actions',
+    'actions'                                    => 'Ações',
     'edit'                                       => 'Editar',
     'delete'                                     => 'Apagar',
     'welcomeBack'                                => 'O que está passando?',
@@ -28,10 +28,10 @@ return [
     'showEverything'                             => 'Mostrar tudo',
     'never'                                      => 'Nunca',
     'no_results_for_empty_search'                => 'Your search was empty, so nothing was found.',
-    'removed_amount'                             => 'Removed :amount',
-    'added_amount'                               => 'Added :amount',
-    'asset_account_role_help'                    => 'Any extra options resulting from your choice can be set later.',
-    'Opening balance'                            => 'Opening balance',
+    'removed_amount'                             => ':amount removido',
+    'added_amount'                               => ':amount adicionada',
+    'asset_account_role_help'                    => 'Quaisquer opções extras resultantes da sua escolha pode ser definido mais tarde.',
+    'Opening balance'                            => 'Saldo inicial',
     'create_new_stuff'                           => 'Criar novas coisas',
     'new_withdrawal'                             => 'Nova retirada',
     'new_deposit'                                => 'Novo depósito',
