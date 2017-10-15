@@ -26,7 +26,7 @@ return [
     'edit_bill'           => 'uredi trajnik ":name"',
     'delete_bill'         => 'izbriši trajnik ":name"',
     'reports'             => 'Poročila',
-    'search_result'       => 'Search results for ":query"',
+    'search_result'       => 'rezultati iskanja za ":query"',
     'withdrawal_list'     => 'stroški',
     'deposit_list'        => 'prihodki',
     'transfer_list'       => 'prenosi',
@@ -40,5 +40,5 @@ return [
     'createTag'           => 'ustvari novo značko',
     'edit_tag'            => 'uredi značko ":tag"',
     'delete_tag'          => 'izbriši značko ":tag"',
-    'delete_journal_link' => 'Delete link between transactions',
+    'delete_journal_link' => 'Izbriši povezavo med transakcijami',
 ];
