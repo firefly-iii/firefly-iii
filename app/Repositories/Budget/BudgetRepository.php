@@ -588,12 +588,25 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit
     {
+        // count the limits:
+        $limits = $budget->budgetlimits()
+                         ->where('budget_limits.start_date', $start->format('Y-m-d'))
+                         ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                         ->get(['budget_limits.*'])->count();
         // there might be a budget limit for these dates:
         /** @var BudgetLimit $limit */
         $limit = $budget->budgetlimits()
                         ->where('budget_limits.start_date', $start->format('Y-m-d'))
                         ->where('budget_limits.end_date', $end->format('Y-m-d'))
                         ->first(['budget_limits.*']);
+
+        // if more than 1 limit found, delete the others:
+        if ($limits > 1 && !is_null($limit)) {
+            $budget->budgetlimits()
+                   ->where('budget_limits.start_date', $start->format('Y-m-d'))
+                   ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                   ->where('budget_limits.id', '!=', $limit->id)->delete();
+        }
 
         // delete if amount is zero.
         if (!is_null($limit) && $amount <= 0.0) {
