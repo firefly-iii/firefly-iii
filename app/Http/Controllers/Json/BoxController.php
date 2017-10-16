@@ -166,16 +166,30 @@ class BoxController extends Controller
      */
     public function netWorth(AccountRepositoryInterface $repository)
     {
-        $today = new Carbon(date('Y-m-d')); // needed so its per day.
+        $date = new Carbon(date('Y-m-d')); // needed so its per day.
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end = session('end', Carbon::now()->endOfMonth());
+
+        // start and end in the future? use $end
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $date = $end;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $date = $end;
+        }
+        // start in the past, end in the future? use $date
         $cache = new CacheProperties;
-        $cache->addProperty($today);
+        $cache->addProperty($date);
         $cache->addProperty('box-net-worth');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $currency = app('amount')->getDefaultCurrency();
-        $balances = app('steam')->balancesByAccounts($accounts, $today);
+        $balances = app('steam')->balancesByAccounts($accounts, $date);
         $sum      = '0';
         foreach ($balances as $entry) {
             $sum = bcadd($sum, $entry);
