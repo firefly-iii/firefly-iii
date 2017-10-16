@@ -19,7 +19,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -133,11 +132,6 @@ class HomeController extends Controller
         $accounts = $repository->getAccountsById($frontPage->data);
         $showDeps = Preferences::get('showDepositsFrontpage', false)->data;
 
-        // zero bills? Hide some elements from view.
-        /** @var BillRepositoryInterface $billRepository */
-        $billRepository = app(BillRepositoryInterface::class);
-        $billCount      = $billRepository->getBills()->count();
-
         foreach ($accounts as $account) {
             $collector = app(JournalCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
@@ -146,7 +140,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
+            'index', compact('count', 'subTitle', 'transactions', 'showDeps')
         );
     }
 

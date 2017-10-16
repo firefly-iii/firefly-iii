@@ -1,16 +1,7 @@
-{# Set box sizes: #}
-{% if billCount > 0 %}
-    {% set boxClasses = 'col-lg-3 col-md-3 col-sm-6 col-xs-12' %}
-{% else %}
-    {# Zero bills? Remove the boxes. #}
-    {% set boxClasses = 'col-lg-4 col-md-4 col-sm-6 col-xs-12' %}
-{% endif %}
-
-
 <div class="row hidden-sm hidden-xs">
 
     {# box for in and out#}
-    <div class="{{ boxClasses }}">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-aqua-gradient">
             <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
 
@@ -29,7 +20,7 @@
     </div>
 
     {# box for bills #}
-    <div class="{{ boxClasses }}">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-teal-gradient">
             <span class="info-box-icon"><i class="fa fa-calendar-o"></i></span>
 
@@ -49,7 +40,7 @@
     </div>
 
     {#  available to spend total / per day #}
-    <div class="{{ boxClasses }}">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-green-gradient">
             <span class="info-box-icon"><i class="fa fa-money"></i></span>
             <div class="info-box-content">
@@ -68,7 +59,7 @@
     </div>
 
     {# net worth #}
-    <div class="{{ boxClasses }}">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-blue-gradient">
             <span class="info-box-icon"><i class="fa fa-line-chart"></i></span>
 
