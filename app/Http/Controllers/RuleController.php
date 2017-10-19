@@ -79,7 +79,6 @@ class RuleController extends Controller
 
         // has old input?
         if ($request->old()) {
-            echo '!';
             // process old triggers.
             $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
