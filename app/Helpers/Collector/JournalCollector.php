@@ -512,7 +512,8 @@ class JournalCollector implements JournalCollectorInterface
                             ->orderBy('transaction_journals.date', 'DESC')
                             ->orderBy('transaction_journals.order', 'ASC')
                             ->orderBy('transaction_journals.id', 'DESC')
-                            ->orderBy('transaction_journals.description', 'DESC');
+                            ->orderBy('transaction_journals.description', 'DESC')
+                            ->orderBy('transactions.amount','DESC');
 
         $this->query = $query;
 
