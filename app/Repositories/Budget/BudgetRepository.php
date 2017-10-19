@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
@@ -47,6 +48,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         // delete limits with amount 0:
         BudgetLimit::where('amount', 0)->delete();
+
+        // clean up:
+        $set = BudgetLimit::groupBy(['budget_id', 'start_date', 'end_date'])
+                          ->get(['budget_id', 'start_date', 'end_date', DB::raw('COUNT(*) as ct')]);
+        foreach ($set as $entry) {
+            if ($entry->ct > 1) {
+                $newest = BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
+                                     ->where('budget_id', $entry->budget_id)->orderBy('updated_at', 'DESC')->first(['budget_limits.*']);
+                BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
+                           ->where('budget_id', $entry->budget_id)->where('id', '!=', $newest->id)->delete();
+            }
+        }
 
         return true;
 
