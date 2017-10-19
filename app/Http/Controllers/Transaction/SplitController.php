@@ -21,6 +21,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -221,6 +222,12 @@ class SplitController extends Controller
     {
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
+        $notes = '';
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        if (!is_null($note)) {
+            $notes = $note->text;
+        }
         $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
             'journal_amount'                 => $journal->amountPositive(),
@@ -241,7 +248,7 @@ class SplitController extends Controller
             'payment_date'                   => $request->old('payment_date', $journal->getMeta('payment_date')),
             'invoice_date'                   => $request->old('invoice_date', $journal->getMeta('invoice_date')),
             'internal_reference'             => $request->old('internal_reference', $journal->getMeta('internal_reference')),
-            'notes'                          => $request->old('notes', $journal->getMeta('notes')),
+            'notes'                          => $request->old('notes', $notes),
 
             // transactions.
             'transactions'                   => $this->getTransactionDataFromJournal($journal),
