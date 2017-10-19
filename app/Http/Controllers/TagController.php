@@ -118,7 +118,7 @@ class TagController extends Controller
         $tagName = $tag->tag;
         $this->repository->destroy($tag);
 
-        Session::flash('success', strval(trans('firefly.deleted_tag', ['tag' => e($tagName)])));
+        Session::flash('success', strval(trans('firefly.deleted_tag', ['tag' => $tagName])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('tags.delete.uri'));
@@ -262,7 +262,7 @@ class TagController extends Controller
         $data = $request->collectTagData();
         $this->repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.created_tag', ['tag' => e($data['tag'])])));
+        Session::flash('success', strval(trans('firefly.created_tag', ['tag' => $data['tag']])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -288,7 +288,7 @@ class TagController extends Controller
         $data = $request->collectTagData();
         $this->repository->update($tag, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => e($data['tag'])])));
+        Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => $data['tag']])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

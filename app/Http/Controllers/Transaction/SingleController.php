@@ -222,7 +222,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
         $type = $transactionJournal->transactionTypeStr();
-        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
+        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description])));
 
         $this->repository->delete($transactionJournal);
 
@@ -355,7 +355,7 @@ class SingleController extends Controller
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
-        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
+        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => $journal->description])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -408,7 +408,7 @@ class SingleController extends Controller
         // update, get events by date and sort DESC
 
         $type = strtolower($journal->transactionTypeStr());
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['description'])])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart

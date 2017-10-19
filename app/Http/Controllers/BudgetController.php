@@ -135,7 +135,7 @@ class BudgetController extends Controller
 
         $name = $budget->name;
         $this->repository->destroy($budget);
-        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
+        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => $name])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));
@@ -464,7 +464,7 @@ class BudgetController extends Controller
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
 
-        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => $budget->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -489,7 +489,7 @@ class BudgetController extends Controller
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => $budget->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

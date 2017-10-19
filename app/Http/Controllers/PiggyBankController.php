@@ -149,7 +149,7 @@ class PiggyBankController extends Controller
      */
     public function destroy(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => e($piggyBank->name)])));
+        Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
         $repository->destroy($piggyBank);
 
@@ -297,7 +297,7 @@ class PiggyBankController extends Controller
             'error', strval(
                        trans(
                            'firefly.cannot_add_amount_piggy',
-                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
+                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                        )
                    )
         );
@@ -337,7 +337,7 @@ class PiggyBankController extends Controller
             'error', strval(
                        trans(
                            'firefly.cannot_remove_from_piggy',
-                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
+                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                        )
                    )
         );
@@ -395,7 +395,7 @@ class PiggyBankController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => e($piggyBank->name)])));
+        Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -421,7 +421,7 @@ class PiggyBankController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $repository->update($piggyBank, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => e($piggyBank->name)])));
+        Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

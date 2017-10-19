@@ -241,7 +241,7 @@ class BillController extends Controller
     {
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
-        $request->session()->flash('success', strval(trans('firefly.stored_new_bill', ['name' => e($bill->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_bill', ['name' => $bill->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -269,7 +269,7 @@ class BillController extends Controller
         $billData = $request->getBillData();
         $bill     = $repository->update($bill, $billData);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_bill', ['name' => e($bill->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_bill', ['name' => $bill->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

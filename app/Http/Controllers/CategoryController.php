@@ -108,7 +108,7 @@ class CategoryController extends Controller
         $name = $category->name;
         $repository->destroy($category);
 
-        $request->session()->flash('success', strval(trans('firefly.deleted_category', ['name' => e($name)])));
+        $request->session()->flash('success', strval(trans('firefly.deleted_category', ['name' => $name])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('categories.delete.uri'));
@@ -292,7 +292,7 @@ class CategoryController extends Controller
         $data     = $request->getCategoryData();
         $category = $repository->store($data);
 
-        $request->session()->flash('success', strval(trans('firefly.stored_category', ['name' => e($category->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_category', ['name' => $category->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -319,7 +319,7 @@ class CategoryController extends Controller
         $data = $request->getCategoryData();
         $repository->update($category, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_category', ['name' => e($category->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_category', ['name' => $category->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

@@ -161,7 +161,7 @@ class SplitController extends Controller
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($journal->transactionTypeStr());
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['journal_description']])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
