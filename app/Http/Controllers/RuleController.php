@@ -79,6 +79,7 @@ class RuleController extends Controller
 
         // has old input?
         if ($request->old()) {
+            echo '!';
             // process old triggers.
             $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
@@ -168,17 +169,24 @@ class RuleController extends Controller
     {
         /** @var RuleGroupRepositoryInterface $ruleGroupRepository */
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $oldTriggers         = $this->getCurrentTriggers($rule);
-        $triggerCount        = count($oldTriggers);
-        $oldActions          = $this->getCurrentActions($rule);
-        $actionCount         = count($oldActions);
         $ruleGroups          = ExpandedForm::makeSelectList($ruleGroupRepository->get());
-
+        $triggerCount        = 0;
+        $actionCount         = 0;
+        $oldActions          = [];
+        $oldTriggers         = [];
         // has old input?
-        if ($request->old()) {
+        if (count($request->old()) > 0) {
             $oldTriggers  = $this->getPreviousTriggers($request);
             $triggerCount = count($oldTriggers);
             $oldActions   = $this->getPreviousActions($request);
+            $actionCount  = count($oldActions);
+        }
+
+        // overrule old input when it as no rule data:
+        if ($triggerCount === 0 && $actionCount === 0) {
+            $oldTriggers  = $this->getCurrentTriggers($rule);
+            $triggerCount = count($oldTriggers);
+            $oldActions   = $this->getCurrentActions($rule);
             $actionCount  = count($oldActions);
         }
 
