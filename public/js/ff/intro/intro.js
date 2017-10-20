@@ -30,5 +30,5 @@ function setupIntro(steps) {
 }
 
 function reportIntroFinished() {
-    $.post(routeForFinishedTour);
+    $.getJSON(routeForFinishedTour);
 }
