@@ -1,4 +1,4 @@
-@0x9411e6c8b3c8a4b6;
+@0xb0032512fca90cd9;
 
 using Spk = import "/sandstorm/package.capnp";
 # This imports:
@@ -16,7 +16,8 @@ const pkgdef :Spk.PackageDefinition = (
   manifest = (
     appTitle = (defaultText = "Firefly III"),
     appVersion = 1,
-    appMarketingVersion = (defaultText = "3.4.6"),
+    appMarketingVersion = (defaultText = "4.6.9"),
+
     actions = [
       # Define your "new document" handlers here.
       ( nounPhrase = (defaultText = "administration"),
@@ -66,9 +67,9 @@ const pkgdef :Spk.PackageDefinition = (
         # Sizes are given in device-independent pixels, so if you took these
         # screenshots on a Retina-style high DPI screen, divide each dimension by two.
 
-        (width = 1200, height = 1000, png = embed "screenshots/screenshot-1.png"),
-        (width = 1200, height = 1000, png = embed "screenshots/screenshot-2.png"),
-        (width = 1200, height = 1518, png = embed "screenshots/screenshot-3.png"),
+        (width = 1291, height = 800, png = embed "screenshots/screenshot-1.png"),
+        (width = 1291, height = 800, png = embed "screenshots/screenshot-2.png"),
+        (width = 1291, height = 800, png = embed "screenshots/screenshot-3.png"),
 
       ],
       changeLog = (defaultText = embed "changelog.md"),
@@ -97,7 +98,7 @@ const pkgdef :Spk.PackageDefinition = (
   # `spk dev` will write a list of all the files your app uses to this file.
   # You should review it later, before shipping your app.
 
-  alwaysInclude = ["app","bootstrap","config","database","public","resources","routes"],
+  alwaysInclude = ["opt/app/app","opt/app/bootstrap","opt/app/config","opt/app/database","opt/app/public","opt/app/resources","opt/app/routes"],
   # Fill this list with more names of files or directories that should be
   # included in your package, even if not listed in sandstorm-files.list.
   # Use this to force-include stuff that you know you need but which may
@@ -176,7 +177,7 @@ const pkgdef :Spk.PackageDefinition = (
 
 const myCommand :Spk.Manifest.Command = (
   # Here we define the command used to start up your server.
-  argv = ["/sandstorm-http-bridge", "8000", "--", "/opt/app/.sandstorm/launcher.sh"],
+  argv = ["/sandstorm-http-bridge", "8000", "--", "/bin/bash", "/opt/app/.sandstorm/launcher.sh"],
   environ = [
     # Note that this defines the *entire* environment seen by your app.
     (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),
