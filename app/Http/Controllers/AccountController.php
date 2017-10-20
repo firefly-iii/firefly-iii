@@ -269,7 +269,12 @@ class AccountController extends Controller
         $start         = null;
         $end           = null;
         $periods       = new Collection;
-        $currency      = $currencyRepos->find(intval($account->getMeta('currency_id')));
+        $currencyId    = intval($account->getMeta('currency_id'));
+        $currency      = $currencyRepos->find($currencyId);
+        if ($currencyId === 0) {
+            $currency  = app('amount')->getDefaultCurrency();
+        }
+
 
         // prep for "all" view.
         if ($moment === 'all') {
