@@ -5,9 +5,9 @@
 
 
 
-[![The index of Firefly III](https://i.nder.be/h327vx3y/400)](https://i.nder.be/h327vx3y) [![The account overview of Firefly III](https://i.nder.be/hnkfkdpr/400)](https://i.nder.be/hv70pbwc)
+[![The index of Firefly III](https://i.nder.be/ccynyxy0/400)](https://i.nder.be/h327vx3y) [![The account overview of Firefly III](https://i.nder.be/g8v86y2g/400)](https://i.nder.be/hkpynqr9)
 
-[![The useful financial reports of Firefly III](https://i.nder.be/h7sk6nb7/400)](https://i.nder.be/ccn0u2mp) [![Even more useful reports in Firefly III](https://i.nder.be/g237hr35/400)](https://i.nder.be/gm8hbh7z)
+[![The useful financial reports of Firefly III](https://i.nder.be/cs3qx4f3/400)](https://i.nder.be/cwznmryd) [![Saving money is easy!](https://i.nder.be/gpq6ykym/400)](https://i.nder.be/gum2qf8z)
 
 "Firefly III" is a financial manager for your personal finances. It can help you keep track of your expenses and income.
 Firefly III supports the use of budgets. You can categorize and tag your transactions.
