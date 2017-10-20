@@ -2,29 +2,39 @@
 
 [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 
-[![The index of Firefly III](https://i.nder.be/hurdhgyg/400)](https://i.nder.be/h2b37243) [![The account overview of Firefly III](https://i.nder.be/hnkfkdpr/400)](https://i.nder.be/hv70pbwc)
+
+
+
+[![The index of Firefly III](https://i.nder.be/h327vx3y/400)](https://i.nder.be/h327vx3y) [![The account overview of Firefly III](https://i.nder.be/hnkfkdpr/400)](https://i.nder.be/hv70pbwc)
 
 [![The useful financial reports of Firefly III](https://i.nder.be/h7sk6nb7/400)](https://i.nder.be/ccn0u2mp) [![Even more useful reports in Firefly III](https://i.nder.be/g237hr35/400)](https://i.nder.be/gm8hbh7z)
 
-"Firefly III" is a financial manager for your personal finances.
-It can help you keep track of your expenses and income.
+"Firefly III" is a financial manager for your personal finances. It can help you keep track of your expenses and income.
 Firefly III supports the use of budgets. You can categorize and tag your transactions.
 It also supports credit cards, shared  household accounts and savings accounts.
 There are many financial reports available.
 
-## Try it out!
+## Want to try Firefly III?
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
 Firefly III can be run on Heroku.
-Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
-There is also a [demo site](https://firefly-iii.nder.be) with an example financial administration already present. 
+Register for a free Heroku account and instantly run Firefly III on your very own cloud instance!
+There is also a **[demo site](https://firefly-iii.nder.be)** with an example financial administration already present. 
 
-## Getting started
+## Install Firefly III
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line.
-Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
-At the moment, installation is fairly complex. I hope to improve this in the future. If you need support, please open a ticket.
+### Using docker
+
+You can use docker-compose to [set up your personal secure](https://firefly-iii.github.io/using-docker.html) Firefly III environment. Advanced users can use the Dockerfile directly. 
+
+### Using vagrant (or other VMs)
+
+You can install Firefly III on any Linux or Windows machine. You'll need a web server (preferrably on Linux) and access to the command line. Please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
+
+### Using Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
 ## More about Firefly III
 
