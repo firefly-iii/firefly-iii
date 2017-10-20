@@ -293,8 +293,8 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // update note:
-        if (isset($data['notes'])) {
-            $this->updateNote($journal, $data['notes']);
+        if (isset($data['notes']) && !is_null($data['notes']) ) {
+            $this->updateNote($journal, strval($data['notes']));
         }
 
         // update meta fields:
@@ -335,7 +335,10 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->budgets()->detach();
 
         // update note:
-        $this->updateNote($journal, $data['notes']);
+        if (isset($data['notes']) && !is_null($data['notes']) ) {
+            $this->updateNote($journal, strval($data['notes']));
+        }
+
 
         // update meta fields:
         $result = $journal->save();
