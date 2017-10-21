@@ -43,8 +43,7 @@ const pkgdef :Spk.PackageDefinition = (
 
       website = "https://firefly-iii.github.io/",
       codeUrl = "https://github.com/firefly-iii/firefly-iii",
-      #license = (openSource = mit),
-      license = (proprietary = (defaultText = embed "../LICENSE")),
+      license = (openSource = gpl3),
       # The license this package is distributed under.  See
       # https://docs.sandstorm.io/en/latest/developing/publishing-apps/#license
 
