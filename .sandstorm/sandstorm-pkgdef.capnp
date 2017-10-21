@@ -54,7 +54,6 @@ const pkgdef :Spk.PackageDefinition = (
 
       author = (
         contactEmail = "thegrumpydictator@gmail.com",
-        upstreamAuthor = "James Cole",
         pgpSignature = embed "pgp-signature",
       ),
 
