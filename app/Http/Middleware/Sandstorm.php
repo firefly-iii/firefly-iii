@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Middleware;
 use Auth;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -99,6 +100,11 @@ class Sandstorm
                     ]
                 );
                 Auth::guard($guard)->login($user);
+
+                // also make the user an admin
+                $admin = Role::where('name', 'owner')->first();
+                $user->attachRole($admin);
+                $user->save();
 
                 return $next($request);
             }
