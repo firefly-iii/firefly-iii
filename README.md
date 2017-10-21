@@ -36,6 +36,10 @@ You can install Firefly III on any Linux or Windows machine. You'll need a web s
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
+### Using Sandstorm.io
+
+You can find Firefly III in [the Sandstorm.io marketplace](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70). You can run it on your own installation or on Oasis.
+
 ## More about Firefly III
 
 Personal financial management is pretty difficult, and everybody has their own approach to it.
