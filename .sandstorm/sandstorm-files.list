@@ -1225,6 +1225,7 @@ opt/app/routes/channels.php
 opt/app/routes/console.php
 opt/app/routes/web.php
 opt/app/server.php
+opt/app/storage
 opt/app/test.sh
 opt/app/vendor/autoload.php
 opt/app/vendor/bacon/bacon-qr-code/.travis.yml
