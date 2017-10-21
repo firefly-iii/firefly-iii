@@ -2,9 +2,6 @@
 
 [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/badge/license-GPL-lightgrey.svg)](https://www.gnu.org/licenses/gpl.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 
-
-
-
 [![The index of Firefly III](https://i.nder.be/ccynyxy0/400)](https://i.nder.be/h327vx3y) [![The account overview of Firefly III](https://i.nder.be/g8v86y2g/400)](https://i.nder.be/hkpynqr9)
 
 [![The useful financial reports of Firefly III](https://i.nder.be/cs3qx4f3/400)](https://i.nder.be/cwznmryd) [![Saving money is easy!](https://i.nder.be/gpq6ykym/400)](https://i.nder.be/gum2qf8z)
@@ -16,11 +13,7 @@ There are many financial reports available.
 
 ## Want to try Firefly III?
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
-
-Firefly III can be run on Heroku.
-Register for a free Heroku account and instantly run Firefly III on your very own cloud instance!
-There is also a **[demo site](https://firefly-iii.nder.be)** with an example financial administration already present. 
+There is a **[demo site](https://firefly-iii.nder.be)** with an example financial administration already present. You can use Docker, Heroku or Sandstorm.io (see below) to quickly setup your own instance.
 
 ## Install Firefly III
 
@@ -35,6 +28,8 @@ You can install Firefly III on any Linux or Windows machine. You'll need a web s
 ### Using Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
+
+Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
 
 ### Using Sandstorm.io
 
