@@ -458,6 +458,9 @@ Route::group(
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
 
+    // frontpage
+    Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
+
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
