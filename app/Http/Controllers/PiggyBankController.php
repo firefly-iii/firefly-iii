@@ -1,12 +1,22 @@
 <?php
 /**
  * PiggyBankController.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -149,7 +159,7 @@ class PiggyBankController extends Controller
      */
     public function destroy(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => e($piggyBank->name)])));
+        Session::flash('success', strval(trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
         $repository->destroy($piggyBank);
 
@@ -297,7 +307,7 @@ class PiggyBankController extends Controller
             'error', strval(
                        trans(
                            'firefly.cannot_add_amount_piggy',
-                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
+                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                        )
                    )
         );
@@ -337,7 +347,7 @@ class PiggyBankController extends Controller
             'error', strval(
                        trans(
                            'firefly.cannot_remove_from_piggy',
-                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
+                           ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                        )
                    )
         );
@@ -395,7 +405,7 @@ class PiggyBankController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $repository->store($data);
 
-        Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => e($piggyBank->name)])));
+        Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -421,7 +431,7 @@ class PiggyBankController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $repository->update($piggyBank, $data);
 
-        Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => e($piggyBank->name)])));
+        Session::flash('success', strval(trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

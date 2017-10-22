@@ -1,12 +1,22 @@
 <?php
 /**
  * BudgetController.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -135,7 +145,7 @@ class BudgetController extends Controller
 
         $name = $budget->name;
         $this->repository->destroy($budget);
-        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
+        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => $name])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));
@@ -464,7 +474,7 @@ class BudgetController extends Controller
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
 
-        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => $budget->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -489,7 +499,7 @@ class BudgetController extends Controller
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => $budget->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {

@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.9] - 2017-10-22
+### Added
+- Firefly III is now available on the [Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70) market.
+- Issue template
+- Pull request template
+- Clean up routine to remove double budget limits (see [issue 932](https://github.com/firefly-iii/firefly-iii/issues/932))
+
+### Changed
+- Changed license to GPLv3.
+
+### Fixed
+- [Issue 895](https://github.com/firefly-iii/firefly-iii/issues/895), as reported by [gavu](https://github.com/gavu)
+- [Issue 902](https://github.com/firefly-iii/firefly-iii/issues/902), as reported by [gavu](https://github.com/gavu)
+- [Issue 916](https://github.com/firefly-iii/firefly-iii/issues/916), as reported by [gavu](https://github.com/gavu)
+- [Issue 942](https://github.com/firefly-iii/firefly-iii/issues/942), as reported by [pkoziol](https://github.com/pkoziol)
+- [Issue 943](https://github.com/firefly-iii/firefly-iii/issues/943), as reported by [aclex](https://github.com/aclex)
+- [Issue 944](https://github.com/firefly-iii/firefly-iii/issues/944), as reported by [gavu](https://github.com/gavu)
+- [Issue 932](https://github.com/firefly-iii/firefly-iii/issues/932), as reported by [nicoschreiner](https://github.com/nicoschreiner)
+- [Issue 933](https://github.com/firefly-iii/firefly-iii/issues/933), as reported by [nicoschreiner](https://github.com/nicoschreiner)
+
 ## [4.6.8] - 2017-10-15
 ### Added
 - Verify routine will check if deposits have a budget (they shouldn't).

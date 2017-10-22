@@ -1,12 +1,22 @@
 <?php
 /**
  * BudgetRepository.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -14,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
@@ -47,6 +58,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         // delete limits with amount 0:
         BudgetLimit::where('amount', 0)->delete();
+
+        // clean up:
+        $set = BudgetLimit::groupBy(['budget_id', 'start_date', 'end_date'])
+                          ->get(['budget_id', 'start_date', 'end_date', DB::raw('COUNT(*) as ct')]);
+        foreach ($set as $entry) {
+            if ($entry->ct > 1) {
+                $newest = BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
+                                     ->where('budget_id', $entry->budget_id)->orderBy('updated_at', 'DESC')->first(['budget_limits.*']);
+                BudgetLimit::where('start_date', $entry->start_date)->where('end_date', $entry->end_date)
+                           ->where('budget_id', $entry->budget_id)->where('id', '!=', $newest->id)->delete();
+            }
+        }
 
         return true;
 
@@ -588,12 +611,25 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit
     {
+        // count the limits:
+        $limits = $budget->budgetlimits()
+                         ->where('budget_limits.start_date', $start->format('Y-m-d'))
+                         ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                         ->get(['budget_limits.*'])->count();
         // there might be a budget limit for these dates:
         /** @var BudgetLimit $limit */
         $limit = $budget->budgetlimits()
                         ->where('budget_limits.start_date', $start->format('Y-m-d'))
                         ->where('budget_limits.end_date', $end->format('Y-m-d'))
                         ->first(['budget_limits.*']);
+
+        // if more than 1 limit found, delete the others:
+        if ($limits > 1 && !is_null($limit)) {
+            $budget->budgetlimits()
+                   ->where('budget_limits.start_date', $start->format('Y-m-d'))
+                   ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                   ->where('budget_limits.id', '!=', $limit->id)->delete();
+        }
 
         // delete if amount is zero.
         if (!is_null($limit) && $amount <= 0.0) {

@@ -50,6 +50,7 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-intl": "*",
+    "ext-gd": "*",
     "ext-mbstring": "*",
     "ext-zip": "*",
     "bacon/bacon-qr-code": "1.*",

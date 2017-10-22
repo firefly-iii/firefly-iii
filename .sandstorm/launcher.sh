@@ -37,15 +37,15 @@ HOME=/etc/mysql /usr/bin/mysql_install_db --force
 # Spawn mysqld, php
 HOME=/etc/mysql /usr/sbin/mysqld &
 
-/usr/sbin/php-fpm7.0 --nodaemonize --fpm-config /etc/php/7.0/fpm/php-fpm.conf &
+/usr/sbin/php-fpm7.1 --nodaemonize --fpm-config /etc/php/7.1/fpm/php-fpm.conf &
 
 # Wait until mysql and php have bound their sockets, indicating readiness
 while [ ! -e /var/run/mysqld/mysqld.sock ] ; do
     echo "waiting for mysql to be available at /var/run/mysqld/mysqld.sock"
     sleep .5
 done
-while [ ! -e /var/run/php7.0-fpm.sock ] ; do
-    echo "waiting for php7.0-fpm to be available at /var/run/php7.0-fpm.sock"
+while [ ! -e /var/run/php7.1-fpm.sock ] ; do
+    echo "waiting for php7.1-fpm to be available at /var/run/php7.1-fpm.sock"
     sleep .5
 done
 

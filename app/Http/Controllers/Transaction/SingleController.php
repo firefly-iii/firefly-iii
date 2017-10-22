@@ -1,12 +1,22 @@
 <?php
 /**
  * SingleController.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -222,7 +232,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
         $type = $transactionJournal->transactionTypeStr();
-        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => e($transactionJournal->description)])));
+        Session::flash('success', strval(trans('firefly.deleted_' . strtolower($type), ['description' => $transactionJournal->description])));
 
         $this->repository->delete($transactionJournal);
 
@@ -355,7 +365,7 @@ class SingleController extends Controller
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
-        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => e($journal->description)])));
+        Session::flash('success', strval(trans('firefly.stored_journal', ['description' => $journal->description])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -408,7 +418,7 @@ class SingleController extends Controller
         // update, get events by date and sort DESC
 
         $type = strtolower($journal->transactionTypeStr());
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['description'])])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['description']])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart

@@ -163,7 +163,7 @@
 
                             {# NOTES #}
                             {% if optionalFields.notes  or journal.notes %}
-                                {{ ExpandedForm.textarea('notes', journal.notes) }}
+                                {{ ExpandedForm.textarea('notes',preFilled.notes) }}
                             {% endif %}
                         </div>
                     </div>

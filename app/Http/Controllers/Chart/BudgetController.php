@@ -1,12 +1,22 @@
 <?php
 /**
  * BudgetController.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -74,17 +84,17 @@ class BudgetController extends Controller
      */
     public function budget(Budget $budget)
     {
-        $first = $this->repository->firstUseDate($budget);
-        $range = Preferences::get('viewRange', '1M')->data;
-        $last  = session('end', new Carbon);
-
-        $cache = new CacheProperties();
+        $first        = $this->repository->firstUseDate($budget);
+        $range        = Preferences::get('viewRange', '1M')->data;
+        $currentStart = Navigation::startOfPeriod($first, $range);
+        $last         = session('end', new Carbon);
+        $cache        = new CacheProperties();
         $cache->addProperty($first);
         $cache->addProperty($last);
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;
@@ -92,17 +102,16 @@ class BudgetController extends Controller
         $budgetCollection = new Collection([$budget]);
         $last             = Navigation::endOfX($last, $range, $final); // not to overshoot.
         $entries          = [];
-        while ($first < $last) {
-
+        while ($currentStart < $last) {
             // periodspecific dates:
-            $currentStart = Navigation::startOfPeriod($first, $range);
-            $currentEnd   = Navigation::endOfPeriod($first, $range);
+            $currentEnd = Navigation::endOfPeriod($currentStart, $range);
             // sub another day because reasons.
             $currentEnd->subDay();
             $spent            = $this->repository->spentInPeriod($budgetCollection, new Collection, $currentStart, $currentEnd);
-            $format           = Navigation::periodShow($first, $range);
+            $format           = Navigation::periodShow($currentStart, $range);
             $entries[$format] = bcmul($spent, '-1');
-            $first            = Navigation::addPeriod($first, $range, 0);
+            $currentStart     = clone $currentEnd;
+            $currentStart->addDays(2);
         }
 
         $data = $this->generator->singleSet(strval(trans('firefly.spent')), $entries);
@@ -244,6 +253,7 @@ class BudgetController extends Controller
 
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
+
         return Response::json($data);
 
     }
