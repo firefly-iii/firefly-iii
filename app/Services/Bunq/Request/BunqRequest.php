@@ -395,6 +395,21 @@ abstract class BunqRequest
     }
 
     /**
+     * @param array $headers
+     *
+     * @return string
+     */
+    private function joinHeaders(array $headers): string
+    {
+        $string = '';
+        foreach ($headers as $header => $value) {
+            $string .= $header . ': ' . trim($value) . "\n";
+        }
+
+        return $string;
+    }
+
+    /**
      * @param array $response
      *
      * @throws Exception
@@ -447,10 +462,7 @@ abstract class BunqRequest
         ksort($verifyHeaders);
 
         // add them to data to sign:
-        foreach ($verifyHeaders as $header => $value) {
-            $dataToVerify .= $header . ': ' . trim($value) . "\n";
-        }
-
+        $dataToVerify .= $this->joinHeaders($verifyHeaders);
         $signature    = $headers['x-bunq-server-signature'][0];
         $dataToVerify .= "\n" . $body;
         $result       = openssl_verify($dataToVerify, base64_decode($signature), $this->serverPublicKey->getPublicKey(), OPENSSL_ALGO_SHA256);
@@ -462,6 +474,8 @@ abstract class BunqRequest
         }
         if (!is_int($result)) {
             Log::error(sprintf('Result of verification is a boolean (%d), return false.', $result));
+
+            return false;
         }
         Log::info('Signature is a match, return true.');
 

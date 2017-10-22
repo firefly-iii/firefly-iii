@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
@@ -49,6 +48,7 @@ use View;
  *
  * @package FireflyIII\Http\Controllers
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetController extends Controller
 {
@@ -256,6 +256,7 @@ class BudgetController extends Controller
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -269,50 +270,49 @@ class BudgetController extends Controller
 
         if ($cache->has()) {
             $result = $cache->get(); // @codeCoverageIgnore
+
+            return view('budgets.info', compact('result', 'begin', 'currentEnd'));
         }
-        if (!$cache->has()) {
-            $result   = [
-                'available' => '0',
-                'earned'    => '0',
-                'suggested' => '0',
-            ];
-            $currency = app('amount')->getDefaultCurrency();
-            $range    = Preferences::get('viewRange', '1M')->data;
-            $begin    = Navigation::subtractPeriod($start, $range, 3);
+        $result   = [
+            'available' => '0',
+            'earned'    => '0',
+            'suggested' => '0',
+        ];
+        $currency = app('amount')->getDefaultCurrency();
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $begin    = Navigation::subtractPeriod($start, $range, 3);
 
-            // get average amount available.
-            $total        = '0';
-            $count        = 0;
-            $currentStart = clone $begin;
-            while ($currentStart < $start) {
-                $currentEnd   = Navigation::endOfPeriod($currentStart, $range);
-                $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
-                $currentStart = Navigation::addPeriod($currentStart, $range, 0);
-                $count++;
-            }
-            $result['available'] = bcdiv($total, strval($count));
-
-            // amount earned in this period:
-            $subDay = clone $end;
-            $subDay->subDay();
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-            $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
-
-            // amount spent in period
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-            $result['spent'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
-            // suggestion starts with the amount spent
-            $result['suggested'] = bcmul($result['spent'], '-1');
-            $result['suggested'] = bccomp($result['suggested'], $result['earned']) === 1 ? $result['earned'] : $result['suggested'];
-            // unless it's more than you earned. So min() of suggested/earned
-
-
-            $cache->store($result);
+        // get average amount available.
+        $total        = '0';
+        $count        = 0;
+        $currentStart = clone $begin;
+        while ($currentStart < $start) {
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $range);
+            $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
+            $currentStart = Navigation::addPeriod($currentStart, $range, 0);
+            $count++;
         }
+        $result['available'] = bcdiv($total, strval($count));
+
+        // amount earned in this period:
+        $subDay = clone $end;
+        $subDay->subDay();
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
+        $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
+
+        // amount spent in period
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
+        $result['spent'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
+        // suggestion starts with the amount spent
+        $result['suggested'] = bcmul($result['spent'], '-1');
+        $result['suggested'] = bccomp($result['suggested'], $result['earned']) === 1 ? $result['earned'] : $result['suggested'];
+        // unless it's more than you earned. So min() of suggested/earned
+
+        $cache->store($result);
 
 
         return view('budgets.info', compact('result', 'begin', 'currentEnd'));
@@ -573,9 +573,7 @@ class BudgetController extends Controller
         $start      = Navigation::startOfPeriod($start, $range);
         $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
-
-        // properties for cache
-        $cache = new CacheProperties;
+        $cache      = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('no-budget-period-entries');
@@ -588,8 +586,6 @@ class BudgetController extends Controller
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-
-            // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL]);
@@ -598,15 +594,7 @@ class BudgetController extends Controller
             $journals = $set->count();
             $dateStr  = $end->format('Y-m-d');
             $dateName = Navigation::periodShow($end, $range);
-            $entries->push(
-                [
-                    'string' => $dateStr,
-                    'name'   => $dateName,
-                    'count'  => $journals,
-                    'sum'    => $sum,
-                    'date'   => clone $end,
-                ]
-            );
+            $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $end,]);
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
         $cache->store($entries);

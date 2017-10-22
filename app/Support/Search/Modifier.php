@@ -51,6 +51,14 @@ class Modifier
         return $compare === $expected;
     }
 
+    /**
+     * @param array       $modifier
+     * @param Transaction $transaction
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * @return bool
+     * @throws FireflyException
+     */
     public static function apply(array $modifier, Transaction $transaction): bool
     {
         switch ($modifier['type']) {
