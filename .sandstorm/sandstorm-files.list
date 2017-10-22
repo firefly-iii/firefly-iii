@@ -169,6 +169,8 @@ lib/x86_64-linux-gnu/libnsl-2.19.so
 lib/x86_64-linux-gnu/libnsl.so.1
 lib/x86_64-linux-gnu/libnss_compat-2.19.so
 lib/x86_64-linux-gnu/libnss_compat.so.2
+lib/x86_64-linux-gnu/libnss_dns-2.19.so
+lib/x86_64-linux-gnu/libnss_dns.so.2
 lib/x86_64-linux-gnu/libnss_files-2.19.so
 lib/x86_64-linux-gnu/libnss_files.so.2
 lib/x86_64-linux-gnu/libnss_nis-2.19.so
