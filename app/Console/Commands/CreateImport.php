@@ -32,6 +32,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\MessageBag;
 use Log;
 use Monolog\Formatter\LineFormatter;
+use Preferences;
 
 /**
  * Class CreateImport
@@ -153,6 +154,9 @@ class CreateImport extends Command
                 sprintf('The import has finished. %d transactions have been imported out of %d records.', $routine->journals->count(), $routine->lines)
             );
         }
+
+        // clear cache for user:
+        Preferences::setForUser($user, 'lastActivity', microtime());
 
         return;
     }
