@@ -261,7 +261,7 @@ class Transaction extends Twig_Extension
                     $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
                     break;
                 case TransactionType::OPENING_BALANCE:
-                    $txt = sprintf('<i class="fa-fw fa fa-ban" title="%s"></i>', trans('firefly.openingBalance'));
+                    $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.openingBalance'));
                     break;
                 default:
                     $txt = '';
