@@ -22,7 +22,7 @@ echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sou
 
 # install packages.
 apt-get update
-apt-get install -y nginx php7.1-fpm php7.1-mysql php7.1-cli php7.1-curl git php7.1-dev php7.1-zip php7.1-intl php7.1-dom php7.1-mbstring php7.1-bcmath mysql-server
+apt-get install -y nginx php7.1-fpm php7.1-mysql php7.1-gd php7.1-cli php7.1-curl git php7.1-dev php7.1-zip php7.1-intl php7.1-dom php7.1-mbstring php7.1-bcmath mysql-server
 service nginx stop
 service php7.1-fpm stop
 service mysql stop
