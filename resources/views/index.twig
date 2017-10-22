@@ -21,7 +21,7 @@
             {# BUDGETS #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'budgetsAndSpending'|_ }}</h3>
+                    <h3 class="box-title"><a href="{{ route('budgets.index') }}" title="{{ 'budgetsAndSpending'|_ }}">{{ 'budgetsAndSpending'|_ }}</a></h3>
                 </div>
                 <div class="box-body">
                     <canvas id="budgets-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
@@ -30,7 +30,7 @@
             {# CATEGORIES #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                    <h3 class="box-title"><a href="{{ route('categories.index') }}" title="{{ 'categories'|_ }}">{{ 'categories'|_ }}</a></h3>
 
                 </div>
                 <div class="box-body">
@@ -39,22 +39,6 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
-            {% if billCount > 0 %}
-                {# BILLS #}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'bills'|_ }}</h3>
-
-                    </div>
-                    <div class="box-body">
-                        <div style="width:100%;margin:0 auto;">
-                            <canvas id="bills-chart" style="width:100%;height:200px;" height="200"></canvas>
-                        </div>
-
-                    </div>
-                </div>
-            {% endif %}
-
             {# TRANSACTIONS #}
             <div id="all_transactions">
                 {% for data in transactions %}
@@ -100,6 +84,27 @@
                     </div>
                 {% endfor %}
             </div>
+
+            {% if billCount > 0 %}
+                {# BILLS #}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><a href="{{ route('bills.index') }}" title="{{ 'bills'|_ }}">{{ 'bills'|_ }}</a></h3>
+
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="bills-chart" style="width:100%;height:200px;" height="200"></canvas>
+                        </div>
+
+                    </div>
+                </div>
+            {% endif %}
+
+            {# box for piggy bank data (JSON) #}
+            <div id="piggy_bank_overview">
+
+            </div>
         </div>
     </div>
     <div class="row">
@@ -107,7 +112,7 @@
             {# EXPENSE ACCOUNTS #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'expense_accounts'|_ }}</h3>
+                    <h3 class="box-title"><a href="{{ route('accounts.index',['expense']) }}" title="{{ 'expense_accounts'|_ }}">{{ 'expense_accounts'|_ }}</a></h3>
 
                 </div>
                 <div class="box-body">
@@ -118,7 +123,7 @@
             {% if showDeps %}
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'revenue_accounts'|_ }}</h3>
+                        <h3 class="box-title"><a href="{{ route('accounts.index',['revenue']) }}" title="{{ 'revenue_accounts'|_ }}">{{ 'revenue_accounts'|_ }}</a></h3>
 
                     </div>
                     <div class="box-body">
@@ -136,6 +141,7 @@
         var accountFrontpageUri = '{{ route('chart.account.frontpage') }}';
         var accountRevenueUri = '{{ route('chart.account.revenue') }}';
         var accountExpenseUri = '{{ route('chart.account.expense') }}';
+        var piggyInfoUri = '{{ route('json.fp.piggy-banks') }}';
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
