@@ -11,7 +11,7 @@
             {# ACCOUNTS #}
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'yourAccounts'|_ }}</h3>
+                    <h3 class="box-title"><a href="{{ route('accounts.index',['asset']) }}" title="{{ 'yourAccounts'|_ }}">{{ 'yourAccounts'|_ }}</a></h3>
                 </div>
                 <div class="box-body">
                     <canvas id="accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
