@@ -171,7 +171,7 @@ return [
 
     // admin
     'domain'                => 'Domena',
-    'single_user_mode'      => 'Disable user registration',
+    'single_user_mode'      => 'Wyłącz rejestrację użytkowników',
     'is_demo_site'          => 'Jest stroną demo',
 
 
