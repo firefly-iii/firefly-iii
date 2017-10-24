@@ -15,21 +15,21 @@ return [
     'index_accounts-chart'                  => 'Ten wykres przedstawia bieżące saldo kont aktywów. Możesz wybrać konta widoczne tutaj w Twoich preferencjach.',
     'index_box_out_holder'                  => 'To małe pole i pola obok niego umożliwiają szybki przegląd Twojej sytuacji finansowej.',
     'index_help'                            => 'Jeśli potrzebujesz pomocy na stronie lub formularzu, naciśnij ten przycisk.',
-    'index_outro'                           => 'Most pages of Firefly III will start with a little tour like this one. Please contact me when you have questions or comments. Enjoy!',
-    'index_sidebar-toggle'                  => 'To create new transactions, accounts or other things, use the menu under this icon.',
+    'index_outro'                           => 'Większość stron z Firefly III zacznie się od małego wprowadzenia jak to. Skontaktuj się ze mną, jeśli masz pytania lub komentarze. Miłego korzystania!',
+    'index_sidebar-toggle'                  => 'Aby utworzyć nowe transakcje, konta lub inne rzeczy, użyj menu pod tą ikoną.',
 
     // create account:
-    'accounts_create_iban'                  => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly.',
-    'accounts_create_asset_currency'        => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
-    'accounts_create_asset_virtual'         => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
+    'accounts_create_iban'                  => 'Nadaj kontom ważny numer IBAN. Może to ułatwić import danych w przyszłości.',
+    'accounts_create_asset_opening_balance' => 'Konta zasobów mogą mieć "bilans otwarcia", wskazując początek historii tego konta w Firefly.',
+    'accounts_create_asset_currency'        => 'Firefly III obsługuje wiele walut. Konta aktywów mają jedną główną walutę, który należy ustawić tutaj.',
+    'accounts_create_asset_virtual'         => 'Czasami warto dodać do konta wirtualne saldo: dodatkowa kwota zawsze dodawana lub odejmowana od rzeczywistego salda.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly can tell you if you have budgeted all available money.',
-    'budgets_index_see_expenses_bar'        => 'Spending money will slowly fill this bar.',
-    'budgets_index_navigate_periods'        => 'Navigate through periods to easily set budgets ahead of time.',
-    'budgets_index_new_budget'              => 'Create new budgets as you see fit.',
+    'budgets_index_intro'                   => 'Budżety są wykorzystywane do zarządzania finansami i stanowią jedną z podstawowych funkcji Firefly III.',
+    'budgets_index_set_budget'              => 'Ustaw całkowity budżet na każdy okres, aby Firefly mógł Ci powiedzieć, czy wydałeś wszystkie dostępne pieniądze.',
+    'budgets_index_see_expenses_bar'        => 'Wydawanie pieniędzy powoli wypełnia ten pasek.',
+    'budgets_index_navigate_periods'        => 'Przejrzyj okresy, aby łatwiej ustawić przyszłe budżety.',
+    'budgets_index_new_budget'              => 'Utwórz nowe budżety zgodnie z Twoimi potrzebami.',
     'budgets_index_list_of_budgets'         => 'Use this table to set the amounts for each budget and see how you are doing.',
     'budgets_index_outro'                   => 'Aby dowiedzieć się więcej o budżetowaniu, użyj ikonki pomocy w prawym górnym rogu.',
 
@@ -76,7 +76,7 @@ return [
 
     // show piggy
     'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
-    'piggy-banks_show_piggyDetails'                           => 'Some details about your piggy bank',
+    'piggy-banks_show_piggyDetails'                           => 'Niektóre szczegóły dotyczące skarbonki',
     'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
 
     // bill index
@@ -108,10 +108,10 @@ return [
     'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
     'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
     'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
-    'rules_create_actions'                                    => 'Set as many actions as you like.',
+    'rules_create_actions'                                    => 'Ustaw tak wiele akcji, jak chcesz.',
 
     // preferences
-    'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
+    'preferences_index_tabs'                                  => 'Więcej opcji dostępne są za tymi kartami.',
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
