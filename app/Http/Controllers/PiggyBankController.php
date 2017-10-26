@@ -285,7 +285,7 @@ class PiggyBankController extends Controller
      */
     public function postAdd(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount   = $request->get('amount');
+        $amount   = $request->get('amount') ?? '0';
         $currency = app('amount')->getDefaultCurrency();
         if ($repository->canAddAmount($piggyBank, $amount)) {
             $repository->addAmount($piggyBank, $amount);
@@ -324,7 +324,7 @@ class PiggyBankController extends Controller
      */
     public function postRemove(Request $request, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $amount   = $request->get('amount');
+        $amount   = $request->get('amount') ?? '0';
         $currency = app('amount')->getDefaultCurrency();
         if ($repository->canRemoveAmount($piggyBank, $amount)) {
             $repository->removeAmount($piggyBank, $amount);
