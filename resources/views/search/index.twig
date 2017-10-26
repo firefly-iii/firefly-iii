@@ -53,11 +53,27 @@
                         <div class="overlay">
                             <i class="fa fa-refresh fa-spin"></i>
                         </div>
+
+                        <div class="row mass_edit_all hidden-xs" style="display: none;">
+                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                                <div class="mass_button_options btn-group btn-group" style="display:none;">
+                                    <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit_selected'|_ }}</span></a>
+                                    <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete_selected'|_ }}</span></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+
+                                <div class="mass_buttons btn-group btn-group pull-right">
+                                    <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
+                                    <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
+                                        ></i> {{ 'stop_selection'|_ }}</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="row error_row" style="display:none; ">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box box-danger">
@@ -85,13 +101,17 @@
                     </div>
                 </div>
             </div>
+
         </div>
     {% endif %}
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
+        var edit_selected_txt = "{{ 'edit_selected'|_ }}";
+        var delete_selected_txt = "{{ 'delete_selected'|_ }}";
         var searchQuery = "{{ fullQuery|escape('js') }}";
         var searchUri = "{{ route('search.search') }}";
     </script>
     <script type="text/javascript" src="js/ff/search/index.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
 {% endblock %}

@@ -16,7 +16,12 @@
     {% for transaction in transactions %}
         <tr>
             <td class="hidden-xs">
-                <div class="btn-group btn-group-xs">
+
+                <div class="select_single" style="display:none;">
+                    <input name="select_all_single[]" class="select_all_single" value="{{ transaction.journal_id }}" type="checkbox"/>
+                </div>
+
+                <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">
                     <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i
                                 class="fa fa-fw fa-pencil"></i></a>
                     <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i

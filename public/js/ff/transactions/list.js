@@ -36,7 +36,7 @@ $(document).ready(function () {
             countChecked();
         }
     });
-    $('.select_all_single').change(function () {
+    $('.select_all_single').unbind('change').change(function () {
         countChecked();
     });
 
@@ -147,7 +147,6 @@ function stopMassSelect() {
 
 function startMassSelect() {
     "use strict";
-
     // show "select all" box in table header.
     $('.select_boxes').show();
 
