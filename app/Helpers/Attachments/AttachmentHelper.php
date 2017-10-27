@@ -102,12 +102,17 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentsForModel(Model $model, ?array $files): bool
     {
         if (is_array($files)) {
+            /** @var UploadedFile $entry */
             foreach ($files as $entry) {
                 if (!is_null($entry)) {
                     $this->processFile($entry, $model);
                 }
             }
+            Log::debug('Done processing uploads.');
+
+            return true;
         }
+        Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
 
         return true;
     }
@@ -128,6 +133,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($count > 0) {
             $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
+            Log::error($msg);
 
             return true;
         }
@@ -194,6 +200,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!in_array($mime, $this->allowedMimes)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
+            Log::error($msg);
 
             return false;
         }
@@ -215,6 +222,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($size > $this->maxUploadSize) {
             $msg = (string)trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
+            Log::error($msg);
 
             return false;
         }
