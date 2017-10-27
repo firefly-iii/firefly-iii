@@ -162,7 +162,7 @@
                 <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
             </li>
             <!-- admin (if user admin) -->
-            {% if Auth.user.hasRole('owner') %}
+            {% if Auth.user.hasRole('owner') and not SANDSTORM %}
                 <li class="{{ activeRoutePartial('admin') }}">
                     <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}"><i
                                 class="fa fa-hand-spock-o fa-fw"></i> {{ 'administration'|_ }}</a>

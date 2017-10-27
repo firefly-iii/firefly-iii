@@ -2,9 +2,21 @@
 /**
  * Sandstorm.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International License.
  *
- * See the LICENSE file for details.
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -14,6 +26,7 @@ namespace FireflyIII\Http\Middleware;
 use Auth;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -36,6 +49,7 @@ class Sandstorm
      *
      * @return mixed
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
@@ -87,6 +101,11 @@ class Sandstorm
                     ]
                 );
                 Auth::guard($guard)->login($user);
+
+                // also make the user an admin
+                $admin = Role::where('name', 'owner')->first();
+                $user->attachRole($admin);
+                $user->save();
 
                 return $next($request);
             }

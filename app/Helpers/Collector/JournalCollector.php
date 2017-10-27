@@ -1,12 +1,22 @@
 <?php
 /**
  * JournalCollector.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -91,8 +101,6 @@ class JournalCollector implements JournalCollectorInterface
             'account_types.type as account_type',
 
         ];
-    /** @var  bool */
-    private $filterTransfers = false;
     /** @var array */
     private $filters = [InternalTransferFilter::class];
 
@@ -125,7 +133,7 @@ class JournalCollector implements JournalCollectorInterface
     public function addFilter(string $filter): JournalCollectorInterface
     {
         $interfaces = class_implements($filter);
-        if (in_array(FilterInterface::class, $interfaces)) {
+        if (in_array(FilterInterface::class, $interfaces) && !in_array($filter, $this->filters) ) {
             Log::debug(sprintf('Enabled filter %s', $filter));
             $this->filters[] = $filter;
         }
@@ -237,7 +245,6 @@ class JournalCollector implements JournalCollectorInterface
 
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
-            $this->filterTransfers = true;
         }
 
 
@@ -261,7 +268,6 @@ class JournalCollector implements JournalCollectorInterface
 
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
-            $this->filterTransfers = true;
         }
 
         return $this;
@@ -516,7 +522,8 @@ class JournalCollector implements JournalCollectorInterface
                             ->orderBy('transaction_journals.date', 'DESC')
                             ->orderBy('transaction_journals.order', 'ASC')
                             ->orderBy('transaction_journals.id', 'DESC')
-                            ->orderBy('transaction_journals.description', 'DESC');
+                            ->orderBy('transaction_journals.description', 'DESC')
+                            ->orderBy('transactions.amount','DESC');
 
         $this->query = $query;
 

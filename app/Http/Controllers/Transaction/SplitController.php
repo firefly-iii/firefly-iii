@@ -1,12 +1,22 @@
 <?php
 /**
  * SplitController.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -21,6 +31,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -161,7 +172,7 @@ class SplitController extends Controller
         // @codeCoverageIgnoreEnd
 
         $type = strtolower($journal->transactionTypeStr());
-        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => e($data['journal_description'])])));
+        Session::flash('success', strval(trans('firefly.updated_' . $type, ['description' => $data['journal_description']])));
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
@@ -221,6 +232,12 @@ class SplitController extends Controller
     {
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
+        $notes = '';
+        /** @var Note $note */
+        $note = $journal->notes()->first();
+        if (!is_null($note)) {
+            $notes = $note->text;
+        }
         $array               = [
             'journal_description'            => $request->old('journal_description', $journal->description),
             'journal_amount'                 => $journal->amountPositive(),
@@ -241,7 +258,7 @@ class SplitController extends Controller
             'payment_date'                   => $request->old('payment_date', $journal->getMeta('payment_date')),
             'invoice_date'                   => $request->old('invoice_date', $journal->getMeta('invoice_date')),
             'internal_reference'             => $request->old('internal_reference', $journal->getMeta('internal_reference')),
-            'notes'                          => $request->old('notes', $journal->getMeta('notes')),
+            'notes'                          => $request->old('notes', $notes),
 
             // transactions.
             'transactions'                   => $this->getTransactionDataFromJournal($journal),

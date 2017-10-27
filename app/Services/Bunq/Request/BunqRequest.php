@@ -2,10 +2,21 @@
 /**
  * BunqRequest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
  *
- * See the LICENSE file for details.
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -384,6 +395,21 @@ abstract class BunqRequest
     }
 
     /**
+     * @param array $headers
+     *
+     * @return string
+     */
+    private function joinHeaders(array $headers): string
+    {
+        $string = '';
+        foreach ($headers as $header => $value) {
+            $string .= $header . ': ' . trim($value) . "\n";
+        }
+
+        return $string;
+    }
+
+    /**
      * @param array $response
      *
      * @throws Exception
@@ -436,10 +462,7 @@ abstract class BunqRequest
         ksort($verifyHeaders);
 
         // add them to data to sign:
-        foreach ($verifyHeaders as $header => $value) {
-            $dataToVerify .= $header . ': ' . trim($value) . "\n";
-        }
-
+        $dataToVerify .= $this->joinHeaders($verifyHeaders);
         $signature    = $headers['x-bunq-server-signature'][0];
         $dataToVerify .= "\n" . $body;
         $result       = openssl_verify($dataToVerify, base64_decode($signature), $this->serverPublicKey->getPublicKey(), OPENSSL_ALGO_SHA256);
@@ -451,6 +474,8 @@ abstract class BunqRequest
         }
         if (!is_int($result)) {
             Log::error(sprintf('Result of verification is a boolean (%d), return false.', $result));
+
+            return false;
         }
         Log::info('Signature is a match, return true.');
 

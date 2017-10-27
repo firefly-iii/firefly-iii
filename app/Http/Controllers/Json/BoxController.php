@@ -2,10 +2,21 @@
 /**
  * BoxController.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
  *
- * See the LICENSE file for details.
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -166,16 +177,30 @@ class BoxController extends Controller
      */
     public function netWorth(AccountRepositoryInterface $repository)
     {
-        $today = new Carbon(date('Y-m-d')); // needed so its per day.
+        $date = new Carbon(date('Y-m-d')); // needed so its per day.
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end = session('end', Carbon::now()->endOfMonth());
+
+        // start and end in the future? use $end
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $date = $end;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $date = $end;
+        }
+        // start in the past, end in the future? use $date
         $cache = new CacheProperties;
-        $cache->addProperty($today);
+        $cache->addProperty($date);
         $cache->addProperty('box-net-worth');
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $currency = app('amount')->getDefaultCurrency();
-        $balances = app('steam')->balancesByAccounts($accounts, $today);
+        $balances = app('steam')->balancesByAccounts($accounts, $date);
         $sum      = '0';
         foreach ($balances as $entry) {
             $sum = bcadd($sum, $entry);

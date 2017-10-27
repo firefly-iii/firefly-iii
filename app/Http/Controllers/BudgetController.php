@@ -1,12 +1,22 @@
 <?php
 /**
  * BudgetController.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
+ * This file is part of Firefly III.
  *
- * See the LICENSE file for details.
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
@@ -19,11 +29,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -40,6 +48,7 @@ use View;
  *
  * @package FireflyIII\Http\Controllers
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetController extends Controller
 {
@@ -136,7 +145,7 @@ class BudgetController extends Controller
 
         $name = $budget->name;
         $this->repository->destroy($budget);
-        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => e($name)])));
+        $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => $name])));
         Preferences::mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));
@@ -247,6 +256,7 @@ class BudgetController extends Controller
     /**
      * @param Carbon $start
      * @param Carbon $end
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -260,50 +270,49 @@ class BudgetController extends Controller
 
         if ($cache->has()) {
             $result = $cache->get(); // @codeCoverageIgnore
+
+            return view('budgets.info', compact('result', 'begin', 'currentEnd'));
         }
-        if (!$cache->has()) {
-            $result   = [
-                'available' => '0',
-                'earned'    => '0',
-                'suggested' => '0',
-            ];
-            $currency = app('amount')->getDefaultCurrency();
-            $range    = Preferences::get('viewRange', '1M')->data;
-            $begin    = Navigation::subtractPeriod($start, $range, 3);
+        $result   = [
+            'available' => '0',
+            'earned'    => '0',
+            'suggested' => '0',
+        ];
+        $currency = app('amount')->getDefaultCurrency();
+        $range    = Preferences::get('viewRange', '1M')->data;
+        $begin    = Navigation::subtractPeriod($start, $range, 3);
 
-            // get average amount available.
-            $total        = '0';
-            $count        = 0;
-            $currentStart = clone $begin;
-            while ($currentStart < $start) {
-                $currentEnd   = Navigation::endOfPeriod($currentStart, $range);
-                $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
-                $currentStart = Navigation::addPeriod($currentStart, $range, 0);
-                $count++;
-            }
-            $result['available'] = bcdiv($total, strval($count));
-
-            // amount earned in this period:
-            $subDay = clone $end;
-            $subDay->subDay();
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-            $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
-
-            // amount spent in period
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-            $result['spent'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
-            // suggestion starts with the amount spent
-            $result['suggested'] = bcmul($result['spent'], '-1');
-            $result['suggested'] = bccomp($result['suggested'], $result['earned']) === 1 ? $result['earned'] : $result['suggested'];
-            // unless it's more than you earned. So min() of suggested/earned
-
-
-            $cache->store($result);
+        // get average amount available.
+        $total        = '0';
+        $count        = 0;
+        $currentStart = clone $begin;
+        while ($currentStart < $start) {
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $range);
+            $total        = bcadd($total, $this->repository->getAvailableBudget($currency, $currentStart, $currentEnd));
+            $currentStart = Navigation::addPeriod($currentStart, $range, 0);
+            $count++;
         }
+        $result['available'] = bcdiv($total, strval($count));
+
+        // amount earned in this period:
+        $subDay = clone $end;
+        $subDay->subDay();
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
+        $result['earned'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
+
+        // amount spent in period
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($begin, $subDay)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
+        $result['spent'] = bcdiv(strval($collector->getJournals()->sum('transaction_amount')), strval($count));
+        // suggestion starts with the amount spent
+        $result['suggested'] = bcmul($result['spent'], '-1');
+        $result['suggested'] = bccomp($result['suggested'], $result['earned']) === 1 ? $result['earned'] : $result['suggested'];
+        // unless it's more than you earned. So min() of suggested/earned
+
+        $cache->store($result);
 
 
         return view('budgets.info', compact('result', 'begin', 'currentEnd'));
@@ -406,7 +415,7 @@ class BudgetController extends Controller
         // collector:
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('budgets.show', [$budget->id]));
 
@@ -444,11 +453,9 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
-                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withCategoryInformation();
+                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $journals = $collector->getPaginatedJournals();
         $journals->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
-
-
         $start  = session('first', Carbon::create()->startOfYear());
         $end    = new Carbon;
         $limits = $this->getLimits($budget, $start, $end);
@@ -467,7 +474,7 @@ class BudgetController extends Controller
         $data   = $request->getBudgetData();
         $budget = $this->repository->store($data);
 
-        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.stored_new_budget', ['name' => $budget->name])));
         Preferences::mark();
 
         if (intval($request->get('create_another')) === 1) {
@@ -492,7 +499,7 @@ class BudgetController extends Controller
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
-        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => e($budget->name)])));
+        $request->session()->flash('success', strval(trans('firefly.updated_budget', ['name' => $budget->name])));
         Preferences::mark();
 
         if (intval($request->get('return_to_edit')) === 1) {
@@ -541,15 +548,12 @@ class BudgetController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
-        $set               = $this->repository->getBudgetLimits($budget, $start, $end);
-        $limits            = new Collection();
+        $set    = $this->repository->getBudgetLimits($budget, $start, $end);
+        $limits = new Collection();
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $entry->spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $entry->start_date, $entry->end_date);
+            $entry->spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
             $limits->push($entry);
         }
         $cache->store($limits);
@@ -569,9 +573,7 @@ class BudgetController extends Controller
         $start      = Navigation::startOfPeriod($start, $range);
         $end        = Navigation::endOfX(new Carbon, $range, null);
         $entries    = new Collection;
-
-        // properties for cache
-        $cache = new CacheProperties;
+        $cache      = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('no-budget-period-entries');
@@ -584,8 +586,6 @@ class BudgetController extends Controller
         while ($end >= $start) {
             $end        = Navigation::startOfPeriod($end, $range);
             $currentEnd = Navigation::endOfPeriod($end, $range);
-
-            // count journals without budget in this period:
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL]);
@@ -594,15 +594,7 @@ class BudgetController extends Controller
             $journals = $set->count();
             $dateStr  = $end->format('Y-m-d');
             $dateName = Navigation::periodShow($end, $range);
-            $entries->push(
-                [
-                    'string' => $dateStr,
-                    'name'   => $dateName,
-                    'count'  => $journals,
-                    'sum'    => $sum,
-                    'date'   => clone $end,
-                ]
-            );
+            $entries->push(['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $end,]);
             $end = Navigation::subtractPeriod($end, $range, 1);
         }
         $cache->store($entries);

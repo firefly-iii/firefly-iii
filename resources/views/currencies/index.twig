@@ -19,7 +19,9 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
+                                {% if isOwner %}
                                 <th>&nbsp;</th>
+                                {% endif %}
                                 <th>{{ 'currency'|_ }}</th>
                                 <th>{{ 'number_of_decimals'|_ }}</th>
                                 <th>&nbsp;</th>
@@ -28,12 +30,14 @@
                             <tbody>
                             {% for currency in currencies %}
                                 <tr>
+                                    {% if isOwner %}
                                     <td>
                                         <div class="btn-group btn-group-xs">
                                             <a class="btn btn-default" href="{{ route('currencies.edit',currency.id) }}"><i class="fa fa-fw fa-pencil"></i></a>
                                             <a class="btn btn-danger" href="{{ route('currencies.delete',currency.id) }}"><i class="fa fa-fw fa-trash"></i></a>
                                         </div>
                                     </td>
+                                    {% endif %}
                                     <td>{{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})</td>
                                     <td>{{ currency.decimal_places }}</td>
                                     <td class="defaultCurrency">

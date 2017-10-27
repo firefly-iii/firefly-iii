@@ -1,30 +1,39 @@
 # Firefly III: A personal finances manager 
 
-[![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
+[![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg)](https://secure.php.net/downloads.php) [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/badge/license-GPL-lightgrey.svg)](https://www.gnu.org/licenses/gpl.html) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) 
 
-[![The index of Firefly III](https://i.nder.be/hurdhgyg/400)](https://i.nder.be/h2b37243) [![The account overview of Firefly III](https://i.nder.be/hnkfkdpr/400)](https://i.nder.be/hv70pbwc)
+[![The index of Firefly III](https://i.nder.be/ccynyxy0/400)](https://i.nder.be/h327vx3y) [![The account overview of Firefly III](https://i.nder.be/g8v86y2g/400)](https://i.nder.be/hkpynqr9)
 
-[![The useful financial reports of Firefly III](https://i.nder.be/h7sk6nb7/400)](https://i.nder.be/ccn0u2mp) [![Even more useful reports in Firefly III](https://i.nder.be/g237hr35/400)](https://i.nder.be/gm8hbh7z)
+[![The useful financial reports of Firefly III](https://i.nder.be/cs3qx4f3/400)](https://i.nder.be/cwznmryd) [![Saving money is easy!](https://i.nder.be/gpq6ykym/400)](https://i.nder.be/gum2qf8z)
 
-"Firefly III" is a financial manager for your personal finances.
-It can help you keep track of your expenses and income.
+"Firefly III" is a financial manager for your personal finances. It can help you keep track of your expenses and income.
 Firefly III supports the use of budgets. You can categorize and tag your transactions.
 It also supports credit cards, shared  household accounts and savings accounts.
 There are many financial reports available.
 
-## Try it out!
+## Want to try Firefly III?
+
+There is a **[demo site](https://firefly-iii.nder.be)** with an example financial administration already present. You can use Docker, Heroku or Sandstorm.io (see below) to quickly setup your own instance.
+
+## Install Firefly III
+
+### Using docker
+
+You can use docker-compose to [set up your personal secure](https://firefly-iii.github.io/using-docker.html) Firefly III environment. Advanced users can use the Dockerfile directly. 
+
+### Using vagrant (or other VMs)
+
+You can install Firefly III on any Linux or Windows machine. You'll need a web server (preferrably on Linux) and access to the command line. Please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
+
+### Using Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
 
-Firefly III can be run on Heroku.
 Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
-There is also a [demo site](https://firefly-iii.nder.be) with an example financial administration already present. 
 
-## Getting started
+### Using Sandstorm.io
 
-To install Firefly III, you'll need a web server (preferrably on Linux) and access to the command line.
-Then, please read the [installation guide](https://firefly-iii.github.io/using-installing.html).
-At the moment, installation is fairly complex. I hope to improve this in the future. If you need support, please open a ticket.
+You can find Firefly III in [the Sandstorm.io marketplace](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70). You can run it on your own installation or on Oasis.
 
 ## More about Firefly III
 
@@ -59,7 +68,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ### License
 
-This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
+This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/LICENSE) under the [GPL v3](https://www.gnu.org/licenses/gpl.html).
 
 ### Other stuff
 
