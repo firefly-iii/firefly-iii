@@ -10,17 +10,17 @@
         <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.to') }}</th>
-        <!-- Hide budgets? -->
+        {# Hide budgets? #}
         {% if not hideBudgets %}
             <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
         {% endif %}
 
-        <!-- Hide categories? -->
+        {# Hide categories? #}
         {% if not hideCategories %}
             <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
         {% endif %}
 
-        <!-- Hide bills? -->
+        {# Hide bills? #}
         {% if not hideBills %}
             <th class="hidden-xs"><i class="fa fa-fw fa-calendar-o" title="{{ trans('list.bill') }}"></i></th>
         {% endif %}
@@ -29,6 +29,7 @@
     <tbody>
     {% for transaction in journals %}
         <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
+            {# input buttons #}
             <td class="hidden-xs">
                 <div class="select_single" style="display:none;">
                     <input name="select_all_single[]" class="select_all_single" value="{{ transaction.journal_id }}" type="checkbox"/>
@@ -40,9 +41,12 @@
                                 class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
 
+            {# icon #}
             <td class="hidden-xs">
                 {{ transaction|typeIconTransaction }}
             </td>
+
+            {# description #}
             <td>
                 <a href="{{ route('transactions.show',transaction.journal_id) }}">
 
@@ -52,13 +56,11 @@
                         {{ transaction.description }}
                     {% endif %}
                 </a>
+                {# is a split journal #}
                 {{ splitJournalIndicator(transaction.journal_id) }}
-                {% set countAtt = transaction.transactionJournal.attachments.count %}
-                {% if countAtt > 0 %}
-                    <i class="fa fa-paperclip"
-                       title="{{ Lang.choice('firefly.nr_of_attachments', countAtt, {count: countAtt}) }}"></i>
-                {% endif %}
 
+                {# count attachments #}
+                {{ attachmentIndicator(transaction.journal_id) }}
             </td>
             <td style="text-align: right;">
                 <span style="margin-right:5px;">

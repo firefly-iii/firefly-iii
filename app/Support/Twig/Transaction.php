@@ -24,8 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Twig;
 
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\CacheProperties;
+use Lang;
 use Steam;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -38,6 +41,41 @@ use Twig_SimpleFunction;
  */
 class Transaction extends Twig_Extension
 {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function attachmentIndicator(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'attachmentIndicator', function (int $journalId) {
+
+            $cache = new CacheProperties;
+            $cache->addProperty('attachments_journal');
+            $cache->addProperty($journalId);
+            if ($cache->has()) {
+                return $cache->get();
+            }
+            $count = Attachment::whereNull('deleted_at')
+                               ->where('attachable_type', 'FireflyIII\Models\TransactionJournal')
+                               ->where('attachable_id', $journalId)
+                               ->count();
+            if ($count > 0) {
+                $res = sprintf('<i class="fa fa-paperclip" title="%s"></i>', Lang::choice('firefly.nr_of_attachments', $count, ['count' => $count]));
+                $cache->store($res);
+
+                return $res;
+            }
+
+            $res = '';
+            $cache->store($res);
+
+            return $res;
+
+
+        }, ['is_safe' => ['html']]
+        );
+    }
+
     /**
      * @return array
      */
@@ -63,6 +101,7 @@ class Transaction extends Twig_Extension
             $this->transactionCategories(),
             $this->transactionIdCategories(),
             $this->splitJournalIndicator(),
+            $this->attachmentIndicator(),
         ];
 
         return $functions;
@@ -85,12 +124,25 @@ class Transaction extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'splitJournalIndicator', function (int $journalId) {
+
+            $cache = new CacheProperties;
+            $cache->addProperty('is_split_journal');
+            $cache->addProperty($journalId);
+            if ($cache->has()) {
+                return $cache->get();
+            }
             $count = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
             if ($count > 2) {
-                return '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
+                $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
+                $cache->store($res);
+
+                return $res;
             }
 
-            return '';
+            $res = '';
+            $cache->store($res);
+
+            return $res;
 
 
         }, ['is_safe' => ['html']]
