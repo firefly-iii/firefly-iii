@@ -396,7 +396,7 @@ class RuleRepository implements RuleRepositoryInterface
 
         $this->storeTrigger($rule, $triggerValues);
         foreach ($data['rule-triggers'] as $index => $trigger) {
-            $value          = $data['rule-trigger-values'][$index];
+            $value          = $data['rule-trigger-values'][$index] ?? '';
             $stopProcessing = isset($data['rule-trigger-stop'][$index]) ? true : false;
 
             $triggerValues = [
