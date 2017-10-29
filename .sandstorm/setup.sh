@@ -11,6 +11,14 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y python-software-properties software-properties-common
 
+# install all languages
+sed -i 's/# nl_NL.UTF-8 UTF-8/nl_NL.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/g' /etc/locale.gen
+dpkg-reconfigure --frontend=noninteractive locales
+
+
 # actually add repository
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E9C74FEEA2098A6E
 add-apt-repository "deb http://packages.dotdeb.org jessie all"

@@ -381,6 +381,7 @@ opt/app/app/Http/Middleware/Range.php
 opt/app/app/Http/Middleware/RedirectIfAuthenticated.php
 opt/app/app/Http/Middleware/RedirectIfTwoFactorAuthenticated.php
 opt/app/app/Http/Middleware/Sandstorm.php
+opt/app/app/Http/Middleware/StartFireflySession.php
 opt/app/app/Http/Middleware/TrimStrings.php
 opt/app/app/Http/Middleware/TrustProxies.php
 opt/app/app/Http/Middleware/VerifyCsrfToken.php
@@ -515,6 +516,7 @@ opt/app/app/Providers/RouteServiceProvider.php
 opt/app/app/Providers/RuleGroupServiceProvider.php
 opt/app/app/Providers/RuleServiceProvider.php
 opt/app/app/Providers/SearchServiceProvider.php
+opt/app/app/Providers/SessionServiceProvider.php
 opt/app/app/Providers/TagServiceProvider.php
 opt/app/app/Repositories/Account/AccountRepository.php
 opt/app/app/Repositories/Account/AccountRepositoryInterface.php
@@ -882,6 +884,8 @@ opt/app/public/js/lib/daterangepicker.js
 opt/app/public/js/lib/html5shiv.min.js
 opt/app/public/js/lib/jquery-3.1.1.min.js
 opt/app/public/js/lib/jquery-3.1.1.min.map
+opt/app/public/js/lib/jquery-3.2.1.min.js
+opt/app/public/js/lib/jquery-3.2.1.min.map
 opt/app/public/js/lib/jquery-ui.min.js
 opt/app/public/js/lib/jquery.color-2.1.2.min.js
 opt/app/public/js/lib/modernizr-custom.js
@@ -1186,6 +1190,7 @@ opt/app/resources/views/index.twig
 opt/app/resources/views/javascript/accounts.twig
 opt/app/resources/views/javascript/currencies.twig
 opt/app/resources/views/javascript/variables.twig
+opt/app/resources/views/json/piggy-banks.twig
 opt/app/resources/views/layout/default.twig
 opt/app/resources/views/layout/empty.twig
 opt/app/resources/views/layout/guest.twig
