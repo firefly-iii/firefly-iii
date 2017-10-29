@@ -48,20 +48,20 @@ class StartFireflySession extends StartSession
 //        return parent::handle($request, $next); // defer to the right stuff
 //    }
 
-//    /**
-//     * Store the current URL for the request if necessary.
-//     *
-//     * @param  \Illuminate\Http\Request              $request
-//     * @param  \Illuminate\Contracts\Session\Session $session
-//     *
-//     * @return void
-//     */
-//    protected function storeCurrentUrl(Request $request, $session)
-//    {
-//        $uri    = $request->fullUrl();
-//        $strpos = strpos($uri, 'jscript');
-//        if ($request->method() === 'GET' && $request->route() && !$request->ajax() && $strpos === false) {
-//            $session->setPreviousUrl($uri);
-//        }
-//    }
+    /**
+     * Store the current URL for the request if necessary.
+     *
+     * @param  \Illuminate\Http\Request              $request
+     * @param  \Illuminate\Contracts\Session\Session $session
+     *
+     * @return void
+     */
+    protected function storeCurrentUrl(Request $request, $session)
+    {
+        $uri    = $request->fullUrl();
+        $strpos = strpos($uri, 'jscript');
+        if ($request->method() === 'GET' && $request->route() && !$request->ajax() && $strpos === false) {
+            $session->setPreviousUrl($uri);
+        }
+    }
 }

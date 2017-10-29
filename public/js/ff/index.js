@@ -103,25 +103,3 @@ function getBalanceBox() {
         $('#box-balance-out').html(data.expense);
     });
 }
-
-
-function getBoxAmounts() {
-    "use strict";
-    var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];
-    for (var x in boxes) {
-        if (!boxes.hasOwnProperty(x)) {
-            continue;
-        }
-        var box = boxes[x];
-        $.getJSON('json/box/' + box).done(putData).fail(failData);
-    }
-}
-
-function putData(data) {
-    "use strict";
-    $('#box-' + data.box).html(data.amount);
-}
-
-function failData() {
-    "use strict";
-}

@@ -65,7 +65,8 @@ $(function () {
             $.post(dateRangeMeta.uri, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
-                label: label
+                label: label,
+                _token: token
             }).done(function () {
                 window.location.reload(true);
             }).fail(function () {
