@@ -21,7 +21,7 @@ return [
     'initial_header_help'           => 'Hier auswählen, wenn die ersten Zeilen der CSV-Datei die Spaltenüberschriften sind.',
     'initial_date_help'             => 'Datumsformat in ihrer CSV-Datei. Geben Sie das Format so an, wie es <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">diese Seite</a> zeigt. Die Standardeinstellung ergibt Daten die so aussehen: :dateExample.',
     'initial_delimiter_help'        => 'Wählen Sie das Trennzeichen, welches in ihrer Datei genutzt wird. Wenn Sie nicht sicher sind ist Komma die sicherste Option.',
-    'initial_import_account_help'   => 'Wenn ihre CSV-Datei KEINE Informationen über ihre Girokonten enthält nutzen Sie bitte diese Dropdown-Liste um anzugeben, zu welchem Girokonto die Transaktionen in der CSV-Datei gehören.',
+    'initial_import_account_help'   => 'Wenn ihre CSV-Datei KEINE Informationen über ihre Girokonten enthält, nutzen Sie bitte diese Dropdown-Liste um anzugeben, zu welchem Girokonto die Transaktionen in der CSV-Datei gehören.',
     'initial_submit'                => 'Fortfahren mit Schritt 2/3',
 
     // roles config
