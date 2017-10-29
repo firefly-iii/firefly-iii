@@ -339,7 +339,7 @@ return [
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
 
 
-    'rules_have_read_warning'                  => 'Have you read the warning?',
+    'rules_have_read_warning'                  => 'Haben Sie die Warnung gelesen?',
     'apply_rule_warning'                       => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
 
     // tags
@@ -444,9 +444,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'secure_pw_short'                          => 'Wenn Sie gerade das Passwort eingegeben haben, welches Sie immer verwenden: <em>Bitte ja</em>.',
     'personal_access_token'                    => 'Persönlicher Zugangs-Token',
     'explain_access_token'                     => 'You need this token to perform command line options, such as importing or exporting data. Without it, such sensitive commands will not work. Do not share your access token. Nobody will ask you for this token, not even me. If you fear you lost this, or when you\'re paranoid, regenerate this token using the button.',
-    'regenerate_access_token'                  => 'Regenerate access token',
-    'token_regenerated'                        => 'A new token was generated',
-    'change_your_email'                        => 'Change your email address',
+    'regenerate_access_token'                  => 'Zugangs-Token neu erstellen',
+    'token_regenerated'                        => 'Ein neuer Zugangs-Token wurde generiert',
+    'change_your_email'                        => 'E-Mail Adresse ändern',
     'email_verification'                       => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
     'email_changed_logout'                     => 'Until you verify your email address, you cannot login.',
     'login_with_new_email'                     => 'You can now login with your new email address.',
@@ -669,7 +669,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'opt_group_defaultAsset'                   => 'Standard-Anlagekonto',
     'opt_group_savingAsset'                    => 'Sparkonten',
     'opt_group_sharedAsset'                    => 'Shared asset accounts',
-    'opt_group_ccAsset'                        => 'Credit cards',
+    'opt_group_ccAsset'                        => 'Kreditkarten',
 
 
     // new user:
@@ -929,15 +929,15 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'block_code_bounced'                    => 'Email message(s) bounced',
     'block_code_expired'                    => 'Demo-Konto abgelaufen',
     'no_block_code'                         => 'Kein Grund für Block oder Benutzer nicht blockiert',
-    'block_code_email_changed'              => 'User has not yet confirmed new email address',
+    'block_code_email_changed'              => 'Der Benutzer hat die neue E-Mail-Adresse noch nicht bestätigt',
     'admin_update_email'                    => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
     'update_user'                           => 'Update user',
     'updated_user'                          => 'User data has been changed.',
     'delete_user'                           => 'Delete user :email',
-    'user_deleted'                          => 'The user has been deleted',
+    'user_deleted'                          => 'Der Nutzer wurde gelöscht',
     'send_test_email'                       => 'Send test email message',
     'send_test_email_text'                  => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
-    'send_message'                          => 'Send message',
+    'send_message'                          => 'Nachricht senden',
     'send_test_triggered'                   => 'Test was triggered. Check your inbox and the log files.',
 
     // links
@@ -1007,7 +1007,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'import_data'                           => 'Daten importieren',
 
     // import index page:
-    'import_index_title'                    => 'Import data into Firefly III',
+    'import_index_title'                    => 'Daten in Firefly III importieren',
     'import_index_sub_title'                => 'Index',
     'import_general_index_intro'            => 'Welcome to Firefly\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
     'import_index_intro'                    => 'This routine will help you import files from your bank into Firefly III. Please check out the help pages in the top right corner.',
@@ -1015,7 +1015,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'import_index_config'                   => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>.',
     'import_index_type'                     => 'Select the type of file you will upload',
     'import_index_start'                    => 'Start importing',
-    'import_file'                           => 'Import a file',
+    'import_file'                           => 'Datei importieren',
 
     // supported file types:
     'import_file_type_csv'                  => 'CSV (Kommagetrennte Werte)',
