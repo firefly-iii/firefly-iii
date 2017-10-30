@@ -190,7 +190,7 @@ class Amount
             }
             $cache->store(config('firefly.default_currency', 'EUR'));
 
-            return config('firefly.default_currency', 'EUR');
+            return strval(config('firefly.default_currency', 'EUR'));
         }
     }
 
