@@ -88,7 +88,7 @@ class SearchController extends Controller
         if (!$cache->has()) {
             // parse search terms:
             $searcher->parseQuery($fullQuery);
-            $searcher->setLimit(20);
+            $searcher->setLimit(intval(env('SEARCH_RESULT_LIMIT', 50)));
             $transactions = $searcher->searchTransactions();
             $cache->store($transactions);
         }
