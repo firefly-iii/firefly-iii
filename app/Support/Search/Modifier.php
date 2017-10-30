@@ -61,24 +61,8 @@ class Modifier
      */
     public static function apply(array $modifier, Transaction $transaction): bool
     {
+        $res = true;
         switch ($modifier['type']) {
-            default:
-                throw new FireflyException(sprintf('Search modifier "%s" is not (yet) supported. Sorry!', $modifier['type']));
-            case 'amount':
-            case 'amount_is':
-                $res = self::amountCompare($transaction, $modifier['value'], 0);
-                Log::debug(sprintf('Amount is %s? %s', $modifier['value'], var_export($res, true)));
-                break;
-            case 'amount_min':
-            case 'amount_less':
-                $res = self::amountCompare($transaction, $modifier['value'], 1);
-                Log::debug(sprintf('Amount less than %s? %s', $modifier['value'], var_export($res, true)));
-                break;
-            case 'amount_max':
-            case 'amount_more':
-                $res = self::amountCompare($transaction, $modifier['value'], -1);
-                Log::debug(sprintf('Amount more than %s? %s', $modifier['value'], var_export($res, true)));
-                break;
             case 'source':
                 $res = self::stringCompare($transaction->account_name, $modifier['value']);
                 Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
@@ -98,25 +82,6 @@ class Modifier
             case 'bill':
                 $res = self::stringCompare(strval($transaction->bill_name), $modifier['value']);
                 Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
-                break;
-            case 'type':
-                $res = self::stringCompare($transaction->transaction_type_type, $modifier['value']);
-                Log::debug(sprintf('Transaction type is %s? %s', $modifier['value'], var_export($res, true)));
-                break;
-            case 'date':
-            case 'on':
-                $res = self::sameDate($transaction->date, $modifier['value']);
-                Log::debug(sprintf('Date same as %s? %s', $modifier['value'], var_export($res, true)));
-                break;
-            case 'date_before':
-            case 'before':
-                $res = self::dateBefore($transaction->date, $modifier['value']);
-                Log::debug(sprintf('Date before %s? %s', $modifier['value'], var_export($res, true)));
-                break;
-            case 'date_after':
-            case 'after':
-                $res = self::dateAfter($transaction->date, $modifier['value']);
-                Log::debug(sprintf('Date before %s? %s', $modifier['value'], var_export($res, true)));
                 break;
         }
 

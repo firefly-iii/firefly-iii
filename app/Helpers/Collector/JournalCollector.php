@@ -133,11 +133,83 @@ class JournalCollector implements JournalCollectorInterface
     public function addFilter(string $filter): JournalCollectorInterface
     {
         $interfaces = class_implements($filter);
-        if (in_array(FilterInterface::class, $interfaces) && !in_array($filter, $this->filters) ) {
+        if (in_array(FilterInterface::class, $interfaces) && !in_array($filter, $this->filters)) {
             Log::debug(sprintf('Enabled filter %s', $filter));
             $this->filters[] = $filter;
         }
 
+        return $this;
+    }
+
+    /**
+     * @param string $amount
+     *
+     * @return JournalCollectorInterface
+     */
+    public function amountIs(string $amount): JournalCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($amount) {
+                $q->where('transactions.amount', $amount);
+                $q->orWhere('transactions.amount', bcmul($amount, '-1'));
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $amount
+     *
+     * @return JournalCollectorInterface
+     */
+    public function amountLess(string $amount): JournalCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q1) use ($amount) {
+                $q1->where(
+                    function (EloquentBuilder $q2) use ($amount) {
+                        // amount < 0 and .amount > -$amount
+                        $amount = bcmul($amount,'-1');
+                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $amount);
+                    }
+                )
+                   ->orWhere(
+                       function (EloquentBuilder $q3) use ($amount) {
+                           // amount > 0 and .amount < $amount
+                           $q3->where('transactions.amount', '>', 0)->where('transactions.amount', '<', $amount);
+                       }
+                   );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $amount
+     *
+     * @return JournalCollectorInterface
+     */
+    public function amountMore(string $amount): JournalCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q1) use ($amount) {
+                $q1->where(
+                    function (EloquentBuilder $q2) use ($amount) {
+                        // amount < 0 and .amount < -$amount
+                        $amount = bcmul($amount,'-1');
+                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $amount);
+                    }
+                )
+                   ->orWhere(
+                       function (EloquentBuilder $q3) use ($amount) {
+                           // amount > 0 and .amount > $amount
+                           $q3->where('transactions.amount', '>', 0)->where('transactions.amount', '>', $amount);
+                       }
+                   );
+            }
+        );
         return $this;
     }
 
@@ -252,6 +324,20 @@ class JournalCollector implements JournalCollectorInterface
     }
 
     /**
+     * @param Carbon $after
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setAfter(Carbon $after): JournalCollectorInterface
+    {
+        $afterStr = $after->format('Y-m-d');
+        $this->query->where('transaction_journals.date', '>=', $afterStr);
+        Log::debug(sprintf('JournalCollector range is now after %s (inclusive)', $afterStr));
+
+        return $this;
+    }
+
+    /**
      * @return JournalCollectorInterface
      */
     public function setAllAssetAccounts(): JournalCollectorInterface
@@ -269,6 +355,20 @@ class JournalCollector implements JournalCollectorInterface
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param Carbon $before
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setBefore(Carbon $before): JournalCollectorInterface
+    {
+        $beforeStr = $before->format('Y-m-d');
+        $this->query->where('transaction_journals.date', '<=', $beforeStr);
+        Log::debug(sprintf('JournalCollector range is now before %s (inclusive)', $beforeStr));
 
         return $this;
     }
@@ -523,7 +623,7 @@ class JournalCollector implements JournalCollectorInterface
                             ->orderBy('transaction_journals.order', 'ASC')
                             ->orderBy('transaction_journals.id', 'DESC')
                             ->orderBy('transaction_journals.description', 'DESC')
-                            ->orderBy('transactions.amount','DESC');
+                            ->orderBy('transactions.amount', 'DESC');
 
         $this->query = $query;
 

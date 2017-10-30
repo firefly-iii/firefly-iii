@@ -82,7 +82,7 @@ class SearchController extends Controller
         $cache->addProperty($fullQuery);
 
         if ($cache->has()) {
-            $transactions = $cache->get();
+            //$transactions = $cache->get();
         }
 
         if (!$cache->has()) {
@@ -92,7 +92,6 @@ class SearchController extends Controller
             $transactions = $searcher->searchTransactions();
             $cache->store($transactions);
         }
-
 
         $html = view('search.search', compact('transactions'))->render();
 
