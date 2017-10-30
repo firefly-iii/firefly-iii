@@ -201,13 +201,13 @@ class Search implements SearchInterface
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountIs($amount);
                     break;
-                case 'amount_min':
+                case 'amount_max':
                 case 'amount_less':
                     $amount = app('steam')->positive(strval($modifier['value']));
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountLess($amount);
                     break;
-                case 'amount_max':
+                case 'amount_min':
                 case 'amount_more':
                     $amount = app('steam')->positive(strval($modifier['value']));
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
