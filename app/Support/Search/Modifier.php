@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
+use Illuminate\Support\Str;
 use Log;
 use Steam;
 
@@ -61,31 +62,29 @@ class Modifier
      */
     public static function apply(array $modifier, Transaction $transaction): bool
     {
-        $res               = true;
+        $res = true;
         switch ($modifier['type']) {
             case 'source':
-                $modifier['value'] = Steam::tryDecrypt($modifier['value']);
-                $res = self::stringCompare($transaction->account_name, $modifier['value']);
+                $name = Steam::tryDecrypt($transaction->account_name);
+                $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'destination':
-                $modifier['value'] = Steam::tryDecrypt($modifier['value']);
-                $res = self::stringCompare($transaction->opposing_account_name, $modifier['value']);
+                $name = Steam::tryDecrypt($transaction->opposing_account_name);
+                $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'category':
-                $modifier['value'] = Steam::tryDecrypt($modifier['value']);
-                $res = self::category($transaction, $modifier['value']);
+                $res               = self::category($transaction, $modifier['value']);
                 Log::debug(sprintf('Category is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'budget':
-                $modifier['value'] = Steam::tryDecrypt($modifier['value']);
-                $res = self::budget($transaction, $modifier['value']);
+                $res               = self::budget($transaction, $modifier['value']);
                 Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'bill':
-                $modifier['value'] = Steam::tryDecrypt($modifier['value']);
-                $res = self::stringCompare(strval($transaction->bill_name), $modifier['value']);
+                $name = Steam::tryDecrypt($transaction->bill_name);
+                $res               = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
         }
