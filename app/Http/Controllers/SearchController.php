@@ -82,7 +82,7 @@ class SearchController extends Controller
         $cache->addProperty($fullQuery);
 
         if ($cache->has()) {
-            //$transactions = $cache->get();
+            $transactions = $cache->get();
         }
 
         if (!$cache->has()) {
