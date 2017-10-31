@@ -126,15 +126,15 @@ return [
         ],
     'languages'                  => [
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => true],
+        'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish', 'complete' => false],
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => true],
         'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian', 'complete' => false],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
-        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish ', 'complete' => false],
+        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish ', 'complete' => true],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => true],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian', 'complete' => false],
         'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian', 'complete' => false],
-        'zh-TW' => ['name_locale' => '正體中文', 'name_english' => 'Chinese Traditional', 'complete' => false],
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],
