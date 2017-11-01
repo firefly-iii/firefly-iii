@@ -142,26 +142,23 @@ class JavascriptController extends Controller
         ];
         Log::debug(sprintf('viewRange is %s', $viewRange));
 
-        // get the format for the ranges:
-        $format = $this->getFormatByRange($viewRange);
-
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {
             Log::debug('Custom is true.');
-            $index             = $start->formatLocalized($format);
+            $index             = Navigation::periodShow($start, $viewRange);
             $customPeriodStart = Navigation::startOfPeriod($start, $viewRange);
             $customPeriodEnd   = Navigation::endOfPeriod($customPeriodStart, $viewRange);
             $ranges[$index]    = [$customPeriodStart, $customPeriodEnd];
         }
         // then add previous range and next range
         $previousDate   = Navigation::subtractPeriod($start, $viewRange);
-        $index          = $previousDate->formatLocalized($format);
+        $index          = Navigation::periodShow($previousDate, $viewRange);
         $previousStart  = Navigation::startOfPeriod($previousDate, $viewRange);
         $previousEnd    = Navigation::endOfPeriod($previousStart, $viewRange);
         $ranges[$index] = [$previousStart, $previousEnd];
 
         $nextDate       = Navigation::addPeriod($start, $viewRange, 0);
-        $index          = $nextDate->formatLocalized($format);
+        $index          = Navigation::periodShow($nextDate, $viewRange);
         $nextStart      = Navigation::startOfPeriod($nextDate, $viewRange);
         $nextEnd        = Navigation::endOfPeriod($nextStart, $viewRange);
         $ranges[$index] = [$nextStart, $nextEnd];
@@ -187,34 +184,5 @@ class JavascriptController extends Controller
 
         return $return;
 
-    }
-
-    private function getFormatByRange(string $viewRange): string
-    {
-        switch ($viewRange) {
-            default:
-                throw new FireflyException(sprintf('The date picker does not yet support "%s".', $viewRange)); // @codeCoverageIgnore
-            case '1D':
-            case 'custom':
-                $format = (string)trans('config.month_and_day');
-                break;
-            case '3M':
-                $format = (string)trans('config.quarter_of_year');
-                break;
-            case '6M':
-                $format = (string)trans('config.half_year');
-                break;
-            case '1Y':
-                $format = (string)trans('config.year');
-                break;
-            case '1M':
-                $format = (string)trans('config.month');
-                break;
-            case '1W':
-                $format = (string)trans('config.week_in_year');
-                break;
-        }
-
-        return $format;
     }
 }
