@@ -199,7 +199,7 @@ class JavascriptController extends Controller
                 $format = (string)trans('config.month_and_day');
                 break;
             case '3M':
-                $format = (string)trans('config.quarter_in_year');
+                $format = (string)trans('config.quarter_of_year');
                 break;
             case '6M':
                 $format = (string)trans('config.half_year');
