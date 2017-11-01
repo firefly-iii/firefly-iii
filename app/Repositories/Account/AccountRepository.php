@@ -507,7 +507,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function validOpeningBalanceData(array $data): bool
     {
-        $data['openingBalance'] = strval($data['openingBalance']);
+        $data['openingBalance'] = strval($data['openingBalance'] ?? '');
         if (isset($data['openingBalance']) && !is_null($data['openingBalance']) && strlen($data['openingBalance']) > 0 &&
             isset($data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
