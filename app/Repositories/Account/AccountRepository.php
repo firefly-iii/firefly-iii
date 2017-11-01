@@ -221,8 +221,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function openingBalanceTransaction(Account $account): TransactionJournal
     {
-        $journal = TransactionJournal::sortCorrectly()
-                                     ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $account->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
@@ -288,6 +287,8 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * At this point strlen of amount > 0.
+     *
      * @param Account $account
      * @param array   $data
      *
@@ -296,6 +297,7 @@ class AccountRepository implements AccountRepositoryInterface
     protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
         $amount = strval($data['openingBalance']);
+        Log::debug(sprintf('Submitted amount is %s',$amount));
 
         if (bccomp($amount, '0') === 0) {
             return new TransactionJournal;
@@ -322,12 +324,15 @@ class AccountRepository implements AccountRepositoryInterface
         $secondAccount = $opposing;
         $firstAmount   = $amount;
         $secondAmount  = bcmul($amount, '-1');
+        Log::debug(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
 
-        if ($data['openingBalance'] < 0) {
+        if (bccomp($amount,'0') === -1) {
+            Log::debug(sprintf('%s is a negative number.', $amount));
             $firstAccount  = $opposing;
             $secondAccount = $account;
             $firstAmount   = bcmul($amount, '-1');
             $secondAmount  = $amount;
+            Log::debug(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
         }
 
         $one = new Transaction(
@@ -374,6 +379,7 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     *
      * @param Account $account
      * @param array   $data
      *
@@ -381,6 +387,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateInitialBalance(Account $account, array $data): bool
     {
+        Log::debug(sprintf('updateInitialBalance() for account #%d', $account->id));
         $openingBalance = $this->openingBalanceTransaction($account);
 
         // no opening balance journal? create it:
@@ -457,6 +464,8 @@ class AccountRepository implements AccountRepositoryInterface
         $amount     = strval($data['openingBalance']);
         $currencyId = intval($data['currency_id']);
 
+        Log::debug(sprintf('Submitted amount for opening balance to update is %s', $amount));
+
         if (bccomp($amount, '0') === 0) {
             $journal->delete();
 
@@ -471,12 +480,15 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ($account->id === $transaction->account_id) {
+                Log::debug(sprintf('Will change transaction #%d amount from %s to %s', $transaction->id, $transaction->amount, $amount));
                 $transaction->amount                  = $amount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
             if ($account->id !== $transaction->account_id) {
-                $transaction->amount                  = bcmul($amount, '-1');
+                $negativeAmount = bcmul($amount, '-1');
+                Log::debug(sprintf('Will change transaction #%d amount from %s to %s', $transaction->id, $transaction->amount, $negativeAmount));
+                $transaction->amount                  = $negativeAmount;
                 $transaction->transaction_currency_id = $currencyId;
                 $transaction->save();
             }
@@ -495,7 +507,9 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function validOpeningBalanceData(array $data): bool
     {
-        if (isset($data['openingBalance']) && isset($data['openingBalanceDate'])) {
+        $data['openingBalance'] = strval($data['openingBalance']);
+        if (isset($data['openingBalance']) && !is_null($data['openingBalance']) && strlen($data['openingBalance']) > 0 &&
+            isset($data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
 
             return true;
