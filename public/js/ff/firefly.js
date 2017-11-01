@@ -26,7 +26,7 @@ $(function () {
     configAccounting(currencySymbol);
 
     // on submit of form, disable any button in form:
-    $('form.form-horizontal').on('submit', function () {
+    $('form.form-horizontal:not(.nodisablebutton)').on('submit', function () {
         $('button[type="submit"]').prop('disabled', true);
     });
 
