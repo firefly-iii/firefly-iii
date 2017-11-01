@@ -48,7 +48,7 @@ return [
     'budget_id'                      => 'Presupuesto',
     'openingBalance'                 => 'Saldo inicial',
     'tagMode'                        => 'Modo de etiqueta',
-    'tag_position'                    => 'Tag location',
+    'tag_position'                   => 'Tag location',
     'virtualBalance'                 => 'Saldo virtual',
     'targetamount'                   => 'Cantidad objetivo',
     'accountRole'                    => 'Tipo de cuenta',
@@ -171,7 +171,7 @@ return [
 
     // admin
     'domain'                => 'Dominio',
-    'single_user_mode'      => 'Modo de un solo usuario',
+    'single_user_mode'      => 'Disable user registration',
     'is_demo_site'          => 'Está en modo demostración',
 
 

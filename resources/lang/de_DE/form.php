@@ -48,7 +48,7 @@ return [
     'budget_id'                      => 'Budget',
     'openingBalance'                 => 'Eröffnungsbilanz',
     'tagMode'                        => 'Tag-Modus',
-    'tag_position'                    => 'Tag location',
+    'tag_position'                   => 'Tag location',
     'virtualBalance'                 => 'Virtueller Kontostand',
     'targetamount'                   => 'Zielbetrag',
     'accountRole'                    => 'Rolle des Kontos',
@@ -67,8 +67,8 @@ return [
     'source_amount'                  => 'Betrag (Quelle)',
     'destination_amount'             => 'Betrag (Ziel)',
     'native_amount'                  => 'Nativer Betrag',
-    'new_email_address'              => 'New email address',
-    'verification'                   => 'Verification',
+    'new_email_address'              => 'Neue E-Mail-Adresse',
+    'verification'                   => 'Bestätigung',
     'api_key'                        => 'API key',
 
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
@@ -97,7 +97,7 @@ return [
     'code'                       => 'Code',
     'iban'                       => 'IBAN',
     'accountNumber'              => 'Kontonummer',
-    'creditCardNumber'           => 'Credit card number',
+    'creditCardNumber'           => 'Kreditkartennummer',
     'has_headers'                => 'Kopfzeilen',
     'date_format'                => 'Datumsformat',
     'specifix'                   => 'Bank- oder Dateispezifischer Korrekturen',
@@ -133,8 +133,8 @@ return [
     'delete_rule'                => 'Lösche Regel ":title"',
     'delete_rule_group'          => 'Lösche Regelgruppe ":title"',
     'delete_link_type'           => 'Delete link type ":name"',
-    'delete_user'                => 'Delete user ":email"',
-    'user_areYouSure'            => 'If you delete user ":email", everything will be gone. There is no undo, undelete or anything. If you delete yourself, you will lose access to this instance of Firefly III.',
+    'delete_user'                => 'Benutzer ":email" löschen',
+    'user_areYouSure'            => 'Wenn Sie den Benutzer ":email" löschen, ist alles weg. Es gibt keine Sicherung, Wiederherstellung oder ähnliches. Wenn Sie sich selbst löschen, verlieren Sie den Zugriff auf diese Instanz von Firefly III.',
     'attachment_areYouSure'      => 'Sind Sie sicher, dass Sie den Anhang ":name" löschen möchten?',
     'account_areYouSure'         => 'Sind Sie sicher, dass Sie das Konto ":name" löschen möchten?',
     'bill_areYouSure'            => 'Sind Sie sicher, dass Sie die Rechnung ":name" löschen möchten?',
@@ -171,7 +171,7 @@ return [
 
     // admin
     'domain'                => 'Domain',
-    'single_user_mode'      => 'Einzelnutzermodus',
+    'single_user_mode'      => 'Registrierung deaktivieren',
     'is_demo_site'          => 'Ist eine Demonstrationsseite',
 
 
@@ -193,5 +193,5 @@ return [
     'internal_reference' => 'Interner Verweis',
     'inward'             => 'Inward description',
     'outward'            => 'Outward description',
-    'rule_group_id'      => 'Rule group',
+    'rule_group_id'      => 'Regelgruppe',
 ];
