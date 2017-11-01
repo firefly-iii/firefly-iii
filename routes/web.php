@@ -48,6 +48,7 @@ Route::group(
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
     Route::get('flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
     Route::get('routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
+    Route::get('debug', 'HomeController@displayDebug')->name('debug');
 }
 );
 

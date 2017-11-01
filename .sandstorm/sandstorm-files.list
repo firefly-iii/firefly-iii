@@ -200,20 +200,12 @@ lib/x86_64-linux-gnu/libwrap.so.0.7.6
 lib/x86_64-linux-gnu/libz.so.1
 lib/x86_64-linux-gnu/libz.so.1.2.8
 lib64/ld-linux-x86-64.so.2
-opt/app/.DS_Store
 opt/app/.dockerignore
 opt/app/.env
 opt/app/.env.docker
 opt/app/.env.example
 opt/app/.env.sandstorm
-opt/app/.env.testing
 opt/app/.gitattributes
-opt/app/.gitignore
-opt/app/.sandstorm/launcher.sh
-opt/app/.sandstorm/service-config/mime.types
-opt/app/.sandstorm/service-config/nginx.conf
-opt/app/.scrutinizer.yml
-opt/app/.travis.yml
 opt/app/CHANGELOG.md
 opt/app/CODE_OF_CONDUCT.md
 opt/app/Dockerfile
@@ -696,6 +688,7 @@ opt/app/bootstrap/cache/packages.php
 opt/app/bootstrap/cache/services.php
 opt/app/composer.json
 opt/app/composer.lock
+opt/app/composer.phar
 opt/app/config/app.php
 opt/app/config/auth.php
 opt/app/config/broadcasting.php
@@ -712,7 +705,6 @@ opt/app/config/session.php
 opt/app/config/twigbridge.php
 opt/app/config/upgrade.php
 opt/app/config/view.php
-opt/app/crowdin.yaml
 opt/app/database/factories/ModelFactory.php
 opt/app/database/migrations/2016_06_16_000000_create_support_tables.php
 opt/app/database/migrations/2016_06_16_000001_create_users_table.php
@@ -733,14 +725,12 @@ opt/app/database/seeds/LinkTypeSeeder.php
 opt/app/database/seeds/PermissionSeeder.php
 opt/app/database/seeds/TransactionCurrencySeeder.php
 opt/app/database/seeds/TransactionTypeSeeder.php
+opt/app/docker-compose.dockerhub.yml
 opt/app/docker-compose.override.yml
 opt/app/docker-compose.prod.yml
 opt/app/docker-compose.yml
 opt/app/nginx_app.conf
-opt/app/package.json
-opt/app/phpunit.coverage.specific.xml
 opt/app/phpunit.coverage.xml
-opt/app/phpunit.xml
 opt/app/public/.htaccess
 opt/app/public/android-chrome-192x192.png
 opt/app/public/android-chrome-512x512.png
@@ -1122,6 +1112,7 @@ opt/app/resources/views/currencies/create.twig
 opt/app/resources/views/currencies/delete.twig
 opt/app/resources/views/currencies/edit.twig
 opt/app/resources/views/currencies/index.twig
+opt/app/resources/views/debug.twig
 opt/app/resources/views/demo/accounts/index.twig
 opt/app/resources/views/demo/budgets/index.twig
 opt/app/resources/views/demo/currencies/index.twig
@@ -1289,9 +1280,7 @@ opt/app/routes/console.php
 opt/app/routes/web.php
 opt/app/server.php
 opt/app/storage
-opt/app/test.sh
 opt/app/vendor/autoload.php
-opt/app/vendor/bacon/bacon-qr-code/.travis.yml
 opt/app/vendor/bacon/bacon-qr-code/LICENSE
 opt/app/vendor/bacon/bacon-qr-code/Module.php
 opt/app/vendor/bacon/bacon-qr-code/README.md
@@ -1352,11 +1341,8 @@ opt/app/vendor/bacon/bacon-qr-code/tests/BaconQrCode/Encoder/MatrixUtilTest.php
 opt/app/vendor/bacon/bacon-qr-code/tests/BaconQrCode/Renderer/Text/HtmlTest.php
 opt/app/vendor/bacon/bacon-qr-code/tests/BaconQrCode/Renderer/Text/TextTest.php
 opt/app/vendor/bacon/bacon-qr-code/tests/bootstrap.php
-opt/app/vendor/bacon/bacon-qr-code/tests/phpunit.xml
 opt/app/vendor/bin/commonmark
 opt/app/vendor/bin/doctrine-dbal
-opt/app/vendor/christian-riesen/base32/.scrutinizer.yml
-opt/app/vendor/christian-riesen/base32/.travis.yml
 opt/app/vendor/christian-riesen/base32/LICENSE
 opt/app/vendor/christian-riesen/base32/README.md
 opt/app/vendor/christian-riesen/base32/build.xml
@@ -1379,9 +1365,7 @@ opt/app/vendor/davejamesmiller/laravel-breadcrumbs/README.md
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/RELEASE-CHECKLIST.md
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/composer.json
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/config/breadcrumbs.php
-opt/app/vendor/davejamesmiller/laravel-breadcrumbs/phpunit.xml
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/scripts/test-coverage.sh
-opt/app/vendor/davejamesmiller/laravel-breadcrumbs/scripts/test.sh
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/src/CurrentRoute.php
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/src/Exception.php
 opt/app/vendor/davejamesmiller/laravel-breadcrumbs/src/Facade.php
@@ -1548,7 +1532,6 @@ opt/app/vendor/doctrine/common/lib/Doctrine/Common/Util/Debug.php
 opt/app/vendor/doctrine/common/lib/Doctrine/Common/Util/Inflector.php
 opt/app/vendor/doctrine/common/lib/Doctrine/Common/Version.php
 opt/app/vendor/doctrine/common/phpstan.neon
-opt/app/vendor/doctrine/dbal/.scrutinizer.yml
 opt/app/vendor/doctrine/dbal/LICENSE
 opt/app/vendor/doctrine/dbal/README.md
 opt/app/vendor/doctrine/dbal/SECURITY.md
@@ -3279,12 +3262,10 @@ opt/app/vendor/paragonie/random_compat/lib/random_int.php
 opt/app/vendor/paragonie/random_compat/other/build_phar.php
 opt/app/vendor/paragonie/random_compat/psalm-autoload.php
 opt/app/vendor/paragonie/random_compat/psalm.xml
-opt/app/vendor/pragmarx/google2fa/.travis.yml
 opt/app/vendor/pragmarx/google2fa/LICENSE
 opt/app/vendor/pragmarx/google2fa/changelog.md
 opt/app/vendor/pragmarx/google2fa/composer.json
 opt/app/vendor/pragmarx/google2fa/phpspec.yml
-opt/app/vendor/pragmarx/google2fa/phpunit.xml
 opt/app/vendor/pragmarx/google2fa/readme.md
 opt/app/vendor/pragmarx/google2fa/src/Contracts/Google2FA.php
 opt/app/vendor/pragmarx/google2fa/src/Exceptions/InvalidCharactersException.php
@@ -3408,7 +3389,6 @@ opt/app/vendor/rcrowe/twigbridge/src/Twig/Globals.php
 opt/app/vendor/rcrowe/twigbridge/src/Twig/Loader.php
 opt/app/vendor/rcrowe/twigbridge/src/Twig/Template.php
 opt/app/vendor/rmccue/requests/.coveralls.yml
-opt/app/vendor/rmccue/requests/.travis.yml
 opt/app/vendor/rmccue/requests/CHANGELOG.md
 opt/app/vendor/rmccue/requests/LICENSE
 opt/app/vendor/rmccue/requests/README.md
@@ -3515,7 +3495,6 @@ opt/app/vendor/swiftmailer/swiftmailer/.gitattributes
 opt/app/vendor/swiftmailer/swiftmailer/.github/ISSUE_TEMPLATE.md
 opt/app/vendor/swiftmailer/swiftmailer/.github/PULL_REQUEST_TEMPLATE.md
 opt/app/vendor/swiftmailer/swiftmailer/.php_cs.dist
-opt/app/vendor/swiftmailer/swiftmailer/.travis.yml
 opt/app/vendor/swiftmailer/swiftmailer/CHANGES
 opt/app/vendor/swiftmailer/swiftmailer/LICENSE
 opt/app/vendor/swiftmailer/swiftmailer/README
@@ -5148,7 +5127,6 @@ opt/app/vendor/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php
 opt/app/vendor/tijsverkoyen/css-to-inline-styles/src/CssToInlineStyles.php
 opt/app/vendor/twig/twig/.editorconfig
 opt/app/vendor/twig/twig/.php_cs.dist
-opt/app/vendor/twig/twig/.travis.yml
 opt/app/vendor/twig/twig/CHANGELOG
 opt/app/vendor/twig/twig/LICENSE
 opt/app/vendor/twig/twig/README.rst

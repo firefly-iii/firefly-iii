@@ -1,0 +1,25 @@
+<html>
+<head>
+    <title>Debug page</title>
+</head>
+<body>
+
+<p>
+    Please copy and paste the content of this textbox into a (new) Github issue. Don't change anything, don't add enters or something.
+</p>
+<textarea rows="30" cols="80">
+Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION }}**.
+
+| Variable | Content |
+| --- | --- |
+| FF version | {{ FF_VERSION }} |
+| PHP version | {{ phpVersion }} |
+| Loaded extensions | {{ extensions }} |
+| UserID | {{ Auth.user.id }} |
+| DB drivers | {{ drivers }} |
+| Current driver | {{ currentDriver }} |
+| Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |
+{% if SANDSTORM == true %}| Sandstorm anon? | {% if SANDSTORM_ANON == true %}yes{% else %}no{% endif %} |{% endif %}
+</textarea>
+</body>
+</html>
