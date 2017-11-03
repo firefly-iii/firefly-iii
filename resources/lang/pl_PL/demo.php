@@ -20,7 +20,7 @@ return [
     'currencies-index'               => 'Firefly III supports multiple currencies. Although it defaults to the Euro it can be set to the US Dollar and many other currencies. As you can see a small selection of currencies has been included but you can add your own if you wish to. Changing the default currency will not change the currency of existing transactions however: Firefly III supports the use of multiple currencies at the same time.',
     'transactions-index'             => 'These expenses, deposits and transfers are not particularly imaginative. They have been generated automatically.',
     'piggy-banks-index'              => 'As you can see, there are three piggy banks. Use the plus and minus buttons to influence the amount of money in each piggy bank. Click the name of the piggy bank to see the administration for each piggy bank.',
-    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III ',
+    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
     'import-configure-security'      => 'Because of security concerns, your upload has been replaced with a local file.',
     'import-configure-configuration' => 'Konfiguracja, która widzisz poniżej jest prawidłowa dla lokalnego pliku.',
 ];
