@@ -130,7 +130,7 @@ return [
     'transaction_data'                           => 'Transaktionsdaten',
     'invalid_server_configuration'               => 'Ungültige Serverkonfiguration',
     'invalid_locale_settings'                    => 'Firefly III kann keine Geldbeträge formatieren, da auf Ihrem Server die erforderlichen Pakete fehlen. Es gibt <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">eine Anleitung</a>, wie dies behoben werden kann.',
-    'quickswitch'                                => 'Quickswitch',
+    'quickswitch'                                => 'Schnellauswahl',
 
     // search
     'search'                                     => 'Suche',
@@ -1097,7 +1097,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'no_piggies_imperative_default'         => 'Haben Sie Dinge, auf die Sie sparen? Erstellen Sie eine Sparschwein und behalten Sie den Überblick:',
     'no_piggies_create_default'             => 'Ein neues Sparschwein erstellen',
     'no_bills_title_default'                => 'Let\'s create a bill!',
-    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
+    'no_bills_intro_default'                => 'Du hast noch keine Rechnungen. Sie können Rechnungen erstellen, um die laufenden Ausgaben, wie zum Beispiel Ihre Versicherung oder Miete, nachzuverfolgen.',
     'no_bills_imperative_default'           => 'Haben Sie regelmäßige Rechnungen? Erstellen Sie eine Rechnung und verfolgen Sie Ihre Zahlungen:',
     'no_bills_create_default'               => 'Eine Rechnung erstellen',
 
