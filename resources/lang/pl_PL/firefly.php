@@ -1095,7 +1095,7 @@ return [
     'no_piggies_imperative_default'         => 'Oszczędzasz pieniądze na coś? Utwórz skarbonkę i śledź:',
     'no_piggies_create_default'             => 'Utwórz nową skarbonkę',
     'no_bills_title_default'                => 'Stwórzmy rachunek!',
-    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent of insurance.',
+    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
     'no_bills_imperative_default'           => 'Do you have such regular bills? Create a bill and keep track of your payments:',
     'no_bills_create_default'               => 'Utwórz rachunek',
 
