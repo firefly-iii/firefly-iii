@@ -144,7 +144,10 @@ return [
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'ежегодно',
+    'repeat_freq_half-year'                      => 'every half-year',
+    'repeat_freq_quarterly'                      => 'quarterly',
     'repeat_freq_monthly'                        => 'ежемесячно',
+    'repeat_freq_weekly'                        => 'weekly',
     'weekly'                                     => 'еженедельно',
     'quarterly'                                  => 'раз в квартал',
     'half-year'                                  => 'раз в полгода',
