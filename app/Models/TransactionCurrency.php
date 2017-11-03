@@ -44,12 +44,14 @@ class TransactionCurrency extends Model
      */
     protected $casts
                         = [
-            'created_at'     => 'date',
-            'updated_at'     => 'date',
-            'deleted_at'     => 'date',
+            'created_at'     => 'datetime',
+            'updated_at'     => 'datetime',
+            'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'date'];
+    /** @var array  */
+    protected $dates    = ['date'];
+    /** @var array  */
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
 
     /**

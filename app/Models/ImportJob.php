@@ -44,11 +44,9 @@ class ImportJob extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
 
     protected $validStatus
         = [

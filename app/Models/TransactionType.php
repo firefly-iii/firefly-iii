@@ -48,12 +48,10 @@ class TransactionType extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
-
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param string $type

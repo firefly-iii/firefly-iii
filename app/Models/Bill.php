@@ -47,9 +47,9 @@ class Bill extends Model
      */
     protected $casts
         = [
-            'created_at'      => 'date',
-            'updated_at'      => 'date',
-            'deleted_at'      => 'date',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'deleted_at'      => 'datetime',
             'date'            => 'date',
             'skip'            => 'int',
             'automatch'       => 'boolean',
@@ -57,8 +57,6 @@ class Bill extends Model
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
         ];
-    /** @var array */
-    protected $dates  = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];

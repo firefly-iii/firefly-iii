@@ -53,9 +53,9 @@ class TransactionJournal extends Model
      */
     protected $casts
         = [
-            'created_at'    => 'date',
-            'updated_at'    => 'date',
-            'deleted_at'    => 'date',
+            'created_at'    => 'datetime',
+            'updated_at'    => 'datetime',
+            'deleted_at'    => 'datetime',
             'date'          => 'date',
             'interest_date' => 'date',
             'book_date'     => 'date',
@@ -66,7 +66,7 @@ class TransactionJournal extends Model
             'completed'     => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'date', 'deleted_at', 'interest_date', 'book_date', 'process_date'];
+    protected $dates = ['date','interest_date', 'book_date', 'process_date'];
     /** @var array */
     protected $fillable
         = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',

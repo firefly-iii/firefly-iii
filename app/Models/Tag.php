@@ -44,17 +44,20 @@ class Tag extends Model
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'date'       => 'date',
             'zoomLevel'  => 'int',
 
         ];
-    protected $dates    = ['created_at', 'updated_at', 'date', 'deleted_at'];
+    /** @var array */
+    protected $dates = ['date'];
+    /** @var array */
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
-    protected $rules    = ['tag' => 'required|between:1,200',];
+    /** @var array */
+    protected $rules = ['tag' => 'required|between:1,200',];
 
 
     /**

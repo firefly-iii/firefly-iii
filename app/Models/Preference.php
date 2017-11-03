@@ -45,10 +45,11 @@ class Preference extends Model
      */
     protected $casts
                         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
-    protected $dates    = ['created_at', 'updated_at'];
+
+    /** @var array  */
     protected $fillable = ['user_id', 'data', 'name', 'data'];
 
     /**

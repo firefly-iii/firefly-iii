@@ -42,13 +42,15 @@ class PiggyBankRepetition extends Model
      */
     protected $casts
                         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'startdate'  => 'date',
             'targetdate' => 'date',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'startdate', 'targetdate'];
+    /** @var array  */
+    protected $dates    = ['startdate', 'targetdate'];
+    /** @var array  */
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**

@@ -39,14 +39,12 @@ class RuleAction extends Model
      */
     protected $casts
         = [
-            'created_at'      => 'date',
-            'updated_at'      => 'date',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

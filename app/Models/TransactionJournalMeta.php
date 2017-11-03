@@ -42,14 +42,15 @@ class TransactionJournalMeta extends Model
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
-    protected $table    = 'journal_meta';
+    /** @var string */
+    protected $table = 'journal_meta';
 
     /**
      * @param $value

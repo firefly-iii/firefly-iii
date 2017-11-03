@@ -47,16 +47,17 @@ class Budget extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array */
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array  */
     protected $fillable = ['user_id', 'name', 'active'];
+    /** @var array  */
     protected $hidden   = ['encrypted'];
+    /** @var array  */
     protected $rules    = ['name' => 'required|between:1,200',];
 
     /**

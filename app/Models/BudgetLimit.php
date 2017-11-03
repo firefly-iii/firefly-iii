@@ -41,14 +41,14 @@ class BudgetLimit extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             'start_date' => 'date',
             'end_date'   => 'date',
             'repeats'    => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'start_date', 'end_date'];
+    protected $dates = ['start_date', 'end_date'];
 
     /**
      * @param $value

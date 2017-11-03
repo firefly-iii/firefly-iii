@@ -42,15 +42,12 @@ class RuleGroup extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'order'      => 'int',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
 
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 

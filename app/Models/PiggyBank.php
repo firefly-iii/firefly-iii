@@ -47,17 +47,20 @@ class PiggyBank extends Model
      */
     protected $casts
                         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'startdate'  => 'date',
             'targetdate' => 'date',
             'order'      => 'int',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    /** @var array  */
+    protected $dates    = ['startdate', 'targetdate'];
+    /** @var array  */
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
+    /** @var array  */
     protected $hidden   = ['targetamount_encrypted', 'encrypted'];
 
     /**
