@@ -14,7 +14,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Dies ist keine gültige IBAN.',
     'unique_account_number_for_user' => 'Es sieht so aus, als ob diese Kontonummer bereits verwendet würde.',
-    'deleted_user'                   => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung dieser Email-Adresse nicht zugelassen.',
+    'deleted_user'                   => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung mit dieser E-Mail-Adresse nicht zugelassen.',
     'rule_trigger_value'             => 'Dieser Wert ist für den ausgewählten Trigger ungültig.',
     'rule_action_value'              => 'Dieser Wert ist für die gewählte Aktion ungültig.',
     'file_already_attached'          => 'Die hochgeladene Datei ":name" ist diesem Objekt bereits angehängt.',
