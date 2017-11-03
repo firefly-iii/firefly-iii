@@ -1096,7 +1096,7 @@ return [
     'no_piggies_imperative_default'         => 'Avez-vous des choses pour lesquelles vous économisez de l\'argent ? Créer une tirelire et suivez-là :',
     'no_piggies_create_default'             => 'Créer une nouvelle tirelire',
     'no_bills_title_default'                => 'Nous allons créer une facture !',
-    'no_bills_intro_default'                => 'Vous n\'avez pas encore de factures. Vous pouvez créer des factures pour suivre les dépenses ordinaires, comme votre loyer d\'assurance.',
+    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
     'no_bills_imperative_default'           => 'Avez-vous des factures régulières ? Créez une facture et suivez vos paiements :',
     'no_bills_create_default'               => 'Créer une facture',
 
