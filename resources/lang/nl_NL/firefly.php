@@ -130,6 +130,7 @@ return [
     'transaction_data'                           => 'Transactiegegevens',
     'invalid_server_configuration'               => 'Ongeldige serverconfiguratie',
     'invalid_locale_settings'                    => 'Firefly III kan geldbedragen niet goed weergeven omdat je server de vereiste software mist. Er zijn <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructies hoe dit te doen</a>.',
+    'quickswitch'                                => 'Quickswitch',
 
     // search
     'search'                                     => 'Zoeken',
@@ -147,7 +148,7 @@ return [
     'repeat_freq_half-year'                      => 'elk half jaar',
     'repeat_freq_quarterly'                      => 'elk kwartaal',
     'repeat_freq_monthly'                        => 'maandelijks',
-    'repeat_freq_weekly'                        => 'wekelijks',
+    'repeat_freq_weekly'                         => 'wekelijks',
     'weekly'                                     => 'wekelijks',
     'quarterly'                                  => 'elk kwartaal',
     'half-year'                                  => 'elk half jaar',
