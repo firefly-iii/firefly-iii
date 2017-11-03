@@ -147,7 +147,7 @@ return [
     'journal_areYouSure'         => 'Sind Sie sicher, dass Sie die Überweisung mit dem Namen ":description" löschen möchten?',
     'mass_journal_are_you_sure'  => 'Sind Sie sicher, dass Sie diese Überweisung löschen möchten?',
     'tag_areYouSure'             => 'Sind Sie sicher, dass Sie den Tag ":name" löschen möchten?',
-    'journal_link_areYouSure'    => 'Bist du sicher, dass du die Verknüpfung zwischen <a href=":source_link">:source</a> und <a href=":destination_link">:destination</a> löschen möchtest?',
+    'journal_link_areYouSure'    => 'Sind Sie sicher, dass Sie die Verknüpfung zwischen <a href=":source_link">:source</a> und <a href=":destination_link">:destination</a> löschen möchten?',
     'linkType_areYouSure'        => 'Are you sure you want to delete the link type ":name" (":inward" / ":outward")?',
     'permDeleteWarning'          => 'Das Löschen von Dingen in Firefly ist dauerhaft und kann nicht rückgängig gemacht werden.',
     'mass_make_selection'        => 'Sie können das Löschen von Elementen verhindern, indem Sie die Checkbox entfernen.',
