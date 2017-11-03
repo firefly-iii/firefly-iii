@@ -390,7 +390,7 @@
                             </td>
                             <td>
                                 {% if transaction.source_account_type == 'Cash account' %}
-                                    <span class="text-success">(cash)</span>
+                                    <span class="text-success">({{ 'cash'|_ }})</span>
                                 {% else %}
                                     <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
                                 {% endif %}
@@ -401,7 +401,7 @@
                             </td>
                             <td>
                                 {% if transaction.destination_account_type == 'Cash account' %}
-                                    <span class="text-success">(cash)</span>
+                                    <span class="text-success">({{ 'cash'|_ }})</span>
                                 {% else %}
                                     <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
                                 {% endif %}
@@ -478,7 +478,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
                         <button type="submit" class="btn btn-primary">{{ 'submit'|_ }}</button>
                     </div>
                 </div>

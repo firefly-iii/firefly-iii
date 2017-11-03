@@ -58,7 +58,7 @@
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only">{{ 'toggleNavigation'|_ }}</span>
             </a>
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
@@ -143,7 +143,7 @@
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> {{ Config.get('firefly.version') }}
+            <b>{{ 'version'|_ }}</b> {{ Config.get('firefly.version') }}
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
     </footer>
