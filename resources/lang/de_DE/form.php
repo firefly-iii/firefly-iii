@@ -63,7 +63,7 @@ return [
     'expense_account'                => 'Debitor (Ausgabe)',
     'revenue_account'                => 'Kreditor (Einnahme)',
     'decimal_places'                 => 'Nachkommastellen',
-    'exchange_rate_instruction'      => 'Ausländische Währungen',
+    'exchange_rate_instruction'      => 'Fremdwährungen',
     'source_amount'                  => 'Betrag (Quelle)',
     'destination_amount'             => 'Betrag (Ziel)',
     'native_amount'                  => 'Nativer Betrag',
