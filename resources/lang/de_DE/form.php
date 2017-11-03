@@ -69,7 +69,7 @@ return [
     'native_amount'                  => 'Nativer Betrag',
     'new_email_address'              => 'Neue E-Mail-Adresse',
     'verification'                   => 'Bestätigung',
-    'api_key'                        => 'API key',
+    'api_key'                        => 'API-Schlüssel',
 
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
     'destination_account_expense' => 'Zielkonto (Unkostenkonto)',
