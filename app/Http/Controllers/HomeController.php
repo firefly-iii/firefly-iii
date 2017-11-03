@@ -35,6 +35,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
+use Monolog\Handler\RotatingFileHandler;
 use Preferences;
 use Route as RouteFacade;
 use Session;
@@ -88,15 +89,36 @@ class HomeController extends Controller
         Session::put('end', $end);
     }
 
-    public function displayDebug()
+    /**
+     *
+     */
+    public function displayDebug(Request $request)
     {
-        $phpVersion = PHP_VERSION;
-        $now        = Carbon::create()->format('Y-m-d H:i:s e');
-        $extensions = join(', ', get_loaded_extensions());
-        $drivers    = join(', ', DB::availableDrivers());
+        $phpVersion    = PHP_VERSION;
+        $phpOs         = php_uname();
+        $interface     = php_sapi_name();
+        $now           = Carbon::create()->format('Y-m-d H:i:s e');
+        $extensions    = join(', ', get_loaded_extensions());
+        $drivers       = join(', ', DB::availableDrivers());
         $currentDriver = DB::getDriverName();
+        $userAgent     = $request->header('user-agent');
 
-        return view('debug', compact('phpVersion', 'extensions', 'carbon', 'now', 'drivers','currentDriver'));
+        // get latest log file:
+        $logger     = Log::getMonolog();
+        $handlers   = $logger->getHandlers();
+        $logContent = '';
+        foreach ($handlers as $handler) {
+            if ($handler instanceof RotatingFileHandler) {
+                $logFile = $handler->getUrl();
+                if (!is_null($logFile)) {
+                    $logContent = file_get_contents($logFile);
+                }
+            }
+        }
+        // last few lines
+        $logContent = 'Truncated from this point <----|'.substr($logContent, -4096);
+
+        return view('debug', compact('phpVersion', 'extensions', 'carbon', 'now', 'drivers', 'currentDriver', 'userAgent', 'phpOs', 'interface', 'logContent'));
 
     }
 

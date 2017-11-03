@@ -4,22 +4,40 @@
 </head>
 <body>
 
-<p>
-    Please copy and paste the content of this textbox into a (new) Github issue. Don't change anything, don't add enters or something.
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
+    If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new
+    or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">Github issue</a>. It will generate a beautiful table that can
+    be used to quickly diagnose your problem.
 </p>
-<textarea rows="30" cols="80">
+<textarea rows="30" cols="100" name="debug_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
 Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION }}**.
 
 | Variable | Content |
 | --- | --- |
 | FF version | {{ FF_VERSION }} |
 | PHP version | {{ phpVersion }} |
+| Host | {{ phpOs }} |
+| Interface | {{ interface }} |
 | Loaded extensions | {{ extensions }} |
 | UserID | {{ Auth.user.id }} |
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
 | Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |
 {% if SANDSTORM == true %}| Sandstorm anon? | {% if SANDSTORM_ANON == true %}yes{% else %}no{% endif %} |{% endif %}
+| User agent | {{ userAgent }} |
+</textarea>
+
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    You may also share the content of the box below. You can also copy-and-paste this into a new
+    or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">Github issue</a>. However, the content of this
+    box may contain private information such as account names, transaction details or email addresses.
+</p>
+
+<textarea rows="30" cols="100" name="log_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:7pt;">
+```
+{{ logContent }}
+```
 </textarea>
 </body>
 </html>
