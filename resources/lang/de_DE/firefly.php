@@ -129,7 +129,7 @@ return [
     'transfer_exchange_rate_instructions'        => 'Das Quellkonto "@source_name" akzeptiert nur Transaktionen in @source_currency. Das Zielkonto "@dest_name" akzeptiert nur Transaktionen in @dest_currency. Sie müssen den Betrag in beiden Währungen korrekt angeben.',
     'transaction_data'                           => 'Transaktionsdaten',
     'invalid_server_configuration'               => 'Ungültige Serverkonfiguration',
-    'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
+    'invalid_locale_settings'                    => 'Firefly III kann keine Geldbeträge formatieren, da auf Ihrem Server die erforderlichen Pakete fehlen. Es gibt <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">eine Anleitung</a>, wie dies behoben werden kann.',
 
     // search
     'search'                                     => 'Suche',
@@ -450,10 +450,10 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'regenerate_access_token'                  => 'Zugangs-Token neu erstellen',
     'token_regenerated'                        => 'Ein neuer Zugangs-Token wurde generiert',
     'change_your_email'                        => 'E-Mail Adresse ändern',
-    'email_verification'                       => 'An email message will be sent to your old AND new email address. For security purposes, you will not be able to login until you verify your new email address. If you are unsure if your Firefly III installation is capable of sending email, please do not use this feature. If you are an administrator, you can test this in the <a href="/admin">Administration</a>.',
+    'email_verification'                       => 'Eine E-Mail-Nachricht wird an Ihre alte UND neue E-Mail-Adresse gesendet. Aus Sicherheitsgründen können Sie sich erst anmelden, wenn Sie Ihre neue E-Mail-Adresse bestätigt haben. Wenn Sie sich nicht sicher sind, ob Ihre Firefly III-Installation E-Mails versenden kann, verwenden Sie bitte diese Funktion nicht. Wenn Sie Administrator sind, können Sie dies in der <a href="/admin">Administration</a> testen.',
     'email_changed_logout'                     => 'Sie müssen Ihre E-Mail-Adresse bestätigen, um sich anmelden zu können.',
-    'login_with_new_email'                     => 'You can now login with your new email address.',
-    'login_with_old_email'                     => 'You can now login with your old email address again.',
+    'login_with_new_email'                     => 'Sie können sich jetzt mit Ihrer neuen E-Mail-Adresse anmelden.',
+    'login_with_old_email'                     => 'Sie können sich jetzt wieder mit Ihrer alten E-Mail-Adresse anmelden.',
 
 
     // attachments
@@ -556,9 +556,9 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'update_budget'                            => 'Budget aktualisieren',
     'update_budget_amount_range'               => 'Aktualisiere (erwarteten) verfügbaren Betrag zwischen :start und :end',
     'budget_period_navigator'                  => 'Zeitraum-navigator',
-    'info_on_available_amount'                 => 'What do I have available?',
+    'info_on_available_amount'                 => 'Was habe ich verfügbar?',
     'available_amount_indication'              => 'Use these amounts to get an indication of what your total budget could be.',
-    'suggested'                                => 'Suggested',
+    'suggested'                                => 'Vorgeschlagen',
     'average_between'                          => 'Average between :start and :end',
 
 
@@ -966,7 +966,7 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'transaction'                           => 'Transaction',
     'comments'                              => 'Comments',
     'to_link_not_found'                     => 'If the transaction you want to link to is not listed, simply enter its ID.',
-    'invalid_link_selection'                => 'Cannot link these transactions',
+    'invalid_link_selection'                => 'Diese Transaktionen können nicht verknüpft werden',
     'journals_linked'                       => 'Transactions are linked.',
     'journals_error_linked'                 => 'These transactions are already linked.',
     'journal_links'                         => 'Transaction links',
