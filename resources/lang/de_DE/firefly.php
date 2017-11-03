@@ -144,7 +144,10 @@ return [
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'Jährlich',
+    'repeat_freq_half-year'                      => 'every half-year',
+    'repeat_freq_quarterly'                      => 'quarterly',
     'repeat_freq_monthly'                        => 'monatlich',
+    'repeat_freq_weekly'                        => 'weekly',
     'weekly'                                     => 'wöchentlich',
     'quarterly'                                  => 'vierteljährlich',
     'half-year'                                  => 'halbjährlich',
