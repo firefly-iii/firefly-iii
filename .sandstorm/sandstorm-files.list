@@ -1161,6 +1161,7 @@ opt/app/resources/views/form/location.twig
 opt/app/resources/views/form/multiCheckbox.twig
 opt/app/resources/views/form/multiRadio.twig
 opt/app/resources/views/form/non-selectable-amount.twig
+opt/app/resources/views/form/number.twig
 opt/app/resources/views/form/options.twig
 opt/app/resources/views/form/password.twig
 opt/app/resources/views/form/select.twig
