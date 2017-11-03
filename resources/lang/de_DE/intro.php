@@ -20,7 +20,7 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Geben Sie Ihren Konten eine gültige IBAN. Dies könnte einen Datenimport in Zukunft sehr einfach machen.',
-    'accounts_create_asset_opening_balance' => 'Anlagekonten können ein "Eröffnungsguthaben" haben, welches den Beginn der Historie dieses Kontos in Firefly angibt.',
+    'accounts_create_asset_opening_balance' => 'Anlagekonten können eine "Eröffnungsbilanz" haben, welche den Beginn der Historie dieses Kontos in Firefly angibt.',
     'accounts_create_asset_currency'        => 'Firefly III unterstützt mehrere Währungen. Anlagenkonten haben eine Hauptwährung, die Sie hier einstellen müssen.',
     'accounts_create_asset_virtual'         => 'Es kann manchmal helfen, Ihrem Konto ein virtuelles Gleichgewicht zu geben: eine zusätzliche Menge, die dem tatsächlichen Kontostand immer hinzugefügt oder daraus entfernt wird.',
 
