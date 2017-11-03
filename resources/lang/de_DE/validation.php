@@ -89,5 +89,5 @@ return [
     'in_array'                       => ':attribute existiert nicht in :other.',
     'present'                        => 'Das :attribute Feld muss vorhanden sein.',
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein',
-    'secure_password'                => 'Das ist kein sicheres Passwort. Bitte versuche es erneut. Weitere Informationen finden Sie unter https://goo.gl/NCh2tN',
+    'secure_password'                => 'Das ist kein sicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://goo.gl/NCh2tN',
 ];
