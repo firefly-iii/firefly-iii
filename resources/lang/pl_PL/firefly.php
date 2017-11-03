@@ -144,10 +144,10 @@ return [
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'rocznie',
-    'repeat_freq_half-year'                      => 'every half-year',
-    'repeat_freq_quarterly'                      => 'quarterly',
+    'repeat_freq_half-year'                      => 'co pół roku',
+    'repeat_freq_quarterly'                      => 'kwartalnie',
     'repeat_freq_monthly'                        => 'miesięcznie',
-    'repeat_freq_weekly'                        => 'weekly',
+    'repeat_freq_weekly'                        => 'tygodniowo',
     'weekly'                                     => 'tygodniowo',
     'quarterly'                                  => 'kwartalnie',
     'half-year'                                  => 'co pół roku',
@@ -825,8 +825,8 @@ return [
     'account_role_sharedAsset'                 => 'Współdzielone konto aktywów',
     'account_role_savingAsset'                 => 'Konto oszczędnościowe',
     'account_role_ccAsset'                     => 'Karta kredytowa',
-    'budget_chart_click'                       => 'Please click on a budget name in the table above to see a chart.',
-    'category_chart_click'                     => 'Please click on a category name in the table above to see a chart.',
+    'budget_chart_click'                       => 'Kliknij na nazwę budżetu w tabeli powyżej, aby zobaczyć wykres.',
+    'category_chart_click'                     => 'Kliknij na nazwę kategorii w tabeli powyżej, aby zobaczyć wykres.',
 
 
     // charts:
