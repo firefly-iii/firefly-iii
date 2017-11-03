@@ -111,7 +111,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $currency = TransactionCurrency::find($currencyId);
         if (is_null($currency)) {
             $currency = new TransactionCurrency;
-
         }
 
         return $currency;
