@@ -20,7 +20,7 @@ return [
     'currencies-index'               => 'Firefly III oferece suporte a várias moedas. Embora o padrão seja o Euro, ela pode ser definida para o dólar americano e muitas outras moedas. Como você pode ver uma pequena seleção de moedas foi incluída, mas você pode adicionar suas próprias se desejar. No entanto, alterar a moeda padrão não vai mudar a moeda de transações existentes: Firefly III suporta o uso de várias moedas ao mesmo tempo.',
     'transactions-index'             => 'Estas despesas, depósitos e transferências não são fantasiosas. Elas foram geradas automaticamente.',
     'piggy-banks-index'              => 'Como você pode ver, existem três cofrinhos. Use o sinal de mais e menos botões para influenciar a quantidade de dinheiro em cada cofrinho. Clique no nome do cofrinho para ver a administração de cada cofrinho.',
-    'import-index'                   => 'Claro, qualquer arquivo .CSV pode ser importado em Firefly III ',
+    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
     'import-configure-security'      => 'Por questões de segurança, seu upload foi substituído por um arquivo local.',
     'import-configure-configuration' => 'A configuração que você vê abaixo é a correta para o arquivo local.',
 ];
