@@ -144,10 +144,10 @@ return [
 
     // repeat frequencies:
     'repeat_freq_yearly'                         => 'jaarlijks',
-    'repeat_freq_half-year'                      => 'every half-year',
-    'repeat_freq_quarterly'                      => 'quarterly',
+    'repeat_freq_half-year'                      => 'elk half jaar',
+    'repeat_freq_quarterly'                      => 'elk kwartaal',
     'repeat_freq_monthly'                        => 'maandelijks',
-    'repeat_freq_weekly'                        => 'weekly',
+    'repeat_freq_weekly'                        => 'wekelijks',
     'weekly'                                     => 'wekelijks',
     'quarterly'                                  => 'elk kwartaal',
     'half-year'                                  => 'elk half jaar',
