@@ -130,6 +130,7 @@ return [
     'transaction_data'                           => 'Transaction data',
     'invalid_server_configuration'               => 'Invalid server configuration',
     'invalid_locale_settings'                    => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions how to do this</a>.',
+    'quickswitch'                                => 'Quickswitch',
 
     // search
     'search'                                     => 'Buscar',
@@ -147,7 +148,7 @@ return [
     'repeat_freq_half-year'                      => 'every half-year',
     'repeat_freq_quarterly'                      => 'quarterly',
     'repeat_freq_monthly'                        => 'monthly',
-    'repeat_freq_weekly'                        => 'weekly',
+    'repeat_freq_weekly'                         => 'weekly',
     'weekly'                                     => 'weekly',
     'quarterly'                                  => 'quarterly',
     'half-year'                                  => 'every half year',
