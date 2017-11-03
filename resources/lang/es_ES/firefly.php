@@ -1095,7 +1095,7 @@ return [
     'no_piggies_imperative_default'         => 'Do you have things you\'re saving money for? Create a piggy bank and keep track:',
     'no_piggies_create_default'             => 'Create a new piggy bank',
     'no_bills_title_default'                => '¡Vamos a crear una factura!',
-    'no_bills_intro_default'                => 'Aún no tienes facturas. Puedes crear facturas para realizar un seguimiento de los gastos periódicos, como el alquiler o un seguro.',
+    'no_bills_intro_default'                => 'You have no bills yet. You can create bills to keep track of regular expenses, like your rent or insurance.',
     'no_bills_imperative_default'           => '¿Tienes facturas periódicas? Crea una factura y haz un seguimiento de tus pagos:',
     'no_bills_create_default'               => 'Crear una factura',
 
