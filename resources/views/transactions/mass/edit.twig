@@ -108,9 +108,9 @@
                                         <td>
                                             {% if journal.transaction_type_type == 'Withdrawal' %}
                                                 <select class="form-control input-sm" name="budget_id[{{ journal.id }}]">
-                                                    <option value="0" label="(none)"
+                                                    <option value="0" label="({{ 'no_budget'|_ }})"
                                                             {% if journal.budgets.count == 0 %}selected="selected"{% endif %}
-                                                    >(none)
+                                                    >({{ 'no_budget'|_ }})
                                                     </option>
                                                     {% for budget in budgets %}
                                                         <option value="{{ budget.id }}"{% if budget.id==journal.budgets[0].id %} selected="selected"{% endif %}

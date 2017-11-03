@@ -119,7 +119,7 @@
                                             {% if rule.active %}
                                                 {{ rule.title }}
                                             {% else %}
-                                                <s>{{ rule.title }}</s> (inactive)
+                                                <s>{{ rule.title }}</s> ({{ 'inactive'|_|lower }})
                                             {% endif %}
                                             {% if rule.stop_processing %}
                                                 <i class="fa fa-stop-circle-o"></i>

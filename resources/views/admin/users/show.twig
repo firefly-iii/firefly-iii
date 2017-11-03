@@ -32,9 +32,9 @@
                             <td>{{ trans('list.is_admin') }}</td>
                             <td>
                                 {% if information.is_admin %}
-                                    <small class="text-success"><i class="fa fa-fw fa-check"></i></small> Yes
+                                    <small class="text-success"><i class="fa fa-fw fa-check"></i></small> {{ 'yes'|_ }}
                                 {% else %}
-                                    <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> No
+                                    <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> {{ 'no'|_ }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -42,9 +42,9 @@
                             <td>{{ trans('list.has_two_factor') }}</td>
                             <td>
                                 {% if information.has_2fa %}
-                                    <small class="text-success"><i class="fa fa-fw fa-check"></i></small> Yes
+                                    <small class="text-success"><i class="fa fa-fw fa-check"></i></small> {{ 'yes'|_ }}
                                 {% else %}
-                                    <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> No
+                                    <small class="text-danger"><i class="fa fa-fw fa-times"></i></small> {{ 'no'|_ }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -52,7 +52,7 @@
                             <td>{{ trans('list.is_blocked') }}</td>
                             <td>
                                 {% if information.blocked %}
-                                    <small class="text-danger"><i class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></i></small> Yes:
+                                    <small class="text-danger"><i class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></i></small> {{ 'yes'|_ }}:
 
                                     {% if information.blocked_code == "" %}
                                         <em>~</em>
@@ -61,7 +61,7 @@
                                     {% endif %}
 
                                 {% else %}
-                                    <small class="text-success"><i class="fa fa-fw fa-times" title="{{ 'no'|_ }}"></i></small> No
+                                    <small class="text-success"><i class="fa fa-fw fa-times" title="{{ 'no'|_ }}"></i></small> {{ 'no'|_ }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -122,7 +122,7 @@
                         </tr>
                         <tr>
                             <td>{{ trans('list.tags_count') }}</td>
-                            <td>{{ information.tags }} tags</td>
+                            <td>{{ information.tags }} {{ 'tag_or_tags'|_ }}</td>
                         </tr>
 
                     </table>
