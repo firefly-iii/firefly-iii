@@ -130,7 +130,7 @@ return [
     'transaction_data'                           => 'Dane transakcji',
     'invalid_server_configuration'               => 'Nieprawidłowa konfiguracja serwera',
     'invalid_locale_settings'                    => 'Firefly III nie może sformatować kwot, ponieważ brakuje wymaganych pakietów na Twoim serwerze. Sprawdź<a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instrukcje jak je zainstalować</a> (po angielsku).',
-    'quickswitch'                                => 'Quickswitch',
+    'quickswitch'                                => 'Szybki przełącznik',
 
     // search
     'search'                                     => 'Szukaj',
