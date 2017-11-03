@@ -261,6 +261,7 @@ class ReportController extends Controller
      * @param ReportFormRequest $request
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function postIndex(ReportFormRequest $request)
     {
@@ -299,7 +300,7 @@ class ReportController extends Controller
             return redirect(route('reports.index'));
         }
 
-        if ($end < $start) {
+        if ($request->getEndDate() < $request->getStartDate()) {
             return view('error')->with('message', trans('firefly.end_after_start_date'));
         }
 

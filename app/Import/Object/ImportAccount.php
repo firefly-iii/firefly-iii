@@ -165,6 +165,7 @@ class ImportAccount
 
     /**
      * @return Account
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function findExistingObject(): Account
     {

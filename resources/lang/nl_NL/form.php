@@ -48,7 +48,7 @@ return [
     'budget_id'                      => 'Budget',
     'openingBalance'                 => 'Startsaldo',
     'tagMode'                        => 'Tag modus',
-    'tag_position'                    => 'Taglocatie',
+    'tag_position'                   => 'Taglocatie',
     'virtualBalance'                 => 'Virtuele saldo',
     'targetamount'                   => 'Doelbedrag',
     'accountRole'                    => 'Rol van rekening',
@@ -171,7 +171,7 @@ return [
 
     // admin
     'domain'                => 'Domein',
-    'single_user_mode'      => 'Enkele gebruiker-modus',
+    'single_user_mode'      => 'Registratie uitgeschakelen',
     'is_demo_site'          => 'Is demo website',
 
 

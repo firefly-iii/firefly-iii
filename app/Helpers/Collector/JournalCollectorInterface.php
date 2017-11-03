@@ -46,6 +46,27 @@ interface JournalCollectorInterface
     public function addFilter(string $filter): JournalCollectorInterface;
 
     /**
+     * @param string $amount
+     *
+     * @return JournalCollectorInterface
+     */
+    public function amountMore(string $amount): JournalCollectorInterface;
+
+    /**
+     * @param string $amount
+     *
+     * @return JournalCollectorInterface
+     */
+    public function amountLess(string $amount): JournalCollectorInterface;
+
+    /**
+     * @param string $amount
+     *
+     * @return JournalCollectorInterface
+     */
+    public function amountIs(string $amount): JournalCollectorInterface;
+
+    /**
      * @return int
      */
     public function count(): int;
@@ -75,9 +96,23 @@ interface JournalCollectorInterface
     public function setAccounts(Collection $accounts): JournalCollectorInterface;
 
     /**
+     * @param Carbon $after
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setAfter(Carbon $after): JournalCollectorInterface;
+
+    /**
      * @return JournalCollectorInterface
      */
     public function setAllAssetAccounts(): JournalCollectorInterface;
+
+    /**
+     * @param Carbon $before
+     *
+     * @return JournalCollectorInterface
+     */
+    public function setBefore(Carbon $before): JournalCollectorInterface;
 
     /**
      * @param Collection $bills

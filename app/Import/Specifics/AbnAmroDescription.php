@@ -125,7 +125,7 @@ class AbnAmroDescription implements SpecificInterface
 
     /**
      * Parses the current description in SEPA format
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @return bool true if the description is SEPA format, false otherwise
      */
     protected function parseSepaDescription()

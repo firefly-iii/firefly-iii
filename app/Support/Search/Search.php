@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -121,6 +122,10 @@ class Search implements SearchInterface
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
             }
+
+            // some modifiers can be applied to the collector directly.
+            $collector = $this->applyModifiers($collector);
+
             $collector->removeFilter(InternalTransferFilter::class);
             $set = $collector->getPaginatedJournals()->getCollection();
 
@@ -184,6 +189,57 @@ class Search implements SearchInterface
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
+    {
+        foreach ($this->modifiers as $modifier) {
+            switch ($modifier['type']) {
+                case 'amount_is':
+                case 'amount':
+                    $amount = app('steam')->positive(strval($modifier['value']));
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
+                    $collector->amountIs($amount);
+                    break;
+                case 'amount_max':
+                case 'amount_less':
+                    $amount = app('steam')->positive(strval($modifier['value']));
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
+                    $collector->amountLess($amount);
+                    break;
+                case 'amount_min':
+                case 'amount_more':
+                    $amount = app('steam')->positive(strval($modifier['value']));
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
+                    $collector->amountMore($amount);
+                    break;
+                case 'type':
+                    $collector->setTypes([ucfirst($modifier['value'])]);
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
+                    break;
+                case 'date':
+                case 'on':
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
+                    $start = new Carbon($modifier['value']);
+                    $collector->setRange($start, $start);
+                    break;
+                case 'date_before':
+                case 'before':
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
+                    $before = new Carbon($modifier['value']);
+                    $collector->setBefore($before);
+                    break;
+                case 'date_after':
+                case 'after':
+                    Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
+                    $after = new Carbon($modifier['value']);
+                    $collector->setBefore($after);
+                    break;
+            }
+        }
+
+
+        return $collector;
     }
 
     /**

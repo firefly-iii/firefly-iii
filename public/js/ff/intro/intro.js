@@ -42,5 +42,5 @@ function setupIntro(steps) {
 }
 
 function reportIntroFinished() {
-    $.getJSON(routeForFinishedTour);
+    $.post(routeForFinishedTour, {_token:token});
 }

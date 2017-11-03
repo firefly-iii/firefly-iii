@@ -48,6 +48,7 @@ Route::group(
     Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
     Route::get('flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
     Route::get('routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
+    Route::get('debug', 'HomeController@displayDebug')->name('debug');
 }
 );
 
@@ -457,6 +458,9 @@ Route::group(
     Route::get('transaction-types', ['uses' => 'JsonController@transactionTypes', 'as' => 'transaction-types']);
     Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
     Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
+
+    // frontpage
+    Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
 
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);

@@ -300,7 +300,6 @@ class ExpandedForm
         return $html;
     }
 
-
     /**
      * @param string $name
      * @param null   $value
@@ -327,6 +326,27 @@ class ExpandedForm
 
 
         $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param null   $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function number(string $name, $value = null, array $options = []): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        unset($options['placeholder']);
+
+        $html = view('form.number', compact( 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }

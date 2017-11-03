@@ -11,6 +11,16 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y python-software-properties software-properties-common
 
+# install all languages
+sed -i 's/# nl_NL.UTF-8 UTF-8/nl_NL.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/g' /etc/locale.gen
+dpkg-reconfigure --frontend=noninteractive locales
+
+
+
+
 # actually add repository
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E9C74FEEA2098A6E
 add-apt-repository "deb http://packages.dotdeb.org jessie all"
@@ -29,6 +39,10 @@ service mysql stop
 systemctl disable nginx
 systemctl disable php7.1-fpm
 systemctl disable mysql
+
+# make php.ini display errors:
+sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/7.1/fpm/php.ini
+
 # patch /etc/php/7.1/fpm/pool.d/www.conf to not change uid/gid to www-data
 sed --in-place='' \
        --expression='s/^listen.owner = www-data/;listen.owner = www-data/' \
@@ -64,3 +78,5 @@ cat <<EOF > /etc/mysql/conf.d/sandstorm.cnf
 # Set the main data file to grow by 1MB at a time, rather than 8MB at a time.
 innodb_autoextend_increment = 1
 EOF
+
+

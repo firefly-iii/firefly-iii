@@ -233,7 +233,7 @@ class Navigation
      */
     public function periodShow(Carbon $theDate, string $repeatFrequency): string
     {
-        $date = clone $theDate;
+        $date      = clone $theDate;
         $formatMap = [
             '1D'      => trans('config.specific_day'),
             'daily'   => trans('config.specific_day'),
@@ -241,8 +241,8 @@ class Navigation
             '1W'      => trans('config.week_in_year'),
             'week'    => trans('config.week_in_year'),
             'weekly'  => trans('config.week_in_year'),
-            '3M'      => trans('config.quarter_of_year'),
-            'quarter' => trans('config.quarter_of_year'),
+            //'3M'      => trans('config.quarter_of_year'),
+            //'quarter' => trans('config.quarter_of_year'),
             '1M'      => trans('config.month'),
             'month'   => trans('config.month'),
             'monthly' => trans('config.month'),
@@ -253,10 +253,16 @@ class Navigation
 
         ];
 
-
         if (isset($formatMap[$repeatFrequency])) {
             return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
+        if ($repeatFrequency === '3M' || $repeatFrequency === 'quarter') {
+            $quarter = ceil($theDate->month / 3);
+
+            return sprintf('Q%d %d', $quarter, $theDate->year);
+        }
+
+        // special formatter for quarter of year
         throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
     }
 

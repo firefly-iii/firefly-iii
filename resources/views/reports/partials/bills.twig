@@ -21,6 +21,8 @@
                     </td>
                     <td class="hidden-xs" data-value="{{ line.getMin }}" style="text-align: right;">{{ line.getMin|formatAmount }}</td>
                     <td class="hidden-xs" data-value="{{ line.getMax }}" style="text-align: right;">{{ line.getMax|formatAmount }}</td>
+
+                    {# if bill is hit, show hit amount #}
                     {% if line.isHit %}
                         <td data-value="{{ line.getAmount }}" style="text-align: right;">
                             <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">
@@ -28,18 +30,18 @@
                             </a>
                         </td>
                     {% endif %}
+                    {# if not but is active, show "not yet charged #}
                     {% if not line.isHit and line.isActive %}
                         <td data-value="0" class="bg-success">{{ 'notCharged'|_ }}</td>
                     {% endif %}
-                    {% if not line.isActive %}
+                    {% if not line.isActive and not line.isHit %}
                         <td data-value="-1">&nbsp;</td>
                     {% endif %}
                     <td data-value="{{ (line.getMax - line.getAmount) }}" style="text-align: right;" class="hidden-xs">
-                        {% if line.isActive %}
+                        {% if line.isHit %}
                             {{ (line.getMax + line.getAmount)|formatAmount }}
                         {% endif %}
                     </td>
-
                 </tr>
 
             {% endfor %}

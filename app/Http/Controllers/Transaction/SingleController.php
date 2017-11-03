@@ -355,6 +355,7 @@ class SingleController extends Controller
         $this->attachments->saveAttachmentsForModel($journal, $files);
 
         // store the journal only, flash the rest.
+        Log::debug(sprintf('Count of error messages is %d', $this->attachments->getErrors()->count()));
         if (count($this->attachments->getErrors()->get('attachments')) > 0) {
             Session::flash('error', $this->attachments->getErrors()->get('attachments'));
         }

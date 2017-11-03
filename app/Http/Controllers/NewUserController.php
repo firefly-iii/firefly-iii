@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Preferences;
 use Session;
 use View;
@@ -81,13 +82,23 @@ class NewUserController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository)
+    public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {
         // create normal asset account:
         $this->createAssetAccount($request, $repository);
 
         // create savings account
         $this->createSavingsAccount($request, $repository);
+
+        // also store currency preference from input:
+        $currency = $currencyRepository->find(intval($request->input('amount_currency_id_bank_balance')));
+
+        if(!is_null($currency->id)) {
+            // store currency preference:
+            Preferences::set('currencyPreference', $currency->code);
+            Preferences::mark();
+        }
+
 
         Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
         Preferences::mark();
@@ -137,7 +148,7 @@ class NewUserController extends Controller
             'accountRole'        => 'savingAsset',
             'openingBalance'     => round($request->input('savings_balance'), 12),
             'openingBalanceDate' => new Carbon,
-            'currency_id'        => intval($request->input('amount_currency_id_savings_balance')),
+            'currency_id'        => intval($request->input('amount_currency_id_bank_balance')),
         ];
         $repository->store($savingsAccount);
 

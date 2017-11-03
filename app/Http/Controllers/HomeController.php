@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Artisan;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\AccountType;
@@ -85,6 +86,18 @@ class HomeController extends Controller
         Session::put('is_custom_range', $isCustomRange);
         Session::put('start', $start);
         Session::put('end', $end);
+    }
+
+    public function displayDebug()
+    {
+        $phpVersion = PHP_VERSION;
+        $now        = Carbon::create()->format('Y-m-d H:i:s e');
+        $extensions = join(', ', get_loaded_extensions());
+        $drivers    = join(', ', DB::availableDrivers());
+        $currentDriver = DB::getDriverName();
+
+        return view('debug', compact('phpVersion', 'extensions', 'carbon', 'now', 'drivers','currentDriver'));
+
     }
 
     /**
@@ -157,7 +170,7 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'subTitle', 'transactions', 'showDeps','billCount')
+            'index', compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
         );
     }
 

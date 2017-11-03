@@ -29,7 +29,6 @@ $(function () {
 });
 
 function startSearch(query) {
-
     $.post(searchUri, {query: query}).done(presentSearchResults).fail(searchFailure);
 }
 
@@ -44,4 +43,8 @@ function presentSearchResults(data) {
     $('span.search_count').text(data.count);
     $('.search_box').find('.overlay').remove();
     $('.search_results').html(data.html).show();
+
+    $('.select_all_single').unbind('change').change(function () {
+        countChecked();
+    });
 }

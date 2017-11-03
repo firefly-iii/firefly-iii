@@ -49,6 +49,7 @@ class Sandstorm
      *
      * @return mixed
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {

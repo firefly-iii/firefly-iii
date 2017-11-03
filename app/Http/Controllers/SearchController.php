@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
 use Response;
@@ -75,11 +76,24 @@ class SearchController extends Controller
     {
         $fullQuery = strval($request->get('query'));
 
-        // parse search terms:
-        $searcher->parseQuery($fullQuery);
-        $searcher->setLimit(20);
-        $transactions = $searcher->searchTransactions();
-        $html         = view('search.search', compact('transactions'))->render();
+        // cache
+        $cache = new CacheProperties;
+        $cache->addProperty('search');
+        $cache->addProperty($fullQuery);
+
+        if ($cache->has()) {
+            $transactions = $cache->get();
+        }
+
+        if (!$cache->has()) {
+            // parse search terms:
+            $searcher->parseQuery($fullQuery);
+            $searcher->setLimit(intval(env('SEARCH_RESULT_LIMIT', 50)));
+            $transactions = $searcher->searchTransactions();
+            $cache->store($transactions);
+        }
+
+        $html = view('search.search', compact('transactions'))->render();
 
         return Response::json(['count' => $transactions->count(), 'html' => $html]);
 

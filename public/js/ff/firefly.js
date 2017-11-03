@@ -26,7 +26,7 @@ $(function () {
     configAccounting(currencySymbol);
 
     // on submit of form, disable any button in form:
-    $('form.form-horizontal').on('submit', function () {
+    $('form.form-horizontal:not(.nodisablebutton)').on('submit', function () {
         $('button[type="submit"]').prop('disabled', true);
     });
 
@@ -65,7 +65,8 @@ $(function () {
             $.post(dateRangeMeta.uri, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
-                label: label
+                label: label,
+                _token: token
             }).done(function () {
                 window.location.reload(true);
             }).fail(function () {
