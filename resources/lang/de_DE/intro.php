@@ -68,7 +68,7 @@ return [
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',
     'piggy-banks_index_button'                                => 'Neben diesem Fortschrittsbalken befinden sich zwei Buttons (+ und -), um Geld von jedem Sparschwein hinzuzufügen oder zu entfernen.',
-    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Anlagenkonten aufgeführt, die mindestens mit einem Sparschwein verbunden sind.',
+    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Anlagenkonten aufgeführt, die mit mindestens einem Sparschwein verbunden sind.',
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Worauf sparen Sie? Eine neue Couch, eine Kamera, Geld für Notfälle?',
