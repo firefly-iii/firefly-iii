@@ -20,7 +20,7 @@ return [
     'currencies-index'               => 'Firefly III unterstützt mehrere Währungen. Obwohl es den Euro standardmäßig nutzt, ist es möglich US-Dollar oder viele andere Währungen zu verwenden. Wie Sie sehen können, ist eine kleine Auswahl an Währungen aufgenommen worden, aber Sie können Ihre eigenen hinzufügen. Die Standardwährung zu ändern, wird die Währung der vorhandenen Buchungen jedoch nicht ändern: Firefly III unterstützt die Verwendung mehrerer Währungen zur gleichen Zeit.',
     'transactions-index'             => 'Diese Aufwendungen, Einzahlungen und Überweisungen sind nicht besonders einfallsreich. Sie wurden automatisch generiert.',
     'piggy-banks-index'              => 'Wie Sie sehen können, gibt es drei Sparschweine. Benutzen die Plus- und Minusknöpfe um die Menge des Geldes in den Sparschweinen zu beeinflussen. Klicken Sie auf den Namen des Sparschweins um Details einzusehen.',
-    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
+    'import-index'                   => 'Natürlich kann jede CSV-Datei in Firefly III importiert werden',
     'import-configure-security'      => 'Aufgrund von Sicherheitsbedenken wurde der Upload mit einer lokalen Datei ersetzt.',
     'import-configure-configuration' => 'Die unten stehende Konfiguration für die lokale Datei ist korrekt.',
 ];
