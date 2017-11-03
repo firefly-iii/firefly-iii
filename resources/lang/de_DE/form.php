@@ -33,7 +33,7 @@ return [
     'journal_source_account_name'    => 'Kreditor (Quelle)',
     'journal_source_account_id'      => 'Girokonto (Quelle)',
     'BIC'                            => 'BIC',
-    'verify_password'                => 'Überprüfen Sie die Kennwortsicherheit',
+    'verify_password'                => 'Passwortsicherheit überprüfen',
     'source_account'                 => 'Quellkonto',
     'destination_account'            => 'Zielkonto',
     'journal_destination_account_id' => 'Girokonto (Ziel)',
