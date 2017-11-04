@@ -617,7 +617,7 @@ return [
     'revenue_accounts'                         => 'Debiteuren',
     'cash_accounts'                            => 'Contant geldrekeningen',
     'Cash account'                             => 'Contant geldrekening',
-	'cash'                                     => 'cash',
+    'cash'                                     => 'cash',
     'account_type'                             => 'Rekeningtype',
     'save_transactions_by_moving'              => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
     'stored_new_account'                       => 'Nieuwe rekening ":name" opgeslagen!',
