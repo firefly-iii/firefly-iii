@@ -618,7 +618,7 @@ return [
     'revenue_accounts'                         => 'Comptes de recettes',
     'cash_accounts'                            => 'Comptes de trésorerie',
     'Cash account'                             => 'Compte de trésorerie',
-	'cash'                                     => 'cash',
+    'cash'                                     => 'cash',
     'account_type'                             => 'Type de compte',
     'save_transactions_by_moving'              => 'Enregistrer ces opération(s) en les déplaçant vers un autre compte :',
     'stored_new_account'                       => 'Nouveau compte ":name" créé !',
