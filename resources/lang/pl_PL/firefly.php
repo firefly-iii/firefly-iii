@@ -617,7 +617,7 @@ return [
     'revenue_accounts'                         => 'Konta przychodów',
     'cash_accounts'                            => 'Konta gotówkowe',
     'Cash account'                             => 'Konto gotówkowe',
-	'cash'                                     => 'gotówka',
+    'cash'                                     => 'gotówka',
     'account_type'                             => 'Typ konta',
     'save_transactions_by_moving'              => 'Zapisz te transakcje, przenosząc je do innego konta:',
     'stored_new_account'                       => 'Nowe konto ":name" zostało zapisane!',
