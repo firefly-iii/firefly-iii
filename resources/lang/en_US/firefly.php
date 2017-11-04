@@ -617,7 +617,7 @@ return [
     'revenue_accounts'                         => 'Revenue accounts',
     'cash_accounts'                            => 'Cash accounts',
     'Cash account'                             => 'Cash account',
-	'cash'                                     => 'cash',
+    'cash'                                     => 'cash',
     'account_type'                             => 'Account type',
     'save_transactions_by_moving'              => 'Save these transaction(s) by moving them to another account:',
     'stored_new_account'                       => 'New account ":name" stored!',

@@ -34,13 +34,14 @@
                                 <td data-value="{{ link.source.description }}">
                                     <a href="{{ route('transactions.show', [link.source_id]) }}">{{ link.source.description }}</a>
                                 </td>
-                                <td>{{ journalAmount(link.source) }}</td>
+                                <td>{{ link.source|journalTotalAmount }}</td>
                                 <td>{{ linkType.outward }}</td>
                                 <td data-value="{{ link.destination.description }}">
                                     <a href="{{ route('transactions.show', [link.destination_id]) }}">{{ link.destination.description }}</a>
                                 </td>
                                 <td>
-                                    {{ journalAmount(link.destination) }}
+                                    {{ link.destination|journalTotalAmount }}
+
                                 </td>
                             </tr>
                         {% endfor %}

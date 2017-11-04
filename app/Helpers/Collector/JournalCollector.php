@@ -73,6 +73,7 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.encrypted',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
+            'transaction_journals.updated_at',
             'bills.name as bill_name',
             'bills.name_encrypted as bill_name_encrypted',
 

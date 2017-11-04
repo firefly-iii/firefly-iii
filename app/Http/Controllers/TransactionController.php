@@ -125,11 +125,11 @@ class TransactionController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath($path);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath($path);
 
 
-        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals', 'periods', 'start', 'end', 'moment'));
+        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end', 'moment'));
 
     }
 

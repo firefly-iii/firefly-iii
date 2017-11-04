@@ -46,7 +46,7 @@
                     <a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
-            <td class="hide-icon">{{ transaction|typeIconTransaction }}</td>
+            <td class="hide-icon">{{ transaction|transactionIcon }}</td>
 
             <td class="hide-description">
                 <a href="{{ route('transactions.show',transaction.journal_id) }}">
@@ -59,7 +59,7 @@
             </td>
             <td class="hide-balance_before" style="text-align: right;">{{ formatAmountByCurrency(transaction.currency, transaction.before) }}</td>
             <td class="hide-amount" style="text-align: right;">
-                {{ transactionAmount(transaction) }}
+                {{ transaction|transactionAmount }}
             </td>
             <td class="hide-balance_after" style="text-align: right;">{{ formatAmountByCurrency(transaction.currency, transaction.after) }}</td>
 
@@ -104,17 +104,17 @@
 
 
             <td class="hide-from">
-                {{ transactionSourceAccount(transaction) }}
+                {{ transaction|transactionSourceAccount }}
             </td>
             <td class="hide-to">
-                {{ transactionDestinationAccount(transaction) }}
+                {{ transaction|transactionDestinationAccount }}
             </td>
 
             <td class="hide-budget">
-                {{ transactionBudgets(transaction) }}
+                {{ transaction|transactionBudgets }}
             </td>
             <td class="hide-category">
-                {{ transactionCategories(transaction) }}
+                {{ transaction|transactionCategories }}
             </td>
             {% if transaction.bill_id %}
                 <td class="hide-bill">

@@ -32,7 +32,7 @@ use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
-
+use FireflyIII\Support\Twig\Extension\TransactionJournal as TransactionJournalExtension;
 /**
  * Class Journal
  *
@@ -83,6 +83,7 @@ class Journal extends Twig_Extension
     {
         $filters = [
             $this->typeIcon(),
+            new Twig_SimpleFilter('journalTotalAmount', [TransactionJournalExtension::class, 'totalAmount'], ['is_safe' => ['html']]),
         ];
 
         return $filters;

@@ -23,12 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction as TransactionModel;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\CacheProperties;
-use Lang;
+use FireflyIII\Support\Twig\Extension\Transaction as TransactionExtension;
 use Steam;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -42,47 +38,21 @@ use Twig_SimpleFunction;
 class Transaction extends Twig_Extension
 {
     /**
-     * @return Twig_SimpleFunction
-     */
-    public function attachmentIndicator(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'attachmentIndicator', function (int $journalId) {
-
-            $cache = new CacheProperties;
-            $cache->addProperty('attachments_journal');
-            $cache->addProperty($journalId);
-            if ($cache->has()) {
-                return $cache->get();
-            }
-            $count = Attachment::whereNull('deleted_at')
-                               ->where('attachable_type', 'FireflyIII\Models\TransactionJournal')
-                               ->where('attachable_id', $journalId)
-                               ->count();
-            if ($count > 0) {
-                $res = sprintf('<i class="fa fa-paperclip" title="%s"></i>', Lang::choice('firefly.nr_of_attachments', $count, ['count' => $count]));
-                $cache->store($res);
-
-                return $res;
-            }
-
-            $res = '';
-            $cache->store($res);
-
-            return $res;
-
-
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
      * @return array
      */
     public function getFilters(): array
     {
         $filters = [
-            $this->typeIconTransaction(),
+            new Twig_SimpleFilter('transactionIcon', [TransactionExtension::class, 'icon'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionDescription', [TransactionExtension::class, 'description']),
+            new Twig_SimpleFilter('transactionIsSplit', [TransactionExtension::class, 'isSplit'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionHasAtt', [TransactionExtension::class, 'hasAttachments'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionAmount', [TransactionExtension::class, 'amount'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionArrayAmount', [TransactionExtension::class, 'amountArray'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionBudgets', [TransactionExtension::class, 'budgets'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionCategories', [TransactionExtension::class, 'categories'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionSourceAccount', [TransactionExtension::class, 'sourceAccount'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('transactionDestinationAccount', [TransactionExtension::class, 'destinationAccount'], ['is_safe' => ['html']]),
         ];
 
         return $filters;
@@ -94,14 +64,8 @@ class Transaction extends Twig_Extension
     public function getFunctions(): array
     {
         $functions = [
-            $this->transactionSourceAccount(),
-            $this->transactionDestinationAccount(),
-            $this->transactionBudgets(),
             $this->transactionIdBudgets(),
-            $this->transactionCategories(),
             $this->transactionIdCategories(),
-            $this->splitJournalIndicator(),
-            $this->attachmentIndicator(),
         ];
 
         return $functions;
@@ -117,107 +81,6 @@ class Transaction extends Twig_Extension
         return 'transaction';
     }
 
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function splitJournalIndicator(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'splitJournalIndicator', function (int $journalId) {
-
-            $cache = new CacheProperties;
-            $cache->addProperty('is_split_journal');
-            $cache->addProperty($journalId);
-            if ($cache->has()) {
-                return $cache->get();
-            }
-            $count = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
-            if ($count > 2) {
-                $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
-                $cache->store($res);
-
-                return $res;
-            }
-
-            $res = '';
-            $cache->store($res);
-
-            return $res;
-
-
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function transactionBudgets(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionBudgets', function (TransactionModel $transaction): string {
-            return $this->getTransactionBudgets($transaction);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function transactionCategories(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionCategories', function (TransactionModel $transaction): string {
-            return $this->getTransactionCategories($transaction);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function transactionDestinationAccount(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionDestinationAccount', function (TransactionModel $transaction): string {
-
-            $name          = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
-            $transactionId = intval($transaction->account_id);
-            $type          = $transaction->account_type;
-
-            // name is present in object, use that one:
-            if (bccomp($transaction->transaction_amount, '0') === -1 && !is_null($transaction->opposing_account_id)) {
-                $name          = $transaction->opposing_account_name;
-                $transactionId = intval($transaction->opposing_account_id);
-                $type          = $transaction->opposing_account_type;
-            }
-
-            // Find the opposing account and use that one:
-            if (bccomp($transaction->transaction_amount, '0') === -1 && is_null($transaction->opposing_account_id)) {
-                // if the amount is negative, find the opposing account and use that one:
-                $journalId = $transaction->journal_id;
-                /** @var TransactionModel $other */
-                $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                                                 ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
-                        'identifier', $transaction->identifier
-                    )
-                                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                                 ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                                 ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-                $name          = Steam::decrypt(intval($other->encrypted), $other->name);
-                $transactionId = $other->account_id;
-                $type          = $other->type;
-            }
-
-            if ($type === AccountType::CASH) {
-                return '<span class="text-success">(cash)</span>';
-            }
-
-            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
-
-        }, ['is_safe' => ['html']]
-        );
-    }
 
     /**
      * @return Twig_SimpleFunction
@@ -243,84 +106,6 @@ class Transaction extends Twig_Extension
             $transaction = TransactionModel::find($transactionId);
 
             return $this->getTransactionCategories($transaction);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function transactionSourceAccount(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionSourceAccount', function (TransactionModel $transaction): string {
-
-            // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
-            $name          = Steam::decrypt(intval($transaction->account_encrypted), $transaction->account_name);
-            $transactionId = intval($transaction->account_id);
-            $type          = $transaction->account_type;
-
-            // name is present in object, use that one:
-            if (bccomp($transaction->transaction_amount, '0') === 1 && !is_null($transaction->opposing_account_id)) {
-                $name          = $transaction->opposing_account_name;
-                $transactionId = intval($transaction->opposing_account_id);
-                $type          = $transaction->opposing_account_type;
-            }
-            // Find the opposing account and use that one:
-            if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
-                $journalId = $transaction->journal_id;
-                /** @var TransactionModel $other */
-                $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
-                                                 ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
-                        'identifier', $transaction->identifier
-                    )
-                                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                                 ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                                 ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-                $name          = Steam::decrypt(intval($other->encrypted), $other->name);
-                $transactionId = $other->account_id;
-                $type          = $other->type;
-            }
-
-            if ($type === AccountType::CASH) {
-                return '<span class="text-success">(cash)</span>';
-            }
-
-            return sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
-
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
-     *
-     * @return Twig_SimpleFilter
-     */
-    public function typeIconTransaction(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'typeIconTransaction', function (TransactionModel $transaction): string {
-
-            switch ($transaction->transaction_type_type) {
-                case TransactionType::WITHDRAWAL:
-                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
-                    break;
-                case TransactionType::DEPOSIT:
-                    $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
-                    break;
-                case TransactionType::TRANSFER:
-                    $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
-                    break;
-                case TransactionType::OPENING_BALANCE:
-                    $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.openingBalance'));
-                    break;
-                default:
-                    $txt = '';
-                    break;
-            }
-
-            return $txt;
         }, ['is_safe' => ['html']]
         );
     }

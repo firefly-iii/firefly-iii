@@ -27,80 +27,8 @@
     </tr>
     </thead>
     <tbody>
-    {% for transaction in journals %}
-        <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
-            {# input buttons #}
-            <td class="hidden-xs">
-                <div class="select_single" style="display:none;">
-                    <input name="select_all_single[]" class="select_all_single" value="{{ transaction.journal_id }}" type="checkbox"/>
-                </div>
-                <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">{% if sorting %}<a href="#" class="handle btn btn-default btn-xs"><i
-                            class="fa fa-fw fa-arrows-v"></i></a>{% endif %}<a href="{{ route('transactions.edit',transaction.journal_id) }}"
-                                                                               class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a><a
-                            href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i
-                                class="fa fa-fw fa-trash-o"></i></a></div>
-            </td>
-
-            {# icon #}
-            <td class="hidden-xs">
-                {{ transaction|typeIconTransaction }}
-            </td>
-
-            {# description #}
-            <td>
-                <a href="{{ route('transactions.show',transaction.journal_id) }}">
-
-                    {% if transaction.transaction_description|length > 0 %}
-                        {{ transaction.transaction_description }} ({{ transaction.description }})
-                    {% else %}
-                        {{ transaction.description }}
-                    {% endif %}
-                </a>
-                {# is a split journal #}
-                {{ splitJournalIndicator(transaction.journal_id) }}
-
-                {# count attachments #}
-                {{ attachmentIndicator(transaction.journal_id) }}
-            </td>
-            <td style="text-align: right;">
-                <span style="margin-right:5px;">
-                    {{ transactionAmount(transaction) }}
-                </span>
-
-            </td>
-            <td class="hidden-sm hidden-xs">
-                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
-            </td>
-            <td class="hidden-xs hidden-sm hidden-md">
-                {{ transactionSourceAccount(transaction) }}
-            </td>
-            <td class="hidden-xs hidden-sm hidden-md">
-                {{ transactionDestinationAccount(transaction) }}
-            </td>
-
-            <!-- Do NOT hide the budget? -->
-            {% if not hideBudgets %}
-                <td class="hidden-xs">
-                    {{ transactionBudgets(transaction) }}
-                </td>
-            {% endif %}
-
-            <!-- Do NOT hide the category? -->
-            {% if not hideCategories %}
-                <td class="hidden-xs">
-                    {{ transactionCategories(transaction) }}
-                </td>
-            {% endif %}
-
-            <!-- Do NOT hide the bill? -->
-            {% if not hideBills %}
-                <td class="hidden-xs">
-                    {% if transaction.bill_id %}
-                        <a href="{{ route('bills.show',transaction.bill_id) }}">{{ transaction.bill_name }}</a>
-                    {% endif %}
-                </td>
-            {% endif %}
-        </tr>
+    {% for transaction in transactions %}
+        {% include 'partials.transaction-row' %}
     {% endfor %}
     </tbody>
 </table>

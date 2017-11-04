@@ -37,7 +37,7 @@ class CacheProperties
 {
 
     /** @var  string */
-    protected $md5 = '';
+    protected $hash = '';
     /** @var Collection */
     protected $properties;
 
@@ -66,15 +66,15 @@ class CacheProperties
      */
     public function get()
     {
-        return Cache::get($this->md5);
+        return Cache::get($this->hash);
     }
 
     /**
      * @return string
      */
-    public function getMd5(): string
+    public function getHash(): string
     {
-        return $this->md5;
+        return $this->hash;
     }
 
     /**
@@ -85,9 +85,9 @@ class CacheProperties
         if (getenv('APP_ENV') === 'testing') {
             return false;
         }
-        $this->md5();
+        $this->hash();
 
-        return Cache::has($this->md5);
+        return Cache::has($this->hash);
     }
 
     /**
@@ -95,18 +95,18 @@ class CacheProperties
      */
     public function store($data)
     {
-        Cache::forever($this->md5, $data);
+        Cache::forever($this->hash, $data);
     }
 
     /**
      * @return void
      */
-    private function md5()
+    private function hash()
     {
-        $this->md5 = '';
+        $content = '';
         foreach ($this->properties as $property) {
-            $this->md5 .= json_encode($property);
+            $content .= json_encode($property);
         }
-        $this->md5 = md5($this->md5);
+        $this->hash = substr(sha1($content), 0, 16);
     }
 }

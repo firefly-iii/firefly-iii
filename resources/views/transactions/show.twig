@@ -88,11 +88,13 @@
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
-                                {{ journalAmount(journal) }}
+                                {{ journal|journalTotalAmount }}
 
+                                {# if more transactions, list each one: #}
                                 {% if transactions|length > 1 %}
-                                    ({{ journalTotalAmount(journal) }})
+                                    ({% for transaction in transactions %}{{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}{% endfor %})
                                 {% endif %}
+
                             </td>
                         </tr>
                         <tr>
@@ -336,12 +338,12 @@
                                             <a href="{{ route('transactions.show',link.destination.id) }}">
                                                 #{{ link.destination.id }}: {{ link.destination.description }}
                                             </a>
-                                            ({{ journalAmount(link.destination) }})
+                                            ({{ link.destination|journalTotalAmount }})
                                         {% else %}
                                             {{ journalLinkTranslation('inward', link.linkType.inward) }}
                                             <a href="{{ route('transactions.show',link.source.id) }}">
                                                 #{{ link.source.id }}: {{ link.source.description }}</a>
-                                            ({{ journalAmount(link.source) }})
+                                            ({{ link.source|journalTotalAmount }})
                                         {% endif %}
                                         {% if link.comment != "" %}
                                             <br/><em>{{ link.comment }}</em>

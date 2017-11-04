@@ -346,7 +346,7 @@ class ExpandedForm
         $options['step'] = 'any';
         unset($options['placeholder']);
 
-        $html = view('form.number', compact( 'classes', 'name', 'label', 'value', 'options'))->render();
+        $html = view('form.number', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -586,7 +586,7 @@ class ExpandedForm
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        $currencies      = Amt::getAllCurrencies();
+        $currencies      = app('amount')->getAllCurrencies();
         unset($options['currency']);
         unset($options['placeholder']);
 

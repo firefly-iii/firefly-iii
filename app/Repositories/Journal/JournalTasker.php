@@ -123,7 +123,8 @@ class JournalTasker implements JournalTaskerInterface
                 ]
             );
 
-        $transactions = [];
+        $transactions    = [];
+        $transactionType = $journal->transactionType->type;
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
@@ -132,6 +133,8 @@ class JournalTasker implements JournalTaskerInterface
             $budget             = $entry->budgets->first();
             $category           = $entry->categories->first();
             $transaction        = [
+                'journal_type'                => $transactionType,
+                'updated_at'                  => $journal->updated_at,
                 'source_id'                   => $entry->id,
                 'source_amount'               => $entry->amount,
                 'foreign_source_amount'       => $entry->foreign_amount,

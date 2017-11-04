@@ -7,14 +7,10 @@
                     href="{{ route('transactions.show',transaction.journal_id) }}"
                 {% endif %}
         >
-            {{ transaction|typeIconTransaction }}
-            {% if transaction.transaction_description|length > 0 %}
-                {{ transaction.transaction_description }} ({{ transaction.description }})
-            {% else %}
-                {{ transaction.description }}
-            {% endif %}
+            {{ transaction|transactionIcon }}
+            {{ transaction|transactionDescription }}
             <span class="pull-right small">
-                {{ transactionAmount(transaction) }}
+                {{ transaction|transactionAmount }}
         </span>
         </a>
     {% endfor %}
