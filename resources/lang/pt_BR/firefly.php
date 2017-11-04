@@ -617,7 +617,7 @@ return [
     'revenue_accounts'                         => 'Contas de receitas',
     'cash_accounts'                            => 'Contas Correntes',
     'Cash account'                             => 'Conta Corrente',
-	'cash'                                     => 'cash',
+    'cash'                                     => 'cash',
     'account_type'                             => 'Tipo de conta',
     'save_transactions_by_moving'              => 'Salve essas transações, movendo-os para outra conta:',
     'stored_new_account'                       => 'Nova conta ":name" armazenado!',
