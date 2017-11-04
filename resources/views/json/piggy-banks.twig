@@ -8,8 +8,9 @@
             <strong>{{ entry.name }}</strong><br />
             <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{ entry.percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ entry.percentage }}%;">
-                    {{ entry.amount|formatAmountPlain }}
+                    {% if entry.percentage >=20 %}{{ entry.amount|formatAmountPlain }}{% endif %}
                 </div>
+                {% if entry.percentage < 20 %}&nbsp;{{ entry.amount|formatAmountPlain }}{% endif %}
             </div>
         {% endfor %}
     </div>
