@@ -107,8 +107,10 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var edit_selected_txt = "{{ 'edit_selected'|_ }}";
-        var delete_selected_txt = "{{ 'delete_selected'|_ }}";
+        var edit_selected_txt = "{{ 'edit'|_ }}";
+        var delete_selected_txt = "{{ 'delete'|_ }}";
+        var reconcile_selected_txt = "{{ 'reconcile_selected'|_ }}";
+
         var searchQuery = "{{ fullQuery|escape('js') }}";
         var searchUri = "{{ route('search.search') }}";
     </script>

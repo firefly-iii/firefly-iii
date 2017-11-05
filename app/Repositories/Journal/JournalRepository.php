@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -124,6 +125,38 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param Transaction $transaction
+     *
+     * @return Transaction|null
+     */
+    public function findOpposingTransaction(Transaction $transaction): ?Transaction
+    {
+        $opposing = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                               ->where('transaction_journals.user_id', $this->user->id)
+                               ->where('transactions.transaction_journal_id', $transaction->transaction_journal_id)
+                               ->where('transactions.identifier', $transaction->identifier)
+                               ->where('amount', bcmul($transaction->amount, '-1'))
+                               ->first(['transactions.*']);
+
+        return $opposing;
+    }
+
+    /**
+     * @param int $transactionid
+     *
+     * @return Transaction|null
+     */
+    public function findTransaction(int $transactionid): ?Transaction
+    {
+        $transaction = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                  ->where('transaction_journals.user_id', $this->user->id)
+                                  ->where('transactions.id', $transactionid)
+                                  ->first(['transactions.*']);
+
+        return $transaction;
+    }
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
@@ -156,6 +189,32 @@ class JournalRepository implements JournalRepositoryInterface
     public function isTransfer(TransactionJournal $journal): bool
     {
         return $journal->transactionType->type === TransactionType::TRANSFER;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return bool
+     */
+    public function reconcile(Transaction $transaction): bool
+    {
+        Log::debug(sprintf('Going to reconcile transaction #%d', $transaction->id));
+        $opposing = $this->findOpposingTransaction($transaction);
+
+        if (is_null($opposing)) {
+            Log::debug('Opposing transaction is NULL. Cannot reconcile.');
+
+            return false;
+        }
+        Log::debug(sprintf('Opposing transaction ID is #%d', $opposing->id));
+
+        $transaction->reconciled = true;
+        $opposing->reconciled    = true;
+        $transaction->save();
+        $opposing->save();
+
+        return true;
+
     }
 
     /**
@@ -303,7 +362,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // update note:
-        if (isset($data['notes']) && !is_null($data['notes']) ) {
+        if (isset($data['notes']) && !is_null($data['notes'])) {
             $this->updateNote($journal, strval($data['notes']));
         }
 
@@ -345,7 +404,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->budgets()->detach();
 
         // update note:
-        if (isset($data['notes']) && !is_null($data['notes']) ) {
+        if (isset($data['notes']) && !is_null($data['notes'])) {
             $this->updateNote($journal, strval($data['notes']));
         }
 

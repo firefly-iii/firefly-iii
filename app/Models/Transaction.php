@@ -93,6 +93,7 @@ class Transaction extends Model
             'identifier'          => 'int',
             'encrypted'           => 'boolean', // model does not have these fields though
             'bill_name_encrypted' => 'boolean',
+            'reconciled'          => 'boolean',
         ];
     protected $fillable
                       = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',

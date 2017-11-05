@@ -413,24 +413,13 @@
                                 {{ formatDestinationBefore(transaction) }} &rarr; {{ formatDestinationAfter(transaction) }}
                             </td>
                             <td>
-                                {% if journal.transactionType.type == "Withdrawal" %}
-                                    {{ formatAmountBySymbol(transaction.source_amount, transaction.transaction_currency_symbol, transaction.transaction_currency_dp, true) }}
-                                    {% if(transaction.foreign_source_amount) %}
-                                        ({{ formatAmountBySymbol(transaction.foreign_source_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_dp, true) }})
-                                    {% endif %}
-                                {% else %}
-                                    {{ formatAmountBySymbol(transaction.destination_amount, transaction.transaction_currency_symbol,2) }}
-
-                                    {% if(transaction.foreign_source_amount) %}
-                                        ({{ formatAmountBySymbol(transaction.foreign_destination_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_dp, true) }})
-                                    {% endif %}
-                                {% endif %}
+                                {{ transaction|transactionArrayAmount }}
                             </td>
                             <td class="hidden-md hidden-xs">
-                                {{ transactionIdBudgets(transaction.source_id) }}
+                                {{  transaction.source|transactionBudgets }}
                             </td>
                             <td class="hidden-md hidden-xs">
-                                {{ transactionIdCategories(transaction.source_id) }}
+                                {{ transaction.source|transactionCategories }}
                             </td>
                         </tr>
                     {% endfor %}

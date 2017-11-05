@@ -39,6 +39,7 @@ use Twig_Extension;
  */
 class Transaction extends Twig_Extension
 {
+
     /**
      * Can show the amount of a transaction, if that transaction has been collected by the journal collector.
      *
@@ -127,13 +128,13 @@ class Transaction extends Twig_Extension
         $string                       = app('amount')->formatAnything($fakeCurrency, $amount, true);
 
         // then display (if present) the foreign amount:
-        if(!is_null($transaction['foreign_source_amount'])) {
+        if (!is_null($transaction['foreign_source_amount'])) {
             $amount                       = $transaction['journal_type'] === TransactionType::WITHDRAWAL ? $transaction['foreign_source_amount']
                 : $transaction['foreign_destination_amount'];
             $fakeCurrency                 = new TransactionCurrency;
             $fakeCurrency->decimal_places = $transaction['foreign_currency_dp'];
             $fakeCurrency->symbol         = $transaction['foreign_currency_symbol'];
-            $string                       .= ' ('.app('amount')->formatAnything($fakeCurrency, $amount, true).')';
+            $string                       .= ' (' . app('amount')->formatAnything($fakeCurrency, $amount, true) . ')';
         }
         $cache->store($string);
 
@@ -399,6 +400,30 @@ class Transaction extends Twig_Extension
         $cache->store($txt);
 
         return $txt;
+    }
+
+    /**
+     * @param TransactionModel $transaction
+     *
+     * @return string
+     */
+    public function isReconciled(TransactionModel $transaction): string
+    {
+        $cache = new SingleCacheProperties;
+        $cache->addProperty('transaction-reconciled');
+        $cache->addProperty($transaction->id);
+        $cache->addProperty($transaction->updated_at);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $icon = '';
+        if (intval($transaction->reconciled) === 1) {
+            $icon = '<i class="fa fa-check"></i>';
+        }
+
+        $cache->store($icon);
+
+        return $icon;
     }
 
     /**

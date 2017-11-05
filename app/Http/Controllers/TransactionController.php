@@ -134,6 +134,22 @@ class TransactionController extends Controller
     }
 
     /**
+     * @param Request $request
+     */
+    public function reconcile(Request $request, JournalRepositoryInterface $repository)
+    {
+        $transactionIds = $request->get('transactions');
+        foreach ($transactionIds as $transactionId) {
+            $transactionId = intval($transactionId);
+            $transaction   = $repository->findTransaction($transactionId);
+            Log::debug(sprintf('Transaction ID is %d', $transaction->id));
+
+            $repository->reconcile($transaction);
+        }
+
+    }
+
+    /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      *
@@ -181,8 +197,6 @@ class TransactionController extends Controller
         $subTitle     = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
-
-
     }
 
     /**

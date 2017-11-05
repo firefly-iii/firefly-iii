@@ -462,6 +462,9 @@ Route::group(
     // frontpage
     Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
 
+    // amount reconciliation
+    Route::get('transactions/amount', ['uses' => 'Json\TransactionController@amounts', 'as' => 'transactions.amounts']);
+
     // currency conversion:
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
@@ -700,6 +703,7 @@ Route::group(
     Route::get('{what}/{moment?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
+    Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
 }
 );
 

@@ -1,9 +1,11 @@
 
-<tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
+<tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
+    data-transaction-id="{{ transaction.id }}"
+>
     {# input buttons #}
     <td class="hidden-xs">
         <div class="select_single" style="display:none;">
-            <input name="select_all_single[]" class="select_all_single" value="{{ transaction.journal_id }}" type="checkbox"/>
+            <input name="select_all_single[]" class="select_all_single" data-transaction="{{ transaction.id }}" value="{{ transaction.journal_id }}" type="checkbox"/>
         </div>
         <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">{% if sorting %}<a href="#" class="handle btn btn-default btn-xs"><i
                     class="fa fa-fw fa-arrows-v"></i></a>{% endif %}<a href="{{ route('transactions.edit',transaction.journal_id) }}"
@@ -19,13 +21,19 @@
 
     {# description #}
     <td>
+        {# count attachments #}
+        {{ transaction|transactionReconciled }}
+
         <a href="{{ route('transactions.show',transaction.journal_id) }}">
             {{ transaction|transactionDescription }}
         </a>
         {# is a split journal #}
         {{ transaction|transactionIsSplit }}
+
         {# count attachments #}
         {{ transaction|transactionHasAtt }}
+
+
     </td>
     <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
     <td class="hidden-sm hidden-xs">

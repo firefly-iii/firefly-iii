@@ -80,6 +80,7 @@ class JournalCollector implements JournalCollectorInterface
             'transactions.id as id',
             'transactions.description as transaction_description',
             'transactions.account_id',
+            'transactions.reconciled',
             'transactions.identifier',
             'transactions.transaction_journal_id',
             'transactions.amount as transaction_amount',
@@ -171,7 +172,7 @@ class JournalCollector implements JournalCollectorInterface
                 $q1->where(
                     function (EloquentBuilder $q2) use ($amount) {
                         // amount < 0 and .amount > -$amount
-                        $amount = bcmul($amount,'-1');
+                        $amount = bcmul($amount, '-1');
                         $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $amount);
                     }
                 )
@@ -199,7 +200,7 @@ class JournalCollector implements JournalCollectorInterface
                 $q1->where(
                     function (EloquentBuilder $q2) use ($amount) {
                         // amount < 0 and .amount < -$amount
-                        $amount = bcmul($amount,'-1');
+                        $amount = bcmul($amount, '-1');
                         $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $amount);
                     }
                 )
@@ -211,6 +212,7 @@ class JournalCollector implements JournalCollectorInterface
                    );
             }
         );
+
         return $this;
     }
 

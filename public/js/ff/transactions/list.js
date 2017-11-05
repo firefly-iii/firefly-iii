@@ -20,6 +20,9 @@
 
 /** global: edit_selected_txt, delete_selected_txt */
 
+/**
+ *
+ */
 $(document).ready(function () {
     "use strict";
     $('.mass_edit_all').show();
@@ -44,8 +47,43 @@ $(document).ready(function () {
     $('.mass_edit').click(goToMassEdit);
     // click the delete button:
     $('.mass_delete').click(goToMassDelete);
+    // click reconcile button
+    $('.mass_reconcile').click(goToReconcile);
 });
 
+/**
+ *
+ * @returns {boolean}
+ */
+function goToReconcile() {
+
+    var checked = $('.select_all_single:checked');
+    var ids = [];
+    $.each(checked, function (i, v) {
+        ids.push(parseInt($(v).data('transaction')));
+    });
+
+    // go to specially crafted URL:
+    var bases = document.getElementsByTagName('base');
+    var baseHref = null;
+
+    if (bases.length > 0) {
+        baseHref = bases[0].href;
+    }
+
+    $.post(baseHref + 'transactions/reconcile', {transactions: ids}).done(function () {
+        alert('OK then.');
+    }).fail(function () {
+        alert('Could not reconcile transactions: please check the logs and try again later.');
+    });
+
+    return false;
+}
+
+/**
+ *
+ * @returns {boolean}
+ */
 function goToMassEdit() {
     "use strict";
     var checkedArray = getCheckboxes();
@@ -62,6 +100,10 @@ function goToMassEdit() {
     return false;
 }
 
+/**
+ *
+ * @returns {boolean}
+ */
 function goToMassDelete() {
     "use strict";
     var checkedArray = getCheckboxes();
@@ -77,6 +119,10 @@ function goToMassDelete() {
     return false;
 }
 
+/**
+ *
+ * @returns {Array}
+ */
 function getCheckboxes() {
     "use strict";
     var list = [];
@@ -90,13 +136,19 @@ function getCheckboxes() {
     return list;
 }
 
-
+/**
+ *
+ */
 function countChecked() {
     "use strict";
     var checked = $('.select_all_single:checked').length;
     if (checked > 0) {
         $('.mass_edit span').text(edit_selected_txt + ' (' + checked + ')');
         $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')');
+
+        // get amount for the transactions:
+        getAmounts();
+
         $('.mass_button_options').show();
 
     } else {
@@ -104,17 +156,49 @@ function countChecked() {
     }
 }
 
+function getAmounts() {
+    $('.mass_reconcile span').html(reconcile_selected_txt + ' (<i class="fa fa-spinner fa-spin "></i>)');
+    var checked = $('.select_all_single:checked');
+    var ids = [];
+    $.each(checked, function (i, v) {
+        ids.push(parseInt($(v).data('transaction')));
+    });
 
+    // go to specially crafted URL:
+    var bases = document.getElementsByTagName('base');
+    var baseHref = null;
+
+    if (bases.length > 0) {
+        baseHref = bases[0].href;
+    }
+
+    $.getJSON(baseHref + 'json/transactions/amount', {transactions: ids}).done(function (data) {
+        $('.mass_reconcile span').text(reconcile_selected_txt + ' (' + data.amounts + ')');
+        console.log(data);
+    });
+    return;
+}
+
+/**
+ *
+ */
 function checkAll() {
     "use strict";
     $('.select_all_single').prop('checked', true);
 }
 
+/**
+ *
+ */
 function uncheckAll() {
     "use strict";
     $('.select_all_single').prop('checked', false);
 }
 
+/**
+ *
+ * @returns {boolean}
+ */
 function stopMassSelect() {
     "use strict";
 
@@ -145,6 +229,10 @@ function stopMassSelect() {
     return false;
 }
 
+/**
+ *
+ * @returns {boolean}
+ */
 function startMassSelect() {
     "use strict";
     // show "select all" box in table header.

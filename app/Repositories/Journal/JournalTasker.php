@@ -28,6 +28,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\SingleCacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
@@ -74,6 +75,13 @@ class JournalTasker implements JournalTaskerInterface
      */
     public function getTransactionsOverview(TransactionJournal $journal): array
     {
+        $cache = new SingleCacheProperties;
+        $cache->addProperty('transaction-overview');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($journal->updated_at);
+        if ($cache->has()) {
+            return $cache->get();
+        }
         // get all transaction data + the opposite site in one list.
         $set = $journal
             ->transactions()// "source"
@@ -136,6 +144,7 @@ class JournalTasker implements JournalTaskerInterface
                 'journal_type'                => $transactionType,
                 'updated_at'                  => $journal->updated_at,
                 'source_id'                   => $entry->id,
+                'source'                      => $journal->transactions()->find($entry->id),
                 'source_amount'               => $entry->amount,
                 'foreign_source_amount'       => $entry->foreign_amount,
                 'description'                 => $entry->description,
@@ -174,6 +183,7 @@ class JournalTasker implements JournalTaskerInterface
 
             $transactions[] = $transaction;
         }
+        $cache->store($transactions);
 
         return $transactions;
     }
