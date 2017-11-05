@@ -322,12 +322,12 @@ class AccountController extends Controller
         if (!is_null($start)) {
             $collector->setRange($start, $end);
         }
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('accounts.show', [$account->id, $moment]));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('accounts.show', [$account->id, $moment]));
 
         return view(
             'accounts.show',
-            compact('account', 'currency', 'moment', 'periods', 'subTitleIcon', 'journals', 'subTitle', 'start', 'end', 'chartUri')
+            compact('account', 'currency', 'moment', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
         );
     }
 
