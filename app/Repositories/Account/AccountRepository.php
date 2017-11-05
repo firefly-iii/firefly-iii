@@ -297,7 +297,7 @@ class AccountRepository implements AccountRepositoryInterface
     protected function storeInitialBalance(Account $account, array $data): TransactionJournal
     {
         $amount = strval($data['openingBalance']);
-        Log::debug(sprintf('Submitted amount is %s',$amount));
+        Log::debug(sprintf('Submitted amount is %s', $amount));
 
         if (bccomp($amount, '0') === 0) {
             return new TransactionJournal;
@@ -326,7 +326,7 @@ class AccountRepository implements AccountRepositoryInterface
         $secondAmount  = bcmul($amount, '-1');
         Log::debug(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
 
-        if (bccomp($amount,'0') === -1) {
+        if (bccomp($amount, '0') === -1) {
             Log::debug(sprintf('%s is a negative number.', $amount));
             $firstAccount  = $opposing;
             $secondAccount = $account;
@@ -508,8 +508,8 @@ class AccountRepository implements AccountRepositoryInterface
     protected function validOpeningBalanceData(array $data): bool
     {
         $data['openingBalance'] = strval($data['openingBalance'] ?? '');
-        if (isset($data['openingBalance']) && !is_null($data['openingBalance']) && strlen($data['openingBalance']) > 0 &&
-            isset($data['openingBalanceDate'])) {
+        if (isset($data['openingBalance']) && !is_null($data['openingBalance']) && strlen($data['openingBalance']) > 0
+            && isset($data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
 
             return true;

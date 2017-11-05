@@ -53,12 +53,12 @@ class Budget extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array  */
+    /** @var array */
     protected $fillable = ['user_id', 'name', 'active'];
-    /** @var array  */
-    protected $hidden   = ['encrypted'];
-    /** @var array  */
-    protected $rules    = ['name' => 'required|between:1,200',];
+    /** @var array */
+    protected $hidden = ['encrypted'];
+    /** @var array */
+    protected $rules = ['name' => 'required|between:1,200',];
 
     /**
      * @param array $fields

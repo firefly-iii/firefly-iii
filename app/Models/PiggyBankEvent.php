@@ -39,12 +39,12 @@ class PiggyBankEvent extends Model
      * @var array
      */
     protected $casts
-                        = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'date'       => 'datetime',
         ];
-    /** @var array  */
+    /** @var array */
     protected $dates    = ['date'];
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
     protected $hidden   = ['amount_encrypted'];

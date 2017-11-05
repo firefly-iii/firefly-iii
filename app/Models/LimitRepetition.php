@@ -42,15 +42,15 @@ class LimitRepetition extends Model
      * @var array
      */
     protected $casts
-                      = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'startdate'  => 'date',
             'enddate'    => 'date',
         ];
-    /** @var array  */
-    protected $dates  = ['startdate', 'enddate'];
-    /** @var array  */
+    /** @var array */
+    protected $dates = ['startdate', 'enddate'];
+    /** @var array */
     protected $hidden = ['amount_encrypted'];
 
     /**

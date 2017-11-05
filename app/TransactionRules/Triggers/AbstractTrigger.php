@@ -48,6 +48,7 @@ class AbstractTrigger
 
     /**
      * AbstractTrigger constructor.
+     *
      * @codeCoverageIgnore
      */
     private function __construct()
@@ -57,6 +58,7 @@ class AbstractTrigger
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $triggerValue
      * @param bool   $stopProcessing
      *
@@ -73,6 +75,7 @@ class AbstractTrigger
 
     /**
      * @codeCoverageIgnore
+     *
      * @param RuleTrigger $trigger
      *
      * @return AbstractTrigger
@@ -89,6 +92,7 @@ class AbstractTrigger
 
     /**
      * @codeCoverageIgnore
+     *
      * @param string $triggerValue
      *
      * @return AbstractTrigger

@@ -50,7 +50,7 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function amountMore(string $amount): JournalCollectorInterface;
+    public function amountIs(string $amount): JournalCollectorInterface;
 
     /**
      * @param string $amount
@@ -64,7 +64,7 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function amountIs(string $amount): JournalCollectorInterface;
+    public function amountMore(string $amount): JournalCollectorInterface;
 
     /**
      * @return int

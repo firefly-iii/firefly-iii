@@ -93,7 +93,7 @@ class NewUserController extends Controller
         // also store currency preference from input:
         $currency = $currencyRepository->find(intval($request->input('amount_currency_id_bank_balance')));
 
-        if(!is_null($currency->id)) {
+        if (!is_null($currency->id)) {
             // store currency preference:
             Preferences::set('currencyPreference', $currency->code);
             Preferences::mark();

@@ -63,7 +63,7 @@ class HasAttachment extends AbstractTrigger implements TriggerInterface
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $minimum = intval($this->triggerValue);
+        $minimum     = intval($this->triggerValue);
         $attachments = $journal->attachments()->count();
         if ($attachments >= $minimum) {
             Log::debug(

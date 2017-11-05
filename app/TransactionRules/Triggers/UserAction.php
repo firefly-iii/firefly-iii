@@ -47,6 +47,7 @@ final class UserAction extends AbstractTrigger implements TriggerInterface
      * false.
      *
      * @param null $value
+     *
      * @codeCoverageIgnore
      *
      * @return bool
@@ -60,6 +61,7 @@ final class UserAction extends AbstractTrigger implements TriggerInterface
      * This trigger is always triggered, because the rule that it is a part of has been pre-selected on this condition.
      *
      * @param TransactionJournal $journal
+     *
      * @codeCoverageIgnore
      *
      * @return bool

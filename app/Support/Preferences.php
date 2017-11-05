@@ -176,7 +176,7 @@ class Preferences
 
     /**
      * @param        $name
-     * @param $value
+     * @param        $value
      *
      * @return Preference
      */

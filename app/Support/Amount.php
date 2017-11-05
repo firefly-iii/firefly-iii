@@ -24,10 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Preferences as Prefs;

@@ -62,9 +62,9 @@ class SetBudget implements ActionInterface
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser($journal->user);
-        $search  = $this->action->action_value;
+        $search = $this->action->action_value;
         $budgets = $repository->getActiveBudgets();
-        $budget  = $budgets->filter(
+        $budget = $budgets->filter(
             function (Budget $current) use ($search) {
                 return $current->name === $search;
             }
@@ -76,7 +76,12 @@ class SetBudget implements ActionInterface
         }
 
         if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
-            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.', $journal->id, $search, $journal->transactionType->type));
+            Log::debug(
+                sprintf(
+                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.', $journal->id, $search,
+                    $journal->transactionType->type
+                )
+            );
 
             return true;
         }

@@ -29,10 +29,11 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Twig\Extension\TransactionJournal as TransactionJournalExtension;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
-use FireflyIII\Support\Twig\Extension\TransactionJournal as TransactionJournalExtension;
+
 /**
  * Class Journal
  *
@@ -82,7 +83,6 @@ class Journal extends Twig_Extension
     public function getFilters(): array
     {
         $filters = [
-            $this->typeIcon(),
             new Twig_SimpleFilter('journalTotalAmount', [TransactionJournalExtension::class, 'totalAmount'], ['is_safe' => ['html']]),
         ];
 
@@ -227,38 +227,4 @@ class Journal extends Twig_Extension
         }
         );
     }
-
-    /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
-     *
-     * @return Twig_SimpleFilter
-     */
-    protected function typeIcon(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'typeIcon', function (TransactionJournal $journal): string {
-
-            switch (true) {
-                case $journal->isWithdrawal():
-                    $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
-                    break;
-                case $journal->isDeposit():
-                    $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
-                    break;
-                case $journal->isTransfer():
-                    $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
-                    break;
-                case $journal->isOpeningBalance():
-                    $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.openingBalance'));
-                    break;
-                default:
-                    $txt = '';
-                    break;
-            }
-
-            return $txt;
-        }, ['is_safe' => ['html']]
-        );
-    }
-
 }

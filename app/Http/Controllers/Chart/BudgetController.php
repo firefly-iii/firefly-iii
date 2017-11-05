@@ -94,7 +94,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;

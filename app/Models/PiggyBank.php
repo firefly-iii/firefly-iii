@@ -46,7 +46,7 @@ class PiggyBank extends Model
      * @var array
      */
     protected $casts
-                        = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -56,12 +56,12 @@ class PiggyBank extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array  */
-    protected $dates    = ['startdate', 'targetdate'];
-    /** @var array  */
+    /** @var array */
+    protected $dates = ['startdate', 'targetdate'];
+    /** @var array */
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
-    /** @var array  */
-    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
+    /** @var array */
+    protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
      * @param PiggyBank $value

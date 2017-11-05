@@ -26,7 +26,6 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Watson\Validating\ValidatingTrait;
 
 /**
  * Class TransactionCurrency
@@ -43,15 +42,15 @@ class TransactionCurrency extends Model
      * @var array
      */
     protected $casts
-                        = [
+        = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
         ];
-    /** @var array  */
-    protected $dates    = ['date'];
-    /** @var array  */
+    /** @var array */
+    protected $dates = ['date'];
+    /** @var array */
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
 
     /**

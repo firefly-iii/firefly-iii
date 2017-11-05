@@ -277,8 +277,8 @@ This will be the last release to support PHP 7.0.
 - Can now make rules for attachments, see [issue 608](https://github.com/firefly-iii/firefly-iii/issues/608), as suggested by [dzaikos](https://github.com/dzaikos).
 
 ### Fixed
-- Fixed [issue 629](https://github.com/firefly-iii/firefly-iii/issues/629), reported by forcaeluz
-- Fixed [issue 630](https://github.com/firefly-iii/firefly-iii/issues/630), reported by welbert
+- Fixed [issue 629](https://github.com/firefly-iii/firefly-iii/issues/629), reported by @forcaeluz
+- Fixed [issue 630](https://github.com/firefly-iii/firefly-iii/issues/630), reported by @welbert
 - And more various bug fixes.
 
 ## [4.3.8] - 2017-04-08

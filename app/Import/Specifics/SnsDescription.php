@@ -33,8 +33,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Specifics;
 
-use Log;
-
 /**
  * Class SnsDescription
  *
@@ -65,8 +63,9 @@ class SnsDescription implements SpecificInterface
      */
     public function run(array $row): array
     {
-        $row[17]  = ltrim($row[17],"'");
-        $row[17]  = rtrim($row[17],"'");
+        $row[17] = ltrim($row[17], "'");
+        $row[17] = rtrim($row[17], "'");
+
         return $row;
     }
 }

@@ -282,7 +282,7 @@ class AccountController extends Controller
         $currencyId    = intval($account->getMeta('currency_id'));
         $currency      = $currencyRepos->find($currencyId);
         if ($currencyId === 0) {
-            $currency  = app('amount')->getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency();
         }
 
 

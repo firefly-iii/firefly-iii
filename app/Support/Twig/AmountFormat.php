@@ -25,9 +25,7 @@ namespace FireflyIII\Support\Twig;
 
 
 use FireflyIII\Models\Account as AccountModel;
-use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;

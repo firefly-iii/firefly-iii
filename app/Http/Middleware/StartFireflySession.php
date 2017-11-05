@@ -43,10 +43,10 @@ class StartFireflySession extends StartSession
      *
      * @return mixed
      */
-//    public function handle($request, Closure $next)
-//    {
-//        return parent::handle($request, $next); // defer to the right stuff
-//    }
+    //    public function handle($request, Closure $next)
+    //    {
+    //        return parent::handle($request, $next); // defer to the right stuff
+    //    }
 
     /**
      * Store the current URL for the request if necessary.

@@ -217,13 +217,13 @@ class CurrencyController extends Controller
     {
         $currencies      = $this->repository->get();
         $defaultCurrency = $this->repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
-        $isOwner = true;
+        $isOwner         = true;
         if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {
             $request->session()->flash('info', trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
             $isOwner = false;
         }
 
-        return view('currencies.index', compact('currencies', 'defaultCurrency','isOwner'));
+        return view('currencies.index', compact('currencies', 'defaultCurrency', 'isOwner'));
     }
 
     /**

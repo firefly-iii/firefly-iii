@@ -28,7 +28,6 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
-use Illuminate\Support\Str;
 use Log;
 use Steam;
 
@@ -75,16 +74,16 @@ class Modifier
                 Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'category':
-                $res               = self::category($transaction, $modifier['value']);
+                $res = self::category($transaction, $modifier['value']);
                 Log::debug(sprintf('Category is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'budget':
-                $res               = self::budget($transaction, $modifier['value']);
+                $res = self::budget($transaction, $modifier['value']);
                 Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'bill':
                 $name = Steam::tryDecrypt($transaction->bill_name);
-                $res               = self::stringCompare($name, $modifier['value']);
+                $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
         }

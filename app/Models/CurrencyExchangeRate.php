@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CurrencyExchangeRate extends Model
 {
 
-    /** @var array  */
+    /** @var array */
     protected $dates = ['date'];
 
     /**

@@ -116,7 +116,7 @@ class HomeController extends Controller
             }
         }
         // last few lines
-        $logContent = 'Truncated from this point <----|'.substr($logContent, -4096);
+        $logContent = 'Truncated from this point <----|' . substr($logContent, -4096);
 
         return view('debug', compact('phpVersion', 'extensions', 'carbon', 'now', 'drivers', 'currentDriver', 'userAgent', 'phpOs', 'interface', 'logContent'));
 

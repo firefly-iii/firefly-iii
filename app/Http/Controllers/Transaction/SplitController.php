@@ -232,13 +232,13 @@ class SplitController extends Controller
     {
         $sourceAccounts      = $journal->sourceAccountList();
         $destinationAccounts = $journal->destinationAccountList();
-        $notes = '';
+        $notes               = '';
         /** @var Note $note */
         $note = $journal->notes()->first();
         if (!is_null($note)) {
             $notes = $note->text;
         }
-        $array               = [
+        $array = [
             'journal_description'            => $request->old('journal_description', $journal->description),
             'journal_amount'                 => $journal->amountPositive(),
             'sourceAccounts'                 => $sourceAccounts,
