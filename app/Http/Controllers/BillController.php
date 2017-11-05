@@ -231,14 +231,14 @@ class BillController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
                   ->withCategoryInformation();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('bills.show', [$bill->id]));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('bills.show', [$bill->id]));
 
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;
         $subTitle                = e($bill->name);
 
-        return view('bills.show', compact('journals', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
+        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
     }
 
     /**

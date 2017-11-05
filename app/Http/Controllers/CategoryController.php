@@ -217,10 +217,10 @@ class CategoryController extends Controller
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('categories.no-category'));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('categories.no-category'));
 
-        return view('categories.no-category', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }
 
     /**
@@ -283,11 +283,11 @@ class CategoryController extends Controller
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('categories.show', [$category->id]));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('categories.show', [$category->id]));
 
 
-        return view('categories.show', compact('category', 'moment', 'journals', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category', 'moment', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
 

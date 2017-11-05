@@ -373,10 +373,10 @@ class BudgetController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
                   ->withoutBudget()->withOpposingAccount();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('budgets.no-budget'));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('journals', 'subTitle', 'moment', 'periods', 'start', 'end'));
+        return view('budgets.no-budget', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
     }
 
     /**
@@ -416,13 +416,13 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('budgets.show', [$budget->id]));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('budgets.show', [$budget->id]));
 
 
         $subTitle = trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
-        return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
+        return view('budgets.show', compact('limits', 'budget', 'repetition', 'transactions', 'subTitle'));
     }
 
     /**
@@ -454,13 +454,13 @@ class BudgetController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
         $start  = session('first', Carbon::create()->startOfYear());
         $end    = new Carbon;
         $limits = $this->getLimits($budget, $start, $end);
 
-        return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'journals', 'subTitle'));
+        return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'transactions', 'subTitle'));
 
     }
 
