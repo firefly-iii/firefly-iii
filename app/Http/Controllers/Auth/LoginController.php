@@ -92,7 +92,7 @@ class LoginController extends Controller
 
         // check for presence of currency:
         $currency = TransactionCurrency::where('code','EUR')->first();
-        if(!is_null($currency)) {
+        if(is_null($currency)) {
             $message = 'Firefly III could not find the EURO currency. This is a strong indication the database has not been initialized correctly. Did you follow the installation instructions?';
             return view('error',compact('message'));
         }
