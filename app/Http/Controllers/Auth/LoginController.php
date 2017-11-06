@@ -35,10 +35,12 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Schema;
 
 
 class LoginController extends Controller
@@ -80,6 +82,21 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request, CookieJar $cookieJar)
     {
+        // check for presence of tables:
+        $hasTable = Schema::hasTable('users');
+
+        if(!$hasTable) {
+            $message = 'Firefly III could not find the "users" table. This is a strong indication your database credentials are wrong or the database has not been initialized. Did you follow the installation instructions correctly?';
+            return view('error',compact('message'));
+        }
+
+        // check for presence of currency:
+        $currency = TransactionCurrency::where('code','EUR')->first();
+        if(!is_null($currency)) {
+            $message = 'Firefly III could not find the EURO currency. This is a strong indication the database has not been initialized correctly. Did you follow the installation instructions?';
+            return view('error',compact('message'));
+        }
+
         // forget 2fa cookie:
         $cookie = $cookieJar->forever('twoFactorAuthenticated', 'false');
 
