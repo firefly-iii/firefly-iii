@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 
 return [
     'bunq_prerequisites_title' => 'Wymagania wstępne dotyczące importowania z bunq',
