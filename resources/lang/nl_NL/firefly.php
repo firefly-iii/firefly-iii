@@ -663,7 +663,7 @@ return [
     'stored_journal'                           => 'Nieuw transactie ":description" opgeslagen',
     'select_transactions'                      => 'Selecteer transacties',
     'stop_selection'                           => 'Stop met selecteren',
-    'reconcile_selected'                       => 'Reconcile',
+    'reconcile_selected'                       => 'Verrekenen',
     'mass_delete_journals'                     => 'Verwijder een aantal transacties',
     'mass_edit_journals'                       => 'Wijzig een aantal transacties',
     'cannot_edit_other_fields'                 => 'Je kan andere velden dan de velden die je hier ziet niet groepsgewijs wijzigen. Er is geen ruimte om ze te laten zien. Als je deze velden toch wilt wijzigen, volg dan de link naast de transactie en wijzig ze stuk voor stuk.',
