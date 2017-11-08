@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * UndoEmailChangeMail.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com

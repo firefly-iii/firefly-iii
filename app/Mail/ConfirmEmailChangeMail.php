@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * ConfirmEmailChangeMail.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
