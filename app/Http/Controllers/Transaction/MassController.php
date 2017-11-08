@@ -159,6 +159,13 @@ class MassController extends Controller
                 $messages[] = trans('firefly.cannot_edit_opening_balance');
                 continue;
             }
+
+            // cannot edit reconciled transactions / journals:
+            if($journal->transactions->first()->reconciled) {
+                $messages[] = trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+
             $filtered->push($journal);
         }
 
