@@ -413,6 +413,7 @@ class Transaction extends Twig_Extension
         $cache->addProperty('transaction-reconciled');
         $cache->addProperty($transaction->id);
         $cache->addProperty($transaction->updated_at);
+        $cache->addProperty($transaction->reconciled);
         if ($cache->has()) {
             return $cache->get();
         }
