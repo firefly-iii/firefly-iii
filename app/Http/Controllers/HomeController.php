@@ -94,14 +94,17 @@ class HomeController extends Controller
      */
     public function displayDebug(Request $request)
     {
-        $phpVersion    = PHP_VERSION;
-        $phpOs         = php_uname();
-        $interface     = php_sapi_name();
-        $now           = Carbon::create()->format('Y-m-d H:i:s e');
-        $extensions    = join(', ', get_loaded_extensions());
-        $drivers       = join(', ', DB::availableDrivers());
-        $currentDriver = DB::getDriverName();
-        $userAgent     = $request->header('user-agent');
+        $phpVersion     = PHP_VERSION;
+        $phpOs          = php_uname();
+        $interface      = php_sapi_name();
+        $now            = Carbon::create()->format('Y-m-d H:i:s e');
+        $extensions     = join(', ', get_loaded_extensions());
+        $drivers        = join(', ', DB::availableDrivers());
+        $currentDriver  = DB::getDriverName();
+        $userAgent      = $request->header('user-agent');
+        $isSandstorm    = var_export(env('IS_SANDSTORM', 'unknown'), true);
+        $isDocker       = var_export(env('IS_DOCKER', 'unknown'), true);
+        $trustedProxies = env('TRUSTED_PROXIES', '(none)');
 
         // get latest log file:
         $logger     = Log::getMonolog();
@@ -118,7 +121,11 @@ class HomeController extends Controller
         // last few lines
         $logContent = 'Truncated from this point <----|' . substr($logContent, -4096);
 
-        return view('debug', compact('phpVersion', 'extensions', 'carbon', 'now', 'drivers', 'currentDriver', 'userAgent', 'phpOs', 'interface', 'logContent'));
+        return view(
+            'debug', compact(
+            'phpVersion', 'extensions', 'carbon', 'now', 'drivers', 'currentDriver', 'userAgent', 'phpOs', 'interface', 'logContent', 'isDocker', 'isSandstorm','trustedProxies'
+        )
+        );
 
     }
 

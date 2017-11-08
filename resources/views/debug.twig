@@ -24,7 +24,11 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Current driver | {{ currentDriver }} |
 | Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |
 {% if SANDSTORM == true %}| Sandstorm anon? | {% if SANDSTORM_ANON == true %}yes{% else %}no{% endif %} |{% endif %}
+| Is Sandstorm (.env) | {{ isSandstorm }} |
+| Is Docker (.env) | {{ isDocker }} |
+| Trusted proxies (.env) | {{ trustedProxies }} |
 | User agent | {{ userAgent }} |
+
 </textarea>
 
 
