@@ -492,7 +492,7 @@ class Transaction extends Twig_Extension
                                              ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                              ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                              ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-            $name          = app('steam')->tryDecrypt(intval($other->encrypted), $other->name);
+            $name          = app('steam')->tryDecrypt($other->name);
             $transactionId = $other->account_id;
             $type          = $other->type;
         }
