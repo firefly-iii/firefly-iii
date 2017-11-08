@@ -20,7 +20,7 @@ return [
     'currencies-index'               => 'Firefly III prend en charge plusieurs devises. Bien que l\'Euro soit la devise par défaut, cette dernière peut être changée pour le Dollar américain et de nombreuses autres devises. Comme vous pouvez le remarquer une petite sélection des monnaies a été incluse, mais vous pouvez ajouter vos propres devises si vous le souhaitez. Gardez à l\'esprit que la modification de la devise par défaut ne modifie pas la monnaie des transactions existantes : Firefly III prend en charge l’utilisation de plusieurs devises en même temps.',
     'transactions-index'             => 'Ces dépenses, dépôts et transferts ne sont pas particulièrement imaginatifs. Ils ont été générés automatiquement.',
     'piggy-banks-index'              => 'Comme vous pouvez le voir, il y a trois tirelires. Utilisez les boutons plus et moins pour influer sur le montant d’argent dans chaque tirelire. Cliquez sur le nom de la tirelire pour voir l’administration pour chaque tirelire.',
-    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
+    'import-index'                   => 'Bien sûr, n’importe quel fichier CSV peut être importé dans Firefly III',
     'import-configure-security'      => 'Pour des raisons de sécurité, votre téléchargement a été remplacé par un fichier local.',
     'import-configure-configuration' => 'La configuration que vous voyez ci-dessous est correcte pour le fichier local.',
 ];
