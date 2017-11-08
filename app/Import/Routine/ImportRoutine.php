@@ -138,6 +138,12 @@ class ImportRoutine
     private function createImportTag(): Tag
     {
         Log::debug('Now in createImportTag()');
+
+        if($this->journals->count() < 1) {
+            Log::info(sprintf('Will not create tag, %d journals imported.', $this->journals->count()));
+            return new Tag;
+        }
+
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);
