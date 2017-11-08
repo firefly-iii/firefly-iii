@@ -254,12 +254,12 @@ class TagController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath($path);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath($path);
 
         $sums = $repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('apiKey', 'tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'journals', 'start', 'end', 'moment'));
+        return view('tags.show', compact('apiKey', 'tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end', 'moment'));
     }
 
     /**
