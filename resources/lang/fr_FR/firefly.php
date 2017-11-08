@@ -1008,6 +1008,7 @@ return [
     'split_this_transfer'                   => 'Scinder ce transfert',
     'cannot_edit_multiple_source'           => 'Vous ne pouvez pas modifier la transaction scindée #:id avec la description ":description" car elle contient plusieurs comptes sources.',
     'cannot_edit_multiple_dest'             => 'Vous ne pouvez pas modifier la transaction scindée #:id avec la description ":description" car elle contient plusieurs comptes de destination.',
+    'cannot_edit_reconciled'                => 'You cannot edit transaction #:id with description ":description" because it has been marked as reconciled.',
     'cannot_edit_opening_balance'           => 'Vous ne pouvez pas modifier le solde d\'ouverture d\'un compte.',
     'no_edit_multiple_left'                 => 'Vous n\'avez sélectionné aucune transaction valide à éditer.',
     'cannot_convert_split_journal'          => 'Vous ne pouvez pas convertir une transaction ventilée',
