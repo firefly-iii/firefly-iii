@@ -257,7 +257,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function reconcile(Request $request, Account $account, string $moment = '')
+    public function reconcile(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
         if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
             return $this->redirectToOriginalAccount($account);
@@ -270,21 +270,39 @@ class AccountController extends Controller
             $currency = app('amount')->getDefaultCurrency();
         }
 
-        // get start and end
+        // no start or end:
         $range        = Preferences::get('viewRange', '1M')->data;
-        $start        = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
-        $end          = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
-        $startBalance = round(app('steam')->balance($account, $start), $currency->decimal_places);
+
+        // get start and end
+        if(is_null($start) && is_null($end)) {
+            $start        = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
+            $end          = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
+        }
+        if(is_null($end)) {
+            $end   = Navigation::endOfPeriod($start, $range);
+        }
+
+        $startDate = clone $start;
+        $startDate->subDays(1);
+        $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
         $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $subTitle     = trans('firefly.reconcile_account', ['account' => $account->name]);
 
-        if(strlen($moment) > 0 && $moment !== 'all') {
-            $start = new Carbon($moment);
-            $end   = Navigation::endOfPeriod($start, $range);
-        }
+        // get the transactions
+        $selectionStart = clone $start;
+        $selectionStart->subDays(7);
+        $selectionEnd = clone $end;
+        $selectionEnd->addDays(5);
 
-        return view('accounts.reconcile', compact('account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance'));
+        // grab transactions:
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))
+            ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
+        $transactions = $collector->getJournals();
+
+        return view('accounts.reconcile', compact('account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance','transactions','selectionStart','selectionEnd'));
 
         // prep for "specific date" view.
         if (strlen($moment) > 0 && $moment !== 'all') {
@@ -292,14 +310,7 @@ class AccountController extends Controller
             $end   = Navigation::endOfPeriod($start, $range);
         }
 
-        // grab journals:
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        if (!is_null($start)) {
-            $collector->setRange($start, $end);
-        }
-        $transactions = $collector->getPaginatedJournals();
-        $transactions->setPath(route('accounts.show', [$account->id, $moment]));
+
 
         return view(
             'accounts.show',

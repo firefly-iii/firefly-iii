@@ -48,7 +48,11 @@
             <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
                                                                                          ></i> {{ 'stop_selection'|_ }}</a>
             {% if showReconcile == true %}
-                <a href="{{ route('accounts.reconcile', [account.id, moment]) }}" class="btn btn-info mass_reconcile"><i class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a>
+                {% if moment == 'all' %}
+                    <a href="{{ route('accounts.reconcile', [account.id, start.format('Ymd')]) }}" class="btn btn-info mass_reconcile"><i class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a>
+                {% else %}
+                    <a href="{{ route('accounts.reconcile', [account.id, start.format('Ymd'), end.format('Ymd')]) }}" class="btn btn-info mass_reconcile"><i class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

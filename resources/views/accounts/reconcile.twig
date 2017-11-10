@@ -13,7 +13,7 @@
                     <h3 class="box-title">{{ 'reconcile_range'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding">
-                    <table class="table">
+                    <table class="table table-hover">
                         <thead>
                         <tr>
                             <th colspan="2" style="width:50%;">{{ 'start_balance'|_ }}</th>
@@ -67,11 +67,12 @@
                         </tr>
                         </tbody>
                         <tfoot>
-                        <tr>
+                        <tr class="update_date_button" style="display:none;">
                             <td colspan="4">
-                                <a href="#" class="btn btn-default">
-                                    {{ 'update'|_ }}
+                                <a href="#" class="btn btn-default update_view">
+                                    {{ 'update_view'|_ }}
                                 </a>
+                                <span class="text-muted">(unsaved progress will be lost!)</span>
                             </td>
                         </tr>
                         </tfoot>
@@ -84,8 +85,28 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'reconcile_options'|_ }}</h3>
                 </div>
-                <div class="box-body">
-                    Do something
+                <div class="box-body no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th style="width:50%;">{{ 'difference'|_ }}</th>
+                            <th>{{ 'actions'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span id="difference"></span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-default">Reconcile</a>
+                                    <a href="#" class="btn btn-default">Reconcile with transaction</a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -99,6 +120,111 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                        <tr class="ignore">
+                            <th class="hidden-xs" colspan="2">&nbsp;</th>
+                            <th>{{ trans('list.description') }}</th>
+                            <th style="text-align:right;">{{ trans('list.amount') }}</th>
+                            <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.reconcile') }}</th>
+                            <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
+                            <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
+                            <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.to') }}</th>
+
+                            <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+                            <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {# data for previous/next markers #}
+                        {% set endSet = false %}
+                        {% set startSet = false %}
+                        {% for transaction in transactions %}
+                            {# start marker #}
+                            {% if transaction.date < start and startSet == false %}
+                                <tr>
+                                    <td colspan="5">
+                                        &nbsp;
+                                    </td>
+                                    <td colspan="3">
+                                        <span class="label label-default">
+                                            {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
+                                        </span>
+                                    </td>
+                                    <td colspan="2">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                {% set startSet = true %}
+                            {% endif %}
+                            <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
+                                data-transaction-id="{{ transaction.id }}">
+                                <td class="hidden-xs">
+                                    <div class="btn-group btn-group-xs">
+                                        <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i
+                                                    class="fa fa-fw fa-pencil"></i></a>
+                                    </div>
+                                </td>
+                                {# icon #}
+                                <td class="hidden-xs">
+                                    {{ transaction|transactionIcon }}
+                                </td>
+
+                                {# description #}
+                                <td>
+                                    <a href="{{ route('transactions.show',transaction.journal_id) }}">
+                                        {{ transaction|transactionDescription }}
+                                    </a>
+                                    {# is a split journal #}
+                                    {{ transaction|transactionIsSplit }}
+
+                                    {# count attachments #}
+                                    {{ transaction|transactionHasAtt }}
+
+
+                                </td>
+                                <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
+                                <td>
+                                    <input type="checkbox" name="reconciled[]" value="{{ transaction.amount }}" class="reconcile_checkbox">
+                                </td>
+                                <td class="hidden-sm hidden-xs">
+                                    {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+                                </td>
+                                <td class="hidden-xs hidden-sm hidden-md">
+                                    {# all source accounts #}
+                                    {{ transaction|transactionSourceAccount }}
+                                </td>
+                                <td class="hidden-xs hidden-sm hidden-md">
+                                    {# all destination accounts #}
+                                    {{ transaction|transactionDestinationAccount }}
+                                </td>
+                                <td class="hidden-xs">
+                                    {{ transaction|transactionBudgets }}
+                                </td>
+                                <td class="hidden-xs">
+                                    {{ transaction|transactionCategories }}
+                                </td>
+                            </tr>
+                            {# end marker #}
+                            {% if transaction.date <= end and endSet == false %}
+                                <tr>
+                                    <td colspan="5">
+                                        &nbsp;
+                                    </td>
+                                    <td colspan="3">
+                                        <span class="label label-default">
+                                            {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
+                                        </span>
+                                    </td>
+                                    <td colspan="2">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                {% set endSet = true %}
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -112,6 +238,8 @@
     <script type="text/javascript">
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
+        var startBalance = {{ startBalance }};
+        var endBalance = {{ endBalance }};
     </script>
     <script src="js/ff/accounts/reconcile.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 {% endblock %}
