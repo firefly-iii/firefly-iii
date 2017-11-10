@@ -619,6 +619,8 @@ return [
     'cash_accounts'                            => 'Contant geldrekeningen',
     'Cash account'                             => 'Contant geldrekening',
     'reconcile_account'                        => 'Reconcile account ":account"',
+    'end_of_reconcile_period' => 'End of reconcile period: :period',
+    'start_of_reconcile_period' => 'Start of reconcile period: :period',
     'cash'                                     => 'cash',
     'account_type'                             => 'Rekeningtype',
     'save_transactions_by_moving'              => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
