@@ -619,6 +619,8 @@ return [
     'cash_accounts'                            => 'Cash accounts',
     'Cash account'                             => 'Cash account',
     'reconcile_account'                        => 'Reconcile account ":account"',
+    'end_of_reconcile_period' => 'End of reconcile period: :period',
+    'start_of_reconcile_period' => 'Start of reconcile period: :period',
     'cash'                                     => 'cash',
     'account_type'                             => 'Account type',
     'save_transactions_by_moving'              => 'Save these transaction(s) by moving them to another account:',
