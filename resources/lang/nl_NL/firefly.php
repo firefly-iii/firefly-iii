@@ -589,6 +589,7 @@ return [
     'bill_is_active'                           => 'Contract is actief',
     'bill_will_automatch'                      => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
     'skips_over'                               => 'slaat over',
+
     // accounts:
     'details_for_asset'                        => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'                      => 'Overzicht voor crediteur ":name"',
@@ -617,6 +618,7 @@ return [
     'revenue_accounts'                         => 'Debiteuren',
     'cash_accounts'                            => 'Contant geldrekeningen',
     'Cash account'                             => 'Contant geldrekening',
+    'reconcile_account'                        => 'Reconcile account ":account"',
     'cash'                                     => 'cash',
     'account_type'                             => 'Rekeningtype',
     'save_transactions_by_moving'              => 'Bewaar deze transacties door ze aan een andere rekening te koppelen:',
