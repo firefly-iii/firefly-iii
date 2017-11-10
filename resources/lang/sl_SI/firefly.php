@@ -589,6 +589,7 @@ return [
     'bill_is_active'                           => 'Bill is active',
     'bill_will_automatch'                      => 'Bill will automatically linked to matching transactions',
     'skips_over'                               => 'skips over',
+
     // accounts:
     'details_for_asset'                        => 'podrobnosti za premoženjski račun ":name"',
     'details_for_expense'                      => 'podrobnosti stroškovnega konta ":name"',
@@ -617,6 +618,7 @@ return [
     'revenue_accounts'                         => 'Revenue accounts',
     'cash_accounts'                            => 'Cash accounts',
     'Cash account'                             => 'Cash account',
+    'reconcile_account'                        => 'Reconcile account ":account"',
     'cash'                                     => 'cash',
     'account_type'                             => 'Account type',
     'save_transactions_by_moving'              => 'Save these transaction(s) by moving them to another account:',
