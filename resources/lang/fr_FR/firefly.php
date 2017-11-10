@@ -620,6 +620,8 @@ return [
     'cash_accounts'                            => 'Comptes de trésorerie',
     'Cash account'                             => 'Compte de trésorerie',
     'reconcile_account'                        => 'Reconcile account ":account"',
+    'end_of_reconcile_period' => 'End of reconcile period: :period',
+    'start_of_reconcile_period' => 'Start of reconcile period: :period',
     'cash'                                     => 'espèce',
     'account_type'                             => 'Type de compte',
     'save_transactions_by_moving'              => 'Enregistrer ces opération(s) en les déplaçant vers un autre compte :',
