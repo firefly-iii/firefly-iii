@@ -619,6 +619,8 @@ return [
     'cash_accounts'                            => 'Konta gotówkowe',
     'Cash account'                             => 'Konto gotówkowe',
     'reconcile_account'                        => 'Reconcile account ":account"',
+    'end_of_reconcile_period' => 'End of reconcile period: :period',
+    'start_of_reconcile_period' => 'Start of reconcile period: :period',
     'cash'                                     => 'gotówka',
     'account_type'                             => 'Typ konta',
     'save_transactions_by_moving'              => 'Zapisz te transakcje, przenosząc je do innego konta:',
