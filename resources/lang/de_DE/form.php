@@ -57,7 +57,7 @@ return [
     'ccMonthlyPaymentDate'           => 'Monatliches Zahlungsdatum der Kreditkarte',
     'piggy_bank_id'                  => 'Sparschwein',
     'returnHere'                     => 'Hierhin zurückkehren',
-    'returnHereExplanation'          => 'Nach dem Speichern, hierher zurückkehren und eine weitere zu erstellen.',
+    'returnHereExplanation'          => 'Nach dem Speichern hierher zurückkehren, um ein weiteres Element zu erstellen.',
     'returnHereUpdateExplanation'    => 'Nach dem Update, hierher zurückkehren.',
     'description'                    => 'Beschreibung',
     'expense_account'                => 'Debitor (Ausgabe)',
