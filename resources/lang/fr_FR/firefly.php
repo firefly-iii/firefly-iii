@@ -590,6 +590,7 @@ return [
     'bill_is_active'                           => 'Facture en cours',
     'bill_will_automatch'                      => 'La facture sera automatiquement liée aux transactions correspondantes',
     'skips_over'                               => 'saute',
+
     // accounts:
     'details_for_asset'                        => 'Détails pour le compte d’actif ":name"',
     'details_for_expense'                      => 'Détail du compte de dépenses ":name"',
@@ -618,6 +619,7 @@ return [
     'revenue_accounts'                         => 'Comptes de recettes',
     'cash_accounts'                            => 'Comptes de trésorerie',
     'Cash account'                             => 'Compte de trésorerie',
+    'reconcile_account'                        => 'Reconcile account ":account"',
     'cash'                                     => 'espèce',
     'account_type'                             => 'Type de compte',
     'save_transactions_by_moving'              => 'Enregistrer ces opération(s) en les déplaçant vers un autre compte :',
