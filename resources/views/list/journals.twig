@@ -36,7 +36,7 @@
     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <div class="mass_button_options btn-group btn-group" style="display:none;">
             <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit'|_ }}</span></a>
-            <a href="#" class="btn btn-default mass_reconcile"><i class="fa fa-fw fa-check"></i> <span>{{ 'reconcile_selected'|_ }} (<i class="fa fa-spinner fa-spin"></i>)</span></a>
+            {#<a href="#" class="btn btn-default mass_reconcile"><i class="fa fa-fw fa-check"></i> <span>{{ 'reconcile_selected'|_ }} (<i class="fa fa-spinner fa-spin"></i>)</span></a>#}
             <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete'|_ }}</span></a>
         </div>
 
@@ -47,6 +47,9 @@
             <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
             <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
                                                                                          ></i> {{ 'stop_selection'|_ }}</a>
+            {% if showReconcile == true %}
+                <a href="{{ route('accounts.reconcile', [account.id, moment]) }}" class="btn btn-info mass_reconcile"><i class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -58,5 +61,5 @@
 <script type="text/javascript">
     var edit_selected_txt = "{{ 'edit'|_ }}";
     var delete_selected_txt = "{{ 'delete'|_ }}";
-    var reconcile_selected_txt = "{{ 'reconcile_selected'|_ }}";
+    {# var reconcile_selected_txt = "{{ 'reconcile_selected'|_ }}"; #}
 </script>

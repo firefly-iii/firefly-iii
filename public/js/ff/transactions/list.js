@@ -48,7 +48,7 @@ $(document).ready(function () {
     // click the delete button:
     $('.mass_delete').click(goToMassDelete);
     // click reconcile button
-    $('.mass_reconcile').click(goToReconcile);
+    // $('.mass_reconcile').click(goToReconcile);
 });
 
 /**
@@ -226,6 +226,9 @@ function stopMassSelect() {
     // hide the stop button
     $('.mass_stop_select').hide();
 
+    // show reconcile account button, if present
+    $('.mass_reconcile').show();
+
     return false;
 }
 
@@ -252,6 +255,9 @@ function startMassSelect() {
 
     // show the stop button
     $('.mass_stop_select').show();
+
+    // hide reconcile account button, if present
+    $('.mass_reconcile').hide();
 
     return false;
 }
