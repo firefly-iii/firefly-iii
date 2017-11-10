@@ -589,6 +589,7 @@ return [
     'bill_is_active'                           => 'Rachunek jest aktywny',
     'bill_will_automatch'                      => 'Rachunek będzie automatycznie powiązany z pasującymi transakcjami',
     'skips_over'                               => 'pomija',
+
     // accounts:
     'details_for_asset'                        => 'Szczegóły konta aktywów ":name"',
     'details_for_expense'                      => 'Szczegóły konta wydatków ":name"',
@@ -617,6 +618,7 @@ return [
     'revenue_accounts'                         => 'Konta przychodów',
     'cash_accounts'                            => 'Konta gotówkowe',
     'Cash account'                             => 'Konto gotówkowe',
+    'reconcile_account'                        => 'Reconcile account ":account"',
     'cash'                                     => 'gotówka',
     'account_type'                             => 'Typ konta',
     'save_transactions_by_moving'              => 'Zapisz te transakcje, przenosząc je do innego konta:',
