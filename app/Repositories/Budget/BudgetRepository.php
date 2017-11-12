@@ -90,7 +90,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         // get account information
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH]);
+        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $return            = [];
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
