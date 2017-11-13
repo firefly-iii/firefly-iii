@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Tag;
 
 
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
@@ -328,47 +329,75 @@ class TagRepository implements TagRepositoryInterface
      */
     public function tagCloud(?int $year): array
     {
+        /*
+         * Some vars
+         */
         $min    = null;
-        $max    = 0;
-        $query  = $this->user->tags();
+        $max    = '0';
         $return = [];
-        Log::debug('Going to build tag-cloud');
+        /*
+         * get tags with a certain amount (in this range):
+         */
+        $query = $this->user->tags()
+                            ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                            ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                            ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->where('transactions.amount', '>', 0)
+                            ->groupBy('tags.id');
+
+        // add date range (or not):
+        if (is_null($year)) {
+            $query->whereNull('tags.date');
+        }
         if (!is_null($year)) {
-            Log::debug(sprintf('Year is not null: %d', $year));
+            $start = $year . '-01-01';
+            $end   = $year . '-12-31';
+            $query->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
+        }
+        $set             = $query->get(['tags.id', DB::raw('SUM(transactions.amount) as amount_sum')]);
+        $tagsWithAmounts = [];
+        /** @var Tag $tag */
+        foreach ($set as $tag) {
+            $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
+        }
+
+        /*
+         * get all tags in period:
+         */
+        $query = $this->user->tags();
+        if (!is_null($year)) {
             $start = $year . '-01-01';
             $end   = $year . '-12-31';
             $query->where('date', '>=', $start)->where('date', '<=', $end);
         }
         if (is_null($year)) {
             $query->whereNull('date');
-            Log::debug('Year is NULL');
         }
         $tags      = $query->orderBy('id', 'desc')->get();
         $temporary = [];
-        Log::debug(sprintf('Found %d tags', $tags->count()));
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount      = floatval($this->sumOfTag($tag, null, null));
-            $min         = $amount < $min || is_null($min) ? $amount : $min;
-            $max         = $amount > $max ? $amount : $max;
+            $amount = $tagsWithAmounts[$tag->id] ?? '0';
+            if (is_null($min)) {
+                $min = $amount;
+            }
+            $max = bccomp($amount, $max) === 1 ? $amount : $max;
+            $min = bccomp($amount, $min) === -1 ? $amount : $min;
+
             $temporary[] = [
                 'amount' => $amount,
                 'tag'    => $tag,
             ];
-            Log::debug(sprintf('Now working on tag %s with total amount %s', $tag->tag, $amount));
-            Log::debug(sprintf('Minimum is now %f, maximum is %f', $min, $max));
         }
         /** @var array $entry */
         foreach ($temporary as $entry) {
-            $scale          = $this->cloudScale([12, 20], $entry['amount'], $min, $max);
+            $scale          = $this->cloudScale([12, 20], floatval($entry['amount']), floatval($min), floatval($max));
             $tagId          = $entry['tag']->id;
             $return[$tagId] = [
                 'scale' => $scale,
                 'tag'   => $entry['tag'],
             ];
         }
-
-        Log::debug('DONE with tagcloud');
 
         return $return;
     }
@@ -402,13 +431,10 @@ class TagRepository implements TagRepositoryInterface
      */
     private function cloudScale(array $range, float $amount, float $min, float $max): int
     {
-        Log::debug(sprintf('Now in cloudScale with %s as amount and %f min, %f max', $amount, $min, $max));
         $amountDiff = $max - $min;
-        Log::debug(sprintf('AmountDiff is %f', $amountDiff));
 
         // no difference? Every tag same range:
         if ($amountDiff === 0.0) {
-            Log::debug(sprintf('AmountDiff is zero, return %d', $range[0]));
 
             return $range[0];
         }

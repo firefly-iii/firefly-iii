@@ -67,12 +67,17 @@
                         </tr>
                         </tbody>
                         <tfoot>
-                        <tr class="update_date_button" style="display:none;">
-                            <td colspan="4">
-                                <a href="#" class="btn btn-default update_view">
-                                    {{ 'update_view'|_ }}
-                                </a>
-                                <span class="text-muted">(unsaved progress will be lost!)</span>
+                        <tr>
+                            <td colspan="3">
+                                <div class="update_balance_instruction">
+                                    {{ 'update_balance_dates_instruction'|_ }}
+                                </div>
+                                <div class="select_transactions_instruction" style="display:none;">
+                                    {{ 'select_transactions_instruction'|_ }}
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-default start_reconcile">{{ 'start_reconcile'|_ }}</a>
                             </td>
                         </tr>
                         </tfoot>
@@ -96,12 +101,11 @@
                         <tbody>
                         <tr>
                             <td>
-                                <span id="difference"></span>
+                                <p class="lead" id="difference"></p>
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="#" class="btn btn-default">Reconcile</a>
-                                    <a href="#" class="btn btn-default">Reconcile with transaction</a>
+                                    <button class="btn btn-default store_reconcile" disabled><i class="fa fa-fw fa-check"></i> {{ 'store_reconcile'|_ }}</button>
                                 </div>
                             </td>
                         </tr>
@@ -157,6 +161,25 @@
                                 </tr>
                                 {% set startSet = true %}
                             {% endif %}
+
+                            {# end marker #}
+                            {% if transaction.date <= end and endSet == false %}
+                                <tr>
+                                    <td colspan="5">
+                                        &nbsp;
+                                    </td>
+                                    <td colspan="3">
+                                        <span class="label label-default">
+                                            {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
+                                        </span>
+                                    </td>
+                                    <td colspan="2">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                {% set endSet = true %}
+                            {% endif %}
+
                             <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
                                 data-transaction-id="{{ transaction.id }}">
                                 <td class="hidden-xs">
@@ -185,7 +208,13 @@
                                 </td>
                                 <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
                                 <td>
-                                    <input type="checkbox" name="reconciled[]" value="{{ transaction.amount }}" class="reconcile_checkbox">
+                                    {% if transaction.reconciled %}
+                                        {{ transaction|transactionReconciled }}
+                                    {% else %}
+                                        <input type="checkbox" name="reconciled[]"
+                                               data-younger="{% if transaction.date > end %}true{% else %}false{% endif %}"
+                                               value="{{ transaction.transaction_amount }}" data-id="{{ transaction.id }}" disabled class="reconcile_checkbox">
+                                    {% endif %}
                                 </td>
                                 <td class="hidden-sm hidden-xs">
                                     {{ transaction.date.formatLocalized(monthAndDayFormat) }}
@@ -205,23 +234,7 @@
                                     {{ transaction|transactionCategories }}
                                 </td>
                             </tr>
-                            {# end marker #}
-                            {% if transaction.date <= end and endSet == false %}
-                                <tr>
-                                    <td colspan="5">
-                                        &nbsp;
-                                    </td>
-                                    <td colspan="3">
-                                        <span class="label label-default">
-                                            {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
-                                        </span>
-                                    </td>
-                                    <td colspan="2">
-                                        &nbsp;
-                                    </td>
-                                </tr>
-                                {% set endSet = true %}
-                            {% endif %}
+
                         {% endfor %}
                         </tbody>
                     </table>
