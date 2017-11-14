@@ -21,6 +21,6 @@ return [
     'transactions-index'             => 'These expenses, deposits and transfers are not particularly imaginative. They have been generated automatically.',
     'piggy-banks-index'              => 'As you can see, there are three piggy banks. Use the plus and minus buttons to influence the amount of money in each piggy bank. Click the name of the piggy bank to see the administration for each piggy bank.',
     'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
-    'import-configure-security'      => 'Because of security concerns, your upload has been replaced with a local file.',
+    'import-configure-security'      => 'По соображениям безопасности, загружаемый вами файл был заменен локальным.',
     'import-configure-configuration' => 'The configuration you see below is correct for the local file.',
 ];
