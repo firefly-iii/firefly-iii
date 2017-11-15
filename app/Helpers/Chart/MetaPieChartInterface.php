@@ -44,54 +44,54 @@ interface MetaPieChartInterface
      *
      * @return MetaPieChartInterface
      */
-    public function setAccounts(Collection $accounts): self;
+    public function setAccounts(Collection $accounts): MetaPieChartInterface;
 
     /**
      * @param Collection $budgets
      *
      * @return MetaPieChartInterface
      */
-    public function setBudgets(Collection $budgets): self;
+    public function setBudgets(Collection $budgets): MetaPieChartInterface;
 
     /**
      * @param Collection $categories
      *
      * @return MetaPieChartInterface
      */
-    public function setCategories(Collection $categories): self;
+    public function setCategories(Collection $categories): MetaPieChartInterface;
 
     /**
      * @param bool $collectOtherObjects
      *
      * @return MetaPieChartInterface
      */
-    public function setCollectOtherObjects(bool $collectOtherObjects): self;
+    public function setCollectOtherObjects(bool $collectOtherObjects): MetaPieChartInterface;
 
     /**
      * @param Carbon $end
      *
      * @return MetaPieChartInterface
      */
-    public function setEnd(Carbon $end): self;
+    public function setEnd(Carbon $end): MetaPieChartInterface;
 
     /**
      * @param Carbon $start
      *
      * @return MetaPieChartInterface
      */
-    public function setStart(Carbon $start): self;
+    public function setStart(Carbon $start): MetaPieChartInterface;
 
     /**
      * @param Collection $tags
      *
      * @return MetaPieChartInterface
      */
-    public function setTags(Collection $tags): self;
+    public function setTags(Collection $tags): MetaPieChartInterface;
 
     /**
      * @param User $user
      *
      * @return MetaPieChartInterface
      */
-    public function setUser(User $user): self;
+    public function setUser(User $user): MetaPieChartInterface;
 }

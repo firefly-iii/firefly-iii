@@ -40,40 +40,40 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setAccounts(Collection $accounts): self;
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface;
 
     /**
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
      */
-    public function setBudgets(Collection $budgets): self;
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface;
 
     /**
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
      */
-    public function setCategories(Collection $categories): self;
+    public function setCategories(Collection $categories): ReportGeneratorInterface;
 
     /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
      */
-    public function setEndDate(Carbon $date): self;
+    public function setEndDate(Carbon $date): ReportGeneratorInterface;
 
     /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
      */
-    public function setStartDate(Carbon $date): self;
+    public function setStartDate(Carbon $date): ReportGeneratorInterface;
 
     /**
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface
      */
-    public function setTags(Collection $tags): self;
+    public function setTags(Collection $tags): ReportGeneratorInterface;
 }

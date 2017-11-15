@@ -120,7 +120,7 @@ class TransactionMatcher
      *
      * @return TransactionMatcher
      */
-    public function setLimit(int $limit): self
+    public function setLimit(int $limit): TransactionMatcher
     {
         $this->limit = $limit;
 
@@ -140,7 +140,7 @@ class TransactionMatcher
      *
      * @return TransactionMatcher
      */
-    public function setRange(int $range): self
+    public function setRange(int $range): TransactionMatcher
     {
         $this->range = $range;
 
@@ -160,7 +160,7 @@ class TransactionMatcher
      *
      * @return TransactionMatcher
      */
-    public function setTriggers(array $triggers): self
+    public function setTriggers(array $triggers): TransactionMatcher
     {
         $this->triggers = $triggers;
 

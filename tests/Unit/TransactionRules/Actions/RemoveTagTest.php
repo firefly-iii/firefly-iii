@@ -72,13 +72,11 @@ class RemoveTagTest extends TestCase
     public function testActNoTag()
     {
         // get journal, link al tags:
+        /** @var TransactionJournal $journal */
         $journal = TransactionJournal::find(11);
         $tags    = $journal->user->tags()->get();
-        foreach ($tags as $tag) {
-            $journal->tags()->save($tag);
-            $journal->save();
-        }
-        $this->assertEquals($tags->count(), $journal->tags()->count());
+        $journal->tags()->sync($tags->pluck('id')->toArray());
+        $this->assertEquals($tags->count(), $journal->tags()->get()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;

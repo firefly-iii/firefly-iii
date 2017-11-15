@@ -45,5 +45,5 @@ interface FileProcessorInterface
      *
      * @return FileProcessorInterface
      */
-    public function setJob(ImportJob $job): self;
+    public function setJob(ImportJob $job): FileProcessorInterface;
 }

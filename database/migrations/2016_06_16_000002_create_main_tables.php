@@ -550,6 +550,9 @@ class CreateMainTables extends Migration
                     $table->integer('transaction_journal_id', false, true);
                     $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
                     $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+
+                    // unique combi:
+                    $table->unique(['tag_id', 'transaction_journal_id']);
                 }
             );
         }
