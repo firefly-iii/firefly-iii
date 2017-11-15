@@ -55,10 +55,10 @@ class PrependDescriptionTest extends TestCase
         $action                   = new PrependDescription($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
-        $journal              = TransactionJournal::find(7);
+        $journal = TransactionJournal::find(7);
 
         // assert result
-        $this->assertEquals($prepend.$description, $journal->description);
+        $this->assertEquals($prepend . $description, $journal->description);
 
     }
 }

@@ -44,7 +44,7 @@ class ToAccountStartsTest extends TestCase
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         $account     = $transaction->account;
 
-        $trigger = ToAccountStarts::makeFromStrings(substr($account->name,0, -3), false);
+        $trigger = ToAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
     }

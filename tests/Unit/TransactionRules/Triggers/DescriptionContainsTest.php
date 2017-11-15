@@ -50,19 +50,6 @@ class DescriptionContainsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionContains::triggered
      */
-    public function testTriggeredNot()
-    {
-        $journal              = new TransactionJournal;
-        $journal->description = 'Lorem IPSUM bla bla ';
-        $trigger              = DescriptionContains::makeFromStrings('blurb', false);
-        $result               = $trigger->triggered($journal);
-        $this->assertFalse($result);
-    }
-
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionContains::triggered
-     */
     public function testTriggeredDefault()
     {
         $journal              = new TransactionJournal;
@@ -82,6 +69,18 @@ class DescriptionContainsTest extends TestCase
         $trigger              = DescriptionContains::makeFromStrings('pen', false);
         $result               = $trigger->triggered($journal);
         $this->assertTrue($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionContains::triggered
+     */
+    public function testTriggeredNot()
+    {
+        $journal              = new TransactionJournal;
+        $journal->description = 'Lorem IPSUM bla bla ';
+        $trigger              = DescriptionContains::makeFromStrings('blurb', false);
+        $result               = $trigger->triggered($journal);
+        $this->assertFalse($result);
     }
 
     /**

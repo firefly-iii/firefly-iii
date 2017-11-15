@@ -30,7 +30,7 @@ $(function () {
                              source: data,
                              autoSelect: true
                          });
-        $input.change(function() {
+        $input.change(function () {
             var current = $input.typeahead("getActive");
             if (current) {
                 // Some item from your model is active!

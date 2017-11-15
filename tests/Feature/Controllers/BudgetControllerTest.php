@@ -205,7 +205,7 @@ class BudgetControllerTest extends TestCase
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
-        $budgetInfo              = [
+        $budgetInfo  = [
             $budget->id => [
                 'spent'      => '0',
                 'budgeted'   => '0',

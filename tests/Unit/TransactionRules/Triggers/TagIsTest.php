@@ -39,6 +39,20 @@ class TagIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
      */
+    public function testNotTriggered()
+    {
+        $journal = TransactionJournal::find(58);
+        $journal->tags()->detach();
+        $this->assertEquals(0, $journal->tags()->count());
+
+        $trigger = TagIs::makeFromStrings('SomeTag', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
+     */
     public function testTriggered()
     {
         $journal = TransactionJournal::find(57);
@@ -56,20 +70,6 @@ class TagIsTest extends TestCase
         $trigger = TagIs::makeFromStrings($search, false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
-     */
-    public function testNotTriggered()
-    {
-        $journal = TransactionJournal::find(58);
-        $journal->tags()->detach();
-        $this->assertEquals(0, $journal->tags()->count());
-
-        $trigger = TagIs::makeFromStrings('SomeTag', false);
-        $result  = $trigger->triggered($journal);
-        $this->assertFalse($result);
     }
 
     /**

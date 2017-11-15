@@ -65,6 +65,16 @@ class FromAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::willMatchEverything
      */
+    public function testWillMatchEverythingEmpty()
+    {
+        $value  = '';
+        $result = FromAccountIs::willMatchEverything($value);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::willMatchEverything
+     */
     public function testWillMatchEverythingNotNull()
     {
         $value  = 'x';
@@ -78,17 +88,6 @@ class FromAccountIsTest extends TestCase
     public function testWillMatchEverythingNull()
     {
         $value  = null;
-        $result = FromAccountIs::willMatchEverything($value);
-        $this->assertTrue($result);
-    }
-
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountIs::willMatchEverything
-     */
-    public function testWillMatchEverythingEmpty()
-    {
-        $value  = '';
         $result = FromAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }

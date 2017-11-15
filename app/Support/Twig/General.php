@@ -118,8 +118,8 @@ class General extends Twig_Extension
             function ($context): string {
                 $args       = func_get_args();
                 $route      = $args[1]; // name of the route.
-            $what       = $args[2]; // name of the route.
-            $activeWhat = $context['what'] ?? false;
+                $what       = $args[2]; // name of the route.
+                $activeWhat = $context['what'] ?? false;
 
                 if ($what === $activeWhat && !(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
                     return 'active';
@@ -194,7 +194,7 @@ class General extends Twig_Extension
             'filesize',
             function (int $size): string {
 
-            // less than one GB, more than one MB
+                // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
                     return round($size / (1024 * 1024), 2) . ' MB';
                 }
@@ -245,14 +245,14 @@ class General extends Twig_Extension
             'mimeIcon',
             function (string $string): string {
                 switch ($string) {
-                default:
-                    return 'fa-file-o';
-                case 'application/pdf':
-                    return 'fa-file-pdf-o';
-                case 'image/png':
-                case 'image/jpeg':
-                    return 'fa-file-image-o';
-            }
+                    default:
+                        return 'fa-file-o';
+                    case 'application/pdf':
+                        return 'fa-file-pdf-o';
+                    case 'image/png':
+                    case 'image/jpeg':
+                        return 'fa-file-image-o';
+                }
             },
             ['is_safe' => ['html']]
         );

@@ -89,7 +89,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         return view(
             'reports.tag.month',
             compact(
-                                   'accountIds',
+                'accountIds',
                 'tagTags',
                 'reportType',
                 'accountSummary',
@@ -97,8 +97,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
                 'averageExpenses',
                 'averageIncome',
                 'topIncome',
-                                   'topExpenses'
-                               )
+                'topExpenses'
+            )
         )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
     }
 

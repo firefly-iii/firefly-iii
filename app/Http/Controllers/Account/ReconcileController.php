@@ -132,7 +132,7 @@ class ReconcileController extends Controller
         return view(
             'accounts.reconcile.index',
             compact(
-                                          'account',
+                'account',
                 'currency',
                 'subTitleIcon',
                 'start',
@@ -141,11 +141,11 @@ class ReconcileController extends Controller
                 'startBalance',
                 'endBalance',
                 'transactionsUri',
-                                          'selectionStart',
+                'selectionStart',
                 'selectionEnd',
                 'overviewUri',
                 'indexUri'
-                                      )
+            )
         );
     }
 

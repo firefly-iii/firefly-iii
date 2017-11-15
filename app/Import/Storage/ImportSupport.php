@@ -277,10 +277,10 @@ trait ImportSupport
                                        'transactions AS destination',
                                        function (JoinClause $join) {
                                            $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
-                                           'destination.amount',
-                                           '>',
-                                           0
-                                       );
+                                               'destination.amount',
+                                               '>',
+                                               0
+                                           );
                                        }
                                    )
                                    ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')

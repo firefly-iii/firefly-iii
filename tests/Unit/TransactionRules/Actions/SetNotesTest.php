@@ -27,7 +27,6 @@ namespace Tests\Unit\TransactionRules\Actions;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Actions\ClearNotes;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use Tests\TestCase;
 

@@ -90,12 +90,12 @@ class ReportController extends Controller
         View::share(
             'subTitle',
             trans(
-                          'firefly.report_audit',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+                'firefly.report_audit',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
 
@@ -126,12 +126,12 @@ class ReportController extends Controller
         View::share(
             'subTitle',
             trans(
-                          'firefly.report_budget',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+                'firefly.report_budget',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Budget', $start, $end);
@@ -162,12 +162,12 @@ class ReportController extends Controller
         View::share(
             'subTitle',
             trans(
-                          'firefly.report_category',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+                'firefly.report_category',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
@@ -198,12 +198,12 @@ class ReportController extends Controller
         View::share(
             'subTitle',
             trans(
-                          'firefly.report_default',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+                'firefly.report_default',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
@@ -344,12 +344,12 @@ class ReportController extends Controller
         View::share(
             'subTitle',
             trans(
-                          'firefly.report_tag',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+                'firefly.report_tag',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);

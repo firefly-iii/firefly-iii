@@ -89,10 +89,10 @@ class JournalTasker implements JournalTaskerInterface
                 'transactions as destination',
                 function (JoinClause $join) {
                     $join
-                    ->on('transactions.transaction_journal_id', '=', 'destination.transaction_journal_id')
-                    ->where('transactions.amount', '=', DB::raw('destination.amount * -1'))
-                    ->where('transactions.identifier', '=', DB::raw('destination.identifier'))
-                    ->whereNull('destination.deleted_at');
+                        ->on('transactions.transaction_journal_id', '=', 'destination.transaction_journal_id')
+                        ->where('transactions.amount', '=', DB::raw('destination.amount * -1'))
+                        ->where('transactions.identifier', '=', DB::raw('destination.identifier'))
+                        ->whereNull('destination.deleted_at');
                 }
             )
             ->with(['budgets', 'categories'])

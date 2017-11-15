@@ -785,8 +785,8 @@ class JournalCollector implements JournalCollectorInterface
                 'transactions as opposing',
                 function (JoinClause $join) {
                     $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
-                     ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
-                     ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
+                         ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
+                         ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
                 }
             );
             $this->query->leftJoin('accounts as opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id');

@@ -455,10 +455,10 @@ class BudgetController extends Controller
         $subTitle = trans(
             'firefly.budget_in_period',
             [
-                                          'name'  => $budget->name,
-                                          'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
-                                          'end'   => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
-                                      ]
+                'name'  => $budget->name,
+                'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
+                'end'   => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
+            ]
         );
 
         // collector:

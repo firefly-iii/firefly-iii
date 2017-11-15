@@ -166,6 +166,7 @@ class SetDestinationAccountTest extends TestCase
 
     /**
      * Test this on a split journal.
+     *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
      */

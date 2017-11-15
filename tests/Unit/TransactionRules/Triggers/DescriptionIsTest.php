@@ -50,15 +50,14 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredClose()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Lorem IPSUM blabla';
-        $trigger              = DescriptionIs::makeFromStrings('lorem', false);
+        $journal->description = 'Something is going to happen';
+        $trigger              = DescriptionIs::makeFromStrings('Something is going to happe', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
@@ -75,11 +74,11 @@ class DescriptionIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
      */
-    public function testTriggeredClose()
+    public function testTriggeredNot()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Something is going to happen';
-        $trigger              = DescriptionIs::makeFromStrings('Something is going to happe', false);
+        $journal->description = 'Lorem IPSUM blabla';
+        $trigger              = DescriptionIs::makeFromStrings('lorem', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

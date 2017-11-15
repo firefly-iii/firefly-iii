@@ -50,15 +50,14 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredClose()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Lorem IPSUM blabla';
-        $trigger              = DescriptionEnds::makeFromStrings('lorem', false);
+        $journal->description = 'Something is going to happen';
+        $trigger              = DescriptionEnds::makeFromStrings('happe', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
@@ -75,11 +74,11 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredClose()
+    public function testTriggeredLongSearch()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Something is going to happen';
-        $trigger              = DescriptionEnds::makeFromStrings('happe', false);
+        $journal->description = 'Something';
+        $trigger              = DescriptionEnds::makeFromStrings('Something is', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
@@ -99,11 +98,11 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredLongSearch()
+    public function testTriggeredNot()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Something';
-        $trigger              = DescriptionEnds::makeFromStrings('Something is', false);
+        $journal->description = 'Lorem IPSUM blabla';
+        $trigger              = DescriptionEnds::makeFromStrings('lorem', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

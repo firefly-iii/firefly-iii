@@ -56,22 +56,6 @@ class NotesAreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
      */
-    public function testTriggeredEmpty()
-    {
-        $journal = TransactionJournal::find(40);
-        $journal->notes()->delete();
-        $note = new Note();
-        $note->noteable()->associate($journal);
-        $note->text = '';
-        $note->save();
-        $trigger = NotesAre::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
-     */
     public function testTriggeredDifferent()
     {
         $journal = TransactionJournal::find(41);
@@ -81,6 +65,22 @@ class NotesAreTest extends TestCase
         $note->text = 'Some note';
         $note->save();
         $trigger = NotesAre::makeFromStrings('Not the note', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
+     */
+    public function testTriggeredEmpty()
+    {
+        $journal = TransactionJournal::find(40);
+        $journal->notes()->delete();
+        $note = new Note();
+        $note->noteable()->associate($journal);
+        $note->text = '';
+        $note->save();
+        $trigger = NotesAre::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

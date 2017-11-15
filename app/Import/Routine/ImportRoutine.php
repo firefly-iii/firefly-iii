@@ -140,6 +140,7 @@ class ImportRoutine
 
         if ($this->journals->count() < 1) {
             Log::info(sprintf('Will not create tag, %d journals imported.', $this->journals->count()));
+
             return new Tag;
         }
 

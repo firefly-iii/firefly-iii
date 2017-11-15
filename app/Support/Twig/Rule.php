@@ -66,9 +66,9 @@ class Rule extends Twig_Extension
             'allJournalTriggers',
             function () {
                 return [
-                'store-journal'  => trans('firefly.rule_trigger_store_journal'),
-                'update-journal' => trans('firefly.rule_trigger_update_journal'),
-            ];
+                    'store-journal'  => trans('firefly.rule_trigger_store_journal'),
+                    'update-journal' => trans('firefly.rule_trigger_update_journal'),
+                ];
             }
         );
     }

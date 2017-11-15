@@ -209,7 +209,7 @@ class AccountController extends Controller
         return view(
             'accounts.edit',
             compact(
-                               'allCurrencies',
+                'allCurrencies',
                 'currencySelectList',
                 'account',
                 'currency',
@@ -218,7 +218,7 @@ class AccountController extends Controller
                 'what',
                 'roles',
                 'preFilled'
-                           )
+            )
         );
     }
 

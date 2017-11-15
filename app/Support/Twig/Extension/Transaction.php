@@ -310,7 +310,7 @@ class Transaction extends Twig_Extension
             $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
                                              ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
                     'identifier',
-                                                 $transaction->identifier
+                    $transaction->identifier
                 )
                                              ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                              ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
@@ -489,7 +489,7 @@ class Transaction extends Twig_Extension
             $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
                                              ->where('amount', '=', bcmul($transaction->transaction_amount, '-1'))->where(
                     'identifier',
-                                                 $transaction->identifier
+                    $transaction->identifier
                 )
                                              ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                              ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')

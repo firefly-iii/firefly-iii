@@ -155,7 +155,7 @@ class ExportControllerTest extends TestCase
         $processor->shouldReceive('collectOldUploads')->once();
         $processor->shouldReceive('collectAttachments')->once();
 
-        $job = new ExportJob;
+        $job       = new ExportJob;
         $job->user = $this->user();
 
         $repository->shouldReceive('changeStatus')->andReturn(true);

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
+
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
@@ -41,7 +42,7 @@ class ClearCategoryTest extends TestCase
     public function testAct()
     {
         // associate budget with journal:
-        $journal = TransactionJournal::find(5);
+        $journal  = TransactionJournal::find(5);
         $category = $journal->user->categories()->first();
         $journal->budgets()->save($category);
         $this->assertGreaterThan(0, $journal->categories()->count());

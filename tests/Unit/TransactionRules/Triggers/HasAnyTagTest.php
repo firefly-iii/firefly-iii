@@ -39,8 +39,8 @@ class HasAnyTagTest extends TestCase
      */
     public function testTriggered()
     {
-        $journal  = TransactionJournal::find(25);
-        $tag = $journal->user->tags()->first();
+        $journal = TransactionJournal::find(25);
+        $tag     = $journal->user->tags()->first();
         $journal->tags()->detach();
         $journal->tags()->save($tag);
 

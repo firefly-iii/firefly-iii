@@ -123,7 +123,7 @@ class HomeController extends Controller
         return view(
             'debug',
             compact(
-            'phpVersion',
+                'phpVersion',
                 'extensions',
                 'carbon',
                 'now',
@@ -136,7 +136,7 @@ class HomeController extends Controller
                 'isDocker',
                 'isSandstorm',
                 'trustedProxies'
-        )
+            )
         );
     }
 

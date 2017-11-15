@@ -38,18 +38,6 @@ class AmountLessTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
      */
-    public function testTriggeredLess()
-    {
-        $journal                     = new TransactionJournal;
-        $journal->destination_amount = '12.34';
-        $trigger                     = AmountLess::makeFromStrings('12.50', false);
-        $result                      = $trigger->triggered($journal);
-        $this->assertTrue($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
-     */
     public function testTriggeredExact()
     {
         $journal                     = new TransactionJournal;
@@ -57,6 +45,18 @@ class AmountLessTest extends TestCase
         $trigger                     = AmountLess::makeFromStrings('12.35', false);
         $result                      = $trigger->triggered($journal);
         $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
+     */
+    public function testTriggeredLess()
+    {
+        $journal                     = new TransactionJournal;
+        $journal->destination_amount = '12.34';
+        $trigger                     = AmountLess::makeFromStrings('12.50', false);
+        $result                      = $trigger->triggered($journal);
+        $this->assertTrue($result);
     }
 
     /**

@@ -296,7 +296,7 @@ class SingleControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::groupedActiveAccountList
      */
     public function testStoreSuccess()
     {

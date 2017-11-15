@@ -50,15 +50,14 @@ class DescriptionStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionStarts::triggered
      */
-    public function testTriggeredNot()
+    public function testTriggeredClose()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Lorem IPSUM blabla';
-        $trigger              = DescriptionStarts::makeFromStrings('blabla', false);
+        $journal->description = 'Something is going to happen';
+        $trigger              = DescriptionStarts::makeFromStrings('omething', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionStarts::triggered
@@ -75,11 +74,11 @@ class DescriptionStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionStarts::triggered
      */
-    public function testTriggeredClose()
+    public function testTriggeredLongSearch()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Something is going to happen';
-        $trigger              = DescriptionStarts::makeFromStrings('omething', false);
+        $journal->description = 'Something';
+        $trigger              = DescriptionStarts::makeFromStrings('Something is', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
@@ -87,11 +86,11 @@ class DescriptionStartsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionStarts::triggered
      */
-    public function testTriggeredLongSearch()
+    public function testTriggeredNot()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Something';
-        $trigger              = DescriptionStarts::makeFromStrings('Something is', false);
+        $journal->description = 'Lorem IPSUM blabla';
+        $trigger              = DescriptionStarts::makeFromStrings('blabla', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

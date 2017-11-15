@@ -65,21 +65,21 @@ class ToAccountIsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
      */
-    public function testWillMatchEverythingNotNull()
-    {
-        $value  = 'x';
-        $result = ToAccountIs::willMatchEverything($value);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
-     */
     public function testWillMatchEverythingEmpty()
     {
         $value  = '';
         $result = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     */
+    public function testWillMatchEverythingNotNull()
+    {
+        $value  = 'x';
+        $result = ToAccountIs::willMatchEverything($value);
+        $this->assertFalse($result);
     }
 
     /**

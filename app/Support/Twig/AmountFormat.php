@@ -176,7 +176,7 @@ class AmountFormat extends Twig_Extension
             'formatDestinationAfter',
             function (array $transaction): string {
 
-            // build fake currency for main amount.
+                // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
                 $format->symbol         = $transaction['transaction_currency_symbol'];
@@ -207,7 +207,7 @@ class AmountFormat extends Twig_Extension
             'formatDestinationBefore',
             function (array $transaction): string {
 
-            // build fake currency for main amount.
+                // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
                 $format->symbol         = $transaction['transaction_currency_symbol'];
@@ -227,7 +227,7 @@ class AmountFormat extends Twig_Extension
             'formatSourceAfter',
             function (array $transaction): string {
 
-            // build fake currency for main amount.
+                // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
                 $format->symbol         = $transaction['transaction_currency_symbol'];
@@ -258,7 +258,7 @@ class AmountFormat extends Twig_Extension
             'formatSourceBefore',
             function (array $transaction): string {
 
-            // build fake currency for main amount.
+                // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
                 $format->symbol         = $transaction['transaction_currency_symbol'];
