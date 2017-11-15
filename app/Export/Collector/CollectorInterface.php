@@ -57,5 +57,4 @@ interface CollectorInterface
      * @return mixed
      */
     public function setJob(ExportJob $job);
-
 }

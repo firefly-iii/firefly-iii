@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -77,7 +76,6 @@ class UpdatedJournalEventHandler
                 if ($rule->stop_processing) {
                     break;
                 }
-
             }
         }
 

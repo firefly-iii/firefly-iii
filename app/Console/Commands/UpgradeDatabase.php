@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
-
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -93,8 +92,6 @@ class UpgradeDatabase extends Command
         $this->info('Firefly III database is up to date.');
 
         return;
-
-
     }
 
     /**
@@ -314,7 +311,6 @@ class UpgradeDatabase extends Command
             $note->save();
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
-
         }
     }
 
@@ -334,7 +330,10 @@ class UpgradeDatabase extends Command
         if (!(intval($currency->id) === intval($journal->transaction_currency_id))) {
             $this->line(
                 sprintf(
-                    'Transfer #%d ("%s") has been updated to use %s instead of %s.', $journal->id, $journal->description, $currency->code,
+                    'Transfer #%d ("%s") has been updated to use %s instead of %s.',
+                    $journal->id,
+                    $journal->description,
+                    $currency->code,
                     $journal->transactionCurrency->code
                 )
             );
@@ -423,8 +422,11 @@ class UpgradeDatabase extends Command
         if ($transaction->transaction_currency_id !== $currency->id && is_null($transaction->foreign_amount)) {
             Log::debug(
                 sprintf(
-                    'Transaction #%d has a currency setting (#%d) that should be #%d. Amount remains %s, currency is changed.', $transaction->id,
-                    $transaction->transaction_currency_id, $currency->id, $transaction->amount
+                    'Transaction #%d has a currency setting (#%d) that should be #%d. Amount remains %s, currency is changed.',
+                    $transaction->id,
+                    $transaction->transaction_currency_id,
+                    $currency->id,
+                    $transaction->amount
                 )
             );
             $transaction->transaction_currency_id = $currency->id;
@@ -483,7 +485,6 @@ class UpgradeDatabase extends Command
 
         // when both are zero, try to grab it from journal:
         if (is_null($opposing->foreign_amount) && is_null($transaction->foreign_amount)) {
-
             $foreignAmount = $journal->getMeta('foreign_amount');
             if (is_null($foreignAmount)) {
                 Log::debug(sprintf('Journal #%d has missing foreign currency data, forced to do 1:1 conversion :(.', $transaction->transaction_journal_id));
@@ -497,7 +498,9 @@ class UpgradeDatabase extends Command
             $foreignPositive = app('steam')->positive(strval($foreignAmount));
             Log::debug(
                 sprintf(
-                    'Journal #%d has missing foreign currency info, try to restore from meta-data ("%s").', $transaction->transaction_journal_id, $foreignAmount
+                    'Journal #%d has missing foreign currency info, try to restore from meta-data ("%s").',
+                    $transaction->transaction_journal_id,
+                    $foreignAmount
                 )
             );
             $transaction->foreign_amount = bcmul($foreignPositive, '-1');

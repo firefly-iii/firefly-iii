@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events;
 
-
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 use Log;

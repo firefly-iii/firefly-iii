@@ -44,7 +44,6 @@ class AdminEventHandler
      */
     public function sendTestMessage(AdminRequestedTestMessage $event): bool
     {
-
         $email     = $event->user->email;
         $ipAddress = $event->ipAddress;
 

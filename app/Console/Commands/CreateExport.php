@@ -34,7 +34,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Storage;
 
-
 /**
  * Class CreateExport
  *

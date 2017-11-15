@@ -116,5 +116,4 @@ class UploadCollector extends BasicCollector implements CollectorInterface
 
         return true;
     }
-
 }

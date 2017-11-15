@@ -60,5 +60,4 @@ interface ExporterInterface
      * @param ExportJob $job
      */
     public function setJob(ExportJob $job);
-
 }

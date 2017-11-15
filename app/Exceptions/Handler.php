@@ -39,7 +39,6 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Request;
 
-
 class Handler extends ExceptionHandler
 {
     /**
@@ -73,7 +72,6 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
-
             $isDebug = env('APP_DEBUG', false);
 
             return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);

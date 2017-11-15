@@ -88,5 +88,4 @@ interface GeneratorInterface
      * @return array
      */
     public function singleSet(string $setLabel, array $data): array;
-
 }

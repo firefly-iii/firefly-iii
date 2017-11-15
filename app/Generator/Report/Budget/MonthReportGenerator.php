@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Budget;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;

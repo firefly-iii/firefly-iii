@@ -77,5 +77,4 @@ trait VerifiesAccessToken
 
         return true;
     }
-
 }

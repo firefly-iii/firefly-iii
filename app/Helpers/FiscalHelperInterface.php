@@ -52,5 +52,4 @@ interface FiscalHelperInterface
      * @return Carbon date object
      */
     public function startOfFiscalYear(Carbon $date): Carbon;
-
 }

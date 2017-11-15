@@ -137,7 +137,6 @@ class StoredJournalEventHandler
             $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-
                 $processor = Processor::make($rule);
                 $processor->handleTransactionJournal($journal);
 

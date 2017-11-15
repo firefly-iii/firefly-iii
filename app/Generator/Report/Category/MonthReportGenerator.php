@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Category;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
@@ -88,7 +87,15 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         return view(
             'reports.category.month',
             compact(
-                'accountIds', 'categoryIds', 'topIncome', 'reportType', 'accountSummary', 'categorySummary', 'averageExpenses', 'averageIncome', 'topExpenses'
+                'accountIds',
+                'categoryIds',
+                'topIncome',
+                'reportType',
+                'accountSummary',
+                'categorySummary',
+                'averageExpenses',
+                'averageIncome',
+                'topExpenses'
             )
         )
             ->with('start', $this->start)->with('end', $this->end)

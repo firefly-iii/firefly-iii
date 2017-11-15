@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Tag;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
@@ -88,8 +87,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
         // render!
         return view(
-            'reports.tag.month', compact(
-                                   'accountIds', 'tagTags', 'reportType', 'accountSummary', 'tagSummary', 'averageExpenses', 'averageIncome', 'topIncome',
+            'reports.tag.month',
+            compact(
+                                   'accountIds',
+                'tagTags',
+                'reportType',
+                'accountSummary',
+                'tagSummary',
+                'averageExpenses',
+                'averageIncome',
+                'topIncome',
                                    'topExpenses'
                                )
         )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();

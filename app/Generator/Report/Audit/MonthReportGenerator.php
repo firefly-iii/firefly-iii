@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Audit;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -52,8 +51,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-
-
         $auditData = [];
         $dayBefore = clone $this->start;
         $dayBefore->subDay();
@@ -81,7 +78,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
         return view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
             ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
             ->render();
-
     }
 
     /**

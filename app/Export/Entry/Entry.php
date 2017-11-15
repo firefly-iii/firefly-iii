@@ -122,7 +122,8 @@ final class Entry
             ? null
             : strval(
                 round(
-                    $transaction->transaction_foreign_amount, $transaction->foreignCurrency->decimal_places
+                    $transaction->transaction_foreign_amount,
+                    $transaction->foreignCurrency->decimal_places
                 )
             );
 
@@ -166,6 +167,4 @@ final class Entry
 
         return $entry;
     }
-
-
 }

@@ -52,5 +52,4 @@ class RequestedNewPassword extends Event
         $this->token     = $token;
         $this->ipAddress = $ipAddress;
     }
-
 }

@@ -33,7 +33,6 @@ use Illuminate\Queue\SerializesModels;
  */
 class UpdatedTransactionJournal extends Event
 {
-
     use SerializesModels;
 
     /** @var TransactionJournal */
@@ -49,5 +48,4 @@ class UpdatedTransactionJournal extends Event
         //
         $this->journal = $journal;
     }
-
 }

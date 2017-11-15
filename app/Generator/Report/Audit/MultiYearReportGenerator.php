@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Audit;
 
-
 /**
  * Class MultiYearReportGenerator
  *

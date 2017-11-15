@@ -26,7 +26,6 @@ namespace FireflyIII\Generator\Report;
 use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 
-
 /**
  * Class Support
  *
@@ -153,5 +152,4 @@ class Support
 
         return $result;
     }
-
 }

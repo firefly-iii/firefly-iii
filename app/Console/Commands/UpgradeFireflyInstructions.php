@@ -59,7 +59,6 @@ class UpgradeFireflyInstructions extends Command
      */
     public function handle()
     {
-
         if ($this->argument('task') === 'update') {
             $this->updateInstructions();
         }
@@ -109,12 +108,10 @@ class UpgradeFireflyInstructions extends Command
             if (substr($version, 0, $len) === $compare) {
                 $text = $config[$compare];
             }
-
         }
         $this->showLine();
         $this->boxed('');
         if (is_null($text)) {
-
             $this->boxed(sprintf('Thank you for installing Firefly III, v%s!', $version));
             $this->boxedInfo('There are no extra installation instructions.');
             $this->boxed('Firefly III should be ready for use.');
@@ -141,7 +138,6 @@ class UpgradeFireflyInstructions extends Command
         }
         $line .= '+';
         $this->line($line);
-
     }
 
     /**
@@ -159,12 +155,10 @@ class UpgradeFireflyInstructions extends Command
             if (substr($version, 0, $len) === $compare) {
                 $text = $config[$compare];
             }
-
         }
         $this->showLine();
         $this->boxed('');
         if (is_null($text)) {
-
             $this->boxed(sprintf('Thank you for updating to Firefly III, v%s', $version));
             $this->boxedInfo('There are no extra upgrade instructions.');
             $this->boxed('Firefly III should be ready for use.');

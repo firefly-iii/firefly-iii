@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Export;
 
-
 use Crypt;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
@@ -136,7 +135,6 @@ class ExpandedProcessor implements ProcessorInterface
                 $transaction->opposing_account_number = $ibans[$opposingId]['accountNumber'] ?? '';
                 $transaction->opposing_account_bic    = $ibans[$opposingId]['BIC'] ?? '';
                 $transaction->opposing_currency_code  = $currencies[$opposingCurrencyId] ?? '';
-
             }
         );
 

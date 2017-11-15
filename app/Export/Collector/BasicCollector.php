@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
 
-
 use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -82,6 +81,4 @@ class BasicCollector
     {
         $this->user = $user;
     }
-
-
 }

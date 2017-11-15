@@ -33,7 +33,6 @@ use Illuminate\Queue\SerializesModels;
  */
 class StoredTransactionJournal extends Event
 {
-
     use SerializesModels;
 
     /** @var TransactionJournal */
@@ -52,7 +51,5 @@ class StoredTransactionJournal extends Event
         //
         $this->journal     = $journal;
         $this->piggyBankId = $piggyBankId;
-
     }
-
 }

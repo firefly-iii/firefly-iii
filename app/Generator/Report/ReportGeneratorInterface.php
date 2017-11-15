@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
 
-
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -80,5 +79,4 @@ interface ReportGeneratorInterface
      * @return ReportGeneratorInterface
      */
     public function setTags(Collection $tags): ReportGeneratorInterface;
-
 }

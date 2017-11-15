@@ -152,7 +152,6 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event)
     {
-
         $sendMail = env('SEND_REGISTRATION_MAIL', true);
         if (!$sendMail) {
             return true; // @codeCoverageIgnore

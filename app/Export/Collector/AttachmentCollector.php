@@ -104,11 +104,9 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
                 $exportFile = $this->exportFileName($attachment);
                 $this->exportDisk->put($exportFile, $decrypted);
                 $this->getEntries()->push($exportFile);
-
             } catch (DecryptException $e) {
                 Log::error('Catchable error: could not decrypt attachment #' . $attachment->id . ' because: ' . $e->getMessage());
             }
-
         }
 
         return true;
@@ -123,7 +121,6 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     private function exportFileName($attachment): string
     {
-
         return sprintf('%s-Attachment nr. %s - %s', $this->job->key, strval($attachment->id), $attachment->filename);
     }
 

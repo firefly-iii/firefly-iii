@@ -30,5 +30,4 @@ namespace FireflyIII\Exceptions;
  */
 class ValidationException extends \Exception
 {
-
-} 
+}

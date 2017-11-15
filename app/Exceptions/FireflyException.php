@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-
 /**
  * Class FireflyException
  *
@@ -31,5 +30,4 @@ namespace FireflyIII\Exceptions;
  */
 class FireflyException extends \Exception
 {
-
-} 
+}

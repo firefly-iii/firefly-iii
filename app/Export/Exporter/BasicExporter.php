@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Export\Exporter;
 
-
 use FireflyIII\Models\ExportJob;
 use Illuminate\Support\Collection;
 
@@ -70,6 +69,4 @@ class BasicExporter
     {
         $this->job = $job;
     }
-
-
 }

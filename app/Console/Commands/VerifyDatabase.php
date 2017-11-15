@@ -96,7 +96,6 @@ class VerifyDatabase extends Command
         $this->repairPiggyBanks();
         $this->createLinkTypes();
         $this->createAccessTokens();
-
     }
 
     /**
@@ -208,7 +207,10 @@ class VerifyDatabase extends Command
         foreach ($set as $entry) {
             $line = sprintf(
                 'User #%d (%s) has budget #%d ("%s") which has no budget limits.',
-                $entry->user_id, $entry->email, $entry->id, $entry->name
+                $entry->user_id,
+                $entry->email,
+                $entry->id,
+                $entry->name
             );
             $this->line($line);
         }
@@ -327,7 +329,6 @@ class VerifyDatabase extends Command
                 'Error: Journal #' . $entry->id . ' has zero transactions. Open table "transaction_journals" and delete the entry with id #' . $entry->id
             );
         }
-
     }
 
     /**
@@ -349,7 +350,6 @@ class VerifyDatabase extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-
             $objName = $entry->name;
             try {
                 $objName = Crypt::decrypt($objName);
@@ -359,7 +359,11 @@ class VerifyDatabase extends Command
 
             $line = sprintf(
                 'User #%d (%s) has %s #%d ("%s") which has no transactions.',
-                $entry->user_id, $entry->email, $name, $entry->id, $objName
+                $entry->user_id,
+                $entry->email,
+                $name,
+                $entry->id,
+                $objName
             );
             $this->line($line);
         }
@@ -419,11 +423,10 @@ class VerifyDatabase extends Command
             $this->error(
                 sprintf(
                     'Error: Transaction journal #%d is a %s, but has a budget. Edit it without changing anything, so the budget will be removed.',
-                    $entry->id, $entry->transactionType->type
+                    $entry->id,
+                    $entry->transactionType->type
                 )
             );
         }
-
-
     }
 }
