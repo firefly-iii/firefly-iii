@@ -37,7 +37,7 @@ class TransactionJournal extends Twig_Extension
      *
      * @return string
      */
-    function totalAmount(JournalModel $journal): string
+    public function totalAmount(JournalModel $journal): string
     {
         $cache = new SingleCacheProperties;
         $cache->addProperty('total-amount');
@@ -86,7 +86,5 @@ class TransactionJournal extends Twig_Extension
         $cache->store($txt);
 
         return $txt;
-
     }
-
 }

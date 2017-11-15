@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
 
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -138,7 +137,6 @@ trait ImportSupport
         $currency = $this->defaultCurrencyId;
 
         return $currency;
-
     }
 
     /**
@@ -197,7 +195,6 @@ trait ImportSupport
         $databaseAccount = $account->getAccount();
 
         return $databaseAccount;
-
     }
 
     /**
@@ -219,7 +216,6 @@ trait ImportSupport
         Log::debug(sprintf('Found %d user rules.', $set->count()));
 
         return $set;
-
     }
 
     /**
@@ -272,16 +268,20 @@ trait ImportSupport
     {
         $set   = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                    ->leftJoin(
-                                       'transactions AS source', function (JoinClause $join) {
-                                       $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
-                                   }
+                                       'transactions AS source',
+                                       function (JoinClause $join) {
+                                           $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
+                                       }
                                    )
                                    ->leftJoin(
-                                       'transactions AS destination', function (JoinClause $join) {
-                                       $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
-                                           'destination.amount', '>', 0
+                                       'transactions AS destination',
+                                       function (JoinClause $join) {
+                                           $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where(
+                                           'destination.amount',
+                                           '>',
+                                           0
                                        );
-                                   }
+                                       }
                                    )
                                    ->leftJoin('accounts as source_accounts', 'source.account_id', '=', 'source_accounts.id')
                                    ->leftJoin('accounts as destination_accounts', 'destination.account_id', '=', 'destination_accounts.id')
@@ -330,7 +330,6 @@ trait ImportSupport
         }
 
         return false;
-
     }
 
     /**
@@ -364,12 +363,10 @@ trait ImportSupport
      */
     private function storeCategory(TransactionJournal $journal, Category $category)
     {
-
         if (!is_null($category->id)) {
             Log::debug(sprintf('Linked category #%d to journal #%d', $category->id, $journal->id));
             $journal->categories()->save($category);
         }
-
     }
 
     private function storeJournal(array $parameters): TransactionJournal
@@ -464,5 +461,4 @@ trait ImportSupport
 
         return;
     }
-
 }

@@ -47,7 +47,6 @@ class NewUserController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-
                 return $next($request);
             }
         );
@@ -61,7 +60,6 @@ class NewUserController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-
         View::share('title', trans('firefly.welcome'));
         View::share('mainTitleIcon', 'fa-fire');
 
@@ -70,7 +68,6 @@ class NewUserController extends Controller
 
         if ($count > 0) {
             return redirect(route('index'));
-
         }
 
         return view('new-user.index');
@@ -154,5 +151,4 @@ class NewUserController extends Controller
 
         return true;
     }
-
 }

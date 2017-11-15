@@ -56,7 +56,6 @@ class IntroController
             // merge arrays and add last step again
             $steps   = array_merge($steps, $specificSteps);
             $steps[] = $lastStep;
-
         }
         if (!$this->hasOutroStep($route)) {
             $steps = array_merge($steps, $specificSteps);
@@ -174,5 +173,4 @@ class IntroController
 
         return $steps;
     }
-
 }

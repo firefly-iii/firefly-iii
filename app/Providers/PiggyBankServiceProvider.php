@@ -29,7 +29,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-
 /**
  * Class PiggyBankServiceProvider
  *

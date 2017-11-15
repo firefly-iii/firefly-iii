@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Balance;
 use Illuminate\Support\Collection;
 
-
 /**
  * Interface BalanceReportHelperInterface
  *

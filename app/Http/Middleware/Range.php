@@ -35,7 +35,6 @@ use Preferences;
 use Session;
 use View;
 
-
 /**
  * Class SessionFilter
  *
@@ -85,7 +84,6 @@ class Range
         }
 
         return $next($request);
-
     }
 
     /**
@@ -132,7 +130,6 @@ class Range
     {
         // ignore preference. set the range to be the current month:
         if (!Session::has('start') && !Session::has('end')) {
-
             $viewRange = Preferences::get('viewRange', '1M')->data;
             $start     = new Carbon;
             $start     = Navigation::updateStartDate($viewRange, $start);
@@ -153,5 +150,4 @@ class Range
             Session::put('first', $first);
         }
     }
-
 }

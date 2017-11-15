@@ -68,18 +68,18 @@ class InternalTransferFilter implements FilterInterface
                     Log::debug(
                         sprintf(
                             'Transaction #%d has #%d and #%d in set, so removed',
-                            $transaction->id, $transaction->account_id, $transaction->opposing_account_id
-                        ), $this->accounts
+                            $transaction->id,
+                            $transaction->account_id,
+                            $transaction->opposing_account_id
+                        ),
+                        $this->accounts
                     );
 
                     return false;
                 }
 
                 return $transaction;
-
             }
         );
-
-
     }
 }

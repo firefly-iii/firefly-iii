@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -52,5 +51,4 @@ interface BudgetReportHelperInterface
      * @return Collection
      */
     public function getBudgetsWithExpenses(Carbon $start, Carbon $end, Collection $accounts): Collection;
-
 }

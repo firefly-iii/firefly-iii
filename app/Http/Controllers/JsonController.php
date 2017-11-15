@@ -105,7 +105,6 @@ class JsonController extends Controller
         sort($return);
 
         return Response::json($return);
-
     }
 
     /**
@@ -143,5 +142,4 @@ class JsonController extends Controller
 
         return Response::json(['html' => $view]);
     }
-
 }

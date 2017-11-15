@@ -103,11 +103,9 @@ class ExportJobRepository implements ExportJobRepositoryInterface
                 return $exportJob;
             }
             $count++;
-
         }
 
         return new ExportJob;
-
     }
 
     /**

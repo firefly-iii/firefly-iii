@@ -62,7 +62,6 @@ class PiggyBankFormRequest extends Request
      */
     public function rules()
     {
-
         $nameRule = 'required|between:1,255|uniquePiggyBankForUser';
         if (intval($this->get('id'))) {
             $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval($this->get('id'));

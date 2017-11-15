@@ -333,7 +333,6 @@ class TransactionJournal extends Model
         $query->orderBy('transaction_journals.date', 'DESC');
         $query->orderBy('transaction_journals.order', 'ASC');
         $query->orderBy('transaction_journals.id', 'DESC');
-
     }
 
     /**
@@ -343,7 +342,6 @@ class TransactionJournal extends Model
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
-
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
@@ -453,5 +451,4 @@ class TransactionJournal extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

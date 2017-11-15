@@ -83,7 +83,6 @@ class Category extends Model
         $category = self::create($fields);
 
         return $category;
-
     }
 
     /**
@@ -109,7 +108,6 @@ class Category extends Model
      */
     public function getNameAttribute($value)
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -151,5 +149,4 @@ class Category extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

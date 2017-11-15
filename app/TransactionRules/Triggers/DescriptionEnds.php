@@ -89,7 +89,6 @@ final class DescriptionEnds extends AbstractTrigger implements TriggerInterface
         $part = substr($description, $searchLength * -1);
 
         if ($part === $search) {
-
             Log::debug(sprintf('RuleTrigger DescriptionEnds for journal #%d: "%s" ends with "%s", return true.', $journal->id, $description, $search));
 
             return true;

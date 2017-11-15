@@ -114,7 +114,6 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, CategoryRepositoryInterface $repository, Category $category)
     {
-
         $name = $category->name;
         $repository->destroy($category);
 
@@ -143,7 +142,6 @@ class CategoryController extends Controller
         $request->session()->flash('gaEventAction', 'edit');
 
         return view('categories.edit', compact('category', 'subTitle'));
-
     }
 
     /**
@@ -487,5 +485,4 @@ class CategoryController extends Controller
 
         return $entries;
     }
-
 }

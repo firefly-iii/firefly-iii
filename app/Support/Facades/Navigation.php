@@ -41,5 +41,4 @@ class Navigation extends Facade
     {
         return 'navigation';
     }
-
 }

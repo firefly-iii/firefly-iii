@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
-
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;

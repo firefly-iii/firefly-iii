@@ -41,5 +41,4 @@ class Amount extends Facade
     {
         return 'amount';
     }
-
 }

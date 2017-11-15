@@ -109,5 +109,4 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function update(LinkType $linkType, array $data): LinkType;
-
 }

@@ -43,7 +43,8 @@ class LogServiceProvider extends LaravelLogServiceProvider
     protected function configureDailyHandler(Writer $log)
     {
         $log->useDailyFiles(
-            $this->app->storagePath() . '/logs/firefly-iii.log', $this->maxFiles(),
+            $this->app->storagePath() . '/logs/firefly-iii.log',
+            $this->maxFiles(),
             $this->logLevel()
         );
     }

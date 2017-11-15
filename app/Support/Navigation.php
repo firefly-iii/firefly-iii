@@ -176,7 +176,6 @@ class Navigation
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
             $currentEnd->$function();
-
         }
 
         if (!is_null($maxDate) && $currentEnd > $maxDate) {
@@ -221,7 +220,6 @@ class Navigation
         }
 
         return $entries;
-
     }
 
     /**
@@ -310,7 +308,6 @@ class Navigation
         }
 
         return $format;
-
     }
 
     /**
@@ -357,7 +354,6 @@ class Navigation
         }
 
         return $format;
-
     }
 
     /**
@@ -381,7 +377,6 @@ class Navigation
         }
 
         return $format;
-
     }
 
     /**
@@ -565,11 +560,7 @@ class Navigation
             $start->startOfYear();
 
             return $start;
-
-
         }
         throw new FireflyException(sprintf('updateStartDate cannot handle range "%s"', $range));
     }
-
-
 }

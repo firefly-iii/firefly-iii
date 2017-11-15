@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Prerequisites;
 
-
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;

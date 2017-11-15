@@ -106,8 +106,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 
         return ($count + $opposingCount > 0);
-
-
     }
 
     /**
@@ -187,6 +185,5 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $linkType->save();
 
         return $linkType;
-
     }
 }

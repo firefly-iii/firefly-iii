@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -179,7 +178,8 @@ class ImportAccount
             Log::debug(sprintf('Finding account of type %d and ID %d', $accountType->id, $this->accountId['value']));
             /** @var Account $account */
             $account = $this->user->accounts()->where('id', '!=', $this->forbiddenAccountId)->where('account_type_id', $accountType->id)->where(
-                'id', $this->accountId['value']
+                'id',
+                $this->accountId['value']
             )->first();
             if (!is_null($account)) {
                 Log::debug(sprintf('Found unmapped %s account by ID (#%d): %s', $this->expectedType, $account->id, $account->name));
@@ -239,7 +239,6 @@ class ImportAccount
         Log::debug('Found NO existing accounts.');
 
         return new Account;
-
     }
 
     /**
@@ -259,7 +258,6 @@ class ImportAccount
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no account on mapped data or no map present.');
 
@@ -302,7 +300,9 @@ class ImportAccount
         if ($account->accountType->type !== $this->expectedType && $account->accountType->type !== AccountType::ASSET) {
             Log::error(
                 sprintf(
-                    'Mapped account #%d is of type "%s" but we expect a "%s"-account. Mapping will be ignored.', $account->id, $account->accountType->type,
+                    'Mapped account #%d is of type "%s" but we expect a "%s"-account. Mapping will be ignored.',
+                    $account->id,
+                    $account->accountType->type,
                     $this->expectedType
                 )
             );
@@ -372,6 +372,4 @@ class ImportAccount
 
         return true;
     }
-
-
 }

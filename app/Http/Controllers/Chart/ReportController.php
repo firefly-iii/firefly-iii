@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -149,7 +148,6 @@ class ReportController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -224,7 +222,6 @@ class ReportController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -270,14 +267,14 @@ class ReportController extends Controller
         $tasker = app(AccountTaskerInterface::class);
 
         while ($currentStart <= $end) {
-
             $currentEnd = Navigation::endOfPeriod($currentStart, '1M');
             $earned     = strval(
                 array_sum(
                     array_map(
                         function ($item) {
                             return $item['sum'];
-                        }, $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
+                        },
+                        $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
                     )
                 )
             );
@@ -287,7 +284,8 @@ class ReportController extends Controller
                     array_map(
                         function ($item) {
                             return $item['sum'];
-                        }, $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
+                        },
+                        $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
                     )
                 )
             );

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
-
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -141,6 +140,4 @@ interface RuleGroupRepositoryInterface
      * @return RuleGroup
      */
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup;
-
-
 }

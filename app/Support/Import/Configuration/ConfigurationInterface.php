@@ -61,5 +61,4 @@ interface ConfigurationInterface
      * @return bool
      */
     public function storeConfiguration(array $data): bool;
-
 }

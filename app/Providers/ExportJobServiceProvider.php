@@ -31,7 +31,6 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-
 /**
  * Class ExportJobServiceProvider
  *
@@ -46,8 +45,6 @@ class ExportJobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-
     }
 
     /**

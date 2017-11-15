@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Token;
 
-
 use Carbon\Carbon;
 
 /**
@@ -96,5 +95,4 @@ class BunqToken
 
         return;
     }
-
 }

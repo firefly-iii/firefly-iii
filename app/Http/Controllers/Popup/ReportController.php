@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Popup;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
@@ -80,7 +79,6 @@ class ReportController extends Controller
                 return $next($request);
             }
         );
-
     }
 
 
@@ -119,8 +117,6 @@ class ReportController extends Controller
         }
 
         return Response::json(['html' => $html]);
-
-
     }
 
     /**
@@ -251,5 +247,4 @@ class ReportController extends Controller
 
         return $attributes;
     }
-
 }

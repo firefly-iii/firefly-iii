@@ -61,6 +61,4 @@ class BalanceHeader
     {
         return $this->accounts;
     }
-
-
 }

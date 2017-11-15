@@ -94,7 +94,6 @@ class BudgetController extends Controller
         Preferences::mark();
 
         return Response::json(['name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
-
     }
 
     /**
@@ -142,7 +141,6 @@ class BudgetController extends Controller
      */
     public function destroy(Request $request, Budget $budget)
     {
-
         $name = $budget->name;
         $this->repository->destroy($budget);
         $request->session()->flash('success', strval(trans('firefly.deleted_budget', ['name' => $name])));
@@ -170,7 +168,6 @@ class BudgetController extends Controller
         $request->session()->flash('gaEventAction', 'edit');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
-
     }
 
     /**
@@ -246,9 +243,23 @@ class BudgetController extends Controller
         return view(
             'budgets.index',
             compact(
-                'available', 'currentMonth', 'next', 'nextText', 'prev', 'prevText',
-                'periodStart', 'periodEnd', 'budgetInformation', 'inactive', 'budgets',
-                'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
+                'available',
+                'currentMonth',
+                'next',
+                'nextText',
+                'prev',
+                'prevText',
+                'periodStart',
+                'periodEnd',
+                'budgetInformation',
+                'inactive',
+                'budgets',
+                'spent',
+                'budgeted',
+                'previousLoop',
+                'nextLoop',
+                'start',
+                'end'
             )
         );
     }
@@ -442,7 +453,8 @@ class BudgetController extends Controller
         $page     = intval($request->get('page'));
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
         $subTitle = trans(
-            'firefly.budget_in_period', [
+            'firefly.budget_in_period',
+            [
                                           'name'  => $budget->name,
                                           'start' => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
                                           'end'   => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
@@ -461,7 +473,6 @@ class BudgetController extends Controller
         $limits = $this->getLimits($budget, $start, $end);
 
         return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'transactions', 'subTitle'));
-
     }
 
     /**
@@ -601,5 +612,4 @@ class BudgetController extends Controller
 
         return $entries;
     }
-
 }

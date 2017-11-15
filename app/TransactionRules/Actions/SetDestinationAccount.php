@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
@@ -39,7 +38,6 @@ use Log;
  */
 class SetDestinationAccount implements ActionInterface
 {
-
     private $action;
 
     /** @var  TransactionJournal */
@@ -87,7 +85,8 @@ class SetDestinationAccount implements ActionInterface
             Log::error(
                 sprintf(
                     'Cannot change destination account of journal #%d because no asset account with name "%s" exists.',
-                    $journal->id, $this->action->action_value
+                    $journal->id,
+                    $this->action->action_value
                 )
             );
 

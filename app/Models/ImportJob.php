@@ -98,7 +98,6 @@ class ImportJob extends Model
         $status['done']        += $count;
         $this->extended_status = $status;
         $this->save();
-
     }
 
     /**
@@ -110,7 +109,6 @@ class ImportJob extends Model
         $status['steps']       += $count;
         $this->extended_status = $status;
         $this->save();
-
     }
 
     /**

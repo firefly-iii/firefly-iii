@@ -153,5 +153,4 @@ class ReportHelper implements ReportHelperInterface
 
         return $months;
     }
-
 }

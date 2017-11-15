@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
-
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\User;
@@ -58,9 +57,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
-
             if (is_null($moveTo)) {
-
                 $rule->delete();
                 continue;
             }
@@ -167,7 +164,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                             'rules'              => function (HasMany $query) {
                                 $query->orderBy('active', 'DESC');
                                 $query->orderBy('order', 'ASC');
-
                             },
                             'rules.ruleTriggers' => function (HasMany $query) {
                                 $query->orderBy('order', 'ASC');
@@ -267,7 +263,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         }
 
         return true;
-
     }
 
     /**

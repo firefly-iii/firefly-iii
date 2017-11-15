@@ -78,7 +78,6 @@ final class NotesAre extends AbstractTrigger implements TriggerInterface
         $search = strtolower($this->triggerValue);
 
         if ($text === $search && strlen($text) > 0) {
-
             Log::debug(sprintf('RuleTrigger NotesAre for journal #%d: "%s" is "%s", return true.', $journal->id, $text, $search));
 
             return true;

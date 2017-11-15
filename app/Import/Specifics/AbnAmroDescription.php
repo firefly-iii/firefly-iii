@@ -89,7 +89,6 @@ class AbnAmroDescription implements SpecificInterface
     {
         // See if the current description is formatted in ABN AMRO format
         if (preg_match('/ABN AMRO.{24} (.*)/', $this->row[7], $matches)) {
-
             $this->row[8] = 'ABN AMRO'; // this one is new (opposing account name)
             $this->row[7] = $matches[1]; // this is the description
 
@@ -133,7 +132,6 @@ class AbnAmroDescription implements SpecificInterface
     {
         // See if the current description is formatted as a SEPA plain description
         if (preg_match('/^SEPA(.{28})/', $this->row[7], $matches)) {
-
             $type           = $matches[1];
             $reference      = '';
             $name           = '';
@@ -188,7 +186,6 @@ class AbnAmroDescription implements SpecificInterface
     {
         // See if the current description is formatted in TRTP format
         if (preg_match_all('!\/([A-Z]{3,4})\/([^/]*)!', $this->row[7], $matches, PREG_SET_ORDER)) {
-
             $type           = '';
             $name           = '';
             $reference      = '';
@@ -235,6 +232,4 @@ class AbnAmroDescription implements SpecificInterface
 
         return false;
     }
-
-
 }

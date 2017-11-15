@@ -34,7 +34,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TransactionJournalMeta extends Model
 {
-
     use SoftDeletes;
     /**
      * The attributes that should be casted to native types.

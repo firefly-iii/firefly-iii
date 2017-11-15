@@ -117,7 +117,6 @@ class Sandstorm
             if ($count > 1) {
                 throw new FireflyException('Your Firefly III installation has more than one user, which is weird.');
             }
-
         }
 
         return $next($request);

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
 
-
 use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 use Log;

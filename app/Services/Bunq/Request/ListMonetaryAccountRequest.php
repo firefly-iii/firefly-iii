@@ -86,5 +86,4 @@ class ListMonetaryAccountRequest extends BunqRequest
     {
         $this->userId = $userId;
     }
-
 }

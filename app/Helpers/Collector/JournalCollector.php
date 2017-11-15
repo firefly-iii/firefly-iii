@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
 
-
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
@@ -265,8 +264,6 @@ class JournalCollector implements JournalCollectorInterface
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
                 $transaction->account_iban          = app('steam')->tryDecrypt($transaction->account_iban);
                 $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
-
-
             }
         );
 
@@ -390,7 +387,6 @@ class JournalCollector implements JournalCollectorInterface
         }
 
         return $this;
-
     }
 
     /**
@@ -630,7 +626,6 @@ class JournalCollector implements JournalCollectorInterface
                             ->orderBy('transactions.amount', 'DESC');
 
         $this->query = $query;
-
     }
 
     /**
@@ -648,7 +643,6 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function withCategoryInformation(): JournalCollectorInterface
     {
-
         $this->joinCategoryTables();
 
         return $this;
@@ -760,7 +754,10 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedCategory = true;
             $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin(
-                'categories as transaction_journal_categories', 'transaction_journal_categories.id', '=', 'category_transaction_journal.category_id'
+                'categories as transaction_journal_categories',
+                'transaction_journal_categories.id',
+                '=',
+                'category_transaction_journal.category_id'
             );
 
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
@@ -785,11 +782,12 @@ class JournalCollector implements JournalCollectorInterface
             Log::debug('joinedOpposing is false');
             // join opposing transaction (hard):
             $this->query->leftJoin(
-                'transactions as opposing', function (JoinClause $join) {
-                $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
+                'transactions as opposing',
+                function (JoinClause $join) {
+                    $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
                      ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
                      ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
-            }
+                }
             );
             $this->query->leftJoin('accounts as opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id');
             $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');

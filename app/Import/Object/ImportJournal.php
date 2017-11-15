@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Converter\Amount;

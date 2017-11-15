@@ -34,7 +34,6 @@ use Log;
  */
 class ClearBudget implements ActionInterface
 {
-
     private $action;
 
 

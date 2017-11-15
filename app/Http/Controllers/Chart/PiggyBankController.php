@@ -31,7 +31,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Response;
 
-
 /**
  * Class PiggyBankController
  *
@@ -86,6 +85,5 @@ class PiggyBankController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 }

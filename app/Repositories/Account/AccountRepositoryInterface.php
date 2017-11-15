@@ -159,5 +159,4 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function update(Account $account, array $data): Account;
-
 }

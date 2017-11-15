@@ -49,7 +49,6 @@ class TwoFactorController extends Controller
      */
     public function index(Request $request)
     {
-
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
@@ -105,5 +104,4 @@ class TwoFactorController extends Controller
 
         return redirect(route('home'))->withCookie($cookie);
     }
-
 }

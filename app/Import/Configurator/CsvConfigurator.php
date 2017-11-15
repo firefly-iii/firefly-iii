@@ -87,7 +87,6 @@ class CsvConfigurator implements ConfiguratorInterface
         $object->setJob($job);
 
         return $object->getData();
-
     }
 
     /**

@@ -37,7 +37,6 @@ use Watson\Validating\ValidatingTrait;
  */
 class Budget extends Model
 {
-
     use SoftDeletes, ValidatingTrait;
 
     /**
@@ -85,7 +84,6 @@ class Budget extends Model
         $budget = self::create($fields);
 
         return $budget;
-
     }
 
     /**
@@ -119,7 +117,6 @@ class Budget extends Model
      */
     public function getNameAttribute($value)
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -160,6 +157,4 @@ class Budget extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-
 }

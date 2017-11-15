@@ -108,7 +108,6 @@ class InstallationTokenRequest extends BunqRequest
         $installationId->setId(intval($data['id']));
 
         return $installationId;
-
     }
 
     /**
@@ -118,7 +117,6 @@ class InstallationTokenRequest extends BunqRequest
      */
     private function extractInstallationToken(array $response): InstallationToken
     {
-
         $data              = $this->getKeyFromResponse('Token', $response);
         $installationToken = new InstallationToken($data);
 

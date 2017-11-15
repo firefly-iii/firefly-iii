@@ -72,7 +72,6 @@ final class DescriptionIs extends AbstractTrigger implements TriggerInterface
         $search      = strtolower($this->triggerValue);
 
         if ($description === $search) {
-
             Log::debug(sprintf('RuleTrigger DescriptionIs for journal #%d: "%s" is "%s", return true.', $journal->id, $description, $search));
 
             return true;

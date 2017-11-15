@@ -547,5 +547,4 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return null;
     }
-
 }

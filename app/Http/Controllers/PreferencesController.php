@@ -113,9 +113,18 @@ class PreferencesController extends Controller
         return view(
             'preferences.index',
             compact(
-                'language', 'accounts', 'frontPageAccounts', 'tjOptionalFields',
-                'viewRange', 'customFiscalYear', 'transactionPageSize', 'fiscalYearStart', 'is2faEnabled',
-                'has2faSecret', 'showIncomplete', 'showDeps'
+                'language',
+                'accounts',
+                'frontPageAccounts',
+                'tjOptionalFields',
+                'viewRange',
+                'customFiscalYear',
+                'transactionPageSize',
+                'fiscalYearStart',
+                'is2faEnabled',
+                'has2faSecret',
+                'showIncomplete',
+                'showDeps'
             )
         );
     }
@@ -236,5 +245,4 @@ class PreferencesController extends Controller
 
         return $parts['host'];
     }
-
 }

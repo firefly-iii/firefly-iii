@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Tag;
 
-
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -252,8 +251,6 @@ class TagRepository implements TagRepositoryInterface
         $tag->save();
 
         return $tag;
-
-
     }
 
     /**
@@ -435,7 +432,6 @@ class TagRepository implements TagRepositoryInterface
 
         // no difference? Every tag same range:
         if ($amountDiff === 0.0) {
-
             return $range[0];
         }
 

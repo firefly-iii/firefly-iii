@@ -98,7 +98,6 @@ class ExportController extends Controller
             ->header('Content-Length', strlen($content));
 
         return $response;
-
     }
 
     /**
@@ -134,7 +133,6 @@ class ExportController extends Controller
         $today         = Carbon::create()->format('Y-m-d');
 
         return view('export.index', compact('job', 'checked', 'accountList', 'formats', 'defaultFormat', 'first', 'today'));
-
     }
 
     /**

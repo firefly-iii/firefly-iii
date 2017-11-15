@@ -34,7 +34,6 @@ use Log;
  */
 class SetDescription implements ActionInterface
 {
-
     private $action;
 
 
@@ -61,7 +60,8 @@ class SetDescription implements ActionInterface
 
         Log::debug(
             sprintf(
-                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".', $journal->id,
+                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
+                $journal->id,
                 $oldDescription,
                 $this->action->action_value
             )

@@ -166,7 +166,6 @@ class JournalRepository implements JournalRepositoryInterface
         $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
         if (is_null($entry)) {
-
             return new TransactionJournal;
         }
 
@@ -214,7 +213,6 @@ class JournalRepository implements JournalRepositoryInterface
         $opposing->save();
 
         return true;
-
     }
 
     /**
@@ -321,7 +319,6 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->save();
 
         return $journal;
-
     }
 
     /**

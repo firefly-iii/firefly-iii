@@ -90,7 +90,10 @@ final class BudgetIs extends AbstractTrigger implements TriggerInterface
                         Log::debug(
                             sprintf(
                                 'RuleTrigger BudgetIs for journal #%d (transaction #%d): "%s" is "%s", return true.',
-                                $journal->id, $transaction->id, $name, $this->triggerValue
+                                $journal->id,
+                                $transaction->id,
+                                $name,
+                                $this->triggerValue
                             )
                         );
 

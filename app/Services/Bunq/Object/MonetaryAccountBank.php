@@ -159,5 +159,4 @@ class MonetaryAccountBank extends BunqObject
     {
         return $this->setting;
     }
-
 }

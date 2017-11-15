@@ -365,7 +365,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-
         $piggyBank->name         = $data['name'];
         $piggyBank->account_id   = intval($data['account_id']);
         $piggyBank->targetamount = round($data['targetamount'], 2);
@@ -380,7 +379,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         // remove money from the rep.
         $repetition = $piggyBank->currentRelevantRep();
         if ($repetition->currentamount > $piggyBank->targetamount) {
-
             $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
             $this->createEvent($piggyBank, $diff);
 

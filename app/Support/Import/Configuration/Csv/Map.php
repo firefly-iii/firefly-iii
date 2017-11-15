@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Csv;
 
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Mapper\MapperInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
@@ -69,7 +68,6 @@ class Map implements ConfigurationInterface
         $indexes              = array_keys($this->data);
         $rowIndex             = 0;
         foreach ($results as $rowIndex => $row) {
-
             $row = $this->runSpecifics($row);
 
             //do something here
@@ -117,7 +115,6 @@ class Map implements ConfigurationInterface
         $this->job->save();
 
         return $this->data;
-
     }
 
     /**
@@ -216,7 +213,6 @@ class Map implements ConfigurationInterface
         }
 
         return true;
-
     }
 
     /**

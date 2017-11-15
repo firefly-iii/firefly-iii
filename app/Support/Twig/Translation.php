@@ -44,11 +44,11 @@ class Translation extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            '_', function ($name) {
-
-            return strval(trans(sprintf('firefly.%s', $name)));
-
-        }, ['is_safe' => ['html']]
+            '_',
+            function ($name) {
+                return strval(trans(sprintf('firefly.%s', $name)));
+            },
+            ['is_safe' => ['html']]
         );
 
         return $filters;
@@ -64,7 +64,6 @@ class Translation extends Twig_Extension
             $this->journalLinkTranslation(),
 
         ];
-
     }
 
     /**
@@ -81,17 +80,17 @@ class Translation extends Twig_Extension
     public function journalLinkTranslation(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'journalLinkTranslation', function (string $direction, string $original) {
-            $key         = sprintf('firefly.%s_%s', $original, $direction);
-            $translation = trans($key);
-            if ($key === $translation) {
-                return $original;
-            }
+            'journalLinkTranslation',
+            function (string $direction, string $original) {
+                $key         = sprintf('firefly.%s_%s', $original, $direction);
+                $translation = trans($key);
+                if ($key === $translation) {
+                    return $original;
+                }
 
-            return $translation;
-
-
-        }, ['is_safe' => ['html']]
+                return $translation;
+            },
+            ['is_safe' => ['html']]
         );
     }
 }

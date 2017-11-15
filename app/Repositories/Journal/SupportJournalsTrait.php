@@ -81,7 +81,6 @@ trait SupportJournalsTrait
         if (is_null($accounts['destination'])) {
             Log::error('"destination"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"destination"-account is null, so we cannot continue!');
-
         }
 
 

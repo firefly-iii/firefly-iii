@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
@@ -161,8 +160,6 @@ trait TransactionJournalTrait
         }
 
         return '';
-
-
     }
 
     /**

@@ -32,5 +32,4 @@ namespace FireflyIII\Services\Bunq\Token;
  */
 class SessionToken extends BunqToken
 {
-
 }

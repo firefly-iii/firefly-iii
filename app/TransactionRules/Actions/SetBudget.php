@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -38,7 +37,6 @@ use Log;
  */
 class SetBudget implements ActionInterface
 {
-
     private $action;
 
 
@@ -78,7 +76,9 @@ class SetBudget implements ActionInterface
         if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
             Log::debug(
                 sprintf(
-                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.', $journal->id, $search,
+                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
+                    $journal->id,
+                    $search,
                     $journal->transactionType->type
                 )
             );

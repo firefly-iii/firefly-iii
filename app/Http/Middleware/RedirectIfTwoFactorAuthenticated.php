@@ -28,7 +28,6 @@ use Cookie;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
 
-
 /**
  * Class RedirectIfTwoFactorAuthenticated
  *
@@ -48,7 +47,6 @@ class RedirectIfTwoFactorAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-
             $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
             $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
 

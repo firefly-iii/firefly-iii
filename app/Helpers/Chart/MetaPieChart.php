@@ -133,7 +133,6 @@ class MetaPieChart implements MetaPieChartInterface
         }
 
         return $chartData;
-
     }
 
     /**
@@ -342,7 +341,6 @@ class MetaPieChart implements MetaPieChartInterface
         }
 
         return $chartData;
-
     }
 
     /**

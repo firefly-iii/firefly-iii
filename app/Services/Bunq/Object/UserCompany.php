@@ -102,7 +102,6 @@ class UserCompany extends BunqObject
         $this->sectorOfIndustry     = $data['sector_of_industry'] ?? '';
         $this->counterBankIban      = $data['counter_bank_iban'];
         $this->name                 = $data['name'];
-
     }
 
     /**
@@ -112,6 +111,4 @@ class UserCompany extends BunqObject
     {
         return $this->id;
     }
-
-
 }

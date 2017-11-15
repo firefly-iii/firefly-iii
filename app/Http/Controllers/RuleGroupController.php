@@ -111,7 +111,6 @@ class RuleGroupController extends Controller
      */
     public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
-
         $title  = $ruleGroup->title;
         $moveTo = auth()->user()->ruleGroups()->find(intval($request->get('move_rules_before_delete')));
 
@@ -135,7 +134,6 @@ class RuleGroupController extends Controller
         $repository->moveDown($ruleGroup);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -156,7 +154,6 @@ class RuleGroupController extends Controller
         Session::flash('gaEventAction', 'edit-rule-group');
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
-
     }
 
     /**
@@ -248,7 +245,6 @@ class RuleGroupController extends Controller
         $repository->moveUp($ruleGroup);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -281,6 +277,5 @@ class RuleGroupController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('rule-groups.edit.uri'));
-
     }
 }

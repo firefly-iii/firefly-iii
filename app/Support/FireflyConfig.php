@@ -117,7 +117,5 @@ class FireflyConfig
         Cache::forget('ff-config-' . $name);
 
         return $config;
-
     }
-
 }

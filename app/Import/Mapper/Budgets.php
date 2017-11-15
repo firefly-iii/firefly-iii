@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
 
-
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
@@ -54,6 +53,5 @@ class Budgets implements MapperInterface
         $list = [0 => trans('csv.map_do_not_map')] + $list;
 
         return $list;
-
     }
 }

@@ -80,5 +80,4 @@ interface ConfiguratorInterface
      * @return void
      */
     public function setJob(ImportJob $job);
-
 }

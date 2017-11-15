@@ -35,7 +35,6 @@ use Log;
  */
 class SetNotes implements ActionInterface
 {
-
     private $action;
 
 

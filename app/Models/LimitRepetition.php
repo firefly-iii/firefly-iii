@@ -90,5 +90,4 @@ class LimitRepetition extends Model
     {
         $this->attributes['amount'] = strval(round($value, 2));
     }
-
 }

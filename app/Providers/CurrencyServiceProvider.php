@@ -66,5 +66,4 @@ class CurrencyServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

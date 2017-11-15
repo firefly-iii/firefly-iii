@@ -30,6 +30,4 @@ namespace FireflyIII\Services\Bunq\Token;
  */
 class InstallationToken extends BunqToken
 {
-
-
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -68,7 +67,6 @@ class BudgetController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
 
     /**

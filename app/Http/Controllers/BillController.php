@@ -264,7 +264,6 @@ class BillController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('bills.create.uri'));
-
     }
 
     /**
@@ -291,7 +290,5 @@ class BillController extends Controller
         }
 
         return redirect($this->getPreviousUri('bills.edit.uri'));
-
     }
-
 }

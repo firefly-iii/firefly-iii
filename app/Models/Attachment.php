@@ -62,7 +62,6 @@ class Attachment extends Model
     public static function routeBinder(Attachment $value)
     {
         if (auth()->check()) {
-
             if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
             }
@@ -209,5 +208,4 @@ class Attachment extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

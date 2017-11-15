@@ -35,7 +35,6 @@ use Log;
  */
 class PrependNotes implements ActionInterface
 {
-
     private $action;
 
 

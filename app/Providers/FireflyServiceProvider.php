@@ -102,36 +102,42 @@ class FireflyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'preferences', function () {
-            return new Preferences;
-        }
+            'preferences',
+            function () {
+                return new Preferences;
+            }
         );
 
         $this->app->bind(
-            'fireflyconfig', function () {
-            return new FireflyConfig;
-        }
+            'fireflyconfig',
+            function () {
+                return new FireflyConfig;
+            }
         );
         $this->app->bind(
-            'navigation', function () {
-            return new Navigation;
-        }
+            'navigation',
+            function () {
+                return new Navigation;
+            }
         );
         $this->app->bind(
-            'amount', function () {
-            return new Amount;
-        }
+            'amount',
+            function () {
+                return new Amount;
+            }
         );
 
         $this->app->bind(
-            'steam', function () {
-            return new Steam;
-        }
+            'steam',
+            function () {
+                return new Steam;
+            }
         );
         $this->app->bind(
-            'expandedform', function () {
-            return new ExpandedForm;
-        }
+            'expandedform',
+            function () {
+                return new ExpandedForm;
+            }
         );
 
         // chart generator:
@@ -168,5 +174,4 @@ class FireflyServiceProvider extends ServiceProvider
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifier::class);
     }
-
 }

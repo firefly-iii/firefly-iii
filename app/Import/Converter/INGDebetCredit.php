@@ -51,6 +51,5 @@ class INGDebetCredit implements ConverterInterface
         Log::debug('Return 1');
 
         return 1;
-
     }
 }

@@ -133,7 +133,6 @@ class ExpandedForm
         $html    = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -153,7 +152,6 @@ class ExpandedForm
         $html            = view('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -172,7 +170,6 @@ class ExpandedForm
         $html    = view('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -387,7 +384,6 @@ class ExpandedForm
         $html    = view('form.password', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -426,7 +422,6 @@ class ExpandedForm
         $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -464,7 +459,6 @@ class ExpandedForm
         $html    = view('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -484,7 +478,6 @@ class ExpandedForm
         $html            = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
-
     }
 
     /**
@@ -567,7 +560,6 @@ class ExpandedForm
         $name = str_replace('[]', '', $name);
 
         return strval(trans('form.' . $name));
-
     }
 
     /**

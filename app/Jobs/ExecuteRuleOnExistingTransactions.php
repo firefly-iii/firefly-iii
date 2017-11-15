@@ -162,7 +162,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
             }
         }
         Log::info(sprintf('Total transactions: %d. Hits: %d, misses: %d', $total, $hits, $misses));
-
     }
 
     /**
@@ -179,5 +178,4 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
 
         return $collector->getJournals();
     }
-
 }

@@ -71,6 +71,5 @@ final class HasNoTag extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasNoTag for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

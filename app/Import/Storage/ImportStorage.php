@@ -159,7 +159,6 @@ class ImportStorage
             $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
             Log::error($message, $parameters);
             throw new FireflyException($message);
-
         }
         unset($parameters);
 
@@ -258,7 +257,8 @@ class ImportStorage
             // number of hits is 4? Then it's a match
             if ($hits === 4) {
                 Log::error(
-                    'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
+                    'There already is a transfer imported with these properties. Compare existing with new. ',
+                    ['existing' => $transfer, 'new' => $parameters]
                 );
 
                 return true;

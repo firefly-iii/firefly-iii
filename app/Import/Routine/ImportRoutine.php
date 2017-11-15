@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
 
-
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Import\FileProcessor\FileProcessorInterface;
@@ -139,7 +138,7 @@ class ImportRoutine
     {
         Log::debug('Now in createImportTag()');
 
-        if($this->journals->count() < 1) {
+        if ($this->journals->count() < 1) {
             Log::info(sprintf('Will not create tag, %d journals imported.', $this->journals->count()));
             return new Tag;
         }

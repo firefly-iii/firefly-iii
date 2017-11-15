@@ -53,6 +53,5 @@ class ImportUploadRequest extends Request
             'import_file_type'   => 'required|in:' . join(',', $types),
             'configuration_file' => 'file',
         ];
-
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -84,7 +83,6 @@ class ReconcileController extends Controller
         $return['html'] = view('accounts.reconcile.overview', compact('account', 'start', 'end'))->render();
 
         return Response::json($return);
-
     }
 
     /**
@@ -132,9 +130,21 @@ class ReconcileController extends Controller
         $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
 
         return view(
-            'accounts.reconcile.index', compact(
-                                          'account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri',
-                                          'selectionStart', 'selectionEnd', 'overviewUri', 'indexUri'
+            'accounts.reconcile.index',
+            compact(
+                                          'account',
+                'currency',
+                'subTitleIcon',
+                'start',
+                'end',
+                'subTitle',
+                'startBalance',
+                'endBalance',
+                'transactionsUri',
+                                          'selectionStart',
+                'selectionEnd',
+                'overviewUri',
+                'indexUri'
                                       )
         );
     }
@@ -169,5 +179,4 @@ class ReconcileController extends Controller
 
         return Response::json(['html' => $html]);
     }
-
 }

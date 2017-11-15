@@ -115,7 +115,6 @@ class Preferences
         }
 
         return $result;
-
     }
 
     /**
@@ -146,7 +145,6 @@ class Preferences
         }
 
         return $this->setForUser($user, $name, $default);
-
     }
 
     /**
@@ -227,6 +225,5 @@ class Preferences
         Cache::forever($fullName, $pref);
 
         return $pref;
-
     }
 }

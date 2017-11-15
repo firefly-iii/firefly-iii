@@ -182,6 +182,5 @@ class JavascriptController extends Controller
 
 
         return $return;
-
     }
 }

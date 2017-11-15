@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -86,6 +85,5 @@ final class AmountMore extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger AmountMore for journal #%d: %d is NOT more than %d, so return false', $journal->id, $amount, $compare));
 
         return false;
-
     }
 }

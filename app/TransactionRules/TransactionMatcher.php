@@ -60,7 +60,6 @@ class TransactionMatcher
     public function __construct(JournalTaskerInterface $tasker)
     {
         $this->tasker = $tasker;
-
     }
 
     /**
@@ -151,7 +150,6 @@ class TransactionMatcher
         $this->range = $range;
 
         return $this;
-
     }
 
     /**
@@ -236,11 +234,8 @@ class TransactionMatcher
             Log::debug(sprintf('reachedEndOfList: %s', var_export($reachedEndOfList, true)));
             Log::debug(sprintf('foundEnough: %s', var_export($foundEnough, true)));
             Log::debug(sprintf('searchedEnough: %s', var_export($searchedEnough, true)));
-
         } while (!$reachedEndOfList && !$foundEnough && !$searchedEnough);
 
         return $result;
     }
-
-
 }

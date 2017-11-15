@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
@@ -36,7 +35,6 @@ use Log;
  */
 class RemoveTag implements ActionInterface
 {
-
     private $action;
 
 

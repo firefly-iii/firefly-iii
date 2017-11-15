@@ -71,6 +71,5 @@ final class HasAnyTag extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasAnyTag for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

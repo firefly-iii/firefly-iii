@@ -97,5 +97,4 @@ interface MetaPieChartInterface
      * @return MetaPieChartInterface
      */
     public function setUser(User $user): MetaPieChartInterface;
-
 }

@@ -64,7 +64,6 @@ class TransactionController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -130,7 +129,6 @@ class TransactionController extends Controller
 
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end', 'moment'));
-
     }
 
     /**
@@ -146,7 +144,6 @@ class TransactionController extends Controller
 
             $repository->reconcile($transaction);
         }
-
     }
 
     /**
@@ -173,7 +170,6 @@ class TransactionController extends Controller
         Preferences::mark();
 
         return Response::json([true]);
-
     }
 
     /**
@@ -300,5 +296,4 @@ class TransactionController extends Controller
 
         return $return;
     }
-
 }

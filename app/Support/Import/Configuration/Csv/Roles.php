@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Csv;
 
-
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
@@ -150,7 +149,6 @@ class Roles implements ConfigurationInterface
         }
 
         return $roles;
-
     }
 
     /**
@@ -175,7 +173,6 @@ class Roles implements ConfigurationInterface
         $this->job->save();
 
         return true;
-
     }
 
     /**

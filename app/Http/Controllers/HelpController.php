@@ -66,7 +66,6 @@ class HelpController extends Controller
         $html     = $this->getHelpText($route, $language);
 
         return Response::json(['html' => $html]);
-
     }
 
     /**
@@ -112,7 +111,6 @@ class HelpController extends Controller
             }
 
             $content = $this->help->getFromGithub($route, $language);
-
         }
 
         // help still empty?
@@ -120,11 +118,8 @@ class HelpController extends Controller
             $this->help->putInCache($route, $language, $content);
 
             return $content;
-
         }
 
         return '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
     }
-
-
 }

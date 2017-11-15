@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Currency;
 
-
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
@@ -142,5 +141,4 @@ interface CurrencyRepositoryInterface
      * @return TransactionCurrency
      */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
-
 }

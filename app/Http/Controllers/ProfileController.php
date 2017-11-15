@@ -64,7 +64,6 @@ class ProfileController extends Controller
             }
         );
         $this->middleware(IsLimitedUser::class)->except(['confirmEmailChange', 'undoEmailChange']);
-
     }
 
     /**
@@ -253,7 +252,7 @@ class ProfileController extends Controller
     /**
      *
      */
-    function regenerate()
+    public function regenerate()
     {
         $token = auth()->user()->generateAccessToken();
         Preferences::set('access_token', $token);
@@ -328,8 +327,5 @@ class ProfileController extends Controller
         }
 
         return true;
-
     }
-
-
 }

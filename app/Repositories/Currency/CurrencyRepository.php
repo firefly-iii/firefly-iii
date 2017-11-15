@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Currency;
 
-
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
@@ -228,8 +227,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return new CurrencyExchangeRate;
-
-
     }
 
     /**

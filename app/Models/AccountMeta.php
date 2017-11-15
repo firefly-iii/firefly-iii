@@ -75,5 +75,4 @@ class AccountMeta extends Model
     {
         $this->attributes['data'] = json_encode($value);
     }
-
 }

@@ -141,7 +141,6 @@ class Amount
         }
 
         if ($coloured === true) {
-
             if ($amount > 0) {
                 return sprintf('<span class="text-success">%s</span>', $result);
             }
@@ -150,8 +149,6 @@ class Amount
             }
 
             return sprintf('<span style="color:#999">%s</span>', $result);
-
-
         }
 
         return $result;
@@ -170,7 +167,6 @@ class Amount
      */
     public function getCurrencyCode(): string
     {
-
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
@@ -180,7 +176,6 @@ class Amount
 
             $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
             if ($currency) {
-
                 $cache->store($currency->code);
 
                 return $currency->code;
@@ -263,5 +258,4 @@ class Amount
             'zero' => $positive,
         ];
     }
-
 }

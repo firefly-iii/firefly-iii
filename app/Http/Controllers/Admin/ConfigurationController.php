@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ConfigurationRequest;
 use FireflyIII\Support\Facades\FireflyConfig;
@@ -55,7 +54,6 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -76,7 +74,6 @@ class ConfigurationController extends Controller
             'admin.configuration.index',
             compact('subTitle', 'subTitleIcon', 'singleUserMode', 'isDemoSite', 'siteOwner')
         );
-
     }
 
     /**
@@ -99,5 +96,4 @@ class ConfigurationController extends Controller
 
         return Redirect::route('admin.configuration.index');
     }
-
 }

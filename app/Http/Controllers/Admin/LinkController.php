@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\LinkTypeFormRequest;
 use FireflyIII\Models\LinkType;
@@ -236,5 +235,4 @@ class LinkController extends Controller
         // redirect to previous URL.
         return redirect($this->getPreviousUri('link_types.edit.uri'));
     }
-
 }

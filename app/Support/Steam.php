@@ -208,8 +208,6 @@ class Steam
         $cache->store($balances);
 
         return $balances;
-
-
     }
 
     /**
@@ -337,8 +335,6 @@ class Steam
         }
 
         return intval($string);
-
-
     }
 
     /**
@@ -370,5 +366,4 @@ class Steam
 
         return $value;
     }
-
 }

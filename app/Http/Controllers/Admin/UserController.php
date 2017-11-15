@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -107,7 +106,6 @@ class UserController extends Controller
         ];
 
         return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes'));
-
     }
 
     /**
@@ -136,7 +134,6 @@ class UserController extends Controller
 
 
         return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users'));
-
     }
 
     /**
@@ -156,7 +153,12 @@ class UserController extends Controller
         return view(
             'admin.users.show',
             compact(
-                'title', 'mainTitleIcon', 'subTitle', 'subTitleIcon', 'information', 'user'
+                'title',
+                'mainTitleIcon',
+                'subTitle',
+                'subTitleIcon',
+                'information',
+                'user'
             )
         );
     }
@@ -195,8 +197,5 @@ class UserController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('users.edit.uri'));
-
     }
-
-
 }

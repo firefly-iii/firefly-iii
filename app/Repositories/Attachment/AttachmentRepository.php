@@ -168,13 +168,11 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function update(Attachment $attachment, array $data): Attachment
     {
-
         $attachment->title       = $data['title'];
         $attachment->description = $data['description'];
         $attachment->notes       = $data['notes'];
         $attachment->save();
 
         return $attachment;
-
     }
 }

@@ -61,7 +61,6 @@ class FrontpageController extends Controller
 
                 $info[] = $entry;
             }
-
         }
         $html = '';
         if (count($info) > 0) {
@@ -70,5 +69,4 @@ class FrontpageController extends Controller
 
         return Response::json(['html' => $html]);
     }
-
 }

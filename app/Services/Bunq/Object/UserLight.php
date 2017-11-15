@@ -77,5 +77,4 @@ class UserLight extends BunqObject
         $this->legalName      = $data['legal_name'];
         // aliases
     }
-
 }

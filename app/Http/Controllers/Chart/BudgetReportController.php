@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
@@ -95,7 +94,6 @@ class BudgetReportController extends Controller
         $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
-
     }
 
     /**
@@ -277,5 +275,4 @@ class BudgetReportController extends Controller
 
         return $grouped;
     }
-
 }

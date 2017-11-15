@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
@@ -49,31 +48,32 @@ class Journal extends Twig_Extension
     public function getDestinationAccount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'destinationAccount', function (TransactionJournal $journal) {
-            $cache = new CacheProperties;
-            $cache->addProperty($journal->id);
-            $cache->addProperty('transaction-journal');
-            $cache->addProperty('destination-account-string');
-            if ($cache->has()) {
-                return $cache->get(); // @codeCoverageIgnore
-            }
-
-            $list  = $journal->destinationAccountList();
-            $array = [];
-            /** @var Account $entry */
-            foreach ($list as $entry) {
-                if ($entry->accountType->type === AccountType::CASH) {
-                    $array[] = '<span class="text-success">(cash)</span>';
-                    continue;
+            'destinationAccount',
+            function (TransactionJournal $journal) {
+                $cache = new CacheProperties;
+                $cache->addProperty($journal->id);
+                $cache->addProperty('transaction-journal');
+                $cache->addProperty('destination-account-string');
+                if ($cache->has()) {
+                    return $cache->get(); // @codeCoverageIgnore
                 }
-                $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
-            }
-            $array  = array_unique($array);
-            $result = join(', ', $array);
-            $cache->store($result);
 
-            return $result;
-        }
+                $list  = $journal->destinationAccountList();
+                $array = [];
+                /** @var Account $entry */
+                foreach ($list as $entry) {
+                    if ($entry->accountType->type === AccountType::CASH) {
+                        $array[] = '<span class="text-success">(cash)</span>';
+                        continue;
+                    }
+                    $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
+                }
+                $array  = array_unique($array);
+                $result = join(', ', $array);
+                $cache->store($result);
+
+                return $result;
+            }
         );
     }
 
@@ -120,34 +120,32 @@ class Journal extends Twig_Extension
     public function getSourceAccount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'sourceAccount', function (TransactionJournal $journal): string {
-
-            $cache = new CacheProperties;
-            $cache->addProperty($journal->id);
-            $cache->addProperty('transaction-journal');
-            $cache->addProperty('source-account-string');
-            if ($cache->has()) {
-                return $cache->get(); // @codeCoverageIgnore
-            }
-
-            $list  = $journal->sourceAccountList();
-            $array = [];
-            /** @var Account $entry */
-            foreach ($list as $entry) {
-                if ($entry->accountType->type === AccountType::CASH) {
-                    $array[] = '<span class="text-success">(cash)</span>';
-                    continue;
+            'sourceAccount',
+            function (TransactionJournal $journal): string {
+                $cache = new CacheProperties;
+                $cache->addProperty($journal->id);
+                $cache->addProperty('transaction-journal');
+                $cache->addProperty('source-account-string');
+                if ($cache->has()) {
+                    return $cache->get(); // @codeCoverageIgnore
                 }
-                $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
+
+                $list  = $journal->sourceAccountList();
+                $array = [];
+                /** @var Account $entry */
+                foreach ($list as $entry) {
+                    if ($entry->accountType->type === AccountType::CASH) {
+                        $array[] = '<span class="text-success">(cash)</span>';
+                        continue;
+                    }
+                    $array[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($entry->name), route('accounts.show', $entry->id));
+                }
+                $array  = array_unique($array);
+                $result = join(', ', $array);
+                $cache->store($result);
+
+                return $result;
             }
-            $array  = array_unique($array);
-            $result = join(', ', $array);
-            $cache->store($result);
-
-            return $result;
-
-
-        }
         );
     }
 
@@ -157,34 +155,33 @@ class Journal extends Twig_Extension
     public function journalBudgets(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'journalBudgets', function (TransactionJournal $journal): string {
-            $cache = new CacheProperties;
-            $cache->addProperty($journal->id);
-            $cache->addProperty('transaction-journal');
-            $cache->addProperty('budget-string');
-            if ($cache->has()) {
-                return $cache->get(); // @codeCoverageIgnore
-            }
+            'journalBudgets',
+            function (TransactionJournal $journal): string {
+                $cache = new CacheProperties;
+                $cache->addProperty($journal->id);
+                $cache->addProperty('transaction-journal');
+                $cache->addProperty('budget-string');
+                if ($cache->has()) {
+                    return $cache->get(); // @codeCoverageIgnore
+                }
 
 
-            $budgets = [];
-            // get all budgets:
-            foreach ($journal->budgets as $budget) {
-                $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('budgets.show', $budget->id));
-            }
-            // and more!
-            foreach ($journal->transactions as $transaction) {
-                foreach ($transaction->budgets as $budget) {
+                $budgets = [];
+                // get all budgets:
+                foreach ($journal->budgets as $budget) {
                     $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('budgets.show', $budget->id));
                 }
+                // and more!
+                foreach ($journal->transactions as $transaction) {
+                    foreach ($transaction->budgets as $budget) {
+                        $budgets[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($budget->name), route('budgets.show', $budget->id));
+                    }
+                }
+                $string = join(', ', array_unique($budgets));
+                $cache->store($string);
+
+                return $string;
             }
-            $string = join(', ', array_unique($budgets));
-            $cache->store($string);
-
-            return $string;
-
-
-        }
         );
     }
 
@@ -194,37 +191,38 @@ class Journal extends Twig_Extension
     public function journalCategories(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'journalCategories', function (TransactionJournal $journal): string {
-            $cache = new CacheProperties;
-            $cache->addProperty($journal->id);
-            $cache->addProperty('transaction-journal');
-            $cache->addProperty('category-string');
-            if ($cache->has()) {
-                return $cache->get(); // @codeCoverageIgnore
-            }
-            $categories = [];
-            // get all categories for the journal itself (easy):
-            foreach ($journal->categories as $category) {
-                $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
-            }
-            if (count($categories) === 0) {
-                $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
+            'journalCategories',
+            function (TransactionJournal $journal): string {
+                $cache = new CacheProperties;
+                $cache->addProperty($journal->id);
+                $cache->addProperty('transaction-journal');
+                $cache->addProperty('category-string');
+                if ($cache->has()) {
+                    return $cache->get(); // @codeCoverageIgnore
+                }
+                $categories = [];
+                // get all categories for the journal itself (easy):
+                foreach ($journal->categories as $category) {
+                    $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
+                }
+                if (count($categories) === 0) {
+                    $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
                                ->leftJoin('transactions', 'category_transaction.transaction_id', '=', 'transactions.id')
                                ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                ->where('categories.user_id', $journal->user_id)
                                ->where('transaction_journals.id', $journal->id)
                                ->get(['categories.*']);
-                /** @var Category $category */
-                foreach ($set as $category) {
-                    $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
+                    /** @var Category $category */
+                    foreach ($set as $category) {
+                        $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
+                    }
                 }
+
+                $string = join(', ', array_unique($categories));
+                $cache->store($string);
+
+                return $string;
             }
-
-            $string = join(', ', array_unique($categories));
-            $cache->store($string);
-
-            return $string;
-        }
         );
     }
 }

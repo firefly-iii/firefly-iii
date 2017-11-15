@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
-
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\User;
@@ -137,7 +136,6 @@ class ImportCategory
         Log::debug('Found NO existing categories.');
 
         return new Category;
-
     }
 
     /**
@@ -157,7 +155,6 @@ class ImportCategory
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no category on mapped data or no map present.');
 
@@ -236,6 +233,4 @@ class ImportCategory
 
         return true;
     }
-
-
 }

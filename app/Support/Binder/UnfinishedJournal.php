@@ -54,6 +54,5 @@ class UnfinishedJournal implements BinderInterface
         }
 
         throw new NotFoundHttpException;
-
     }
 }

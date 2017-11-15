@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Events;
 
-
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 
@@ -48,5 +47,4 @@ class BillScanner
             $repository->scan($bill, $journal);
         }
     }
-
 }

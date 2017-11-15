@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -86,6 +85,5 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
         Log::debug(sprintf('RuleTrigger DescriptionContains for journal #%d: "%s" does NOT contain "%s", return false.', $journal->id, $source, $search));
 
         return false;
-
     }
 }

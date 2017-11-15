@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Import\Information\InformationInterface;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
@@ -60,7 +59,6 @@ class BankController extends Controller
         $remoteAccounts = $object->getAccounts();
 
         return view('import.bank.form', compact('remoteAccounts', 'bank'));
-
     }
 
     /**
@@ -75,7 +73,6 @@ class BankController extends Controller
      */
     public function postForm(Request $request, string $bank)
     {
-
         $class = config(sprintf('firefly.import_pre.%s', $bank));
         /** @var PrerequisitesInterface $object */
         $object = app($class);
@@ -95,8 +92,6 @@ class BankController extends Controller
         // get import file
 
         // get import config
-
-
     }
 
     /**
@@ -161,5 +156,4 @@ class BankController extends Controller
 
         return redirect(route('import.bank.form', [$bank]));
     }
-
 }

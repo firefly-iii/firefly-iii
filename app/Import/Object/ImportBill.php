@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
-
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
@@ -154,7 +153,6 @@ class ImportBill
         Log::debug('Found NO existing bills.');
 
         return new Bill;
-
     }
 
     /**
@@ -174,7 +172,6 @@ class ImportBill
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no bill on mapped data or no map present.');
 
@@ -264,5 +261,4 @@ class ImportBill
 
         return true;
     }
-
 }

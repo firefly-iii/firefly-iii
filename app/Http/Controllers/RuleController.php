@@ -110,7 +110,8 @@ class RuleController extends Controller
         Session::flash('gaEventAction', 'create-rule');
 
         return view(
-            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
+            'rules.rule.create',
+            compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
         );
     }
 
@@ -143,7 +144,6 @@ class RuleController extends Controller
      */
     public function destroy(RuleRepositoryInterface $repository, Rule $rule)
     {
-
         $title = $rule->title;
         $repository->destroy($rule);
 
@@ -164,7 +164,6 @@ class RuleController extends Controller
         $repository->moveDown($rule);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -212,9 +211,16 @@ class RuleController extends Controller
         Session::flash('gaEventAction', 'edit-rule');
 
         return view(
-            'rules.rule.edit', compact(
-                                 'rule', 'subTitle',
-                                 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
+            'rules.rule.edit',
+            compact(
+                                 'rule',
+                'subTitle',
+                                 'primaryTrigger',
+                'oldTriggers',
+                'oldActions',
+                'triggerCount',
+                'actionCount',
+                'ruleGroups'
                              )
         );
     }
@@ -283,7 +289,6 @@ class RuleController extends Controller
         }
 
         return Response::json('true');
-
     }
 
     /**
@@ -301,7 +306,6 @@ class RuleController extends Controller
         }
 
         return Response::json('true');
-
     }
 
     /**
@@ -411,7 +415,6 @@ class RuleController extends Controller
      */
     public function testTriggersByRule(Rule $rule)
     {
-
         $triggers = $rule->ruleTriggers;
 
         if (count($triggers) === 0) {
@@ -454,7 +457,6 @@ class RuleController extends Controller
         $repository->moveUp($rule);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -510,7 +512,6 @@ class RuleController extends Controller
 
             $repository->store($data);
         }
-
     }
 
     /**
@@ -655,7 +656,6 @@ class RuleController extends Controller
      */
     private function getValidTriggerList(TestRuleFormRequest $request): array
     {
-
         $triggers = [];
         $data     = [
             'rule-triggers'       => $request->get('rule-trigger'),
@@ -675,6 +675,4 @@ class RuleController extends Controller
 
         return $triggers;
     }
-
-
 }

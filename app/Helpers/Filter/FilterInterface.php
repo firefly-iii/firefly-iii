@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
 
-
 use Illuminate\Support\Collection;
 
 interface FilterInterface
@@ -34,5 +33,4 @@ interface FilterInterface
      * @return Collection
      */
     public function filter(Collection $set): Collection;
-
 }

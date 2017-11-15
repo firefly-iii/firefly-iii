@@ -58,6 +58,4 @@ class ServerPublicKey extends BunqObject
     {
         $this->publicKey = $publicKey;
     }
-
-
 }

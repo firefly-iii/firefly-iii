@@ -83,7 +83,6 @@ class BunqInformation implements InformationInterface
         $return   = [];
         /** @var MonetaryAccountBank $account */
         foreach ($accounts as $account) {
-
             $current = [
                 'id'       => $account->getId(),
                 'name'     => $account->getDescription(),
@@ -156,7 +155,6 @@ class BunqInformation implements InformationInterface
         $request->call();
 
         return $request->getMonetaryAccounts();
-
     }
 
     /**

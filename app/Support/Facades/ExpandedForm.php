@@ -41,5 +41,4 @@ class ExpandedForm extends Facade
     {
         return 'expandedform';
     }
-
 }

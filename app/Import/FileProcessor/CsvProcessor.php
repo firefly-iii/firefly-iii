@@ -285,7 +285,6 @@ class CsvProcessor implements FileProcessorInterface
         }
 
         return false;
-
     }
 
     /**
@@ -301,7 +300,6 @@ class CsvProcessor implements FileProcessorInterface
         $config = $this->job->configuration;
         $names  = array_keys($config['specifics']);
         foreach ($names as $name) {
-
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
             }
@@ -314,6 +312,5 @@ class CsvProcessor implements FileProcessorInterface
         }
 
         return $row;
-
     }
 }

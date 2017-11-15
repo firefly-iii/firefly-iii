@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -35,7 +34,6 @@ use Log;
  */
 class ClearCategory implements ActionInterface
 {
-
     private $action;
 
 

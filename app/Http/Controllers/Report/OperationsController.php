@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
@@ -63,7 +62,6 @@ class OperationsController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
 
     /**
@@ -92,7 +90,6 @@ class OperationsController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
 
     /**
@@ -121,7 +118,8 @@ class OperationsController extends Controller
             array_map(
                 function ($item) {
                     return $item['sum'];
-                }, $incomes
+                },
+                $incomes
             )
         );
 
@@ -129,7 +127,8 @@ class OperationsController extends Controller
             array_map(
                 function ($item) {
                     return $item['sum'];
-                }, $expenses
+                },
+                $expenses
             )
         );
 
@@ -137,7 +136,5 @@ class OperationsController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
-
 }

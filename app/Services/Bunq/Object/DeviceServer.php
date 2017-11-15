@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
 
-
 use Carbon\Carbon;
 use FireflyIII\Services\Bunq\Id\DeviceServerId;
 
@@ -69,6 +68,4 @@ class DeviceServer extends BunqObject
     {
         return $this->ip;
     }
-
-
 }

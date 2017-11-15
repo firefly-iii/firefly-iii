@@ -147,6 +147,4 @@ class UserPerson extends BunqObject
     {
         return $this->id;
     }
-
-
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collection;
 
-
 use Carbon\Carbon;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -132,5 +131,4 @@ class Bill
     {
         $this->startDate = $startDate;
     }
-
 }

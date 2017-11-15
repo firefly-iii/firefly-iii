@@ -243,7 +243,6 @@ class AccountController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -326,7 +325,6 @@ class AccountController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -580,5 +578,4 @@ class AccountController extends Controller
 
         return $return;
     }
-
 }

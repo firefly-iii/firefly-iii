@@ -71,7 +71,6 @@ final class NotesAny extends AbstractTrigger implements TriggerInterface
         }
 
         if (strlen($text) > 0) {
-
             Log::debug(sprintf('RuleTrigger NotesEmpty for journal #%d: strlen > 0, return true.', $journal->id));
 
             return true;

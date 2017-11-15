@@ -28,7 +28,6 @@ use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-
 class AdminServiceProvider extends ServiceProvider
 {
     /**
@@ -38,8 +37,6 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-
     }
 
     /**
@@ -70,5 +67,4 @@ class AdminServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

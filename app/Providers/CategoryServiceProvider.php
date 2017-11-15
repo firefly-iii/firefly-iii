@@ -65,6 +65,5 @@ class CategoryServiceProvider extends ServiceProvider
                 return $repository;
             }
         );
-
     }
 }

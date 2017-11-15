@@ -65,7 +65,5 @@ class PresidentsChoice implements SpecificInterface
         }
 
         return $row;
-
-
     }
 }

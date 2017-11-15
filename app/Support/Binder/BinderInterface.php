@@ -37,5 +37,4 @@ interface BinderInterface
      * @return mixed
      */
     public static function routeBinder($value, $route);
-
 }

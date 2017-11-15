@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -111,6 +110,4 @@ class TransactionJournalLink extends Model
     {
         return $this->belongsTo(TransactionJournal::class, 'source_id');
     }
-
-
 }

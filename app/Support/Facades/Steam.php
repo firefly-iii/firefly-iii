@@ -41,5 +41,4 @@ class Steam extends Facade
     {
         return 'steam';
     }
-
 }

@@ -36,5 +36,4 @@ interface PreProcessorInterface
      * @return array
      */
     public function run(string $value): array;
-
 }

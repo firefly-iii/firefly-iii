@@ -50,7 +50,6 @@ class UndoEmailChangeMail extends Mailable
      */
     public function __construct(string $newEmail, string $oldEmail, string $uri, string $ipAddress)
     {
-
         $this->newEmail  = $newEmail;
         $this->oldEmail  = $oldEmail;
         $this->uri       = $uri;

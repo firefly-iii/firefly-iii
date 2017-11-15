@@ -79,6 +79,5 @@ final class HasNoCategory extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasNoCategory for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

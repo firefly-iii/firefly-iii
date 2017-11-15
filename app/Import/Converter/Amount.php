@@ -93,6 +93,5 @@ class Amount implements ConverterInterface
         }
 
         return strval(round(floatval($value), 12));
-
     }
 }

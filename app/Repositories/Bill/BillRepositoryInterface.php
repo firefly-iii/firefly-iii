@@ -188,5 +188,4 @@ interface BillRepositoryInterface
      * @return Bill
      */
     public function update(Bill $bill, array $data): Bill;
-
 }

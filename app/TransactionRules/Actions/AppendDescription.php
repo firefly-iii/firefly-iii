@@ -34,7 +34,6 @@ use Log;
  */
 class AppendDescription implements ActionInterface
 {
-
     private $action;
 
 

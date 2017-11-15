@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -93,7 +92,6 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
 
         $strpos = strpos($text, $search);
         if (!($strpos === false)) {
-
             Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" contains "%s", return true.', $journal->id, $text, $search));
 
             return true;
@@ -102,6 +100,5 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" does NOT contain "%s", return false.', $journal->id, $text, $search));
 
         return false;
-
     }
 }

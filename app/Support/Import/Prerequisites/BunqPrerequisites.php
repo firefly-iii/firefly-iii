@@ -149,7 +149,6 @@ class BunqPrerequisites implements PrerequisitesInterface
         Log::debug('Created key pair');
 
         return;
-
     }
 
     /**
@@ -334,5 +333,4 @@ class BunqPrerequisites implements PrerequisitesInterface
 
         return $deviceServerId;
     }
-
 }

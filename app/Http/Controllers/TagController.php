@@ -124,7 +124,6 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-
         $tagName = $tag->tag;
         $this->repository->destroy($tag);
 
@@ -284,7 +283,6 @@ class TagController extends Controller
         }
 
         return redirect($this->getPreviousUri('tags.create.uri'));
-
     }
 
     /**
@@ -356,8 +354,5 @@ class TagController extends Controller
         $cache->store($collection);
 
         return $collection;
-
     }
-
-
 }

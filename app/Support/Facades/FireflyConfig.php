@@ -41,5 +41,4 @@ class FireflyConfig extends Facade
     {
         return 'fireflyconfig';
     }
-
 }

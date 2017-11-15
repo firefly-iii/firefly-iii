@@ -93,7 +93,6 @@ class JournalServiceProvider extends ServiceProvider
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepository::class);
                 if ($app->auth->check()) {
-
                     $repository->setUser(auth()->user());
                 }
 
@@ -121,5 +120,4 @@ class JournalServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

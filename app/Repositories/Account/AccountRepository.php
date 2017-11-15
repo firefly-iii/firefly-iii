@@ -37,7 +37,6 @@ use FireflyIII\User;
 use Log;
 use Validator;
 
-
 /**
  *
  * Class AccountRepository
@@ -176,7 +175,6 @@ class AccountRepository implements AccountRepositoryInterface
         $this->deleteInitialBalance($newAccount);
 
         return $newAccount;
-
     }
 
     /**
@@ -211,7 +209,6 @@ class AccountRepository implements AccountRepositoryInterface
         if (!is_null($journal->id)) {
             $journal->delete();
         }
-
     }
 
     /**
@@ -276,10 +273,10 @@ class AccountRepository implements AccountRepositoryInterface
         // verify its creation:
         if (is_null($newAccount->id)) {
             Log::error(
-                sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()), $newAccount->getErrors()->toArray()
+                sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()),
+                $newAccount->getErrors()->toArray()
             );
             throw new FireflyException(sprintf('Tried to create account named "%s" but failed. The logs have more details.', $data['name']));
-
         }
         Log::debug(sprintf('Created new account #%d named "%s" of type %s.', $newAccount->id, $newAccount->name, $accountType->type));
 
@@ -424,7 +421,10 @@ class AccountRepository implements AccountRepositoryInterface
                 Log::debug(
                     sprintf(
                         'Created meta-field "%s":"%s" for account #%d ("%s") ',
-                        $field, $data[$field], $account->id, $account->name
+                        $field,
+                        $data[$field],
+                        $account->id,
+                        $account->name
                     )
                 );
                 AccountMeta::create(
@@ -443,12 +443,14 @@ class AccountRepository implements AccountRepositoryInterface
                 Log::debug(
                     sprintf(
                         'Updated meta-field "%s":"%s" for account #%d ("%s") ',
-                        $field, $data[$field], $account->id, $account->name
+                        $field,
+                        $data[$field],
+                        $account->id,
+                        $account->name
                     )
                 );
             }
         }
-
     }
 
     /**
@@ -496,7 +498,6 @@ class AccountRepository implements AccountRepositoryInterface
         Log::debug('Updated opening balance journal.');
 
         return true;
-
     }
 
 

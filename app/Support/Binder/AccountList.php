@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,9 +43,7 @@ class AccountList implements BinderInterface
      */
     public static function routeBinder($value, $route): Collection
     {
-
         if (auth()->check()) {
-
             $ids = explode(',', $value);
             // filter ids:
             $ids = self::filterIds($ids);

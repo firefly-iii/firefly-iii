@@ -183,5 +183,4 @@ class ReportFormRequest extends Request
             'report_type' => 'in:audit,default,category,budget,tag',
         ];
     }
-
 }

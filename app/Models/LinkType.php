@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -72,5 +71,4 @@ class LinkType extends Model
     {
         return $this->hasMany(TransactionJournalLink::class);
     }
-
 }

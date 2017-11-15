@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-
 use Cache;
 use Illuminate\Support\Collection;
 use Preferences as Prefs;

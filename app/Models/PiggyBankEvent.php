@@ -72,5 +72,4 @@ class PiggyBankEvent extends Model
     {
         return $this->belongsTo('FireflyIII\Models\TransactionJournal');
     }
-
 }

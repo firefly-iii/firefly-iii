@@ -230,7 +230,6 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return true;
-
     }
 
     /**
@@ -373,7 +372,6 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return true;
-
     }
 
     /**

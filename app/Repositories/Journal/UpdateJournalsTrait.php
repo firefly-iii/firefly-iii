@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
-
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -96,7 +95,6 @@ trait UpdateJournalsTrait
         $transaction->foreign_currency_id     = $data['foreign_currency_id'];
         $transaction->account_id              = $account->id;
         $transaction->save();
-
     }
 
     /**

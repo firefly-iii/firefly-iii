@@ -27,7 +27,6 @@ use FireflyIII\Models\Budget;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 /**
  * Class BudgetList
  *

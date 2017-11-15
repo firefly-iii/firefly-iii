@@ -53,7 +53,6 @@ class General extends Twig_Extension
             $this->mimeIcon(),
 
         ];
-
     }
 
     /**
@@ -73,7 +72,6 @@ class General extends Twig_Extension
             $this->activeRoutePartialWhat(),
 
         ];
-
     }
 
     /**
@@ -93,16 +91,17 @@ class General extends Twig_Extension
     protected function activeRoutePartial(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartial', function (): string {
-            $args  = func_get_args();
-            $route = $args[0]; // name of the route.
-            $name  = Route::getCurrentRoute()->getName() ?? '';
-            if (!(strpos($name, $route) === false)) {
-                return 'active';
-            }
+            'activeRoutePartial',
+            function (): string {
+                $args  = func_get_args();
+                $route = $args[0]; // name of the route.
+                $name  = Route::getCurrentRoute()->getName() ?? '';
+                if (!(strpos($name, $route) === false)) {
+                    return 'active';
+                }
 
-            return '';
-        }
+                return '';
+            }
         );
     }
 
@@ -115,18 +114,20 @@ class General extends Twig_Extension
     protected function activeRoutePartialWhat(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartialWhat', function ($context): string {
-            $args       = func_get_args();
-            $route      = $args[1]; // name of the route.
+            'activeRoutePartialWhat',
+            function ($context): string {
+                $args       = func_get_args();
+                $route      = $args[1]; // name of the route.
             $what       = $args[2]; // name of the route.
             $activeWhat = $context['what'] ?? false;
 
-            if ($what === $activeWhat && !(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
-                return 'active';
-            }
+                if ($what === $activeWhat && !(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
+                    return 'active';
+                }
 
-            return '';
-        }, ['needs_context' => true]
+                return '';
+            },
+            ['needs_context' => true]
         );
     }
 
@@ -139,16 +140,17 @@ class General extends Twig_Extension
     protected function activeRouteStrict(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRouteStrict', function (): string {
-            $args  = func_get_args();
-            $route = $args[0]; // name of the route.
+            'activeRouteStrict',
+            function (): string {
+                $args  = func_get_args();
+                $route = $args[0]; // name of the route.
 
-            if (Route::getCurrentRoute()->getName() === $route) {
-                return 'active';
+                if (Route::getCurrentRoute()->getName() === $route) {
+                    return 'active';
+                }
+
+                return '';
             }
-
-            return '';
-        }
         );
     }
 
@@ -158,14 +160,15 @@ class General extends Twig_Extension
     protected function balance(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'balance', function (?Account $account): string {
-            if (is_null($account)) {
-                return 'NULL';
-            }
-            $date = session('end', Carbon::now()->endOfMonth());
+            'balance',
+            function (?Account $account): string {
+                if (is_null($account)) {
+                    return 'NULL';
+                }
+                $date = session('end', Carbon::now()->endOfMonth());
 
-            return app('steam')->balance($account, $date);
-        }
+                return app('steam')->balance($account, $date);
+            }
         );
     }
 
@@ -175,9 +178,10 @@ class General extends Twig_Extension
     protected function env(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'env', function (string $name, string $default): string {
-            return env($name, $default);
-        }
+            'env',
+            function (string $name, string $default): string {
+                return env($name, $default);
+            }
         );
     }
 
@@ -187,20 +191,21 @@ class General extends Twig_Extension
     protected function formatFilesize(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'filesize', function (int $size): string {
+            'filesize',
+            function (int $size): string {
 
             // less than one GB, more than one MB
-            if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                return round($size / (1024 * 1024), 2) . ' MB';
-            }
+                if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+                    return round($size / (1024 * 1024), 2) . ' MB';
+                }
 
-            // less than one MB
-            if ($size < (1024 * 1024)) {
-                return round($size / 1024, 2) . ' KB';
-            }
+                // less than one MB
+                if ($size < (1024 * 1024)) {
+                    return round($size / 1024, 2) . ' KB';
+                }
 
-            return $size . ' bytes';
-        }
+                return $size . ' bytes';
+            }
         );
     }
 
@@ -211,9 +216,10 @@ class General extends Twig_Extension
     protected function getCurrencyCode(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'getCurrencyCode', function (): string {
-            return app('amount')->getCurrencyCode();
-        }
+            'getCurrencyCode',
+            function (): string {
+                return app('amount')->getCurrencyCode();
+            }
         );
     }
 
@@ -223,9 +229,10 @@ class General extends Twig_Extension
     protected function getCurrencySymbol(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'getCurrencySymbol', function (): string {
-            return app('amount')->getCurrencySymbol();
-        }
+            'getCurrencySymbol',
+            function (): string {
+                return app('amount')->getCurrencySymbol();
+            }
         );
     }
 
@@ -235,8 +242,9 @@ class General extends Twig_Extension
     protected function mimeIcon(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'mimeIcon', function (string $string): string {
-            switch ($string) {
+            'mimeIcon',
+            function (string $string): string {
+                switch ($string) {
                 default:
                     return 'fa-file-o';
                 case 'application/pdf':
@@ -245,7 +253,8 @@ class General extends Twig_Extension
                 case 'image/jpeg':
                     return 'fa-file-image-o';
             }
-        }, ['is_safe' => ['html']]
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -255,9 +264,10 @@ class General extends Twig_Extension
     protected function phpdate()
     {
         return new Twig_SimpleFunction(
-            'phpdate', function (string $str): string {
-            return date($str);
-        }
+            'phpdate',
+            function (string $str): string {
+                return date($str);
+            }
         );
     }
 
@@ -267,9 +277,10 @@ class General extends Twig_Extension
     protected function steamPositive()
     {
         return new Twig_SimpleFunction(
-            'steam_positive', function (string $str): string {
-            return Steam::positive($str);
-        }
+            'steam_positive',
+            function (string $str): string {
+                return Steam::positive($str);
+            }
         );
     }
 
@@ -279,10 +290,10 @@ class General extends Twig_Extension
     private function getAmountFromJournal()
     {
         return new Twig_SimpleFunction(
-            'getAmount', function (TransactionJournal $journal): string {
-            return $journal->amount();
-        }
+            'getAmount',
+            function (TransactionJournal $journal): string {
+                return $journal->amount();
+            }
         );
     }
-
 }

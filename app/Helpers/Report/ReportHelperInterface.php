@@ -57,5 +57,4 @@ interface ReportHelperInterface
      * @return array
      */
     public function listOfMonths(Carbon $date): array;
-
 }

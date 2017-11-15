@@ -36,7 +36,6 @@ class Domain
     public static function getBindables(): array
     {
         return config('firefly.bindables');
-
     }
 
     /**

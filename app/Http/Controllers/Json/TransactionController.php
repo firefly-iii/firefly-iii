@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -89,5 +88,4 @@ class TransactionController extends Controller
 
         return Response::json($result);
     }
-
 }

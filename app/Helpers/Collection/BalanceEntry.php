@@ -89,6 +89,4 @@ class BalanceEntry
     {
         $this->spent = $spent;
     }
-
-
 }

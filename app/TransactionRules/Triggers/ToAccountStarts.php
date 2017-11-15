@@ -92,6 +92,5 @@ final class ToAccountStarts extends AbstractTrigger implements TriggerInterface
 
 
         return false;
-
     }
 }

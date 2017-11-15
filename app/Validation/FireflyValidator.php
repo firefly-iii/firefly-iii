@@ -102,7 +102,6 @@ class FireflyValidator extends Validator
         }
 
         return false;
-
     }
 
     /**
@@ -279,7 +278,6 @@ class FireflyValidator extends Validator
             $class = $classes[$name];
 
             return !($class::willMatchEverything($value));
-
         }
 
         return false;
@@ -363,13 +361,11 @@ class FireflyValidator extends Validator
         /** @var AccountMeta $entry */
         foreach ($set as $entry) {
             if ($entry->data === $value) {
-
                 return false;
             }
         }
 
         return true;
-
     }
 
     /**
@@ -447,7 +443,6 @@ class FireflyValidator extends Validator
     private function getRuleTriggerName($index): string
     {
         return $this->data['rule-trigger'][$index] ?? 'invalid';
-
     }
 
     /**
@@ -525,7 +520,6 @@ class FireflyValidator extends Validator
         }
 
         return true;
-
     }
 
     /**
@@ -549,7 +543,6 @@ class FireflyValidator extends Validator
         }
 
         return true;
-
     }
 
     /**
@@ -575,4 +568,3 @@ class FireflyValidator extends Validator
         return true;
     }
 }
-

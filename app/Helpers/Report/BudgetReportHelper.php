@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -163,6 +162,5 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         $array['expenses']  = $expenses;
 
         return $array;
-
     }
 }

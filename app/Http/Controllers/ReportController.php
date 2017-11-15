@@ -69,7 +69,6 @@ class ReportController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -89,7 +88,8 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
+            'subTitle',
+            trans(
                           'firefly.report_audit',
                           [
                               'start' => $start->formatLocalized($this->monthFormat),
@@ -104,7 +104,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -125,7 +124,8 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
+            'subTitle',
+            trans(
                           'firefly.report_budget',
                           [
                               'start' => $start->formatLocalized($this->monthFormat),
@@ -140,7 +140,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -161,7 +160,8 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
+            'subTitle',
+            trans(
                           'firefly.report_category',
                           [
                               'start' => $start->formatLocalized($this->monthFormat),
@@ -176,7 +176,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -197,7 +196,8 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
+            'subTitle',
+            trans(
                           'firefly.report_default',
                           [
                               'start' => $start->formatLocalized($this->monthFormat),
@@ -211,7 +211,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -343,7 +342,8 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
+            'subTitle',
+            trans(
                           'firefly.report_tag',
                           [
                               'start' => $start->formatLocalized($this->monthFormat),
@@ -358,7 +358,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -372,7 +371,6 @@ class ReportController extends Controller
         $result     = view('reports.options.budget', compact('budgets'))->render();
 
         return $result;
-
     }
 
     /**
@@ -386,7 +384,6 @@ class ReportController extends Controller
         $result     = view('reports.options.category', compact('categories'))->render();
 
         return $result;
-
     }
 
     /**
@@ -412,6 +409,5 @@ class ReportController extends Controller
         $result     = view('reports.options.tag', compact('tags'))->render();
 
         return $result;
-
     }
 }

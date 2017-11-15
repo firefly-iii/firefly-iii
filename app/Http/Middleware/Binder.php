@@ -27,7 +27,6 @@ use Closure;
 use FireflyIII\Support\Domain;
 use Illuminate\Http\Request;
 
-
 /**
  * Class Binder
  *

@@ -208,7 +208,6 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -255,7 +254,6 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -301,7 +299,6 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**

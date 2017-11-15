@@ -44,15 +44,17 @@ class PiggyBank extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'currentRelevantRepAmount', function (PB $piggyBank) {
-            return $piggyBank->currentRelevantRep()->currentamount;
-        }
+            'currentRelevantRepAmount',
+            function (PB $piggyBank) {
+                return $piggyBank->currentRelevantRep()->currentamount;
+            }
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'suggestedMonthlyAmount', function (PB $piggyBank) {
-            return $piggyBank->getSuggestedMonthlyAmount();
-        }
+            'suggestedMonthlyAmount',
+            function (PB $piggyBank) {
+                return $piggyBank->getSuggestedMonthlyAmount();
+            }
         );
 
         return $functions;

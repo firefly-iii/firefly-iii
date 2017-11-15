@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalLinkRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -60,7 +59,6 @@ class LinkController extends Controller
                 return $next($request);
             }
         );
-
     }
 
 
@@ -103,7 +101,10 @@ class LinkController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(
-        JournalLinkRequest $request, LinkTypeRepositoryInterface $repository, JournalRepositoryInterface $journalRepository, TransactionJournal $journal
+        JournalLinkRequest $request,
+        LinkTypeRepositoryInterface $repository,
+        JournalRepositoryInterface $journalRepository,
+        TransactionJournal $journal
     ) {
         $linkInfo = $request->getLinkInfo();
         if ($linkInfo['transaction_journal_id'] === 0) {
@@ -150,10 +151,8 @@ class LinkController extends Controller
      */
     public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
     {
-
         $repository->switchLink($link);
 
         return redirect(URL::previous());
     }
-
 }

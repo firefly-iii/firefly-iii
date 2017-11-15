@@ -149,5 +149,4 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal;
-
 }

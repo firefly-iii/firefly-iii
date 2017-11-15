@@ -193,7 +193,6 @@ final class Processor
         }
 
         return false;
-
     }
 
     /**
@@ -220,7 +219,6 @@ final class Processor
         }
 
         return false;
-
     }
 
     /**
@@ -241,7 +239,6 @@ final class Processor
                 Log::debug('Stop processing now and break.');
                 break;
             }
-
         }
 
         return true;
@@ -272,14 +269,10 @@ final class Processor
                 Log::debug('Stop processing this trigger and break.');
                 break;
             }
-
         }
         $result = ($hitTriggers === $foundTriggers && $foundTriggers > 0);
         Log::debug('Result of triggered()', ['hitTriggers' => $hitTriggers, 'foundTriggers' => $foundTriggers, 'result' => $result]);
 
         return $result;
-
     }
-
-
 }

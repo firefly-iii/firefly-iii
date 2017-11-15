@@ -79,6 +79,5 @@ final class HasNoBudget extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasNoBudget for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

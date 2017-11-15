@@ -91,6 +91,5 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger FromAccountIs for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $name, $search));
 
         return false;
-
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
 
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -154,7 +153,6 @@ class Modifier
         Log::debug(sprintf('"%s" is in "%s"? %s', $needle, $haystack, var_export($res, true)));
 
         return $res;
-
     }
 
     /**

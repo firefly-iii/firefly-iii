@@ -125,7 +125,6 @@ class BillRepository implements BillRepositoryInterface
 
         $set = $set->sortBy(
             function (Bill $bill) {
-
                 $int = $bill->active ? 0 : 1;
 
                 return $int . strtolower($bill->name);
@@ -161,14 +160,16 @@ class BillRepository implements BillRepositoryInterface
         $ids    = $accounts->pluck('id')->toArray();
         $set    = $this->user->bills()
                              ->leftJoin(
-                                 'transaction_journals', function (JoinClause $join) {
-                                 $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
-                             }
+                                 'transaction_journals',
+                                 function (JoinClause $join) {
+                                     $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
+                                 }
                              )
                              ->leftJoin(
-                                 'transactions', function (JoinClause $join) {
-                                 $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                             }
+                                 'transactions',
+                                 function (JoinClause $join) {
+                                     $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                                 }
                              )
                              ->whereIn('transactions.account_id', $ids)
                              ->whereNull('transaction_journals.deleted_at')
@@ -177,7 +178,6 @@ class BillRepository implements BillRepositoryInterface
 
         $set = $set->sortBy(
             function (Bill $bill) {
-
                 $int = $bill->active === 1 ? 0 : 1;
 
                 return $int . strtolower($bill->name);
@@ -238,7 +238,6 @@ class BillRepository implements BillRepositoryInterface
             Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
 
             if ($total > 0) {
-
                 $average = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $multi   = bcmul($average, strval($total));
                 $sum     = bcadd($sum, $multi);
@@ -285,7 +284,6 @@ class BillRepository implements BillRepositoryInterface
         $dates = $bill->transactionJournals()->before($end)->after($start)->get(['transaction_journals.date'])->pluck('date');
 
         return $dates;
-
     }
 
     /**
@@ -519,7 +517,6 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return false;
-
     }
 
     /**
@@ -565,8 +562,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function update(Bill $bill, array $data): Bill
     {
-
-
         $bill->name        = $data['name'];
         $bill->match       = $data['match'];
         $bill->amount_min  = $data['amount_min'];

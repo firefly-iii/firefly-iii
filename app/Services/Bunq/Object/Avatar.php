@@ -30,5 +30,4 @@ namespace FireflyIII\Services\Bunq\Object;
  */
 class Avatar extends BunqObject
 {
-
 }

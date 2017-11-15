@@ -36,7 +36,6 @@ use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
-
 /**
  * Class Account
  *
@@ -112,7 +111,6 @@ class Account extends Model
         $account = self::create($fields);
 
         return $account;
-
     }
 
     /**
@@ -122,7 +120,6 @@ class Account extends Model
      */
     public static function routeBinder(Account $value)
     {
-
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
@@ -211,7 +208,6 @@ class Account extends Model
      */
     public function getNameAttribute($value): string
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -321,9 +317,10 @@ class Account extends Model
     {
         $joinName = str_replace('.', '_', $name);
         $query->leftJoin(
-            'account_meta as ' . $joinName, function (JoinClause $join) use ($joinName, $name) {
-            $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
-        }
+            'account_meta as ' . $joinName,
+            function (JoinClause $join) use ($joinName, $name) {
+                $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
+            }
         );
         $query->where($joinName . '.data', json_encode($value));
     }

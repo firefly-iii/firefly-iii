@@ -115,7 +115,6 @@ class PiggyBank extends Model
      */
     public function getNameAttribute($value)
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -156,7 +155,6 @@ class PiggyBank extends Model
      */
     public function leftOnAccount(Carbon $date): string
     {
-
         $balance = Steam::balanceIgnoreVirtual($this->account, $date);
         /** @var PiggyBank $p */
         foreach ($this->account->piggyBanks as $piggyBank) {
@@ -166,7 +164,6 @@ class PiggyBank extends Model
         }
 
         return $balance;
-
     }
 
     /**

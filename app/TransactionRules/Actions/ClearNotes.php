@@ -35,7 +35,6 @@ use Log;
  */
 class ClearNotes implements ActionInterface
 {
-
     private $action;
 
 

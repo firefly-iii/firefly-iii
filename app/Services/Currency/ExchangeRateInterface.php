@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Currency;
 
-
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
@@ -46,5 +45,4 @@ interface ExchangeRateInterface
      * @return mixed
      */
     public function setUser(User $user);
-
 }

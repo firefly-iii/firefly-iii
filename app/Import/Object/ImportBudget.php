@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
-
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\User;
@@ -143,7 +142,6 @@ class ImportBudget
         Log::debug('Found NO existing budgets.');
 
         return new Budget;
-
     }
 
     /**
@@ -163,7 +161,6 @@ class ImportBudget
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no budget on mapped data or no map present.');
 
@@ -242,6 +239,4 @@ class ImportBudget
 
         return true;
     }
-
-
 }

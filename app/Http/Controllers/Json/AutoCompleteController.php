@@ -58,7 +58,6 @@ class AutoCompleteController extends Controller
         sort($return);
 
         return Response::json($return);
-
     }
 
     /**
@@ -111,7 +110,6 @@ class AutoCompleteController extends Controller
      */
     public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except)
     {
-
         $cache = new CacheProperties;
         $cache->addProperty('recent-journals-id');
 
@@ -178,5 +176,4 @@ class AutoCompleteController extends Controller
 
         return Response::json($return);
     }
-
 }

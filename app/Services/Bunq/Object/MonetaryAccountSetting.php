@@ -74,6 +74,4 @@ class MonetaryAccountSetting extends BunqObject
     {
         return $this->restrictionChat;
     }
-
-
 }

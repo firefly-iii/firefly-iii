@@ -81,7 +81,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 return $importJob;
             }
             $count++;
-
         }
 
         return new ImportJob;
@@ -115,7 +114,8 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         // demo user's configuration upload is ignored completely.
         if (!$repository->hasRole($this->user, 'demo')) {
             Log::debug(
-                'Uploaded configuration file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
+                'Uploaded configuration file',
+                ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
             );
 
             $configFileObject = new SplFileObject($file->getRealPath());

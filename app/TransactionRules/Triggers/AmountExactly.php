@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -79,6 +78,5 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger AmountExactly for journal #%d: %d matches %d NOT exactly, so return false', $journal->id, $amount, $compare));
 
         return false;
-
     }
 }

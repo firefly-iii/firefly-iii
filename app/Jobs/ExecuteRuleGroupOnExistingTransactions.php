@@ -192,8 +192,8 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
         return array_map(
             function ($rule) {
                 return Processor::make($rule);
-            }, $rules->all()
+            },
+            $rules->all()
         );
     }
-
 }

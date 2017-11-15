@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
 
-
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
@@ -68,7 +67,6 @@ class ImportCurrency
         $mapped = $this->findMappedObject();
 
         if (!is_null($mapped->id)) {
-
             Log::debug('Mapped existing currency.', ['new' => $mapped->toArray()]);
             $this->currency = $mapped;
 
@@ -101,7 +99,6 @@ class ImportCurrency
 
 
         return $currency;
-
     }
 
     /**
@@ -189,7 +186,6 @@ class ImportCurrency
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no currency on mapped data or no map present.');
 
@@ -232,6 +228,4 @@ class ImportCurrency
 
         return $currency;
     }
-
-
 }

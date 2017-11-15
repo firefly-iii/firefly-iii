@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
 
-
 use FireflyIII\Services\Bunq\Id\DeviceSessionId;
 use FireflyIII\Services\Bunq\Object\UserCompany;
 use FireflyIII\Services\Bunq\Object\UserPerson;
@@ -155,6 +154,4 @@ class DeviceSessionRequest extends BunqRequest
 
         return $userPerson;
     }
-
-
 }

@@ -95,7 +95,6 @@ final class NotesEnd extends AbstractTrigger implements TriggerInterface
         $part = substr($text, $searchLength * -1);
 
         if ($part === $search) {
-
             Log::debug(sprintf('RuleTrigger NotesEnd for journal #%d: "%s" ends with "%s", return true.', $journal->id, $text, $search));
 
             return true;

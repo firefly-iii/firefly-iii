@@ -147,5 +147,4 @@ interface RuleRepositoryInterface
      * @return Rule
      */
     public function update(Rule $rule, array $data): Rule;
-
 }

@@ -87,6 +87,4 @@ class Balance
     {
         $this->balanceLines = $balanceLines;
     }
-
-
 }

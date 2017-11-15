@@ -89,7 +89,6 @@ class Tag extends Model
         $tag                   = self::create($fields);
 
         return $tag;
-
     }
 
     /**
@@ -204,6 +203,4 @@ class Tag extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-
 }

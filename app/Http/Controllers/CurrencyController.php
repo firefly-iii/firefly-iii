@@ -102,7 +102,6 @@ class CurrencyController extends Controller
      */
     public function defaultCurrency(Request $request, TransactionCurrency $currency)
     {
-
         Preferences::set('currencyPreference', $currency->code);
         Preferences::mark();
 
@@ -111,7 +110,6 @@ class CurrencyController extends Controller
         Cache::forget('FFCURRENCYCODE');
 
         return redirect(route('currencies.index'));
-
     }
 
 
@@ -205,7 +203,6 @@ class CurrencyController extends Controller
         $request->session()->flash('gaEventAction', 'edit');
 
         return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
-
     }
 
     /**

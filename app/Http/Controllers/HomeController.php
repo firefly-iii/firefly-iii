@@ -63,7 +63,6 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request)
     {
-
         $start         = new Carbon($request->get('start'));
         $end           = new Carbon($request->get('end'));
         $label         = $request->get('label');
@@ -122,11 +121,23 @@ class HomeController extends Controller
         $logContent = 'Truncated from this point <----|' . substr($logContent, -4096);
 
         return view(
-            'debug', compact(
-            'phpVersion', 'extensions', 'carbon', 'now', 'drivers', 'currentDriver', 'userAgent', 'phpOs', 'interface', 'logContent', 'isDocker', 'isSandstorm','trustedProxies'
+            'debug',
+            compact(
+            'phpVersion',
+                'extensions',
+                'carbon',
+                'now',
+                'drivers',
+                'currentDriver',
+                'userAgent',
+                'phpOs',
+                'interface',
+                'logContent',
+                'isDocker',
+                'isSandstorm',
+                'trustedProxies'
         )
         );
-
     }
 
     /**
@@ -176,7 +187,8 @@ class HomeController extends Controller
         $subTitle     = trans('firefly.welcomeBack');
         $transactions = [];
         $frontPage    = Preferences::get(
-            'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+            'frontPageAccounts',
+            $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
@@ -199,7 +211,8 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
+            'index',
+            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
         );
     }
 
@@ -228,7 +241,6 @@ class HomeController extends Controller
                 if (!$found) {
                     echo 'touch ' . $route->getName() . '.md;';
                 }
-
             }
         }
 
@@ -247,5 +259,4 @@ class HomeController extends Controller
 
         return redirect(route('home'));
     }
-
 }

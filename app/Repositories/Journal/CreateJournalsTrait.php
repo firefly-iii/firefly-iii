@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
 
-
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
@@ -205,7 +204,6 @@ trait CreateJournalsTrait
         }
 
         return $transaction;
-
     }
 
 

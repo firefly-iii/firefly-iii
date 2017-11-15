@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -62,5 +61,4 @@ class HomeController extends Controller
 
         return redirect(route('admin.index'));
     }
-
 }

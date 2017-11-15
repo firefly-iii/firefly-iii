@@ -49,6 +49,4 @@ class BunqId
     {
         $this->id = $id;
     }
-
-
 }

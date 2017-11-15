@@ -51,5 +51,4 @@ class MonetaryAccountProfile extends BunqObject
 
         return;
     }
-
 }

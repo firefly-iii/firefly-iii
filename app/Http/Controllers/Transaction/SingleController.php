@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
 use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\StoredTransactionJournal;
@@ -99,7 +98,6 @@ class SingleController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     public function cloneTransaction(TransactionJournal $journal)
@@ -214,8 +212,6 @@ class SingleController extends Controller
         Session::flash('gaEventAction', 'delete-' . $what);
 
         return view('transactions.single.delete', compact('journal', 'subTitle', 'what'));
-
-
     }
 
     /**

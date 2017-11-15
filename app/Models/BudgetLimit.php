@@ -93,5 +93,4 @@ class BudgetLimit extends Model
     {
         $this->attributes['amount'] = strval(round($value, 12));
     }
-
 }

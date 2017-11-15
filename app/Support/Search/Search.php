@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -134,7 +133,6 @@ class Search implements SearchInterface
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(
                 function (Transaction $transaction) {
-
                     if ($this->matchModifiers($transaction)) {
                         return $transaction;
                     }
@@ -167,7 +165,6 @@ class Search implements SearchInterface
             // break at some point so the script does not crash:
             $currentTime = microtime(true) - $startTime;
             Log::debug(sprintf('Have been running for %f seconds.', $currentTime));
-
         } while (!$reachedEndOfList && !$foundEnough && $currentTime <= 30);
 
         $result = $result->slice(0, $this->limit);
@@ -287,7 +284,6 @@ class Search implements SearchInterface
         }
 
         return true;
-
     }
 
     /**

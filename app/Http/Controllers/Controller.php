@@ -110,7 +110,6 @@ class Controller extends BaseController
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -162,7 +161,6 @@ class Controller extends BaseController
             if (in_array($account->accountType->type, $valid)) {
                 return redirect(route('accounts.show', [$account->id]));
             }
-
         }
         // @codeCoverageIgnoreStart
         Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
@@ -178,5 +176,4 @@ class Controller extends BaseController
     {
         Session::put($identifier, URL::previous());
     }
-
 }

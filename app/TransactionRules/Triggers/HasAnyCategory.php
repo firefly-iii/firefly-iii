@@ -86,6 +86,5 @@ final class HasAnyCategory extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasAnyCategory for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

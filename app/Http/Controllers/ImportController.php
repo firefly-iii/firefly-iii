@@ -72,5 +72,4 @@ class ImportController extends Controller
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'importFileTypes', 'defaultImportType'));
     }
-
 }

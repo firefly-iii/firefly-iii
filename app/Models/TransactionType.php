@@ -68,7 +68,6 @@ class TransactionType extends Model
             return $transactionType;
         }
         throw new NotFoundHttpException;
-
     }
 
 

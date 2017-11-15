@@ -53,7 +53,6 @@ class AbstractTrigger
      */
     private function __construct()
     {
-
     }
 
     /**
@@ -122,6 +121,4 @@ class AbstractTrigger
     {
         return $this->triggerValue;
     }
-
-
 }

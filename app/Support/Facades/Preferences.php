@@ -41,5 +41,4 @@ class Preferences extends Facade
     {
         return 'preferences';
     }
-
 }

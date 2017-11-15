@@ -26,7 +26,6 @@ namespace FireflyIII\Helpers\Collection;
 use FireflyIII\Models\Category as CategoryModel;
 use Illuminate\Support\Collection;
 
-
 /**
  *
  * Class Category
@@ -91,6 +90,4 @@ class Category
     {
         return $this->total;
     }
-
-
 }

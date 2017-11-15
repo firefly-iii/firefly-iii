@@ -67,8 +67,6 @@ class TagFormRequest extends Request
         ];
 
         return $data;
-
-
     }
 
     /**

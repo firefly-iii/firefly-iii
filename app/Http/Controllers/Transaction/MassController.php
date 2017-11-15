@@ -78,7 +78,6 @@ class MassController extends Controller
         Session::flash('gaEventAction', 'mass-delete');
 
         return view('transactions.mass-delete', compact('journals', 'subTitle'));
-
     }
 
     /**
@@ -115,7 +114,6 @@ class MassController extends Controller
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
-
     }
 
 
@@ -161,7 +159,7 @@ class MassController extends Controller
             }
 
             // cannot edit reconciled transactions / journals:
-            if($journal->transactions->first()->reconciled) {
+            if ($journal->transactions->first()->reconciled) {
                 $messages[] = trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
             }
@@ -270,13 +268,11 @@ class MassController extends Controller
                     $count++;
                 }
             }
-
         }
         Preferences::mark();
         Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
-
     }
 }

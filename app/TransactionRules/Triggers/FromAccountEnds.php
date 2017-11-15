@@ -104,6 +104,5 @@ final class FromAccountEnds extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger FromAccountEnds for journal #%d: "%s" does not end with "%s", return false.', $journal->id, $name, $search));
 
         return false;
-
     }
 }

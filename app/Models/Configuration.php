@@ -64,6 +64,4 @@ class Configuration extends Model
     {
         $this->attributes['data'] = json_encode($value);
     }
-
-
 }

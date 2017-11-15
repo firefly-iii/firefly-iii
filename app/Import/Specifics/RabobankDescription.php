@@ -64,7 +64,8 @@ class RabobankDescription implements SpecificInterface
             Log::debug(
                 sprintf(
                     'Rabobank specific: Opposite account and opposite name are' .
-                    ' both empty. Will use "%s" (from description) instead', $alternateName
+                    ' both empty. Will use "%s" (from description) instead',
+                    $alternateName
                 )
             );
             $row[6]  = $alternateName;

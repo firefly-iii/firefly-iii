@@ -29,7 +29,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-
 /**
  * Class RuleGroupServiceProvider
  *

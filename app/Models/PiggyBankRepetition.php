@@ -89,7 +89,6 @@ class PiggyBankRepetition extends Model
         )
                      ->where(
                          function (EloquentBuilder $q) use ($date) {
-
                              $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
                              $q->orWhereNull('targetdate');
                          }
@@ -103,5 +102,4 @@ class PiggyBankRepetition extends Model
     {
         $this->attributes['currentamount'] = strval(round($value, 12));
     }
-
 }

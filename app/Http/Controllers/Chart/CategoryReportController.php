@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
@@ -40,7 +39,6 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Navigation;
 use Response;
-
 
 /**
  * Separate controller because many helper functions are shared.

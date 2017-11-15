@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -94,6 +93,5 @@ final class NotesStart extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger NotesStart for journal #%d: "%s" does not start with "%s", return false.', $journal->id, $text, $search));
 
         return false;
-
     }
 }

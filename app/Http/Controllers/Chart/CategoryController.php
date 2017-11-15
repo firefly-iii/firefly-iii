@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -120,7 +119,6 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -269,7 +267,6 @@ class CategoryController extends Controller
             $chartData[0]['entries'][$label] = bcmul($spent, '-1');
             $chartData[1]['entries'][$label] = $earned;
             $chartData[2]['entries'][$label] = $sum;
-
         }
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
@@ -358,7 +355,5 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return $data;
-
     }
-
 }

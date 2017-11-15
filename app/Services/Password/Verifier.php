@@ -38,5 +38,4 @@ interface Verifier
      * @return bool
      */
     public function validPassword(string $password): bool;
-
 }

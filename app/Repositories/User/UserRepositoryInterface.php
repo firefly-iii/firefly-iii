@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
-
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 

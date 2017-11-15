@@ -121,5 +121,4 @@ class IngDescription implements SpecificInterface
 
         return true;
     }
-
 }

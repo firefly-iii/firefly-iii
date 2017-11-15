@@ -103,7 +103,6 @@ class AccountController extends Controller
         $request->session()->flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'currencySelectList', 'allCurrencies', 'roles'));
-
     }
 
     /**
@@ -208,8 +207,17 @@ class AccountController extends Controller
         $request->session()->flash('gaEventAction', 'edit-' . $what);
 
         return view(
-            'accounts.edit', compact(
-                               'allCurrencies', 'currencySelectList', 'account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'
+            'accounts.edit',
+            compact(
+                               'allCurrencies',
+                'currencySelectList',
+                'account',
+                'currency',
+                'subTitle',
+                'subTitleIcon',
+                'what',
+                'roles',
+                'preFilled'
                            )
         );
     }
@@ -386,7 +394,6 @@ class AccountController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('accounts.edit.uri'));
-
     }
 
 

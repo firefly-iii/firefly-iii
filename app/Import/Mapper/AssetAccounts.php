@@ -60,6 +60,5 @@ class AssetAccounts implements MapperInterface
         $list = [0 => trans('csv.map_do_not_map')] + $list;
 
         return $list;
-
     }
 }

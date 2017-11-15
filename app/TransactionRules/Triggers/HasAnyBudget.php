@@ -86,6 +86,5 @@ final class HasAnyBudget extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasAnyBudget for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

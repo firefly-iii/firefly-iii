@@ -34,7 +34,6 @@ use Log;
  */
 class PrependDescription implements ActionInterface
 {
-
     private $action;
 
 

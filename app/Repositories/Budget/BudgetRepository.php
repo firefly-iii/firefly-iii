@@ -72,7 +72,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return true;
-
     }
 
     /**
@@ -229,7 +228,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $oldest;
-
     }
 
     /**
@@ -396,7 +394,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $data;
-
     }
 
     /**

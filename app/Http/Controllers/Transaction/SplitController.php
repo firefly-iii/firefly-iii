@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-
 use ExpandedForm;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -136,9 +135,17 @@ class SplitController extends Controller
         return view(
             'transactions.split.edit',
             compact(
-                'subTitleIcon', 'currencies', 'optionalFields',
-                'preFilled', 'subTitle', 'uploadSize', 'assetAccounts',
-                'budgets', 'journal', 'accountArray', 'previous'
+                'subTitleIcon',
+                'currencies',
+                'optionalFields',
+                'preFilled',
+                'subTitle',
+                'uploadSize',
+                'assetAccounts',
+                'budgets',
+                'journal',
+                'accountArray',
+                'previous'
             )
         );
     }
@@ -306,7 +313,6 @@ class SplitController extends Controller
             }
 
             $return[] = $set;
-
         }
 
         return $return;
@@ -322,7 +328,6 @@ class SplitController extends Controller
         $return       = [];
         $transactions = $request->get('transactions');
         foreach ($transactions as $transaction) {
-
             $return[] = [
                 'description'              => $transaction['description'],
                 'source_account_id'        => $transaction['source_account_id'] ?? 0,
@@ -373,6 +378,4 @@ class SplitController extends Controller
 
         return $array;
     }
-
-
 }

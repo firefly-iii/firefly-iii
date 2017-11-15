@@ -63,6 +63,4 @@ class Amount extends BunqObject
     {
         return $this->value;
     }
-
-
 }

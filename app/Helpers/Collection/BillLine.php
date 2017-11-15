@@ -177,6 +177,4 @@ class BillLine
     {
         $this->hit = $hit;
     }
-
-
 }

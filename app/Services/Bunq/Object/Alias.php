@@ -74,6 +74,4 @@ class Alias extends BunqObject
     {
         return $this->value;
     }
-
-
 }

@@ -97,4 +97,3 @@ interface AttachmentRepositoryInterface
      */
     public function update(Attachment $attachment, array $attachmentData): Attachment;
 }
-

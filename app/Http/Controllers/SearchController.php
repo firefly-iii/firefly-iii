@@ -51,7 +51,6 @@ class SearchController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -96,8 +95,5 @@ class SearchController extends Controller
         $html = view('search.search', compact('transactions'))->render();
 
         return Response::json(['count' => $transactions->count(), 'html' => $html]);
-
-
     }
-
 }

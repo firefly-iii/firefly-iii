@@ -38,7 +38,6 @@ use Watson\Validating\ValidatingTrait;
  */
 class Bill extends Model
 {
-
     use SoftDeletes, ValidatingTrait;
     /**
      * The attributes that should be casted to native types.
@@ -85,7 +84,6 @@ class Bill extends Model
      */
     public function getMatchAttribute($value)
     {
-
         if (intval($this->match_encrypted) === 1) {
             return Crypt::decrypt($value);
         }
@@ -100,7 +98,6 @@ class Bill extends Model
      */
     public function getNameAttribute($value)
     {
-
         if (intval($this->name_encrypted) === 1) {
             return Crypt::decrypt($value);
         }
@@ -159,6 +156,4 @@ class Bill extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-
 }

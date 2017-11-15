@@ -39,7 +39,6 @@ use Response;
 use Session;
 use View;
 
-
 /**
  * Class FileController.
  *
@@ -128,8 +127,6 @@ class FileController extends Controller
                  ->header('Content-Length', strlen($result));
 
         return $response;
-
-
     }
 
     /**

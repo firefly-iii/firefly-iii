@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Loader;
 
-
 use FireflyIII\Support\Twig\Extension\Transaction;
 use Twig_RuntimeLoaderInterface;
 
