@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
@@ -27,13 +26,10 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 
 /**
- * Class Categories
- *
- * @package FireflyIII\Import\Mapper
+ * Class Categories.
  */
 class Categories implements MapperInterface
 {
-
     /**
      * @return array
      */

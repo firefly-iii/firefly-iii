@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
@@ -30,13 +29,10 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface AccountRepositoryInterface
- *
- * @package FireflyIII\Repositories\Account
+ * Interface AccountRepositoryInterface.
  */
 interface AccountRepositoryInterface
 {
-
     /**
      * Moved here from account CRUD.
      *

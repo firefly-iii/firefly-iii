@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -42,9 +41,7 @@ use Session;
 use View;
 
 /**
- * Class ReportController
- *
- * @package FireflyIII\Http\Controllers
+ * Class ReportController.
  */
 class ReportController extends Controller
 {
@@ -97,7 +94,6 @@ class ReportController extends Controller
                 ]
             )
         );
-
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
@@ -227,7 +223,6 @@ class ReportController extends Controller
         $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList      = join(',', $accounts->pluck('id')->toArray());
 
-
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
     }
 
@@ -274,26 +269,26 @@ class ReportController extends Controller
         $tags       = join(',', $request->getTagList()->pluck('tag')->toArray());
         $uri        = route('reports.index');
 
-        if ($request->getAccountList()->count() === 0) {
+        if (0 === $request->getAccountList()->count()) {
             Log::debug('Account count is zero');
             Session::flash('error', trans('firefly.select_more_than_one_account'));
 
             return redirect(route('reports.index'));
         }
 
-        if ($request->getCategoryList()->count() === 0 && $reportType === 'category') {
+        if (0 === $request->getCategoryList()->count() && 'category' === $reportType) {
             Session::flash('error', trans('firefly.select_more_than_one_category'));
 
             return redirect(route('reports.index'));
         }
 
-        if ($request->getBudgetList()->count() === 0 && $reportType === 'budget') {
+        if (0 === $request->getBudgetList()->count() && 'budget' === $reportType) {
             Session::flash('error', trans('firefly.select_more_than_one_budget'));
 
             return redirect(route('reports.index'));
         }
 
-        if ($request->getTagList()->count() === 0 && $reportType === 'tag') {
+        if (0 === $request->getTagList()->count() && 'tag' === $reportType) {
             Session::flash('error', trans('firefly.select_more_than_one_tag'));
 
             return redirect(route('reports.index'));

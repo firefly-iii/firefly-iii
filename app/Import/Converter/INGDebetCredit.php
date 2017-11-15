@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Converter;
@@ -26,13 +25,10 @@ namespace FireflyIII\Import\Converter;
 use Log;
 
 /**
- * Class INGDebetCredit
- *
- * @package FireflyIII\Import\Converter
+ * Class INGDebetCredit.
  */
 class INGDebetCredit implements ConverterInterface
 {
-
     /**
      * @param $value
      *
@@ -42,7 +38,7 @@ class INGDebetCredit implements ConverterInterface
     {
         Log::debug('Going to convert ing debet credit', ['value' => $value]);
 
-        if ($value === 'Af') {
+        if ('Af' === $value) {
             Log::debug('Return -1');
 
             return -1;

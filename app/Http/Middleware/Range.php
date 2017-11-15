@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -36,9 +35,7 @@ use Session;
 use View;
 
 /**
- * Class SessionFilter
- *
- * @package FireflyIII\Http\Middleware
+ * Class SessionFilter.
  */
 class Range
 {
@@ -52,8 +49,7 @@ class Range
     /**
      * Create a new filter instance.
      *
-     * @param  Guard $auth
-     *
+     * @param Guard $auth
      */
     public function __construct(Guard $auth)
     {
@@ -63,16 +59,15 @@ class Range
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param Closure                   $next
-     * @param  string|null              $guard
+     * @param \Illuminate\Http\Request $request
+     * @param Closure                  $next
+     * @param string|null              $guard
      *
      * @return mixed
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
         if (!Auth::guard($guard)->guest()) {
-
             // set start, end and finish:
             $this->setRange();
 
@@ -108,10 +103,9 @@ class Range
         $moneyResult = setlocale(LC_MONETARY, $locale);
 
         // send error to view if could not set money format
-        if ($moneyResult === false) {
+        if (false === $moneyResult) {
             View::share('invalidMonetaryLocale', true);
         }
-
 
         // save some formats:
         $monthAndDayFormat = (string)trans('config.month_and_day');
@@ -144,7 +138,7 @@ class Range
             $journal    = $repository->first();
             $first      = Carbon::now()->startOfYear();
 
-            if (!is_null($journal->id)) {
+            if (null !== $journal->id) {
                 $first = $journal->date;
             }
             Session::put('first', $first);

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
@@ -31,19 +30,15 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- *
- * Class ImportAccount
- *
- * @package FireflyIII\Import\Object
+ * Class ImportAccount.
  */
 class ImportAccount
 {
-
-    /** @var  Account */
+    /** @var Account */
     private $account;
     /** @var array */
     private $accountIban = [];
-    /** @var  array */
+    /** @var array */
     private $accountId = [];
     /** @var array */
     private $accountName = [];
@@ -61,9 +56,9 @@ class ImportAccount
      * @var int
      */
     private $forbiddenAccountId = 0;
-    /** @var  AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface */
     private $repository;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -82,7 +77,7 @@ class ImportAccount
      */
     public function getAccount(): Account
     {
-        if (is_null($this->account->id)) {
+        if (null === $this->account->id) {
             $this->store();
         }
 
@@ -174,14 +169,14 @@ class ImportAccount
         $accountType = AccountType::whereType($this->expectedType)->first();
 
         // 1: find by ID, iban or name (and type)
-        if (count($this->accountId) === 3) {
+        if (3 === count($this->accountId)) {
             Log::debug(sprintf('Finding account of type %d and ID %d', $accountType->id, $this->accountId['value']));
             /** @var Account $account */
             $account = $this->user->accounts()->where('id', '!=', $this->forbiddenAccountId)->where('account_type_id', $accountType->id)->where(
                 'id',
                 $this->accountId['value']
             )->first();
-            if (!is_null($account)) {
+            if (null !== $account) {
                 Log::debug(sprintf('Found unmapped %s account by ID (#%d): %s', $this->expectedType, $account->id, $account->name));
 
                 return $account;
@@ -191,7 +186,7 @@ class ImportAccount
         /** @var Collection $accounts */
         $accounts = $this->repository->getAccountsByType([$accountType->type]);
         // Two: find by IBAN (and type):
-        if (count($this->accountIban) === 3) {
+        if (3 === count($this->accountIban)) {
             $iban = $this->accountIban['value'];
             Log::debug(sprintf('Finding account of type %d and IBAN %s', $accountType->id, $iban));
             $filtered = $accounts->filter(
@@ -207,14 +202,14 @@ class ImportAccount
                     return null;
                 }
             );
-            if ($filtered->count() === 1) {
+            if (1 === $filtered->count()) {
                 return $filtered->first();
             }
             Log::debug('Found nothing.');
         }
 
         // Three: find by name (and type):
-        if (count($this->accountName) === 3) {
+        if (3 === count($this->accountName)) {
             $name = $this->accountName['value'];
             Log::debug(sprintf('Finding account of type %d and name %s', $accountType->id, $name));
             $filtered = $accounts->filter(
@@ -229,7 +224,7 @@ class ImportAccount
                 }
             );
 
-            if ($filtered->count() === 1) {
+            if (1 === $filtered->count()) {
                 return $filtered->first();
             }
             Log::debug('Found nothing.');
@@ -253,7 +248,7 @@ class ImportAccount
             Log::debug(sprintf('Find mapped account based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (!is_null($mapped->id)) {
+            if (null !== $mapped->id) {
                 Log::debug(sprintf('Found account #%d!', $mapped->id));
 
                 return $mapped;
@@ -272,13 +267,13 @@ class ImportAccount
     private function getMappedObject(array $array): Account
     {
         Log::debug('In getMappedObject() for Account');
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return new Account;
         }
 
-        if (array_key_exists('mapped', $array) && is_null($array['mapped'])) {
+        if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
             return new Account;
@@ -289,7 +284,7 @@ class ImportAccount
         $search  = intval($array['mapped']);
         $account = $this->repository->find($search);
 
-        if (is_null($account->id)) {
+        if (null === $account->id) {
             Log::error(sprintf('There is no account with id #%d. Invalid mapping will be ignored!', $search));
 
             return new Account;
@@ -297,7 +292,7 @@ class ImportAccount
         // must be of the same type
         // except when mapped is an asset, then it's fair game.
         // which only shows that user must map very carefully.
-        if ($account->accountType->type !== $this->expectedType && $account->accountType->type !== AccountType::ASSET) {
+        if ($account->accountType->type !== $this->expectedType && AccountType::ASSET !== $account->accountType->type) {
             Log::error(
                 sprintf(
                     'Mapped account #%d is of type "%s" but we expect a "%s"-account. Mapping will be ignored.',
@@ -322,14 +317,14 @@ class ImportAccount
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (!is_null($mapped->id)) {
+        if (null !== $mapped->id) {
             $this->account = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (!is_null($found->id)) {
+        if (null !== $found->id) {
             $this->account = $found;
 
             return true;
@@ -340,7 +335,7 @@ class ImportAccount
         $oldExpectedType    = $this->expectedType;
         $this->expectedType = AccountType::ASSET;
         $found              = $this->findExistingObject();
-        if (!is_null($found->id)) {
+        if (null !== $found->id) {
             Log::debug('Found asset account!');
             $this->account = $found;
 
@@ -349,7 +344,7 @@ class ImportAccount
         $this->expectedType = $oldExpectedType;
 
         // 4: if search for an asset account, fall back to given "default account" (mandatory)
-        if ($this->expectedType === AccountType::ASSET) {
+        if (AccountType::ASSET === $this->expectedType) {
             $this->account = $this->repository->find($this->defaultAccountId);
             Log::debug(sprintf('Fall back to default account #%d "%s"', $this->account->id, $this->account->name));
 

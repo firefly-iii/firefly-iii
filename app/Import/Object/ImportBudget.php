@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
@@ -30,13 +29,10 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class ImportBudget
- *
- * @package FireflyIII\Import\Object
+ * Class ImportBudget.
  */
 class ImportBudget
 {
-
     /** @var Budget */
     private $budget;
     /** @var array */
@@ -45,7 +41,7 @@ class ImportBudget
     private $name = [];
     /** @var BudgetRepositoryInterface */
     private $repository;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -63,7 +59,7 @@ class ImportBudget
      */
     public function getBudget(): Budget
     {
-        if (is_null($this->budget->id)) {
+        if (null === $this->budget->id) {
             $this->store();
         }
 
@@ -103,11 +99,11 @@ class ImportBudget
         Log::debug('In findExistingObject() for Budget');
         // 1: find by ID, or name
 
-        if (count($this->id) === 3) {
+        if (3 === count($this->id)) {
             Log::debug(sprintf('Finding budget with ID #%d', $this->id['value']));
             /** @var Budget $budget */
             $budget = $this->repository->find(intval($this->id['value']));
-            if (!is_null($budget->id)) {
+            if (null !== $budget->id) {
                 Log::debug(sprintf('Found unmapped budget by ID (#%d): %s', $budget->id, $budget->name));
 
                 return $budget;
@@ -115,7 +111,7 @@ class ImportBudget
             Log::debug('Found nothing.');
         }
         // 2: find by name
-        if (count($this->name) === 3) {
+        if (3 === count($this->name)) {
             /** @var Collection $budgets */
             $budgets = $this->repository->getBudgets();
             $name    = $this->name['value'];
@@ -132,7 +128,7 @@ class ImportBudget
                 }
             );
 
-            if ($filtered->count() === 1) {
+            if (1 === $filtered->count()) {
                 return $filtered->first();
             }
             Log::debug('Found nothing.');
@@ -156,7 +152,7 @@ class ImportBudget
             Log::debug(sprintf('Find mapped budget based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (!is_null($mapped->id)) {
+            if (null !== $mapped->id) {
                 Log::debug(sprintf('Found budget #%d!', $mapped->id));
 
                 return $mapped;
@@ -175,13 +171,13 @@ class ImportBudget
     private function getMappedObject(array $array): Budget
     {
         Log::debug('In getMappedObject() for Budget');
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return new Budget;
         }
 
-        if (array_key_exists('mapped', $array) && is_null($array['mapped'])) {
+        if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
             return new Budget;
@@ -192,7 +188,7 @@ class ImportBudget
         $search = intval($array['mapped']);
         $budget = $this->repository->find($search);
 
-        if (is_null($budget->id)) {
+        if (null === $budget->id) {
             Log::error(sprintf('There is no budget with id #%d. Invalid mapping will be ignored!', $search));
 
             return new Budget;
@@ -210,21 +206,21 @@ class ImportBudget
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (!is_null($mapped->id)) {
+        if (null !== $mapped->id) {
             $this->budget = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (!is_null($found->id)) {
+        if (null !== $found->id) {
             $this->budget = $found;
 
             return true;
         }
         $name = $this->name['value'] ?? '';
 
-        if (strlen($name) === 0) {
+        if (0 === strlen($name)) {
             return true;
         }
 

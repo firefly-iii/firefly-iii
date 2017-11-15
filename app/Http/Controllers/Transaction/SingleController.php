@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
@@ -48,26 +47,24 @@ use Steam;
 use View;
 
 /**
- * Class SingleController
- *
- * @package FireflyIII\Http\Controllers\Transaction
+ * Class SingleController.
  */
 class SingleController extends Controller
 {
-    /** @var  AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface */
     private $accounts;
 
     /** @var AttachmentHelperInterface */
     private $attachments;
 
-    /** @var  BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface */
     private $budgets;
-    /** @var  CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface */
     private $currency;
-    /** @var  PiggyBankRepositoryInterface */
+    /** @var PiggyBankRepositoryInterface */
     private $piggyBanks;
 
-    /** @var  JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface */
     private $repository;
 
     /**
@@ -105,14 +102,14 @@ class SingleController extends Controller
         $source       = $journal->sourceAccountList()->first();
         $destination  = $journal->destinationAccountList()->first();
         $budget       = $journal->budgets()->first();
-        $budgetId     = is_null($budget) ? 0 : $budget->id;
+        $budgetId     = null === $budget ? 0 : $budget->id;
         $category     = $journal->categories()->first();
-        $categoryName = is_null($category) ? '' : $category->name;
+        $categoryName = null === $category ? '' : $category->name;
         $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
         $amount        = Steam::positive($transaction->amount);
-        $foreignAmount = is_null($transaction->foreign_amount) ? null : Steam::positive($transaction->foreign_amount);
+        $foreignAmount = null === $transaction->foreign_amount ? null : Steam::positive($transaction->foreign_amount);
 
         $preFilled = [
             'description'               => $journal->description,
@@ -142,7 +139,7 @@ class SingleController extends Controller
 
         /** @var Note $note */
         $note = $journal->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
 
@@ -172,7 +169,7 @@ class SingleController extends Controller
         Session::put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('transactions.create.fromStore') !== true) {
+        if (true !== session('transactions.create.fromStore')) {
             $this->rememberPreviousUri('transactions.create.uri');
         }
         Session::forget('transactions.create.fromStore');
@@ -218,6 +215,7 @@ class SingleController extends Controller
      * @param TransactionJournal $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @internal param JournalRepositoryInterface $repository
      */
     public function destroy(TransactionJournal $transactionJournal)
@@ -265,7 +263,7 @@ class SingleController extends Controller
         $destinationAccounts = $journal->destinationAccountList();
         $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
         $pTransaction        = $journal->positiveTransaction();
-        $foreignCurrency     = !is_null($pTransaction->foreignCurrency) ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency;
+        $foreignCurrency     = null !== $pTransaction->foreignCurrency ? $pTransaction->foreignCurrency : $pTransaction->transactionCurrency;
         $preFilled           = [
             'date'                     => $journal->dateAsString(),
             'interest_date'            => $journal->dateAsString('interest_date'),
@@ -299,13 +297,13 @@ class SingleController extends Controller
         ];
         /** @var Note $note */
         $note = $journal->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $preFilled['notes'] = $note->text;
         }
 
         // amounts for withdrawals and deposits:
         // amount, native_amount, source_amount, destination_amount
-        if (($journal->isWithdrawal() || $journal->isDeposit()) && !is_null($pTransaction->foreign_amount)) {
+        if (($journal->isWithdrawal() || $journal->isDeposit()) && null !== $pTransaction->foreign_amount) {
             $preFilled['amount']   = $pTransaction->foreign_amount;
             $preFilled['currency'] = $pTransaction->foreignCurrency;
         }
@@ -315,7 +313,7 @@ class SingleController extends Controller
         Session::flash('gaEventAction', 'edit-' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('transactions.edit.fromUpdate') !== true) {
+        if (true !== session('transactions.edit.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit.uri');
         }
         Session::forget('transactions.edit.fromUpdate');
@@ -334,11 +332,11 @@ class SingleController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-        $doSplit       = intval($request->get('split_journal')) === 1;
-        $createAnother = intval($request->get('create_another')) === 1;
+        $doSplit       = 1 === intval($request->get('split_journal'));
+        $createAnother = 1 === intval($request->get('create_another'));
         $data          = $request->getJournalData();
         $journal       = $repository->store($data);
-        if (is_null($journal->id)) {
+        if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal: ', $journal->getErrors()->toArray());
             Session::flash('error', $journal->getErrors()->first());
@@ -366,13 +364,13 @@ class SingleController extends Controller
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
-        if ($createAnother === true) {
+        if (true === $createAnother) {
             Session::put('transactions.create.fromStore', true);
 
             return redirect(route('transactions.create', [$request->input('what')]))->withInput();
         }
 
-        if ($doSplit === true) {
+        if (true === $doSplit) {
             return redirect(route('transactions.split.edit', [$journal->id]));
         }
 
@@ -419,7 +417,7 @@ class SingleController extends Controller
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             Session::put('transactions.edit.fromUpdate', true);
 
             return redirect(route('transactions.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
@@ -440,7 +438,7 @@ class SingleController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $type = $account->getMeta('accountRole');
-            if (strlen($type) === 0) {
+            if (0 === strlen($type)) {
                 $type = 'no_account_type';
             }
             $key                        = strval(trans('firefly.opt_group_' . $type));
@@ -460,7 +458,7 @@ class SingleController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $type = $account->getMeta('accountRole');
-            if (strlen($type) === 0) {
+            if (0 === strlen($type)) {
                 $type = 'no_account_type';
             }
             $key                        = strval(trans('firefly.opt_group_' . $type));

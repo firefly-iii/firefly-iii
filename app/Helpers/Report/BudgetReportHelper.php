@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
@@ -30,9 +29,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
- * Class BudgetReportHelper
- *
- * @package FireflyIII\Helpers\Report
+ * Class BudgetReportHelper.
  */
 class BudgetReportHelper implements BudgetReportHelperInterface
 {
@@ -52,6 +49,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // all the arrays make it long.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -66,9 +64,8 @@ class BudgetReportHelper implements BudgetReportHelperInterface
         /** @var Budget $budget */
         foreach ($set as $budget) {
             $budgetLimits = $this->repository->getBudgetLimits($budget, $start, $end);
-            if ($budgetLimits->count() === 0) { // no budget limit(s) for this budget
-
-                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end);// spent for budget in time range
+            if (0 === $budgetLimits->count()) { // no budget limit(s) for this budget
+                $spent = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $start, $end); // spent for budget in time range
                 if (bccomp($spent, '0') === -1) {
                     $line    = [
                         'type'      => 'budget',
@@ -156,9 +153,9 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     {
         $array              = [];
         $expenses           = $this->repository->spentInPeriod(new Collection([$budget]), $accounts, $budgetLimit->start_date, $budgetLimit->end_date);
-        $array['left']      = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? bcadd($budgetLimit->amount, $expenses) : '0';
-        $array['spent']     = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? $expenses : '0';
-        $array['overspent'] = bccomp(bcadd($budgetLimit->amount, $expenses), '0') === 1 ? '0' : bcadd($expenses, $budgetLimit->amount);
+        $array['left']      = 1 === bccomp(bcadd($budgetLimit->amount, $expenses), '0') ? bcadd($budgetLimit->amount, $expenses) : '0';
+        $array['spent']     = 1 === bccomp(bcadd($budgetLimit->amount, $expenses), '0') ? $expenses : '0';
+        $array['overspent'] = 1 === bccomp(bcadd($budgetLimit->amount, $expenses), '0') ? '0' : bcadd($expenses, $budgetLimit->amount);
         $array['expenses']  = $expenses;
 
         return $array;

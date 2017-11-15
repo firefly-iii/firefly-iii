@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,9 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class TransactionCurrency
- *
- * @package FireflyIII\Models
+ * Class TransactionCurrency.
  */
 class TransactionCurrency extends Model
 {
@@ -58,7 +55,7 @@ class TransactionCurrency extends Model
      *
      * @return TransactionCurrency
      */
-    public static function routeBinder(TransactionCurrency $currency)
+    public static function routeBinder(self $currency)
     {
         if (auth()->check()) {
             return $currency;

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -43,20 +42,16 @@ use Steam;
 use View;
 
 /**
- * Class CategoryController
- *
- * @package FireflyIII\Http\Controllers
+ * Class CategoryController.
  */
 class CategoryController extends Controller
 {
-
     /**
      *
      */
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -75,7 +70,7 @@ class CategoryController extends Controller
      */
     public function create(Request $request)
     {
-        if (session('categories.create.fromStore') !== true) {
+        if (true !== session('categories.create.fromStore')) {
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
@@ -103,7 +98,6 @@ class CategoryController extends Controller
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
-
 
     /**
      * @param Request                     $request
@@ -134,7 +128,7 @@ class CategoryController extends Controller
         $subTitle = trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('categories.edit.fromUpdate') !== true) {
+        if (true !== session('categories.edit.fromUpdate')) {
             $this->rememberPreviousUri('categories.edit.uri');
         }
         $request->session()->forget('categories.edit.fromUpdate');
@@ -180,7 +174,7 @@ class CategoryController extends Controller
         $pageSize = intval(Preferences::get('transactionPageSize', 50)->data);
 
         // prep for "all" view.
-        if ($moment === 'all') {
+        if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_without_category');
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
@@ -188,7 +182,7 @@ class CategoryController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && $moment !== 'all') {
+        if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
             $subTitle = trans(
@@ -199,7 +193,7 @@ class CategoryController extends Controller
         }
 
         // prep for current period
-        if (strlen($moment) === 0) {
+        if (0 === strlen($moment)) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getNoCategoryPeriodOverview();
@@ -208,7 +202,6 @@ class CategoryController extends Controller
                 ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
             );
         }
-
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -242,28 +235,28 @@ class CategoryController extends Controller
         $periods      = new Collection;
 
         // prep for "all" view.
-        if ($moment === 'all') {
+        if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
             $first    = $repository->firstUseDate($category);
             /** @var Carbon $start */
-            $start = is_null($first) ? new Carbon : $first;
+            $start = null === $first ? new Carbon : $first;
             $end   = new Carbon;
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && $moment !== 'all') {
+        if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name'  => $category->name,
-                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
             );
             $periods  = $this->getPeriodOverview($category);
         }
 
         // prep for current period
-        if (strlen($moment) === 0) {
+        if (0 === strlen($moment)) {
             /** @var Carbon $start */
             $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
@@ -272,7 +265,7 @@ class CategoryController extends Controller
             $subTitle = trans(
                 'firefly.journals_in_period_for_category',
                 ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                 'end'  => $end->formatLocalized($this->monthAndDayFormat)]
+                 'end'  => $end->formatLocalized($this->monthAndDayFormat),]
             );
         }
 
@@ -284,10 +277,8 @@ class CategoryController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('categories.show', [$category->id]));
 
-
         return view('categories.show', compact('category', 'moment', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
-
 
     /**
      * @param CategoryFormRequest         $request
@@ -303,7 +294,7 @@ class CategoryController extends Controller
         $request->session()->flash('success', strval(trans('firefly.stored_category', ['name' => $category->name])));
         Preferences::mark();
 
-        if (intval($request->get('create_another')) === 1) {
+        if (1 === intval($request->get('create_another'))) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.create.fromStore', true);
 
@@ -313,7 +304,6 @@ class CategoryController extends Controller
 
         return redirect(route('categories.index'));
     }
-
 
     /**
      * @param CategoryFormRequest         $request
@@ -330,7 +320,7 @@ class CategoryController extends Controller
         $request->session()->flash('success', strval(trans('firefly.updated_category', ['name' => $category->name])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.edit.fromUpdate', true);
 
@@ -432,7 +422,7 @@ class CategoryController extends Controller
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $first             = $repository->firstUseDate($category);
-        if (is_null($first)) {
+        if (null === $first) {
             $first = new Carbon;
         }
         $range   = Preferences::get('viewRange', '1M')->data;
@@ -479,7 +469,7 @@ class CategoryController extends Controller
                 ]
             );
             $end = Navigation::subtractPeriod($end, $range, 1);
-            $count++;
+            ++$count;
         }
         $cache->store($entries);
 

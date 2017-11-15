@@ -1,7 +1,7 @@
 <?php
 /**
  * IngDescription.php
- * Copyright (C) 2016 https://github.com/tomwerf
+ * Copyright (C) 2016 https://github.com/tomwerf.
  *
  * This file is part of Firefly III.
  *
@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Specifics;
 
 /**
- * Class IngDescription
+ * Class IngDescription.
  *
  * Parses the description from CSV files for Ing bank accounts.
  *
@@ -32,12 +31,10 @@ namespace FireflyIII\Import\Specifics;
  * 'Incasso' the Name of Opposing account the Opposing IBAN number are in the
  * Description. This class will remove them, and add Name in description by
  * 'Betaalautomaat' so those are easily recognizable
- *
- * @package FireflyIII\Import\Specifics
  */
 class IngDescription implements SpecificInterface
 {
-    /** @var  array */
+    /** @var array */
     public $row;
 
     /**
@@ -84,7 +81,7 @@ class IngDescription implements SpecificInterface
 
     /**
      * Add the Opposing name from cell 1 in the description for Betaalautomaten
-     * Otherwise the description is only: 'Pasvolgnr:<nr> <date> Transactie:<NR> Term:<nr>'
+     * Otherwise the description is only: 'Pasvolgnr:<nr> <date> Transactie:<NR> Term:<nr>'.
      *
      * @return bool true
      */
@@ -97,7 +94,7 @@ class IngDescription implements SpecificInterface
 
     /**
      * Remove IBAN number out of the  description
-     * Default description of Description is: Naam: <OPPOS NAME> Omschrijving: <DESCRIPTION> IBAN: <OPPOS IBAN NR>
+     * Default description of Description is: Naam: <OPPOS NAME> Omschrijving: <DESCRIPTION> IBAN: <OPPOS IBAN NR>.
      *
      * @return bool true
      */
@@ -110,7 +107,7 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     * Remove name from the description (Remove everything before the description incl the word 'Omschrijving' )
+     * Remove name from the description (Remove everything before the description incl the word 'Omschrijving' ).
      *
      * @return bool true
      */

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
@@ -26,9 +25,7 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 
 /**
- * Class UserCompany
- *
- * @package FireflyIII\Services\Bunq\Object
+ * Class UserCompany.
  */
 class UserCompany extends BunqObject
 {
@@ -69,7 +66,7 @@ class UserCompany extends BunqObject
     private $status = '';
     /** @var string */
     private $subStatus = '';
-    /** @var  string */
+    /** @var string */
     private $typeOfBusinessEntity = '';
     /** @var array */
     private $ubos = [];

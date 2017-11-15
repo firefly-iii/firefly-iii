@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
@@ -31,21 +30,19 @@ use FireflyIII\Services\Bunq\Token\SessionToken;
 use Log;
 
 /**
- * Class DeviceSessionRequest
- *
- * @package FireflyIII\Services\Bunq\Request
+ * Class DeviceSessionRequest.
  */
 class DeviceSessionRequest extends BunqRequest
 {
-    /** @var  DeviceSessionId */
+    /** @var DeviceSessionId */
     private $deviceSessionId;
-    /** @var  InstallationToken */
+    /** @var InstallationToken */
     private $installationToken;
-    /** @var  SessionToken */
+    /** @var SessionToken */
     private $sessionToken;
-    /** @var  UserCompany */
+    /** @var UserCompany */
     private $userCompany;
-    /** @var  UserPerson */
+    /** @var UserPerson */
     private $userPerson;
 
     /**
@@ -58,7 +55,6 @@ class DeviceSessionRequest extends BunqRequest
         $headers                                 = $this->getDefaultHeaders();
         $headers['X-Bunq-Client-Authentication'] = $this->installationToken->getToken();
         $response                                = $this->sendSignedBunqPost($uri, $data, $headers);
-
 
         $this->deviceSessionId = $this->extractDeviceSessionId($response);
         $this->sessionToken    = $this->extractSessionToken($response);
@@ -137,7 +133,6 @@ class DeviceSessionRequest extends BunqRequest
         $data        = $this->getKeyFromResponse('UserCompany', $response);
         $userCompany = new UserCompany($data);
 
-
         return $userCompany;
     }
 
@@ -150,7 +145,6 @@ class DeviceSessionRequest extends BunqRequest
     {
         $data       = $this->getKeyFromResponse('UserPerson', $response);
         $userPerson = new UserPerson($data);
-
 
         return $userPerson;
     }

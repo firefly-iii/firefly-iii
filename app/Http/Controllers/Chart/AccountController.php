@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -45,14 +44,11 @@ use Response;
 use Steam;
 
 /** checked
- * Class AccountController
- *
- * @package FireflyIII\Http\Controllers\Chart
+ * Class AccountController.
  */
 class AccountController extends Controller
 {
-
-    /** @var  GeneratorInterface */
+    /** @var GeneratorInterface */
     protected $generator;
 
     /**
@@ -133,7 +129,7 @@ class AccountController extends Controller
             $startBalance = $startBalances[$id] ?? '0';
             $endBalance   = $endBalances[$id] ?? '0';
             $diff         = bcsub($endBalance, $startBalance);
-            if (bccomp($diff, '0') !== 0) {
+            if (0 !== bccomp($diff, '0')) {
                 $chartData[$account->name] = $diff;
             }
         }
@@ -274,7 +270,7 @@ class AccountController extends Controller
         Log::debug('Default set is ', $defaultSet);
         $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
         Log::debug('Frontpage preference set is ', $frontPage->data);
-        if (count($frontPage->data) === 0) {
+        if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             Log::debug('frontpage set is empty!');
             $frontPage->save();
@@ -346,6 +342,7 @@ class AccountController extends Controller
      * @param Carbon  $start
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws FireflyException
      */
     public function period(Account $account, Carbon $start)
@@ -427,7 +424,7 @@ class AccountController extends Controller
             $endBalance   = $endBalances[$id] ?? '0';
             $diff         = bcsub($endBalance, $startBalance);
             $diff         = bcmul($diff, '-1');
-            if (bccomp($diff, '0') !== 0) {
+            if (0 !== bccomp($diff, '0')) {
                 $chartData[$account->name] = $diff;
             }
         }
@@ -539,7 +536,6 @@ class AccountController extends Controller
      */
     private function getBudgetNames(array $budgetIds): array
     {
-
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $budgets    = $repository->getBudgets();

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -72,7 +71,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -96,7 +95,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('income', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -223,7 +222,6 @@ class TagReportController extends Controller
                 $currentIncome  = $income[$tag->id] ?? '0';
                 $currentExpense = $expenses[$tag->id] ?? '0';
 
-
                 // add to sum:
                 $sumOfIncome[$tag->id]  = $sumOfIncome[$tag->id] ?? '0';
                 $sumOfExpense[$tag->id] = $sumOfExpense[$tag->id] ?? '0';
@@ -242,11 +240,11 @@ class TagReportController extends Controller
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
-            if (!array_sum($entry['entries']) === 0) {
+            if (0 === !array_sum($entry['entries'])) {
                 $newSet[$key] = $chartData[$key];
             }
         }
-        if (count($newSet) === 0) {
+        if (0 === count($newSet)) {
             $newSet = $chartData; // @codeCoverageIgnore
         }
         $data = $this->generator->multiSet($newSet);
@@ -272,7 +270,7 @@ class TagReportController extends Controller
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('expense', 'tag');
         $data      = $this->generator->pieChart($chartData);
 
@@ -290,14 +288,13 @@ class TagReportController extends Controller
      */
     public function tagIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end, string $others)
     {
-
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setTags($tags);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('income', 'tag');
         $data      = $this->generator->pieChart($chartData);
 

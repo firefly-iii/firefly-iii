@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
@@ -35,9 +34,7 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class ExecuteRuleOnExistingTransactions
- *
- * @package FireflyIII\Jobs
+ * Class ExecuteRuleOnExistingTransactions.
  */
 class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
 {
@@ -45,13 +42,13 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
 
     /** @var Collection */
     private $accounts;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $endDate;
     /** @var Rule */
     private $rule;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $startDate;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -73,7 +70,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param Collection $accounts
      */
     public function setAccounts(Collection $accounts)
@@ -90,7 +86,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param Carbon $date
      */
     public function setEndDate(Carbon $date)
@@ -107,7 +102,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param Carbon $date
      */
     public function setStartDate(Carbon $date)
@@ -124,7 +118,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param User $user
      */
     public function setUser(User $user)
@@ -134,8 +127,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
@@ -147,13 +138,13 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
         $total        = 0;
         // Execute the rules for each transaction
         foreach ($transactions as $transaction) {
-            $total++;
+            ++$total;
             $result = $processor->handleTransaction($transaction);
             if ($result) {
-                $hits++;
+                ++$hits;
             }
             if (!$result) {
-                $misses++;
+                ++$misses;
             }
             Log::info(sprintf('Current progress: %d Transactions. Hits: %d, misses: %d', $total, $hits, $misses));
             // Stop processing this group if the rule specifies 'stop_processing'
@@ -165,7 +156,7 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     * Collect all journals that should be processed
+     * Collect all journals that should be processed.
      *
      * @return Collection
      */

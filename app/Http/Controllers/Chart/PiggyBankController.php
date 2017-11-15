@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -32,13 +31,10 @@ use FireflyIII\Support\CacheProperties;
 use Response;
 
 /**
- * Class PiggyBankController
- *
- * @package FireflyIII\Http\Controllers\Chart
+ * Class PiggyBankController.
  */
 class PiggyBankController extends Controller
 {
-
     /** @var GeneratorInterface */
     protected $generator;
 

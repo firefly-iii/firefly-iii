@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
@@ -31,15 +30,13 @@ use Requests;
 use Requests_Exception;
 
 /**
- * Class BunqRequest
- *
- * @package Bunq\Request
+ * Class BunqRequest.
  */
 abstract class BunqRequest
 {
     /** @var string */
     protected $secret = '';
-    /** @var  ServerPublicKey */
+    /** @var ServerPublicKey */
     protected $serverPublicKey;
     /** @var string */
     private $privateKey = '';
@@ -111,14 +108,15 @@ abstract class BunqRequest
      * @param string $data
      *
      * @return string
+     *
      * @throws FireflyException
      */
     protected function generateSignature(string $method, string $uri, array $headers, string $data): string
     {
-        if (strlen($this->privateKey) === 0) {
+        if (0 === strlen($this->privateKey)) {
             throw new FireflyException('No private key present.');
         }
-        if (strtolower($method) === 'get' || strtolower($method) === 'delete') {
+        if ('get' === strtolower($method) || 'delete' === strtolower($method)) {
             $data = '';
         }
 
@@ -127,7 +125,7 @@ abstract class BunqRequest
         $headersToSign = ['Cache-Control', 'User-Agent'];
         ksort($headers);
         foreach ($headers as $name => $value) {
-            if (in_array($name, $headersToSign) || substr($name, 0, 7) === 'X-Bunq-') {
+            if (in_array($name, $headersToSign) || 'X-Bunq-' === substr($name, 0, 7)) {
                 $toSign .= sprintf("%s: %s\n", $name, $value);
             }
         }
@@ -202,11 +200,12 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
      * @throws Exception
      */
     protected function sendSignedBunqDelete(string $uri, array $headers): array
     {
-        if (strlen($this->server) === 0) {
+        if (0 === strlen($this->server)) {
             throw new FireflyException('No bunq server defined');
         }
 
@@ -216,7 +215,7 @@ abstract class BunqRequest
         try {
             $response = Requests::delete($fullUri, $headers);
         } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
 
         $body                        = $response->body;
@@ -235,7 +234,6 @@ abstract class BunqRequest
             throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
         }
 
-
         return $array;
     }
 
@@ -245,11 +243,12 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
      * @throws Exception
      */
     protected function sendSignedBunqGet(string $uri, array $data, array $headers): array
     {
-        if (strlen($this->server) === 0) {
+        if (0 === strlen($this->server)) {
             throw new FireflyException('No bunq server defined');
         }
 
@@ -260,7 +259,7 @@ abstract class BunqRequest
         try {
             $response = Requests::get($fullUri, $headers);
         } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
 
         $body                        = $response->body;
@@ -287,6 +286,7 @@ abstract class BunqRequest
      * @param array  $headers
      *
      * @return array
+     *
      * @throws Exception
      */
     protected function sendSignedBunqPost(string $uri, array $data, array $headers): array
@@ -298,7 +298,7 @@ abstract class BunqRequest
         try {
             $response = Requests::post($fullUri, $headers, $body);
         } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
 
         $body                        = $response->body;
@@ -315,7 +315,6 @@ abstract class BunqRequest
         if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
             throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
         }
-
 
         return $array;
     }
@@ -332,7 +331,7 @@ abstract class BunqRequest
         try {
             $response = Requests::delete($fullUri, $headers);
         } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         $body                        = $response->body;
         $array                       = json_decode($body, true);
@@ -362,7 +361,7 @@ abstract class BunqRequest
         try {
             $response = Requests::post($fullUri, $headers, $body);
         } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()],]];
+            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
         $body                        = $response->body;
         $array                       = json_decode($body, true);
@@ -375,7 +374,6 @@ abstract class BunqRequest
             $this->throwResponseError($array);
         }
 
-
         return $array;
     }
 
@@ -387,7 +385,7 @@ abstract class BunqRequest
     private function isErrorResponse(array $response): bool
     {
         $key = key($response);
-        if ($key === 'Error') {
+        if ('Error' === $key) {
             return true;
         }
 
@@ -431,6 +429,7 @@ abstract class BunqRequest
      * @param int    $statusCode
      *
      * @return bool
+     *
      * @throws Exception
      */
     private function verifyServerSignature(string $body, array $headers, int $statusCode): bool
@@ -440,15 +439,14 @@ abstract class BunqRequest
         $verifyHeaders = [];
 
         // false when no public key is present
-        if (is_null($this->serverPublicKey)) {
+        if (null === $this->serverPublicKey) {
             Log::error('No public key present in class, so return FALSE.');
 
             return false;
         }
         foreach ($headers as $header => $value) {
-
             // skip non-bunq headers or signature
-            if (substr($header, 0, 7) !== 'x-bunq-' || $header === 'x-bunq-server-signature') {
+            if ('x-bunq-' !== substr($header, 0, 7) || 'x-bunq-server-signature' === $header) {
                 continue;
             }
             // need to have upper case variant of header:

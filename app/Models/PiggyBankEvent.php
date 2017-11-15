@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -26,13 +25,10 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class PiggyBankEvent
- *
- * @package FireflyIII\Models
+ * Class PiggyBankEvent.
  */
 class PiggyBankEvent extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *

@@ -18,24 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Specifics;
 
 /**
- * Class AbnAmroDescription
+ * Class AbnAmroDescription.
  *
  * Parses the description from txt files for ABN AMRO bank accounts.
  *
  * Based on the logic as described in the following Gist:
  * https://gist.github.com/vDorst/68d555a6a90f62fec004
- *
- * @package FireflyIII\Import\Specifics
  */
 class AbnAmroDescription implements SpecificInterface
 {
-    /** @var  array */
+    /** @var array */
     public $row;
 
     /**
@@ -70,7 +67,6 @@ class AbnAmroDescription implements SpecificInterface
         // Try to parse the description in known formats.
         $parsed = $this->parseSepaDescription() || $this->parseTRTPDescription() || $this->parseGEABEADescription() || $this->parseABNAMRODescription();
 
-
         // If the description could not be parsed, specify an unknown opposing
         // account, as an opposing account is required
         if (!$parsed) {
@@ -81,7 +77,7 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
-     * Parses the current description with costs from ABN AMRO itself
+     * Parses the current description with costs from ABN AMRO itself.
      *
      * @return bool true if the description is GEA/BEA-format, false otherwise
      */
@@ -99,7 +95,7 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
-     * Parses the current description in GEA/BEA format
+     * Parses the current description in GEA/BEA format.
      *
      * @return bool true if the description is GEA/BEAformat, false otherwise
      */
@@ -107,12 +103,11 @@ class AbnAmroDescription implements SpecificInterface
     {
         // See if the current description is formatted in GEA/BEA format
         if (preg_match('/([BG]EA) +(NR:[a-zA-Z:0-9]+) +([0-9.\/]+) +([^,]*)/', $this->row[7], $matches)) {
-
             // description and opposing account will be the same.
             $this->row[8] = $matches[4]; // 'opposing-account-name'
             $this->row[7] = $matches[4]; // 'description'
 
-            if ($matches[1] === 'GEA') {
+            if ('GEA' === $matches[1]) {
                 $this->row[7] = 'GEA ' . $matches[4]; // 'description'
             }
 
@@ -123,7 +118,8 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
-     * Parses the current description in SEPA format
+     * Parses the current description in SEPA format.
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return bool true if the description is SEPA format, false otherwise
@@ -167,7 +163,7 @@ class AbnAmroDescription implements SpecificInterface
             // Set a new description for the current transaction. If none was given
             // set the description to type, name and reference
             $this->row[7] = $newDescription;
-            if (strlen($newDescription) === 0) {
+            if (0 === strlen($newDescription)) {
                 $this->row[7] = sprintf('%s - %s (%s)', $type, $name, $reference);
             }
 
@@ -178,7 +174,7 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
-     * Parses the current description in TRTP format
+     * Parses the current description in TRTP format.
      *
      * @return bool true if the description is TRTP format, false otherwise
      */
@@ -222,7 +218,7 @@ class AbnAmroDescription implements SpecificInterface
                 // Set a new description for the current transaction. If none was given
                 // set the description to type, name and reference
                 $this->row[7] = $newDescription;
-                if (strlen($newDescription) === 0) {
+                if (0 === strlen($newDescription)) {
                     $this->row[7] = sprintf('%s - %s (%s)', $type, $name, $reference);
                 }
             }

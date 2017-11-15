@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -28,9 +27,7 @@ use Illuminate\Console\Command;
 use Log;
 
 /**
- * Class DecryptAttachment
- *
- * @package FireflyIII\Console\Commands
+ * Class DecryptAttachment.
  */
 class DecryptAttachment extends Command
 {
@@ -50,10 +47,8 @@ class DecryptAttachment extends Command
         = 'firefly:decrypt-attachment {id:The ID of the attachment.} {name:The file name of the attachment.} 
     {directory:Where the file must be stored.}';
 
-
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -65,7 +60,6 @@ class DecryptAttachment extends Command
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     *
      */
     public function handle()
     {
@@ -75,7 +69,7 @@ class DecryptAttachment extends Command
         $attachment     = $repository->findWithoutUser($attachmentId);
         $attachmentName = trim($this->argument('name'));
         $storagePath    = realpath(trim($this->argument('directory')));
-        if (is_null($attachment->id)) {
+        if (null === $attachment->id) {
             $this->error(sprintf('No attachment with id #%d', $attachmentId));
             Log::error(sprintf('DecryptAttachment: No attachment with id #%d', $attachmentId));
 
@@ -107,7 +101,7 @@ class DecryptAttachment extends Command
         $content  = $repository->getContent($attachment);
         $this->line(sprintf('Going to write content for attachment #%d into file "%s"', $attachment->id, $fullPath));
         $result = file_put_contents($fullPath, $content);
-        if ($result === false) {
+        if (false === $result) {
             $this->error('Could not write to file.');
 
             return;

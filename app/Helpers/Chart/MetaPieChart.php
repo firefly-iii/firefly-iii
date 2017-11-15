@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Chart;
@@ -41,23 +40,19 @@ use Illuminate\Support\Collection;
 use Steam;
 
 /**
- * Class MetaPieChart
- *
- * @package FireflyIII\Helpers\Chart
- *
- *
+ * Class MetaPieChart.
  */
 class MetaPieChart implements MetaPieChartInterface
 {
-    /** @var  Collection */
+    /** @var Collection */
     protected $accounts;
-    /** @var  Collection */
+    /** @var Collection */
     protected $budgets;
-    /** @var  Collection */
+    /** @var Collection */
     protected $categories;
     /** @var bool */
     protected $collectOtherObjects = false;
-    /** @var  Carbon */
+    /** @var Carbon */
     protected $end;
     /** @var array */
     protected $grouping
@@ -75,13 +70,13 @@ class MetaPieChart implements MetaPieChartInterface
             'category' => CategoryRepositoryInterface::class,
             'tag'      => TagRepositoryInterface::class,
         ];
-    /** @var  Carbon */
+    /** @var Carbon */
     protected $start;
-    /** @var  Collection */
+    /** @var Collection */
     protected $tags;
-    /** @var  string */
+    /** @var string */
     protected $total = '0';
-    /** @var  User */
+    /** @var User */
     protected $user;
 
     public function __construct()
@@ -108,7 +103,7 @@ class MetaPieChart implements MetaPieChartInterface
         $key          = strval(trans('firefly.everything_else'));
 
         // also collect all other transactions
-        if ($this->collectOtherObjects && $direction === 'expense') {
+        if ($this->collectOtherObjects && 'expense' === $direction) {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
@@ -121,7 +116,7 @@ class MetaPieChart implements MetaPieChartInterface
             $chartData[$key] = $sum;
         }
 
-        if ($this->collectOtherObjects && $direction === 'income') {
+        if ($this->collectOtherObjects && 'income' === $direction) {
             /** @var JournalCollectorInterface $collector */
             $collector = app(JournalCollectorInterface::class);
             $collector->setUser($this->user);
@@ -258,7 +253,7 @@ class MetaPieChart implements MetaPieChartInterface
         $collector = app(JournalCollectorInterface::class);
         $types     = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $collector->addFilter(NegativeAmountFilter::class);
-        if ($direction === 'expense') {
+        if ('expense' === $direction) {
             $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
             $collector->addFilter(PositiveAmountFilter::class);
             $collector->removeFilter(NegativeAmountFilter::class);
@@ -271,7 +266,7 @@ class MetaPieChart implements MetaPieChartInterface
         $collector->withOpposingAccount();
         $collector->addFilter(OpposingAccountFilter::class);
 
-        if ($direction === 'income') {
+        if ('income' === $direction) {
             $collector->removeFilter(TransferFilter::class);
         }
 
@@ -294,11 +289,10 @@ class MetaPieChart implements MetaPieChartInterface
      * @return array
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      */
     protected function groupByFields(Collection $set, array $fields): array
     {
-        if (count($fields) === 0 && $this->tags->count() > 0) {
+        if (0 === count($fields) && $this->tags->count() > 0) {
             // do a special group on tags:
             return $this->groupByTag($set);
         }

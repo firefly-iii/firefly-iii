@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Converter;
@@ -26,16 +25,13 @@ namespace FireflyIII\Import\Converter;
 use Log;
 
 /**
- * Class RabobankDebetCredit
- *
- * @package FireflyIII\Import\Converter
+ * Class RabobankDebetCredit.
  */
 class Amount implements ConverterInterface
 {
-
     /**
      * Some people, when confronted with a problem, think "I know, I'll use regular expressions." Now they have two problems.
-     * - Jamie Zawinski
+     * - Jamie Zawinski.
      *
      *
      * @param $value
@@ -46,7 +42,7 @@ class Amount implements ConverterInterface
      */
     public function convert($value): string
     {
-        if (is_null($value)) {
+        if (null === $value) {
             return '0';
         }
         $value = strval($value);
@@ -56,35 +52,35 @@ class Amount implements ConverterInterface
         $altPosition     = $len - 2;
         $decimal         = null;
 
-        if (($len > 2 && $value{$decimalPosition} === '.') || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
+        if (($len > 2 && '.' === $value[$decimalPosition]) || ($len > 2 && strpos($value, '.') > $decimalPosition)) {
             $decimal = '.';
             Log::debug(sprintf('Decimal character in "%s" seems to be a dot.', $value));
         }
-        if ($len > 2 && $value{$decimalPosition} === ',') {
+        if ($len > 2 && ',' === $value[$decimalPosition]) {
             $decimal = ',';
             Log::debug(sprintf('Decimal character in "%s" seems to be a comma.', $value));
         }
         // decimal character is null? find out if "0.1" or ".1" or "0,1" or ",1"
-        if ($len > 1 && ($value{$altPosition} === '.' || $value{$altPosition} === ',')) {
-            $decimal = $value{$altPosition};
+        if ($len > 1 && ('.' === $value[$altPosition] || ',' === $value[$altPosition])) {
+            $decimal = $value[$altPosition];
             Log::debug(sprintf('Alternate search resulted in "%s" for decimal sign.', $decimal));
         }
 
         // if decimal is dot, replace all comma's and spaces with nothing. then parse as float (round to 4 pos)
-        if ($decimal === '.') {
+        if ('.' === $decimal) {
             $search   = [',', ' '];
             $oldValue = $value;
             $value    = str_replace($search, '', $value);
             Log::debug(sprintf('Converted amount from "%s" to "%s".', $oldValue, $value));
         }
-        if ($decimal === ',') {
+        if (',' === $decimal) {
             $search   = ['.', ' '];
             $oldValue = $value;
             $value    = str_replace($search, '', $value);
             $value    = str_replace(',', '.', $value);
             Log::debug(sprintf('Converted amount from "%s" to "%s".', $oldValue, $value));
         }
-        if (is_null($decimal)) {
+        if (null === $decimal) {
             // replace all:
             $search   = ['.', ' ', ','];
             $oldValue = $value;

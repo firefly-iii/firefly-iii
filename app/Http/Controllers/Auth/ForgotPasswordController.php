@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * ForgotPasswordController.php
@@ -53,7 +51,6 @@ class ForgotPasswordController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      */
     public function __construct()
     {

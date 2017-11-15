@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -28,13 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class NotesEmpty
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class NotesEmpty.
  */
 final class NotesEmpty extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -66,11 +62,11 @@ final class NotesEmpty extends AbstractTrigger implements TriggerInterface
         /** @var Note $note */
         $note = $journal->notes()->first();
         $text = '';
-        if (!is_null($note)) {
+        if (null !== $note) {
             $text = $note->text;
         }
 
-        if (strlen($text) === 0) {
+        if (0 === strlen($text)) {
             Log::debug(sprintf('RuleTrigger NotesEmpty for journal #%d: strlen is 0, return true.', $journal->id));
 
             return true;

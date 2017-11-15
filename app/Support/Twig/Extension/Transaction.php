@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Extension;
@@ -33,13 +32,10 @@ use Lang;
 use Twig_Extension;
 
 /**
- * Class Transaction
- *
- * @package FireflyIII\Support\Twig\Extension
+ * Class Transaction.
  */
 class Transaction extends Twig_Extension
 {
-
     /**
      * Can show the amount of a transaction, if that transaction has been collected by the journal collector.
      *
@@ -61,16 +57,16 @@ class Transaction extends Twig_Extension
         $format   = '%s';
         $coloured = true;
 
-        if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
+        if (TransactionType::DEPOSIT === $transaction->transaction_type_type) {
             $amount = bcmul($amount, '-1');
         }
 
-        if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
+        if (TransactionType::TRANSFER === $transaction->transaction_type_type) {
             $amount   = app('steam')->positive($amount);
             $coloured = false;
             $format   = '<span class="text-info">%s</span>';
         }
-        if ($transaction->transaction_type_type === TransactionType::OPENING_BALANCE) {
+        if (TransactionType::OPENING_BALANCE === $transaction->transaction_type_type) {
             $amount = strval($transaction->transaction_amount);
         }
 
@@ -79,15 +75,13 @@ class Transaction extends Twig_Extension
         $currency->decimal_places = $transaction->transaction_currency_dp;
         $str                      = sprintf($format, app('amount')->formatAnything($currency, $amount, $coloured));
 
-
-        if (!is_null($transaction->transaction_foreign_amount)) {
+        if (null !== $transaction->transaction_foreign_amount) {
             $amount = bcmul(app('steam')->positive(strval($transaction->transaction_foreign_amount)), '-1');
-            if ($transaction->transaction_type_type === TransactionType::DEPOSIT) {
+            if (TransactionType::DEPOSIT === $transaction->transaction_type_type) {
                 $amount = bcmul($amount, '-1');
             }
 
-
-            if ($transaction->transaction_type_type === TransactionType::TRANSFER) {
+            if (TransactionType::TRANSFER === $transaction->transaction_type_type) {
                 $amount   = app('steam')->positive($amount);
                 $coloured = false;
                 $format   = '<span class="text-info">%s</span>';
@@ -120,7 +114,7 @@ class Transaction extends Twig_Extension
         }
 
         // first display amount:
-        $amount                       = $transaction['journal_type'] === TransactionType::WITHDRAWAL ? $transaction['source_amount']
+        $amount                       = TransactionType::WITHDRAWAL === $transaction['journal_type'] ? $transaction['source_amount']
             : $transaction['destination_amount'];
         $fakeCurrency                 = new TransactionCurrency;
         $fakeCurrency->decimal_places = $transaction['transaction_currency_dp'];
@@ -128,8 +122,8 @@ class Transaction extends Twig_Extension
         $string                       = app('amount')->formatAnything($fakeCurrency, $amount, true);
 
         // then display (if present) the foreign amount:
-        if (!is_null($transaction['foreign_source_amount'])) {
-            $amount                       = $transaction['journal_type'] === TransactionType::WITHDRAWAL ? $transaction['foreign_source_amount']
+        if (null !== $transaction['foreign_source_amount']) {
+            $amount                       = TransactionType::WITHDRAWAL === $transaction['journal_type'] ? $transaction['foreign_source_amount']
                 : $transaction['foreign_destination_amount'];
             $fakeCurrency                 = new TransactionCurrency;
             $fakeCurrency->decimal_places = $transaction['foreign_currency_dp'];
@@ -176,7 +170,7 @@ class Transaction extends Twig_Extension
 
         // see if the transaction has a budget:
         $budgets = $transaction->budgets()->get();
-        if ($budgets->count() === 0) {
+        if (0 === $budgets->count()) {
             $budgets = $transaction->transactionJournal()->first()->budgets()->get();
         }
         if ($budgets->count() > 0) {
@@ -231,7 +225,7 @@ class Transaction extends Twig_Extension
 
         // see if the transaction has a category:
         $categories = $transaction->categories()->get();
-        if ($categories->count() === 0) {
+        if (0 === $categories->count()) {
             $categories = $transaction->transactionJournal()->first()->categories()->get();
         }
         if ($categories->count() > 0) {
@@ -296,14 +290,14 @@ class Transaction extends Twig_Extension
         $type          = $transaction->account_type;
 
         // name is present in object, use that one:
-        if (bccomp($transaction->transaction_amount, '0') === -1 && !is_null($transaction->opposing_account_id)) {
+        if (bccomp($transaction->transaction_amount, '0') === -1 && null !== $transaction->opposing_account_id) {
             $name          = $transaction->opposing_account_name;
             $transactionId = intval($transaction->opposing_account_id);
             $type          = $transaction->opposing_account_type;
         }
 
         // Find the opposing account and use that one:
-        if (bccomp($transaction->transaction_amount, '0') === -1 && is_null($transaction->opposing_account_id)) {
+        if (bccomp($transaction->transaction_amount, '0') === -1 && null === $transaction->opposing_account_id) {
             // if the amount is negative, find the opposing account and use that one:
             $journalId = $transaction->journal_id;
             /** @var TransactionModel $other */
@@ -320,7 +314,7 @@ class Transaction extends Twig_Extension
             $type          = $other->type;
         }
 
-        if ($type === AccountType::CASH) {
+        if (AccountType::CASH === $type) {
             $txt = '<span class="text-success">(' . trans('firefly.cash') . ')</span>';
             $cache->store($txt);
 
@@ -418,7 +412,7 @@ class Transaction extends Twig_Extension
             return $cache->get();
         }
         $icon = '';
-        if (intval($transaction->reconciled) === 1) {
+        if (1 === intval($transaction->reconciled)) {
             $icon = '<i class="fa fa-check"></i>';
         }
 
@@ -477,13 +471,13 @@ class Transaction extends Twig_Extension
         $type          = $transaction->account_type;
 
         // name is present in object, use that one:
-        if (bccomp($transaction->transaction_amount, '0') === 1 && !is_null($transaction->opposing_account_id)) {
+        if (1 === bccomp($transaction->transaction_amount, '0') && null !== $transaction->opposing_account_id) {
             $name          = $transaction->opposing_account_name;
             $transactionId = intval($transaction->opposing_account_id);
             $type          = $transaction->opposing_account_type;
         }
         // Find the opposing account and use that one:
-        if (bccomp($transaction->transaction_amount, '0') === 1 && is_null($transaction->opposing_account_id)) {
+        if (1 === bccomp($transaction->transaction_amount, '0') && null === $transaction->opposing_account_id) {
             $journalId = $transaction->journal_id;
             /** @var TransactionModel $other */
             $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)
@@ -499,7 +493,7 @@ class Transaction extends Twig_Extension
             $type          = $other->type;
         }
 
-        if ($type === AccountType::CASH) {
+        if (AccountType::CASH === $type) {
             $txt = '<span class="text-success">(' . trans('firefly.cash') . ')</span>';
             $cache->store($txt);
 

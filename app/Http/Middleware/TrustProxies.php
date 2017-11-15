@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * TrustProxies.php
@@ -67,7 +65,7 @@ class TrustProxies extends Middleware
     public function __construct(Repository $config)
     {
         $trustedProxies = env('TRUSTED_PROXIES', null);
-        if (!is_null($trustedProxies) && strlen($trustedProxies) > 0) {
+        if (null !== $trustedProxies && strlen($trustedProxies) > 0) {
             $this->proxies = $trustedProxies;
         }
 

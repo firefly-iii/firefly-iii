@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Events;
@@ -27,9 +26,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 
 /**
- * Class BillScanner
- *
- * @package FireflyIII\Support\Events
+ * Class BillScanner.
  */
 class BillScanner
 {

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -37,13 +36,11 @@ use Preferences;
 use Response;
 
 /**
- * Class CategoryController
- *
- * @package FireflyIII\Http\Controllers\Chart
+ * Class CategoryController.
  */
 class CategoryController extends Controller
 {
-    /** @var  GeneratorInterface */
+    /** @var GeneratorInterface */
     protected $generator;
 
     /**
@@ -76,7 +73,7 @@ class CategoryController extends Controller
 
         $start = $repository->firstUseDate($category);
 
-        if (is_null($start)) {
+        if (null === $start) {
             $start = new Carbon;
         }
 
@@ -277,7 +274,6 @@ class CategoryController extends Controller
     /**
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
-     *
      * @param                             $date
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -291,7 +287,6 @@ class CategoryController extends Controller
 
         return Response::json($data);
     }
-
 
     /**
      * @param CategoryRepositoryInterface $repository
@@ -346,7 +341,6 @@ class CategoryController extends Controller
             $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = round($earned, 12);
             $chartData[2]['entries'][$label] = round($sum, 12);
-
 
             $start->addDay();
         }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Loader;
@@ -27,13 +26,10 @@ use FireflyIII\Support\Twig\Extension\TransactionJournal;
 use Twig_RuntimeLoaderInterface;
 
 /**
- * Class TransactionJournalLoader
- *
- * @package FireflyIII\Support\Twig\Extension
+ * Class TransactionJournalLoader.
  */
 class TransactionJournalLoader implements Twig_RuntimeLoaderInterface
 {
-
     /**
      * Creates the runtime implementation of a Twig element (filter/function/test).
      *

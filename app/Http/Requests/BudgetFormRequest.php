@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
- * Class BudgetFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class BudgetFormRequest.
  */
 class BudgetFormRequest extends Request
 {
@@ -61,7 +57,7 @@ class BudgetFormRequest extends Request
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $nameRule   = 'required|between:1,100|uniqueObjectForUser:budgets,name';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . intval($this->get('id'));
         }
 

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -34,14 +33,10 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
- * Class Journal
- *
- * @package FireflyIII\Support\Twig
+ * Class Journal.
  */
 class Journal extends Twig_Extension
 {
-
-
     /**
      * @return Twig_SimpleFunction
      */
@@ -62,7 +57,7 @@ class Journal extends Twig_Extension
                 $array = [];
                 /** @var Account $entry */
                 foreach ($list as $entry) {
-                    if ($entry->accountType->type === AccountType::CASH) {
+                    if (AccountType::CASH === $entry->accountType->type) {
                         $array[] = '<span class="text-success">(cash)</span>';
                         continue;
                     }
@@ -134,7 +129,7 @@ class Journal extends Twig_Extension
                 $array = [];
                 /** @var Account $entry */
                 foreach ($list as $entry) {
-                    if ($entry->accountType->type === AccountType::CASH) {
+                    if (AccountType::CASH === $entry->accountType->type) {
                         $array[] = '<span class="text-success">(cash)</span>';
                         continue;
                     }
@@ -164,7 +159,6 @@ class Journal extends Twig_Extension
                 if ($cache->has()) {
                     return $cache->get(); // @codeCoverageIgnore
                 }
-
 
                 $budgets = [];
                 // get all budgets:
@@ -205,7 +199,7 @@ class Journal extends Twig_Extension
                 foreach ($journal->categories as $category) {
                     $categories[] = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($category->name), route('categories.show', $category->id));
                 }
-                if (count($categories) === 0) {
+                if (0 === count($categories)) {
                     $set = Category::distinct()->leftJoin('category_transaction', 'categories.id', '=', 'category_transaction.category_id')
                                    ->leftJoin('transactions', 'category_transaction.transaction_id', '=', 'transactions.id')
                                    ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Currency;
@@ -31,9 +30,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface CurrencyRepositoryInterface
- *
- * @package FireflyIII\Repositories\Currency
+ * Interface CurrencyRepositoryInterface.
  */
 interface CurrencyRepositoryInterface
 {
@@ -59,7 +56,7 @@ interface CurrencyRepositoryInterface
     public function destroy(TransactionCurrency $currency): bool;
 
     /**
-     * Find by ID
+     * Find by ID.
      *
      * @param int $currencyId
      *
@@ -68,7 +65,7 @@ interface CurrencyRepositoryInterface
     public function find(int $currencyId): TransactionCurrency;
 
     /**
-     * Find by currency code
+     * Find by currency code.
      *
      * @param string $currencyCode
      *
@@ -77,7 +74,7 @@ interface CurrencyRepositoryInterface
     public function findByCode(string $currencyCode): TransactionCurrency;
 
     /**
-     * Find by currency name
+     * Find by currency name.
      *
      * @param string $currencyName
      *
@@ -86,7 +83,7 @@ interface CurrencyRepositoryInterface
     public function findByName(string $currencyName): TransactionCurrency;
 
     /**
-     * Find by currency symbol
+     * Find by currency symbol.
      *
      * @param string $currencySymbol
      *

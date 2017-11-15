@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
@@ -27,13 +26,10 @@ use FireflyIII\Models\TransactionCurrency;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class CurrencyCode
- *
- * @package FireflyIII\Support\Binder
+ * Class CurrencyCode.
  */
 class CurrencyCode implements BinderInterface
 {
-
     /**
      * @param $value
      * @param $route
@@ -43,7 +39,7 @@ class CurrencyCode implements BinderInterface
     public static function routeBinder($value, $route)
     {
         $currency = TransactionCurrency::where('code', $value)->first();
-        if (!is_null($currency)) {
+        if (null !== $currency) {
             return $currency;
         }
         throw new NotFoundHttpException;

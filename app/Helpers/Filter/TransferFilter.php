@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
@@ -29,11 +28,9 @@ use Illuminate\Support\Collection;
 use Steam;
 
 /**
- * Class TransferFilter
+ * Class TransferFilter.
  *
  * This filter removes any transfers that are in the collection twice (from A to B and from B to A).
- *
- * @package FireflyIII\Helpers\Filter
  */
 class TransferFilter implements FilterInterface
 {
@@ -48,7 +45,7 @@ class TransferFilter implements FilterInterface
         $new   = new Collection;
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            if ($transaction->transaction_type_type !== TransactionType::TRANSFER) {
+            if (TransactionType::TRANSFER !== $transaction->transaction_type_type) {
                 $new->push($transaction);
                 continue;
             }

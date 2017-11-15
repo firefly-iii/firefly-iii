@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Events;
@@ -27,19 +26,17 @@ use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UserChangedEmail
- *
- * @package FireflyIII\Events
+ * Class UserChangedEmail.
  */
 class UserChangedEmail extends Event
 {
     use SerializesModels;
 
-    /** @var  string */
+    /** @var string */
     public $ipAddress;
-    /** @var  string */
+    /** @var string */
     public $newEmail;
-    /** @var  string */
+    /** @var string */
     public $oldEmail;
     /** @var User */
     public $user;

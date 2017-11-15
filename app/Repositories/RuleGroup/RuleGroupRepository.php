@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
@@ -30,9 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
- * Class RuleGroupRepository
- *
- * @package FireflyIII\Repositories\RuleGroup
+ * Class RuleGroupRepository.
  */
 class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
@@ -57,7 +54,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
-            if (is_null($moveTo)) {
+            if (null === $moveTo) {
                 $rule->delete();
                 continue;
             }
@@ -69,7 +66,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->delete();
 
         $this->resetRuleGroupOrder();
-        if (!is_null($moveTo)) {
+        if (null !== $moveTo) {
             $this->resetRulesInGroupOrder($moveTo);
         }
 
@@ -84,7 +81,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function find(int $ruleGroupId): RuleGroup
     {
         $group = $this->user->ruleGroups()->find($ruleGroupId);
-        if (is_null($group)) {
+        if (null === $group) {
             return new RuleGroup;
         }
 
@@ -234,9 +231,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         foreach ($set as $entry) {
             $entry->order = $count;
             $entry->save();
-            $count++;
+            ++$count;
         }
-
 
         return true;
     }
@@ -259,7 +255,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         foreach ($set as $entry) {
             $entry->order = $count;
             $entry->save();
-            $count++;
+            ++$count;
         }
 
         return true;
@@ -289,8 +285,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                 'description' => $data['description'],
                 'order'       => ($order + 1),
                 'active'      => 1,
-
-
             ]
         );
         $newRuleGroup->save();

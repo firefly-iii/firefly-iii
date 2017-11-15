@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -29,18 +28,16 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 
 /**
- * Class Authenticate
- *
- * @package FireflyIII\Http\Middleware
+ * Class Authenticate.
  */
 class Authenticate
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  string|null              $guard
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null              $guard
      *
      * @return mixed
      */
@@ -53,9 +50,9 @@ class Authenticate
 
             return redirect()->guest('login');
         }
-        if (intval(auth()->user()->blocked) === 1) {
+        if (1 === intval(auth()->user()->blocked)) {
             $message = strval(trans('firefly.block_account_logout'));
-            if (auth()->user()->blocked_code === 'email_changed') {
+            if ('email_changed' === auth()->user()->blocked_code) {
                 $message = strval(trans('firefly.email_changed_logout'));
             }
 

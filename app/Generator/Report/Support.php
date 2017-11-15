@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
@@ -27,9 +26,7 @@ use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 
 /**
- * Class Support
- *
- * @package FireflyIII\Generator\Report\Category
+ * Class Support.
  */
 class Support
 {
@@ -79,7 +76,7 @@ class Support
                 ];
                 continue;
             }
-            $result[$opposingId]['count']++;
+            ++$result[$opposingId]['count'];
             $result[$opposingId]['sum']     = bcadd($result[$opposingId]['sum'], $transaction->transaction_amount);
             $result[$opposingId]['average'] = bcdiv($result[$opposingId]['sum'], strval($result[$opposingId]['count']));
         }
@@ -97,6 +94,7 @@ class Support
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     *
      * @param array $spent
      * @param array $earned
      *
@@ -107,7 +105,7 @@ class Support
         $return = [];
 
         /**
-         * @var int    $accountId
+         * @var int
          * @var string $entry
          */
         foreach ($spent as $objectId => $entry) {
@@ -120,7 +118,7 @@ class Support
         unset($entry);
 
         /**
-         * @var int    $accountId
+         * @var int
          * @var string $entry
          */
         foreach ($earned as $objectId => $entry) {
@@ -130,7 +128,6 @@ class Support
 
             $return[$objectId]['earned'] = $entry;
         }
-
 
         return $return;
     }

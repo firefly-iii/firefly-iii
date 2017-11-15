@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -27,10 +26,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionType;
 
 /**
- * Class JournalFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class JournalFormRequest.
  */
 class JournalFormRequest extends Request
 {
@@ -81,7 +77,6 @@ class JournalFormRequest extends Request
             'native_amount'            => $this->float('native_amount'),
             'source_amount'            => $this->float('source_amount'),
             'destination_amount'       => $this->float('destination_amount'),
-
         ];
 
         return $data;
@@ -130,12 +125,13 @@ class JournalFormRequest extends Request
     }
 
     /**
-     * Inspired by https://www.youtube.com/watch?v=WwnI0RS6J5A
+     * Inspired by https://www.youtube.com/watch?v=WwnI0RS6J5A.
      *
      * @param string $what
      * @param array  $rules
      *
      * @return array
+     *
      * @throws FireflyException
      */
     private function enhanceRules(string $what, array $rules): array

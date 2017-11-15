@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
@@ -34,25 +33,23 @@ use Log;
 use Steam;
 
 /**
- * Class ImportJournal
- *
- * @package FireflyIII\Import\Object
+ * Class ImportJournal.
  */
 class ImportJournal
 {
     /** @var ImportAccount */
     public $asset;
-    /** @var  ImportBill */
+    /** @var ImportBill */
     public $bill;
     /** @var ImportBudget */
     public $budget;
     /** @var ImportCategory */
     public $category;
-    /** @var  ImportCurrency */
+    /** @var ImportCurrency */
     public $currency;
-    /** @var  string */
+    /** @var string */
     public $description = '';
-    /** @var  string */
+    /** @var string */
     public $hash;
     /** @var array */
     public $metaDates = [];
@@ -64,7 +61,7 @@ class ImportJournal
     public $tags = [];
     /** @var string */
     private $amount;
-    /** @var  string */
+    /** @var string */
     private $convertedAmount = null;
     /** @var string */
     private $date = '';
@@ -72,7 +69,7 @@ class ImportJournal
     private $externalId = '';
     /** @var array */
     private $modifiers = [];
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -98,12 +95,13 @@ class ImportJournal
 
     /**
      * @return string
+     *
      * @throws FireflyException
      */
     public function getAmount(): string
     {
         Log::debug('Now in getAmount()');
-        if (is_null($this->convertedAmount)) {
+        if (null === $this->convertedAmount) {
             Log::debug('convertedAmount is NULL');
             /** @var ConverterInterface $amountConverter */
             $amountConverter       = app(Amount::class);
@@ -124,7 +122,7 @@ class ImportJournal
             Log::debug(sprintf('After modifiers the result is: "%s"', $this->convertedAmount));
         }
         Log::debug(sprintf('convertedAmount is: "%s"', $this->convertedAmount));
-        if (bccomp($this->convertedAmount, '0') === 0) {
+        if (0 === bccomp($this->convertedAmount, '0')) {
             throw new FireflyException('Amount is zero.');
         }
 
@@ -154,7 +152,7 @@ class ImportJournal
      */
     public function getDescription(): string
     {
-        if ($this->description === '') {
+        if ('' === $this->description) {
             return '(no description)';
         }
 

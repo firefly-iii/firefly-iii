@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -35,13 +34,10 @@ use Response;
 use Steam;
 
 /**
- * Class ReportController
- *
- * @package FireflyIII\Http\Controllers\Chart
+ * Class ReportController.
  */
 class ReportController extends Controller
 {
-
     /** @var GeneratorInterface */
     protected $generator;
 
@@ -92,14 +88,12 @@ class ReportController extends Controller
         return Response::json($data);
     }
 
-
     /**
-     * Shows income and expense, debet/credit: operations
+     * Shows income and expense, debet/credit: operations.
      *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     *
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -143,7 +137,6 @@ class ReportController extends Controller
             $chartData[1]['entries'][$label] = bcadd($spent, $amount);
         }
 
-
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
@@ -151,7 +144,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Shows sum income and expense, debet/credit: operations
+     * Shows sum income and expense, debet/credit: operations.
      *
      * @param Carbon     $start
      * @param Carbon     $end
@@ -161,8 +154,6 @@ class ReportController extends Controller
      */
     public function sum(Collection $accounts, Carbon $start, Carbon $end)
     {
-
-
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty('chart.report.sum');
@@ -172,7 +163,6 @@ class ReportController extends Controller
         if ($cache->has()) {
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
-
 
         $source  = $this->getChartData($accounts, $start, $end);
         $numbers = [
@@ -185,14 +175,14 @@ class ReportController extends Controller
         ];
         foreach ($source['earned'] as $amount) {
             $numbers['sum_earned'] = bcadd($amount, $numbers['sum_earned']);
-            $numbers['count_earned']++;
+            ++$numbers['count_earned'];
         }
         if ($numbers['count_earned'] > 0) {
             $numbers['avg_earned'] = $numbers['sum_earned'] / $numbers['count_earned'];
         }
         foreach ($source['spent'] as $amount) {
             $numbers['sum_spent'] = bcadd($amount, $numbers['sum_spent']);
-            $numbers['count_spent']++;
+            ++$numbers['count_spent'];
         }
         if ($numbers['count_spent'] > 0) {
             $numbers['avg_spent'] = $numbers['sum_spent'] / $numbers['count_spent'];
@@ -217,7 +207,6 @@ class ReportController extends Controller
             ],
         ];
 
-
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
@@ -240,7 +229,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Collects the incomes and expenses for the given periods, grouped per month. Will cache its results
+     * Collects the incomes and expenses for the given periods, grouped per month. Will cache its results.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -289,7 +278,6 @@ class ReportController extends Controller
                     )
                 )
             );
-
 
             $label               = $currentStart->format('Y-m') . '-01';
             $spentArray[$label]  = bcmul($spent, '-1');

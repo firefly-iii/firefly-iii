@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Extension;
@@ -31,7 +30,6 @@ use Twig_Extension;
 
 class TransactionJournal extends Twig_Extension
 {
-
     /**
      * @param JournalModel $journal
      *
@@ -63,7 +61,7 @@ class TransactionJournal extends Twig_Extension
             }
             $totals[$currencyId]['amount'] = bcadd($transaction->amount, $totals[$currencyId]['amount']);
 
-            if (!is_null($transaction->foreign_currency_id)) {
+            if (null !== $transaction->foreign_currency_id) {
                 $foreignId = $transaction->foreign_currency_id;
                 $foreign   = $transaction->foreignCurrency;
                 if (!isset($totals[$foreignId])) {
@@ -77,7 +75,7 @@ class TransactionJournal extends Twig_Extension
         }
         $array = [];
         foreach ($totals as $total) {
-            if ($type === TransactionType::WITHDRAWAL) {
+            if (TransactionType::WITHDRAWAL === $type) {
                 $total['amount'] = bcmul($total['amount'], '-1');
             }
             $array[] = app('amount')->formatAnything($total['currency'], $total['amount']);

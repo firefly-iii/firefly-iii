@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
@@ -34,12 +33,10 @@ use FireflyIII\TransactionRules\Processor;
  * @codeCoverageIgnore
  *
  * Class UpdatedJournalEventHandler
- *
- * @package FireflyIII\Handlers\Events
  */
 class UpdatedJournalEventHandler
 {
-    /** @var  RuleGroupRepositoryInterface */
+    /** @var RuleGroupRepositoryInterface */
     public $repository;
 
     /**

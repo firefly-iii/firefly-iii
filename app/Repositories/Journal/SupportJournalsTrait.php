@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
@@ -34,9 +33,7 @@ use FireflyIII\User;
 use Log;
 
 /**
- * Trait SupportJournalsTrait
- *
- * @package FireflyIII\Repositories\Journal
+ * Trait SupportJournalsTrait.
  */
 trait SupportJournalsTrait
 {
@@ -46,6 +43,7 @@ trait SupportJournalsTrait
      * @param array           $data
      *
      * @return array
+     *
      * @throws FireflyException
      */
     protected function storeAccounts(User $user, TransactionType $type, array $data): array
@@ -73,16 +71,15 @@ trait SupportJournalsTrait
                 throw new FireflyException(sprintf('Did not recognise transaction type "%s".', $type->type));
         }
 
-        if (is_null($accounts['source'])) {
+        if (null === $accounts['source']) {
             Log::error('"source"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"source"-account is null, so we cannot continue!');
         }
 
-        if (is_null($accounts['destination'])) {
+        if (null === $accounts['destination']) {
             Log::error('"destination"-account is null, so we cannot continue!', ['data' => $data]);
             throw new FireflyException('"destination"-account is null, so we cannot continue!');
         }
-
 
         return $accounts;
     }
@@ -93,7 +90,7 @@ trait SupportJournalsTrait
      */
     protected function storeBudgetWithJournal(TransactionJournal $journal, int $budgetId)
     {
-        if (intval($budgetId) > 0 && $journal->transactionType->type === TransactionType::WITHDRAWAL) {
+        if (intval($budgetId) > 0 && TransactionType::WITHDRAWAL === $journal->transactionType->type) {
             /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::find($budgetId);
             $journal->budgets()->save($budget);
@@ -215,6 +212,7 @@ trait SupportJournalsTrait
      * @param array $accounts
      *
      * @return array
+     *
      * @throws FireflyException
      */
     protected function verifyNativeAmount(array $data, array $accounts): array
@@ -227,7 +225,7 @@ trait SupportJournalsTrait
 
         // which account to check for what the native currency is?
         $check = 'source';
-        if ($transactionType->type === TransactionType::DEPOSIT) {
+        if (TransactionType::DEPOSIT === $transactionType->type) {
             $check = 'destination';
         }
         switch ($transactionType->type) {

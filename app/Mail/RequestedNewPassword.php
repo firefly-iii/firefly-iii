@@ -19,9 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * RequestedNewPassword.php
@@ -41,9 +39,9 @@ use Illuminate\Queue\SerializesModels;
 class RequestedNewPassword extends Mailable
 {
     use Queueable, SerializesModels;
-    /** @var  string */
+    /** @var string */
     public $ipAddress;
-    /** @var  string */
+    /** @var string */
     public $url;
 
     /**

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -31,13 +30,11 @@ use Twig_SimpleFunction;
 
 /**
  * Contains all amount formatting routines.
- *
- * @package FireflyIII\Support\Twig
  */
 class AmountFormat extends Twig_Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFilters(): array
     {
@@ -48,7 +45,7 @@ class AmountFormat extends Twig_Extension
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFunctions(): array
     {
@@ -74,7 +71,6 @@ class AmountFormat extends Twig_Extension
     }
 
     /**
-     *
      * @return Twig_SimpleFilter
      */
     protected function formatAmount(): Twig_SimpleFilter
@@ -102,7 +98,7 @@ class AmountFormat extends Twig_Extension
             function (AccountModel $account, string $amount, bool $coloured = true): string {
                 $currencyId = intval($account->getMeta('currency_id'));
 
-                if ($currencyId !== 0) {
+                if (0 !== $currencyId) {
                     $currency = TransactionCurrency::find($currencyId);
 
                     return app('amount')->formatAnything($currency, $amount, $coloured);
@@ -175,7 +171,6 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatDestinationAfter',
             function (array $transaction): string {
-
                 // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
@@ -183,14 +178,13 @@ class AmountFormat extends Twig_Extension
                 $string                 = app('amount')->formatAnything($format, $transaction['destination_account_after'], true);
 
                 // also append foreign amount for clarity:
-                if (!is_null($transaction['foreign_destination_amount'])) {
+                if (null !== $transaction['foreign_destination_amount']) {
                     // build fake currency for foreign amount
                     $format                 = new TransactionCurrency;
                     $format->decimal_places = $transaction['foreign_currency_dp'];
                     $format->symbol         = $transaction['foreign_currency_symbol'];
                     $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_destination_amount'], true) . ')';
                 }
-
 
                 return $string;
             },
@@ -206,7 +200,6 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatDestinationBefore',
             function (array $transaction): string {
-
                 // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
@@ -226,7 +219,6 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatSourceAfter',
             function (array $transaction): string {
-
                 // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];
@@ -234,14 +226,13 @@ class AmountFormat extends Twig_Extension
                 $string                 = app('amount')->formatAnything($format, $transaction['source_account_after'], true);
 
                 // also append foreign amount for clarity:
-                if (!is_null($transaction['foreign_source_amount'])) {
+                if (null !== $transaction['foreign_source_amount']) {
                     // build fake currency for foreign amount
                     $format                 = new TransactionCurrency;
                     $format->decimal_places = $transaction['foreign_currency_dp'];
                     $format->symbol         = $transaction['foreign_currency_symbol'];
                     $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_source_amount'], true) . ')';
                 }
-
 
                 return $string;
             },
@@ -257,7 +248,6 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatSourceBefore',
             function (array $transaction): string {
-
                 // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
                 $format->decimal_places = $transaction['transaction_currency_dp'];

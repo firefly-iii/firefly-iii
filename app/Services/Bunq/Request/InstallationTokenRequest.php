@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
@@ -29,15 +28,13 @@ use FireflyIII\Services\Bunq\Token\InstallationToken;
 use Log;
 
 /**
- * Class InstallationTokenRequest
- *
- * @package FireflyIII\Services\Bunq\Request
+ * Class InstallationTokenRequest.
  */
 class InstallationTokenRequest extends BunqRequest
 {
     /** @var InstallationId */
     private $installationId;
-    /** @var  InstallationToken */
+    /** @var InstallationToken */
     private $installationToken;
     /** @var string */
     private $publicKey = '';
@@ -48,7 +45,7 @@ class InstallationTokenRequest extends BunqRequest
     public function call(): void
     {
         $uri      = '/v1/installation';
-        $data     = ['client_public_key' => $this->publicKey,];
+        $data     = ['client_public_key' => $this->publicKey];
         $headers  = $this->getDefaultHeaders();
         $response = $this->sendUnsignedBunqPost($uri, $data, $headers);
         Log::debug('Installation request response', $response);

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -27,13 +26,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class AmountExactly
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class AmountExactly.
  */
 final class AmountExactly extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -52,7 +48,7 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
+        if (null !== $value) {
             return false;
         }
         Log::error(sprintf('Cannot use %s with a null value.', self::class));
@@ -70,7 +66,7 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
         $amount  = $journal->destination_amount ?? $journal->amountPositive();
         $compare = $this->triggerValue;
         $result  = bccomp($amount, $compare);
-        if ($result === 0) {
+        if (0 === $result) {
             Log::debug(sprintf('RuleTrigger AmountExactly for journal #%d: %d matches %d exactly, so return true', $journal->id, $amount, $compare));
 
             return true;

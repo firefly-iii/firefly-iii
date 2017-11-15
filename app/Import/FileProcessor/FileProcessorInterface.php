@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\FileProcessor;
@@ -27,14 +26,10 @@ use FireflyIII\Models\ImportJob;
 use Illuminate\Support\Collection;
 
 /**
- * Interface FileProcessorInterface
- *
- * @package FireflyIII\Import\FileProcessor
+ * Interface FileProcessorInterface.
  */
 interface FileProcessorInterface
 {
-
-
     /**
      * @return Collection
      */
@@ -50,5 +45,5 @@ interface FileProcessorInterface
      *
      * @return FileProcessorInterface
      */
-    public function setJob(ImportJob $job): FileProcessorInterface;
+    public function setJob(ImportJob $job): self;
 }

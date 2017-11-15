@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -28,17 +29,15 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class AdminTestMail
- *
- * @package FireflyIII\Mail
+ * Class AdminTestMail.
  */
 class AdminTestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var  string */
+    /** @var string */
     public $email;
-    /** @var  string */
+    /** @var string */
     public $ipAddress;
 
     /**

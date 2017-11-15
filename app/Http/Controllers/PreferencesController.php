@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -34,20 +33,16 @@ use Session;
 use View;
 
 /**
- * Class PreferencesController
- *
- * @package FireflyIII\Http\Controllers
+ * Class PreferencesController.
  */
 class PreferencesController extends Controller
 {
-
     /**
      *
      */
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -70,7 +65,6 @@ class PreferencesController extends Controller
         $secret = $google2fa->generateSecretKey();
         Session::flash('two-factor-secret', $secret);
         $image = $google2fa->getQRCodeInline($domain, auth()->user()->email, $secret, 200);
-
 
         return view('preferences.code', compact('image'));
     }
@@ -107,8 +101,8 @@ class PreferencesController extends Controller
         $fiscalYearStart     = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
         $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
-        $has2faSecret        = !is_null(Preferences::get('twoFactorAuthSecret')); // hasTwoFactorAuthSecret
-        $showIncomplete      = env('SHOW_INCOMPLETE_TRANSLATIONS', false) === true;
+        $has2faSecret        = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
+        $showIncomplete      = true === env('SHOW_INCOMPLETE_TRANSLATIONS', false);
 
         return view(
             'preferences.index',
@@ -148,7 +142,6 @@ class PreferencesController extends Controller
 
     /**
      * @param Request                 $request
-     *
      * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -172,13 +165,13 @@ class PreferencesController extends Controller
         Session::forget('range');
 
         // custom fiscal year
-        $customFiscalYear = intval($request->get('customFiscalYear')) === 1;
+        $customFiscalYear = 1 === intval($request->get('customFiscalYear'));
         $fiscalYearStart  = date('m-d', strtotime(strval($request->get('fiscalYearStart'))));
         Preferences::set('customFiscalYear', $customFiscalYear);
         Preferences::set('fiscalYearStart', $fiscalYearStart);
 
         // show deposits frontpage:
-        $showDepositsFrontpage = intval($request->get('showDepositsFrontpage')) === 1;
+        $showDepositsFrontpage = 1 === intval($request->get('showDepositsFrontpage'));
         Preferences::set('showDepositsFrontpage', $showDepositsFrontpage);
 
         // save page size:
@@ -193,7 +186,7 @@ class PreferencesController extends Controller
         if (!$repository->hasRole(auth()->user(), 'demo')) {
             // two factor auth
             $twoFactorAuthEnabled   = intval($request->get('twoFactorAuthEnabled'));
-            $hasTwoFactorAuthSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+            $hasTwoFactorAuthSecret = null !== Preferences::get('twoFactorAuthSecret');
 
             // If we already have a secret, just set the two factor auth enabled to 1, and let the user continue with the existing secret.
             if ($hasTwoFactorAuthSecret) {
@@ -222,13 +215,12 @@ class PreferencesController extends Controller
         ];
         Preferences::set('transaction_journal_optional_fields', $optionalTj);
 
-
         Session::flash('success', strval(trans('firefly.saved_preferences')));
         Preferences::mark();
 
         // if we don't have a valid secret yet, redirect to the code page.
         // AND USER HAS ACTUALLY ENABLED 2FA
-        if (!$hasTwoFactorAuthSecret && $twoFactorAuthEnabled === 1) {
+        if (!$hasTwoFactorAuthSecret && 1 === $twoFactorAuthEnabled) {
             return redirect(route('preferences.code'));
         }
 

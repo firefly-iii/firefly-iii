@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,9 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class RuleGroup
- *
- * @package FireflyIII\Models
+ * Class RuleGroup.
  */
 class RuleGroup extends Model
 {
@@ -56,7 +53,7 @@ class RuleGroup extends Model
      *
      * @return RuleGroup
      */
-    public static function routeBinder(RuleGroup $value)
+    public static function routeBinder(self $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {

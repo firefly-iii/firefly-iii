@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
@@ -29,9 +28,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Response;
 
 /**
- * Class FrontpageController
- *
- * @package FireflyIII\Http\Controllers\Json
+ * Class FrontpageController.
  */
 class FrontpageController extends Controller
 {
@@ -46,8 +43,7 @@ class FrontpageController extends Controller
         foreach ($set as $piggyBank) {
             $rep    = $piggyBank->currentRelevantRep();
             $amount = strval($rep->currentamount);
-            if (!is_null($rep->id) && bccomp($amount, '0') === 1) {
-
+            if (null !== $rep->id && 1 === bccomp($amount, '0')) {
                 // percentage!
                 $pct = round(($amount / $piggyBank->targetamount) * 100);
 

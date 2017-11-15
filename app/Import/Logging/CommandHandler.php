@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Logging;
@@ -27,14 +26,11 @@ use Illuminate\Console\Command;
 use Monolog\Handler\AbstractProcessingHandler;
 
 /**
- * Class CommandHandler
- *
- * @package FireflyIII\Import\Logging
+ * Class CommandHandler.
  */
 class CommandHandler extends AbstractProcessingHandler
 {
-
-    /** @var  Command */
+    /** @var Command */
     private $command;
 
     /**
@@ -51,11 +47,9 @@ class CommandHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Writes the record down to the log of the implementing handler
+     * Writes the record down to the log of the implementing handler.
      *
-     * @param  array $record
-     *
-     * @return void
+     * @param array $record
      */
     protected function write(array $record)
     {

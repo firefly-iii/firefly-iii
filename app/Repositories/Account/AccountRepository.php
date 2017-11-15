@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Repositories\Account;
 
@@ -38,10 +36,7 @@ use Log;
 use Validator;
 
 /**
- *
- * Class AccountRepository
- *
- * @package FireflyIII\Repositories\Account
+ * Class AccountRepository.
  */
 class AccountRepository implements AccountRepositoryInterface
 {
@@ -53,7 +48,7 @@ class AccountRepository implements AccountRepositoryInterface
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
 
     /**
-     * Moved here from account CRUD
+     * Moved here from account CRUD.
      *
      * @param array $types
      *
@@ -76,10 +71,10 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function destroy(Account $account, Account $moveTo): bool
     {
-        if (!is_null($moveTo->id)) {
+        if (null !== $moveTo->id) {
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
-        if (!is_null($account)) {
+        if (null !== $account) {
             $account->delete();
         }
 
@@ -102,7 +97,7 @@ class AccountRepository implements AccountRepositoryInterface
                         ->orderBy('transaction_journals.order', 'ASC')
                         ->orderBy('transaction_journals.id', 'DESC')
                         ->first(['transaction_journals.date']);
-        if (!is_null($date)) {
+        if (null !== $date) {
             $last = new Carbon($date->date);
         }
 
@@ -125,7 +120,7 @@ class AccountRepository implements AccountRepositoryInterface
                          ->where('transaction_journals.user_id', $this->user->id)
                          ->orderBy('transaction_journals.id', 'ASC')
                          ->first(['transaction_journals.id']);
-        if (!is_null($first)) {
+        if (null !== $first) {
             return TransactionJournal::find(intval($first->id));
         }
 
@@ -142,7 +137,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function oldestJournalDate(Account $account): Carbon
     {
         $journal = $this->oldestJournal($account);
-        if (is_null($journal->id)) {
+        if (null === $journal->id) {
             return new Carbon;
         }
 
@@ -206,7 +201,7 @@ class AccountRepository implements AccountRepositoryInterface
     protected function deleteInitialBalance(Account $account)
     {
         $journal = $this->openingBalanceTransaction($account);
-        if (!is_null($journal->id)) {
+        if (null !== $journal->id) {
             $journal->delete();
         }
     }
@@ -222,7 +217,7 @@ class AccountRepository implements AccountRepositoryInterface
                                      ->where('transactions.account_id', $account->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
+        if (null === $journal) {
             Log::debug('Could not find a opening balance journal, return empty one.');
 
             return new TransactionJournal;
@@ -236,6 +231,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     protected function storeAccount(array $data): Account
@@ -245,13 +241,13 @@ class AccountRepository implements AccountRepositoryInterface
         $accountType         = AccountType::whereType($type)->first();
         $data['iban']        = $this->filterIban($data['iban']);
         // verify account type
-        if (is_null($accountType)) {
+        if (null === $accountType) {
             throw new FireflyException(sprintf('Account type "%s" is invalid. Cannot create account.', $data['accountType']));
         }
 
         // account may exist already:
         $existingAccount = $this->findByName($data['name'], [$type]);
-        if (!is_null($existingAccount->id)) {
+        if (null !== $existingAccount->id) {
             Log::warning(sprintf('There already is an account named "%s" of type "%s".', $data['name'], $type));
 
             return $existingAccount;
@@ -264,14 +260,14 @@ class AccountRepository implements AccountRepositoryInterface
             'account_type_id' => $accountType->id,
             'name'            => $data['name'],
             'virtual_balance' => $data['virtualBalance'],
-            'active'          => $data['active'] === true ? true : false,
+            'active'          => true === $data['active'] ? true : false,
             'iban'            => $data['iban'],
         ];
         $newAccount = new Account($databaseData);
         Log::debug('Final account creation dataset', $databaseData);
         $newAccount->save();
         // verify its creation:
-        if (is_null($newAccount->id)) {
+        if (null === $newAccount->id) {
             Log::error(
                 sprintf('Could not create account "%s" (%d error(s))', $data['name'], $newAccount->getErrors()->count()),
                 $newAccount->getErrors()->toArray()
@@ -296,7 +292,7 @@ class AccountRepository implements AccountRepositoryInterface
         $amount = strval($data['openingBalance']);
         Log::debug(sprintf('Submitted amount is %s', $amount));
 
-        if (bccomp($amount, '0') === 0) {
+        if (0 === bccomp($amount, '0')) {
             return new TransactionJournal;
         }
 
@@ -340,7 +336,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'transaction_currency_id' => $currencyId,
             ]
         );
-        $one->save();// first transaction: from
+        $one->save(); // first transaction: from
 
         $two = new Transaction(
             [
@@ -376,7 +372,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     *
      * @param Account $account
      * @param array   $data
      *
@@ -388,14 +383,14 @@ class AccountRepository implements AccountRepositoryInterface
         $openingBalance = $this->openingBalanceTransaction($account);
 
         // no opening balance journal? create it:
-        if (is_null($openingBalance->id)) {
+        if (null === $openingBalance->id) {
             Log::debug('No opening balance journal yet, create journal.');
             $this->storeInitialBalance($account, $data);
 
             return true;
         }
         // opening balance data? update it!
-        if (!is_null($openingBalance->id)) {
+        if (null !== $openingBalance->id) {
             Log::debug('Opening balance journal found, update journal.');
             $this->updateOpeningBalanceJournal($account, $openingBalance, $data);
 
@@ -408,7 +403,6 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param array   $data
-     *
      */
     protected function updateMetadata(Account $account, array $data)
     {
@@ -417,7 +411,7 @@ class AccountRepository implements AccountRepositoryInterface
             $entry = $account->accountMeta()->where('name', $field)->first();
 
             // if $data has field and $entry is null, create new one:
-            if (isset($data[$field]) && is_null($entry)) {
+            if (isset($data[$field]) && null === $entry) {
                 Log::debug(
                     sprintf(
                         'Created meta-field "%s":"%s" for account #%d ("%s") ',
@@ -437,7 +431,7 @@ class AccountRepository implements AccountRepositoryInterface
             }
 
             // if $data has field and $entry is not null, update $entry:
-            if (isset($data[$field]) && !is_null($entry)) {
+            if (isset($data[$field]) && null !== $entry) {
                 $entry->data = $data[$field];
                 $entry->save();
                 Log::debug(
@@ -468,7 +462,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         Log::debug(sprintf('Submitted amount for opening balance to update is %s', $amount));
 
-        if (bccomp($amount, '0') === 0) {
+        if (0 === bccomp($amount, '0')) {
             $journal->delete();
 
             return true;
@@ -500,7 +494,6 @@ class AccountRepository implements AccountRepositoryInterface
         return true;
     }
 
-
     /**
      * @param array $data
      *
@@ -509,7 +502,7 @@ class AccountRepository implements AccountRepositoryInterface
     protected function validOpeningBalanceData(array $data): bool
     {
         $data['openingBalance'] = strval($data['openingBalance'] ?? '');
-        if (isset($data['openingBalance']) && !is_null($data['openingBalance']) && strlen($data['openingBalance']) > 0
+        if (isset($data['openingBalance']) && null !== $data['openingBalance'] && strlen($data['openingBalance']) > 0
             && isset($data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
 
@@ -527,7 +520,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     private function filterIban(?string $iban)
     {
-        if (is_null($iban)) {
+        if (null === $iban) {
             return null;
         }
         $data      = ['iban' => $iban];

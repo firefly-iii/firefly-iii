@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -31,9 +30,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Storage;
 
 /**
- * Class ScanAttachments
- *
- * @package FireflyIII\Console\Commands
+ * Class ScanAttachments.
  */
 class ScanAttachments extends Command
 {
@@ -53,7 +50,6 @@ class ScanAttachments extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {

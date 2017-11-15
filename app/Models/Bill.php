@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -32,9 +31,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Bill
- *
- * @package FireflyIII\Models
+ * Class Bill.
  */
 class Bill extends Model
 {
@@ -60,14 +57,14 @@ class Bill extends Model
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-    protected $rules  = ['name' => 'required|between:1,200',];
+    protected $rules  = ['name' => 'required|between:1,200'];
 
     /**
      * @param Bill $value
      *
      * @return Bill
      */
-    public static function routeBinder(Bill $value)
+    public static function routeBinder(self $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {
@@ -84,7 +81,7 @@ class Bill extends Model
      */
     public function getMatchAttribute($value)
     {
-        if (intval($this->match_encrypted) === 1) {
+        if (1 === intval($this->match_encrypted)) {
             return Crypt::decrypt($value);
         }
 
@@ -98,7 +95,7 @@ class Bill extends Model
      */
     public function getNameAttribute($value)
     {
-        if (intval($this->name_encrypted) === 1) {
+        if (1 === intval($this->name_encrypted)) {
             return Crypt::decrypt($value);
         }
 

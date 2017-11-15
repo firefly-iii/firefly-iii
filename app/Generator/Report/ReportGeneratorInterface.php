@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
@@ -27,9 +26,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * Interface ReportGeneratorInterface
- *
- * @package FireflyIII\Generator\Report
+ * Interface ReportGeneratorInterface.
  */
 interface ReportGeneratorInterface
 {
@@ -43,40 +40,40 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface;
+    public function setAccounts(Collection $accounts): self;
 
     /**
      * @param Collection $budgets
      *
      * @return ReportGeneratorInterface
      */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface;
+    public function setBudgets(Collection $budgets): self;
 
     /**
      * @param Collection $categories
      *
      * @return ReportGeneratorInterface
      */
-    public function setCategories(Collection $categories): ReportGeneratorInterface;
+    public function setCategories(Collection $categories): self;
 
     /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
      */
-    public function setEndDate(Carbon $date): ReportGeneratorInterface;
+    public function setEndDate(Carbon $date): self;
 
     /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface
      */
-    public function setStartDate(Carbon $date): ReportGeneratorInterface;
+    public function setStartDate(Carbon $date): self;
 
     /**
      * @param Collection $tags
      *
      * @return ReportGeneratorInterface
      */
-    public function setTags(Collection $tags): ReportGeneratorInterface;
+    public function setTags(Collection $tags): self;
 }

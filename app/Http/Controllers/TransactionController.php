@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -42,9 +41,7 @@ use Response;
 use View;
 
 /**
- * Class TransactionController
- *
- * @package FireflyIII\Http\Controllers
+ * Class TransactionController.
  */
 class TransactionController extends Controller
 {
@@ -54,7 +51,6 @@ class TransactionController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -70,7 +66,6 @@ class TransactionController extends Controller
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      * @param string                     $what
-     *
      * @param string                     $moment
      *
      * @return View
@@ -89,7 +84,7 @@ class TransactionController extends Controller
         $path         = route('transactions.index', [$what]);
 
         // prep for "all" view.
-        if ($moment === 'all') {
+        if ('all' === $moment) {
             $subTitle = trans('firefly.all_' . $what);
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
@@ -98,7 +93,7 @@ class TransactionController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && $moment !== 'all') {
+        if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
             $path     = route('transactions.index', [$what, $moment]);
@@ -110,7 +105,7 @@ class TransactionController extends Controller
         }
 
         // prep for current period
-        if (strlen($moment) === 0) {
+        if (0 === strlen($moment)) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($what);
@@ -126,7 +121,6 @@ class TransactionController extends Controller
         $collector->removeFilter(InternalTransferFilter::class);
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath($path);
-
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end', 'moment'));
     }
@@ -163,7 +157,7 @@ class TransactionController extends Controller
                 $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->isSameDay($date)) {
                     $repository->setOrder($journal, $order);
-                    $order++;
+                    ++$order;
                 }
             }
         }
@@ -175,7 +169,6 @@ class TransactionController extends Controller
     /**
      * @param TransactionJournal          $journal
      * @param JournalTaskerInterface      $tasker
-     *
      * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
@@ -199,6 +192,7 @@ class TransactionController extends Controller
      * @param string $what
      *
      * @return Collection
+     *
      * @throws FireflyException
      */
     private function getPeriodOverview(string $what): Collection
@@ -290,7 +284,7 @@ class TransactionController extends Controller
             }
             // save amount:
             $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $transaction->transaction_amount);
-            $return[$currencyId]['count']++;
+            ++$return[$currencyId]['count'];
         }
         asort($return);
 

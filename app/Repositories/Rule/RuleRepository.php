@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Rule;
@@ -31,9 +30,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
 
 /**
- * Class RuleRepository
- *
- * @package FireflyIII\Repositories\Rule
+ * Class RuleRepository.
  */
 class RuleRepository implements RuleRepositoryInterface
 {
@@ -74,7 +71,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function find(int $ruleId): Rule
     {
         $rule = $this->user->rules()->find($ruleId);
-        if (is_null($rule)) {
+        if (null === $rule) {
             return new Rule;
         }
 
@@ -82,7 +79,7 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * FIxXME can return null
+     * FIxXME can return null.
      *
      * @return RuleGroup
      */
@@ -105,12 +102,13 @@ class RuleRepository implements RuleRepositoryInterface
      * @param Rule $rule
      *
      * @return string
+     *
      * @throws FireflyException
      */
     public function getPrimaryTrigger(Rule $rule): string
     {
         $count = $rule->ruleTriggers()->count();
-        if ($count === 0) {
+        if (0 === $count) {
             throw new FireflyException('Rules should have more than zero triggers, rule #' . $rule->id . ' has none!');
         }
 
@@ -132,7 +130,6 @@ class RuleRepository implements RuleRepositoryInterface
             $other->order = $other->order - 1;
             $other->save();
         }
-
 
         $rule->order = ($rule->order + 1);
         $rule->save();
@@ -176,10 +173,10 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($ids as $actionId) {
             /** @var RuleTrigger $trigger */
             $action = $rule->ruleActions()->find($actionId);
-            if (!is_null($action)) {
+            if (null !== $action) {
                 $action->order = $order;
                 $action->save();
-                $order++;
+                ++$order;
             }
         }
 
@@ -198,10 +195,10 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($ids as $triggerId) {
             /** @var RuleTrigger $trigger */
             $trigger = $rule->ruleTriggers()->find($triggerId);
-            if (!is_null($trigger)) {
+            if (null !== $trigger) {
                 $trigger->order = $order;
                 $trigger->save();
-                $order++;
+                ++$order;
             }
         }
 
@@ -226,7 +223,7 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($set as $entry) {
             $entry->order = $count;
             $entry->save();
-            $count++;
+            ++$count;
         }
 
         return true;
@@ -260,7 +257,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
         $rule->active          = 1;
-        $rule->stop_processing = intval($data['stop_processing']) === 1;
+        $rule->stop_processing = 1 === intval($data['stop_processing']);
         $rule->title           = $data['title'];
         $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
 
@@ -289,9 +286,8 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleAction->active          = 1;
         $ruleAction->stop_processing = $values['stopProcessing'];
         $ruleAction->action_type     = $values['action'];
-        $ruleAction->action_value    = is_null($values['value']) ? '' : $values['value'];
+        $ruleAction->action_value    = null === $values['value'] ? '' : $values['value'];
         $ruleAction->save();
-
 
         return $ruleAction;
     }
@@ -310,7 +306,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger->active          = 1;
         $ruleTrigger->stop_processing = $values['stopProcessing'];
         $ruleTrigger->trigger_type    = $values['action'];
-        $ruleTrigger->trigger_value   = is_null($values['value']) ? '' : $values['value'];
+        $ruleTrigger->trigger_value   = null === $values['value'] ? '' : $values['value'];
         $ruleTrigger->save();
 
         return $ruleTrigger;
@@ -343,7 +339,6 @@ class RuleRepository implements RuleRepositoryInterface
 
         // recreate actions:
         $this->storeActions($rule, $data);
-
 
         return $rule;
     }
@@ -405,7 +400,7 @@ class RuleRepository implements RuleRepositoryInterface
             ];
 
             $this->storeTrigger($rule, $triggerValues);
-            $order++;
+            ++$order;
         }
 
         return true;

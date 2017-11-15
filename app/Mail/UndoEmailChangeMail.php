@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -31,13 +32,13 @@ class UndoEmailChangeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var  string */
+    /** @var string */
     public $ipAddress;
-    /** @var  string */
+    /** @var string */
     public $newEmail;
-    /** @var  string */
+    /** @var string */
     public $oldEmail;
-    /** @var  string */
+    /** @var string */
     public $uri;
 
     /**

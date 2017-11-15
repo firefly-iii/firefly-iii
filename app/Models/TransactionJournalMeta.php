@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,9 +27,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class TransactionJournalMeta
- *
- * @package FireflyIII\Models
+ * Class TransactionJournalMeta.
  */
 class TransactionJournalMeta extends Model
 {
@@ -72,7 +69,6 @@ class TransactionJournalMeta extends Model
     }
 
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal(): BelongsTo

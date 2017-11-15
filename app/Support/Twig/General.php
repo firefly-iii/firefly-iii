@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -33,15 +32,10 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
- *
- * Class TwigSupport
- *
- * @package FireflyIII\Support
+ * Class TwigSupport.
  */
 class General extends Twig_Extension
 {
-
-
     /**
      * @return array
      */
@@ -51,12 +45,11 @@ class General extends Twig_Extension
             $this->balance(),
             $this->formatFilesize(),
             $this->mimeIcon(),
-
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFunctions(): array
     {
@@ -70,12 +63,11 @@ class General extends Twig_Extension
             $this->steamPositive(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
-
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -96,7 +88,7 @@ class General extends Twig_Extension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (!(strpos($name, $route) === false)) {
+                if (!(false === strpos($name, $route))) {
                     return 'active';
                 }
 
@@ -121,7 +113,7 @@ class General extends Twig_Extension
                 $what       = $args[2]; // name of the route.
                 $activeWhat = $context['what'] ?? false;
 
-                if ($what === $activeWhat && !(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
+                if ($what === $activeWhat && !(false === strpos(Route::getCurrentRoute()->getName(), $route))) {
                     return 'active';
                 }
 
@@ -162,7 +154,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFilter(
             'balance',
             function (?Account $account): string {
-                if (is_null($account)) {
+                if (null === $account) {
                     return 'NULL';
                 }
                 $date = session('end', Carbon::now()->endOfMonth());
@@ -193,7 +185,6 @@ class General extends Twig_Extension
         return new Twig_SimpleFilter(
             'filesize',
             function (int $size): string {
-
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
                     return round($size / (1024 * 1024), 2) . ' MB';
@@ -208,7 +199,6 @@ class General extends Twig_Extension
             }
         );
     }
-
 
     /**
      * @return Twig_SimpleFunction

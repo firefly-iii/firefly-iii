@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -30,20 +29,18 @@ use FireflyIII\Models\TransactionJournal;
  * This class will be magical!
  *
  * Class AbstractTrigger
- *
- * @package FireflyIII\TransactionRules\Triggers
  */
 class AbstractTrigger
 {
-    /** @var  bool */
+    /** @var bool */
     public $stopProcessing;
-    /** @var  string */
+    /** @var string */
     protected $checkValue;
-    /** @var  TransactionJournal */
+    /** @var TransactionJournal */
     protected $journal;
     /** @var RuleTrigger */
     protected $trigger;
-    /** @var  string */
+    /** @var string */
     protected $triggerValue;
 
     /**
@@ -106,6 +103,7 @@ class AbstractTrigger
 
     /**
      * @codeCoverageIgnore
+     *
      * @return RuleTrigger
      */
     public function getTrigger(): RuleTrigger
@@ -115,6 +113,7 @@ class AbstractTrigger
 
     /**
      * @codeCoverageIgnore
+     *
      * @return string
      */
     public function getTriggerValue(): string

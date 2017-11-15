@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,11 +27,9 @@ use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class ExportJob
+ * Class ExportJob.
  *
  * @property User $user
- *
- * @package FireflyIII\Models
  */
 class ExportJob extends Model
 {
@@ -47,13 +44,14 @@ class ExportJob extends Model
      * @param $value
      *
      * @return mixed
+     *
      * @throws NotFoundHttpException
      */
     public static function routeBinder($value)
     {
         if (auth()->check()) {
             $model = self::where('key', $value)->where('user_id', auth()->user()->id)->first();
-            if (!is_null($model)) {
+            if (null !== $model) {
                 return $model;
             }
         }

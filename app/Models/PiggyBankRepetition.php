@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,13 +27,10 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class PiggyBankRepetition
- *
- * @package FireflyIII\Models
+ * Class PiggyBankRepetition.
  */
 class PiggyBankRepetition extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
@@ -32,9 +31,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
- * Interface JournalCollectorInterface
- *
- * @package FireflyIII\Helpers\Collector
+ * Interface JournalCollectorInterface.
  */
 interface JournalCollectorInterface
 {
@@ -43,28 +40,28 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function addFilter(string $filter): JournalCollectorInterface;
+    public function addFilter(string $filter): self;
 
     /**
      * @param string $amount
      *
      * @return JournalCollectorInterface
      */
-    public function amountIs(string $amount): JournalCollectorInterface;
+    public function amountIs(string $amount): self;
 
     /**
      * @param string $amount
      *
      * @return JournalCollectorInterface
      */
-    public function amountLess(string $amount): JournalCollectorInterface;
+    public function amountLess(string $amount): self;
 
     /**
      * @param string $amount
      *
      * @return JournalCollectorInterface
      */
-    public function amountMore(string $amount): JournalCollectorInterface;
+    public function amountMore(string $amount): self;
 
     /**
      * @return int
@@ -86,89 +83,89 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function removeFilter(string $filter): JournalCollectorInterface;
+    public function removeFilter(string $filter): self;
 
     /**
      * @param Collection $accounts
      *
      * @return JournalCollectorInterface
      */
-    public function setAccounts(Collection $accounts): JournalCollectorInterface;
+    public function setAccounts(Collection $accounts): self;
 
     /**
      * @param Carbon $after
      *
      * @return JournalCollectorInterface
      */
-    public function setAfter(Carbon $after): JournalCollectorInterface;
+    public function setAfter(Carbon $after): self;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function setAllAssetAccounts(): JournalCollectorInterface;
+    public function setAllAssetAccounts(): self;
 
     /**
      * @param Carbon $before
      *
      * @return JournalCollectorInterface
      */
-    public function setBefore(Carbon $before): JournalCollectorInterface;
+    public function setBefore(Carbon $before): self;
 
     /**
      * @param Collection $bills
      *
      * @return JournalCollectorInterface
      */
-    public function setBills(Collection $bills): JournalCollectorInterface;
+    public function setBills(Collection $bills): self;
 
     /**
      * @param Budget $budget
      *
      * @return JournalCollectorInterface
      */
-    public function setBudget(Budget $budget): JournalCollectorInterface;
+    public function setBudget(Budget $budget): self;
 
     /**
      * @param Collection $budgets
      *
      * @return JournalCollectorInterface
      */
-    public function setBudgets(Collection $budgets): JournalCollectorInterface;
+    public function setBudgets(Collection $budgets): self;
 
     /**
      * @param Collection $categories
      *
      * @return JournalCollectorInterface
      */
-    public function setCategories(Collection $categories): JournalCollectorInterface;
+    public function setCategories(Collection $categories): self;
 
     /**
      * @param Category $category
      *
      * @return JournalCollectorInterface
      */
-    public function setCategory(Category $category): JournalCollectorInterface;
+    public function setCategory(Category $category): self;
 
     /**
      * @param int $limit
      *
      * @return JournalCollectorInterface
      */
-    public function setLimit(int $limit): JournalCollectorInterface;
+    public function setLimit(int $limit): self;
 
     /**
      * @param int $offset
      *
      * @return JournalCollectorInterface
      */
-    public function setOffset(int $offset): JournalCollectorInterface;
+    public function setOffset(int $offset): self;
 
     /**
      * @param int $page
      *
      * @return JournalCollectorInterface
      */
-    public function setPage(int $page): JournalCollectorInterface;
+    public function setPage(int $page): self;
 
     /**
      * @param Carbon $start
@@ -176,28 +173,28 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function setRange(Carbon $start, Carbon $end): JournalCollectorInterface;
+    public function setRange(Carbon $start, Carbon $end): self;
 
     /**
      * @param Tag $tag
      *
      * @return JournalCollectorInterface
      */
-    public function setTag(Tag $tag): JournalCollectorInterface;
+    public function setTag(Tag $tag): self;
 
     /**
      * @param Collection $tags
      *
      * @return JournalCollectorInterface
      */
-    public function setTags(Collection $tags): JournalCollectorInterface;
+    public function setTags(Collection $tags): self;
 
     /**
      * @param array $types
      *
      * @return JournalCollectorInterface
      */
-    public function setTypes(array $types): JournalCollectorInterface;
+    public function setTypes(array $types): self;
 
     public function setUser(User $user);
 
@@ -209,25 +206,25 @@ interface JournalCollectorInterface
     /**
      * @return JournalCollectorInterface
      */
-    public function withBudgetInformation(): JournalCollectorInterface;
+    public function withBudgetInformation(): self;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withCategoryInformation(): JournalCollectorInterface;
+    public function withCategoryInformation(): self;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withOpposingAccount(): JournalCollectorInterface;
+    public function withOpposingAccount(): self;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withoutBudget(): JournalCollectorInterface;
+    public function withoutBudget(): self;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withoutCategory(): JournalCollectorInterface;
+    public function withoutCategory(): self;
 }

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * LoginController.php
@@ -66,7 +64,6 @@ class LoginController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      */
     public function __construct()
     {
@@ -93,7 +90,7 @@ class LoginController extends Controller
 
         // check for presence of currency:
         $currency = TransactionCurrency::where('code', 'EUR')->first();
-        if (is_null($currency)) {
+        if (null === $currency) {
             $message
                 = 'Firefly III could not find the EURO currency. This is a strong indication the database has not been initialized correctly. Did you follow the installation instructions?';
 
@@ -107,7 +104,7 @@ class LoginController extends Controller
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
-        if ($singleUserMode === true && $userCount > 0) {
+        if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }
 

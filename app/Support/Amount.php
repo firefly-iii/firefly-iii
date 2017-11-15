@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -30,18 +29,15 @@ use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
 /**
- * Class Amount
- *
- * @package FireflyIII\Support
+ * Class Amount.
  */
 class Amount
 {
-
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
      * string $sign = $localeconv['negative_sign']
-     * bool $csPrecedes = $localeconv['n_cs_precedes']
+     * bool $csPrecedes = $localeconv['n_cs_precedes'].
      *
      * @param bool   $sepBySpace
      * @param int    $signPosn
@@ -73,7 +69,6 @@ class Amount
         // or:
         // AD%v_B%sCE (amount before currency)
         // the _ is the optional space
-
 
         // switch on how to display amount:
         switch ($signPosn) {
@@ -140,7 +135,7 @@ class Amount
             $result = $formatted . $space . $format->symbol;
         }
 
-        if ($coloured === true) {
+        if (true === $coloured) {
             if ($amount > 0) {
                 return sprintf('<span class="text-success">%s</span>', $result);
             }
@@ -206,6 +201,7 @@ class Amount
 
     /**
      * @return \FireflyIII\Models\TransactionCurrency
+     *
      * @throws FireflyException
      */
     public function getDefaultCurrency(): TransactionCurrency
@@ -219,6 +215,7 @@ class Amount
      * @param User $user
      *
      * @return \FireflyIII\Models\TransactionCurrency
+     *
      * @throws FireflyException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
@@ -231,7 +228,7 @@ class Amount
         }
         $currencyPreference = Prefs::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
         $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
-        if (is_null($currency)) {
+        if (null === $currency) {
             throw new FireflyException(sprintf('No currency found with code "%s"', $currencyPreference->data));
         }
         $cache->store($currency);
@@ -249,8 +246,8 @@ class Amount
      */
     public function getJsConfig(array $config): array
     {
-        $negative = self::getAmountJsConfig($config['n_sep_by_space'] === 1, $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes'] === 1);
-        $positive = self::getAmountJsConfig($config['p_sep_by_space'] === 1, $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes'] === 1);
+        $negative = self::getAmountJsConfig(1 === $config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], 1 === $config['n_cs_precedes']);
+        $positive = self::getAmountJsConfig(1 === $config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], 1 === $config['p_cs_precedes']);
 
         return [
             'pos'  => $positive,

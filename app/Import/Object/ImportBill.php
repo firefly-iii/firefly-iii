@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
@@ -31,13 +30,10 @@ use Log;
 use Steam;
 
 /**
- * Class ImportBill
- *
- * @package FireflyIII\Import\Object
+ * Class ImportBill.
  */
 class ImportBill
 {
-
     /** @var string */
     private $amount = '1';
     /** @var Bill */
@@ -48,7 +44,7 @@ class ImportBill
     private $name = [];
     /** @var BillRepositoryInterface */
     private $repository;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -66,7 +62,7 @@ class ImportBill
      */
     public function getBill(): Bill
     {
-        if (is_null($this->bill->id)) {
+        if (null === $this->bill->id) {
             $this->store();
         }
 
@@ -114,11 +110,11 @@ class ImportBill
         Log::debug('In findExistingObject() for Bill');
         // 1: find by ID, or name
 
-        if (count($this->id) === 3) {
+        if (3 === count($this->id)) {
             Log::debug(sprintf('Finding bill with ID #%d', $this->id['value']));
             /** @var Bill $bill */
             $bill = $this->repository->find(intval($this->id['value']));
-            if (!is_null($bill->id)) {
+            if (null !== $bill->id) {
                 Log::debug(sprintf('Found unmapped bill by ID (#%d): %s', $bill->id, $bill->name));
 
                 return $bill;
@@ -126,7 +122,7 @@ class ImportBill
             Log::debug('Found nothing.');
         }
         // 2: find by name
-        if (count($this->name) === 3) {
+        if (3 === count($this->name)) {
             /** @var Collection $bills */
             $bills = $this->repository->getBills();
             $name  = $this->name['value'];
@@ -143,7 +139,7 @@ class ImportBill
                 }
             );
 
-            if ($filtered->count() === 1) {
+            if (1 === $filtered->count()) {
                 return $filtered->first();
             }
             Log::debug('Found nothing.');
@@ -167,7 +163,7 @@ class ImportBill
             Log::debug(sprintf('Find mapped bill based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (!is_null($mapped->id)) {
+            if (null !== $mapped->id) {
                 Log::debug(sprintf('Found bill #%d!', $mapped->id));
 
                 return $mapped;
@@ -186,13 +182,13 @@ class ImportBill
     private function getMappedObject(array $array): Bill
     {
         Log::debug('In getMappedObject() for Bill');
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return new Bill;
         }
 
-        if (array_key_exists('mapped', $array) && is_null($array['mapped'])) {
+        if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
             return new Bill;
@@ -203,12 +199,11 @@ class ImportBill
         $search = intval($array['mapped']);
         $bill   = $this->repository->find($search);
 
-        if (is_null($bill->id)) {
+        if (null === $bill->id) {
             Log::error(sprintf('There is no bill with id #%d. Invalid mapping will be ignored!', $search));
 
             return new Bill;
         }
-
 
         Log::debug(sprintf('Found bill! #%d ("%s"). Return it', $bill->id, $bill->name));
 
@@ -222,21 +217,21 @@ class ImportBill
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (!is_null($mapped->id)) {
+        if (null !== $mapped->id) {
             $this->bill = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (!is_null($found->id)) {
+        if (null !== $found->id) {
             $this->bill = $found;
 
             return true;
         }
         $name = $this->name['value'] ?? '';
 
-        if (strlen($name) === 0) {
+        if (0 === strlen($name)) {
             return true;
         }
 
@@ -254,7 +249,6 @@ class ImportBill
         ];
 
         Log::debug('Found no bill so must create one ourselves. Assume default values.', $data);
-
 
         $this->bill = $this->repository->store($data);
         Log::debug(sprintf('Successfully stored new bill #%d: %s', $this->bill->id, $this->bill->name));

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
@@ -32,9 +31,7 @@ use Session;
 use View;
 
 /**
- * Class ConfigurationController
- *
- * @package FireflyIII\Http\Controllers\Admin
+ * Class ConfigurationController.
  */
 class ConfigurationController extends Controller
 {
@@ -44,7 +41,6 @@ class ConfigurationController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {

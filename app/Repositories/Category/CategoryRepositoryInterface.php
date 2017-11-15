@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Category;
@@ -29,9 +28,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface CategoryRepositoryInterface
- *
- * @package FireflyIII\Repositories\Category
+ * Interface CategoryRepositoryInterface.
  */
 interface CategoryRepositoryInterface
 {
@@ -53,7 +50,7 @@ interface CategoryRepositoryInterface
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
-     * Find a category
+     * Find a category.
      *
      * @param int $categoryId
      *
@@ -62,7 +59,7 @@ interface CategoryRepositoryInterface
     public function find(int $categoryId): Category;
 
     /**
-     * Find a category
+     * Find a category.
      *
      * @param string $name
      *

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * Kernel.php
@@ -48,13 +46,10 @@ class Kernel extends ConsoleKernel
      */
     protected $commands
         = [
-            //
         ];
 
     /**
      * Register the commands for the application.
-     *
-     * @return void
      */
     protected function commands()
     {
@@ -66,9 +61,8 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      *
-     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function schedule(Schedule $schedule)

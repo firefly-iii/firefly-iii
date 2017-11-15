@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -28,13 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class HasNoCategory
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class HasNoCategory.
  */
 final class HasNoCategory extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -71,7 +67,7 @@ final class HasNoCategory extends AbstractTrigger implements TriggerInterface
             $count += $transaction->categories()->count();
         }
 
-        if ($count === 0) {
+        if (0 === $count) {
             Log::debug(sprintf('RuleTrigger HasNoCategory for journal #%d: count is %d, return true.', $journal->id, $count));
 
             return true;

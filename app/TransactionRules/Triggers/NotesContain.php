@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -28,13 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class NotesContain
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class NotesContain.
  */
 final class NotesContain extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -53,9 +49,9 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
-            $res = strval($value) === '';
-            if ($res === true) {
+        if (null !== $value) {
+            $res = '' === strval($value);
+            if (true === $res) {
                 Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
             }
 
@@ -76,7 +72,7 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
     {
         $search = trim(strtolower($this->triggerValue));
 
-        if (strlen($search) === 0) {
+        if (0 === strlen($search)) {
             Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" is empty, return false.', $journal->id, $search));
 
             return false;
@@ -85,13 +81,12 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
         /** @var Note $note */
         $note = $journal->notes()->first();
         $text = '';
-        if (!is_null($note)) {
+        if (null !== $note) {
             $text = strtolower($note->text);
         }
 
-
         $strpos = strpos($text, $search);
-        if (!($strpos === false)) {
+        if (!(false === $strpos)) {
             Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" contains "%s", return true.', $journal->id, $text, $search));
 
             return true;

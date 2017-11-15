@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
@@ -28,13 +27,10 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class JournalList
- *
- * @package FireflyIII\Support\Binder
+ * Class JournalList.
  */
 class JournalList implements BinderInterface
 {
-
     /**
      * @param $value
      * @param $route
@@ -48,7 +44,7 @@ class JournalList implements BinderInterface
             /** @var \Illuminate\Support\Collection $object */
             $object = TransactionJournal::whereIn('transaction_journals.id', $ids)
                                         ->where('transaction_journals.user_id', auth()->user()->id)
-                                        ->get(['transaction_journals.*',]);
+                                        ->get(['transaction_journals.*']);
 
             if ($object->count() > 0) {
                 return $object;

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Currency;
@@ -32,13 +31,11 @@ use Requests;
 use Requests_Exception;
 
 /**
- * Class FixerIO
- *
- * @package FireflyIII\Services\Currency
+ * Class FixerIO.
  */
 class FixerIO implements ExchangeRateInterface
 {
-    /** @var  User */
+    /** @var User */
     protected $user;
 
     public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate
@@ -57,14 +54,14 @@ class FixerIO implements ExchangeRateInterface
         // Requests_Exception
         $rate    = 1.0;
         $content = null;
-        if ($statusCode !== 200) {
+        if (200 !== $statusCode) {
             Log::error(sprintf('Something went wrong. Received error code %d and body "%s" from FixerIO.', $statusCode, $body));
         }
         // get rate from body:
-        if ($statusCode === 200) {
+        if (200 === $statusCode) {
             $content = json_decode($body, true);
         }
-        if (!is_null($content)) {
+        if (null !== $content) {
             $code = $toCurrency->code;
             $rate = isset($content['rates'][$code]) ? $content['rates'][$code] : '1';
         }

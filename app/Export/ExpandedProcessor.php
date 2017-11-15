@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Export;
@@ -42,32 +41,29 @@ use Storage;
 use ZipArchive;
 
 /**
- * Class ExpandedProcessor
+ * Class ExpandedProcessor.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // its doing a lot.
- *
- * @package FireflyIII\Export
  */
 class ExpandedProcessor implements ProcessorInterface
 {
-
     /** @var Collection */
     public $accounts;
-    /** @var  string */
+    /** @var string */
     public $exportFormat;
-    /** @var  bool */
+    /** @var bool */
     public $includeAttachments;
-    /** @var  bool */
+    /** @var bool */
     public $includeOldUploads;
-    /** @var  ExportJob */
+    /** @var ExportJob */
     public $job;
     /** @var array */
     public $settings;
-    /** @var  Collection */
+    /** @var Collection */
     private $exportEntries;
-    /** @var  Collection */
+    /** @var Collection */
     private $files;
-    /** @var  Collection */
+    /** @var Collection */
     private $journals;
 
     /**
@@ -175,6 +171,7 @@ class ExpandedProcessor implements ProcessorInterface
 
     /**
      * @return bool
+     *
      * @throws FireflyException
      */
     public function createZipFile(): bool
@@ -183,7 +180,7 @@ class ExpandedProcessor implements ProcessorInterface
         $file     = $this->job->key . '.zip';
         $fullPath = storage_path('export') . '/' . $file;
 
-        if ($zip->open($fullPath, ZipArchive::CREATE) !== true) {
+        if (true !== $zip->open($fullPath, ZipArchive::CREATE)) {
             throw new FireflyException('Cannot store zip file.');
         }
         // for each file in the collection, add it to the zip file.
@@ -278,7 +275,7 @@ class ExpandedProcessor implements ProcessorInterface
     }
 
     /**
-     * Get all IBAN / SWIFT / account numbers
+     * Get all IBAN / SWIFT / account numbers.
      *
      * @param array $array
      *

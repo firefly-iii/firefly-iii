@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Tag;
@@ -35,18 +34,14 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class TagRepository
- *
- * @package FireflyIII\Repositories\Tag
+ * Class TagRepository.
  */
 class TagRepository implements TagRepositoryInterface
 {
-
     /** @var User */
     private $user;
 
     /**
-     *
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *
@@ -54,9 +49,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function connect(TransactionJournal $journal, Tag $tag): bool
     {
-        /*
-         * Already connected:
-         */
+        // Already connected:
         if ($journal->tags()->find($tag->id)) {
             Log::info(sprintf('Tag #%d is already connected to journal #%d.', $tag->id, $journal->id));
 
@@ -116,7 +109,7 @@ class TagRepository implements TagRepositoryInterface
     public function find(int $tagId): Tag
     {
         $tag = $this->user->tags()->find($tagId);
-        if (is_null($tag)) {
+        if (null === $tag) {
             $tag = new Tag;
         }
 
@@ -131,7 +124,7 @@ class TagRepository implements TagRepositoryInterface
     public function findByTag(string $tag): Tag
     {
         $tags = $this->user->tags()->get();
-        /** @var Tag $tag */
+        // @var Tag $tag
         foreach ($tags as $databaseTag) {
             if ($databaseTag->tag === $tag) {
                 return $databaseTag;
@@ -149,7 +142,7 @@ class TagRepository implements TagRepositoryInterface
     public function firstUseDate(Tag $tag): Carbon
     {
         $journal = $tag->transactionJournals()->orderBy('date', 'ASC')->first();
-        if (!is_null($journal)) {
+        if (null !== $journal) {
             return $journal->date;
         }
 
@@ -190,7 +183,7 @@ class TagRepository implements TagRepositoryInterface
     public function lastUseDate(Tag $tag): Carbon
     {
         $journal = $tag->transactionJournals()->orderBy('date', 'DESC')->first();
-        if (!is_null($journal)) {
+        if (null !== $journal) {
             return $journal->date;
         }
 
@@ -265,7 +258,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
 
-        if (!is_null($start) && !is_null($end)) {
+        if (null !== $start && null !== $end) {
             $collector->setRange($start, $end);
         }
 
@@ -291,7 +284,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
 
-        if (!is_null($start) && !is_null($end)) {
+        if (null !== $start && null !== $end) {
             $collector->setRange($start, $end);
         }
 
@@ -308,7 +301,7 @@ class TagRepository implements TagRepositoryInterface
         foreach ($journals as $journal) {
             $amount = app('steam')->positive(strval($journal->transaction_amount));
             $type   = $journal->transaction_type_type;
-            if ($type === TransactionType::WITHDRAWAL) {
+            if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
             }
             $sums[$type] = bcadd($sums[$type], $amount);
@@ -326,15 +319,11 @@ class TagRepository implements TagRepositoryInterface
      */
     public function tagCloud(?int $year): array
     {
-        /*
-         * Some vars
-         */
+        // Some vars
         $min    = null;
         $max    = '0';
         $return = [];
-        /*
-         * get tags with a certain amount (in this range):
-         */
+        // get tags with a certain amount (in this range):
         $query = $this->user->tags()
                             ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
                             ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
@@ -343,10 +332,10 @@ class TagRepository implements TagRepositoryInterface
                             ->groupBy('tags.id');
 
         // add date range (or not):
-        if (is_null($year)) {
+        if (null === $year) {
             $query->whereNull('tags.date');
         }
-        if (!is_null($year)) {
+        if (null !== $year) {
             $start = $year . '-01-01';
             $end   = $year . '-12-31';
             $query->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
@@ -358,16 +347,14 @@ class TagRepository implements TagRepositoryInterface
             $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
         }
 
-        /*
-         * get all tags in period:
-         */
+        // get all tags in period:
         $query = $this->user->tags();
-        if (!is_null($year)) {
+        if (null !== $year) {
             $start = $year . '-01-01';
             $end   = $year . '-12-31';
             $query->where('date', '>=', $start)->where('date', '<=', $end);
         }
-        if (is_null($year)) {
+        if (null === $year) {
             $query->whereNull('date');
         }
         $tags      = $query->orderBy('id', 'desc')->get();
@@ -375,10 +362,10 @@ class TagRepository implements TagRepositoryInterface
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $amount = $tagsWithAmounts[$tag->id] ?? '0';
-            if (is_null($min)) {
+            if (null === $min) {
                 $min = $amount;
             }
-            $max = bccomp($amount, $max) === 1 ? $amount : $max;
+            $max = 1 === bccomp($amount, $max) ? $amount : $max;
             $min = bccomp($amount, $min) === -1 ? $amount : $min;
 
             $temporary[] = [
@@ -431,20 +418,19 @@ class TagRepository implements TagRepositoryInterface
         $amountDiff = $max - $min;
 
         // no difference? Every tag same range:
-        if ($amountDiff === 0.0) {
+        if (0.0 === $amountDiff) {
             return $range[0];
         }
 
         $diff = $range[1] - $range[0];
         $step = 1;
-        if ($diff != 0) {
+        if (0 != $diff) {
             $step = $amountDiff / $diff;
         }
-        if ($step == 0) {
+        if (0 == $step) {
             $step = 1;
         }
         $extra = round($amount / $step);
-
 
         return intval($range[0] + $extra);
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionMatcher.php
- * Copyright (C) 2016 Robert Horlings
+ * Copyright (C) 2016 Robert Horlings.
  *
  * This file is part of Firefly III.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules;
@@ -33,9 +32,7 @@ use Log;
 
 /**
  * Class TransactionMatcher is used to find a list of
- * transaction matching a set of triggers
- *
- * @package FireflyIII\TransactionRules
+ * transaction matching a set of triggers.
  */
 class TransactionMatcher
 {
@@ -43,9 +40,9 @@ class TransactionMatcher
     private $limit = 10;
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
     private $range = 200;
-    /** @var  Rule */
+    /** @var Rule */
     private $rule;
-    /** @var  JournalTaskerInterface */
+    /** @var JournalTaskerInterface */
     private $tasker;
     /** @var array */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
@@ -68,11 +65,10 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
-     *
      */
     public function findTransactionsByRule()
     {
-        if (count($this->rule->ruleTriggers) === 0) {
+        if (0 === count($this->rule->ruleTriggers)) {
             return new Collection;
         }
 
@@ -93,11 +89,10 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
-     *
      */
     public function findTransactionsByTriggers(): Collection
     {
-        if (count($this->triggers) === 0) {
+        if (0 === count($this->triggers)) {
             return new Collection;
         }
 
@@ -125,7 +120,7 @@ class TransactionMatcher
      *
      * @return TransactionMatcher
      */
-    public function setLimit(int $limit): TransactionMatcher
+    public function setLimit(int $limit): self
     {
         $this->limit = $limit;
 
@@ -145,7 +140,7 @@ class TransactionMatcher
      *
      * @return TransactionMatcher
      */
-    public function setRange(int $range): TransactionMatcher
+    public function setRange(int $range): self
     {
         $this->range = $range;
 
@@ -165,7 +160,7 @@ class TransactionMatcher
      *
      * @return TransactionMatcher
      */
-    public function setTriggers(array $triggers): TransactionMatcher
+    public function setTriggers(array $triggers): self
     {
         $this->triggers = $triggers;
 
@@ -221,7 +216,7 @@ class TransactionMatcher
             Log::debug(sprintf('Total count is now %d', $result->count()));
 
             // Update counters
-            $page++;
+            ++$page;
             $processed += count($set);
 
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));

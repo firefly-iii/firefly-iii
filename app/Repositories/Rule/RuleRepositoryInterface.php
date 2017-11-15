@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Rule;
@@ -30,9 +29,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
 
 /**
- * Interface RuleRepositoryInterface
- *
- * @package FireflyIII\Repositories\Rule
+ * Interface RuleRepositoryInterface.
  */
 interface RuleRepositoryInterface
 {
@@ -54,7 +51,6 @@ interface RuleRepositoryInterface
      * @return Rule
      */
     public function find(int $ruleId): Rule;
-
 
     /**
      * @return RuleGroup

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII;
 
@@ -34,9 +32,7 @@ use Illuminate\Notifications\Notifiable;
 use Request;
 
 /**
- * Class User
- *
- * @package FireflyIII
+ * Class User.
  */
 class User extends Authenticatable
 {
@@ -227,9 +223,7 @@ class User extends Authenticatable
     /**
      * Send the password reset notification.
      *
-     * @param  string $token
-     *
-     * @return void
+     * @param string $token
      */
     public function sendPasswordResetNotification($token)
     {

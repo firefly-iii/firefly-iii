@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,9 +25,7 @@ namespace FireflyIII\Http\Requests;
 use Steam;
 
 /**
- * Class SplitJournalFormRequest
- *
- * @package FireflyIII\Http\Requests
+ * Class SplitJournalFormRequest.
  */
 class SplitJournalFormRequest extends Request
 {

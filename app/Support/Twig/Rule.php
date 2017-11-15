@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -28,13 +27,10 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
- * Class Rule
- *
- * @package FireflyIII\Support\Twig
+ * Class Rule.
  */
 class Rule extends Twig_Extension
 {
-
     /**
      * @return Twig_SimpleFunction
      */
@@ -84,7 +80,7 @@ class Rule extends Twig_Extension
                 $ruleTriggers     = array_keys(Config::get('firefly.rule-triggers'));
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {
-                    if ($key !== 'user_action') {
+                    if ('user_action' !== $key) {
                         $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
                     }
                 }
@@ -93,7 +89,6 @@ class Rule extends Twig_Extension
 
                 return $possibleTriggers;
             }
-
         );
     }
 

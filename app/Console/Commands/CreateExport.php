@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Console\Commands;
 
@@ -35,11 +33,9 @@ use Illuminate\Console\Command;
 use Storage;
 
 /**
- * Class CreateExport
+ * Class CreateExport.
  *
  * Generates export from the command line.
- *
- * @package FireflyIII\Console\Commands
  */
 class CreateExport extends Command
 {
@@ -65,7 +61,6 @@ class CreateExport extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -73,7 +68,6 @@ class CreateExport extends Command
     }
 
     /**
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
@@ -108,7 +102,7 @@ class CreateExport extends Command
         // first date
         $firstJournal = $journalRepository->first();
         $first        = new Carbon;
-        if (!is_null($firstJournal->id)) {
+        if (null !== $firstJournal->id) {
             $first = $firstJournal->date;
         }
 
@@ -123,7 +117,6 @@ class CreateExport extends Command
             'includeOldUploads'  => $this->option('with_uploads'),
             'job'                => $job,
         ];
-
 
         /** @var ProcessorInterface $processor */
         $processor = app(ProcessorInterface::class);

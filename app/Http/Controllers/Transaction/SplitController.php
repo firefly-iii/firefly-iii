@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
@@ -45,21 +44,17 @@ use Steam;
 use View;
 
 /**
- * Class SplitController
- *
- * @package FireflyIII\Http\Controllers\Transaction
- *
+ * Class SplitController.
  */
 class SplitController extends Controller
 {
-
-    /** @var  AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface */
     private $accounts;
 
     /** @var AttachmentHelperInterface */
     private $attachments;
 
-    /** @var  BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface */
     private $budgets;
 
     /** @var CurrencyRepositoryInterface */
@@ -74,7 +69,6 @@ class SplitController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         // some useful repositories:
         $this->middleware(
@@ -122,12 +116,11 @@ class SplitController extends Controller
             $accountArray[$account->id]['currency_id'] = intval($account->getMeta('currency_id'));
         }
 
-
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'edit-split-' . $preFilled['what']);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('transactions.edit-split.fromUpdate') !== true) {
+        if (true !== session('transactions.edit-split.fromUpdate')) {
             $this->rememberPreviousUri('transactions.edit-split.uri');
         }
         Session::forget('transactions.edit-split.fromUpdate');
@@ -149,7 +142,6 @@ class SplitController extends Controller
             )
         );
     }
-
 
     /**
      * @param SplitJournalFormRequest    $request
@@ -183,7 +175,7 @@ class SplitController extends Controller
         Preferences::mark();
 
         // @codeCoverageIgnoreStart
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit-split.fromUpdate', true);
 
@@ -202,7 +194,7 @@ class SplitController extends Controller
      */
     private function arrayFromInput(SplitJournalFormRequest $request): array
     {
-        $tags  = is_null($request->get('tags')) ? '' : $request->get('tags');
+        $tags  = null === $request->get('tags') ? '' : $request->get('tags');
         $array = [
             'journal_description'            => $request->get('journal_description'),
             'journal_source_account_id'      => $request->get('journal_source_account_id'),
@@ -225,7 +217,6 @@ class SplitController extends Controller
             'transactions'                   => $this->getTransactionDataFromRequest($request),
         ];
 
-
         return $array;
     }
 
@@ -242,7 +233,7 @@ class SplitController extends Controller
         $notes               = '';
         /** @var Note $note */
         $note = $journal->notes()->first();
-        if (!is_null($note)) {
+        if (null !== $note) {
             $notes = $note->text;
         }
         $array = [
@@ -303,11 +294,10 @@ class SplitController extends Controller
                 'foreign_currency_id'         => $transaction['foreign_currency_id'],
                 'foreign_currency_code'       => $transaction['foreign_currency_code'],
                 'foreign_currency_symbol'     => $transaction['foreign_currency_symbol'],
-
             ];
 
             // set initial category and/or budget:
-            if (count($transactions) === 1 && $index === 0) {
+            if (1 === count($transactions) && 0 === $index) {
                 $set['budget_id'] = $journal->budgetId();
                 $set['category']  = $journal->categoryAsString();
             }
@@ -340,7 +330,6 @@ class SplitController extends Controller
                 'category'                 => $transaction['category'] ?? '',
                 'transaction_currency_id'  => intval($transaction['transaction_currency_id']),
                 'foreign_currency_id'      => $transaction['foreign_currency_id'] ?? null,
-
             ];
         }
         Log::debug(sprintf('Found %d splits in request data.', count($return)));
@@ -356,7 +345,7 @@ class SplitController extends Controller
      */
     private function updateWithPrevious($array, $old): array
     {
-        if (count($old) === 0 || !isset($old['transactions'])) {
+        if (0 === count($old) || !isset($old['transactions'])) {
             return $array;
         }
         $old = $old['transactions'];

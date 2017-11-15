@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -27,13 +26,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class DescriptionContains
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class DescriptionContains.
  */
 final class DescriptionContains extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -52,9 +48,9 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
-            $res = strval($value) === '';
-            if ($res === true) {
+        if (null !== $value) {
+            $res = '' === strval($value);
+            if (true === $res) {
                 Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
             }
 
@@ -76,7 +72,7 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
         $search = strtolower($this->triggerValue);
         $source = strtolower($journal->description ?? '');
         $strpos = stripos($source, $search);
-        if (!($strpos === false)) {
+        if (!(false === $strpos)) {
             Log::debug(sprintf('RuleTrigger DescriptionContains for journal #%d: "%s" contains "%s", return true.', $journal->id, $source, $search));
 
             return true;

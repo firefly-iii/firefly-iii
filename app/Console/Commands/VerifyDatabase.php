@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -42,11 +41,9 @@ use Schema;
 use stdClass;
 
 /**
- * Class VerifyDatabase
+ * Class VerifyDatabase.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- *
- * @package FireflyIII\Console\Commands
  */
 class VerifyDatabase extends Command
 {
@@ -107,7 +104,7 @@ class VerifyDatabase extends Command
         /** @var User $user */
         foreach ($users as $user) {
             $pref = Preferences::getForUser($user, 'access_token', null);
-            if (is_null($pref)) {
+            if (null === $pref) {
                 $token = $user->generateAccessToken();
                 Preferences::setForUser($user, 'access_token', $token);
                 $this->line(sprintf('Generated access token for user %s', $user->email));
@@ -128,7 +125,7 @@ class VerifyDatabase extends Command
         ];
         foreach ($set as $name => $values) {
             $link = LinkType::where('name', $name)->where('outward', $values[0])->where('inward', $values[1])->first();
-            if (is_null($link)) {
+            if (null === $link) {
                 $link          = new LinkType;
                 $link->name    = $name;
                 $link->outward = $values[0];
@@ -147,17 +144,17 @@ class VerifyDatabase extends Command
         $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
         $set->each(
             function (PiggyBankEvent $event) {
-                if (is_null($event->transaction_journal_id)) {
+                if (null === $event->transaction_journal_id) {
                     return true;
                 }
                 /** @var TransactionJournal $journal */
                 $journal = $event->transactionJournal()->first();
-                if (is_null($journal)) {
+                if (null === $journal) {
                     return true;
                 }
 
                 $type = $journal->transactionType->type;
-                if ($type !== TransactionType::TRANSFER) {
+                if (TransactionType::TRANSFER !== $type) {
                     $event->transaction_journal_id = null;
                     $event->save();
                     $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
@@ -234,11 +231,11 @@ class VerifyDatabase extends Command
                       ->get(
                           ['accounts.id as account_id', 'accounts.deleted_at as account_deleted_at', 'transactions.id as transaction_id',
                            'transactions.deleted_at as transaction_deleted_at', 'transaction_journals.id as journal_id',
-                           'transaction_journals.deleted_at as journal_deleted_at']
+                           'transaction_journals.deleted_at as journal_deleted_at',]
                       );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $date = is_null($entry->transaction_deleted_at) ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
+            $date = null === $entry->transaction_deleted_at ? $entry->journal_deleted_at : $entry->transaction_deleted_at;
             $this->error(
                 'Error: Account #' . $entry->account_id . ' should have been deleted, but has not.' .
                 ' Find it in the table called "accounts" and change the "deleted_at" field to: "' . $date . '"'
@@ -270,7 +267,7 @@ class VerifyDatabase extends Command
                                      ->whereNull('transaction_journals.deleted_at')
                                      ->get(
                                          ['transaction_journals.id', 'transaction_journals.user_id', 'users.email', 'account_types.type as a_type',
-                                          'transaction_types.type']
+                                          'transaction_types.type',]
                                      );
             foreach ($set as $entry) {
                 $this->error(
@@ -289,7 +286,7 @@ class VerifyDatabase extends Command
     }
 
     /**
-     * Any deleted transaction journals that have transactions that are NOT deleted:
+     * Any deleted transaction journals that have transactions that are NOT deleted:.
      */
     private function reportJournals()
     {
@@ -303,7 +300,7 @@ class VerifyDatabase extends Command
                                          'transaction_journals.description',
                                          'transaction_journals.deleted_at as journal_deleted',
                                          'transactions.id as transaction_id',
-                                         'transactions.deleted_at as transaction_deleted_at']
+                                         'transactions.deleted_at as transaction_deleted_at',]
                                  );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -340,7 +337,7 @@ class VerifyDatabase extends Command
     {
         $plural = str_plural($name);
         $class  = sprintf('FireflyIII\Models\%s', ucfirst($name));
-        $field  = $name === 'tag' ? 'tag' : 'name';
+        $field  = 'tag' === $name ? 'tag' : 'name';
         $set    = $class::leftJoin($name . '_transaction_journal', $plural . '.id', '=', $name . '_transaction_journal.' . $name . '_id')
                         ->leftJoin('users', $plural . '.user_id', '=', 'users.id')
                         ->distinct()
@@ -380,7 +377,7 @@ class VerifyDatabase extends Command
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
             $sum = strval($user->transactions()->sum('amount'));
-            if (bccomp($sum, '0') !== 0) {
+            if (0 !== bccomp($sum, '0')) {
                 $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
             }
         }
@@ -396,7 +393,7 @@ class VerifyDatabase extends Command
                           ->whereNull('transaction_journals.deleted_at')
                           ->get(
                               ['transactions.id as transaction_id', 'transactions.deleted_at as transaction_deleted', 'transaction_journals.id as journal_id',
-                               'transaction_journals.deleted_at']
+                               'transaction_journals.deleted_at',]
                           );
         /** @var stdClass $entry */
         foreach ($set as $entry) {

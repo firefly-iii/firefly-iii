@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collection;
@@ -26,18 +25,14 @@ namespace FireflyIII\Helpers\Collection;
 use Illuminate\Support\Collection;
 
 /**
- *
- * Class Balance
- *
- * @package FireflyIII\Helpers\Collection
+ * Class Balance.
  */
 class Balance
 {
-
-    /** @var  BalanceHeader */
+    /** @var BalanceHeader */
     protected $balanceHeader;
 
-    /** @var  Collection */
+    /** @var Collection */
     protected $balanceLines;
 
     /**

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -33,9 +32,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Log;
 
 /**
- * Class EventServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class EventServiceProvider.
  */
 class EventServiceProvider extends ServiceProvider
 {
@@ -47,11 +44,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-            'FireflyIII\Events\RegisteredUser'            =>
-                [
-                    'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
-                    'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
-                ],
+            'FireflyIII\Events\RegisteredUser'            => [
+                'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
+                'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
+            ],
             // is a User related event.
             'FireflyIII\Events\RequestedNewPassword'      => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
@@ -66,25 +62,20 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            'FireflyIII\Events\StoredTransactionJournal'  =>
-                [
-                    'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
-                    'FireflyIII\Handlers\Events\StoredJournalEventHandler@connectToPiggyBank',
-                    'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
-                ],
+            'FireflyIII\Events\StoredTransactionJournal'  => [
+                'FireflyIII\Handlers\Events\StoredJournalEventHandler@scanBills',
+                'FireflyIII\Handlers\Events\StoredJournalEventHandler@connectToPiggyBank',
+                'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
+            ],
             // is a Transaction Journal related event.
-            'FireflyIII\Events\UpdatedTransactionJournal' =>
-                [
-                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
-                    'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
-                ],
-
+            'FireflyIII\Events\UpdatedTransactionJournal' => [
+                'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@scanBills',
+                'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
+            ],
         ];
 
     /**
      * Register any events for your application.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -98,15 +89,14 @@ class EventServiceProvider extends ServiceProvider
      */
     protected function registerCreateEvents()
     {
-
         // move this routine to a filter
         // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
             function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = is_null($piggyBank->startdate) ? null : $piggyBank->startdate;
-                $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
+                $repetition->startdate     = null === $piggyBank->startdate ? null : $piggyBank->startdate;
+                $repetition->targetdate    = null === $piggyBank->targetdate ? null : $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }
@@ -125,7 +115,7 @@ class EventServiceProvider extends ServiceProvider
                 foreach ($account->transactions()->get() as $transaction) {
                     Log::debug('Now at transaction #' . $transaction->id);
                     $journal = $transaction->transactionJournal()->first();
-                    if (!is_null($journal)) {
+                    if (null !== $journal) {
                         Log::debug('Call for deletion of journal #' . $journal->id);
                         $journal->delete();
                     }

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Http\Controllers\Import;
 
@@ -41,12 +39,10 @@ use View;
 
 /**
  * Class FileController.
- *
- * @package FireflyIII\Http\Controllers\Import
  */
 class FileController extends Controller
 {
-    /** @var  ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface */
     public $repository;
 
     /**
@@ -73,6 +69,7 @@ class FileController extends Controller
      * @param ImportJob $job
      *
      * @return View
+     *
      * @throws FireflyException
      */
     public function configure(ImportJob $job)
@@ -110,7 +107,7 @@ class FileController extends Controller
         $config['column-roles-complete']   = false;
         $config['column-mapping-complete'] = false;
         $config['initial-config-complete'] = false;
-        $config['delimiter']               = $config['delimiter'] === "\t" ? 'tab' : $config['delimiter'];
+        $config['delimiter']               = "\t" === $config['delimiter'] ? 'tab' : $config['delimiter'];
 
         $result = json_encode($config, JSON_PRETTY_PRINT);
         $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
@@ -177,9 +174,7 @@ class FileController extends Controller
         return redirect(route('import.file.configure', [$job->key]));
     }
 
-
     /**
-     *
      * Show status of import job in JSON.
      *
      * @param ImportJob $job
@@ -202,12 +197,12 @@ class FileController extends Controller
             'finishedText'    => '',
         ];
 
-        if ($job->extended_status['steps'] !== 0) {
+        if (0 !== $job->extended_status['steps']) {
             $result['percentage']      = round(($job->extended_status['done'] / $job->extended_status['steps']) * 100, 0);
             $result['show_percentage'] = true;
         }
 
-        if ($job->status === 'finished') {
+        if ('finished' === $job->status) {
             $tagId = $job->extended_status['tag'];
             /** @var TagRepositoryInterface $repository */
             $repository             = app(TagRepositoryInterface::class);
@@ -216,7 +211,7 @@ class FileController extends Controller
             $result['finishedText'] = trans('firefly.import_status_finished_job', ['link' => route('tags.show', [$tag->id, 'all']), 'tag' => $tag->tag]);
         }
 
-        if ($job->status === 'running') {
+        if ('running' === $job->status) {
             $result['started'] = true;
             $result['running'] = true;
         }
@@ -259,6 +254,7 @@ class FileController extends Controller
      * @param ImportJob $job
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws FireflyException
      */
     public function start(ImportJob $job)
@@ -295,6 +291,7 @@ class FileController extends Controller
      * @param ImportJob $job
      *
      * @return ConfiguratorInterface
+     *
      * @throws FireflyException
      */
     private function makeConfigurator(ImportJob $job): ConfiguratorInterface
@@ -302,13 +299,12 @@ class FileController extends Controller
         $type      = $job->file_type;
         $key       = sprintf('firefly.import_configurators.%s', $type);
         $className = config($key);
-        if (is_null($className)) {
+        if (null === $className) {
             throw new FireflyException('Cannot find configurator class for this job.'); // @codeCoverageIgnore
         }
         /** @var ConfiguratorInterface $configurator */
         $configurator = app($className);
         $configurator->setJob($job);
-
 
         return $configurator;
     }

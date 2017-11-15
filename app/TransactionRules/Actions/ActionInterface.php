@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -27,9 +26,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 
 /**
- * Interface ActionInterface
- *
- * @package FireflyIII\TransactionRules\Action
+ * Interface ActionInterface.
  */
 interface ActionInterface
 {

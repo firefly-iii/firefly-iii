@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
@@ -29,13 +28,10 @@ use FireflyIII\Models\Category;
 use Illuminate\Support\Collection;
 
 /**
- * Interface PopupReportInterface
- *
- * @package FireflyIII\Helpers\Report
+ * Interface PopupReportInterface.
  */
 interface PopupReportInterface
 {
-
     /**
      * @param $account
      * @param $attributes

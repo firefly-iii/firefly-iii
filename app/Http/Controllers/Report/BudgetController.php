@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
@@ -32,14 +31,10 @@ use Illuminate\Support\Collection;
 use Navigation;
 
 /**
- * Class BudgetController
- *
- * @package FireflyIII\Http\Controllers\Report
+ * Class BudgetController.
  */
 class BudgetController extends Controller
 {
-
-
     /**
      * @param BudgetReportHelperInterface $helper
      * @param Collection                  $accounts
@@ -50,7 +45,6 @@ class BudgetController extends Controller
      */
     public function general(BudgetReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
     {
-
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -103,7 +97,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * Filters empty results from getBudgetPeriodReport
+     * Filters empty results from getBudgetPeriodReport.
      *
      * @param array $data
      *
@@ -112,7 +106,7 @@ class BudgetController extends Controller
     private function filterBudgetPeriodReport(array $data): array
     {
         /**
-         * @var int   $budgetId
+         * @var int
          * @var array $set
          */
         foreach ($data as $budgetId => $set) {
@@ -121,7 +115,7 @@ class BudgetController extends Controller
                 $sum = bcadd($amount, $sum);
             }
             $data[$budgetId]['sum'] = $sum;
-            if (bccomp('0', $sum) === 0) {
+            if (0 === bccomp('0', $sum)) {
                 unset($data[$budgetId]);
             }
         }

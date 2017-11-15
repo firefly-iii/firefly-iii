@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Category;
@@ -34,9 +33,7 @@ use Log;
 use Navigation;
 
 /**
- * Class CategoryRepository
- *
- * @package FireflyIII\Repositories\Category
+ * Class CategoryRepository.
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -76,7 +73,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * Find a category
+     * Find a category.
      *
      * @param int $categoryId
      *
@@ -85,7 +82,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function find(int $categoryId): Category
     {
         $category = $this->user->categories()->find($categoryId);
-        if (is_null($category)) {
+        if (null === $category) {
             $category = new Category;
         }
 
@@ -93,7 +90,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * Find a category
+     * Find a category.
      *
      * @param string $name
      *
@@ -121,13 +118,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         $firstJournalDate     = $this->getFirstJournalDate($category);
         $firstTransactionDate = $this->getFirstTransactionDate($category);
 
-        if (is_null($firstTransactionDate) && is_null($firstJournalDate)) {
+        if (null === $firstTransactionDate && null === $firstJournalDate) {
             return null;
         }
-        if (is_null($firstTransactionDate)) {
+        if (null === $firstTransactionDate) {
             return $firstJournalDate;
         }
-        if (is_null($firstJournalDate)) {
+        if (null === $firstJournalDate) {
             return $firstTransactionDate;
         }
 
@@ -167,13 +164,13 @@ class CategoryRepository implements CategoryRepositoryInterface
         $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
         $lastTransactionDate = $this->getLastTransactionDate($category, $accounts);
 
-        if (is_null($lastTransactionDate) && is_null($lastJournalDate)) {
+        if (null === $lastTransactionDate && null === $lastJournalDate) {
             return null;
         }
-        if (is_null($lastTransactionDate)) {
+        if (null === $lastTransactionDate) {
             return $lastJournalDate;
         }
-        if (is_null($lastJournalDate)) {
+        if (null === $lastJournalDate) {
             return $lastTransactionDate;
         }
 
@@ -218,7 +215,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             // if positive, skip:
-            if (bccomp($transaction->transaction_amount, '0') === 1) {
+            if (1 === bccomp($transaction->transaction_amount, '0')) {
                 continue;
             }
             $categoryId                          = max(intval($transaction->transaction_journal_category_id), intval($transaction->transaction_category_id));
@@ -253,7 +250,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         foreach ($transactions as $transaction) {
             // if positive, skip:
-            if (bccomp($transaction->transaction_amount, '0') === 1) {
+            if (1 === bccomp($transaction->transaction_amount, '0')) {
                 continue;
             }
             $date = $transaction->date->format($carbonFormat);
@@ -336,7 +333,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         ];
         Log::debug('Looping transactions..');
         foreach ($transactions as $transaction) {
-
             // if negative, skip:
             if (bccomp($transaction->transaction_amount, '0') === -1) {
                 continue;
@@ -377,14 +373,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
 
-
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if ($accounts->count() === 0) {
+        if (0 === $accounts->count()) {
             $collector->setAllAssetAccounts();
         }
-
 
         $set = $collector->getJournals();
         $sum = strval($set->sum('transaction_amount'));
@@ -409,7 +403,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if ($accounts->count() === 0) {
+        if (0 === $accounts->count()) {
             $collector->setAllAssetAccounts();
         }
 
@@ -472,7 +466,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $query  = $category->transactionJournals()->orderBy('date', 'ASC');
         $result = $query->first(['transaction_journals.*']);
 
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result->date;
         }
 
@@ -492,7 +486,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                           ->orderBy('transaction_journals.date', 'DESC');
 
         $lastTransaction = $query->first(['transaction_journals.*']);
-        if (!is_null($lastTransaction)) {
+        if (null !== $lastTransaction) {
             return new Carbon($lastTransaction->date);
         }
 
@@ -516,7 +510,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         $result = $query->first(['transaction_journals.*']);
 
-        if (!is_null($result)) {
+        if (null !== $result) {
             return $result->date;
         }
 
@@ -541,7 +535,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         $lastTransaction = $query->first(['transaction_journals.*']);
-        if (!is_null($lastTransaction)) {
+        if (null !== $lastTransaction) {
             return new Carbon($lastTransaction->date);
         }
 

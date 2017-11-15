@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -38,9 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class TransactionJournal
- *
- * @package FireflyIII\Models
+ * Class TransactionJournal.
  */
 class TransactionJournal extends Model
 {
@@ -71,7 +68,7 @@ class TransactionJournal extends Model
     protected $fillable
         = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',
            'transaction_currency_id', 'description', 'completed',
-           'date', 'rent_date', 'encrypted', 'tag_count'];
+           'date', 'rent_date', 'encrypted', 'tag_count',];
     /** @var array */
     protected $hidden = ['encrypted'];
     /** @var array */
@@ -89,6 +86,7 @@ class TransactionJournal extends Model
      * @param $value
      *
      * @return mixed
+     *
      * @throws NotFoundHttpException
      */
     public static function routeBinder($value)
@@ -98,7 +96,7 @@ class TransactionJournal extends Model
                           ->with('transactionType')
                           ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                           ->where('user_id', auth()->user()->id)->first(['transaction_journals.*']);
-            if (!is_null($object)) {
+            if (null !== $object) {
                 return $object;
             }
         }
@@ -159,7 +157,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
@@ -174,7 +171,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     *
      * @param string $name
      *
      * @return string
@@ -193,14 +189,14 @@ class TransactionJournal extends Model
 
         Log::debug(sprintf('Looking for journal #%d meta field "%s".', $this->id, $name));
         $entry = $this->transactionJournalMeta()->where('name', $name)->first();
-        if (!is_null($entry)) {
+        if (null !== $entry) {
             $value = $entry->data;
             // cache:
             $cache->store($value);
         }
 
         // convert to Carbon if name is _date
-        if (!is_null($value) && substr($name, -5) === '_date') {
+        if (null !== $value && '_date' === substr($name, -5)) {
             $value = new Carbon($value);
             // cache:
             $cache->store($value);
@@ -216,7 +212,7 @@ class TransactionJournal extends Model
      */
     public function hasMeta(string $name): bool
     {
-        return !is_null($this->getMeta($name));
+        return null !== $this->getMeta($name);
     }
 
     /**
@@ -224,47 +220,44 @@ class TransactionJournal extends Model
      */
     public function isDeposit(): bool
     {
-        if (!is_null($this->transaction_type_type)) {
-            return $this->transaction_type_type === TransactionType::DEPOSIT;
+        if (null !== $this->transaction_type_type) {
+            return TransactionType::DEPOSIT === $this->transaction_type_type;
         }
 
         return $this->transactionType->isDeposit();
     }
 
     /**
-     *
      * @return bool
      */
     public function isOpeningBalance(): bool
     {
-        if (!is_null($this->transaction_type_type)) {
-            return $this->transaction_type_type === TransactionType::OPENING_BALANCE;
+        if (null !== $this->transaction_type_type) {
+            return TransactionType::OPENING_BALANCE === $this->transaction_type_type;
         }
 
         return $this->transactionType->isOpeningBalance();
     }
 
     /**
-     *
      * @return bool
      */
     public function isTransfer(): bool
     {
-        if (!is_null($this->transaction_type_type)) {
-            return $this->transaction_type_type === TransactionType::TRANSFER;
+        if (null !== $this->transaction_type_type) {
+            return TransactionType::TRANSFER === $this->transaction_type_type;
         }
 
         return $this->transactionType->isTransfer();
     }
 
     /**
-     *
      * @return bool
      */
     public function isWithdrawal(): bool
     {
-        if (!is_null($this->transaction_type_type)) {
-            return $this->transaction_type_type === TransactionType::WITHDRAWAL;
+        if (null !== $this->transaction_type_type) {
+            return TransactionType::WITHDRAWAL === $this->transaction_type_type;
         }
 
         return $this->transactionType->isWithdrawal();
@@ -289,7 +282,7 @@ class TransactionJournal extends Model
     /**
      * Save the model to the database.
      *
-     * @param  array $options
+     * @param array $options
      *
      * @return bool
      */
@@ -302,7 +295,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -314,7 +306,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -336,7 +327,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -351,7 +341,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -369,12 +358,12 @@ class TransactionJournal extends Model
      */
     public function setMeta(string $name, $value): TransactionJournalMeta
     {
-        if (is_null($value)) {
+        if (null === $value) {
             $this->deleteMeta($name);
 
             return new TransactionJournalMeta();
         }
-        if (is_string($value) && strlen($value) === 0) {
+        if (is_string($value) && 0 === strlen($value)) {
             return new TransactionJournalMeta();
         }
 
@@ -384,7 +373,7 @@ class TransactionJournal extends Model
 
         Log::debug(sprintf('Going to set "%s" with value "%s"', $name, json_encode($value)));
         $entry = $this->transactionJournalMeta()->where('name', $name)->first();
-        if (is_null($entry)) {
+        if (null === $entry) {
             $entry = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($this);
             $entry->name = $name;

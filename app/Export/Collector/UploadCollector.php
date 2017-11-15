@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
@@ -30,9 +29,7 @@ use Log;
 use Storage;
 
 /**
- * Class UploadCollector
- *
- * @package FireflyIII\Export\Collector
+ * Class UploadCollector.
  */
 class UploadCollector extends BasicCollector implements CollectorInterface
 {
@@ -94,7 +91,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
     {
         // find job associated with import file:
         $job = $this->job->user->importJobs()->where('key', $key)->first();
-        if (is_null($job)) {
+        if (null === $job) {
             return false;
         }
 

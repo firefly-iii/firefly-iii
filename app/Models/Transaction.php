@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -30,53 +29,43 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Transaction
+ * Class Transaction.
  *
- * @property-read int    $journal_id
- * @property Carbon      $date
- * @property-read string $transaction_description
- * @property string      $transaction_amount
- * @property string      $transaction_foreign_amount
- * @property string      $transaction_type_type
- * @property string      $foreign_currency_symbol
- * @property int         $foreign_currency_dp
- *
- * @property int         $account_id
- * @property string      $account_name
- * @property string      $account_iban
- * @property string      $account_number
- * @property string      $account_bic
- * @property string      $account_currency_code
- *
- * @property int         $opposing_account_id
- * @property string      $opposing_account_name
- * @property string      $opposing_account_iban
- * @property string      $opposing_account_number
- * @property string      $opposing_account_bic
- * @property string      $opposing_currency_code
- *
- *
- * @property int         $transaction_budget_id
- * @property string      $transaction_budget_name
- * @property int         $transaction_journal_budget_id
- * @property string      $transaction_journal_budget_name
- *
- * @property-read int    $transaction_category_id
- * @property-read string $transaction_category_name
- * @property-read int    $transaction_journal_category_id
- * @property-read string $transaction_journal_category_name
- *
- * @property-read int    $bill_id
- * @property string      $bill_name
- *
- * @property string      $notes
- * @property string      $tags
- *
- * @property string      $transaction_currency_symbol
- * @property int         $transaction_currency_dp
- * @property string      $transaction_currency_code
- *
- * @package FireflyIII\Models
+ * @property int    $journal_id
+ * @property Carbon $date
+ * @property string $transaction_description
+ * @property string $transaction_amount
+ * @property string $transaction_foreign_amount
+ * @property string $transaction_type_type
+ * @property string $foreign_currency_symbol
+ * @property int    $foreign_currency_dp
+ * @property int    $account_id
+ * @property string $account_name
+ * @property string $account_iban
+ * @property string $account_number
+ * @property string $account_bic
+ * @property string $account_currency_code
+ * @property int    $opposing_account_id
+ * @property string $opposing_account_name
+ * @property string $opposing_account_iban
+ * @property string $opposing_account_number
+ * @property string $opposing_account_bic
+ * @property string $opposing_currency_code
+ * @property int    $transaction_budget_id
+ * @property string $transaction_budget_name
+ * @property int    $transaction_journal_budget_id
+ * @property string $transaction_journal_budget_name
+ * @property int    $transaction_category_id
+ * @property string $transaction_category_name
+ * @property int    $transaction_journal_category_id
+ * @property string $transaction_journal_category_name
+ * @property int    $bill_id
+ * @property string $bill_name
+ * @property string $notes
+ * @property string $tags
+ * @property string $transaction_currency_symbol
+ * @property int    $transaction_currency_dp
+ * @property string $transaction_currency_code
  */
 class Transaction extends Model
 {
@@ -97,7 +86,7 @@ class Transaction extends Model
         ];
     protected $fillable
                       = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
-                         'foreign_amount'];
+                         'foreign_amount',];
     protected $hidden = ['encrypted'];
     protected $rules
                       = [
@@ -117,7 +106,7 @@ class Transaction extends Model
     public static function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if (is_null($joins)) {
+        if (null === $joins) {
             return false;
         }
         foreach ($joins as $join) {
@@ -174,7 +163,6 @@ class Transaction extends Model
     }
 
     /**
-     *
      * @param Builder $query
      * @param Carbon  $date
      */
@@ -187,10 +175,8 @@ class Transaction extends Model
     }
 
     /**
-     *
      * @param Builder $query
      * @param Carbon  $date
-     *
      */
     public function scopeBefore(Builder $query, Carbon $date)
     {
@@ -201,7 +187,6 @@ class Transaction extends Model
     }
 
     /**
-     *
      * @param Builder $query
      * @param array   $types
      */

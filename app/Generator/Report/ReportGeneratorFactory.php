@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
@@ -27,19 +26,17 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
- * Class ReportGeneratorFactory
- *
- * @package FireflyIII\Generator\Report
+ * Class ReportGeneratorFactory.
  */
 class ReportGeneratorFactory
 {
-
     /**
      * @param string $type
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return ReportGeneratorInterface
+     *
      * @throws FireflyException
      */
     public static function reportGenerator(string $type, Carbon $start, Carbon $end): ReportGeneratorInterface
@@ -54,7 +51,6 @@ class ReportGeneratorFactory
         if ($start->diffInMonths($end) > 12) {
             $period = 'MultiYear';
         }
-
 
         $class = sprintf('FireflyIII\Generator\Report\%s\%sReportGenerator', $type, $period);
         if (class_exists($class)) {

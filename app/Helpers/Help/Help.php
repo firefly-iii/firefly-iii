@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Help;
@@ -31,9 +30,7 @@ use Requests_Exception;
 use Route;
 
 /**
- * Class Help
- *
- * @package FireflyIII\Helpers\Help
+ * Class Help.
  */
 class Help implements HelpInterface
 {
@@ -76,7 +73,7 @@ class Help implements HelpInterface
 
         Log::debug(sprintf('Status code is %d', $result->status_code));
 
-        if ($result->status_code === 200) {
+        if (200 === $result->status_code) {
             $content = trim($result->body);
         }
 
@@ -90,7 +87,6 @@ class Help implements HelpInterface
     }
 
     /**
-     *
      * @param string $route
      *
      * @return bool
@@ -121,11 +117,9 @@ class Help implements HelpInterface
     }
 
     /**
-     *
      * @param string $route
      * @param string $language
      * @param string $content
-     *
      */
     public function putInCache(string $route, string $language, string $content)
     {

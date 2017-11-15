@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
@@ -28,13 +27,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
- * Class AssetAccounts
- *
- * @package FireflyIII\Import\Mapper
+ * Class AssetAccounts.
  */
 class AssetAccountIbans implements MapperInterface
 {
-
     /**
      * @return array
      */
@@ -52,7 +48,7 @@ class AssetAccountIbans implements MapperInterface
             if (strlen($iban) > 0) {
                 $topList[$account->id] = $account->iban . ' (' . $account->name . ')';
             }
-            if (strlen($iban) === 0) {
+            if (0 === strlen($iban)) {
                 $list[$account->id] = $account->name;
             }
         }

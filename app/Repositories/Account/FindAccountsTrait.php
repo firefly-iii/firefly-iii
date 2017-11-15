@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
@@ -34,8 +33,6 @@ use Log;
  * @property User $user
  *
  * Trait FindAccountsTrait
- *
- * @package FireflyIII\Repositories\Account
  */
 trait FindAccountsTrait
 {
@@ -47,7 +44,7 @@ trait FindAccountsTrait
     public function find(int $accountId): Account
     {
         $account = $this->user->accounts()->find($accountId);
-        if (is_null($account)) {
+        if (null === $account) {
             return new Account;
         }
 

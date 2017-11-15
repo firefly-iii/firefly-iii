@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -41,9 +40,7 @@ use Session;
 use View;
 
 /**
- * Class ProfileController
- *
- * @package FireflyIII\Http\Controllers
+ * Class ProfileController.
  */
 class ProfileController extends Controller
 {
@@ -53,7 +50,6 @@ class ProfileController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -95,6 +91,7 @@ class ProfileController extends Controller
      * @param string $token
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function confirmEmailChange(string $token)
@@ -109,7 +106,7 @@ class ProfileController extends Controller
             }
         }
         // update user to clear blocked and blocked_code.
-        if (is_null($user)) {
+        if (null === $user) {
             throw new FireflyException('Invalid token.');
         }
         $user->blocked      = 0;
@@ -136,7 +133,6 @@ class ProfileController extends Controller
 
     /**
      * @return View
-     *
      */
     public function index()
     {
@@ -145,7 +141,7 @@ class ProfileController extends Controller
 
         // get access token or create one.
         $accessToken = Preferences::get('access_token', null);
-        if (is_null($accessToken)) {
+        if (null === $accessToken) {
             $token       = auth()->user()->generateAccessToken();
             $accessToken = Preferences::set('access_token', $token);
         }
@@ -171,7 +167,7 @@ class ProfileController extends Controller
             return redirect(route('profile.change-email'))->withInput();
         }
         $existing = $repository->findByEmail($newEmail);
-        if (!is_null($existing)) {
+        if (null !== $existing) {
             // force user logout.
             $this->guard()->logout();
             $request->session()->invalidate();
@@ -245,7 +241,6 @@ class ProfileController extends Controller
         Session::flash('gaEventCategory', 'user');
         Session::flash('gaEventAction', 'delete-account');
 
-
         return redirect(route('index'));
     }
 
@@ -278,7 +273,7 @@ class ProfileController extends Controller
                 $user = $preference->user;
             }
         }
-        if (is_null($user)) {
+        if (null === $user) {
             throw new FireflyException('Invalid token.');
         }
 
@@ -293,7 +288,7 @@ class ProfileController extends Controller
                 break;
             }
         }
-        if (is_null($match)) {
+        if (null === $match) {
             throw new FireflyException('Invalid token.');
         }
         // change user back
@@ -314,6 +309,7 @@ class ProfileController extends Controller
      * @param string $new
      *
      * @return bool
+     *
      * @throws ValidationException
      */
     protected function validatePassword(User $user, string $current, string $new): bool

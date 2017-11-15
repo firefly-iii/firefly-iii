@@ -18,16 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
 /**
- * Class UserFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class UserFormRequest.
  */
 class UserFormRequest extends Request
 {
@@ -47,7 +43,7 @@ class UserFormRequest extends Request
     {
         return [
             'email'        => $this->string('email'),
-            'blocked'      => $this->integer('blocked') === 1,
+            'blocked'      => 1 === $this->integer('blocked'),
             'blocked_code' => $this->string('blocked_code'),
             'password'     => $this->string('password'),
         ];

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -45,9 +44,8 @@ use Steam;
 use View;
 
 /**
- * Class AccountController
+ * Class AccountController.
  *
- * @package FireflyIII\Http\Controllers
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountController extends Controller
@@ -90,12 +88,11 @@ class AccountController extends Controller
             $roles[$role] = strval(trans('firefly.account_role_' . $role));
         }
 
-
         // pre fill some data
-        $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id,]);
+        $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id]);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('accounts.create.fromStore') !== true) {
+        if (true !== session('accounts.create.fromStore')) {
             $this->rememberPreviousUri('accounts.create.uri');
         }
         $request->session()->forget('accounts.create.fromStore');
@@ -174,9 +171,8 @@ class AccountController extends Controller
             $roles[$role] = strval(trans('firefly.account_role_' . $role));
         }
 
-
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('accounts.edit.fromUpdate') !== true) {
+        if (true !== session('accounts.edit.fromUpdate')) {
             $this->rememberPreviousUri('accounts.edit.uri');
         }
         $request->session()->forget('accounts.edit.fromUpdate');
@@ -185,9 +181,9 @@ class AccountController extends Controller
 
         // the opening balance is tricky:
         $openingBalanceAmount = $account->getOpeningBalanceAmount();
-        $openingBalanceAmount = $account->getOpeningBalanceAmount() === '0' ? '' : $openingBalanceAmount;
+        $openingBalanceAmount = '0' === $account->getOpeningBalanceAmount() ? '' : $openingBalanceAmount;
         $openingBalanceDate   = $account->getOpeningBalanceDate();
-        $openingBalanceDate   = $openingBalanceDate->year === 1900 ? null : $openingBalanceDate->format('Y-m-d');
+        $openingBalanceDate   = 1900 === $openingBalanceDate->year ? null : $openingBalanceDate->format('Y-m-d');
         $currency             = $repository->find(intval($account->getMeta('currency_id')));
 
         $preFilled = [
@@ -200,7 +196,6 @@ class AccountController extends Controller
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
-
         ];
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->flash('gaEventCategory', 'accounts');
@@ -273,7 +268,7 @@ class AccountController extends Controller
      */
     public function show(Request $request, JournalRepositoryInterface $repository, Account $account, string $moment = '')
     {
-        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
+        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
         /** @var CurrencyRepositoryInterface $currencyRepos */
@@ -288,13 +283,12 @@ class AccountController extends Controller
         $periods       = new Collection;
         $currencyId    = intval($account->getMeta('currency_id'));
         $currency      = $currencyRepos->find($currencyId);
-        if ($currencyId === 0) {
+        if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency();
         }
 
-
         // prep for "all" view.
-        if ($moment === 'all') {
+        if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_for_account', ['name' => $account->name]);
             $chartUri = route('chart.account.all', [$account->id]);
             $first    = $repository->first();
@@ -303,7 +297,7 @@ class AccountController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && $moment !== 'all') {
+        if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
@@ -314,7 +308,7 @@ class AccountController extends Controller
         }
 
         // prep for current period view
-        if (strlen($moment) === 0) {
+        if (0 === strlen($moment)) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $fStart   = $start->formatLocalized($this->monthAndDayFormat);
@@ -326,7 +320,7 @@ class AccountController extends Controller
         // grab journals:
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        if (!is_null($start)) {
+        if (null !== $start) {
             $collector->setRange($start, $end);
         }
         $transactions = $collector->getPaginatedJournals();
@@ -343,7 +337,6 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
      */
     public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
@@ -354,12 +347,12 @@ class AccountController extends Controller
 
         // update preferences if necessary:
         $frontPage = Preferences::get('frontPageAccounts', [])->data;
-        if (count($frontPage) > 0 && $account->accountType->type === AccountType::ASSET) {
+        if (count($frontPage) > 0 && AccountType::ASSET === $account->accountType->type) {
             $frontPage[] = $account->id;
             Preferences::set('frontPageAccounts', $frontPage);
         }
 
-        if (intval($request->get('create_another')) === 1) {
+        if (1 === intval($request->get('create_another'))) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);
 
@@ -385,7 +378,7 @@ class AccountController extends Controller
         $request->session()->flash('success', strval(trans('firefly.updated_account', ['name' => $account->name])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 
@@ -395,7 +388,6 @@ class AccountController extends Controller
         // redirect to previous URL.
         return redirect($this->getPreviousUri('accounts.edit.uri'));
     }
-
 
     /**
      * @param array $array
@@ -468,10 +460,10 @@ class AccountController extends Controller
                     'name'   => $dateName,
                     'spent'  => $spent,
                     'earned' => $earned,
-                    'date'   => clone $end]
+                    'date'   => clone $end,]
             );
             $end = Navigation::subtractPeriod($end, $range, 1);
-            $count++;
+            ++$count;
         }
         $cache->store($entries);
 
@@ -482,13 +474,14 @@ class AccountController extends Controller
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     private function redirectToOriginalAccount(Account $account)
     {
         /** @var Transaction $transaction */
         $transaction = $account->transactions()->first();
-        if (is_null($transaction)) {
+        if (null === $transaction) {
             throw new FireflyException('Expected a transaction. This account has none. BEEP, error.');
         }
 
@@ -496,7 +489,7 @@ class AccountController extends Controller
         /** @var Transaction $opposingTransaction */
         $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
 
-        if (is_null($opposingTransaction)) {
+        if (null === $opposingTransaction) {
             throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
         }
 

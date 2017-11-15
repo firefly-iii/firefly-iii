@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
@@ -34,9 +33,7 @@ use Log;
 use Preferences;
 
 /**
- * Class JournalRepository
- *
- * @package FireflyIII\Repositories\Journal
+ * Class JournalRepository.
  */
 class JournalRepository implements JournalRepositoryInterface
 {
@@ -64,7 +61,7 @@ class JournalRepository implements JournalRepositoryInterface
         $messages->add('destination_account_expense', trans('firefly.invalid_convert_selection'));
         $messages->add('source_account_asset', trans('firefly.invalid_convert_selection'));
 
-        if ($source->id === $destination->id || is_null($source->id) || is_null($destination->id)) {
+        if ($source->id === $destination->id || null === $source->id || null === $destination->id) {
             return $messages;
         }
 
@@ -78,7 +75,7 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->save();
 
         // if journal is a transfer now, remove budget:
-        if ($type->type === TransactionType::TRANSFER) {
+        if (TransactionType::TRANSFER === $type->type) {
             $journal->budgets()->detach();
         }
 
@@ -117,7 +114,7 @@ class JournalRepository implements JournalRepositoryInterface
     public function find(int $journalId): TransactionJournal
     {
         $journal = $this->user->transactionJournals()->where('id', $journalId)->first();
-        if (is_null($journal)) {
+        if (null === $journal) {
             return new TransactionJournal;
         }
 
@@ -157,7 +154,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Get users first transaction journal
+     * Get users first transaction journal.
      *
      * @return TransactionJournal
      */
@@ -165,7 +162,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
 
-        if (is_null($entry)) {
+        if (null === $entry) {
             return new TransactionJournal;
         }
 
@@ -187,7 +184,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function isTransfer(TransactionJournal $journal): bool
     {
-        return $journal->transactionType->type === TransactionType::TRANSFER;
+        return TransactionType::TRANSFER === $journal->transactionType->type;
     }
 
     /**
@@ -200,7 +197,7 @@ class JournalRepository implements JournalRepositoryInterface
         Log::debug(sprintf('Going to reconcile transaction #%d', $transaction->id));
         $opposing = $this->findOpposingTransaction($transaction);
 
-        if (is_null($opposing)) {
+        if (null === $opposing) {
             Log::debug('Opposing transaction is NULL. Cannot reconcile.');
 
             return false;
@@ -272,7 +269,7 @@ class JournalRepository implements JournalRepositoryInterface
             'account'                 => $accounts['source'],
             'amount'                  => bcmul($amount, '-1'),
             'transaction_currency_id' => $data['currency_id'],
-            'foreign_amount'          => is_null($data['foreign_amount']) ? null : bcmul(strval($data['foreign_amount']), '-1'),
+            'foreign_amount'          => null === $data['foreign_amount'] ? null : bcmul(strval($data['foreign_amount']), '-1'),
             'foreign_currency_id'     => $data['foreign_currency_id'],
             'description'             => null,
             'category'                => null,
@@ -295,7 +292,6 @@ class JournalRepository implements JournalRepositoryInterface
         ];
 
         $this->storeTransaction($two);
-
 
         // store tags
         if (isset($data['tags']) && is_array($data['tags'])) {
@@ -329,14 +325,13 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
-
         // update actual journal:
         $journal->description   = $data['description'];
         $journal->date          = $data['date'];
         $accounts               = $this->storeAccounts($this->user, $journal->transactionType, $data);
         $data                   = $this->verifyNativeAmount($data, $accounts);
         $data['amount']         = strval($data['amount']);
-        $data['foreign_amount'] = is_null($data['foreign_amount']) ? null : strval($data['foreign_amount']);
+        $data['foreign_amount'] = null === $data['foreign_amount'] ? null : strval($data['foreign_amount']);
 
         // unlink all categories, recreate them:
         $journal->categories()->detach();
@@ -359,7 +354,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // update note:
-        if (isset($data['notes']) && !is_null($data['notes'])) {
+        if (isset($data['notes']) && null !== $data['notes']) {
             $this->updateNote($journal, strval($data['notes']));
         }
 
@@ -401,10 +396,9 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->budgets()->detach();
 
         // update note:
-        if (isset($data['notes']) && !is_null($data['notes'])) {
+        if (isset($data['notes']) && null !== $data['notes']) {
             $this->updateNote($journal, strval($data['notes']));
         }
-
 
         // update meta fields:
         $result = $journal->save();
@@ -434,7 +428,7 @@ class JournalRepository implements JournalRepositoryInterface
             Log::debug(sprintf('Split journal update split transaction %d', $identifier));
             $transaction = $this->appendTransactionData($transaction, $data);
             $this->storeSplitTransaction($journal, $transaction, $identifier);
-            $identifier++;
+            ++$identifier;
         }
 
         $journal->save();

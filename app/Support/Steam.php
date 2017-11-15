@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -32,15 +31,11 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 
 /**
- * Class Steam
- *
- * @package FireflyIII\Support
+ * Class Steam.
  */
 class Steam
 {
-
     /**
-     *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
      *
@@ -48,7 +43,6 @@ class Steam
      */
     public function balance(Account $account, Carbon $date): string
     {
-
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -59,7 +53,7 @@ class Steam
         }
         $currencyId = intval($account->getMeta('currency_id'));
         // use system default currency:
-        if ($currencyId === 0) {
+        if (0 === $currencyId) {
             $currency   = app('amount')->getDefaultCurrency();
             $currencyId = $currency->id;
         }
@@ -81,7 +75,7 @@ class Steam
                     ->sum('transactions.foreign_amount')
         );
         $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = is_null($account->virtual_balance) ? '0' : strval($account->virtual_balance);
+        $virtual        = null === $account->virtual_balance ? '0' : strval($account->virtual_balance);
         $balance        = bcadd($balance, $virtual);
         $cache->store($balance);
 
@@ -89,7 +83,6 @@ class Steam
     }
 
     /**
-     *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
      *
@@ -97,7 +90,6 @@ class Steam
      */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
-
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -132,7 +124,7 @@ class Steam
     }
 
     /**
-     * Gets the balance for the given account during the whole range, using this format:
+     * Gets the balance for the given account during the whole range, using this format:.
      *
      * [yyyy-mm-dd] => 123,2
      *
@@ -187,10 +179,10 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = is_null($entry->modified) ? '0' : strval($entry->modified);
-            $foreignModified = is_null($entry->modified_foreign) ? '0' : strval($entry->modified_foreign);
+            $modified        = null === $entry->modified ? '0' : strval($entry->modified);
+            $foreignModified = null === $entry->modified_foreign ? '0' : strval($entry->modified_foreign);
             $amount          = '0';
-            if ($currencyId === $entry->transaction_currency_id || $currencyId === 0) {
+            if ($currencyId === $entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
@@ -250,7 +242,7 @@ class Steam
      */
     public function decrypt(int $isEncrypted, string $value)
     {
-        if ($isEncrypted === 1) {
+        if (1 === $isEncrypted) {
             return Crypt::decrypt($value);
         }
 
@@ -285,7 +277,7 @@ class Steam
      */
     public function negative(string $amount): string
     {
-        if (bccomp($amount, '0') === 1) {
+        if (1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
 
@@ -313,21 +305,21 @@ class Steam
     {
         $string = strtolower($string);
 
-        if (!(stripos($string, 'k') === false)) {
+        if (!(false === stripos($string, 'k'))) {
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'kK'), '1024');
 
             return intval($bytes);
         }
 
-        if (!(stripos($string, 'm') === false)) {
+        if (!(false === stripos($string, 'm'))) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'mM'), '1048576');
 
             return intval($bytes);
         }
 
-        if (!(stripos($string, 'g') === false)) {
+        if (!(false === stripos($string, 'g'))) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'gG'), '1073741824');
 

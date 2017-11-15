@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * Kernel.php
@@ -94,7 +92,6 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
             ],
-
 
             // MUST NOT be logged in. Does not care about 2FA or confirmation.
             'user-not-logged-in'    => [
@@ -173,13 +170,11 @@ class Kernel extends HttpKernel
                 Binder::class,
             ],
 
-
             'api' => [
                 'throttle:60,1',
                 'bindings',
             ],
         ];
-
 
     /**
      * The application's route middleware.

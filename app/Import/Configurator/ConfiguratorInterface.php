@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Configurator;
@@ -26,9 +25,7 @@ namespace FireflyIII\Import\Configurator;
 use FireflyIII\Models\ImportJob;
 
 /**
- * Interface ConfiguratorInterface
- *
- * @package FireflyIII\Import\Configurator
+ * Interface ConfiguratorInterface.
  */
 interface ConfiguratorInterface
 {
@@ -76,8 +73,6 @@ interface ConfiguratorInterface
 
     /**
      * @param ImportJob $job
-     *
-     * @return void
      */
     public function setJob(ImportJob $job);
 }

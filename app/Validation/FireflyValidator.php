@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Validation;
@@ -42,20 +41,16 @@ use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Validation\Validator;
 
 /**
- * Class FireflyValidator
- *
- * @package FireflyIII\Validation
+ * Class FireflyValidator.
  */
 class FireflyValidator extends Validator
 {
-
     /**
      * @param Translator $translator
      * @param array      $data
      * @param array      $rules
      * @param array      $messages
      * @param array      $customAttributes
-     *
      */
     public function __construct(Translator $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
@@ -64,15 +59,15 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      *
      * @return bool
-     *
      */
     public function validate2faCode($attribute, $value): bool
     {
-        if (!is_string($value) || is_null($value) || strlen($value) <> 6) {
+        if (!is_string($value) || null === $value || 6 != strlen($value)) {
             return false;
         }
 
@@ -83,6 +78,7 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -93,11 +89,11 @@ class FireflyValidator extends Validator
     {
         $field = $parameters[1] ?? 'id';
 
-        if (intval($value) === 0) {
+        if (0 === intval($value)) {
             return true;
         }
         $count = DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
-        if ($count === 1) {
+        if (1 === $count) {
             return true;
         }
 
@@ -106,20 +102,20 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      *
      * @return bool
-     *
      */
     public function validateBic($attribute, $value): bool
     {
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
-        if ($result === false) {
+        if (false === $result) {
             return false;
         }
-        if ($result === 0) {
+        if (0 === $result) {
             return false;
         }
 
@@ -128,15 +124,15 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
-     *
      *
      * @return bool
      */
     public function validateIban($attribute, $value): bool
     {
-        if (!is_string($value) || is_null($value) || strlen($value) < 6) {
+        if (!is_string($value) || null === $value || strlen($value) < 6) {
             return false;
         }
 
@@ -144,7 +140,7 @@ class FireflyValidator extends Validator
 
         $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $replace = ['', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31',
-                    '32', '33', '34', '35'];
+                    '32', '33', '34', '35',];
 
         // take
         $first    = substr($value, 0, 4);
@@ -153,7 +149,7 @@ class FireflyValidator extends Validator
         $iban     = str_replace($search, $replace, $iban);
         $checksum = bcmod($iban, '97');
 
-        return (intval($checksum) === 1);
+        return 1 === intval($checksum);
     }
 
     /**
@@ -173,6 +169,7 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -183,11 +180,11 @@ class FireflyValidator extends Validator
     {
         $field = $parameters[1] ?? 'id';
 
-        if (intval($value) === 0) {
+        if (0 === intval($value)) {
             return true;
         }
         $count = DB::table($parameters[0])->where($field, $value)->count();
-        if ($count === 1) {
+        if (1 === $count) {
             return true;
         }
 
@@ -225,10 +222,9 @@ class FireflyValidator extends Validator
                         }
                     )->count();
 
-                    return ($count === 1);
+                    return 1 === $count;
                 case 'invalid':
                     return false;
-
             }
         }
 
@@ -256,13 +252,13 @@ class FireflyValidator extends Validator
             switch ($name) {
                 case 'amount_less':
                     $result = is_numeric($value);
-                    if ($result === false) {
+                    if (false === $result) {
                         return false;
                     }
                     break;
                 case 'transaction_type':
                     $count = TransactionType::where('type', $value)->count();
-                    if (!($count === 1)) {
+                    if (!(1 === $count)) {
                         return false;
                     }
                     break;
@@ -293,7 +289,7 @@ class FireflyValidator extends Validator
     {
         $verify = false;
         if (isset($this->data['verify_password'])) {
-            $verify = intval($this->data['verify_password']) === 1;
+            $verify = 1 === intval($this->data['verify_password']);
         }
         if ($verify) {
             /** @var Verifier $service */
@@ -307,10 +303,10 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      * @param $parameters
-     *
      *
      * @return bool
      */
@@ -332,12 +328,12 @@ class FireflyValidator extends Validator
             return $this->validateByAccountId($value);
         }
 
-
         return false;
     }
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -380,7 +376,6 @@ class FireflyValidator extends Validator
      * @param $value
      * @param $parameters
      *
-     *
      * @return bool
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
@@ -408,6 +403,7 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -419,7 +415,7 @@ class FireflyValidator extends Validator
         $exclude = $parameters[0] ?? null;
         $query   = DB::table('piggy_banks')->whereNull('piggy_banks.deleted_at')
                      ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', auth()->user()->id);
-        if (!is_null($exclude)) {
+        if (null !== $exclude) {
             $query->where('piggy_banks.id', '!=', $exclude);
         }
         $set = $query->get(['piggy_banks.*']);
@@ -484,7 +480,6 @@ class FireflyValidator extends Validator
         $type  = AccountType::find($this->data['account_type_id'])->first();
         $value = $this->tryDecrypt($this->data['name']);
 
-
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
@@ -500,7 +495,6 @@ class FireflyValidator extends Validator
      * @param $value
      *
      * @return bool
-     *
      */
     private function validateByAccountId($value): bool
     {

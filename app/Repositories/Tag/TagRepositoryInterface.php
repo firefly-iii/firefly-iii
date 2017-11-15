@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Tag;
@@ -30,13 +29,10 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface TagRepositoryInterface
- *
- * @package FireflyIII\Repositories\Tag
+ * Interface TagRepositoryInterface.
  */
 interface TagRepositoryInterface
 {
-
     /**
      * This method will connect a journal with a tag.
      *

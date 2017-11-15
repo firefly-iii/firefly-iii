@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Attachments;
@@ -33,14 +32,11 @@ use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class AttachmentHelper
- *
- * @package FireflyIII\Helpers\Attachments
+ * Class AttachmentHelper.
  */
 class AttachmentHelper implements AttachmentHelperInterface
 {
-
-    /** @var  Collection */
+    /** @var Collection */
     public $attachments;
     /** @var MessageBag */
     public $errors;
@@ -114,7 +110,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (is_array($files)) {
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
-                if (!is_null($entry)) {
+                if (null !== $entry) {
                     $this->processFile($entry, $model);
                 }
             }
@@ -152,7 +148,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     *
      * @param UploadedFile $file
      * @param Model        $model
      *
@@ -161,7 +156,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     protected function processFile(UploadedFile $file, Model $model): Attachment
     {
         $validation = $this->validateUpload($file, $model);
-        if ($validation === false) {
+        if (false === $validation) {
             return new Attachment;
         }
 

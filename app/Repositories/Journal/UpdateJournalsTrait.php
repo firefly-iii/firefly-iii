@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
@@ -34,15 +33,12 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Log;
 
 /**
- * Trait UpdateJournalsTrait
- *
- * @package FireflyIII\Repositories\Journal
+ * Trait UpdateJournalsTrait.
  */
 trait UpdateJournalsTrait
 {
-
     /**
-     * When the user edits a split journal, each line is missing crucial data:
+     * When the user edits a split journal, each line is missing crucial data:.
      *
      * - Withdrawal lines are missing the source account ID
      * - Deposit lines are missing the destination account ID
@@ -84,14 +80,14 @@ trait UpdateJournalsTrait
     protected function updateDestinationTransaction(TransactionJournal $journal, Account $account, array $data)
     {
         $set = $journal->transactions()->where('amount', '>', 0)->get();
-        if ($set->count() !== 1) {
+        if (1 !== $set->count()) {
             throw new FireflyException(sprintf('Journal #%d has %d transactions with an amount more than zero.', $journal->id, $set->count()));
         }
         /** @var Transaction $transaction */
         $transaction                          = $set->first();
         $transaction->amount                  = app('steam')->positive($data['amount']);
         $transaction->transaction_currency_id = $data['currency_id'];
-        $transaction->foreign_amount          = is_null($data['foreign_amount']) ? null : app('steam')->positive($data['foreign_amount']);
+        $transaction->foreign_amount          = null === $data['foreign_amount'] ? null : app('steam')->positive($data['foreign_amount']);
         $transaction->foreign_currency_id     = $data['foreign_currency_id'];
         $transaction->account_id              = $account->id;
         $transaction->save();
@@ -108,14 +104,14 @@ trait UpdateJournalsTrait
     {
         // should be one:
         $set = $journal->transactions()->where('amount', '<', 0)->get();
-        if ($set->count() !== 1) {
+        if (1 !== $set->count()) {
             throw new FireflyException(sprintf('Journal #%d has %d transactions with an amount more than zero.', $journal->id, $set->count()));
         }
         /** @var Transaction $transaction */
         $transaction                          = $set->first();
         $transaction->amount                  = bcmul(app('steam')->positive($data['amount']), '-1');
         $transaction->transaction_currency_id = $data['currency_id'];
-        $transaction->foreign_amount          = is_null($data['foreign_amount']) ? null : bcmul(app('steam')->positive($data['foreign_amount']), '-1');
+        $transaction->foreign_amount          = null === $data['foreign_amount'] ? null : bcmul(app('steam')->positive($data['foreign_amount']), '-1');
         $transaction->foreign_currency_id     = $data['foreign_currency_id'];
         $transaction->account_id              = $account->id;
         $transaction->save();
@@ -133,7 +129,6 @@ trait UpdateJournalsTrait
         /** @var TagRepositoryInterface $tagRepository */
         $tagRepository = app(TagRepositoryInterface::class);
 
-
         // find or create all tags:
         $tags = [];
         $ids  = [];
@@ -150,7 +145,7 @@ trait UpdateJournalsTrait
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
         }
         // if count is zero, delete them all:
-        if (count($ids) === 0) {
+        if (0 === count($ids)) {
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
         }
 

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 
 /**
- * Class RuleFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class RuleFormRequest.
  */
 class RuleFormRequest extends Request
 {
@@ -77,7 +73,7 @@ class RuleFormRequest extends Request
         $contextActions = join(',', config('firefly.rule-actions-text'));
 
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . intval($this->get('id'));
         }
         $rules = [
@@ -91,7 +87,7 @@ class RuleFormRequest extends Request
             'rule-action.*'        => 'required|in:' . join(',', $validActions),
         ];
         // since Laravel does not support this stuff yet, here's a trick.
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $rules['rule-action-value.' . $i] = 'required_if:rule-action.' . $i . ',' . $contextActions . '|ruleActionValue';
         }
 

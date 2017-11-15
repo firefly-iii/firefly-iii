@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -29,13 +28,10 @@ use Preferences;
 use Response;
 
 /**
- * Class HelpController
- *
- * @package FireflyIII\Http\Controllers
+ * Class HelpController.
  */
 class HelpController extends Controller
 {
-
     /** @var HelpInterface */
     private $help;
 
@@ -56,7 +52,7 @@ class HelpController extends Controller
     }
 
     /**
-     * @param               $route
+     * @param   $route
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -99,7 +95,7 @@ class HelpController extends Controller
         $content = $this->help->getFromGithub($route, $language);
 
         // content will have 0 length when Github failed. Try en_US when it does:
-        if (strlen($content) === 0) {
+        if (0 === strlen($content)) {
             $language = 'en_US';
 
             // also check cache first:
@@ -114,7 +110,7 @@ class HelpController extends Controller
         }
 
         // help still empty?
-        if (strlen($content) !== 0) {
+        if (0 !== strlen($content)) {
             $this->help->putInCache($route, $language, $content);
 
             return $content;

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
@@ -26,9 +25,7 @@ namespace FireflyIII\Support\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Navigation
- *
- * @package FireflyIII\Support\Facades
+ * Class Navigation.
  */
 class Navigation extends Facade
 {

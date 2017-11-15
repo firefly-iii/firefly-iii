@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -31,9 +30,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Budget
- *
- * @package FireflyIII\Models
+ * Class Budget.
  */
 class Budget extends Model
 {
@@ -57,7 +54,7 @@ class Budget extends Model
     /** @var array */
     protected $hidden = ['encrypted'];
     /** @var array */
-    protected $rules = ['name' => 'required|between:1,200',];
+    protected $rules = ['name' => 'required|between:1,200'];
 
     /**
      * @param array $fields
@@ -91,7 +88,7 @@ class Budget extends Model
      *
      * @return Budget
      */
-    public static function routeBinder(Budget $value)
+    public static function routeBinder(self $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {
@@ -102,7 +99,6 @@ class Budget extends Model
     }
 
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function budgetlimits()

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
@@ -33,20 +32,16 @@ use FireflyIII\Support\CacheProperties;
 use Response;
 
 /**
- * Class AutoCompleteController
- *
- * @package FireflyIII\Http\Controllers\Json
+ * Class AutoCompleteController.
  */
 class AutoCompleteController extends Controller
 {
-
     /**
      * Returns a JSON list of all accounts.
      *
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
-     *
      */
     public function allAccounts(AccountRepositoryInterface $repository)
     {
@@ -80,7 +75,6 @@ class AutoCompleteController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
-     *
      */
     public function expenseAccounts(AccountRepositoryInterface $repository)
     {
@@ -103,7 +97,6 @@ class AutoCompleteController extends Controller
 
     /**
      * @param JournalCollectorInterface $collector
-     *
      * @param TransactionJournal        $except
      *
      * @return \Illuminate\Http\JsonResponse|mixed
@@ -139,7 +132,6 @@ class AutoCompleteController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Http\JsonResponse
-     *
      */
     public function revenueAccounts(AccountRepositoryInterface $repository)
     {

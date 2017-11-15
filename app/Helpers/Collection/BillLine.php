@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collection;
@@ -27,27 +26,23 @@ use Carbon\Carbon;
 use FireflyIII\Models\Bill as BillModel;
 
 /**
- *
- * Class BillLine
- *
- * @package FireflyIII\Helpers\Collection
+ * Class BillLine.
  */
 class BillLine
 {
-
-    /** @var  string */
+    /** @var string */
     protected $amount;
-    /** @var  BillModel */
+    /** @var BillModel */
     protected $bill;
-    /** @var  bool */
+    /** @var bool */
     protected $hit;
-    /** @var  string */
+    /** @var string */
     protected $max;
-    /** @var  string */
+    /** @var string */
     protected $min;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $lastHitDate;
-    /** @var  int */
+    /** @var int */
     private $transactionJournalId;
 
     /**
@@ -159,7 +154,7 @@ class BillLine
      */
     public function isActive(): bool
     {
-        return intval($this->bill->active) === 1;
+        return 1 === intval($this->bill->active);
     }
 
     /**

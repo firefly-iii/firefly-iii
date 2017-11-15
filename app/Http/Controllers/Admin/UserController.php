@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
@@ -33,9 +32,7 @@ use Session;
 use View;
 
 /**
- * Class UserController
- *
- * @package FireflyIII\Http\Controllers\Admin
+ * Class UserController.
  */
 class UserController extends Controller
 {
@@ -45,7 +42,6 @@ class UserController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -91,7 +87,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('users.edit.fromUpdate') !== true) {
+        if (true !== session('users.edit.fromUpdate')) {
             $this->rememberPreviousUri('users.edit.uri');
         }
         Session::forget('users.edit.fromUpdate');
@@ -125,13 +121,12 @@ class UserController extends Controller
                 $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
                 $preferences   = Preferences::getArrayForUser($user, $list);
                 $user->isAdmin = $user->hasRole('owner');
-                $is2faEnabled  = $preferences['twoFactorAuthEnabled'] === true;
-                $has2faSecret  = !is_null($preferences['twoFactorAuthSecret']);
+                $is2faEnabled  = true === $preferences['twoFactorAuthEnabled'];
+                $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];
                 $user->has2FA  = ($is2faEnabled && $has2faSecret) ? true : false;
                 $user->prefs   = $preferences;
             }
         );
-
 
         return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users'));
     }
@@ -166,7 +161,6 @@ class UserController extends Controller
     /**
      * @param UserFormRequest         $request
      * @param User                    $user
-     *
      * @param UserRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -187,7 +181,7 @@ class UserController extends Controller
         Session::flash('success', strval(trans('firefly.updated_user', ['email' => $user->email])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             Session::put('users.edit.fromUpdate', true);
 

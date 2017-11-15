@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Csv;
@@ -33,9 +32,7 @@ use League\Csv\Reader;
 use Log;
 
 /**
- * Class Mapping
- *
- * @package FireflyIII\Support\Import\Configuration\Csv
+ * Class Mapping.
  */
 class Map implements ConfigurationInterface
 {
@@ -43,13 +40,14 @@ class Map implements ConfigurationInterface
     private $configuration = [];
     /** @var array that holds each column to be mapped by the user */
     private $data = [];
-    /** @var  ImportJob */
+    /** @var ImportJob */
     private $job;
     /** @var array */
     private $validSpecifics = [];
 
     /**
      * @return array
+     *
      * @throws FireflyException
      */
     public function getData(): array
@@ -79,10 +77,9 @@ class Map implements ConfigurationInterface
                 }
                 $value = $row[$index];
                 if (strlen($value) > 0) {
-
                     // we can do some preprocessing here,
                     // which is exclusively to fix the tags:
-                    if (!is_null($this->data[$index]['preProcessMap']) && strlen($this->data[$index]['preProcessMap']) > 0) {
+                    if (null !== $this->data[$index]['preProcessMap'] && strlen($this->data[$index]['preProcessMap']) > 0) {
                         /** @var PreProcessorInterface $preProcessor */
                         $preProcessor                 = app($this->data[$index]['preProcessMap']);
                         $result                       = $preProcessor->run($value);
@@ -91,7 +88,6 @@ class Map implements ConfigurationInterface
                         Log::debug($rowIndex . ':' . $index . 'Value before preprocessor', ['value' => $value]);
                         Log::debug($rowIndex . ':' . $index . 'Value after preprocessor', ['value-new' => $result]);
                         Log::debug($rowIndex . ':' . $index . 'Value after joining', ['value-complete' => $this->data[$index]['values']]);
-
 
                         continue;
                     }
@@ -154,7 +150,7 @@ class Map implements ConfigurationInterface
                 $config['column-mapping-config'][$index] = [];
                 foreach ($data as $value => $mapId) {
                     $mapId = intval($mapId);
-                    if ($mapId !== 0) {
+                    if (0 !== $mapId) {
                         $config['column-mapping-config'][$index][$value] = intval($mapId);
                     }
                 }
@@ -192,15 +188,13 @@ class Map implements ConfigurationInterface
         $config = $this->job->configuration;
 
         /**
-         * @var int  $index
+         * @var int
          * @var bool $mustBeMapped
          */
         foreach ($config['column-do-mapping'] as $index => $mustBeMapped) {
             $column    = $this->validateColumnName($config['column-roles'][$index] ?? '_ignore');
             $shouldMap = $this->shouldMapColumn($column, $mustBeMapped);
             if ($shouldMap) {
-
-
                 // create configuration entry for this specific column and add column to $this->data array for later processing.
                 $this->data[$index] = [
                     'name'          => $column,
@@ -226,7 +220,7 @@ class Map implements ConfigurationInterface
         $hasPreProcess   = config('csv.import_roles.' . $column . '.pre-process-map');
         $preProcessClass = config('csv.import_roles.' . $column . '.pre-process-mapper');
 
-        if (!is_null($hasPreProcess) && $hasPreProcess === true && !is_null($preProcessClass)) {
+        if (null !== $hasPreProcess && true === $hasPreProcess && null !== $preProcessClass) {
             $name = sprintf('\\FireflyIII\\Import\\MapperPreProcess\\%s', $preProcessClass);
         }
 
@@ -237,6 +231,7 @@ class Map implements ConfigurationInterface
      * @param array $row
      *
      * @return array
+     *
      * @throws FireflyException
      */
     private function runSpecifics(array $row): array
@@ -269,13 +264,14 @@ class Map implements ConfigurationInterface
     {
         $canBeMapped = config('csv.import_roles.' . $column . '.mappable');
 
-        return ($canBeMapped && $mustBeMapped);
+        return $canBeMapped && $mustBeMapped;
     }
 
     /**
      * @param string $column
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function validateColumnName(string $column): string

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
@@ -33,21 +32,19 @@ use Mail;
 use Swift_TransportException;
 
 /**
- * Class MailError
- *
- * @package FireflyIII\Jobs
+ * Class MailError.
  */
 class MailError extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    /** @var  string */
+    /** @var string */
     protected $destination;
-    /** @var  array */
+    /** @var array */
     protected $exception;
-    /** @var  string */
+    /** @var string */
     protected $ipAddress;
-    /** @var  array */
+    /** @var array */
     protected $userData;
 
     /**
@@ -57,7 +54,6 @@ class MailError extends Job implements ShouldQueue
      * @param string $destination
      * @param string $ipAddress
      * @param array  $exceptionData
-     *
      */
     public function __construct(array $userData, string $destination, string $ipAddress, array $exceptionData)
     {
@@ -72,8 +68,6 @@ class MailError extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
@@ -90,7 +84,7 @@ class MailError extends Job implements ShouldQueue
                     ['emails.error-html', 'emails.error-text'],
                     $args,
                     function (Message $message) use ($email) {
-                        if ($email !== 'mail@example.com') {
+                        if ('mail@example.com' !== $email) {
                             $message->to($email, $email)->subject('Caught an error in Firely III');
                         }
                     }

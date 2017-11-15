@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Bill;
@@ -37,13 +36,10 @@ use Log;
 use Navigation;
 
 /**
- * Class BillRepository
- *
- * @package FireflyIII\Repositories\Bill
+ * Class BillRepository.
  */
 class BillRepository implements BillRepositoryInterface
 {
-
     /** @var User */
     private $user;
 
@@ -69,7 +65,7 @@ class BillRepository implements BillRepositoryInterface
     public function find(int $billId): Bill
     {
         $bill = $this->user->bills()->find($billId);
-        if (is_null($bill)) {
+        if (null === $bill) {
             $bill = new Bill;
         }
 
@@ -156,7 +152,7 @@ class BillRepository implements BillRepositoryInterface
                    'bills.automatch',
                    'bills.active',
                    'bills.name_encrypted',
-                   'bills.match_encrypted'];
+                   'bills.match_encrypted',];
         $ids    = $accounts->pluck('id')->toArray();
         $set    = $this->user->bills()
                              ->leftJoin(
@@ -178,7 +174,7 @@ class BillRepository implements BillRepositoryInterface
 
         $set = $set->sortBy(
             function (Bill $bill) {
-                $int = $bill->active === 1 ? 0 : 1;
+                $int = 1 === $bill->active ? 0 : 1;
 
                 return $int . strtolower($bill->name);
             }
@@ -300,9 +296,7 @@ class BillRepository implements BillRepositoryInterface
         $set = new Collection;
         Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
 
-        /*
-         * Start at 2016-10-01, see when we expect the bill to hit:
-         */
+        // Start at 2016-10-01, see when we expect the bill to hit:
         $currentStart = clone $start;
         Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
@@ -310,9 +304,7 @@ class BillRepository implements BillRepositoryInterface
             Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
             Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
-            /*
-             * If nextExpectedMatch is after end, we continue:
-             */
+            // If nextExpectedMatch is after end, we continue:
             if ($nextExpectedMatch > $end) {
                 Log::debug(
                     sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
@@ -336,7 +328,6 @@ class BillRepository implements BillRepositoryInterface
             }
         );
         Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
-
 
         return $set;
     }
@@ -482,9 +473,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal): bool
     {
-        /*
-         * Can only support withdrawals.
-         */
+        // Can only support withdrawals.
         if (false === $journal->isWithdrawal()) {
             return false;
         }
@@ -498,10 +487,7 @@ class BillRepository implements BillRepositoryInterface
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($journal->amountPositive(), $bill->amount_min, $bill->amount_max);
 
-
-        /*
-         * If both, update!
-         */
+        // If both, update!
         if ($wordMatch && $amountMatch) {
             $journal->bill()->associate($bill);
             $journal->save();
@@ -547,7 +533,6 @@ class BillRepository implements BillRepositoryInterface
                 'skip'        => $data['skip'],
                 'automatch'   => $data['automatch'],
                 'active'      => $data['active'],
-
             ]
         );
 
@@ -603,8 +588,8 @@ class BillRepository implements BillRepositoryInterface
         $wordMatch = false;
         $count     = 0;
         foreach ($matches as $word) {
-            if (!(strpos($description, strtolower($word)) === false)) {
-                $count++;
+            if (!(false === strpos($description, strtolower($word)))) {
+                ++$count;
             }
         }
         if ($count >= count($matches)) {

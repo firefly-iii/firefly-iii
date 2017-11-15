@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
@@ -26,35 +25,33 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 
 /**
- * Class MonetaryAccountBank
- *
- * @package FireflyIII\Services\Bunq\Object
+ * Class MonetaryAccountBank.
  */
 class MonetaryAccountBank extends BunqObject
 {
     /** @var array */
     private $aliases = [];
-    /** @var  Avatar */
+    /** @var Avatar */
     private $avatar;
-    /** @var  Amount */
+    /** @var Amount */
     private $balance;
     /** @var Carbon */
     private $created;
     /** @var string */
     private $currency = '';
-    /** @var  Amount */
+    /** @var Amount */
     private $dailyLimit;
-    /** @var  Amount */
+    /** @var Amount */
     private $dailySpent;
     /** @var string */
     private $description = '';
     /** @var int */
     private $id = 0;
-    /** @var  MonetaryAccountProfile */
+    /** @var MonetaryAccountProfile */
     private $monetaryAccountProfile;
     /** @var array */
     private $notificationFilters = [];
-    /** @var  Amount */
+    /** @var Amount */
     private $overdraftLimit;
     /** @var string */
     private $publicUuid = '';
@@ -62,7 +59,7 @@ class MonetaryAccountBank extends BunqObject
     private $reason = '';
     /** @var string */
     private $reasonDescription = '';
-    /** @var  MonetaryAccountSetting */
+    /** @var MonetaryAccountSetting */
     private $setting;
     /** @var string */
     private $status = '';

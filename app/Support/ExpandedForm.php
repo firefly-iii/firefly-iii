@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -28,19 +27,14 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use Input;
 use RuntimeException;
 use Session;
 
 /**
- * Class ExpandedForm
- *
- * @package FireflyIII\Support
- *
+ * Class ExpandedForm.
  */
 class ExpandedForm
 {
-
     /**
      * @param       $name
      * @param null  $value
@@ -87,7 +81,7 @@ class ExpandedForm
      */
     public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
     {
-        $options['checked'] = $checked === true ? true : null;
+        $options['checked'] = true === $checked ? true : null;
         $label              = $this->label($name, $options);
         $options            = $this->expandOptionArray($name, $label, $options);
         $classes            = $this->getHolderClasses($name);
@@ -173,7 +167,6 @@ class ExpandedForm
     }
 
     /**
-     *
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param \Illuminate\Support\Collection $set
@@ -190,7 +183,7 @@ class ExpandedForm
             $title   = null;
 
             foreach ($fields as $field) {
-                if (isset($entry->$field) && is_null($title)) {
+                if (isset($entry->$field) && null === $title) {
                     $title = $entry->$field;
                 }
             }
@@ -216,7 +209,7 @@ class ExpandedForm
             $title   = null;
 
             foreach ($fields as $field) {
-                if (isset($entry->$field) && is_null($title)) {
+                if (isset($entry->$field) && null === $title) {
                     $title = $entry->$field;
                 }
             }
@@ -287,10 +280,9 @@ class ExpandedForm
         unset($options['placeholder']);
 
         // make sure value is formatted nicely:
-        if (!is_null($value) && $value !== '') {
+        if (null !== $value && '' !== $value) {
             $value = round($value, $selectedCurrency->decimal_places);
         }
-
 
         $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
 
@@ -316,11 +308,10 @@ class ExpandedForm
         unset($options['placeholder']);
 
         // make sure value is formatted nicely:
-        if (!is_null($value) && $value !== '') {
+        if (null !== $value && '' !== $value) {
             $decimals = $selectedCurrency->decimal_places ?? 2;
             $value    = round($value, $decimals);
         }
-
 
         $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
 
@@ -364,7 +355,7 @@ class ExpandedForm
             // don't care
         }
 
-        $previousValue = is_null($previousValue) ? 'store' : $previousValue;
+        $previousValue = null === $previousValue ? 'store' : $previousValue;
         $html          = view('form.options', compact('type', 'name', 'previousValue'))->render();
 
         return $html;
@@ -508,10 +499,10 @@ class ExpandedForm
     {
         if (Session::has('preFilled')) {
             $preFilled = session('preFilled');
-            $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
+            $value     = isset($preFilled[$name]) && null === $value ? $preFilled[$name] : $value;
         }
         try {
-            if (!is_null(request()->old($name))) {
+            if (null !== request()->old($name)) {
                 $value = request()->old($name);
             }
         } catch (RuntimeException $e) {
@@ -520,7 +511,6 @@ class ExpandedForm
         if ($value instanceof Carbon) {
             $value = $value->format('Y-m-d');
         }
-
 
         return $value;
     }
@@ -532,14 +522,12 @@ class ExpandedForm
      */
     protected function getHolderClasses(string $name): string
     {
-        /*
-       * Get errors from session:
-       */
+        // Get errors from session:
         /** @var MessageBag $errors */
         $errors  = session('errors');
         $classes = 'form-group';
 
-        if (!is_null($errors) && $errors->has($name)) {
+        if (null !== $errors && $errors->has($name)) {
             $classes = 'form-group has-error has-feedback';
         }
 
@@ -596,10 +584,9 @@ class ExpandedForm
         }
 
         // make sure value is formatted nicely:
-        if (!is_null($value) && $value !== '') {
+        if (null !== $value && '' !== $value) {
             $value = round($value, $defaultCurrency->decimal_places);
         }
-
 
         $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
@@ -30,13 +29,10 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
- * Class BalanceController
- *
- * @package FireflyIII\Http\Controllers\Report
+ * Class BalanceController.
  */
 class BalanceController extends Controller
 {
-
     /**
      * @param BalanceReportHelperInterface $helper
      * @param Collection                   $accounts
@@ -47,8 +43,6 @@ class BalanceController extends Controller
      */
     public function general(BalanceReportHelperInterface $helper, Collection $accounts, Carbon $start, Carbon $end)
     {
-
-
         // chart properties for cache:
         $cache = new CacheProperties;
         $cache->addProperty($start);

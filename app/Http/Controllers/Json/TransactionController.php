@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
@@ -62,7 +61,7 @@ class TransactionController extends Controller
             $totals[$currencyId]['amount'] = bcadd($totals[$currencyId]['amount'], app('steam')->positive($transaction->amount));
 
             // foreign amount:
-            if (!is_null($transaction->foreign_amount)) {
+            if (null !== $transaction->foreign_amount) {
                 $currencyId = $transaction->foreign_currency_id;
                 if (!isset($totals[$currencyId])) {
                     $totals[$currencyId] = [
@@ -78,7 +77,7 @@ class TransactionController extends Controller
         $entries = [];
         foreach ($totals as $entry) {
             $amount = $entry['amount'];
-            if ($entry['type'] === TransactionType::WITHDRAWAL) {
+            if (TransactionType::WITHDRAWAL === $entry['type']) {
                 $amount = bcmul($entry['amount'], '-1');
             }
             $entries[] = app('amount')->formatAnything($entry['currency'], $amount, false);

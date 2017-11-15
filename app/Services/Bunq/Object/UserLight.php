@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Object;
@@ -26,9 +25,7 @@ namespace FireflyIII\Services\Bunq\Object;
 use Carbon\Carbon;
 
 /**
- * Class UserLight
- *
- * @package FireflyIII\Services\Bunq\Object
+ * Class UserLight.
  */
 class UserLight extends BunqObject
 {
@@ -62,7 +59,7 @@ class UserLight extends BunqObject
      */
     public function __construct(array $data)
     {
-        if (count($data) === 0) {
+        if (0 === count($data)) {
             return;
         }
         $this->id             = intval($data['id']);

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -35,15 +34,12 @@ use Response;
 use View;
 
 /**
- * Class AttachmentController
+ * Class AttachmentController.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // it's 13.
- *
- * @package FireflyIII\Http\Controllers
  */
 class AttachmentController extends Controller
 {
-
     /**
      *
      */
@@ -104,6 +100,7 @@ class AttachmentController extends Controller
      * @param Attachment                    $attachment
      *
      * @return mixed
+     *
      * @throws FireflyException
      */
     public function download(AttachmentRepositoryInterface $repository, Attachment $attachment)
@@ -111,7 +108,6 @@ class AttachmentController extends Controller
         if ($repository->exists($attachment)) {
             $content = $repository->getContent($attachment);
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
-
 
             /** @var LaravelResponse $response */
             $response = response($content, 200);
@@ -143,7 +139,7 @@ class AttachmentController extends Controller
         $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('attachments.edit.fromUpdate') !== true) {
+        if (true !== session('attachments.edit.fromUpdate')) {
             $this->rememberPreviousUri('attachments.edit.uri');
         }
         $request->session()->forget('attachments.edit.fromUpdate');
@@ -160,8 +156,7 @@ class AttachmentController extends Controller
     {
         $image = 'images/page_green.png';
 
-
-        if ($attachment->mime === 'application/pdf') {
+        if ('application/pdf' === $attachment->mime) {
             $image = 'images/page_white_acrobat.png';
         }
         $file     = public_path($image);
@@ -170,7 +165,6 @@ class AttachmentController extends Controller
 
         return $response;
     }
-
 
     /**
      * @param AttachmentFormRequest         $request
@@ -187,7 +181,7 @@ class AttachmentController extends Controller
         $request->session()->flash('success', strval(trans('firefly.attachment_updated', ['name' => $attachment->filename])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             $request->session()->put('attachments.edit.fromUpdate', true);
 

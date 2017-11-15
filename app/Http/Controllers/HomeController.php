@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -42,9 +41,7 @@ use Session;
 use View;
 
 /**
- * Class HomeController
- *
- * @package FireflyIII\Http\Controllers
+ * Class HomeController.
  */
 class HomeController extends Controller
 {
@@ -112,7 +109,7 @@ class HomeController extends Controller
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
                 $logFile = $handler->getUrl();
-                if (!is_null($logFile)) {
+                if (null !== $logFile) {
                     $logContent = file_get_contents($logFile);
                 }
             }
@@ -180,7 +177,7 @@ class HomeController extends Controller
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
-        if ($count === 0) {
+        if (0 === $count) {
             return redirect(route('new-user.index'));
         }
 
@@ -201,7 +198,6 @@ class HomeController extends Controller
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);
         $billCount      = $billRepository->getBills()->count();
-
 
         foreach ($accounts as $account) {
             $collector = app(JournalCollectorInterface::class);
@@ -225,16 +221,15 @@ class HomeController extends Controller
                    'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
                    'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
                    'two-factor.lost', 'report.options',
-
         ];
 
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
-            if (!is_null($name) && in_array('GET', $route->methods()) && strlen($name) > 0) {
+            if (null !== $name && in_array('GET', $route->methods()) && strlen($name) > 0) {
                 $found = false;
                 foreach ($ignore as $string) {
-                    if (strpos($name, $string) !== false) {
+                    if (false !== strpos($name, $string)) {
                         $found = true;
                     }
                 }

@@ -18,19 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Specifics;
 
 /**
- * Class PresidentsChoice
- *
- * @package FireflyIII\Import\Specifics
+ * Class PresidentsChoice.
  */
 class PresidentsChoice implements SpecificInterface
 {
-
     /**
      * @return string
      */
@@ -56,7 +52,7 @@ class PresidentsChoice implements SpecificInterface
     {
         // first, if column 2 is empty and 3 is not, do nothing.
         // if column 3 is empty and column 2 is not, move amount to column 3, *-1
-        if (isset($row[3]) && strlen($row[3]) === 0) {
+        if (isset($row[3]) && 0 === strlen($row[3])) {
             $row[3] = bcmul($row[2], '-1');
         }
         if (isset($row[1])) {

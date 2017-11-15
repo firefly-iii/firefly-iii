@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -28,14 +27,10 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
- *
- * Class Budget
- *
- * @package FireflyIII\Support\Twig
+ * Class Budget.
  */
 class Translation extends Twig_Extension
 {
-
     /**
      * @return array
      */
@@ -54,20 +49,18 @@ class Translation extends Twig_Extension
         return $filters;
     }
 
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFunctions(): array
     {
         return [
             $this->journalLinkTranslation(),
-
         ];
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName(): string
     {

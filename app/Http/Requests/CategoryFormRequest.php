@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 
 /**
- * Class CategoryFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class CategoryFormRequest.
  */
 class CategoryFormRequest extends Request
 {
@@ -60,7 +56,7 @@ class CategoryFormRequest extends Request
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $nameRule   = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval($this->get('id'));
         }
 

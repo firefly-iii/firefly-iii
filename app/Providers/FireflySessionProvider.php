@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -31,8 +30,6 @@ class FireflySessionProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
@@ -45,8 +42,6 @@ class FireflySessionProvider extends ServiceProvider
 
     /**
      * Register the session driver instance.
-     *
-     * @return void
      */
     protected function registerSessionDriver()
     {
@@ -63,8 +58,6 @@ class FireflySessionProvider extends ServiceProvider
 
     /**
      * Register the session manager instance.
-     *
-     * @return void
      */
     protected function registerSessionManager()
     {

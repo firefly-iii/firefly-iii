@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
@@ -51,7 +50,6 @@ use Steam;
  *
  * Class JournalCollector
  *
- * @package FireflyIII\Helpers\Collector
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -59,10 +57,9 @@ use Steam;
  */
 class JournalCollector implements JournalCollectorInterface
 {
-
     /** @var array */
     private $accountIds = [];
-    /** @var  int */
+    /** @var int */
     private $count = 0;
     /** @var array */
     private $fields
@@ -101,22 +98,21 @@ class JournalCollector implements JournalCollectorInterface
             'accounts.encrypted as account_encrypted',
             'accounts.iban as account_iban',
             'account_types.type as account_type',
-
         ];
     /** @var array */
     private $filters = [InternalTransferFilter::class];
 
-    /** @var  bool */
+    /** @var bool */
     private $joinedBudget = false;
-    /** @var  bool */
+    /** @var bool */
     private $joinedCategory = false;
     /** @var bool */
     private $joinedOpposing = false;
     /** @var bool */
     private $joinedTag = false;
-    /** @var  int */
+    /** @var int */
     private $limit;
-    /** @var  int */
+    /** @var int */
     private $offset;
     /** @var int */
     private $page = 1;
@@ -218,11 +214,12 @@ class JournalCollector implements JournalCollectorInterface
 
     /**
      * @return int
+     *
      * @throws FireflyException
      */
     public function count(): int
     {
-        if ($this->run === true) {
+        if (true === $this->run) {
             throw new FireflyException('Cannot count after run in JournalCollector.');
         }
 
@@ -258,7 +255,7 @@ class JournalCollector implements JournalCollectorInterface
                 $transaction->date        = new Carbon($transaction->date);
                 $transaction->description = Steam::decrypt(intval($transaction->encrypted), $transaction->description);
 
-                if (!is_null($transaction->bill_name)) {
+                if (null !== $transaction->bill_name) {
                     $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
@@ -272,11 +269,12 @@ class JournalCollector implements JournalCollectorInterface
 
     /**
      * @return LengthAwarePaginator
+     *
      * @throws FireflyException
      */
     public function getPaginatedJournals(): LengthAwarePaginator
     {
-        if ($this->run === true) {
+        if (true === $this->run) {
             throw new FireflyException('Cannot getPaginatedJournals after run in JournalCollector.');
         }
         $this->count();
@@ -294,7 +292,7 @@ class JournalCollector implements JournalCollectorInterface
     public function removeFilter(string $filter): JournalCollectorInterface
     {
         $key = array_search($filter, $this->filters, true);
-        if (!($key === false)) {
+        if (!(false === $key)) {
             Log::debug(sprintf('Removed filter %s', $filter));
             unset($this->filters[$key]);
         }
@@ -319,7 +317,6 @@ class JournalCollector implements JournalCollectorInterface
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
         }
-
 
         return $this;
     }
@@ -416,7 +413,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setBudgets(Collection $budgets): JournalCollectorInterface
     {
         $budgetIds = $budgets->pluck('id')->toArray();
-        if (count($budgetIds) === 0) {
+        if (0 === count($budgetIds)) {
             return $this;
         }
         $this->joinBudgetTables();
@@ -440,7 +437,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setCategories(Collection $categories): JournalCollectorInterface
     {
         $categoryIds = $categories->pluck('id')->toArray();
-        if (count($categoryIds) === 0) {
+        if (0 === count($categoryIds)) {
             return $this;
         }
         $this->joinCategoryTables();
@@ -514,11 +511,11 @@ class JournalCollector implements JournalCollectorInterface
         $this->page = $page;
 
         if ($page > 0) {
-            $page--;
+            --$page;
         }
         Log::debug(sprintf('Page is %d', $page));
 
-        if (!is_null($this->limit)) {
+        if (null !== $this->limit) {
             $offset       = ($this->limit * $page);
             $this->offset = $offset;
             $this->query->skip($offset);

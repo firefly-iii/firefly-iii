@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -27,9 +26,7 @@ use Crypt;
 use Illuminate\Console\Command;
 
 /**
- * Class EncryptFile
- *
- * @package FireflyIII\Console\Commands
+ * Class EncryptFile.
  */
 class EncryptFile extends Command
 {
@@ -49,7 +46,6 @@ class EncryptFile extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {

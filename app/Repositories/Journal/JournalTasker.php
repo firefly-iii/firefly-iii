@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
@@ -36,16 +35,12 @@ use Illuminate\Support\Collection;
 use Steam;
 
 /**
- * Class JournalTasker
- *
- * @package FireflyIII\Repositories\Journal
+ * Class JournalTasker.
  */
 class JournalTasker implements JournalTaskerInterface
 {
-
     /** @var User */
     private $user;
-
 
     /**
      * @param TransactionJournal $journal
@@ -128,7 +123,6 @@ class JournalTasker implements JournalTaskerInterface
                     'foreign_currencies.decimal_places as foreign_currency_dp',
                     'foreign_currencies.code as foreign_currency_code',
                     'foreign_currencies.symbol as foreign_currency_symbol',
-
                 ]
             );
 
@@ -156,14 +150,14 @@ class JournalTasker implements JournalTaskerInterface
                 'source_account_after'        => bcadd($sourceBalance, $entry->amount),
                 'destination_id'              => $entry->destination_id,
                 'destination_amount'          => bcmul($entry->amount, '-1'),
-                'foreign_destination_amount'  => is_null($entry->foreign_amount) ? null : bcmul($entry->foreign_amount, '-1'),
+                'foreign_destination_amount'  => null === $entry->foreign_amount ? null : bcmul($entry->foreign_amount, '-1'),
                 'destination_account_id'      => $entry->destination_account_id,
                 'destination_account_type'    => $entry->destination_account_type,
                 'destination_account_name'    => Steam::decrypt(intval($entry->destination_account_encrypted), $entry->destination_account_name),
                 'destination_account_before'  => $destinationBalance,
                 'destination_account_after'   => bcadd($destinationBalance, bcmul($entry->amount, '-1')),
-                'budget_id'                   => is_null($budget) ? 0 : $budget->id,
-                'category'                    => is_null($category) ? '' : $category->name,
+                'budget_id'                   => null === $budget ? 0 : $budget->id,
+                'category'                    => null === $category ? '' : $category->name,
                 'transaction_currency_id'     => $entry->transaction_currency_id,
                 'transaction_currency_code'   => $entry->transaction_currency_code,
                 'transaction_currency_symbol' => $entry->transaction_currency_symbol,
@@ -173,14 +167,13 @@ class JournalTasker implements JournalTaskerInterface
                 'foreign_currency_symbol'     => $entry->foreign_currency_symbol,
                 'foreign_currency_dp'         => $entry->foreign_currency_dp,
             ];
-            if ($entry->destination_account_type === AccountType::CASH) {
+            if (AccountType::CASH === $entry->destination_account_type) {
                 $transaction['destination_account_name'] = '';
             }
 
-            if ($entry->account_type === AccountType::CASH) {
+            if (AccountType::CASH === $entry->account_type) {
                 $transaction['source_account_name'] = '';
             }
-
 
             $transactions[] = $transaction;
         }
@@ -200,7 +193,7 @@ class JournalTasker implements JournalTaskerInterface
     /**
      * Collect the balance of an account before the given transaction has hit. This is tricky, because
      * the balance does not depend on the transaction itself but the journal it's part of. And of course
-     * the order of transactions within the journal. So the query is pretty complex:
+     * the order of transactions within the journal. So the query is pretty complex:.
      *
      * @param int $transactionId
      *

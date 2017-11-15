@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
- * Class AccountFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class AccountFormRequest.
  */
 class AccountFormRequest extends Request
 {
@@ -77,7 +73,7 @@ class AccountFormRequest extends Request
 
         $nameRule = 'required|min:1|uniqueAccountForUser';
         $idRule   = '';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $idRule   = 'belongsToUser:accounts';
             $nameRule = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
         }

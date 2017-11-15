@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -28,13 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class BudgetIs
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class BudgetIs.
  */
 final class BudgetIs extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -53,7 +49,7 @@ final class BudgetIs extends AbstractTrigger implements TriggerInterface
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
+        if (null !== $value) {
             return false;
         }
         Log::error(sprintf('Cannot use %s with a null value.', self::class));
@@ -69,7 +65,7 @@ final class BudgetIs extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal): bool
     {
         $budget = $journal->budgets()->first();
-        if (!is_null($budget)) {
+        if (null !== $budget) {
             $name = strtolower($budget->name);
             // match on journal:
             if ($name === strtolower($this->triggerValue)) {
@@ -79,12 +75,12 @@ final class BudgetIs extends AbstractTrigger implements TriggerInterface
             }
         }
 
-        if (is_null($budget)) {
+        if (null === $budget) {
             // perhaps transactions have this budget?
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
                 $budget = $transaction->budgets()->first();
-                if (!is_null($budget)) {
+                if (null !== $budget) {
                     $name = strtolower($budget->name);
                     if ($name === strtolower($this->triggerValue)) {
                         Log::debug(

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Prerequisites;
@@ -41,12 +40,10 @@ use Requests_Exception;
 
 /**
  * This class contains all the routines necessary to connect to Bunq.
- *
- * @package FireflyIII\Support\Import\Prerequisites
  */
 class BunqPrerequisites implements PrerequisitesInterface
 {
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -80,7 +77,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         $apiKey = Preferences::getForUser($this->user, 'bunq_api_key', false);
 
-        return ($apiKey->data === false || is_null($apiKey->data));
+        return false === $apiKey->data || null === $apiKey->data;
     }
 
     /**
@@ -156,6 +153,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      * to try and detect the server ID for this firefly instance.
      *
      * @return DeviceServerId
+     *
      * @throws FireflyException
      */
     private function getExistingDevice(): DeviceServerId
@@ -187,7 +185,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         Log::debug('Get installation token.');
         $token = Preferences::getForUser($this->user, 'bunq_installation_token', null);
-        if (!is_null($token)) {
+        if (null !== $token) {
             return $token->data;
         }
         Log::debug('Have no token, request one.');
@@ -219,7 +217,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         Log::debug('get private key');
         $preference = Preferences::getForUser($this->user, 'bunq_private_key', null);
-        if (is_null($preference)) {
+        if (null === $preference) {
             Log::debug('private key is null');
             // create key pair
             $this->createKeyPair();
@@ -239,7 +237,7 @@ class BunqPrerequisites implements PrerequisitesInterface
     {
         Log::debug('get public key');
         $preference = Preferences::getForUser($this->user, 'bunq_public_key', null);
-        if (is_null($preference)) {
+        if (null === $preference) {
             Log::debug('public key is null');
             // create key pair
             $this->createKeyPair();
@@ -254,18 +252,19 @@ class BunqPrerequisites implements PrerequisitesInterface
      * Request users server remote IP. Let's assume this value will not change any time soon.
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function getRemoteIp(): string
     {
         $preference = Preferences::getForUser($this->user, 'external_ip', null);
-        if (is_null($preference)) {
+        if (null === $preference) {
             try {
                 $response = Requests::get('https://api.ipify.org');
             } catch (Requests_Exception $e) {
                 throw new FireflyException(sprintf('Could not retrieve external IP: %s', $e->getMessage()));
             }
-            if ($response->status_code !== 200) {
+            if (200 !== $response->status_code) {
                 throw new FireflyException(sprintf('Could not retrieve external IP: %d %s', $response->status_code, $response->body));
             }
             $serverIp = $response->body;
@@ -299,7 +298,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         Log::debug('Now in registerDevice');
         $deviceServerId = Preferences::getForUser($this->user, 'bunq_device_server_id', null);
         $serverIp       = $this->getRemoteIp();
-        if (!is_null($deviceServerId)) {
+        if (null !== $deviceServerId) {
             Log::debug('Have device server ID.');
 
             return $deviceServerId->data;
@@ -323,7 +322,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }
-        if (is_null($deviceServerId)) {
+        if (null === $deviceServerId) {
             // try get the current from a list:
             $deviceServerId = $this->getExistingDevice();
         }

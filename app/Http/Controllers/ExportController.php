@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Http\Controllers;
 
@@ -39,9 +37,7 @@ use Response;
 use View;
 
 /**
- * Class ExportController
- *
- * @package FireflyIII\Http\Controllers
+ * Class ExportController.
  */
 class ExportController extends Controller
 {
@@ -51,7 +47,6 @@ class ExportController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -68,6 +63,7 @@ class ExportController extends Controller
      * @param ExportJob                    $job
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     *
      * @throws FireflyException
      */
     public function download(ExportJobRepositoryInterface $repository, ExportJob $job)
@@ -81,7 +77,6 @@ class ExportController extends Controller
             throw new FireflyException('Against all expectations, zip file "' . $file . '" does not exist.');
         }
         $content = $repository->getContent($job);
-
 
         $job->change('export_downloaded');
         /** @var LaravelResponse $response */
@@ -162,48 +157,35 @@ class ExportController extends Controller
         $processor = app(ProcessorInterface::class);
         $processor->setSettings($settings);
 
-        /*
-         * Collect journals:
-         */
+        // Collect journals:
         $jobs->changeStatus($job, 'export_status_collecting_journals');
         $processor->collectJournals();
         $jobs->changeStatus($job, 'export_status_collected_journals');
 
-        /*
-         * Transform to exportable entries:
-         */
+        // Transform to exportable entries:
         $jobs->changeStatus($job, 'export_status_converting_to_export_format');
         $processor->convertJournals();
         $jobs->changeStatus($job, 'export_status_converted_to_export_format');
 
-        /*
-         * Transform to (temporary) file:
-         */
+        // Transform to (temporary) file:
         $jobs->changeStatus($job, 'export_status_creating_journal_file');
         $processor->exportJournals();
         $jobs->changeStatus($job, 'export_status_created_journal_file');
-        /*
-         *  Collect attachments, if applicable.
-         */
+        // Collect attachments, if applicable.
         if ($settings['includeAttachments']) {
             $jobs->changeStatus($job, 'export_status_collecting_attachments');
             $processor->collectAttachments();
             $jobs->changeStatus($job, 'export_status_collected_attachments');
         }
 
-
-        /*
-         * Collect old uploads
-         */
+        // Collect old uploads
         if ($settings['includeOldUploads']) {
             $jobs->changeStatus($job, 'export_status_collecting_old_uploads');
             $processor->collectOldUploads();
             $jobs->changeStatus($job, 'export_status_collected_old_uploads');
         }
 
-        /*
-         * Create ZIP file:
-         */
+        // Create ZIP file:
         $jobs->changeStatus($job, 'export_status_creating_zip_file');
         $processor->createZipFile();
         $jobs->changeStatus($job, 'export_status_created_zip_file');

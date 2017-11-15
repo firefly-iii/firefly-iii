@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -35,9 +34,7 @@ use Navigation;
 use Preferences;
 
 /**
- * Class JavascriptController
- *
- * @package FireflyIII\Http\Controllers
+ * Class JavascriptController.
  */
 class JavascriptController extends Controller
 {
@@ -53,18 +50,16 @@ class JavascriptController extends Controller
         $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
         $default    = $currencyRepository->findByCode($preference->data);
 
-        $data = ['accounts' => [],];
-
+        $data = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId                    = $account->id;
             $currency                     = intval($account->getMeta('currency_id'));
-            $currency                     = $currency === 0 ? $default->id : $currency;
+            $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
         }
-
 
         return response()
             ->view('javascript.accounts', $data, 200)
@@ -79,7 +74,7 @@ class JavascriptController extends Controller
     public function currencies(CurrencyRepositoryInterface $repository)
     {
         $currencies = $repository->get();
-        $data       = ['currencies' => [],];
+        $data       = ['currencies' => []];
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             $currencyId                      = $currency->id;
@@ -179,7 +174,6 @@ class JavascriptController extends Controller
                 'ranges'      => $ranges,
             ],
         ];
-
 
         return $return;
     }

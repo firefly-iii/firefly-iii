@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -35,9 +34,7 @@ use Monolog\Formatter\LineFormatter;
 use Preferences;
 
 /**
- * Class CreateImport
- *
- * @package FireflyIII\Console\Commands
+ * Class CreateImport.
  */
 class CreateImport extends Command
 {
@@ -65,7 +62,6 @@ class CreateImport extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -98,7 +94,7 @@ class CreateImport extends Command
         }
 
         $configurationData = json_decode(file_get_contents($configuration));
-        if (is_null($configurationData)) {
+        if (null === $configurationData) {
             $this->error(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
 
             return;
@@ -109,25 +105,21 @@ class CreateImport extends Command
         $this->line(sprintf('Import into user: #%d (%s)', $user->id, $user->email));
         $this->line(sprintf('Type of import: %s', $type));
 
-
         /** @var ImportJobRepositoryInterface $jobRepository */
         $jobRepository = app(ImportJobRepositoryInterface::class);
         $jobRepository->setUser($user);
         $job = $jobRepository->create($type);
         $this->line(sprintf('Created job "%s"', $job->key));
 
-
         Artisan::call('firefly:encrypt-file', ['file' => $file, 'key' => $job->key]);
         $this->line('Stored import data...');
-
 
         $job->configuration = $configurationData;
         $job->status        = 'configured';
         $job->save();
         $this->line('Stored configuration...');
 
-
-        if ($this->option('start') === true) {
+        if (true === $this->option('start')) {
             $this->line('The import will start in a moment. This process is not visible...');
             Log::debug('Go for import!');
 
@@ -137,7 +129,6 @@ class CreateImport extends Command
             $formatter = new LineFormatter(null, null, false, true);
             $handler->setFormatter($formatter);
             $monolog->pushHandler($handler);
-
 
             // start the actual routine:
             /** @var ImportRoutine $routine */
@@ -177,7 +168,7 @@ class CreateImport extends Command
         $cwd            = getcwd();
         $validTypes     = array_keys(config('firefly.import_formats'));
         $type           = strtolower($this->option('type'));
-        if (is_null($user->id)) {
+        if (null === $user->id) {
             $this->error(sprintf('There is no user with ID %d.', $this->option('user')));
 
             return false;

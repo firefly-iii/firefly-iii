@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
@@ -30,14 +29,10 @@ use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Date
- *
- * @package FireflyIII\Support\Binder
+ * Class Date.
  */
 class Date implements BinderInterface
 {
-
-
     /**
      * @param $value
      * @param $route
@@ -70,7 +65,6 @@ class Date implements BinderInterface
                 return $fiscalHelper->startOfFiscalYear(Carbon::now());
             case 'currentFiscalYearEnd':
                 return $fiscalHelper->endOfFiscalYear(Carbon::now());
-
         }
     }
 }

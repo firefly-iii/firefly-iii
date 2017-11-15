@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -29,13 +28,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class AddTag
- *
- * @package FireflyIII\TransactionRules\Actions
+ * Class AddTag.
  */
 class AddTag implements ActionInterface
 {
-
     /** @var RuleAction */
     private $action;
 
@@ -56,12 +52,11 @@ class AddTag implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
-
         // journal has this tag maybe?
         $tag = Tag::firstOrCreateEncrypted(['tag' => $this->action->action_value, 'user_id' => $journal->user->id]);
 
         $count = $journal->tags()->where('tag_id', $tag->id)->count();
-        if ($count === 0) {
+        if (0 === $count) {
             $journal->tags()->save($tag);
             Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal->id));
 

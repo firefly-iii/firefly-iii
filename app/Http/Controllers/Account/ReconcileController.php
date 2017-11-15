@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
@@ -37,9 +36,7 @@ use Response;
 use View;
 
 /**
- * Class ReconcileController
- *
- * @package FireflyIII\Http\Controllers\Account
+ * Class ReconcileController.
  */
 class ReconcileController extends Controller
 {
@@ -94,14 +91,14 @@ class ReconcileController extends Controller
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
-        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
+        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
         $currencyId    = intval($account->getMeta('currency_id'));
         $currency      = $currencyRepos->find($currencyId);
-        if ($currencyId === 0) {
+        if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency();
         }
 
@@ -109,11 +106,11 @@ class ReconcileController extends Controller
         $range = Preferences::get('viewRange', '1M')->data;
 
         // get start and end
-        if (is_null($start) && is_null($end)) {
+        if (null === $start && null === $end) {
             $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end   = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
         }
-        if (is_null($end)) {
+        if (null === $end) {
             $end = Navigation::endOfPeriod($start, $range);
         }
 
@@ -158,7 +155,7 @@ class ReconcileController extends Controller
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
-        if ($account->accountType->type === AccountType::INITIAL_BALANCE) {
+        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
 
@@ -167,7 +164,6 @@ class ReconcileController extends Controller
         $selectionStart->subDays(3);
         $selectionEnd = clone $end;
         $selectionEnd->addDays(3);
-
 
         // grab transactions:
         /** @var JournalCollectorInterface $collector */

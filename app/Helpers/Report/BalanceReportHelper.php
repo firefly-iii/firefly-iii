@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
@@ -34,15 +33,13 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class BalanceReportHelper
+ * Class BalanceReportHelper.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // I can't really help it.
- * @package FireflyIII\Helpers\Report
  */
 class BalanceReportHelper implements BalanceReportHelperInterface
 {
-
-    /** @var  BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface */
     protected $budgetRepository;
 
     /**
@@ -55,7 +52,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     {
         $this->budgetRepository = $budgetRepository;
     }
-
 
     /**
      * @param Collection $accounts
@@ -77,7 +73,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
-            if (!is_null($budgetLimit->budget)) {
+            if (null !== $budgetLimit->budget) {
                 $line = $this->createBalanceLine($budgetLimit, $accounts);
                 $balance->addBalanceLine($line);
             }
@@ -95,7 +91,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
 
         return $balance;
     }
-
 
     /**
      * @param BudgetLimit $budgetLimit
@@ -126,7 +121,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         return $line;
     }
 
-
     /**
      * @param Collection $accounts
      * @param Carbon     $start
@@ -150,7 +144,6 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         return $empty;
     }
 
-
     /**
      * @param Balance $balance
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly 5.
@@ -162,7 +155,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
         $set    = $balance->getBalanceLines();
         $newSet = new Collection;
         foreach ($set as $entry) {
-            if (!is_null($entry->getBudget()->id)) {
+            if (null !== $entry->getBudget()->id) {
                 $sum = '0';
                 foreach ($entry->getBalanceEntries() as $balanceEntry) {
                     $sum = bcadd($sum, $balanceEntry->getSpent());

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
@@ -32,13 +31,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
- * Interface JournalRepositoryInterface
- *
- * @package FireflyIII\Repositories\Journal
+ * Interface JournalRepositoryInterface.
  */
 interface JournalRepositoryInterface
 {
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -66,7 +62,7 @@ interface JournalRepositoryInterface
     public function delete(TransactionJournal $journal): bool;
 
     /**
-     * Find a specific journal
+     * Find a specific journal.
      *
      * @param int $journalId
      *
@@ -89,7 +85,7 @@ interface JournalRepositoryInterface
     public function findTransaction(int $transactionid): ?Transaction;
 
     /**
-     * Get users very first transaction journal
+     * Get users very first transaction journal.
      *
      * @return TransactionJournal
      */

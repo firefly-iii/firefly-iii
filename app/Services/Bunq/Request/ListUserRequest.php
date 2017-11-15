@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
@@ -29,19 +28,17 @@ use FireflyIII\Services\Bunq\Object\UserPerson;
 use FireflyIII\Services\Bunq\Token\SessionToken;
 
 /**
- * Class ListUserRequest
- *
- * @package FireflyIII\Services\Bunq\Request
+ * Class ListUserRequest.
  */
 class ListUserRequest extends BunqRequest
 {
-    /** @var  SessionToken */
+    /** @var SessionToken */
     private $sessionToken;
-    /** @var  UserCompany */
+    /** @var UserCompany */
     private $userCompany;
-    /** @var  UserLight */
+    /** @var UserLight */
     private $userLight;
-    /** @var  UserPerson */
+    /** @var UserPerson */
     private $userPerson;
 
     /**
@@ -89,7 +86,6 @@ class ListUserRequest extends BunqRequest
     {
         return $this->userPerson;
     }
-
 
     /**
      * @param SessionToken $sessionToken

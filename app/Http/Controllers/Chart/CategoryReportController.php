@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -44,13 +43,10 @@ use Response;
  * Separate controller because many helper functions are shared.
  *
  * Class CategoryReportController
- *
- * @package FireflyIII\Http\Controllers\Chart
  */
 class CategoryReportController extends Controller
 {
-
-    /** @var  GeneratorInterface */
+    /** @var GeneratorInterface */
     private $generator;
 
     /**
@@ -81,7 +77,7 @@ class CategoryReportController extends Controller
     {
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
-        $helper->setAccounts($accounts)->setCategories($categories)->setStart($start)->setEnd($end)->setCollectOtherObjects(intval($others) === 1);
+        $helper->setAccounts($accounts)->setCategories($categories)->setStart($start)->setEnd($end)->setCollectOtherObjects(1 === intval($others));
 
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
@@ -106,7 +102,7 @@ class CategoryReportController extends Controller
         $helper->setCategories($categories);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('income', 'account');
         $data      = $this->generator->pieChart($chartData);
 
@@ -130,7 +126,7 @@ class CategoryReportController extends Controller
         $helper->setCategories($categories);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('expense', 'category');
         $data      = $this->generator->pieChart($chartData);
 
@@ -148,14 +144,13 @@ class CategoryReportController extends Controller
      */
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end, string $others)
     {
-
         /** @var MetaPieChartInterface $helper */
         $helper = app(MetaPieChartInterface::class);
         $helper->setAccounts($accounts);
         $helper->setCategories($categories);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('income', 'category');
         $data      = $this->generator->pieChart($chartData);
 
@@ -236,7 +231,6 @@ class CategoryReportController extends Controller
                 $currentIncome  = $income[$category->id] ?? '0';
                 $currentExpense = $expenses[$category->id] ?? '0';
 
-
                 // add to sum:
                 $sumOfIncome[$category->id]  = $sumOfIncome[$category->id] ?? '0';
                 $sumOfExpense[$category->id] = $sumOfExpense[$category->id] ?? '0';
@@ -255,11 +249,11 @@ class CategoryReportController extends Controller
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
-            if (!array_sum($entry['entries']) === 0) {
+            if (0 === !array_sum($entry['entries'])) {
                 $newSet[$key] = $chartData[$key];
             }
         }
-        if (count($newSet) === 0) {
+        if (0 === count($newSet)) {
             $newSet = $chartData;
         }
         $data = $this->generator->multiSet($newSet);
@@ -267,7 +261,6 @@ class CategoryReportController extends Controller
 
         return Response::json($data);
     }
-
 
     /**
      * @param Collection $accounts

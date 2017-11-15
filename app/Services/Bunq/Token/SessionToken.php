@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Bunq\Token;
@@ -26,9 +25,7 @@ namespace Bunq\Token;
 namespace FireflyIII\Services\Bunq\Token;
 
 /**
- * Class SessionToken
- *
- * @package FireflyIII\Services\Bunq\Token
+ * Class SessionToken.
  */
 class SessionToken extends BunqToken
 {

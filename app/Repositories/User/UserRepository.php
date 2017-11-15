@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
@@ -31,13 +30,10 @@ use Log;
 use Preferences;
 
 /**
- * Class UserRepository
- *
- * @package FireflyIII\Repositories\User
+ * Class UserRepository.
  */
 class UserRepository implements UserRepositoryInterface
 {
-
     /**
      * @return Collection
      */
@@ -153,7 +149,7 @@ class UserRepository implements UserRepositoryInterface
     public function find(int $userId): User
     {
         $user = User::find($userId);
-        if (!is_null($user)) {
+        if (null !== $user) {
             return $user;
         }
 
@@ -183,14 +179,14 @@ class UserRepository implements UserRepositoryInterface
 
         // two factor:
         $is2faEnabled      = Preferences::getForUser($user, 'twoFactorAuthEnabled', false)->data;
-        $has2faSecret      = !is_null(Preferences::getForUser($user, 'twoFactorAuthSecret'));
+        $has2faSecret      = null !== Preferences::getForUser($user, 'twoFactorAuthSecret');
         $return['has_2fa'] = false;
         if ($is2faEnabled && $has2faSecret) {
             $return['has_2fa'] = true;
         }
 
         $return['is_admin']            = $user->hasRole('owner');
-        $return['blocked']             = intval($user->blocked) === 1;
+        $return['blocked']             = 1 === intval($user->blocked);
         $return['blocked_code']        = $user->blocked_code;
         $return['accounts']            = $user->accounts()->count();
         $return['journals']            = $user->transactionJournals()->count();

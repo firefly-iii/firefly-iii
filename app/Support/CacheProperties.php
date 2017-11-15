@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -28,14 +27,11 @@ use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
 /**
- * Class CacheProperties
- *
- * @package FireflyIII\Support
+ * Class CacheProperties.
  */
 class CacheProperties
 {
-
-    /** @var  string */
+    /** @var string */
     protected $hash = '';
     /** @var Collection */
     protected $properties;
@@ -81,7 +77,7 @@ class CacheProperties
      */
     public function has(): bool
     {
-        if (getenv('APP_ENV') === 'testing') {
+        if ('testing' === getenv('APP_ENV')) {
             return false;
         }
         $this->hash();
@@ -98,7 +94,6 @@ class CacheProperties
     }
 
     /**
-     * @return void
      */
     private function hash()
     {

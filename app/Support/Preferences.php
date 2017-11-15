@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -30,9 +29,7 @@ use Illuminate\Support\Collection;
 use Session;
 
 /**
- * Class Preferences
- *
- * @package FireflyIII\Support
+ * Class Preferences.
  */
 class Preferences
 {
@@ -53,6 +50,7 @@ class Preferences
      * @param $name
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function delete(string $name): bool
@@ -87,7 +85,7 @@ class Preferences
     public function get($name, $default = null)
     {
         $user = auth()->user();
-        if (is_null($user)) {
+        if (null === $user) {
             return $default;
         }
 
@@ -119,7 +117,7 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param      string      $name
+     * @param string           $name
      * @param null|string      $default
      *
      * @return \FireflyIII\Models\Preference|null
@@ -139,7 +137,7 @@ class Preferences
             return $preference;
         }
         // no preference found and default is null:
-        if (is_null($default)) {
+        if (null === $default) {
             // return NULL
             return null;
         }
@@ -154,7 +152,7 @@ class Preferences
     {
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
-        if (!is_null($preference)) {
+        if (null !== $preference) {
             $lastActivity = $preference->data;
         }
 
@@ -173,15 +171,15 @@ class Preferences
     }
 
     /**
-     * @param        $name
-     * @param        $value
+     * @param   $name
+     * @param   $value
      *
      * @return Preference
      */
     public function set($name, $value): Preference
     {
         $user = auth()->user();
-        if (is_null($user)) {
+        if (null === $user) {
             // make new preference, return it:
             $pref       = new Preference;
             $pref->name = $name;
@@ -206,7 +204,7 @@ class Preferences
         Cache::forget($fullName);
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data']);
 
-        if (!is_null($pref)) {
+        if (null !== $pref) {
             $pref->data = $value;
             $pref->save();
 

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -38,7 +37,7 @@ use Session;
 use View;
 
 /**
- * Class TagController
+ * Class TagController.
  *
  * Remember: a balancingAct takes at most one expense and one transfer.
  *           an advancePayment takes at most one expense, infinite deposits and NO transfers.
@@ -47,13 +46,10 @@ use View;
  *  Other attempts to put in such a tag are blocked.
  *  also show an error when editing a tag and it becomes either
  *  of these two types. Or rather, block editing of the tag.
- *
- * @package FireflyIII\Http\Controllers
  */
 class TagController extends Controller
 {
-
-    /** @var  TagRepositoryInterface */
+    /** @var TagRepositoryInterface */
     protected $repository;
 
     /**
@@ -88,7 +84,7 @@ class TagController extends Controller
         $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('tags.create.fromStore') !== true) {
+        if (true !== session('tags.create.fromStore')) {
             $this->rememberPreviousUri('tags.create.uri');
         }
         Session::forget('tags.create.fromStore');
@@ -99,7 +95,7 @@ class TagController extends Controller
     }
 
     /**
-     * Delete a tag
+     * Delete a tag.
      *
      * @param Tag $tag
      *
@@ -134,7 +130,7 @@ class TagController extends Controller
     }
 
     /**
-     * Edit a tag
+     * Edit a tag.
      *
      * @param Tag $tag
      *
@@ -147,7 +143,7 @@ class TagController extends Controller
         $apiKey       = env('GOOGLE_MAPS_API_KEY', '');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('tags.edit.fromUpdate') !== true) {
+        if (true !== session('tags.edit.fromUpdate')) {
             $this->rememberPreviousUri('tags.edit.uri');
         }
         Session::forget('tags.edit.fromUpdate');
@@ -158,7 +154,7 @@ class TagController extends Controller
     }
 
     /**
-     * View all tags
+     * View all tags.
      *
      * @param TagRepositoryInterface $repository
      *
@@ -170,13 +166,13 @@ class TagController extends Controller
         $oldestTag = $repository->oldestTag();
         /** @var Carbon $start */
         $start = new Carbon;
-        if (!is_null($oldestTag)) {
+        if (null !== $oldestTag) {
             /** @var Carbon $start */
             $start = $oldestTag->date;
         }
-        if (is_null($oldestTag)) {
+        if (null === $oldestTag) {
             /** @var Carbon $start */
-            $start = clone(session('first'));
+            $start = clone session('first');
         }
 
         $now               = new Carbon;
@@ -216,7 +212,7 @@ class TagController extends Controller
         $path         = route('tags.show', [$tag->id]);
 
         // prep for "all" view.
-        if ($moment === 'all') {
+        if ('all' === $moment) {
             $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
             $start    = $repository->firstUseDate($tag);
             $end      = new Carbon;
@@ -224,20 +220,20 @@ class TagController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && $moment !== 'all') {
+        if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
             $subTitle = trans(
                 'firefly.journals_in_period_for_tag',
                 ['tag'   => $tag->tag,
-                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
             );
             $periods  = $this->getPeriodOverview($tag);
             $path     = route('tags.show', [$tag->id, $moment]);
         }
 
         // prep for current period
-        if (strlen($moment) === 0) {
+        if (0 === strlen($moment)) {
             /** @var Carbon $start */
             $start = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
@@ -274,7 +270,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.created_tag', ['tag' => $data['tag']])));
         Preferences::mark();
 
-        if (intval($request->get('create_another')) === 1) {
+        if (1 === intval($request->get('create_another'))) {
             // @codeCoverageIgnoreStart
             Session::put('tags.create.fromStore', true);
 
@@ -299,7 +295,7 @@ class TagController extends Controller
         Session::flash('success', strval(trans('firefly.updated_tag', ['tag' => $data['tag']])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             Session::put('tags.edit.fromUpdate', true);
 

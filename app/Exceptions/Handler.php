@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * Handler.php
@@ -58,14 +56,13 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport
         = [
-            //
         ];
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Exception               $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $exception
      *
      * @return \Illuminate\Http\Response
      */
@@ -86,9 +83,8 @@ class Handler extends ExceptionHandler
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
-     * @param  \Exception $exception
      *
-     * @return void
+     * @param \Exception $exception
      */
     public function report(Exception $exception)
     {
@@ -118,7 +114,6 @@ class Handler extends ExceptionHandler
             $job       = new MailError($userData, env('SITE_OWNER', ''), $ipAddress, $data);
             dispatch($job);
         }
-
 
         parent::report($exception);
     }

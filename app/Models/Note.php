@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -27,9 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 use League\CommonMark\CommonMarkConverter;
 
 /**
- * Class Note
- *
- * @package FireflyIII\Models
+ * Class Note.
  */
 class Note extends Model
 {
@@ -59,7 +56,7 @@ class Note extends Model
 
     /**
      * Get all of the owning noteable models. Currently piggy bank and
-     * transaction journal
+     * transaction journal.
      */
     public function noteable()
     {

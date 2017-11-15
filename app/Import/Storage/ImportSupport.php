@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
@@ -46,17 +45,15 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Trait ImportSupport
- *
- * @package FireflyIII\Import\Storage
+ * Trait ImportSupport.
  */
 trait ImportSupport
 {
     /** @var int */
     protected $defaultCurrencyId = 1;
-    /** @var  ImportJob */
+    /** @var ImportJob */
     protected $job;
-    /** @var  Collection */
+    /** @var Collection */
     protected $rules;
 
     /**
@@ -88,6 +85,7 @@ trait ImportSupport
      * @param array $parameters
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     private function createTransaction(array $parameters): bool
@@ -100,7 +98,7 @@ trait ImportSupport
         $transaction->foreign_currency_id     = $parameters['foreign_currency'];
         $transaction->foreign_amount          = $parameters['foreign_amount'];
         $transaction->save();
-        if (is_null($transaction->id)) {
+        if (null === $transaction->id) {
             $errorText = join(', ', $transaction->getErrors()->all());
             throw new FireflyException($errorText);
         }
@@ -129,7 +127,7 @@ trait ImportSupport
 
         // use given currency
         $currency = $importJournal->currency->getTransactionCurrency();
-        if (!is_null($currency->id)) {
+        if (null !== $currency->id) {
             return $currency->id;
         }
 
@@ -154,7 +152,7 @@ trait ImportSupport
     {
         // use given currency by import journal.
         $currency = $importJournal->currency->getTransactionCurrency();
-        if (!is_null($currency->id) && $currency->id !== $currencyId) {
+        if (null !== $currency->id && $currency->id !== $currencyId) {
             return $currency->id;
         }
 
@@ -226,7 +224,9 @@ trait ImportSupport
      * @param Account $account
      *
      * @return string
+     *
      * @throws FireflyException
+     *
      * @see ImportSupport::getOpposingAccount()
      */
     private function getTransactionType(string $amount, Account $account): string
@@ -237,18 +237,18 @@ trait ImportSupport
             $transactionType = TransactionType::WITHDRAWAL;
         }
 
-        if (bccomp($amount, '0') === 1) {
+        if (1 === bccomp($amount, '0')) {
             $transactionType = TransactionType::DEPOSIT;
         }
 
         // if opposing is an asset account, it's a transfer:
-        if ($account->accountType->type === AccountType::ASSET) {
+        if (AccountType::ASSET === $account->accountType->type) {
             Log::debug(sprintf('Opposing account #%d %s is an asset account, make transfer.', $account->id, $account->name));
             $transactionType = TransactionType::TRANSFER;
         }
 
         // verify that opposing account is of the correct type:
-        if ($account->accountType->type === AccountType::EXPENSE && $transactionType !== TransactionType::WITHDRAWAL) {
+        if (AccountType::EXPENSE === $account->accountType->type && TransactionType::WITHDRAWAL !== $transactionType) {
             $message = 'This row is imported as a withdrawal but opposing is an expense account. This cannot be!';
             Log::error($message);
             throw new FireflyException($message);
@@ -289,8 +289,8 @@ trait ImportSupport
                                    ->where('transaction_types.type', TransactionType::TRANSFER)
                                    ->get(
                                        ['transaction_journals.id', 'transaction_journals.encrypted', 'transaction_journals.description',
-                                        'source_accounts.name as source_name', 'destination_accounts.name as destination_name', 'destination.amount'
-                                        , 'transaction_journals.date']
+                                        'source_accounts.name as source_name', 'destination_accounts.name as destination_name', 'destination.amount',
+                                        'transaction_journals.date',]
                                    );
         $array = [];
         /** @var TransactionJournal $entry */
@@ -323,7 +323,7 @@ trait ImportSupport
                                        ->where('data', $json)
                                        ->where('name', 'importHash')
                                        ->first();
-        if (!is_null($entry)) {
+        if (null !== $entry) {
             Log::error(sprintf('A journal with hash %s has already been imported (spoiler: it\'s journal #%d)', $hash, $entry->transaction_journal_id));
 
             return true;
@@ -338,7 +338,7 @@ trait ImportSupport
      */
     private function storeBill(TransactionJournal $journal, Bill $bill)
     {
-        if (!is_null($bill->id)) {
+        if (null !== $bill->id) {
             Log::debug(sprintf('Linked bill #%d to journal #%d', $bill->id, $journal->id));
             $journal->bill()->associate($bill);
             $journal->save();
@@ -351,7 +351,7 @@ trait ImportSupport
      */
     private function storeBudget(TransactionJournal $journal, Budget $budget)
     {
-        if (!is_null($budget->id)) {
+        if (null !== $budget->id) {
             Log::debug(sprintf('Linked budget #%d to journal #%d', $budget->id, $journal->id));
             $journal->budgets()->save($budget);
         }
@@ -363,7 +363,7 @@ trait ImportSupport
      */
     private function storeCategory(TransactionJournal $journal, Category $category)
     {
-        if (!is_null($category->id)) {
+        if (null !== $category->id) {
             Log::debug(sprintf('Linked category #%d to journal #%d', $category->id, $journal->id));
             $journal->categories()->save($category);
         }
@@ -403,7 +403,7 @@ trait ImportSupport
             'currency'         => $parameters['currency'],
             'amount'           => $parameters['amount'],
             'foreign_currency' => $parameters['foreign_currency'],
-            'foreign_amount'   => is_null($parameters['foreign_currency']) ? null : $parameters['amount'],
+            'foreign_amount'   => null === $parameters['foreign_currency'] ? null : $parameters['amount'],
         ];
         $opposite = app('steam')->opposite($parameters['amount']);
         $two      = [
@@ -412,7 +412,7 @@ trait ImportSupport
             'currency'         => $parameters['currency'],
             'amount'           => $opposite,
             'foreign_currency' => $parameters['foreign_currency'],
-            'foreign_amount'   => is_null($parameters['foreign_currency']) ? null : $opposite,
+            'foreign_amount'   => null === $parameters['foreign_currency'] ? null : $opposite,
         ];
         $this->createTransaction($one);
         $this->createTransaction($two);
@@ -449,10 +449,10 @@ trait ImportSupport
 
         foreach ($tags as $tag) {
             $dbTag = $repository->findByTag($tag);
-            if (is_null($dbTag->id)) {
+            if (null === $dbTag->id) {
                 $dbTag = $repository->store(
                     ['tag'       => $tag, 'date' => null, 'description' => null, 'latitude' => null, 'longitude' => null,
-                     'zoomLevel' => null, 'tagMode' => 'nothing']
+                     'zoomLevel' => null, 'tagMode' => 'nothing',]
                 );
             }
             $journal->tags()->save($dbTag);

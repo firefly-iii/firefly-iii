@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
@@ -37,17 +36,15 @@ use Log;
  * @codeCoverageIgnore
  *
  * Class StoredJournalEventHandler
- *
- * @package FireflyIII\Handlers\Events
  */
 class StoredJournalEventHandler
 {
-    /** @var  JRI */
+    /** @var JRI */
     public $journalRepository;
-    /** @var  PRI */
+    /** @var PRI */
     public $repository;
 
-    /** @var  RGRI */
+    /** @var RGRI */
     public $ruleGroupRepository;
 
     /**
@@ -88,7 +85,7 @@ class StoredJournalEventHandler
         }
 
         // piggy exists?
-        if (is_null($piggyBank->id)) {
+        if (null === $piggyBank->id) {
             Log::error(sprintf('There is no piggy bank with ID #%d', $piggyBankId));
 
             return true;
@@ -96,7 +93,7 @@ class StoredJournalEventHandler
 
         // repetition exists?
         $repetition = $this->repository->getRepetition($piggyBank, $journal->date);
-        if (is_null($repetition->id)) {
+        if (null === $repetition->id) {
             Log::error(sprintf('No piggy bank repetition on %s!', $journal->date->format('Y-m-d')));
 
             return true;
@@ -104,7 +101,7 @@ class StoredJournalEventHandler
 
         // get the amount
         $amount = $this->repository->getExactAmount($piggyBank, $repetition, $journal);
-        if (bccomp($amount, '0') === 0) {
+        if (0 === bccomp($amount, '0')) {
             Log::debug('Amount is zero, will not create event.');
 
             return true;

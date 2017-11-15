@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
@@ -27,13 +26,10 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 
 /**
- * Class Tags
- *
- * @package FireflyIII\Import\Mapper
+ * Class Tags.
  */
 class Tags implements MapperInterface
 {
-
     /**
      * @return array
      */

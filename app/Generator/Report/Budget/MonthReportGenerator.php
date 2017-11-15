@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Budget;
@@ -36,23 +35,21 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class MonthReportGenerator
- *
- * @package FireflyIII\Generator\Report\Budget
+ * Class MonthReportGenerator.
  */
 class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
-    /** @var  Collection */
+    /** @var Collection */
     private $accounts;
-    /** @var  Collection */
+    /** @var Collection */
     private $budgets;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $end;
     /** @var Collection */
     private $expenses;
     /** @var Collection */
     private $income;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $start;
 
     /**

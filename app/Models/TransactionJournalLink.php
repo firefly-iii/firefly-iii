@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -29,9 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class TransactionJournalLink
- *
- * @package FireflyIII\Models
+ * Class TransactionJournalLink.
  */
 class TransactionJournalLink extends Model
 {
@@ -41,6 +38,7 @@ class TransactionJournalLink extends Model
      * @param $value
      *
      * @return mixed
+     *
      * @throws NotFoundHttpException
      */
     public static function routeBinder($value)
@@ -52,7 +50,7 @@ class TransactionJournalLink extends Model
                          ->where('t_a.user_id', auth()->user()->id)
                          ->where('t_b.user_id', auth()->user()->id)
                          ->first(['journal_links.*']);
-            if (!is_null($model)) {
+            if (null !== $model) {
                 return $model;
             }
         }
@@ -74,7 +72,7 @@ class TransactionJournalLink extends Model
      */
     public function getCommentAttribute($value): ?string
     {
-        if (!is_null($value)) {
+        if (null !== $value) {
             return Crypt::decrypt($value);
         }
 
@@ -90,12 +88,11 @@ class TransactionJournalLink extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setCommentAttribute($value): void
     {
-        if (!is_null($value) && strlen($value) > 0) {
+        if (null !== $value && strlen($value) > 0) {
             $this->attributes['comment'] = Crypt::encrypt($value);
 
             return;

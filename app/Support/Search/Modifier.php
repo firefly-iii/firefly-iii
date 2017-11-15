@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
@@ -56,6 +55,7 @@ class Modifier
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public static function apply(array $modifier, Transaction $transaction): bool
@@ -149,7 +149,7 @@ class Modifier
      */
     public static function stringCompare(string $haystack, string $needle): bool
     {
-        $res = !(strpos(strtolower($haystack), strtolower($needle)) === false);
+        $res = !(false === strpos(strtolower($haystack), strtolower($needle)));
         Log::debug(sprintf('"%s" is in "%s"? %s', $needle, $haystack, var_export($res, true)));
 
         return $res;
@@ -164,11 +164,11 @@ class Modifier
     private static function budget(Transaction $transaction, string $search): bool
     {
         $journalBudget = '';
-        if (!is_null($transaction->transaction_journal_budget_name)) {
+        if (null !== $transaction->transaction_journal_budget_name) {
             $journalBudget = Steam::decrypt(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
         }
         $transactionBudget = '';
-        if (!is_null($transaction->transaction_budget_name)) {
+        if (null !== $transaction->transaction_budget_name) {
             $journalBudget = Steam::decrypt(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
         }
 
@@ -184,11 +184,11 @@ class Modifier
     private static function category(Transaction $transaction, string $search): bool
     {
         $journalCategory = '';
-        if (!is_null($transaction->transaction_journal_category_name)) {
+        if (null !== $transaction->transaction_journal_category_name) {
             $journalCategory = Steam::decrypt(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
         }
         $transactionCategory = '';
-        if (!is_null($transaction->transaction_category_name)) {
+        if (null !== $transaction->transaction_category_name) {
             $journalCategory = Steam::decrypt(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
         }
 

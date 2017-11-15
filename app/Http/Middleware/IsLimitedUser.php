@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -30,18 +29,16 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 
 /**
- * Class IsAdmin
- *
- * @package FireflyIII\Http\Middleware
+ * Class IsAdmin.
  */
 class IsLimitedUser
 {
     /**
      * Handle an incoming request. May not be a limited user (ie. Sandstorm env. or demo user).
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  string|null              $guard
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null              $guard
      *
      * @return mixed
      */
@@ -62,7 +59,7 @@ class IsLimitedUser
             return redirect(route('index'));
         }
 
-        if (intval(getenv('SANDSTORM')) === 1) {
+        if (1 === intval(getenv('SANDSTORM'))) {
             Session::flash('warning', strval(trans('firefly.sandstorm_not_available')));
 
             return redirect(route('index'));

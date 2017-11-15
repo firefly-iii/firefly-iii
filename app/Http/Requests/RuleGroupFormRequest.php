@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 
 /**
- * Class RuleGroupFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class RuleGroupFormRequest.
  */
 class RuleGroupFormRequest extends Request
 {
@@ -62,7 +58,7 @@ class RuleGroupFormRequest extends Request
         /** @var RuleGroupRepositoryInterface $repository */
         $repository = app(RuleGroupRepositoryInterface::class);
         $titleRule  = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . intval($this->get('id'));
         }
 

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -30,9 +29,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Tag
- *
- * @package FireflyIII\Models
+ * Class Tag.
  */
 class Tag extends Model
 {
@@ -50,15 +47,13 @@ class Tag extends Model
             'deleted_at' => 'datetime',
             'date'       => 'date',
             'zoomLevel'  => 'int',
-
         ];
     /** @var array */
     protected $dates = ['date'];
     /** @var array */
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
     /** @var array */
-    protected $rules = ['tag' => 'required|between:1,200',];
-
+    protected $rules = ['tag' => 'required|between:1,200'];
 
     /**
      * @param array $fields
@@ -96,7 +91,7 @@ class Tag extends Model
      *
      * @return Tag
      */
-    public static function routeBinder(Tag $value)
+    public static function routeBinder(self $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {
@@ -111,7 +106,7 @@ class Tag extends Model
      *
      * @return string
      */
-    public static function tagSum(Tag $tag): string
+    public static function tagSum(self $tag): string
     {
         $sum = '0';
         /** @var TransactionJournal $journal */
@@ -123,14 +118,13 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
      */
     public function getDescriptionAttribute($value)
     {
-        if (is_null($value)) {
+        if (null === $value) {
             return $value;
         }
 
@@ -138,14 +132,13 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
      */
     public function getTagAttribute($value)
     {
-        if (is_null($value)) {
+        if (null === $value) {
             return null;
         }
 
@@ -155,7 +148,7 @@ class Tag extends Model
     /**
      * Save the model to the database.
      *
-     * @param  array $options
+     * @param array $options
      *
      * @return bool
      */
@@ -171,7 +164,6 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -180,7 +172,6 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setTagAttribute($value)

@@ -1,7 +1,7 @@
 <?php
 /**
  * TriggerFactory.php
- * Copyright (C) 2016 Robert Horlings
+ * Copyright (C) 2016 Robert Horlings.
  *
  * This file is part of Firefly III.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Factory;
@@ -33,8 +32,6 @@ use Log;
 /**
  * @codeCoverageIgnore
  * Interface TriggerInterface
- *
- * @package FireflyIII\TransactionRules\Triggers
  */
 class TriggerFactory
 {
@@ -78,7 +75,9 @@ class TriggerFactory
      * @param bool   $stopProcessing
      *
      * @see TriggerFactory::getTrigger
+     *
      * @return AbstractTrigger
+     *
      * @throws FireflyException
      */
     public static function makeTriggerFromStrings(string $triggerType, string $triggerValue, bool $stopProcessing)
@@ -98,7 +97,7 @@ class TriggerFactory
      */
     protected static function getTriggerTypes(): array
     {
-        if (count(self::$triggerTypes) === 0) {
+        if (0 === count(self::$triggerTypes)) {
             self::$triggerTypes = Domain::getRuleTriggers();
         }
 
@@ -113,6 +112,7 @@ class TriggerFactory
      * @param string $triggerType
      *
      * @return TriggerInterface|string
+     *
      * @throws FireflyException
      */
     private static function getTriggerClass(string $triggerType): string

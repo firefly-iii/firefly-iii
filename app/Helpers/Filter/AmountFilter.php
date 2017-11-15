@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
@@ -28,12 +27,10 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class AmountFilter
+ * Class AmountFilter.
  *
  * This filter removes transactions with either a positive amount ($parameters = 1) or a negative amount
  * ($parameter = -1). This is helpful when a Collection has you with both transactions in a journal.
- *
- * @package FireflyIII\Helpers\Filter
  */
 class AmountFilter implements FilterInterface
 {
