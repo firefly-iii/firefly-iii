@@ -40,28 +40,28 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function addFilter(string $filter): self;
+    public function addFilter(string $filter): JournalCollectorInterface;
 
     /**
      * @param string $amount
      *
      * @return JournalCollectorInterface
      */
-    public function amountIs(string $amount): self;
+    public function amountIs(string $amount): JournalCollectorInterface;
 
     /**
      * @param string $amount
      *
      * @return JournalCollectorInterface
      */
-    public function amountLess(string $amount): self;
+    public function amountLess(string $amount): JournalCollectorInterface;
 
     /**
      * @param string $amount
      *
      * @return JournalCollectorInterface
      */
-    public function amountMore(string $amount): self;
+    public function amountMore(string $amount): JournalCollectorInterface;
 
     /**
      * @return int
@@ -83,89 +83,89 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function removeFilter(string $filter): self;
+    public function removeFilter(string $filter): JournalCollectorInterface;
 
     /**
      * @param Collection $accounts
      *
      * @return JournalCollectorInterface
      */
-    public function setAccounts(Collection $accounts): self;
+    public function setAccounts(Collection $accounts): JournalCollectorInterface;
 
     /**
      * @param Carbon $after
      *
      * @return JournalCollectorInterface
      */
-    public function setAfter(Carbon $after): self;
+    public function setAfter(Carbon $after): JournalCollectorInterface;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function setAllAssetAccounts(): self;
+    public function setAllAssetAccounts(): JournalCollectorInterface;
 
     /**
      * @param Carbon $before
      *
      * @return JournalCollectorInterface
      */
-    public function setBefore(Carbon $before): self;
+    public function setBefore(Carbon $before): JournalCollectorInterface;
 
     /**
      * @param Collection $bills
      *
      * @return JournalCollectorInterface
      */
-    public function setBills(Collection $bills): self;
+    public function setBills(Collection $bills): JournalCollectorInterface;
 
     /**
      * @param Budget $budget
      *
      * @return JournalCollectorInterface
      */
-    public function setBudget(Budget $budget): self;
+    public function setBudget(Budget $budget): JournalCollectorInterface;
 
     /**
      * @param Collection $budgets
      *
      * @return JournalCollectorInterface
      */
-    public function setBudgets(Collection $budgets): self;
+    public function setBudgets(Collection $budgets): JournalCollectorInterface;
 
     /**
      * @param Collection $categories
      *
      * @return JournalCollectorInterface
      */
-    public function setCategories(Collection $categories): self;
+    public function setCategories(Collection $categories): JournalCollectorInterface;
 
     /**
      * @param Category $category
      *
      * @return JournalCollectorInterface
      */
-    public function setCategory(Category $category): self;
+    public function setCategory(Category $category): JournalCollectorInterface;
 
     /**
      * @param int $limit
      *
      * @return JournalCollectorInterface
      */
-    public function setLimit(int $limit): self;
+    public function setLimit(int $limit): JournalCollectorInterface;
 
     /**
      * @param int $offset
      *
      * @return JournalCollectorInterface
      */
-    public function setOffset(int $offset): self;
+    public function setOffset(int $offset): JournalCollectorInterface;
 
     /**
      * @param int $page
      *
      * @return JournalCollectorInterface
      */
-    public function setPage(int $page): self;
+    public function setPage(int $page): JournalCollectorInterface;
 
     /**
      * @param Carbon $start
@@ -173,28 +173,28 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function setRange(Carbon $start, Carbon $end): self;
+    public function setRange(Carbon $start, Carbon $end): JournalCollectorInterface;
 
     /**
      * @param Tag $tag
      *
      * @return JournalCollectorInterface
      */
-    public function setTag(Tag $tag): self;
+    public function setTag(Tag $tag): JournalCollectorInterface;
 
     /**
      * @param Collection $tags
      *
      * @return JournalCollectorInterface
      */
-    public function setTags(Collection $tags): self;
+    public function setTags(Collection $tags): JournalCollectorInterface;
 
     /**
      * @param array $types
      *
      * @return JournalCollectorInterface
      */
-    public function setTypes(array $types): self;
+    public function setTypes(array $types): JournalCollectorInterface;
 
     public function setUser(User $user);
 
@@ -206,25 +206,25 @@ interface JournalCollectorInterface
     /**
      * @return JournalCollectorInterface
      */
-    public function withBudgetInformation(): self;
+    public function withBudgetInformation(): JournalCollectorInterface;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withCategoryInformation(): self;
+    public function withCategoryInformation(): JournalCollectorInterface;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withOpposingAccount(): self;
+    public function withOpposingAccount(): JournalCollectorInterface;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withoutBudget(): self;
+    public function withoutBudget(): JournalCollectorInterface;
 
     /**
      * @return JournalCollectorInterface
      */
-    public function withoutCategory(): self;
+    public function withoutCategory(): JournalCollectorInterface;
 }
