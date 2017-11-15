@@ -323,6 +323,8 @@ class TagRepository implements TagRepositoryInterface
         $min    = null;
         $max    = '0';
         $return = [];
+        // get all tags
+        $allTags = $this->user->tags();
         // get tags with a certain amount (in this range):
         $query = $this->user->tags()
                             ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
@@ -334,11 +336,13 @@ class TagRepository implements TagRepositoryInterface
         // add date range (or not):
         if (null === $year) {
             $query->whereNull('tags.date');
+            $allTags->whereNull('date');
         }
         if (null !== $year) {
             $start = $year . '-01-01';
             $end   = $year . '-12-31';
             $query->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
+            $allTags->where('date', '>=', $start)->where('date', '<=', $end);
         }
         $set             = $query->get(['tags.id', DB::raw('SUM(transactions.amount) as amount_sum')]);
         $tagsWithAmounts = [];
@@ -347,16 +351,6 @@ class TagRepository implements TagRepositoryInterface
             $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
         }
 
-        // get all tags in period:
-        $query = $this->user->tags();
-        if (null !== $year) {
-            $start = $year . '-01-01';
-            $end   = $year . '-12-31';
-            $query->where('date', '>=', $start)->where('date', '<=', $end);
-        }
-        if (null === $year) {
-            $query->whereNull('date');
-        }
         $tags      = $query->orderBy('id', 'desc')->get();
         $temporary = [];
         /** @var Tag $tag */
