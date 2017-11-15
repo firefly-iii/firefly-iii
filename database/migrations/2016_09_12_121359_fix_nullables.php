@@ -24,7 +24,6 @@ class FixNullables extends Migration
      */
     public function down()
     {
-
     }
 
     /**
@@ -35,15 +34,17 @@ class FixNullables extends Migration
     public function up()
     {
         Schema::table(
-            'rule_groups', function (Blueprint $table) {
-            $table->text('description')->nullable()->change();
-        }
+            'rule_groups',
+            function (Blueprint $table) {
+                $table->text('description')->nullable()->change();
+            }
         );
 
         Schema::table(
-            'rules', function (Blueprint $table) {
-            $table->text('description')->nullable()->change();
-        }
+            'rules',
+            function (Blueprint $table) {
+                $table->text('description')->nullable()->change();
+            }
         );
     }
 }

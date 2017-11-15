@@ -31,6 +31,4 @@ class AccountTypeSeeder extends Seeder
         AccountType::create(['type' => 'Import account']);
         AccountType::create(['type' => 'Loan']);
     }
-
-
-} 
+}

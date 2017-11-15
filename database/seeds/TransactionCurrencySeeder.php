@@ -30,5 +30,4 @@ class TransactionCurrencySeeder extends Seeder
         TransactionCurrency::create(['code' => 'XBT', 'name' => 'Bitcoin', 'symbol' => 'B', 'decimal_places' => 8]);
         TransactionCurrency::create(['code' => 'JPY', 'name' => 'Japanese yen', 'symbol' => '¥', 'decimal_places' => 2]);
     }
-
-} 
+}

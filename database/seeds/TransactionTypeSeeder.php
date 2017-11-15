@@ -26,5 +26,4 @@ class TransactionTypeSeeder extends Seeder
         TransactionType::create(['type' => TransactionType::TRANSFER]);
         TransactionType::create(['type' => TransactionType::OPENING_BALANCE]);
     }
-
-} 
+}

@@ -27,9 +27,10 @@ class ChangesForV470a extends Migration
     public function up()
     {
         Schema::table(
-            'transactions', function (Blueprint $table) {
-            $table->boolean('reconciled')->after('deleted_at')->default(0);
-        }
+            'transactions',
+            function (Blueprint $table) {
+                $table->boolean('reconciled')->after('deleted_at')->default(0);
+            }
         );
     }
 }

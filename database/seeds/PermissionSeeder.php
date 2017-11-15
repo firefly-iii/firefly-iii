@@ -33,7 +33,5 @@ class PermissionSeeder extends Seeder
         $demo->display_name = 'Demo User';
         $demo->description  = 'User is a demo user';
         $demo->save();
-
     }
-
 }

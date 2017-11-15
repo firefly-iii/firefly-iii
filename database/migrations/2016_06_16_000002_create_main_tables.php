@@ -82,33 +82,35 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('accounts')) {
             Schema::create(
-                'accounts', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->integer('account_type_id', false, true);
-                $table->string('name', 1024);
-                $table->decimal('virtual_balance', 22, 12)->nullable();
-                $table->string('iban', 255)->nullable();
-                $table->boolean('active')->default(1);
-                $table->boolean('encrypted')->default(0);
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('account_type_id')->references('id')->on('account_types')->onDelete('cascade');
-            }
+                'accounts',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->integer('account_type_id', false, true);
+                    $table->string('name', 1024);
+                    $table->decimal('virtual_balance', 22, 12)->nullable();
+                    $table->string('iban', 255)->nullable();
+                    $table->boolean('active')->default(1);
+                    $table->boolean('encrypted')->default(0);
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                    $table->foreign('account_type_id')->references('id')->on('account_types')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('account_meta')) {
             Schema::create(
-                'account_meta', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('account_id', false, true);
-                $table->string('name');
-                $table->text('data');
-                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-            }
+                'account_meta',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('account_id', false, true);
+                    $table->string('name');
+                    $table->text('data');
+                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                }
             );
         }
     }
@@ -118,30 +120,28 @@ class CreateMainTables extends Migration
      */
     private function createAttachmentsTable()
     {
-
         if (!Schema::hasTable('attachments')) {
             Schema::create(
-                'attachments', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->integer('attachable_id', false, true);
-                $table->string('attachable_type', 255);
-                $table->string('md5', 32);
-                $table->string('filename', 1024);
-                $table->string('title', 1024)->nullable();
-                $table->text('description')->nullable();
-                $table->text('notes')->nullable();
-                $table->string('mime', 1024);
-                $table->integer('size', false, true);
-                $table->boolean('uploaded')->default(1);
+                'attachments',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->integer('attachable_id', false, true);
+                    $table->string('attachable_type', 255);
+                    $table->string('md5', 32);
+                    $table->string('filename', 1024);
+                    $table->string('title', 1024)->nullable();
+                    $table->text('description')->nullable();
+                    $table->text('notes')->nullable();
+                    $table->string('mime', 1024);
+                    $table->integer('size', false, true);
+                    $table->boolean('uploaded')->default(1);
 
-                // link user id to users table
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-
-            }
+                    // link user id to users table
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
     }
@@ -153,26 +153,27 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('bills')) {
             Schema::create(
-                'bills', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->string('name', 1024);
-                $table->string('match', 1024);
-                $table->decimal('amount_min', 22, 12);
-                $table->decimal('amount_max', 22, 12);
-                $table->date('date');
-                $table->string('repeat_freq', 30);
-                $table->smallInteger('skip', false, true)->default(0);
-                $table->boolean('automatch')->default(1);
-                $table->boolean('active')->default(1);
-                $table->boolean('name_encrypted')->default(0);
-                $table->boolean('match_encrypted')->default(0);
+                'bills',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->string('name', 1024);
+                    $table->string('match', 1024);
+                    $table->decimal('amount_min', 22, 12);
+                    $table->decimal('amount_max', 22, 12);
+                    $table->date('date');
+                    $table->string('repeat_freq', 30);
+                    $table->smallInteger('skip', false, true)->default(0);
+                    $table->boolean('automatch')->default(1);
+                    $table->boolean('active')->default(1);
+                    $table->boolean('name_encrypted')->default(0);
+                    $table->boolean('match_encrypted')->default(0);
 
-                // link user id to users table
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                    // link user id to users table
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
     }
@@ -184,46 +185,46 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('budgets')) {
             Schema::create(
-                'budgets', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->string('name', 1024);
-                $table->boolean('active')->default(1);
-                $table->boolean('encrypted')->default(0);
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-
-            }
+                'budgets',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->string('name', 1024);
+                    $table->boolean('active')->default(1);
+                    $table->boolean('encrypted')->default(0);
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
         if (!Schema::hasTable('budget_limits')) {
             Schema::create(
-                'budget_limits', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('budget_id', false, true);
-                $table->date('startdate');
-                $table->decimal('amount', 22, 12);
-                $table->string('repeat_freq', 30);
-                $table->boolean('repeats')->default(0);
-                $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-
-            }
+                'budget_limits',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('budget_id', false, true);
+                    $table->date('startdate');
+                    $table->decimal('amount', 22, 12);
+                    $table->string('repeat_freq', 30);
+                    $table->boolean('repeats')->default(0);
+                    $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                }
             );
         }
         if (!Schema::hasTable('limit_repetitions')) {
             Schema::create(
-                'limit_repetitions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('budget_limit_id', false, true);
-                $table->date('startdate');
-                $table->date('enddate');
-                $table->decimal('amount', 22, 12);
-                $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
-            }
+                'limit_repetitions',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('budget_limit_id', false, true);
+                    $table->date('startdate');
+                    $table->date('enddate');
+                    $table->decimal('amount', 22, 12);
+                    $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
+                }
             );
         }
     }
@@ -235,18 +236,18 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('categories')) {
             Schema::create(
-                'categories', function (Blueprint $table) {
+                'categories',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->string('name', 1024);
+                    $table->boolean('encrypted')->default(0);
 
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->string('name', 1024);
-                $table->boolean('encrypted')->default(0);
-
-                // link user id to users table
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                    // link user id to users table
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
     }
@@ -258,32 +259,33 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('export_jobs')) {
             Schema::create(
-                'export_jobs', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('user_id', false, true);
-                $table->string('key', 12);
-                $table->string('status', 255);
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                'export_jobs',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('user_id', false, true);
+                    $table->string('key', 12);
+                    $table->string('status', 255);
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('import_jobs')) {
             Schema::create(
-                'import_jobs', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('user_id')->unsigned();
-                $table->string('key', 12)->unique();
-                $table->string('file_type', 12);
-                $table->string('status', 45);
-                $table->text('configuration')->nullable();
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                'import_jobs',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('user_id')->unsigned();
+                    $table->string('key', 12)->unique();
+                    $table->string('file_type', 12);
+                    $table->string('status', 45);
+                    $table->text('configuration')->nullable();
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
-
     }
 
     /**
@@ -293,34 +295,36 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('piggy_banks')) {
             Schema::create(
-                'piggy_banks', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('account_id', false, true);
-                $table->string('name', 1024);
-                $table->decimal('targetamount', 22, 12);
-                $table->date('startdate')->nullable();
-                $table->date('targetdate')->nullable();
-                $table->integer('order', false, true)->default(0);
-                $table->boolean('active')->default(0);
-                $table->boolean('encrypted')->default(1);
-                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-            }
+                'piggy_banks',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('account_id', false, true);
+                    $table->string('name', 1024);
+                    $table->decimal('targetamount', 22, 12);
+                    $table->date('startdate')->nullable();
+                    $table->date('targetdate')->nullable();
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(0);
+                    $table->boolean('encrypted')->default(1);
+                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('piggy_bank_repetitions')) {
             Schema::create(
-                'piggy_bank_repetitions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('piggy_bank_id', false, true);
-                $table->date('startdate')->nullable();
-                $table->date('targetdate')->nullable();
-                $table->decimal('currentamount', 22, 12);
-                $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
-            }
+                'piggy_bank_repetitions',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('piggy_bank_id', false, true);
+                    $table->date('startdate')->nullable();
+                    $table->date('targetdate')->nullable();
+                    $table->decimal('currentamount', 22, 12);
+                    $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
+                }
             );
         }
     }
@@ -332,15 +336,16 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('preferences')) {
             Schema::create(
-                'preferences', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('user_id', false, true);
-                $table->string('name', 1024);
-                $table->text('data');
+                'preferences',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('user_id', false, true);
+                    $table->string('name', 1024);
+                    $table->text('data');
 
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
     }
@@ -350,22 +355,20 @@ class CreateMainTables extends Migration
      */
     private function createRoleTable()
     {
-
         if (!Schema::hasTable('role_user')) {
             Schema::create(
-                'role_user', function (Blueprint $table) {
-                $table->integer('user_id', false, true);
-                $table->integer('role_id', false, true);
+                'role_user',
+                function (Blueprint $table) {
+                    $table->integer('user_id', false, true);
+                    $table->integer('role_id', false, true);
 
-                $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-                $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+                    $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+                    $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
 
-                $table->primary(['user_id', 'role_id']);
-
-            }
+                    $table->primary(['user_id', 'role_id']);
+                }
             );
         }
-
     }
 
     /**
@@ -376,81 +379,85 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('rule_groups')) {
             Schema::create(
-                'rule_groups', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->string('title', 255);
-                $table->text('description')->nullable();
-                $table->integer('order', false, true)->default(0);
-                $table->boolean('active')->default(1);
+                'rule_groups',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->string('title', 255);
+                    $table->text('description')->nullable();
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(1);
 
-                // link user id to users table
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+                    // link user id to users table
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
         if (!Schema::hasTable('rules')) {
             Schema::create(
-                'rules', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->integer('rule_group_id', false, true);
-                $table->string('title', 255);
-                $table->text('description')->nullable();
-                $table->integer('order', false, true)->default(0);
-                $table->boolean('active')->default(1);
-                $table->boolean('stop_processing')->default(0);
+                'rules',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->integer('rule_group_id', false, true);
+                    $table->string('title', 255);
+                    $table->text('description')->nullable();
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(1);
+                    $table->boolean('stop_processing')->default(0);
 
-                // link user id to users table
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                    // link user id to users table
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-                // link rule group id to rule group table
-                $table->foreign('rule_group_id')->references('id')->on('rule_groups')->onDelete('cascade');
-            }
+                    // link rule group id to rule group table
+                    $table->foreign('rule_group_id')->references('id')->on('rule_groups')->onDelete('cascade');
+                }
             );
         }
         if (!Schema::hasTable('rule_actions')) {
             Schema::create(
-                'rule_actions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('rule_id', false, true);
+                'rule_actions',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('rule_id', false, true);
 
-                $table->string('action_type', 50);
-                $table->string('action_value', 255);
+                    $table->string('action_type', 50);
+                    $table->string('action_value', 255);
 
-                $table->integer('order', false, true)->default(0);
-                $table->boolean('active')->default(1);
-                $table->boolean('stop_processing')->default(0);
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(1);
+                    $table->boolean('stop_processing')->default(0);
 
 
-                // link rule id to rules table
-                $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
-            }
+                    // link rule id to rules table
+                    $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
+                }
             );
         }
         if (!Schema::hasTable('rule_triggers')) {
             Schema::create(
-                'rule_triggers', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('rule_id', false, true);
+                'rule_triggers',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('rule_id', false, true);
 
-                $table->string('trigger_type', 50);
-                $table->string('trigger_value', 255);
+                    $table->string('trigger_type', 50);
+                    $table->string('trigger_value', 255);
 
-                $table->integer('order', false, true)->default(0);
-                $table->boolean('active')->default(1);
-                $table->boolean('stop_processing')->default(0);
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(1);
+                    $table->boolean('stop_processing')->default(0);
 
 
-                // link rule id to rules table
-                $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
-            }
+                    // link rule id to rules table
+                    $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
+                }
             );
         }
     }
@@ -462,24 +469,24 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('tags')) {
             Schema::create(
-                'tags', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
+                'tags',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
 
-                $table->string('tag', 1024);
-                $table->string('tagMode', 1024);
-                $table->date('date')->nullable();
-                $table->text('description')->nullable();
-                $table->decimal('latitude', 24, 12)->nullable();
-                $table->decimal('longitude', 24, 12)->nullable();
-                $table->smallInteger('zoomLevel', false, true)->nullable();
+                    $table->string('tag', 1024);
+                    $table->string('tagMode', 1024);
+                    $table->date('date')->nullable();
+                    $table->text('description')->nullable();
+                    $table->decimal('latitude', 24, 12)->nullable();
+                    $table->decimal('longitude', 24, 12)->nullable();
+                    $table->smallInteger('zoomLevel', false, true)->nullable();
 
-                // link user id to users table
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-            }
+                    // link user id to users table
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                }
             );
         }
     }
@@ -493,141 +500,147 @@ class CreateMainTables extends Migration
     {
         if (!Schema::hasTable('transaction_journals')) {
             Schema::create(
-                'transaction_journals', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id', false, true);
-                $table->integer('transaction_type_id', false, true);
-                $table->integer('bill_id', false, true)->nullable();
-                $table->integer('transaction_currency_id', false, true);
-                $table->string('description', 1024);
-                $table->date('date');
-                $table->date('interest_date')->nullable();
-                $table->date('book_date')->nullable();
-                $table->date('process_date')->nullable();
-                $table->integer('order', false, true)->default(0);
-                $table->integer('tag_count', false, true);
-                $table->boolean('encrypted')->default(1);
-                $table->boolean('completed')->default(1);
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
-                $table->foreign('bill_id')->references('id')->on('bills')->onDelete('set null');
-                $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-            }
+                'transaction_journals',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->integer('transaction_type_id', false, true);
+                    $table->integer('bill_id', false, true)->nullable();
+                    $table->integer('transaction_currency_id', false, true);
+                    $table->string('description', 1024);
+                    $table->date('date');
+                    $table->date('interest_date')->nullable();
+                    $table->date('book_date')->nullable();
+                    $table->date('process_date')->nullable();
+                    $table->integer('order', false, true)->default(0);
+                    $table->integer('tag_count', false, true);
+                    $table->boolean('encrypted')->default(1);
+                    $table->boolean('completed')->default(1);
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                    $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
+                    $table->foreign('bill_id')->references('id')->on('bills')->onDelete('set null');
+                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('journal_meta')) {
             Schema::create(
-                'journal_meta', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('transaction_journal_id', false, true);
-                $table->string('name', 255);
-                $table->text('data');
-                $table->string('hash', 64);
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            }
+                'journal_meta',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('transaction_journal_id', false, true);
+                    $table->string('name', 255);
+                    $table->text('data');
+                    $table->string('hash', 64);
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('tag_transaction_journal')) {
             Schema::create(
-                'tag_transaction_journal', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('tag_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-                $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-
-
-            }
+                'tag_transaction_journal',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->integer('tag_id', false, true);
+                    $table->integer('transaction_journal_id', false, true);
+                    $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('budget_transaction_journal')) {
             Schema::create(
-                'budget_transaction_journal', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('budget_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-                $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            }
+                'budget_transaction_journal',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->integer('budget_id', false, true);
+                    $table->integer('transaction_journal_id', false, true);
+                    $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('category_transaction_journal')) {
             Schema::create(
-                'category_transaction_journal', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('category_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-            }
+                'category_transaction_journal',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->integer('category_id', false, true);
+                    $table->integer('transaction_journal_id', false, true);
+                    $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                }
             );
         }
 
 
         if (!Schema::hasTable('piggy_bank_events')) {
             Schema::create(
-                'piggy_bank_events', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('piggy_bank_id', false, true);
-                $table->integer('transaction_journal_id', false, true)->nullable();
-                $table->date('date');
-                $table->decimal('amount', 22, 12);
+                'piggy_bank_events',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('piggy_bank_id', false, true);
+                    $table->integer('transaction_journal_id', false, true)->nullable();
+                    $table->date('date');
+                    $table->decimal('amount', 22, 12);
 
-                $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
-            }
+                    $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
+                }
             );
         }
 
         if (!Schema::hasTable('transactions')) {
             Schema::create(
-                'transactions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('account_id', false, true);
-                $table->integer('transaction_journal_id', false, true);
-                $table->string('description', 1024)->nullable();
-                $table->decimal('amount', 22, 12);
+                'transactions',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('account_id', false, true);
+                    $table->integer('transaction_journal_id', false, true);
+                    $table->string('description', 1024)->nullable();
+                    $table->decimal('amount', 22, 12);
 
-                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-
-            }
+                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('budget_transaction')) {
             Schema::create(
-                'budget_transaction', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('budget_id', false, true);
-                $table->integer('transaction_id', false, true);
+                'budget_transaction',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->integer('budget_id', false, true);
+                    $table->integer('transaction_id', false, true);
 
-                $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-                $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            }
+                    $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                    $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+                }
             );
         }
 
         if (!Schema::hasTable('category_transaction')) {
             Schema::create(
-                'category_transaction', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('category_id', false, true);
-                $table->integer('transaction_id', false, true);
+                'category_transaction',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->integer('category_id', false, true);
+                    $table->integer('transaction_id', false, true);
 
-                $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-                $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            }
+                    $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+                    $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+                }
             );
         }
     }

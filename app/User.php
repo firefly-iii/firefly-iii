@@ -167,7 +167,6 @@ class User extends Authenticatable
      */
     public function hasRole(string $name): bool
     {
-
         foreach ($this->roles as $role) {
             if ($role->name === $name) {
                 return true;
@@ -262,6 +261,4 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough('FireflyIII\Models\Transaction', 'FireflyIII\Models\TransactionJournal');
     }
-
-
 }

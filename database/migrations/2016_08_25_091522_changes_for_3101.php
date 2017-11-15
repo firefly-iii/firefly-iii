@@ -34,9 +34,10 @@ class ChangesFor3101 extends Migration
     public function up()
     {
         Schema::table(
-            'import_jobs', function (Blueprint $table) {
-            $table->text('extended_status')->nullable();
-        }
+            'import_jobs',
+            function (Blueprint $table) {
+                $table->text('extended_status')->nullable();
+            }
         );
     }
 }

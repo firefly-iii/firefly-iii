@@ -51,7 +51,5 @@ class LinkTypeSeeder extends Seeder
         $link->outward  = '(partially) reimburses';
         $link->editable = false;
         $link->save();
-
     }
-
 }

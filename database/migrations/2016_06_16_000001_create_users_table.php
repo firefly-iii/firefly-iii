@@ -35,16 +35,17 @@ class CreateUsersTable extends Migration
     {
         if (!Schema::hasTable('users')) {
             Schema::create(
-                'users', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->string('email', 255);
-                $table->string('password', 60);
-                $table->string('remember_token', 100)->nullable();
-                $table->string('reset', 32)->nullable();
-                $table->tinyInteger('blocked', false, true)->default('0');
-                $table->string('blocked_code', 25)->nullable();
-            }
+                'users',
+                function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->string('email', 255);
+                    $table->string('password', 60);
+                    $table->string('remember_token', 100)->nullable();
+                    $table->string('reset', 32)->nullable();
+                    $table->tinyInteger('blocked', false, true)->default('0');
+                    $table->string('blocked_code', 25)->nullable();
+                }
             );
         }
     }

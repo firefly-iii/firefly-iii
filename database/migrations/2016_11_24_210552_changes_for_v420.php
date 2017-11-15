@@ -35,9 +35,10 @@ class ChangesForV420 extends Migration
     public function up()
     {
         Schema::table(
-            'journal_meta', function (Blueprint $table) {
-            $table->softDeletes();
-        }
+            'journal_meta',
+            function (Blueprint $table) {
+                $table->softDeletes();
+            }
         );
     }
 }

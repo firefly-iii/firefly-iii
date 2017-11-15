@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 
-
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -25,21 +24,22 @@ use Carbon\Carbon;
 */
 
 $factory->define(
-    FireflyIII\User::class, function (Faker\Generator $faker) {
-    static $password;
+    FireflyIII\User::class,
+    function (Faker\Generator $faker) {
+        static $password;
 
-    return [
+        return [
         'email'          => $faker->safeEmail,
         'password'       => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\CurrencyExchangeRate::class, function (Faker\Generator $faker) {
-
-    return [
+    FireflyIII\Models\CurrencyExchangeRate::class,
+    function (Faker\Generator $faker) {
+        return [
         'user_id'          => 1,
         'from_currency_id' => 1,
         'to_currency_id'   => 2,
@@ -47,23 +47,24 @@ $factory->define(
         'rate'             => '1.5',
         'user_rate'        => null,
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\TransactionCurrency::class, function (Faker\Generator $faker) {
-
-    return [
+    FireflyIII\Models\TransactionCurrency::class,
+    function (Faker\Generator $faker) {
+        return [
         'name'   => $faker->words(1, true),
         'code'   => 'ABC',
         'symbol' => 'x',
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\ImportJob::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\ImportJob::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'              => $faker->numberBetween(1, 100),
         'user_id'         => 1,
         'key'             => $faker->words(1, true),
@@ -78,13 +79,14 @@ $factory->define(
             'errors'       => [],
         ],
     ];
-}
+    }
 );
 
 
 $factory->define(
-    FireflyIII\Models\TransactionJournal::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\TransactionJournal::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'                      => $faker->unique()->numberBetween(1000, 10000),
         'user_id'                 => 1,
         'transaction_type_id'     => 1,
@@ -101,12 +103,13 @@ $factory->define(
         'encrypted'               => 0,
         'completed'               => 1,
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\Bill::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\Bill::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'              => $faker->numberBetween(1, 10),
         'user_id'         => 1,
         'name'            => $faker->words(3, true),
@@ -120,24 +123,26 @@ $factory->define(
         'name_encrypted'  => 0,
         'match_encrypted' => 0,
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\PiggyBankRepetition::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\PiggyBankRepetition::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'            => $faker->unique()->numberBetween(100, 10000),
         'piggy_bank_id' => $faker->numberBetween(1, 10),
         'startdate'     => '2017-01-01',
         'targetdate'    => '2020-01-01',
         'currentamount' => 10,
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\PiggyBank::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\PiggyBank::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'            => $faker->unique()->numberBetween(100, 10000),
         'account_id'    => $faker->numberBetween(1, 10),
         'name'          => $faker->words(3, true),
@@ -147,53 +152,58 @@ $factory->define(
         'active'        => 1,
         'encrypted'     => 0,
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\Tag::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\Tag::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'      => $faker->unique()->numberBetween(200, 10000),
         'user_id' => 1,
         'tagMode' => 'nothing',
         'tag'     => $faker->words(1, true),
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\Category::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\Category::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'   => $faker->numberBetween(1, 10),
         'name' => $faker->words(3, true),
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\Budget::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\Budget::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'   => $faker->numberBetween(1, 10),
         'name' => $faker->words(3, true),
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\PiggyBankEvent::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\PiggyBankEvent::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'                     => $faker->numberBetween(1, 10),
         'piggy_bank_id'          => $faker->numberBetween(1, 10),
         'transaction_journal_id' => $faker->numberBetween(1, 10),
         'date'                   => $faker->date('Y-m-d'),
         'amount'                 => '100',
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\BudgetLimit::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\BudgetLimit::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'         => $faker->numberBetween(1, 10),
         'start_date' => '2017-01-01',
         'end_date'   => '2017-01-31',
@@ -201,23 +211,25 @@ $factory->define(
         'budget_id'  => $faker->numberBetween(1, 6),
 
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\Account::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\Account::class,
+    function (Faker\Generator $faker) {
+        return [
         'id'              => $faker->unique()->numberBetween(1000, 10000),
         'name'            => $faker->words(3, true),
         'account_type_id' => 1,
         'active'          => true,
     ];
-}
+    }
 );
 
 $factory->define(
-    FireflyIII\Models\Transaction::class, function (Faker\Generator $faker) {
-    return [
+    FireflyIII\Models\Transaction::class,
+    function (Faker\Generator $faker) {
+        return [
         'transaction_amount'          => strval($faker->randomFloat(2, -100, 100)),
         'destination_amount'          => strval($faker->randomFloat(2, -100, 100)),
         'opposing_account_id'         => $faker->numberBetween(1, 10),
@@ -244,5 +256,5 @@ $factory->define(
         'foreign_currency_code'       => null,
         'foreign_currency_symbol'     => null,
     ];
-}
+    }
 );
