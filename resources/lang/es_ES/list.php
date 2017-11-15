@@ -83,10 +83,10 @@ return [
     'inward'                  => 'Descripción interna',
     'outward'                 => 'Descripción externa',
     'number_of_transactions'  => 'Número de transacciones',
-    'total_amount'            => 'Total amount',
-    'sum'                     => 'Sum',
+    'total_amount'            => 'Total',
+    'sum'                     => 'Suma',
     'sum_excluding_transfers' => 'Sum (excluding transfers)',
     'sum_withdrawals'         => 'Sum of withdrawals',
     'sum_deposits'            => 'Sum of deposits',
-    'sum_transfers'           => 'Sum of transfers',
+    'sum_transfers'           => 'Suma de transferencias',
 ];

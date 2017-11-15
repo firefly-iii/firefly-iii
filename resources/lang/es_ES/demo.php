@@ -20,7 +20,7 @@ return [
     'currencies-index'               => 'Firefly III admite múltiples monedas. A pesar de que la moneda por defecto es el Euro, se puede seleccionar el Dólar de EE.UU, y muchas otras monedas. Como se puede ver se ha incluido una pequeña selección de monedas, pero puedes agregar tu propia moneda si lo deseas. Sin embargo, cambiar la moneda predeterminada no cambiará la moneda de las transacciones existentes: Firefly III admite el uso de varias monedas al mismo tiempo.',
     'transactions-index'             => 'Estos gastos, depósitos y transferencias no son particularmente imaginativos. Se han generado automáticamente.',
     'piggy-banks-index'              => 'Como puede ver, hay tres alcancías. Utilice los botones más y menos para influir en la cantidad de dinero en cada alcancía. Haga clic en el nombre de la alcancía para ver la administración de cada una.',
-    'import-index'                   => 'Por supuesto, cualquier archivo CSV puede ser importado en Firefly III',
+    'import-index'                   => 'Of course, any CSV file can be imported into Firefly III',
     'import-configure-security'      => 'Debido a problemas de seguridad, su subida se ha sustituido por un archivo local.',
     'import-configure-configuration' => 'La configuración que ves a continuación es correcta para el archivo local.',
 ];

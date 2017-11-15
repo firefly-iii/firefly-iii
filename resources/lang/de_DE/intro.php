@@ -20,7 +20,7 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Geben Sie Ihren Konten eine gültige IBAN. Dies könnte einen Datenimport in Zukunft sehr einfach machen.',
-    'accounts_create_asset_opening_balance' => 'Anlagekonten können ein "Eröffnungsguthaben" haben, welches den Beginn der Historie dieses Kontos in Firefly angibt.',
+    'accounts_create_asset_opening_balance' => 'Anlagekonten können eine "Eröffnungsbilanz" haben, welche den Beginn der Historie dieses Kontos in Firefly angibt.',
     'accounts_create_asset_currency'        => 'Firefly III unterstützt mehrere Währungen. Anlagenkonten haben eine Hauptwährung, die Sie hier einstellen müssen.',
     'accounts_create_asset_virtual'         => 'Es kann manchmal helfen, Ihrem Konto ein virtuelles Gleichgewicht zu geben: eine zusätzliche Menge, die dem tatsächlichen Kontostand immer hinzugefügt oder daraus entfernt wird.',
 
@@ -68,14 +68,14 @@ return [
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',
     'piggy-banks_index_button'                                => 'Neben diesem Fortschrittsbalken befinden sich zwei Buttons (+ und -), um Geld von jedem Sparschwein hinzuzufügen oder zu entfernen.',
-    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Anlagenkonten aufgeführt, die mindestens mit einem Sparschwein verbunden sind.',
+    'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Anlagenkonten aufgeführt, die mit mindestens einem Sparschwein verbunden sind.',
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'Was ist Ihr Ziel? Eine neue Couch, eine Kamera, Geld für Notfälle?',
+    'piggy-banks_create_name'                                 => 'Worauf sparen Sie? Eine neue Couch, eine Kamera, Geld für Notfälle?',
     'piggy-banks_create_date'                                 => 'Sie können ein Zieldatum oder einen Termin für Ihr Sparschwein festlegen.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'Diese Grafik zeigt die Historie dieses Sparschweins.',
+    'piggy-banks_show_piggyChart'                             => 'Dieses Diagramm zeigt den Verlauf dieses Sparschweins.',
     'piggy-banks_show_piggyDetails'                           => 'Einige Details über Ihr Sparschwein',
     'piggy-banks_show_piggyEvents'                            => 'Hinzufügungen oder Entfernungen sind hier ebenfalls aufgeführt.',
 
@@ -105,7 +105,7 @@ return [
     'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
 
     // create rule:
-    'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
+    'rules_create_mandatory'                                  => 'Wählen Sie einen aussagekräftigen Titel und legen Sie fest, wann die Regel ausgelöst werden soll.',
     'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
     'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
     'rules_create_actions'                                    => 'Legen Sie so viele Aktionen fest, wie Sie möchten.',

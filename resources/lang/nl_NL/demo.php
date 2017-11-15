@@ -20,7 +20,7 @@ return [
     'currencies-index'               => 'Firefly ondersteunt meerdere valuta\'s. Hoewel het standaard de Euro is kan je ook kiezen voor de US dollar of een van de vele anderen. Er is een kleine selectie valuta meegeleverd maar je kan je eigen valuta toevoegen. Het veranderen van de standaardvaluta verandert de bestaande transacties niet: Firefly III ondersteunt het gebruik van meerdere valuta op hetzelfde moment.',
     'transactions-index'             => 'Deze uitgaven, inkomsten en overschrijvingen zijn niet heel fantasierijk. Ze zijn automatisch gegenereerd.',
     'piggy-banks-index'              => 'Zoals je kan zien zijn er drie spaarpotjes. Gebruik de plus- en minknoppen om het bedrag in de spaarpotjes te veranderen. Klik op de naam van het spaarpotje om er de geschiedenis van te zien.',
-    'import-index'                   => 'Uiteraard kan je elk CSV bestand importeren in Firefly III ',
+    'import-index'                   => 'Uiteraard kan je elk CSV bestand importeren in Firefly III',
     'import-configure-security'      => 'Uit veiligheidsoverwegingen is je upload vervangen door een lokaal bestand.',
     'import-configure-configuration' => 'Deze configuratie is correct voor het lokale bestand.',
 ];
