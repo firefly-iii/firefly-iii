@@ -1,0 +1,39 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            </button>
+            <h4 class="modal-title">Overview of reconciliation
+            </h4>
+        </div>
+
+        <form style="display: inline;" id="income" action="some route" method="POST">
+            <div class="modal-body">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="start" value="{{ start.format('Y-m-d') }}"/>
+                <input type="hidden" name="end" value="{{ end.format('Y-m-d') }}"/>
+
+                You have selected X transactions. Total value X. Difference is zero
+                reconcile will go ahead. (so no popup actually)
+
+                Difference is X or -X. X = you have too much money in Firefly III register. -X = you are missing amount X
+                in your Firefly III register.
+
+                Please correct this first, or allow firefly to create a reconcilliation transaction. You can always edit or delete this later:
+
+                [X] Create a reconciling withdrawal for amount X
+                [X] Create a reconciling deposit for amount X.
+
+                <div class="input-group">
+                    <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                    <input step="any" class="form-control" id="amount" value="{{ available }}" autocomplete="off" name="amount" type="number"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'update_amount'|_ }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+

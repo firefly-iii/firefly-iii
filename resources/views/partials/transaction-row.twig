@@ -21,7 +21,7 @@
 
     {# description #}
     <td>
-        {# count attachments #}
+        {# is reconciled? #}
         {{ transaction|transactionReconciled }}
 
         <a href="{{ route('transactions.show',transaction.journal_id) }}">

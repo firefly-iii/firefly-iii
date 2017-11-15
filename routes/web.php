@@ -90,9 +90,14 @@ Route::group(
     Route::get('{what}', ['uses' => 'AccountController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
     Route::get('create/{what}', ['uses' => 'AccountController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
     Route::get('edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'edit']);
-    Route::get('reconcile/{account}/{start_date?}/{end_date?}', ['uses' => 'AccountController@reconcile', 'as' => 'reconcile']);
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
     Route::get('show/{account}/{moment?}', ['uses' => 'AccountController@show', 'as' => 'show']);
+
+    // reconcile routes:
+    Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);
+    Route::get('reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@transactions', 'as' => 'reconcile.transactions']);
+    Route::get('reconcile/{account}/overview/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@overview', 'as' => 'reconcile.overview']);
+    Route::post('reconcile/{account}/submit/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@submit', 'as' => 'reconcile.submit']);
 
     Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
     Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);

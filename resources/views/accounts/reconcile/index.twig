@@ -75,9 +75,13 @@
                                 <div class="select_transactions_instruction" style="display:none;">
                                     {{ 'select_transactions_instruction'|_ }}
                                 </div>
+                                <div class="date_change_warning text-danger" style="display:none;">
+                                    {{ 'date_change_instruction'|_ }}
+                                </div>
                             </td>
                             <td>
                                 <a href="#" class="btn btn-default start_reconcile">{{ 'start_reconcile'|_ }}</a>
+                                <a href="#" class="btn btn-default change_date_button" style="display: none;">{{ 'update_selection'|_ }}</a>
                             </td>
                         </tr>
                         </tfoot>
@@ -124,120 +128,9 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <table class="table table-striped table-condensed">
-                        <thead>
-                        <tr class="ignore">
-                            <th class="hidden-xs" colspan="2">&nbsp;</th>
-                            <th>{{ trans('list.description') }}</th>
-                            <th style="text-align:right;">{{ trans('list.amount') }}</th>
-                            <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.reconcile') }}</th>
-                            <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
-                            <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
-                            <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.to') }}</th>
-
-                            <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
-                            <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {# data for previous/next markers #}
-                        {% set endSet = false %}
-                        {% set startSet = false %}
-                        {% for transaction in transactions %}
-                            {# start marker #}
-                            {% if transaction.date < start and startSet == false %}
-                                <tr>
-                                    <td colspan="5">
-                                        &nbsp;
-                                    </td>
-                                    <td colspan="3">
-                                        <span class="label label-default">
-                                            {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
-                                        </span>
-                                    </td>
-                                    <td colspan="2">
-                                        &nbsp;
-                                    </td>
-                                </tr>
-                                {% set startSet = true %}
-                            {% endif %}
-
-                            {# end marker #}
-                            {% if transaction.date <= end and endSet == false %}
-                                <tr>
-                                    <td colspan="5">
-                                        &nbsp;
-                                    </td>
-                                    <td colspan="3">
-                                        <span class="label label-default">
-                                            {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
-                                        </span>
-                                    </td>
-                                    <td colspan="2">
-                                        &nbsp;
-                                    </td>
-                                </tr>
-                                {% set endSet = true %}
-                            {% endif %}
-
-                            <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
-                                data-transaction-id="{{ transaction.id }}">
-                                <td class="hidden-xs">
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i
-                                                    class="fa fa-fw fa-pencil"></i></a>
-                                    </div>
-                                </td>
-                                {# icon #}
-                                <td class="hidden-xs">
-                                    {{ transaction|transactionIcon }}
-                                </td>
-
-                                {# description #}
-                                <td>
-                                    <a href="{{ route('transactions.show',transaction.journal_id) }}">
-                                        {{ transaction|transactionDescription }}
-                                    </a>
-                                    {# is a split journal #}
-                                    {{ transaction|transactionIsSplit }}
-
-                                    {# count attachments #}
-                                    {{ transaction|transactionHasAtt }}
-
-
-                                </td>
-                                <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
-                                <td>
-                                    {% if transaction.reconciled %}
-                                        {{ transaction|transactionReconciled }}
-                                    {% else %}
-                                        <input type="checkbox" name="reconciled[]"
-                                               data-younger="{% if transaction.date > end %}true{% else %}false{% endif %}"
-                                               value="{{ transaction.transaction_amount }}" data-id="{{ transaction.id }}" disabled class="reconcile_checkbox">
-                                    {% endif %}
-                                </td>
-                                <td class="hidden-sm hidden-xs">
-                                    {{ transaction.date.formatLocalized(monthAndDayFormat) }}
-                                </td>
-                                <td class="hidden-xs hidden-sm hidden-md">
-                                    {# all source accounts #}
-                                    {{ transaction|transactionSourceAccount }}
-                                </td>
-                                <td class="hidden-xs hidden-sm hidden-md">
-                                    {# all destination accounts #}
-                                    {{ transaction|transactionDestinationAccount }}
-                                </td>
-                                <td class="hidden-xs">
-                                    {{ transaction|transactionBudgets }}
-                                </td>
-                                <td class="hidden-xs">
-                                    {{ transaction|transactionCategories }}
-                                </td>
-                            </tr>
-
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    <div id="transactions_holder">
+                        <p class="text-center lead">{{ 'select_range_and_balance'|_ }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -253,6 +146,9 @@
         var accountID = {{ account.id }};
         var startBalance = {{ startBalance }};
         var endBalance = {{ endBalance }};
+        var transactionsUri = '{{ transactionsUri }}';
+        var overviewUri = '{{ overviewUri }}';
+        var indexUri = '{{ indexUri }}';
     </script>
     <script src="js/ff/accounts/reconcile.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 {% endblock %}
