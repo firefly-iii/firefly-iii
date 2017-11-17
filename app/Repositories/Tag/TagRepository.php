@@ -331,7 +331,7 @@ class TagRepository implements TagRepositoryInterface
                             ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transactions.amount', '>', 0)
-                            ->groupBy('tags.id');
+                            ->groupBy(['tags.id', 'tags.tag']);
 
         // add date range (or not):
         if (null === $year) {
@@ -351,7 +351,7 @@ class TagRepository implements TagRepositoryInterface
             $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
         }
 
-        $tags      = $query->orderBy('tags.id', 'desc')->get();
+        $tags      = $query->orderBy('tags.id', 'desc')->get(['tags.id', 'tags.tag']);
         $temporary = [];
         /** @var Tag $tag */
         foreach ($tags as $tag) {
