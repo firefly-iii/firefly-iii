@@ -86,7 +86,9 @@ class HomeController extends Controller
     }
 
     /**
+     * @param Request $request
      *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function displayDebug(Request $request)
     {
@@ -193,6 +195,7 @@ class HomeController extends Controller
         $end      = session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccountsById($frontPage->data);
         $showDeps = Preferences::get('showDepositsFrontpage', false)->data;
+        $today    = new Carbon;
 
         // zero bills? Hide some elements from view.
         /** @var BillRepositoryInterface $billRepository */
@@ -208,7 +211,7 @@ class HomeController extends Controller
 
         return view(
             'index',
-            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
+            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount','start','end','today')
         );
     }
 
