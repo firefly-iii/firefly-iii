@@ -331,18 +331,18 @@ class TagRepository implements TagRepositoryInterface
                             ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                             ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transactions.amount', '>', 0)
-                            ->groupBy(['tags.id','tags.tag']);
+                            ->groupBy(['tags.id', 'tags.tag']);
 
         // add date range (or not):
         if (null === $year) {
             $query->whereNull('tags.date');
-            $allTags->whereNull('date');
+            $allTags->whereNull('tags.date');
         }
         if (null !== $year) {
             $start = $year . '-01-01';
             $end   = $year . '-12-31';
             $query->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
-            $allTags->where('date', '>=', $start)->where('date', '<=', $end);
+            $allTags->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
         }
         $set             = $query->get(['tags.id', DB::raw('SUM(transactions.amount) as amount_sum')]);
         $tagsWithAmounts = [];
@@ -351,7 +351,7 @@ class TagRepository implements TagRepositoryInterface
             $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
         }
 
-        $tags      = $query->orderBy('id', 'desc')->get(['tags.id','tags.tag']);
+        $tags      = $query->orderBy('tags.id', 'desc')->get(['tags.id', 'tags.tag']);
         $temporary = [];
         /** @var Tag $tag */
         foreach ($tags as $tag) {
