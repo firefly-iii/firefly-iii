@@ -44,10 +44,10 @@ class BillFormRequest extends Request
         return [
             'name'                          => $this->string('name'),
             'match'                         => $this->string('match'),
-            'amount_min'                    => $this->float('amount_min'),
+            'amount_min'                    => $this->string('amount_min'),
             'amount_currency_id_amount_min' => $this->integer('amount_currency_id_amount_min'),
             'amount_currency_id_amount_max' => $this->integer('amount_currency_id_amount_max'),
-            'amount_max'                    => $this->float('amount_max'),
+            'amount_max'                    => $this->string('amount_max'),
             'date'                          => $this->date('date'),
             'repeat_freq'                   => $this->string('repeat_freq'),
             'skip'                          => $this->integer('skip'),

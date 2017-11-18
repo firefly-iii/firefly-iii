@@ -79,7 +79,7 @@
 
                         <div class="box-footer clearfix">
                             <a class="btn btn-sm btn-default btn-flat pull-right"
-                               href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
+                               href="{{ route('accounts.show',data[1].id) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}</a>
                         </div>
                     </div>
                 {% endfor %}

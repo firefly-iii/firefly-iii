@@ -147,7 +147,7 @@ function countChecked() {
         $('.mass_delete span').text(delete_selected_txt + ' (' + checked + ')');
 
         // get amount for the transactions:
-        getAmounts();
+        //getAmounts();
 
         $('.mass_button_options').show();
 

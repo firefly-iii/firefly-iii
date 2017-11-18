@@ -64,7 +64,7 @@ class JournalFormRequest extends Request
 
             // transaction / journal data:
             'description'              => $this->string('description'),
-            'amount'                   => $this->float('amount'),
+            'amount'                   => $this->string('amount'),
             'budget_id'                => $this->integer('budget_id'),
             'category'                 => $this->string('category'),
             'source_account_id'        => $this->integer('source_account_id'),
@@ -74,9 +74,9 @@ class JournalFormRequest extends Request
             'piggy_bank_id'            => $this->integer('piggy_bank_id'),
 
             // native amount and stuff like that:
-            'native_amount'            => $this->float('native_amount'),
-            'source_amount'            => $this->float('source_amount'),
-            'destination_amount'       => $this->float('destination_amount'),
+            'native_amount'            => $this->string('native_amount'),
+            'source_amount'            => $this->string('source_amount'),
+            'destination_amount'       => $this->string('destination_amount'),
         ];
 
         return $data;
