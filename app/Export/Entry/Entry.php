@@ -45,35 +45,47 @@ use FireflyIII\Models\Transaction;
 final class Entry
 {
     // @formatter:off
-    public $amount;
-    public $asset_account_bic;
-    public $asset_account_iban;
-    public $asset_account_id;
-    public $asset_account_name;
-    public $asset_account_number;
-    public $asset_currency_code;
-    public $bill_id;
-    public $bill_name;
-    public $budget_id;
-    public $budget_name;
-    public $category_id;
-    public $category_name;
-    public $currency_code;
+    public $journal_id;
+    public $transaction_id = 0;
+
     public $date;
     public $description;
-    public $foreign_amount        = '0';
+
+    public $currency_code;
+    public $amount;
     public $foreign_currency_code = '';
-    public $journal_id;
-    public $notes;
-    public $opposing_account_bic;
-    public $opposing_account_iban;
+    public $foreign_amount        = '0';
+
+    public $transaction_type;
+
+    public $asset_account_id;
+    public $asset_account_name;
+    public $asset_account_iban;
+    public $asset_account_bic;
+    public $asset_account_number;
+    public $asset_currency_code;
+
     public $opposing_account_id;
     public $opposing_account_name;
+    public $opposing_account_iban;
+    public $opposing_account_bic;
     public $opposing_account_number;
     public $opposing_currency_code;
+
+    public $budget_id;
+    public $budget_name;
+
+    public $category_id;
+    public $category_name;
+
+    public $bill_id;
+    public $bill_name;
+
+    public $notes;
+
     public $tags;
-    public $transaction_id = 0;
-    public $transaction_type;
+
+
     // @formatter:on
 
     /**
@@ -93,9 +105,9 @@ final class Entry
      *
      * @return Entry
      */
-    public static function fromTransaction(Transaction $transaction): Entry
+    public static function fromTransaction(Transaction $transaction): self
     {
-        $entry                 = new self;
+        $entry                 = new self();
         $entry->journal_id     = $transaction->journal_id;
         $entry->transaction_id = $transaction->id;
         $entry->date           = $transaction->date->format('Ymd');
