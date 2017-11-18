@@ -88,6 +88,7 @@ class Amount implements ConverterInterface
             Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $oldValue, $value));
         }
 
-        return strval(round(floatval($value), 12));
+        $number = strval(number_format(round(floatval($value), 12), 12));
+        return $number;
     }
 }

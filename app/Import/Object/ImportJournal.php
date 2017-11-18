@@ -59,8 +59,12 @@ class ImportJournal
     public $opposing;
     /** @var array */
     public $tags = [];
-    /** @var string */
+    /** @var array */
     private $amount;
+    /** @var array */
+    private $amountCredit;
+    /** @var array */
+    private $amountDebet;
     /** @var string */
     private $convertedAmount = null;
     /** @var string */
@@ -101,11 +105,40 @@ class ImportJournal
     public function getAmount(): string
     {
         Log::debug('Now in getAmount()');
+        Log::debug(sprintf('amount is %s', var_export($this->amount, true)));
+        Log::debug(sprintf('debet amount is %s', var_export($this->amountDebet, true)));
+        Log::debug(sprintf('credit amount is %s', var_export($this->amountCredit, true)));
+
         if (null === $this->convertedAmount) {
+            // first check if the amount is set:
             Log::debug('convertedAmount is NULL');
+
+            $info           = [];
+            $converterClass = '';
+
+            if (!is_null($this->amount)) {
+                Log::debug('Amount value is not NULL, assume this is the correct value.');
+                $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amount['role'])));
+                $info           = $this->amount;
+            }
+            if (!is_null($this->amountDebet)) {
+                Log::debug('Amount DEBET value is not NULL, assume this is the correct value (overrules Amount).');
+                $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountDebet['role'])));
+                $info           = $this->amountDebet;
+            }
+            if (!is_null($this->amountCredit)) {
+                Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebet).');
+                $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountCredit['role'])));
+                $info           = $this->amountCredit;
+            }
+            if (count($info) === 0) {
+                throw new FireflyException('No amount information for this row.');
+            }
+
+            Log::debug(sprintf('Converter class is %s', $converterClass));
             /** @var ConverterInterface $amountConverter */
-            $amountConverter       = app(Amount::class);
-            $this->convertedAmount = $amountConverter->convert($this->amount);
+            $amountConverter       = app($converterClass);
+            $this->convertedAmount = $amountConverter->convert($info['value']);
             Log::debug(sprintf('First attempt to convert gives "%s"', $this->convertedAmount));
             // modify
             foreach ($this->modifiers as $modifier) {
@@ -196,7 +229,13 @@ class ImportJournal
                 $this->asset->setAccountId($array);
                 break;
             case 'amount':
-                $this->amount = $array['value'];
+                $this->amount = $array;
+                break;
+            case 'amount_debet':
+                $this->amountDebet = $array;
+                break;
+            case 'amount_credit':
+                $this->amountCredit = $array;
                 break;
             case 'account-iban':
                 $this->asset->setAccountIban($array);

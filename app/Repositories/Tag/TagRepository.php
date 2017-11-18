@@ -351,7 +351,7 @@ class TagRepository implements TagRepositoryInterface
             $tagsWithAmounts[$tag->id] = strval($tag->amount_sum);
         }
 
-        $tags      = $query->orderBy('tags.id', 'desc')->get(['tags.id', 'tags.tag']);
+        $tags      = $allTags->orderBy('tags.id', 'desc')->get(['tags.id', 'tags.tag']);
         $temporary = [];
         /** @var Tag $tag */
         foreach ($tags as $tag) {
@@ -364,13 +364,17 @@ class TagRepository implements TagRepositoryInterface
 
             $temporary[] = [
                 'amount' => $amount,
-                'tag'    => $tag,
+                'tag'    => [
+                    'id'  => $tag->id,
+                    'tag' => $tag->tag,
+                ],
             ];
         }
+
         /** @var array $entry */
         foreach ($temporary as $entry) {
             $scale          = $this->cloudScale([12, 20], floatval($entry['amount']), floatval($min), floatval($max));
-            $tagId          = $entry['tag']->id;
+            $tagId          = $entry['tag']['id'];
             $return[$tagId] = [
                 'scale' => $scale,
                 'tag'   => $entry['tag'],

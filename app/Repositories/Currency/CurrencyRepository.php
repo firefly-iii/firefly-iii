@@ -168,7 +168,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function get(): Collection
     {
-        return TransactionCurrency::get();
+        return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
     /**
@@ -178,7 +178,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function getByIds(array $ids): Collection
     {
-        return TransactionCurrency::whereIn('id', $ids)->get();
+        return TransactionCurrency::orderBy('code', 'ASC')->whereIn('id', $ids)->get();
     }
 
     /**

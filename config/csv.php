@@ -280,6 +280,18 @@ return [
             'converter'       => 'Amount',
             'field'           => 'amount',
         ],
+        'amount_debet'            => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'AmountDebet',
+            'field'           => 'amount_debet',
+        ],
+        'amount_credit'            => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'AmountCredit',
+            'field'           => 'amount_credit',
+        ],
         'sepa-ct-id'        => [
             'mappable'        => false,
             'pre-process-map' => false,
