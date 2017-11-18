@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 return [
     // general stuff:
+    'language_incomplete'                        => 'Incomplete translation',
     'close'                                      => 'Sluiten',
     'actions'                                    => 'Acties',
     'edit'                                       => 'Wijzig',
     'delete'                                     => 'Verwijder',
     'welcomeBack'                                => 'Hoe staat het er voor?',
     'everything'                                 => 'Alles',
+    'today'                                      => 'vandaag',
     'customRange'                                => 'Zelf bereik kiezen',
     'apply'                                      => 'Go',
     'select_date'                                => 'Selecteer periode..',

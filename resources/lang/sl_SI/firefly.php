@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 return [
     // general stuff:
+    'language_incomplete'                        => 'Incomplete translation',
     'close'                                      => 'zapri',
     'actions'                                    => 'Dejanja',
     'edit'                                       => 'uredi',
     'delete'                                     => 'izbriši',
     'welcomeBack'                                => 'Kaj dogaja?',
     'everything'                                 => 'vse',
+    'today'                                      => 'today',
     'customRange'                                => 'obseg po meri',
     'apply'                                      => 'uporabi',
     'select_date'                                => 'Izberi datum..',

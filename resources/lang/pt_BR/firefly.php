@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 return [
     // general stuff:
+    'language_incomplete'                        => 'Incomplete translation',
     'close'                                      => 'Fechar',
     'actions'                                    => 'Ações',
     'edit'                                       => 'Editar',
     'delete'                                     => 'Apagar',
     'welcomeBack'                                => 'O que está passando?',
     'everything'                                 => 'Tudo',
+    'today'                                      => 'today',
     'customRange'                                => 'Intervalo Personalizado',
     'apply'                                      => 'Aplicar',
     'select_date'                                => 'Selecione a data..',
