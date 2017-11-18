@@ -130,7 +130,7 @@
                                                         {% if not rule.active %}
                                                             class="text-muted"
                                                         {% endif %}
-                                                ><br/>{{ rule.description }}</small>
+                                                ><br/>{{ rule.description|markdown }}</small>
                                             {% endif %}
 
                                         </td>

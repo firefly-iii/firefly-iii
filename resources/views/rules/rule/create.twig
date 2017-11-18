@@ -31,7 +31,7 @@
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.textarea('description') }}
+                        {{ ExpandedForm.textarea('description', null, {helpText: trans('firefly.field_supports_markdown')}) }}
                     </div>
                 </div>
             </div>

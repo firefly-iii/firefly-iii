@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Twig;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use League\CommonMark\CommonMarkConverter;
 use Route;
 use Steam;
 use Twig_Extension;
@@ -45,6 +46,7 @@ class General extends Twig_Extension
             $this->balance(),
             $this->formatFilesize(),
             $this->mimeIcon(),
+            $this->markdown(),
         ];
     }
 
@@ -149,6 +151,21 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
+    protected function markdown(): Twig_SimpleFilter
+    {
+        return new Twig_SimpleFilter(
+            'markdown',
+            function (string $text): string {
+                $converter = new CommonMarkConverter;
+
+                return $converter->convertToHtml($text);
+            },['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
     protected function balance(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
@@ -163,6 +180,7 @@ class General extends Twig_Extension
             }
         );
     }
+
 
     /**
      * @return Twig_SimpleFunction

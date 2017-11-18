@@ -3,7 +3,7 @@
     <div class="col-sm-8">
         {% if env('MAPBOX_API_KEY','') == '' %}
             <p class="text-danger">
-                {{ trans('mapbox_api_key')|raw }}
+                {{ trans('firefly.mapbox_api_key')|raw }}
             </p>
         {% else %}
         <div id="{{ name }}_map" style="width:100%;height:300px;"></div>
