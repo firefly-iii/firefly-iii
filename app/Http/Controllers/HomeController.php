@@ -94,7 +94,7 @@ class HomeController extends Controller
     {
         $phpVersion     = PHP_VERSION;
         $phpOs          = php_uname();
-        $interface      = php_sapi_name();
+        $interface      = PHP_SAPI;
         $now            = Carbon::create()->format('Y-m-d H:i:s e');
         $extensions     = join(', ', get_loaded_extensions());
         $drivers        = join(', ', DB::availableDrivers());
@@ -211,7 +211,7 @@ class HomeController extends Controller
 
         return view(
             'index',
-            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount','start','end','today')
+            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount', 'start', 'end', 'today')
         );
     }
 

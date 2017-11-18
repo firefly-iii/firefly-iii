@@ -101,7 +101,7 @@ class LoginController extends Controller
         }
 
         // forget 2fa cookie:
-        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'false');
+        $request->session()->forget('twoFactorAuthenticated');
 
         // is allowed to?
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
@@ -114,6 +114,7 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        return view('auth.login', compact('allowRegistration', 'email', 'remember'))->withCookie($cookie);
+
+        return view('auth.login', compact('allowRegistration', 'email', 'remember'));//->withCookie($cookie);
     }
 }

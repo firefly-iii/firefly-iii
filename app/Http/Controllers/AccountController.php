@@ -409,7 +409,7 @@ class AccountController extends Controller
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
      * performance reasons.
      *
-     * @param Account $account The account involved.
+     * @param Account $account the account involved
      *
      * @return Collection
      *

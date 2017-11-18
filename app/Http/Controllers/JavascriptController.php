@@ -100,7 +100,7 @@ class JavascriptController extends Controller
             $currencyId = intval($account->getMeta('currency_id'));
         }
         /** @var TransactionCurrency $currency */
-        $currency   = $currencyRepository->find($currencyId);
+        $currency = $currencyRepository->find($currencyId);
         if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency();
         }

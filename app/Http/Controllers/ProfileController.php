@@ -261,6 +261,7 @@ class ProfileController extends Controller
      * @param string $hash
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function undoEmailChange(string $token, string $hash)

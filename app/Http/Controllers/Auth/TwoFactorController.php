@@ -96,9 +96,9 @@ class TwoFactorController extends Controller
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {
-        // set cookie!
-        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'true');
+        // update session, not cookie:
+        $request->session()->put('twoFactorAuthenticated', true);
 
-        return redirect(route('home'))->withCookie($cookie);
+        return redirect(route('home'));
     }
 }

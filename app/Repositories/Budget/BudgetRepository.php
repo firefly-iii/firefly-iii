@@ -87,7 +87,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $defaultCurrency   = app('amount')->getDefaultCurrency();
         $return            = [];
         /** @var Budget $budget */
         foreach ($budgets as $budget) {

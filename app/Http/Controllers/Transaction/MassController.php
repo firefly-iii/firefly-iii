@@ -133,9 +133,7 @@ class MassController extends Controller
         // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
         $messages = [];
-        /**
-         * @var TransactionJournal
-         */
+        // @var TransactionJournal
         foreach ($journals as $journal) {
             $sources      = $journal->sourceAccountList();
             $destinations = $journal->destinationAccountList();

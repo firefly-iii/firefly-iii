@@ -64,8 +64,8 @@ class AuthenticateTwoFactor
         $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
         $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
 
-        // grab 2auth information from cookie, not from session.
-        $is2faAuthed = 'true' === Cookie::get('twoFactorAuthenticated');
+        // grab 2auth information from session.
+        $is2faAuthed = true === $request->session()->get('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
             Log::debug('Does not seem to be 2 factor authed, redirect.');

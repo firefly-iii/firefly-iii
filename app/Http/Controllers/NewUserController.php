@@ -72,7 +72,6 @@ class NewUserController extends Controller
     /**
      * @param NewUserFormRequest          $request
      * @param AccountRepositoryInterface  $repository
-     *
      * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
