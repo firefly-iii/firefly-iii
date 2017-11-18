@@ -214,5 +214,5 @@ interface BudgetRepositoryInterface
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit;
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit;
 }

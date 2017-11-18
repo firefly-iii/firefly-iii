@@ -87,6 +87,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
         $return            = [];
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
@@ -105,7 +106,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                 if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
                 ) {
                     $return[$budgetId]['currentLimit'] = $limit;
-                    $return[$budgetId]['budgeted']     = $limit->amount;
+                    $return[$budgetId]['budgeted']     = round($limit->amount, $defaultCurrency->decimal_places);
                     continue;
                 }
                 // otherwise it's just one of the many relevant repetitions:
@@ -599,11 +600,11 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
-     * @param int    $amount
+     * @param string $amount
      *
      * @return BudgetLimit
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, int $amount): BudgetLimit
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
     {
         // count the limits:
         $limits = $budget->budgetlimits()
@@ -626,7 +627,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // delete if amount is zero.
-        if (null !== $limit && $amount <= 0.0) {
+        if (null !== $limit && bccomp('0', $amount) < 0) {
             $limit->delete();
 
             return new BudgetLimit;

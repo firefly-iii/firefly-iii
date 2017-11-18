@@ -81,7 +81,7 @@ class BudgetController extends Controller
      */
     public function amount(Request $request, Budget $budget)
     {
-        $amount      = intval($request->get('amount'));
+        $amount      = strval($request->get('amount'));
         $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end         = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);

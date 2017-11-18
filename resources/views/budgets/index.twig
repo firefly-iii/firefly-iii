@@ -164,7 +164,7 @@
                                 {% endif %}
                             </td>
                             {% if budgetInformation[budget.id]['currentLimit'] %}
-                                {% set repAmount = budgetInformation[budget.id]['currentLimit'].amount %}
+                                {% set repAmount = budgetInformation[budget.id]['budgeted'] %}
                             {% else %}
                                 {% set repAmount = '0' %}
                             {% endif %}
@@ -174,8 +174,8 @@
                                     <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
                                     <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
                                     <input class="form-control budgetAmount" data-original="{{ repAmount }}"
-                                           data-id="{{ budget.id }}" value="{{ repAmount|round }}" autocomplete="off"
-                                           step="1" min="0" name="amount" type="number">
+                                           data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
+                                           min="0" name="amount" type="number">
                                 </div>
                             </td>
                             <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
