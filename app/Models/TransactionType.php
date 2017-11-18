@@ -37,6 +37,7 @@ class TransactionType extends Model
     const DEPOSIT         = 'Deposit';
     const TRANSFER        = 'Transfer';
     const OPENING_BALANCE = 'Opening balance';
+    const RECONCILIATION  = 'Reconciliation';
 
     /**
      * The attributes that should be casted to native types.
@@ -58,13 +59,13 @@ class TransactionType extends Model
     public static function routeBinder(string $type)
     {
         if (!auth()->check()) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         $transactionType = self::where('type', ucfirst($type))->first();
         if (null !== $transactionType) {
             return $transactionType;
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

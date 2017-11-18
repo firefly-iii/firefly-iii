@@ -21,14 +21,15 @@ class AccountTypeSeeder extends Seeder
 {
     public function run()
     {
-        AccountType::create(['type' => 'Default account']);
-        AccountType::create(['type' => 'Cash account']);
-        AccountType::create(['type' => 'Asset account']);
-        AccountType::create(['type' => 'Expense account']);
-        AccountType::create(['type' => 'Revenue account']);
-        AccountType::create(['type' => 'Initial balance account']);
-        AccountType::create(['type' => 'Beneficiary account']);
-        AccountType::create(['type' => 'Import account']);
-        AccountType::create(['type' => 'Loan']);
+        AccountType::create(['type' => AccountType::DEFAULT]);
+        AccountType::create(['type' => AccountType::CASH]);
+        AccountType::create(['type' => AccountType::ASSET]);
+        AccountType::create(['type' => AccountType::EXPENSE]);
+        AccountType::create(['type' => AccountType::REVENUE]);
+        AccountType::create(['type' => AccountType::INITIAL_BALANCE]);
+        AccountType::create(['type' => AccountType::BENEFICIARY]);
+        AccountType::create(['type' => AccountType::IMPORT]);
+        AccountType::create(['type' => AccountType::LOAN]);
+        AccountType::create(['type' => AccountType::RECONCILIATION]);
     }
 }

@@ -38,6 +38,8 @@ class AccountType extends Model
     const INITIAL_BALANCE = 'Initial balance account';
     const BENEFICIARY     = 'Beneficiary account';
     const IMPORT          = 'Import account';
+    const RECONCILIATION  = 'Reconciliation account';
+    const LOAN            = 'Loan';
 
     /**
      * The attributes that should be casted to native types.
