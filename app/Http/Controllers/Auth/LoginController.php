@@ -74,6 +74,9 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
+     * @param Request   $request
+     * @param CookieJar $cookieJar
+     *
      * @return \Illuminate\Http\Response
      */
     public function showLoginForm(Request $request, CookieJar $cookieJar)

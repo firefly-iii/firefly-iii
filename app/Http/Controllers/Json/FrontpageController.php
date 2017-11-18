@@ -33,6 +33,8 @@ use Response;
 class FrontpageController extends Controller
 {
     /**
+     * @param PiggyBankRepositoryInterface $repository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function piggyBanks(PiggyBankRepositoryInterface $repository)

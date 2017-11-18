@@ -85,6 +85,8 @@ class Handler extends ExceptionHandler
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
      *
      * @param \Exception $exception
+     *
+     * @return mixed|void
      */
     public function report(Exception $exception)
     {

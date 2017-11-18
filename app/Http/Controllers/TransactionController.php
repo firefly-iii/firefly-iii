@@ -126,7 +126,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
      */
     public function reconcile(Request $request, JournalRepositoryInterface $repository)
     {

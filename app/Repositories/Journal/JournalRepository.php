@@ -264,6 +264,7 @@ class JournalRepository implements JournalRepositoryInterface
         $this->storeBudgetWithJournal($journal, $data['budget_id']);
 
         // store two transactions:
+
         $one = [
             'journal'                 => $journal,
             'account'                 => $accounts['source'],
