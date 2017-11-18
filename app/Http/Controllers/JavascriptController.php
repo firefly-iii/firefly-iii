@@ -92,20 +92,30 @@ class JavascriptController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function variables(Request $request)
+    public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {
+        $account    = $repository->find(intval($request->get('account')));
+        $currencyId = 0;
+        if (null !== $account) {
+            $currencyId = intval($account->getMeta('currency_id'));
+        }
+        /** @var TransactionCurrency $currency */
+        $currency   = $currencyRepository->find($currencyId);
+        if (0 === $currencyId) {
+            $currency = app('amount')->getDefaultCurrency();
+        }
+
         $localeconv                = localeconv();
         $accounting                = app('amount')->getJsConfig($localeconv);
         $localeconv                = localeconv();
-        $defaultCurrency           = app('amount')->getDefaultCurrency();
-        $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
+        $localeconv['frac_digits'] = $currency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang                      = $pref->data;
         $dateRange                 = $this->getDateRangeConfig();
 
         $data = [
-            'currencyCode'    => app('amount')->getCurrencyCode(),
-            'currencySymbol'  => app('amount')->getCurrencySymbol(),
+            'currencyCode'    => $currency->code,
+            'currencySymbol'  => $currency->symbol,
             'accounting'      => $accounting,
             'localeconv'      => $localeconv,
             'language'        => $lang,
