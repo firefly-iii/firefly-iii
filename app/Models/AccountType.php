@@ -41,6 +41,9 @@ class AccountType extends Model
     const RECONCILIATION  = 'Reconciliation account';
     const LOAN            = 'Loan';
 
+    /** @var array  */
+    protected $fillable = ['type'];
+
     /**
      * The attributes that should be casted to native types.
      *

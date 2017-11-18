@@ -39,6 +39,9 @@ class TransactionType extends Model
     const OPENING_BALANCE = 'Opening balance';
     const RECONCILIATION  = 'Reconciliation';
 
+    /** @var array  */
+    protected $fillable = ['type'];
+
     /**
      * The attributes that should be casted to native types.
      *
