@@ -81,6 +81,7 @@ class UpgradeDatabase extends Command
         $this->setTransactionIdentifier();
         $this->migrateRepetitions();
         $this->updateAccountCurrencies();
+        $this->createNewTypes();
         $this->line('Updating currency information..');
         $this->updateTransferCurrencies();
         $this->updateOtherCurrencies();
@@ -289,6 +290,19 @@ class UpgradeDatabase extends Command
         );
     }
 
+    private function createNewTypes(): void
+    {
+        // create transaction type "Reconciliation".
+        $type = TransactionType::where('type', TransactionType::RECONCILIATION)->first();
+        if (is_null($type)) {
+            TransactionType::create(['type' => TransactionType::RECONCILIATION]);
+        }
+        $account = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        if (is_null($account)) {
+            AccountType::create(['type' => AccountType::RECONCILIATION]);
+        }
+    }
+
     /**
      * Move all the journal_meta notes to their note object counter parts.
      */
@@ -300,7 +314,7 @@ class UpgradeDatabase extends Command
             $journal = $meta->transactionJournal;
             $note    = $journal->notes()->first();
             if (null === $note) {
-                $note = new Note;
+                $note = new Note();
                 $note->noteable()->associate($journal);
             }
 
