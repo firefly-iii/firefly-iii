@@ -84,12 +84,13 @@ class Preferences
      */
     public function get($name, $default = null)
     {
+        /** @var User $user */
         $user = auth()->user();
         if (null === $user) {
             return $default;
         }
 
-        return $this->getForUser(auth()->user(), $name, $default);
+        return $this->getForUser($user, $name, $default);
     }
 
     /**
@@ -126,6 +127,7 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
+
             return Cache::get($fullName);
         }
 
