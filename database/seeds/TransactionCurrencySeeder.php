@@ -34,7 +34,7 @@ class TransactionCurrencySeeder extends Seeder
         // oceanian currencies
         TransactionCurrency::create(['code' => 'IDR', 'name' => 'Indonesian rupiah', 'symbol' => 'Rp', 'decimal_places' => 2]);
         TransactionCurrency::create(['code' => 'AUD', 'name' => 'Australian dollar', 'symbol' => 'A$', 'decimal_places' => 2]);
-        TransactionCurrency::create(['code' => 'AUD', 'name' => 'New Zealand dollar', 'symbol' => 'NZ$', 'decimal_places' => 2]);
+        TransactionCurrency::create(['code' => 'NZD', 'name' => 'New Zealand dollar', 'symbol' => 'NZ$', 'decimal_places' => 2]);
 
         // african currencies
         TransactionCurrency::create(['code' => 'EGP', 'name' => 'Egyptian pound', 'symbol' => 'E£', 'decimal_places' => 2]);
