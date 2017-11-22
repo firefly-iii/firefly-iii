@@ -280,13 +280,13 @@ return [
             'converter'       => 'Amount',
             'field'           => 'amount',
         ],
-        'amount_debet'            => [
+        'amount_debet'      => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'AmountDebet',
             'field'           => 'amount_debet',
         ],
-        'amount_credit'            => [
+        'amount_credit'     => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'AmountCredit',

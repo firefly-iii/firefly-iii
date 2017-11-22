@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
@@ -29,8 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class HasAnyTagTest
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class HasAnyTagTest extends TestCase
 {
@@ -72,5 +69,4 @@ class HasAnyTagTest extends TestCase
         $result = HasAnyTag::willMatchEverything($value);
         $this->assertFalse($result);
     }
-
 }

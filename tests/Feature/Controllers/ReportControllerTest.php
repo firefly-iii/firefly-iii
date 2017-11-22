@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
-
 
 use FireflyIII\Generator\Report\Audit\YearReportGenerator as AYRG;
 use FireflyIII\Generator\Report\Budget\YearReportGenerator as BYRG;
@@ -46,14 +44,12 @@ use Tests\TestCase;
 /**
  * Class ReportControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\ReportController::auditReport
      */
@@ -67,7 +63,6 @@ class ReportControllerTest extends TestCase
         $generator->shouldReceive('setEndDate')->once();
         $generator->shouldReceive('setAccounts')->once();
         $generator->shouldReceive('generate')->andReturn('here-be-report')->once();
-
 
         $this->be($this->user());
         $response = $this->get(route('reports.report.audit', [1, '20160101', '20160131']));
@@ -188,7 +183,6 @@ class ReportControllerTest extends TestCase
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $budget      = factory(Budget::class)->make();
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]));
-
 
         $this->be($this->user());
         $response = $this->get(route('reports.options', ['budget']));
@@ -458,5 +452,4 @@ class ReportControllerTest extends TestCase
         $response = $this->get(route('reports.report.tag', [1, 'TagJanuary', '20160101', '20160131']));
         $response->assertStatus(200);
     }
-
 }

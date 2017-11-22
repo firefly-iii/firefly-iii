@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Import;
@@ -33,7 +32,6 @@ use Tests\TestCase;
 /**
  * Class FileControllerTest
  *
- * @package Tests\Feature\Controllers\Import
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -53,7 +51,6 @@ class FileControllerTest extends TestCase
         $configurator->shouldReceive('isJobConfigured')->once()->andReturn(false);
         $configurator->shouldReceive('getNextView')->once()->andReturn('import.csv.initial');
         $configurator->shouldReceive('getNextData')->andReturn(['specifics' => [], 'delimiters' => [], 'accounts' => []])->once();
-
 
         $this->be($this->user());
         $response = $this->get(route('import.file.configure', ['configure']));
@@ -88,7 +85,6 @@ class FileControllerTest extends TestCase
         $response = $this->get(route('import.file.download', ['configure']));
         $response->assertStatus(200);
     }
-
 
     /**
      * @covers \FireflyIII\Http\Controllers\Import\FileController::initialize
@@ -156,7 +152,6 @@ class FileControllerTest extends TestCase
         $configurator->shouldReceive('configureJob')->once()->andReturn(false);
         $configurator->shouldReceive('getWarningMessage')->once()->andReturn('');
 
-
         $this->be($this->user());
         $response = $this->post(route('import.file.process-configuration', ['running']));
         $response->assertStatus(302);
@@ -171,7 +166,6 @@ class FileControllerTest extends TestCase
         $configurator = $this->mock(CsvConfigurator::class);
         $configurator->shouldReceive('setJob')->once();
         $configurator->shouldReceive('isJobConfigured')->once()->andReturn(true);
-
 
         $this->be($this->user());
         $response = $this->post(route('import.file.process-configuration', ['running']));
@@ -188,7 +182,6 @@ class FileControllerTest extends TestCase
         $importer->shouldReceive('setJob')->once();
         $importer->shouldReceive('run')->once()->andReturn(true);
 
-
         $this->be($this->user());
         $response = $this->post(route('import.file.start', ['running']));
         $response->assertStatus(200);
@@ -203,7 +196,6 @@ class FileControllerTest extends TestCase
         $importer = $this->mock(ImportRoutine::class);
         $importer->shouldReceive('setJob')->once();
         $importer->shouldReceive('run')->once()->andReturn(false);
-
 
         $this->be($this->user());
         $response = $this->post(route('import.file.start', ['running']));
@@ -230,5 +222,4 @@ class FileControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('import.file.configure', ['new']));
     }
-
 }

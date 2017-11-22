@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
@@ -29,12 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class ToAccountIsTest
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class ToAccountIsTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::triggered
      */
@@ -48,7 +44,6 @@ class ToAccountIsTest extends TestCase
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::triggered
@@ -91,6 +86,4 @@ class ToAccountIsTest extends TestCase
         $result = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
-
-
 }

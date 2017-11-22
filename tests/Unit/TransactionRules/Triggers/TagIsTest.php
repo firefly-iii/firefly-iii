@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\TagIs;
@@ -30,12 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class TagIsTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class TagIsTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
      */
@@ -61,7 +56,7 @@ class TagIsTest extends TestCase
         $search = '';
         foreach ($tags as $index => $tag) {
             $journal->tags()->save($tag);
-            if ($index === 1) {
+            if (1 === $index) {
                 $search = $tag->tag;
             }
         }
@@ -81,7 +76,6 @@ class TagIsTest extends TestCase
         $result = TagIs::willMatchEverything($value);
         $this->assertFalse($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything

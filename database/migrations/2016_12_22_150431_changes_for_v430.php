@@ -8,9 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
-
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -46,7 +44,6 @@ class ChangesForV430 extends Migration
                 $table->decimal('amount', 22, 12);
                 $table->date('start_date');
                 $table->date('end_date');
-
 
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -74,9 +74,9 @@ class TwoFactorController extends Controller
      */
     public function lostTwoFactor()
     {
-        $user = auth()->user();
+        $user      = auth()->user();
         $siteOwner = env('SITE_OWNER', '');
-        $title = strval(trans('firefly.two_factor_forgot_title'));
+        $title     = strval(trans('firefly.two_factor_forgot_title'));
 
         Log::info(
             'To reset the two factor authentication for user #' . $user->id .
@@ -99,10 +99,8 @@ class TwoFactorController extends Controller
         // wants to remember session?
         $remember = $request->session()->get('remember_login') ?? false;
 
-
-
-        $minutes  = config('session.lifetime');
-        if ($remember === true) {
+        $minutes = config('session.lifetime');
+        if (true === $remember) {
             // set cookie with a long lifetime (30 days)
             $minutes = 43200;
         }

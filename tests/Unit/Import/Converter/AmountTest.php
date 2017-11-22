@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\Import\Converter;
@@ -28,8 +27,6 @@ use Tests\TestCase;
 
 /**
  * Class AmountTest
- *
- * @package Tests\Unit\Import\Converter
  */
 class AmountTest extends TestCase
 {
@@ -83,12 +80,11 @@ class AmountTest extends TestCase
             '1.234'    => '1234',
             '1.234,5'  => '1234.5',
             '1.234,56' => '1234.56',
-
         ];
         foreach ($values as $value => $expected) {
             $converter = new Amount;
             $result    = $converter->convert($value);
-            $this->assertEquals($expected, $result,sprintf('The original value was %s', $value));
+            $this->assertEquals($expected, $result, sprintf('The original value was %s', $value));
         }
     }
 
@@ -101,6 +97,4 @@ class AmountTest extends TestCase
         $result    = $converter->convert(null);
         $this->assertEquals('0', $result);
     }
-
-
 }

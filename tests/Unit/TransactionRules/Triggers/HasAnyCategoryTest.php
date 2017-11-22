@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
@@ -29,8 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class HasAnyCategoryTest
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class HasAnyCategoryTest extends TestCase
 {
@@ -76,7 +73,7 @@ class HasAnyCategoryTest extends TestCase
         // append to transaction
         foreach ($journal->transactions()->get() as $index => $transaction) {
             $transaction->categories()->detach();
-            if ($index === 0) {
+            if (0 === $index) {
                 $transaction->categories()->save($category);
             }
         }
@@ -95,5 +92,4 @@ class HasAnyCategoryTest extends TestCase
         $result = HasAnyCategory::willMatchEverything($value);
         $this->assertFalse($result);
     }
-
 }

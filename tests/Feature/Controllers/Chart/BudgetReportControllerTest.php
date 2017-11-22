@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -41,7 +39,6 @@ use Tests\TestCase;
 /**
  * Class BudgetReportControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -117,7 +114,6 @@ class BudgetReportControllerTest extends TestCase
 
         $budgetRepos->shouldReceive('getAllBudgetLimits')->andReturn(new Collection([$one, $two]))->once();
 
-
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();
@@ -134,5 +130,4 @@ class BudgetReportControllerTest extends TestCase
         $response = $this->get(route('chart.budget.main', ['1', '1', '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
-
 }

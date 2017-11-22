@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
@@ -40,7 +38,6 @@ use Tests\TestCase;
 /**
  * Class TagReportControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -88,7 +85,6 @@ class TagReportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->get(route('chart.tag.account-income', ['1', 'housing', '20120101', '20120131', 0]));
         $response->assertStatus(200);
-
     }
 
     /**
@@ -144,15 +140,12 @@ class TagReportControllerTest extends TestCase
         $generator = $this->mock(GeneratorInterface::class);
         $collector = $this->mock(JournalCollectorInterface::class);
         $set       = new Collection;
-        for ($i = 0; $i < 10; $i++) {
-
-
+        for ($i = 0; $i < 10; ++$i) {
             $transaction = factory(Transaction::class)->make();
             $tag         = factory(Tag::class)->make();
             $transaction->transactionJournal->tags()->save($tag);
             $set->push($transaction);
         }
-
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -213,6 +206,4 @@ class TagReportControllerTest extends TestCase
         $response = $this->get(route('chart.tag.tag-income', ['1', 'housing', '20120101', '20120131', 0]));
         $response->assertStatus(200);
     }
-
-
 }

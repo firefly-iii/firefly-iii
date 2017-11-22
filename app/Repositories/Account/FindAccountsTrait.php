@@ -228,11 +228,12 @@ trait FindAccountsTrait
      * @param Account $account
      *
      * @return Account|null
+     *
      * @throws FireflyException
      */
     public function getReconciliation(Account $account): ?Account
     {
-        if ($account->accountType->type !== AccountType::ASSET) {
+        if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
         $name     = $account->name . ' reconciliation';

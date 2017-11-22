@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -37,14 +36,12 @@ use Tests\TestCase;
 /**
  * Class ExportControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ExportControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\ExportController::download
      */
@@ -134,7 +131,6 @@ class ExportControllerTest extends TestCase
             ['first' => new Carbon('2014-01-01')]
         );
 
-
         $data = [
             'export_start_range'  => '2015-01-01',
             'export_end_range'    => '2015-01-21',
@@ -167,5 +163,4 @@ class ExportControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('ok');
     }
-
 }

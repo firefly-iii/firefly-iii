@@ -70,11 +70,12 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws FireflyException
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
     {
-        if ($account->accountType->type !== AccountType::ASSET) {
+        if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('Account %s is not an asset account.', $account->name));
         }
         $startBalance   = $request->get('startBalance');
@@ -102,7 +103,7 @@ class ReconcileController extends Controller
         foreach ($cleared as $transaction) {
             if ($transaction->transactionJournal->date <= $end) {
                 $clearedAmount = bcadd($clearedAmount, $transaction->amount);
-                $countCleared++;
+                ++$countCleared;
             }
         }
 
@@ -120,7 +121,7 @@ class ReconcileController extends Controller
             'accounts.reconcile.overview',
             compact(
                 'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount',
-                'route','countCleared'
+                'route', 'countCleared'
             )
         )->render();
 
@@ -212,7 +213,7 @@ class ReconcileController extends Controller
         }
 
         // create reconciliation transaction (if necessary):
-        if ($request->get('reconcile') === 'create') {
+        if ('create' === $request->get('reconcile')) {
             /** @var AccountRepositoryInterface $accountRepos */
             $accountRepos   = app(AccountRepositoryInterface::class);
             $reconciliation = $accountRepos->getReconciliation($account);
@@ -243,8 +244,6 @@ class ReconcileController extends Controller
         Session::flash('success', trans('firefly.reconciliation_stored'));
 
         return redirect(route('accounts.show', [$account->id]));
-
-
     }
 
     /**

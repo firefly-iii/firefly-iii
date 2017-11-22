@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Admin;
-
 
 use FireflyConfig;
 use FireflyIII\Models\Configuration;
@@ -31,14 +29,12 @@ use Tests\TestCase;
 /**
  * Class ConfigurationControllerTest
  *
- * @package Tests\Feature\Controllers\Admin
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConfigurationControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::index
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::__construct
@@ -80,5 +76,4 @@ class ConfigurationControllerTest extends TestCase
         $response->assertSessionHas('success');
         $response->assertStatus(302);
     }
-
 }

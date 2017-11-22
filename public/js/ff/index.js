@@ -29,7 +29,7 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    if(today >= 0) {
+    if (today >= 0) {
         lineChartWithDay(accountFrontpageUri, 'accounts-chart', today);
     } else {
         lineChart(accountFrontpageUri, 'accounts-chart');

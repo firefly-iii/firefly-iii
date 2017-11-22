@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
-
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -37,7 +35,6 @@ use Tests\TestCase;
 /**
  * Class BillControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -252,7 +249,5 @@ class BillControllerTest extends TestCase
         $response = $this->post(route('bills.update', [1]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-
     }
-
 }

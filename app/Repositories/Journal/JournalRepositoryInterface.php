@@ -35,15 +35,6 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
-
-    /**
-     * @param array $transactionIds
-     *
-     * @return Collection
-     */
-    public function getTransactionsById(array $transactionIds): Collection;
-
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -104,6 +95,13 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getTransactionTypes(): Collection;
+
+    /**
+     * @param array $transactionIds
+     *
+     * @return Collection
+     */
+    public function getTransactionsById(array $transactionIds): Collection;
 
     /**
      * @param TransactionJournal $journal

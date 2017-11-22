@@ -151,21 +151,6 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFilter
      */
-    protected function markdown(): Twig_SimpleFilter
-    {
-        return new Twig_SimpleFilter(
-            'markdown',
-            function (string $text): string {
-                $converter = new CommonMarkConverter;
-
-                return $converter->convertToHtml($text);
-            },['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFilter
-     */
     protected function balance(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
@@ -180,7 +165,6 @@ class General extends Twig_Extension
             }
         );
     }
-
 
     /**
      * @return Twig_SimpleFunction
@@ -241,6 +225,21 @@ class General extends Twig_Extension
             function (): string {
                 return app('amount')->getCurrencySymbol();
             }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function markdown(): Twig_SimpleFilter
+    {
+        return new Twig_SimpleFilter(
+            'markdown',
+            function (string $text): string {
+                $converter = new CommonMarkConverter;
+
+                return $converter->convertToHtml($text);
+            }, ['is_safe' => ['html']]
         );
     }
 

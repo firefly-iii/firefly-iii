@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,8 +13,6 @@ class ChangesForV470 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -26,7 +24,6 @@ class ChangesForV470 extends Migration
      * Run the migrations.
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up()
     {
@@ -42,7 +39,7 @@ class ChangesForV470 extends Migration
                     $table->string('inward');
                     $table->boolean('editable');
 
-                    $table->unique(['name', 'outward','inward']);
+                    $table->unique(['name', 'outward', 'inward']);
                 }
             );
         }
@@ -62,7 +59,7 @@ class ChangesForV470 extends Migration
                     $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
                     $table->foreign('destination_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
-                    $table->unique(['link_type_id','source_id','destination_id']);
+                    $table->unique(['link_type_id', 'source_id', 'destination_id']);
                 }
             );
         }

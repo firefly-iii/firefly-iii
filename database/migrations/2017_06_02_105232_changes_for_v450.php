@@ -8,9 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
-
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,8 +20,6 @@ class ChangesForV450 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -33,7 +29,6 @@ class ChangesForV450 extends Migration
      * Run the migrations.
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up()
     {

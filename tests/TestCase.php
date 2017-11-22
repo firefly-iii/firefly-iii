@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests;
@@ -34,7 +33,6 @@ use Mockery;
 /**
  * Class TestCase
  *
- * @package Tests
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class TestCase extends BaseTestCase
@@ -58,9 +56,8 @@ abstract class TestCase extends BaseTestCase
                 ]
             );
             // set period to match?
-
         }
-        if ($range === 'custom') {
+        if ('custom' === $range) {
             $this->session(
                 [
                     'start' => Carbon::now()->subDays(20),
@@ -119,5 +116,4 @@ abstract class TestCase extends BaseTestCase
 
         return $object;
     }
-
 }

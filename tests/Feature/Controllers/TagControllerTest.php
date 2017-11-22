@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -33,18 +32,15 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
-
 /**
  * Class TagControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TagControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\TagController::create
      */
@@ -161,7 +157,6 @@ class TagControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
-
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1]));
         $response->assertStatus(200);
@@ -197,7 +192,6 @@ class TagControllerTest extends TestCase
             TransactionType::DEPOSIT    => '0',
         ];
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
-
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1, 'all']));
@@ -238,7 +232,6 @@ class TagControllerTest extends TestCase
         ];
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
-
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1, '2016-01-01']));
         $response->assertStatus(200);
@@ -278,7 +271,6 @@ class TagControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-
         $this->session(['tags.edit.uri' => 'http://localhost']);
         $data = [
             'tag'     => 'Hello updated tag' . rand(999, 10000),
@@ -293,5 +285,4 @@ class TagControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
 }

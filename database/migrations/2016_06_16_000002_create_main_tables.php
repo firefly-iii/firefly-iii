@@ -60,7 +60,6 @@ class CreateMainTables extends Migration
      */
     public function up()
     {
-        //
         $this->createAccountTables();
         $this->createPiggyBanksTable();
         $this->createAttachmentsTable();
@@ -433,7 +432,6 @@ class CreateMainTables extends Migration
                     $table->boolean('active')->default(1);
                     $table->boolean('stop_processing')->default(0);
 
-
                     // link rule id to rules table
                     $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
                 }
@@ -453,7 +451,6 @@ class CreateMainTables extends Migration
                     $table->integer('order', false, true)->default(0);
                     $table->boolean('active')->default(1);
                     $table->boolean('stop_processing')->default(0);
-
 
                     // link rule id to rules table
                     $table->foreign('rule_id')->references('id')->on('rules')->onDelete('cascade');
@@ -582,7 +579,6 @@ class CreateMainTables extends Migration
                 }
             );
         }
-
 
         if (!Schema::hasTable('piggy_bank_events')) {
             Schema::create(

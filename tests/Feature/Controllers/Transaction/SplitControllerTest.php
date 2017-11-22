@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
-
 
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\AccountType;
@@ -40,7 +38,6 @@ use Tests\TestCase;
 /**
  * Class SplitControllerTest
  *
- * @package Tests\Feature\Controllers\Transaction
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -55,7 +52,6 @@ class SplitControllerTest extends TestCase
      */
     public function testEdit()
     {
-
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
@@ -70,7 +66,6 @@ class SplitControllerTest extends TestCase
                           ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
-
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -98,7 +93,6 @@ class SplitControllerTest extends TestCase
      */
     public function testEditSingle()
     {
-
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepository  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
@@ -113,7 +107,6 @@ class SplitControllerTest extends TestCase
                           ->andReturn(new Collection([$account]))->once();
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $tasker->shouldReceive('getTransactionsOverview')->andReturn($transactions->toArray());
-
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -158,7 +151,6 @@ class SplitControllerTest extends TestCase
         $repository->shouldReceive('updateSplitJournal')->andReturn($deposit);
         $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
 
-
         $attachmentRepos = $this->mock(AttachmentHelperInterface::class);
         $attachmentRepos->shouldReceive('saveAttachmentsForModel');
         $attachmentRepos->shouldReceive('getMessages')->andReturn(new MessageBag);
@@ -191,5 +183,4 @@ class SplitControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionMissing('success');
     }
-
 }

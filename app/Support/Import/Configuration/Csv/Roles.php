@@ -258,7 +258,7 @@ class Roles implements ConfigurationInterface
             if ('_ignore' !== $role) {
                 ++$assigned;
             }
-            if (in_array($role, ['amount','amount_credit','amount_debet'])) {
+            if (in_array($role, ['amount', 'amount_credit', 'amount_debet'])) {
                 $hasAmount = true;
             }
         }

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasNoCategory;
@@ -30,12 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class HasNoCategoryTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class HasNoCategoryTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoCategory::triggered
      */
@@ -61,7 +56,6 @@ class HasNoCategoryTest extends TestCase
         $journal->categories()->detach();
         $this->assertEquals(0, $journal->categories()->count());
 
-
         $trigger = HasNoCategory::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
@@ -80,7 +74,6 @@ class HasNoCategoryTest extends TestCase
         $transaction->categories()->save($category);
         $this->assertEquals(0, $journal->categories()->count());
         $this->assertEquals(1, $transaction->categories()->count());
-
 
         $trigger = HasNoCategory::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);

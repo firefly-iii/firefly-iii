@@ -21,8 +21,6 @@
 var allCharts = {};
 
 
-
-
 /*
  Make some colours:
  */
@@ -61,8 +59,6 @@ Chart.defaults.global.responsive = true;
 Chart.defaults.global.maintainAspectRatio = false;
 
 
-
-
 /**
  * Chart line thing
  */
@@ -92,12 +88,15 @@ const verticalLinePlugin = {
 
     afterDatasetsDraw: function (chart, easing) {
         if (chart.config.lineAtIndex) {
-            chart.config.lineAtIndex.forEach(pointIndex => this.renderVerticalLine(chart, pointIndex));
+            chart.config.lineAtIndex.forEach(pointIndex = > this.renderVerticalLine(chart, pointIndex)
+        )
+            ;
         }
     }
 };
 
 Chart.plugins.register(verticalLinePlugin);
+
 /**
  *
  * @param data
@@ -343,8 +342,8 @@ function drawAChart(URI, container, chartType, options, colorData, today) {
                 options: options,
                 lineAtIndex: []
             };
-            if(today >= 0) {
-                chartOpts.lineAtIndex.push(today-1);
+            if (today >= 0) {
+                chartOpts.lineAtIndex.push(today - 1);
                 console.log('push opt');
             }
             allCharts[container] = new Chart(ctx, chartOpts);

@@ -24,7 +24,6 @@ namespace FireflyIII\Import\Object;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\Converter\Amount;
 use FireflyIII\Import\Converter\ConverterInterface;
 use FireflyIII\Import\MapperPreProcess\PreProcessorInterface;
 use FireflyIII\User;
@@ -131,7 +130,7 @@ class ImportJournal
                 $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountCredit['role'])));
                 $info           = $this->amountCredit;
             }
-            if (count($info) === 0) {
+            if (0 === count($info)) {
                 throw new FireflyException('No amount information for this row.');
             }
 

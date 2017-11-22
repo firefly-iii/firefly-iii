@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
-
 
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
@@ -32,8 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class PrependNotesTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class PrependNotesTest extends TestCase
 {
@@ -64,7 +60,6 @@ class PrependNotesTest extends TestCase
 
         $newNote = $journal->notes()->first();
         $this->assertEquals($toPrepend . $start, $newNote->text);
-
     }
 
     /**
@@ -90,6 +85,5 @@ class PrependNotesTest extends TestCase
 
         $newNote = $journal->notes()->first();
         $this->assertEquals($toPrepend, $newNote->text);
-
     }
 }

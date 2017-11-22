@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -38,7 +37,6 @@ use Tests\TestCase;
 /**
  * Class BudgetControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -184,7 +182,6 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
 
-
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('budgets.index'));
@@ -231,7 +228,6 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
         $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
 
-
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('budgets.index', ['2017-01-01']));
@@ -277,7 +273,6 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
         $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
-
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -455,7 +450,6 @@ class BudgetControllerTest extends TestCase
     /**
      * @covers                   \FireflyIII\Http\Controllers\BudgetController::showByBudgetLimit
      * @expectedExceptionMessage This budget limit is not part of
-     *
      */
     public function testShowByBadBudgetLimit()
     {
@@ -484,7 +478,6 @@ class BudgetControllerTest extends TestCase
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
         $accountRepository->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
-
         // mock budget repository
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $budgetRepository->shouldReceive('spentInPeriod')->andReturn('1');
@@ -499,7 +492,6 @@ class BudgetControllerTest extends TestCase
         $collector->shouldReceive('setBudget')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
-
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -575,5 +567,4 @@ class BudgetControllerTest extends TestCase
         $response = $this->get(route('budgets.income', ['2017-01-01', '2017-01-31']));
         $response->assertStatus(200);
     }
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -31,14 +30,12 @@ use Tests\TestCase;
 /**
  * Class NewUserControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NewUserControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\NewUserController::index
      * @covers \FireflyIII\Http\Controllers\NewUserController::__construct
@@ -69,7 +66,6 @@ class NewUserControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('count')->andReturn(1);
 
-
         $this->be($this->user());
         $response = $this->get(route('new-user.index'));
         $response->assertStatus(302);
@@ -88,7 +84,6 @@ class NewUserControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('store')->times(2);
-
 
         $data = [
             'bank_name'       => 'New bank',
@@ -121,5 +116,4 @@ class NewUserControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
 }

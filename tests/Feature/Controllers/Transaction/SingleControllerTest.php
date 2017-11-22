@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
-
 
 use DB;
 use FireflyIII\Events\StoredTransactionJournal;
@@ -45,14 +43,12 @@ use Tests\TestCase;
 /**
  * Class SingleControllerTest
  *
- * @package Tests\Feature\Controllers\Transaction
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SingleControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::cloneTransaction
      */
@@ -77,7 +73,6 @@ class SingleControllerTest extends TestCase
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
         $piggyRepos = $this->mock(PiggyBankRepositoryInterface::class);
         $piggyRepos->shouldReceive('getPiggyBanksWithAmount')->andReturn(new Collection)->once();
-
 
         $this->be($this->user());
         $response = $this->get(route('transactions.create', ['withdrawal']));
@@ -206,7 +201,6 @@ class SingleControllerTest extends TestCase
         $response->assertStatus(302);
     }
 
-
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
      * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::groupedAccountList
@@ -317,13 +311,11 @@ class SingleControllerTest extends TestCase
         $messages = new MessageBag;
         $messages->add('attachments', 'Fake error');
 
-
         // mock attachment helper, trigger an error AND and info thing.
         $attachmentRepo = $this->mock(AttachmentHelperInterface::class);
         $attachmentRepo->shouldReceive('saveAttachmentsForModel');
         $attachmentRepo->shouldReceive('getErrors')->andReturn($errors);
         $attachmentRepo->shouldReceive('getMessages')->andReturn($messages);
-
 
         $this->session(['transactions.create.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -360,7 +352,6 @@ class SingleControllerTest extends TestCase
         $journal->description = 'New journal';
         $journal->transactionType()->associate($type);
 
-
         $repository->shouldReceive('update')->andReturn($journal);
         $repository->shouldReceive('first')->times(2)->andReturn(new TransactionJournal);
 
@@ -389,7 +380,5 @@ class SingleControllerTest extends TestCase
         $response->assertSee('Updated groceries');
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-
     }
-
 }

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Auth;
-
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Tests\TestCase;
@@ -30,7 +28,6 @@ use Tests\TestCase;
 /**
  * Class ForgotPasswordControllerTest
  *
- * @package Tests\Feature\Controllers\Auth
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

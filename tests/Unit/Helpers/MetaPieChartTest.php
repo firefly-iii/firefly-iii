@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\Helpers;
-
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Chart\MetaPieChart;
@@ -40,7 +38,6 @@ use Tests\TestCase;
 /**
  * Class MetaPieChartTest
  *
- * @package Tests\Unit\Helpers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -87,7 +84,6 @@ class MetaPieChartTest extends TestCase
         $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
         $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
 
-
         $helper = new MetaPieChart();
         $helper->setUser($this->user());
         $helper->setStart($som);
@@ -98,12 +94,10 @@ class MetaPieChartTest extends TestCase
         $keys = array_keys($chart);
         $this->assertEquals($keys[0], $accounts[1]->name);
         $this->assertEquals($keys[1], $accounts[2]->name);
-        $this->assertTrue(bccomp('1000', $chart[$accounts[1]->name]) === 0);
-        $this->assertTrue(bccomp('1000', $chart[$accounts[2]->name]) === 0);
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
 
         $this->assertTrue(true);
-
-
     }
 
     /**
@@ -149,7 +143,6 @@ class MetaPieChartTest extends TestCase
         $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
         $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
 
-
         $helper = new MetaPieChart();
         $helper->setCollectOtherObjects(true);
         $helper->setUser($this->user());
@@ -161,20 +154,18 @@ class MetaPieChartTest extends TestCase
         $keys = array_keys($chart);
         $this->assertEquals($keys[0], $accounts[1]->name);
         $this->assertEquals($keys[1], $accounts[2]->name);
-        $this->assertTrue(bccomp('1000', $chart[$accounts[1]->name]) === 0);
-        $this->assertTrue(bccomp('1000', $chart[$accounts[2]->name]) === 0);
-        $this->assertTrue(bccomp('1000', $chart['Everything else']) === 0);
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[1]->name]));
+        $this->assertTrue(0 === bccomp('1000', $chart[$accounts[2]->name]));
+        $this->assertTrue(0 === bccomp('1000', $chart['Everything else']));
 
         $this->assertTrue(true);
-
-
     }
 
     private function fakeOthers(): Collection
     {
         $set = new Collection;
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 30; ++$i) {
             $transaction = new Transaction;
 
             // basic fields.
@@ -193,7 +184,7 @@ class MetaPieChartTest extends TestCase
     private function fakeTransactions(): Collection
     {
         $set = new Collection;
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $transaction = new Transaction;
 
             // basic fields.
@@ -206,7 +197,7 @@ class MetaPieChartTest extends TestCase
             $set->push($transaction);
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $transaction = new Transaction;
 
             // basic fields.
@@ -221,5 +212,4 @@ class MetaPieChartTest extends TestCase
 
         return $set;
     }
-
 }

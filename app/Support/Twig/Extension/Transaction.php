@@ -58,7 +58,7 @@ class Transaction extends Twig_Extension
         $coloured = true;
 
         // at this point amount is always negative.
-        if ($transaction->transaction_type_type === TransactionType::RECONCILIATION && bccomp(strval($transaction->transaction_amount),'0') === 1) {
+        if (TransactionType::RECONCILIATION === $transaction->transaction_type_type && 1 === bccomp(strval($transaction->transaction_amount), '0')) {
             $amount = bcmul($amount, '-1');
         }
 
@@ -290,7 +290,7 @@ class Transaction extends Twig_Extension
             return $cache->get();
         }
 
-        if($transaction->transaction_type_type === TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION === $transaction->transaction_type_type) {
             return '&mdash;';
         }
 
@@ -476,7 +476,7 @@ class Transaction extends Twig_Extension
         if ($cache->has()) {
             return $cache->get();
         }
-        if($transaction->transaction_type_type === TransactionType::RECONCILIATION) {
+        if (TransactionType::RECONCILIATION === $transaction->transaction_type_type) {
             return '&mdash;';
         }
 

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -30,14 +29,12 @@ use Tests\TestCase;
 /**
  * Class HelpControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class HelpControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\HelpController::show
      * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
@@ -65,7 +62,7 @@ class HelpControllerTest extends TestCase
     {
         // force pref in dutch for test
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
-        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'nl_NL',]);
+        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'nl_NL']);
 
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->withArgs(['index'])->andReturn(true)->once();
@@ -83,7 +80,7 @@ class HelpControllerTest extends TestCase
 
         // put English back:
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
-        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'en_US',]);
+        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'en_US']);
     }
 
     /**
@@ -94,7 +91,7 @@ class HelpControllerTest extends TestCase
     {
         // force pref in dutch for test
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
-        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'nl_NL',]);
+        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'nl_NL']);
 
         $help = $this->mock(HelpInterface::class);
         $help->shouldReceive('hasRoute')->withArgs(['index'])->andReturn(true)->once();
@@ -112,7 +109,7 @@ class HelpControllerTest extends TestCase
 
         // put English back:
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
-        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'en_US',]);
+        Preference::create(['user_id' => $this->user()->id, 'name' => 'language', 'data' => 'en_US']);
     }
 
     /**
@@ -146,5 +143,4 @@ class HelpControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('There is no help for this route.');
     }
-
 }

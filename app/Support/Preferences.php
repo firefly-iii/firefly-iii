@@ -127,7 +127,6 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
-
             return Cache::get($fullName);
         }
 

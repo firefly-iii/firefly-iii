@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -36,14 +35,12 @@ use Tests\TestCase;
 /**
  * Class RuleGroupControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RuleGroupControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::create
      * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
@@ -122,7 +119,6 @@ class RuleGroupControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-
         $this->be($this->user());
         $response = $this->get(route('rule-groups.edit', [1]));
         $response->assertStatus(200);
@@ -191,7 +187,6 @@ class RuleGroupControllerTest extends TestCase
             'description' => 'No description',
         ];
 
-
         $this->be($this->user());
         $response = $this->post(route('rule-groups.store', [1]), $data);
         $response->assertStatus(302);
@@ -239,5 +234,4 @@ class RuleGroupControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
 }

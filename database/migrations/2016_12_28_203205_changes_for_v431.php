@@ -8,7 +8,6 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
@@ -21,8 +20,6 @@ class ChangesForV431 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -39,7 +36,6 @@ class ChangesForV431 extends Migration
                 $table->boolean('repeats')->default(0);
             }
         );
-
 
         // remove date field "end_date"
         Schema::table(

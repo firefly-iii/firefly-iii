@@ -189,7 +189,7 @@ class JournalRepository implements JournalRepositoryInterface
                           ->where('transaction_journals.user_id', $this->user->id)
                           ->whereNull('transaction_journals.deleted_at')
                           ->whereNull('transactions.deleted_at')
-                          ->get(    ['transactions.*']);
+                          ->get(['transactions.*']);
 
         return $set;
     }

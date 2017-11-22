@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -28,14 +27,12 @@ use Tests\TestCase;
 /**
  * Class ImportControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ImportControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\ImportController::index
      */
@@ -46,6 +43,4 @@ class ImportControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
-
-
 }

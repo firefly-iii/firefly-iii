@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Admin;
@@ -28,14 +27,12 @@ use Tests\TestCase;
 /**
  * Class HomeControllerTest
  *
- * @package Tests\Feature\Controllers\Admin
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class HomeControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\HomeController::index
      */
@@ -47,5 +44,4 @@ class HomeControllerTest extends TestCase
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
-
 }

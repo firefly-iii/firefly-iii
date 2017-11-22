@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
-
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Tag;
@@ -46,7 +44,6 @@ class AddTagTest extends TestCase
         $result                   = $action->act($journal);
         $this->assertFalse($result);
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => 2, 'transaction_journal_id' => 1]);
-
     }
 
     /**
@@ -64,7 +61,5 @@ class AddTagTest extends TestCase
         // find newly created tag:
         $tag = Tag::orderBy('id', 'DESC')->first();
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => 1]);
-
     }
-
 }

@@ -20,7 +20,6 @@ class CreateSupportTables extends Migration
 {
     /**
      * Reverse the migrations.
-     *
      */
     public function down()
     {
@@ -124,8 +123,7 @@ class CreateSupportTables extends Migration
             Schema::create(
                 'jobs',
                 function (Blueprint $table) {
-
-                // straight from Laravel
+                    // straight from Laravel
                     $table->bigIncrements('id');
                     $table->string('queue');
                     $table->longText('payload');

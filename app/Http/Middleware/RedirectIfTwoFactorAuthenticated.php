@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use Cookie;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
 

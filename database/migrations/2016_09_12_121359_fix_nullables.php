@@ -18,7 +18,6 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class FixNullables extends Migration
 {
-
     /**
      * Reverse the migrations.
      */

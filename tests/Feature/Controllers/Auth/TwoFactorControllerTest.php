@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Auth;
-
 
 use FireflyIII\Models\Preference;
 use PragmaRX\Google2FA\Contracts\Google2FA;
@@ -32,7 +30,6 @@ use Tests\TestCase;
 /**
  * Class TwoFactorControllerTest
  *
- * @package Tests\Feature\Controllers\Auth
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -50,7 +47,6 @@ class TwoFactorControllerTest extends TestCase
         $truePref->data         = true;
         $secretPreference       = new Preference;
         $secretPreference->data = 'BlablaSeecret';
-
 
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->twice();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn($secretPreference)->once();
@@ -130,5 +126,4 @@ class TwoFactorControllerTest extends TestCase
         $response = $this->post(route('two-factor.post'), $data);
         $response->assertStatus(302);
     }
-
 }

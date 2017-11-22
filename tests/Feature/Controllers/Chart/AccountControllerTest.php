@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -43,14 +41,12 @@ use Tests\TestCase;
 /**
  * Class AccountControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountControllerTest extends TestCase
 {
-
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController::all
      */
@@ -85,7 +81,6 @@ class AccountControllerTest extends TestCase
         $generator->shouldReceive('singleSet')->andReturn([]);
         Steam::shouldReceive('balancesByAccounts')->twice()->andReturn([]);
 
-
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('chart.account.expense'));
@@ -113,7 +108,6 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('pieChart')->andReturn([]);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
-
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -144,7 +138,6 @@ class AccountControllerTest extends TestCase
         $generator->shouldReceive('pieChart')->andReturn([]);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
-
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -374,5 +367,4 @@ class AccountControllerTest extends TestCase
         $response = $this->get(route('chart.account.single', [1]));
         $response->assertStatus(200);
     }
-
 }

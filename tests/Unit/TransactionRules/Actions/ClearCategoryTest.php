@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
@@ -30,8 +29,6 @@ use Tests\TestCase;
 
 /**
  * Class ClearCategoryTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class ClearCategoryTest extends TestCase
 {
@@ -56,6 +53,5 @@ class ClearCategoryTest extends TestCase
 
         // assert result
         $this->assertEquals(0, $journal->categories()->count());
-
     }
 }

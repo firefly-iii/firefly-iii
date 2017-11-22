@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -42,14 +40,12 @@ use Tests\TestCase;
 /**
  * Class BudgetControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetControllerTest extends TestCase
 {
-
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::budget
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetController::__construct
@@ -65,7 +61,6 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon('2015-01-01'))->once();
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
         $generator->shouldReceive('singleSet')->andReturn([])->once();
-
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -83,7 +78,6 @@ class BudgetControllerTest extends TestCase
     {
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $generator  = $this->mock(GeneratorInterface::class);
-
 
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
         $generator->shouldReceive('singleSet')->once()->andReturn([]);
@@ -214,7 +208,6 @@ class BudgetControllerTest extends TestCase
         $budgetLimit->budget_id = $budget->id;
         $transaction            = factory(Transaction::class)->make();
 
-
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->once();
         $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection([$budgetLimit]));
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
@@ -254,7 +247,6 @@ class BudgetControllerTest extends TestCase
         $two->budget_id = $budget->id;
         $transaction    = factory(Transaction::class)->make();
 
-
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]))->once();
         $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection([$one, $two]));
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
@@ -290,7 +282,6 @@ class BudgetControllerTest extends TestCase
         $budget      = factory(Budget::class)->make();
         $transaction = factory(Transaction::class)->make();
 
-
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
         $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection);
         $repository->shouldReceive('spentInPeriod')->andReturn('-100');
@@ -324,7 +315,6 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getBudgetPeriodReport')->andReturn([])->once();
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
-
 
         $this->be($this->user());
         $response = $this->get(route('chart.budget.period', [1, '1', '20120101', '20120131']));

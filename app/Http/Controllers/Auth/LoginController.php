@@ -74,7 +74,7 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
@@ -92,7 +92,6 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-
             // user is logged in. Save in session if the user requested session to be remembered:
             $request->session()->put('remember_login', $request->filled('remember'));
 
@@ -110,7 +109,8 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request, CookieJar $cookieJar)
@@ -166,7 +166,6 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-
-        return view('auth.login', compact('allowRegistration', 'email', 'remember'));//->withCookie($cookie);
+        return view('auth.login', compact('allowRegistration', 'email', 'remember')); //->withCookie($cookie);
     }
 }

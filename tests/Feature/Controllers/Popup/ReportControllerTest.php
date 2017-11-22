@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Popup;
-
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\PopupReportInterface;
@@ -35,18 +33,15 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
 
-
 /**
  * Class ReportControllerTest
  *
- * @package Tests\Feature\Controllers\Popup
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportControllerTest extends TestCase
 {
-
     /**
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::__construct
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::general
@@ -176,7 +171,6 @@ class ReportControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper  = $this->mock(PopupReportInterface::class);
 
-
         $budget  = factory(Budget::class)->make();
         $account = factory(Account::class)->make();
 
@@ -231,7 +225,6 @@ class ReportControllerTest extends TestCase
                 'role'       => 2, // ROLE_TAGROLE
             ],
         ];
-
 
         $uri      = route('popup.general') . '?' . http_build_query($arguments);
         $response = $this->get($uri);
@@ -385,6 +378,4 @@ class ReportControllerTest extends TestCase
         $response  = $this->get($uri);
         $response->assertStatus(500);
     }
-
-
 }

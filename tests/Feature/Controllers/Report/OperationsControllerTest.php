@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
-
 
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -33,7 +31,6 @@ use Tests\TestCase;
 /**
  * Class OperationsControllerTest
  *
- * @package Tests\Feature\Controllers\Report
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -54,7 +51,6 @@ class OperationsControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('addFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transactions);
-
 
         $this->be($this->user());
         $response = $this->get(route('report-data.operations.expenses', ['1', '20160101', '20160131']));
@@ -101,5 +97,4 @@ class OperationsControllerTest extends TestCase
         $response = $this->get(route('report-data.operations.operations', ['1', '20160101', '20160131']));
         $response->assertStatus(200);
     }
-
 }
