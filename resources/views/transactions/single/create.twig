@@ -165,7 +165,7 @@
 
                             {# NOTES #}
                             {% if optionalFields.notes %}
-                                {{ ExpandedForm.textarea('notes') }}
+                                {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                             {% endif %}
 
                         </div>

@@ -240,7 +240,7 @@
                         {% if journal.notes.count == 1 %}
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td>{{ journal.notes.first.markdown|raw }}</td>
+                                <td>{{ journal.notes.first.text|markdown }}</td>
                             </tr>
                         {% endif %}
 
