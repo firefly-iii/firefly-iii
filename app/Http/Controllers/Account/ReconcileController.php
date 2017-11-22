@@ -23,11 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
@@ -35,6 +37,7 @@ use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
+use Session;
 use View;
 
 /**
@@ -67,9 +70,13 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws FireflyException
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
     {
+        if ($account->accountType->type !== AccountType::ASSET) {
+            throw new FireflyException(sprintf('Account %s is not an asset account.', $account->name));
+        }
         $startBalance   = $request->get('startBalance');
         $endBalance     = $request->get('endBalance');
         $transactionIds = $request->get('transactions') ?? [];
@@ -93,6 +100,11 @@ class ReconcileController extends Controller
             $clearedAmount = bcadd($clearedAmount, $transaction->amount);
         }
 
+        // final difference:
+        //{% set diff = (startBalance - endBalance) + clearedAmount + amount %}
+        $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
+        $diffCompare = bccomp($difference, '0');
+
         $return         = [
             'is_zero'  => false,
             'post_uri' => $route,
@@ -100,7 +112,10 @@ class ReconcileController extends Controller
         ];
         $return['html'] = view(
             'accounts.reconcile.overview',
-            compact('account', 'start', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route')
+            compact(
+                'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount',
+                'route'
+            )
         )->render();
 
         return Response::json($return);
@@ -117,6 +132,11 @@ class ReconcileController extends Controller
     {
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
+        }
+        if (AccountType::ASSET !== $account->accountType->type) {
+            Session::flash('error', trans('firefly.must_be_asset_account'));
+
+            return redirect(route('accounts.index', [config('firefly.shortNamesByFullName.' . $account->accountType->type)]));
         }
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -174,6 +194,52 @@ class ReconcileController extends Controller
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
+     */
+    public function submit(Request $request, Account $account, Carbon $start, Carbon $end)
+    {
+        /** @var JournalRepositoryInterface $repository */
+        $repository   = app(JournalRepositoryInterface::class);
+        $transactions = $repository->getTransactionsById($request->get('transactions'));
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $repository->reconcile($transaction); // mark as reconciled.
+        }
+
+        // create reconciliation transaction (if necessary):
+        if ($request->get('reconcile') === 'create') {
+            /** @var AccountRepositoryInterface $accountRepos */
+            $accountRepos   = app(AccountRepositoryInterface::class);
+            $reconciliation = $accountRepos->getReconciliation($account);
+            $difference     = $request->get('difference');
+
+            // store journal between these two.
+            $data    = [
+                'what'        => 'Reconciliation',
+                'source'      => $account,
+                'destination' => $reconciliation,
+                'category'    => '',
+                'budget_id'   => 0,
+                'amount'      => $difference,
+                'currency_id' => $account->getMeta('currency_id'),
+                'description' => 'Reconciliation [period]',
+                'date'        => $request->get('end'),
+            ];
+            $journal = $repository->store($data);
+            // reconcile this transaction too:
+            $transaction = $journal->transactions()->first();
+            $repository->reconcile($transaction);
+        }
+        Session::flash('success', trans('firefly.reconciliation_stored'));
+
+        return redirect(route('accounts.show', [$account->id]));
+
+
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return mixed
      */
@@ -198,14 +264,5 @@ class ReconcileController extends Controller
         $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
 
         return Response::json(['html' => $html]);
-    }
-
-    /**
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     */
-    public function submit(Request $request, Account $account, Carbon $start, Carbon $end) {
-        var_dump($request->all());
     }
 }

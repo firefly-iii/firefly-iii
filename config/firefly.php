@@ -107,12 +107,13 @@ return [
         ],
     'accountTypeByIdentifier'    =>
         [
-            'asset'   => 'Asset account',
-            'expense' => 'Expense account',
-            'revenue' => 'Revenue account',
-            'opening' => 'Initial balance account',
-            'initial' => 'Initial balance account',
-            'import'  => 'Import account',
+            'asset'     => 'Asset account',
+            'expense'   => 'Expense account',
+            'revenue'   => 'Revenue account',
+            'opening'   => 'Initial balance account',
+            'initial'   => 'Initial balance account',
+            'import'    => 'Import account',
+            'reconcile' => 'Reconciliation account',
         ],
     'shortNamesByFullName'       =>
         [

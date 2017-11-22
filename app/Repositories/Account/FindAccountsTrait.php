@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\User;
@@ -219,6 +220,39 @@ trait FindAccountsTrait
         );
         $account->active = true;
         $account->save();
+
+        return $account;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return Account|null
+     * @throws FireflyException
+     */
+    public function getReconciliation(Account $account): ?Account
+    {
+        if ($account->accountType->type !== AccountType::ASSET) {
+            throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
+        }
+        $name     = $account->name . ' reconciliation';
+        $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name) {
+                return $account;
+            }
+        }
+        // assume nothing was found. create it!
+        $data    = [
+            'accountType'    => 'reconcile',
+            'name'           => $name,
+            'iban'           => null,
+            'virtualBalance' => null,
+            'active'         => true,
+        ];
+        $account = $this->storeAccount($data);
 
         return $account;
     }

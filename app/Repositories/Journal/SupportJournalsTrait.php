@@ -67,6 +67,11 @@ trait SupportJournalsTrait
                 $accounts['source']      = Account::where('user_id', $user->id)->where('id', $data['source_account_id'])->first();
                 $accounts['destination'] = Account::where('user_id', $user->id)->where('id', $data['destination_account_id'])->first();
                 break;
+            case TransactionType::RECONCILIATION:
+                $accounts['source']      = $data['source'];
+                $accounts['destination'] = $data['destination'];
+                unset($data['source'], $data['destination']);
+                break;
             default:
                 throw new FireflyException(sprintf('Did not recognise transaction type "%s".', $type->type));
         }
@@ -229,6 +234,9 @@ trait SupportJournalsTrait
             $check = 'destination';
         }
         switch ($transactionType->type) {
+            case TransactionType::RECONCILIATION:
+                // do nothing.
+                break;
             case TransactionType::DEPOSIT:
             case TransactionType::WITHDRAWAL:
                 // continue:

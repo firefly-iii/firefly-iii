@@ -110,6 +110,15 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
+     * Find or create the opposing reconciliation account.
+     *
+     * @param Account $account
+     *
+     * @return Account|null
+     */
+    public function getReconciliation(Account $account): ?Account;
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account
