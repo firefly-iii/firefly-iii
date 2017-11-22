@@ -40,10 +40,6 @@ class AccountType extends Model
     const IMPORT          = 'Import account';
     const RECONCILIATION  = 'Reconciliation account';
     const LOAN            = 'Loan';
-
-    /** @var array  */
-    protected $fillable = ['type'];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -54,6 +50,8 @@ class AccountType extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    /** @var array */
+    protected $fillable = ['type'];
 
     /**
      * @return HasMany

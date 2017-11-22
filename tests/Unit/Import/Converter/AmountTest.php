@@ -88,7 +88,7 @@ class AmountTest extends TestCase
         foreach ($values as $value => $expected) {
             $converter = new Amount;
             $result    = $converter->convert($value);
-            $this->assertEquals($expected, $result);
+            $this->assertEquals($expected, $result,sprintf('The original value was %s', $value));
         }
     }
 

@@ -38,10 +38,6 @@ class TransactionType extends Model
     const TRANSFER        = 'Transfer';
     const OPENING_BALANCE = 'Opening balance';
     const RECONCILIATION  = 'Reconciliation';
-
-    /** @var array  */
-    protected $fillable = ['type'];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -53,6 +49,8 @@ class TransactionType extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    /** @var array */
+    protected $fillable = ['type'];
 
     /**
      * @param string $type
