@@ -28,7 +28,7 @@
                         <td>{{ formatAmountByAccount(account, amount) }}</td>
                     </tr>
                     <tr>
-                        <td>{{ trans('firefly.already_cleared_transactions', {count: clearedIds|length}) }}</td>
+                        <td>{{ trans('firefly.already_cleared_transactions', {count: countCleared}) }}</td>
                         <td>{{ formatAmountByAccount(account, clearedAmount) }}</td>
                     </tr>
                     <tr>

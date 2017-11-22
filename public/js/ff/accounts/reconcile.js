@@ -134,7 +134,7 @@ function calculateBalanceDifference() {
     var endBalance = parseFloat($('input[name="end_balance"]').val());
     balanceDifference = startBalance - endBalance;
     //if (balanceDifference < 0) {
-      //  balanceDifference = balanceDifference * -1;
+    //  balanceDifference = balanceDifference * -1;
     //}
 }
 
@@ -153,13 +153,15 @@ function getTransactionsForRange() {
 }
 
 /**
- * Loop over all transactions that have already been cleared and add this to the selectedAmount.
+ * Loop over all transactions that have already been cleared (in the range) and add this to the selectedAmount.
  *
  */
 function includeClearedTransactions() {
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
-        selectedAmount = selectedAmount - parseFloat(obj.val());
+        if (obj.data('younger') === false) {
+            selectedAmount = selectedAmount - parseFloat(obj.val());
+        }
     });
 }
 

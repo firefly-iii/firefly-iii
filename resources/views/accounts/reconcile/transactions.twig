@@ -84,7 +84,8 @@
             <td>
                 {% if transaction.reconciled %}
                     {{ transaction|transactionReconciled }}
-                    <input type="hidden" name="cleared[]" class="cleared" data-id="{{ transaction.id }}" value="{{ transaction.transaction_amount }}">
+                    <input type="hidden" name="cleared[]" data-younger="{% if transaction.date > end %}true{% else %}false{% endif %}"
+                           class="cleared" data-id="{{ transaction.id }}" value="{{ transaction.transaction_amount }}">
                 {% else %}
                     <input type="checkbox" name="reconciled[]"
                            data-younger="{% if transaction.date > end %}true{% else %}false{% endif %}"

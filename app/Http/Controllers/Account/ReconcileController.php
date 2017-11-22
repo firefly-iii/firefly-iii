@@ -89,15 +89,21 @@ class ReconcileController extends Controller
         $repository   = app(JournalRepositoryInterface::class);
         $transactions = $repository->getTransactionsById($transactionIds);
         $cleared      = $repository->getTransactionsById($clearedIds);
+        $countCleared = 0;
 
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
+            // {% if transaction.date > end %}
+
             $amount = bcadd($amount, $transaction->amount);
         }
 
         /** @var Transaction $transaction */
         foreach ($cleared as $transaction) {
-            $clearedAmount = bcadd($clearedAmount, $transaction->amount);
+            if ($transaction->transactionJournal->date <= $end) {
+                $clearedAmount = bcadd($clearedAmount, $transaction->amount);
+                $countCleared++;
+            }
         }
 
         // final difference:
@@ -114,7 +120,7 @@ class ReconcileController extends Controller
             'accounts.reconcile.overview',
             compact(
                 'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount',
-                'route'
+                'route','countCleared'
             )
         )->render();
 
@@ -221,14 +227,19 @@ class ReconcileController extends Controller
                 'budget_id'   => 0,
                 'amount'      => $difference,
                 'currency_id' => $account->getMeta('currency_id'),
-                'description' => 'Reconciliation [period]',
+                'description' => trans(
+                    'firefly.reconcilliation_transaction_title',
+                    ['from' => $start->formatLocalized($this->monthAndDayFormat), 'to' => $end->formatLocalized($this->monthAndDayFormat)]
+                ),
                 'date'        => $request->get('end'),
+                'notes'       => join(',', $transactions->pluck('id')->toArray()),
             ];
             $journal = $repository->store($data);
             // reconcile this transaction too:
             $transaction = $journal->transactions()->first();
             $repository->reconcile($transaction);
         }
+
         Session::flash('success', trans('firefly.reconciliation_stored'));
 
         return redirect(route('accounts.show', [$account->id]));

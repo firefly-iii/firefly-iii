@@ -57,6 +57,11 @@ class Transaction extends Twig_Extension
         $format   = '%s';
         $coloured = true;
 
+        // at this point amount is always negative.
+        if ($transaction->transaction_type_type === TransactionType::RECONCILIATION && bccomp(strval($transaction->transaction_amount),'0') === 1) {
+            $amount = bcmul($amount, '-1');
+        }
+
         if (TransactionType::DEPOSIT === $transaction->transaction_type_type) {
             $amount = bcmul($amount, '-1');
         }
@@ -285,6 +290,10 @@ class Transaction extends Twig_Extension
             return $cache->get();
         }
 
+        if($transaction->transaction_type_type === TransactionType::RECONCILIATION) {
+            return '&mdash;';
+        }
+
         $name          = app('steam')->tryDecrypt($transaction->account_name);
         $transactionId = intval($transaction->account_id);
         $type          = $transaction->account_type;
@@ -387,6 +396,9 @@ class Transaction extends Twig_Extension
             case TransactionType::OPENING_BALANCE:
                 $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.openingBalance'));
                 break;
+            case TransactionType::RECONCILIATION:
+                $txt = sprintf('<i class="fa-fw fa fa-calculator" title="%s"></i>', trans('firefly.reconciliation_transaction'));
+                break;
             default:
                 $txt = '';
                 break;
@@ -463,6 +475,9 @@ class Transaction extends Twig_Extension
         $cache->addProperty($transaction->updated_at);
         if ($cache->has()) {
             return $cache->get();
+        }
+        if($transaction->transaction_type_type === TransactionType::RECONCILIATION) {
+            return '&mdash;';
         }
 
         // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
