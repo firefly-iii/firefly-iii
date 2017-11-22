@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'Betaalrekening (ID gelijk aan Firefly)',
     'column_account-name'           => 'Betaalrekeningnaam',
     'column_amount'                 => 'Bedrag',
+    'column_amount_debet'           => 'Bedrag (debetkolom)',
+    'column_amount_credit'          => 'Bedrag (creditkolom)',
     'column_amount-comma-separated' => 'Bedrag (komma as decimaalscheidingsteken)',
     'column_bill-id'                => 'Contract (ID gelijk aan Firefly)',
     'column_bill-name'              => 'Contractnaam',

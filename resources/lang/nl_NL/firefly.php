@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 return [
     // general stuff:
-    'language_incomplete'                        => 'Incomplete translation',
+    'language_incomplete'                        => 'Onvolledige vertaling',
     'close'                                      => 'Sluiten',
     'actions'                                    => 'Acties',
     'edit'                                       => 'Wijzig',
@@ -631,6 +631,9 @@ return [
     'date_change_instruction'                  => 'Als je het datumbereik nu wijzigt, gaat je voortgang verloren.',
     'update_selection'                         => 'Selectie bijwerken',
     'store_reconcile'                          => 'Afstemming opslaan',
+    'reconciliation_transaction'               => 'Corrigerende transactie',
+    'Reconciliation'                           => 'Correctie',
+    'reconciliation'                           => 'Correctie',
     'reconcile_options'                        => 'Afstemmingsopties',
     'reconcile_range'                          => 'Afstemmingsbereik',
     'start_reconcile'                          => 'Begin met afstemmen',
@@ -647,6 +650,22 @@ return [
     'select_more_than_one_budget'              => 'Selecteer meer dan één budget',
     'select_more_than_one_tag'                 => 'Selecteer meer dan één tag',
     'account_default_currency'                 => 'Nieuwe transacties van deze betaalrekening krijgen automatisch deze valuta.',
+    'reconcile_has_more'                       => 'Je Firefly III boekhouding bevat meer geld dan je bank beweert dat er in zou moeten zitten. Je hebt verschillende opties. Kies wat je wilt doen, en klik dan "Bevestig correctie".',
+    'reconcile_has_less'                       => 'Je Firefly III boekhouding bevat minder geld dan je bank beweert dat er in zou moeten zitten. Je hebt verschillende opties. Kies wat je wilt doen, en klik dan "Bevestig correctie".',
+    'reconcile_is_equal'                       => 'Je Firefly III boekhouding en je bankafschriften lopen gelijk. Je hoeft niets te doen. Klik op "Bevestig correctie" om je invoer te bevestigen.',
+    'create_pos_reconcile_transaction'         => 'Markeer de geselecteerde transacties als afgestemd, en voeg :amount toe aan de betaalrekening.',
+    'create_neg_reconcile_transaction'         => 'Markeer de geselecteerde transacties als afgestemd, en verwijder :amount van de betaalrekening.',
+    'reconcile_do_nothing'                     => 'Markeer de geselecteerde transacties als afgestemd, maar maak geen correctie.',
+    'reconcile_go_back'                        => 'Je kan een correctie later altijd wijzigen.',
+    'must_be_asset_account'                    => 'Je kan alleen betaalrekeningen corrigeren',
+    'reconciliation_stored'                    => 'Correctie opgeslagen',
+    'reconcilliation_transaction_title'        => 'Correctie (:from tot :to)',
+    'reconcile_this_account'                   => 'Corrigeer deze rekening',
+    'confirm_reconciliation'                   => 'Bevestig correctie',
+    'submitted_start_balance'                  => 'Ingevoerd startsaldo',
+    'selected_transactions'                    => 'Geselecteerde transacties (:count)',
+    'already_cleared_transactions'             => 'Al afgestemde transacties (:count)',
+    'submitted_end_balance'                    => 'Ingevoerd eindsaldo',
 
     // categories:
     'new_category'                             => 'Nieuwe categorie',
