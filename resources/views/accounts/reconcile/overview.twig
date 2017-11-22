@@ -21,25 +21,25 @@
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>{{ 'submitted_start_balance'|_ }} (date)</td>
-                        <td>{{ startBalance|formatAmount }}</td>
+                        <td>{{ formatAmountByAccount(account, startBalance) }}</td>
                     </tr>
                     <tr>
                         <td>{{ trans('firefly.selected_transactions', {count: transactionIds|length}) }}</td>
-                        <td>{{ amount|formatAmount }}</td>
+                        <td>{{ formatAmountByAccount(account, amount) }}</td>
                     </tr>
                     <tr>
                         <td>{{ trans('firefly.already_cleared_transactions', {count: clearedIds|length}) }}</td>
-                        <td>{{ clearedAmount|formatAmount }}</td>
+                        <td>{{ formatAmountByAccount(account, clearedAmount) }}</td>
                     </tr>
                     <tr>
                         <td>{{ 'submitted_end_balance'|_ }} (date)</td>
-                        <td>{{ endBalance|formatAmount }}</td>
+                        <td>{{ formatAmountByAccount(account, endBalance)}}</td>
                     </tr>
 
                     <tr>
                         <td>{{ 'difference'|_ }}</td>
                         <td>
-                            {{ difference|formatAmount }}
+                            {{ formatAmountByAccount(account, difference) }}
                             <input type="hidden" name="difference" value="{{ difference }}" />
                         </td>
 
@@ -67,10 +67,10 @@
 
                                 <input type="radio" name="reconcile" value="create">
                                 {% if diffCompare > 0 %}
-                                    {{ trans('firefly.create_neg_reconcile_transaction', {amount: (difference*-1)|formatAmount})|raw }}
+                                    {{ trans('firefly.create_neg_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
                                 {% endif %}
                                 {% if diffCompare < 0 %}
-                                    {{ trans('firefly.create_pos_reconcile_transaction', {amount: (difference*-1)|formatAmount})|raw }}
+                                    {{ trans('firefly.create_pos_reconcile_transaction', {amount: formatAmountByAccount(account, (difference*-1))})|raw }}
                                 {% endif %}
                             </label>
                         </div>
