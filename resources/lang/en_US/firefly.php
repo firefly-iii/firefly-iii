@@ -647,6 +647,18 @@ return [
     'select_more_than_one_budget'              => 'Please select more than one budget',
     'select_more_than_one_tag'                 => 'Please select more than one tag',
     'account_default_currency'                 => 'If you select another currency, new transactions from this account will have this currency pre-selected.',
+    'reconcile_has_more'                       => 'Your Firefly III ledger has more money in it than your bank claims you should have. There are several options. Please choose what to do. Then, press "Confirm reconciliation".',
+    'reconcile_has_less'                       => 'Your Firefly III ledger has less money in it than your bank claims you should have. There are several options. Please choose what to do. Then, press "Confirm reconciliation".',
+    'reconcile_is_equal'                       => 'Your Firefly III ledger and your bank statements match. There is nothing to do. Please press "Confirm reconciliation" to confirm your input.',
+    'create_pos_reconcile_transaction'         => 'Clear the selected transactions, and create a correction adding :amount to this asset account.',
+    'create_neg_reconcile_transaction'         => 'Clear the selected transactions, and create a correction removing :amount from this asset account.',
+    'reconcile_do_nothing'                     => 'Clear the selected transactions, but do not correct.',
+    'reconcile_go_back'                        => 'You can always edit or delete a correction later.',
+    'confirm_reconciliation'                   => 'Confirm reconciliation',
+    'submitted_start_balance'                  => 'Submitted start balance',
+    'selected_transactions'                    => 'Selected transactions (:count)',
+    'already_cleared_transactions'             => 'Already cleared transactions (:count)',
+    'submitted_end_balance'                    => 'Submitted end balance',
 
     // categories:
     'new_category'                             => 'New category',

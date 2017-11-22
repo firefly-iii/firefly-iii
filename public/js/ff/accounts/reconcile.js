@@ -68,12 +68,19 @@ function storeReconcile() {
     $.each($('.reconcile_checkbox:checked'), function (i, v) {
         ids.push($(v).data('id'));
     });
+    var cleared = [];
+    $.each($('input[class="cleared"]'), function (i, v) {
+        var obj = $(v);
+        cleared.push(obj.data('id'));
+    });
+
     var variables = {
         startBalance: parseFloat($('input[name="start_balance"]').val()),
         endBalance: parseFloat($('input[name="end_balance"]').val()),
         startDate: $('input[name="start_date"]').val(),
         startEnd: $('input[name="end_date"]').val(),
-        transactions: ids
+        transactions: ids,
+        cleared: cleared,
     };
     var uri = overviewUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
 
@@ -126,11 +133,15 @@ function calculateBalanceDifference() {
     var startBalance = parseFloat($('input[name="start_balance"]').val());
     var endBalance = parseFloat($('input[name="end_balance"]').val());
     balanceDifference = startBalance - endBalance;
-    if (balanceDifference < 0) {
-        balanceDifference = balanceDifference * -1;
-    }
+    //if (balanceDifference < 0) {
+      //  balanceDifference = balanceDifference * -1;
+    //}
 }
 
+/**
+ * Grab all transactions, update the URL and place the set of transactions in the box.
+ * This more or less resets the reconciliation.
+ */
 function getTransactionsForRange() {
     // clear out the box:
     $('#transactions_holder').empty().append($('<p>').addClass('text-center').html('<i class="fa fa-fw fa-spin fa-spinner"></i>'));
@@ -141,12 +152,31 @@ function getTransactionsForRange() {
     $.getJSON(uri).done(placeTransactions);
 }
 
+/**
+ * Loop over all transactions that have already been cleared and add this to the selectedAmount.
+ *
+ */
+function includeClearedTransactions() {
+    $.each($('input[class="cleared"]'), function (i, v) {
+        var obj = $(v);
+        selectedAmount = selectedAmount - parseFloat(obj.val());
+    });
+}
+
+/**
+ * Place the HTML for the transactions within the date range and update the balance difference.
+ * @param data
+ */
 function placeTransactions(data) {
     $('#transactions_holder').empty().html(data.html);
 
 
     // as long as the dates are equal, changing the balance does not matter.
     calculateBalanceDifference();
+
+    // any already cleared transactions must be added to / removed from selectedAmount.
+    includeClearedTransactions();
+
     difference = balanceDifference;
     updateDifference();
 

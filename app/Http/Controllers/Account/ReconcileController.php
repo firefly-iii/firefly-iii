@@ -27,7 +27,9 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -68,16 +70,38 @@ class ReconcileController extends Controller
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end)
     {
-        $startBalance = $request->get('startBalance');
-        $endBalance   = $request->get('endBalance');
-        $transactions = $request->get('transactions');
+        $startBalance   = $request->get('startBalance');
+        $endBalance     = $request->get('endBalance');
+        $transactionIds = $request->get('transactions') ?? [];
+        $clearedIds     = $request->get('cleared') ?? [];
+        $amount         = '0';
+        $clearedAmount  = '0';
+        $route          = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
+        // get sum of transaction amounts:
+        /** @var JournalRepositoryInterface $repository */
+        $repository   = app(JournalRepositoryInterface::class);
+        $transactions = $repository->getTransactionsById($transactionIds);
+        $cleared      = $repository->getTransactionsById($clearedIds);
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $amount = bcadd($amount, $transaction->amount);
+        }
+
+        /** @var Transaction $transaction */
+        foreach ($cleared as $transaction) {
+            $clearedAmount = bcadd($clearedAmount, $transaction->amount);
+        }
 
         $return         = [
             'is_zero'  => false,
-            'post_uri' => route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]),
+            'post_uri' => $route,
             'html'     => '',
         ];
-        $return['html'] = view('accounts.reconcile.overview', compact('account', 'start', 'end'))->render();
+        $return['html'] = view(
+            'accounts.reconcile.overview',
+            compact('account', 'start', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route')
+        )->render();
 
         return Response::json($return);
     }
@@ -174,5 +198,14 @@ class ReconcileController extends Controller
         $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
 
         return Response::json(['html' => $html]);
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     */
+    public function submit(Request $request, Account $account, Carbon $start, Carbon $end) {
+        var_dump($request->all());
     }
 }

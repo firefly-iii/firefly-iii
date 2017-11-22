@@ -18,11 +18,7 @@
     {% for account in accounts %}
         <tr>
             <td class="hidden-sm hidden-xs">
-                <div class="btn-group btn-group-xs">
-                    <a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}" href="{{ route('accounts.edit',account.id) }}"><i class="fa fa-fw fa-pencil"></i></a>
-                    <a class="btn btn-default btn-xs" title="{{ 'reconcile'|_ }}" href="{{ route('accounts.reconcile',account.id) }}"><i class="fa fa-fw fa-check"></i></a>
-                    <a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}" href="{{ route('accounts.delete',account.id) }}"><i class="fa fa-fw fa-trash-o"></i></a>
-                </div>
+                <div class="btn-group btn-group-xs edit_tr_buttons"><a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}" href="{{ route('accounts.edit',account.id) }}"><i class="fa fa-fw fa-pencil"></i></a><a class="btn btn-default btn-xs" title="{{ 'reconcile'|_ }}" href="{{ route('accounts.reconcile',account.id) }}"><i class="fa fa-fw fa-check"></i></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}" href="{{ route('accounts.delete',account.id) }}"><i class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
             <td data-value="{{ account.name }}"><a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a></td>
             {% if what == "asset" %}

@@ -178,6 +178,23 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param array $transactionIds
+     *
+     * @return Collection
+     */
+    public function getTransactionsById(array $transactionIds): Collection
+    {
+        $set = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->whereIn('transactions.id', $transactionIds)
+                          ->where('transaction_journals.user_id', $this->user->id)
+                          ->whereNull('transaction_journals.deleted_at')
+                          ->whereNull('transactions.deleted_at')
+                          ->get(    ['transactions.*']);
+
+        return $set;
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return bool
