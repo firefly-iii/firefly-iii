@@ -170,16 +170,21 @@ class PiggyBankController extends Controller
         $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $targetDate   = null;
+        $startDate    = null;
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
         if (null !== $piggyBank->targetdate) {
             $targetDate = $piggyBank->targetdate->format('Y-m-d');
+        }
+        if (null !== $piggyBank->startdate) {
+            $startDate = $piggyBank->startdate->format('Y-m-d');
         }
 
         $preFilled = ['name'         => $piggyBank->name,
                       'account_id'   => $piggyBank->account_id,
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
+                      'startdate'    => $startDate,
                       'note'         => null === $note ? '' : $note->text,
         ];
         Session::flash('preFilled', $preFilled);
@@ -390,8 +395,12 @@ class PiggyBankController extends Controller
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
-        $data      = $request->getPiggyBankData();
+        $data = $request->getPiggyBankData();
+        if (null === $data['startdate']) {
+            $data['startdate'] = new Carbon;
+        }
         $piggyBank = $repository->store($data);
+
 
         Session::flash('success', strval(trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name])));
         Preferences::mark();

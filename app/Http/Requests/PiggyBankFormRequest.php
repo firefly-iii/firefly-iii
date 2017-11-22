@@ -45,7 +45,7 @@ class PiggyBankFormRequest extends Request
     {
         return [
             'name'         => $this->string('name'),
-            'startdate'    => new Carbon,
+            'startdate'    => $this->date('startdate'),
             'account_id'   => $this->integer('account_id'),
             'targetamount' => $this->string('targetamount'),
             'targetdate'   => $this->date('targetdate'),
