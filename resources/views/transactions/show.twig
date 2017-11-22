@@ -19,44 +19,47 @@
                                 <li><a href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete',journal.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                                 {# convert to withdrawal #}
-                                {% if journal.transactionType.type != "Withdrawal" %}
+                                {% if journal.transactionType.type != 'Reconciliation' %}
+                                    {% if journal.transactionType.type != "Withdrawal" %}
+                                        <li>
+                                            <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
+                                                <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {# convert to deposit #}
+                                    {% if journal.transactionType.type != "Deposit" %}
+                                        <li>
+                                            <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
+                                                <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {# convert to transfer#}
+                                    {% if journal.transactionType.type != "Transfer" %}
+                                        <li>
+                                            <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
+                                                <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {# other options #}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
+                                        <a href="{{ route('transactions.clone', [journal.id]) }}">
+                                            <i class="fa fa-copy fa-fw"></i> {{ ('clone_'~journal.transactionType.type|lower)|_ }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('transactions.split.edit', journal.id) }}">
+                                            <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i
+                                                    class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
                                         </a>
                                     </li>
                                 {% endif %}
-                                {# convert to deposit #}
-                                {% if journal.transactionType.type != "Deposit" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# convert to transfer#}
-                                {% if journal.transactionType.type != "Transfer" %}
-                                    <li>
-                                        <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {# other options #}
-                                <li>
-                                    <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                        <i class="fa fa-copy fa-fw"></i> {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('transactions.split.edit', journal.id) }}">
-                                        <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -73,17 +76,19 @@
                             <td>{{ trans('list.description') }}</td>
                             <td>{{ journal.description }}</td>
                         </tr>
-                        <!-- source(s) -->
-                        <tr>
-                            <td>{{ 'source_accounts'|_ }}</td>
-                            <td>{{ sourceAccount(journal)|raw }}</td>
-                        </tr>
+                        {% if journal.transactionType.type != 'Reconciliation' %}
+                            <!-- source(s) -->
+                            <tr>
+                                <td>{{ 'source_accounts'|_ }}</td>
+                                <td>{{ sourceAccount(journal)|raw }}</td>
+                            </tr>
 
-                        <!-- destination(s) -->
-                        <tr>
-                            <td>{{ 'destination_accounts'|_ }}</td>
-                            <td>{{ destinationAccount(journal)|raw }}</td>
-                        </tr>
+                            <!-- destination(s) -->
+                            <tr>
+                                <td>{{ 'destination_accounts'|_ }}</td>
+                                <td>{{ destinationAccount(journal)|raw }}</td>
+                            </tr>
+                        {% endif %}
                         <!-- total amount -->
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
@@ -108,50 +113,55 @@
                     <div class="pull-right">
                         <div class="btn-group">
                             <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a>
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-cog fa-fw"></i> {{ 'options'|_ }} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                {# convert to withdrawal #}
-                                {% if journal.transactionType.type != "Withdrawal" %}
+                            {% if journal.transactionType.type != 'Reconciliation' %}
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-cog fa-fw"></i> {{ 'options'|_ }} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+
+                                    {# convert to withdrawal #}
+                                    {% if journal.transactionType.type != "Withdrawal" %}
+                                        <li>
+                                            <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
+                                                <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {# convert to deposit #}
+                                    {% if journal.transactionType.type != "Deposit" %}
+                                        <li>
+                                            <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
+                                                <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {# convert to transfer#}
+                                    {% if journal.transactionType.type != "Transfer" %}
+                                        <li>
+                                            <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
+                                                <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {# other options #}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['withdrawal', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_withdrawal')|_ }}
+                                        <a href="{{ route('transactions.clone', [journal.id]) }}">
+                                            <i class="fa fa-copy fa-fw"></i> {{ ('clone_'~journal.transactionType.type|lower)|_ }}
                                         </a>
                                     </li>
-                                {% endif %}
-                                {# convert to deposit #}
-                                {% if journal.transactionType.type != "Deposit" %}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['deposit', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_deposit')|_ }}
+                                        <a href="{{ route('transactions.split.edit', journal.id) }}">
+                                            <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
                                         </a>
                                     </li>
-                                {% endif %}
-                                {# convert to transfer#}
-                                {% if journal.transactionType.type != "Transfer" %}
                                     <li>
-                                        <a href="{{ route('transactions.convert.index', ['transfer', journal.id]) }}">
-                                            <i class="fa fa-exchange fa-fw"></i> {{ ('convert_'~journal.transactionType.type~'_to_transfer')|_ }}
+                                        <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i
+                                                    class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
                                         </a>
                                     </li>
-                                {% endif %}
-                                {# other options #}
-                                <li>
-                                    <a href="{{ route('transactions.clone', [journal.id]) }}">
-                                        <i class="fa fa-copy fa-fw"></i> {{ ('clone_'~journal.transactionType.type|lower)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('transactions.split.edit', journal.id) }}">
-                                        <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
-                                    </a>
-                                </li>
-                            </ul>
+
+                                </ul>
+                            {% endif %}
                             <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}
                             </a>
                         </div>
@@ -184,10 +194,12 @@
                             <td>{{ 'categories'|_ }}</td>
                             <td>{{ journalCategories(journal)|raw }}</td>
                         </tr>
-                        <tr>
-                            <td>{{ 'budgets'|_ }}</td>
-                            <td>{{ journalBudgets(journal)|raw }}</td>
-                        </tr>
+                        {% if journal.transactionType.type != 'Reconciliation' %}
+                            <tr>
+                                <td>{{ 'budgets'|_ }}</td>
+                                <td>{{ journalBudgets(journal)|raw }}</td>
+                            </tr>
+                        {% endif %}
 
                         {% if journal.hasMeta('interest_date') %}
                             <tr>
@@ -328,7 +340,8 @@
                                     <td>
                                         <div class="btn-group btn-group-xs">
                                             <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                            <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
+                                            <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i
+                                                        class="fa fa-fw fa-arrows-h"></i></a>
                                         </div>
                                     </td>
                                     <td>
@@ -360,74 +373,75 @@
             {% endif %}
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
-                </div>
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr>
-                        <th class="hidden-md hidden-sm hidden-xs">{{ trans('list.description') }}</th>
-                        <th>{{ trans('list.source_account') }}</th>
-                        <th class="hidden-sm hidden-xs">&#916;</th>
-                        <th>{{ trans('list.destination_account') }}</th>
-                        <th class="hidden-sm hidden-xs">&#916;</th>
-                        <th>{{ trans('list.amount') }}</th>
-                        <th class="hidden-md hidden-xs">{{ trans('list.budget') }}</th>
-                        <th class="hidden-md hidden-xs">{{ trans('list.category') }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for transaction in transactions %}
+    {% if journal.transactionType.type != 'Reconciliation' %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
                         <tr>
-                            <td class="hidden-md hidden-sm hidden-xs">
-                                {% if transaction.description == "" %}
-                                    {{ journal.description }}
-                                {% else %}
-                                    {{ transaction.description }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if transaction.source_account_type == 'Cash account' %}
-                                    <span class="text-success">({{ 'cash'|_ }})</span>
-                                {% else %}
-                                    <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
-                                {% endif %}
-
-                            </td>
-                            <td class="hidden-sm hidden-xs">
-                                {{ formatSourceBefore(transaction) }} &rarr; {{ formatSourceAfter(transaction) }}
-                            </td>
-                            <td>
-                                {% if transaction.destination_account_type == 'Cash account' %}
-                                    <span class="text-success">({{ 'cash'|_ }})</span>
-                                {% else %}
-                                    <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
-                                {% endif %}
-
-                            </td>
-                            <td class="hidden-sm hidden-xs">
-                                {{ formatDestinationBefore(transaction) }} &rarr; {{ formatDestinationAfter(transaction) }}
-                            </td>
-                            <td>
-                                {{ transaction|transactionArrayAmount }}
-                            </td>
-                            <td class="hidden-md hidden-xs">
-                                {{  transaction.source|transactionBudgets }}
-                            </td>
-                            <td class="hidden-md hidden-xs">
-                                {{ transaction.source|transactionCategories }}
-                            </td>
+                            <th class="hidden-md hidden-sm hidden-xs">{{ trans('list.description') }}</th>
+                            <th>{{ trans('list.source_account') }}</th>
+                            <th class="hidden-sm hidden-xs">&#916;</th>
+                            <th>{{ trans('list.destination_account') }}</th>
+                            <th class="hidden-sm hidden-xs">&#916;</th>
+                            <th>{{ trans('list.amount') }}</th>
+                            <th class="hidden-md hidden-xs">{{ trans('list.budget') }}</th>
+                            <th class="hidden-md hidden-xs">{{ trans('list.category') }}</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td class="hidden-md hidden-sm hidden-xs">
+                                    {% if transaction.description == "" %}
+                                        {{ journal.description }}
+                                    {% else %}
+                                        {{ transaction.description }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if transaction.source_account_type == 'Cash account' %}
+                                        <span class="text-success">({{ 'cash'|_ }})</span>
+                                    {% else %}
+                                        <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
+                                    {% endif %}
+
+                                </td>
+                                <td class="hidden-sm hidden-xs">
+                                    {{ formatSourceBefore(transaction) }} &rarr; {{ formatSourceAfter(transaction) }}
+                                </td>
+                                <td>
+                                    {% if transaction.destination_account_type == 'Cash account' %}
+                                        <span class="text-success">({{ 'cash'|_ }})</span>
+                                    {% else %}
+                                        <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
+                                    {% endif %}
+
+                                </td>
+                                <td class="hidden-sm hidden-xs">
+                                    {{ formatDestinationBefore(transaction) }} &rarr; {{ formatDestinationAfter(transaction) }}
+                                </td>
+                                <td>
+                                    {{ transaction|transactionArrayAmount }}
+                                </td>
+                                <td class="hidden-md hidden-xs">
+                                    {{ transaction.source|transactionBudgets }}
+                                </td>
+                                <td class="hidden-md hidden-xs">
+                                    {{ transaction.source|transactionCategories }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     {# link journal modal:#}
     <div class="modal fade" tabindex="-1" role="dialog" id="linkJournalModal">

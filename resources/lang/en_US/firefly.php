@@ -633,6 +633,7 @@ return [
     'store_reconcile'                          => 'Store reconciliation',
     'reconciliation_transaction'               => 'Reconciliation transaction',
     'Reconciliation'                           => 'Reconciliation',
+    'reconciliation'                           => 'Reconciliation',
     'reconcile_options'                        => 'Reconciliation options',
     'reconcile_range'                          => 'Reconciliation range',
     'start_reconcile'                          => 'Start reconciling',
