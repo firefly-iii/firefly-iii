@@ -74,9 +74,9 @@ class TwoFactorController extends Controller
      */
     public function lostTwoFactor()
     {
-        $user      = auth()->user();
+        $user = auth()->user();
         $siteOwner = env('SITE_OWNER', '');
-        $title     = strval(trans('firefly.two_factor_forgot_title'));
+        $title = strval(trans('firefly.two_factor_forgot_title'));
 
         Log::info(
             'To reset the two factor authentication for user #' . $user->id .
@@ -96,9 +96,23 @@ class TwoFactorController extends Controller
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {
-        // update session, not cookie:
-        $request->session()->put('twoFactorAuthenticated', true);
+        // wants to remember session?
+        $remember = $request->session()->get('remember_login') ?? false;
 
-        return redirect(route('home'));
+
+
+        $minutes  = config('session.lifetime');
+        if ($remember === true) {
+            // set cookie with a long lifetime (30 days)
+            $minutes = 43200;
+        }
+        $cookie = $cookieJar->make(
+            'twoFactorAuthenticated', 'true', $minutes, config('session.path'), config('session.domain'), config('session.secure'), config('session.http_only')
+        );
+
+        // whatever the case, forget about it:
+        $request->session()->forget('remember_login');
+
+        return redirect(route('home'))->withCookie($cookie);
     }
 }

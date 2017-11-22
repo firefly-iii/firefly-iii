@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'driver'          => env('SESSION_DRIVER', 'file'),
-    'lifetime'        => 10080,
+    'lifetime'        => 120,
     'expire_on_close' => false,
     'encrypt'         => true,
     'files'           => storage_path('framework/sessions'),

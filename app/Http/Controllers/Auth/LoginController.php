@@ -72,6 +72,58 @@ class LoginController extends Controller
     }
 
     /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request)
+    {
+        $this->validateLogin($request);
+
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+
+            return $this->sendLockoutResponse($request);
+        }
+
+        if ($this->attemptLogin($request)) {
+
+            // user is logged in. Save in session if the user requested session to be remembered:
+            $request->session()->put('remember_login', $request->filled('remember'));
+
+            return $this->sendLoginResponse($request);
+        }
+
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
+        $this->incrementLoginAttempts($request);
+
+        return $this->sendFailedLoginResponse($request);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request, CookieJar $cookieJar)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+        $cookie = $cookieJar->forget('twoFactorAuthenticated');
+
+        return redirect('/')->withCookie($cookie);
+    }
+
+    /**
      * Show the application's login form.
      *
      * @param Request   $request
@@ -100,7 +152,7 @@ class LoginController extends Controller
             return view('error', compact('message'));
         }
 
-        // forget 2fa cookie:
+        // forget 2fa session thing.
         $request->session()->forget('twoFactorAuthenticated');
 
         // is allowed to?

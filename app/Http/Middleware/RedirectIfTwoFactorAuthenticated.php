@@ -47,8 +47,8 @@ class RedirectIfTwoFactorAuthenticated
             $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
             $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
 
-            // grab 2auth information from session.
-            $is2faAuthed = true === $request->session()->get('twoFactorAuthenticated');
+            // grab 2auth information from cookie.
+            $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
 
             if ($is2faEnabled && $has2faSecret && $is2faAuthed) {
                 return redirect('/');
