@@ -79,7 +79,7 @@ class BudgetController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function amount(Request $request, Budget $budget)
+    public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
         $amount      = strval($request->get('amount'));
         $start       = Carbon::createFromFormat('Y-m-d', $request->get('start'));
@@ -88,9 +88,15 @@ class BudgetController extends Controller
         if (0 === $amount) {
             $budgetLimit = null;
         }
+
+        // calculate left in budget:
+        $spent    = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+        $currency = app('amount')->getDefaultCurrency();
+        $left     = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+
         Preferences::mark();
 
-        return Response::json(['name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
+        return Response::json(['left' => $left, 'name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount]);
     }
 
     /**
