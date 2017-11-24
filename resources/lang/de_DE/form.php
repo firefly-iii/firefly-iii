@@ -91,6 +91,7 @@ return [
     'deletePermanently'          => 'Dauerhaft löschen',
     'cancel'                     => 'Abbrechen',
     'targetdate'                 => 'Zieldatum',
+    'startdate'                  => 'Startdatum',
     'tag'                        => 'Tag',
     'under'                      => 'Unter',
     'symbol'                     => 'Zeichen',
@@ -164,7 +165,7 @@ return [
 
     'email'                 => 'E-Mail Adresse',
     'password'              => 'Passwort',
-    'password_confirmation' => 'Passwort (nochmal)',
+    'password_confirmation' => 'Passwort (wiederholen)',
     'blocked'               => 'Ist blockiert?',
     'blocked_code'          => 'Grund für Block',
 

@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'ID konta aktywów (taki sam jak w Firefly)',
     'column_account-name'           => 'Konto aktywów (nazwa)',
     'column_amount'                 => 'Kwota',
+    'column_amount_debet'           => 'Amount (debet column)',
+    'column_amount_credit'          => 'Amount (credit column)',
     'column_amount-comma-separated' => 'Kwota (przecinek jako separator dziesiętny)',
     'column_bill-id'                => 'ID rachunku (taki sam jak w Firefly)',
     'column_bill-name'              => 'Nazwa rachunku',

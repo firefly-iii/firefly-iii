@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'Asset account  ID (matching Firefly)',
     'column_account-name'           => 'Asset account (name)',
     'column_amount'                 => 'Amount',
+    'column_amount_debet'           => 'Amount (debet column)',
+    'column_amount_credit'          => 'Amount (credit column)',
     'column_amount-comma-separated' => 'Amount (comma as decimal separator)',
     'column_bill-id'                => 'Bill ID (matching Firefly)',
     'column_bill-name'              => 'Bill name',

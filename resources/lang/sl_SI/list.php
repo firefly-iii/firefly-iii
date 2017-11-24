@@ -17,7 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Ustvarjeno',
     'update_date'             => 'Posodobljeno',
-    'updated_at'             => 'Posodobljeno',
+    'updated_at'              => 'Posodobljeno',
     'balance_before'          => 'Stanje prej',
     'balance_after'           => 'Stanje potem',
     'name'                    => 'ime',
@@ -89,4 +89,5 @@ return [
     'sum_withdrawals'         => 'Vsota odlivov',
     'sum_deposits'            => 'Vsota prilivov',
     'sum_transfers'           => 'Vsota prenosov',
+    'reconcile'               => 'Reconcile',
 ];

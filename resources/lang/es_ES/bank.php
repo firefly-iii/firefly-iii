@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 
 return [
-    'bunq_prerequisites_title' => 'Prerequisites for an import from bunq',
-    'bunq_prerequisites_text'  => 'In order to import from bunq, you need to obtain an API key. You can do this through the app.',
+    'bunq_prerequisites_title' => 'Requisitos previos para una importación de bunq',
+    'bunq_prerequisites_text'  => 'Para importar de bunq, necesita obtener una clave de API. Puedes hacer esto a través de la aplicación.',
 ];

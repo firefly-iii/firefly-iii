@@ -91,6 +91,7 @@ return [
     'deletePermanently'          => 'Delete permanently',
     'cancel'                     => 'Отмена',
     'targetdate'                 => 'Намеченная дата',
+    'startdate'                  => 'Start date',
     'tag'                        => 'Тег',
     'under'                      => 'Under',
     'symbol'                     => 'Символ',

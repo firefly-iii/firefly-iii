@@ -107,7 +107,7 @@ return [
     // create rule:
     'rules_create_mandatory'                                  => 'Wählen Sie einen aussagekräftigen Titel und legen Sie fest, wann die Regel ausgelöst werden soll.',
     'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
-    'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
+    'rules_create_test_rule_triggers'                         => 'Verwenden Sie diese Schaltfläche, um zu sehen, welche Transaktionen zu Ihrer Regel passen würden.',
     'rules_create_actions'                                    => 'Legen Sie so viele Aktionen fest, wie Sie möchten.',
 
     // preferences

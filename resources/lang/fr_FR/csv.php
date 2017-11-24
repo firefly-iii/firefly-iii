@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'Compte d\'actif (ID correspondant à Firefly)',
     'column_account-name'           => 'Compte d’actif (nom)',
     'column_amount'                 => 'Montant',
+    'column_amount_debet'           => 'Montant (colonne débit)',
+    'column_amount_credit'          => 'Montant (colonne de crédit)',
     'column_amount-comma-separated' => 'Montant (virgule comme séparateur décimal)',
     'column_bill-id'                => 'Facture (ID correspondant à Firefly)',
     'column_bill-name'              => 'Nom de la facture',
