@@ -1,0 +1,115 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('accounts.reconcile.update',journal.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update"
+          enctype="multipart/form-data">
+
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <input type="hidden" name="id" value="{{ journal.id }}"/>
+
+        {% if errors.all|length > 0 %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="text-danger">{{ 'errors'|_ }}</h3>
+                    <ul>
+                        {% for err in errors.all %}
+                            <li class="text-danger">{{ err }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {# ALWAYS AVAILABLE #}
+                        {{ ExpandedForm.staticText('description',journal.description) }}
+
+                        {# ALWAYS SHOW AMOUNT #}
+                        {{ ExpandedForm.nonSelectableAmount('amount',data.amount, {'currency' : data.currency}) }}
+
+                        {# ALWAYS SHOW DATE #}
+                        {{ ExpandedForm.staticText('date',journal.date.formatLocalized(monthAndDayFormat)) }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- CATEGORY ALWAYS -->
+                        {{ ExpandedForm.text('category',data['category']) }}
+
+                        <!-- TAGS -->
+                        {{ ExpandedForm.text('tags') }}
+                    </div>
+                </div>
+
+                <!-- box for attachments -->
+                {% if optionalFields.attachments %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'optional_field_attachments'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            {% if optionalFields.attachments %}
+                                <!-- ATTACHMENTS -->
+                                {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- panel for options -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.optionsList('update','transaction') }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="pull-right btn btn-success">{{ ('update_reconciliation')|_ }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var what = "{{ what }}";
+    </script>
+    <script type="text/javascript" src="js/lib/bootstrap3-typeahead.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="jscript/accounts?ext=.js&amp;v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="jscript/currencies?ext=.js&amp;v={{ FF_VERSION }}"></script>
+    <script type="text/javascript">
+        var journal = {{ journal.toArray()|json_encode|raw }};
+        var journalData = {{ data|json_encode|raw }};
+    </script>
+    <script type="text/javascript" src="/js/ff/accounts/edit-reconciliation.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
+{% block styles %}
+    <link href="css/bootstrap-tagsinput.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+{% endblock %}

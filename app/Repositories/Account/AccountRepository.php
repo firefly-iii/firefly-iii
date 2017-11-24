@@ -28,9 +28,12 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Log;
 use Validator;
@@ -40,10 +43,11 @@ use Validator;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
-    use FindAccountsTrait;
 
     /** @var User */
     private $user;
+
+    use FindAccountsTrait;
     /** @var array */
     private $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
 
@@ -196,6 +200,43 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal
+    {
+        // update journal
+        // update actual journal:
+        $data['amount'] = strval($data['amount']);
+
+        // unlink all categories, recreate them:
+        $journal->categories()->detach();
+
+        $this->storeCategoryWithJournal($journal, strval($data['category']));
+
+        // update amounts
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $transaction->amount = bcmul($data['amount'], '-1');
+            if ($transaction->account->accountType->type === AccountType::ASSET) {
+                $transaction->amount = $data['amount'];
+            }
+            $transaction->save();
+        }
+
+        $journal->save();
+
+        // update tags:
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->updateTags($journal, $data['tags']);
+        }
+
+        return $journal;
+    }
+
+    /**
      * @param Account $account
      */
     protected function deleteInitialBalance(Account $account)
@@ -277,6 +318,18 @@ class AccountRepository implements AccountRepositoryInterface
         Log::debug(sprintf('Created new account #%d named "%s" of type %s.', $newAccount->id, $newAccount->name, $accountType->type));
 
         return $newAccount;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $category
+     */
+    protected function storeCategoryWithJournal(TransactionJournal $journal, string $category)
+    {
+        if (strlen($category) > 0) {
+            $category = Category::firstOrCreateEncrypted(['name' => $category, 'user_id' => $journal->user_id]);
+            $journal->categories()->save($category);
+        }
     }
 
     /**
@@ -490,6 +543,48 @@ class AccountRepository implements AccountRepositoryInterface
             }
         }
         Log::debug('Updated opening balance journal.');
+
+        return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return bool
+     */
+    protected function updateTags(TransactionJournal $journal, array $array): bool
+    {
+        // create tag repository
+        /** @var TagRepositoryInterface $tagRepository */
+        $tagRepository = app(TagRepositoryInterface::class);
+
+        // find or create all tags:
+        $tags = [];
+        $ids  = [];
+        foreach ($array as $name) {
+            if (strlen(trim($name)) > 0) {
+                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                $tags[] = $tag;
+                $ids[]  = $tag->id;
+            }
+        }
+
+        // delete all tags connected to journal not in this array:
+        if (count($ids) > 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
+        }
+        // if count is zero, delete them all:
+        if (0 === count($ids)) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
+        }
+
+        // connect each tag to journal (if not yet connected):
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
+            $tagRepository->connect($journal, $tag);
+        }
 
         return true;
     }

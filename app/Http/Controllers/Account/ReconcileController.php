@@ -26,9 +26,12 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Http\Requests\ReconciliationFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -61,6 +64,45 @@ class ReconcileController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function edit(TransactionJournal $journal)
+    {
+        if ($journal->transactionType->type !== TransactionType::RECONCILIATION) {
+            return redirect(route('transactions.edit', [$journal->id]));
+        }
+        // view related code
+        $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+
+        // journal related code
+        $pTransaction = $journal->positiveTransaction();
+        $preFilled    = [
+            'date'     => $journal->dateAsString(),
+            'category' => $journal->categoryAsString(),
+            'tags'     => join(',', $journal->tags->pluck('tag')->toArray()),
+            'amount'   => $pTransaction->amount,
+        ];
+
+        Session::flash('preFilled', $preFilled);
+        Session::flash('gaEventCategory', 'transactions');
+        Session::flash('gaEventAction', 'edit-reconciliation');
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (true !== session('reconcile.edit.fromUpdate')) {
+            $this->rememberPreviousUri('reconcile.edit.uri');
+        }
+        Session::forget('reconcile.edit.fromUpdate');
+
+        return view(
+            'accounts.reconcile.edit',
+            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'subTitle')
+        )->with('data', $preFilled);
+
     }
 
     /**
@@ -198,6 +240,23 @@ class ReconcileController extends Controller
     }
 
     /**
+     * @param TransactionJournal $journal
+     */
+    public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
+    {
+        if ($journal->transactionType->type !== TransactionType::RECONCILIATION) {
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+        $subTitle = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+
+        // get main transaction:
+        $transaction = $repository->getAssetTransaction($journal);
+
+
+        return view('accounts.reconcile.show', compact('journal', 'subTitle', 'transaction'));
+    }
+
+    /**
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -288,5 +347,66 @@ class ReconcileController extends Controller
         $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
 
         return Response::json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
+    }
+
+    /**
+     * @param ReconciliationFormRequest  $request
+     * @param AccountRepositoryInterface $repository
+     * @param TransactionJournal         $journal
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(ReconciliationFormRequest $request, AccountRepositoryInterface $repository, TransactionJournal $journal)
+    {
+        if ($journal->transactionType->type !== TransactionType::RECONCILIATION) {
+            return redirect(route('transactions.show', [$journal->id]));
+        }
+        if (bccomp('0', $request->get('amount')) === 0) {
+            Session::flash('error', trans('firefly.amount_cannot_be_zero'));
+
+            return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput();
+        }
+        // update journal using account repository. Keep it consistent.
+        $data = $request->getJournalData();
+        $repository->updateReconciliation($journal, $data);
+
+        // @codeCoverageIgnoreStart
+        if (1 === intval($request->get('return_to_edit'))) {
+            Session::put('reconcile.edit.fromUpdate', true);
+
+            return redirect(route('accounts.reconcile.edit', [$journal->id]))->withInput(['return_to_edit' => 1]);
+        }
+        // @codeCoverageIgnoreEnd
+
+        // redirect to previous URL.
+        return redirect($this->getPreviousUri('reconcile.edit.uri'));
+
+    }
+
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @throws FireflyException
+     */
+    private function redirectToOriginalAccount(Account $account)
+    {
+        /** @var Transaction $transaction */
+        $transaction = $account->transactions()->first();
+        if (null === $transaction) {
+            throw new FireflyException('Expected a transaction. This account has none. BEEP, error.');
+        }
+
+        $journal = $transaction->transactionJournal;
+        /** @var Transaction $opposingTransaction */
+        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
+
+        if (null === $opposingTransaction) {
+            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
+        }
+
+        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
     }
 }

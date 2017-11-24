@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
@@ -178,6 +179,9 @@ class TransactionController extends Controller
     {
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
+        }
+        if ($journal->transactionType->type === TransactionType::RECONCILIATION) {
+            return redirect(route('accounts.reconcile.show', [$journal->id]));
         }
         $linkTypes    = $linkTypeRepository->get();
         $links        = $linkTypeRepository->getLinks($journal);

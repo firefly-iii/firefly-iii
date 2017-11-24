@@ -33,6 +33,7 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * Moved here from account CRUD.
      *
@@ -164,4 +165,12 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function update(Account $account, array $data): Account;
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal;
 }

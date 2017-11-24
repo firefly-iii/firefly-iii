@@ -92,6 +92,13 @@ interface JournalRepositoryInterface
     public function first(): TransactionJournal;
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction|null
+     */
+    public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
+
+    /**
      * @return Collection
      */
     public function getTransactionTypes(): Collection;

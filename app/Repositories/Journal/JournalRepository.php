@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -167,6 +168,23 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $entry;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction|null
+     */
+    public function getAssetTransaction(TransactionJournal $journal): ?Transaction
+    {
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            if ($transaction->account->accountType->type === AccountType::ASSET) {
+                return $transaction;
+            }
+        }
+
+        return null;
     }
 
     /**
