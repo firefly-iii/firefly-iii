@@ -259,6 +259,20 @@ class ReconcileController extends Controller
             return $this->redirectToOriginalAccount($account);
         }
 
+        $startDate = clone $start;
+        $startDate->subDays(1);
+
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $currencyId    = intval($account->getMeta('currency_id'));
+        $currency      = $currencyRepos->find($currencyId);
+        if (0 === $currencyId) {
+            $currency = app('amount')->getDefaultCurrency();
+        }
+
+        $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
+        $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
+
         // get the transactions
         $selectionStart = clone $start;
         $selectionStart->subDays(3);
@@ -273,6 +287,6 @@ class ReconcileController extends Controller
         $transactions = $collector->getJournals();
         $html         = view('accounts.reconcile.transactions', compact('account', 'transactions', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
 
-        return Response::json(['html' => $html]);
+        return Response::json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
 }

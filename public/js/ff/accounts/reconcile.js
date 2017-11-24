@@ -22,6 +22,7 @@ var balanceDifference = 0;
 var difference = 0;
 var selectedAmount = 0;
 var reconcileStarted = false;
+var changedBalances = false;
 
 /**
  *
@@ -38,6 +39,7 @@ $(function () {
             difference = balanceDifference - selectedAmount;
             updateDifference();
         }
+        changedBalances = true;
     });
 
     /*
@@ -111,19 +113,8 @@ function checkReconciledBox(e) {
     }
     difference = balanceDifference - selectedAmount;
     updateDifference();
-    allowReconcile();
 }
 
-/**
- *
- */
-function allowReconcile() {
-    var count = $('.reconcile_checkbox:checked').length;
-    console.log('Count checkboxes is ' + count);
-    if (count > 0) {
-        $('.store_reconcile').prop('disabled', false);
-    }
-}
 
 /**
  * Calculate the difference between given start and end balance
@@ -171,7 +162,12 @@ function includeClearedTransactions() {
  */
 function placeTransactions(data) {
     $('#transactions_holder').empty().html(data.html);
-
+    selectedAmount = 0;
+    // update start + end balance when user has not touched them.
+    if (!changedBalances) {
+        $('input[name="start_balance"]').val(data.startBalance);
+        $('input[name="end_balance"]').val(data.endBalance);
+    }
 
     // as long as the dates are equal, changing the balance does not matter.
     calculateBalanceDifference();
@@ -187,6 +183,8 @@ function placeTransactions(data) {
 
     // show the other instruction:
     $('.select_transactions_instruction').show();
+
+    $('.store_reconcile').prop('disabled', false);
 }
 
 /**
