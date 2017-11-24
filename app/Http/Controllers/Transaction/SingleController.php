@@ -40,6 +40,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Http\Request;
 use Log;
 use Preferences;
 use Session;
@@ -153,9 +154,10 @@ class SingleController extends Controller
      *
      * @return View
      */
-    public function create(string $what = TransactionType::DEPOSIT)
+    public function create(Request $request, string $what = TransactionType::DEPOSIT)
     {
         $what           = strtolower($what);
+        $what           = $request->old('what') ?? $what;
         $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $assetAccounts  = $this->groupedActiveAccountList();
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
