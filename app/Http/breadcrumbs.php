@@ -871,6 +871,16 @@ Breadcrumbs::register(
         $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', [$journal->id]));
     }
 );
+
+// also edit reconciliations:
+Breadcrumbs::register(
+    'accounts.reconcile.edit',
+    function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
+        $breadcrumbs->parent('transactions.show', $journal);
+        $breadcrumbs->push(trans('breadcrumbs.edit_reconciliation', ['description' => $journal->description]), route('accounts.reconcile.edit', [$journal->id]));
+    }
+);
+
 Breadcrumbs::register(
     'transactions.delete',
     function (BreadCrumbGenerator $breadcrumbs, TransactionJournal $journal) {
