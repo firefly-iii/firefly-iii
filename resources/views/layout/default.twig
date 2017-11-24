@@ -143,7 +143,7 @@
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>{{ 'version'|_ }}</b> {{ Config.get('firefly.version') }}
+            <b>{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
     </footer>
