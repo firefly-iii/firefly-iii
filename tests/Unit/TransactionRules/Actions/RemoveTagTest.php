@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\RemoveTag;
@@ -38,16 +39,14 @@ class RemoveTagTest extends TestCase
      */
     public function testAct()
     {
-        // get journal, link al tags:
-        $journal = TransactionJournal::find(10);
-        $tags    = $journal->user->tags()->get();
-        foreach ($tags as $tag) {
-            $journal->tags()->save($tag);
-            $journal->save();
-        }
-        $firstTag = $tags->first();
-        $oldCount = $journal->tags()->count();
-        $this->assertGreaterThan(0, $journal->tags()->count());
+
+        // find journal with at least one tag
+        $journalIds = DB::table('tag_transaction_journal')->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $journalId  = intval($journalIds[0]);
+        /** @var TransactionJournal $journal */
+        $journal       = TransactionJournal::find($journalId);
+        $originalCount = $journal->tags()->count();
+        $firstTag      = $journal->tags()->first();
 
         // fire the action:
         $ruleAction               = new RuleAction;
@@ -58,7 +57,7 @@ class RemoveTagTest extends TestCase
         foreach ($journal->tags()->get() as $tag) {
             $this->assertNotEquals($firstTag->id, $tag->id);
         }
-        $this->assertEquals(($oldCount - 1), $journal->tags()->count());
+        $this->assertEquals(($originalCount - 1), $journal->tags()->count());
     }
 
     /**

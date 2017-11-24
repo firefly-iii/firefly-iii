@@ -53,6 +53,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
+        $repository->shouldReceive('spentInPeriod')->andReturn('0');
 
         $data = ['amount' => 200, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
@@ -70,6 +71,7 @@ class BudgetControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
+        $repository->shouldReceive('spentInPeriod')->andReturn('0');
 
         $data = ['amount' => 0, 'start' => '2017-01-01', 'end' => '2017-01-31'];
         $this->be($this->user());
