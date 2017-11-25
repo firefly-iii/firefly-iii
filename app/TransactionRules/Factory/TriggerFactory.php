@@ -30,9 +30,9 @@ use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use Log;
 
 /**
- * @codeCoverageIgnore
- *
  * Class TriggerFactory can create triggers.
+ *
+ * @codeCoverageIgnore
  */
 class TriggerFactory
 {

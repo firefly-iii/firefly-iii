@@ -1,7 +1,7 @@
 version: '2'
 services:
   firefly-db:
-    image: mysql:latest
+    image: mysql:8
     environment:
       - MYSQL_DATABASE=firefly_db
       - MYSQL_USER=firefly_db

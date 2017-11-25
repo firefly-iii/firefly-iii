@@ -71,7 +71,7 @@ class AccountServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register the tasker.
      */
     private function registerTasker()
     {

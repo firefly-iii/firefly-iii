@@ -54,7 +54,7 @@ class JournalServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register the collector.
      */
     private function registerCollector()
     {
@@ -73,7 +73,7 @@ class JournalServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register repository.
      */
     private function registerRepository()
     {
@@ -92,7 +92,7 @@ class JournalServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register the tasker.
      */
     private function registerTasker()
     {

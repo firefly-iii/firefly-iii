@@ -29,9 +29,9 @@ use FireflyIII\TransactionRules\Actions\ActionInterface;
 use Log;
 
 /**
- * @codeCoverageIgnore
- *
  * Class ActionFactory can create actions.
+ *
+ * @codeCoverageIgnore
  */
 class ActionFactory
 {
