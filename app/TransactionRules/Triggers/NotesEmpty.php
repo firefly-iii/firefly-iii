@@ -53,6 +53,8 @@ final class NotesEmpty extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when journal has no notes.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

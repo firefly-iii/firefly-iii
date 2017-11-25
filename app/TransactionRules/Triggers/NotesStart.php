@@ -64,6 +64,8 @@ final class NotesStart extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * When the notes start with X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

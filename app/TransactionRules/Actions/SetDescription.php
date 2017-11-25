@@ -31,9 +31,11 @@ use Log;
  */
 class SetDescription implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
+     *
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
@@ -44,6 +46,8 @@ class SetDescription implements ActionInterface
     }
 
     /**
+     * Set description to X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

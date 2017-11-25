@@ -53,6 +53,7 @@ final class HasNoBudget extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when journal has no budget
      * @param TransactionJournal $journal
      *
      * @return bool

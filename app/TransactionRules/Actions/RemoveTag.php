@@ -32,6 +32,7 @@ use Log;
  */
 class RemoveTag implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -45,6 +46,8 @@ class RemoveTag implements ActionInterface
     }
 
     /**
+     * Remove tag X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

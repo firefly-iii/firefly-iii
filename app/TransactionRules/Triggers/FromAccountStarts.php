@@ -63,6 +63,8 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
     }
 
     /**
+     * Returns true when from-account starts with X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

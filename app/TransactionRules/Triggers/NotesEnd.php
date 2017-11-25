@@ -64,6 +64,7 @@ final class NotesEnd extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when notes end with X
      * @param TransactionJournal $journal
      *
      * @return bool

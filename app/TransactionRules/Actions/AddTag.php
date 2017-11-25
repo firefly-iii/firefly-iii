@@ -32,7 +32,7 @@ use Log;
  */
 class AddTag implements ActionInterface
 {
-    /** @var RuleAction */
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -46,6 +46,8 @@ class AddTag implements ActionInterface
     }
 
     /**
+     * Add a tag
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

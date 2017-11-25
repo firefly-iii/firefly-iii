@@ -59,6 +59,8 @@ final class NotesAre extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when notes are specifically X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

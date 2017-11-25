@@ -58,6 +58,8 @@ final class CategoryIs extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when category is X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

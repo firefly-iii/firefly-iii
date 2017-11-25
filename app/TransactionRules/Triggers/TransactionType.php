@@ -57,6 +57,8 @@ final class TransactionType extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Return true when transaction type is X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

@@ -31,10 +31,12 @@ use Log;
 
 /**
  * @codeCoverageIgnore
- * Interface TriggerInterface
+ *
+ * Class TriggerFactory can create triggers.
  */
 class TriggerFactory
 {
+    /** @var array array with trigger types */
     protected static $triggerTypes = [];
 
     /**

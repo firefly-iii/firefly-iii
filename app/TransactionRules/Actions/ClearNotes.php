@@ -32,6 +32,7 @@ use Log;
  */
 class ClearNotes implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -45,6 +46,8 @@ class ClearNotes implements ActionInterface
     }
 
     /**
+     * Remove notes
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

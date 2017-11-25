@@ -30,10 +30,12 @@ use Log;
 
 /**
  * @codeCoverageIgnore
- * Class ActionFactory
+ *
+ * Class ActionFactory can create actions.
  */
 class ActionFactory
 {
+    /** @var array array of action types */
     protected static $actionTypes = [];
 
     /**

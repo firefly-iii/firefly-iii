@@ -52,6 +52,8 @@ final class HasNoTag extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Return true when journal has no tags.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

@@ -58,6 +58,8 @@ final class BudgetIs extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when budget is X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

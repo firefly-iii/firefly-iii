@@ -31,6 +31,7 @@ use Log;
  */
 class ClearBudget implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -44,6 +45,8 @@ class ClearBudget implements ActionInterface
     }
 
     /**
+     * Clear all budgets
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

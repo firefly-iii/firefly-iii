@@ -58,6 +58,8 @@ final class DescriptionIs extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when description is X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

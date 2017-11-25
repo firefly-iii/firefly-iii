@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * AdminTestMail.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -22,6 +19,9 @@ declare(strict_types=1);
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+
 namespace FireflyIII\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -30,14 +30,16 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class AdminTestMail.
+ *
+ * Sends a test mail to administrators.
  */
 class AdminTestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string */
+    /** @var string Email address of admin */
     public $email;
-    /** @var string */
+    /** @var string IP address of admin */
     public $ipAddress;
 
     /**

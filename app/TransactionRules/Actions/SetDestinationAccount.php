@@ -35,15 +35,16 @@ use Log;
  */
 class SetDestinationAccount implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
-    /** @var TransactionJournal */
+    /** @var TransactionJournal The journal */
     private $journal;
 
-    /** @var Account */
+    /** @var Account The new account */
     private $newDestinationAccount;
 
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface Account repository */
     private $repository;
 
     /**
@@ -57,6 +58,7 @@ class SetDestinationAccount implements ActionInterface
     }
 
     /**
+     * Set destination account to X
      * @param TransactionJournal $journal
      *
      * @return bool

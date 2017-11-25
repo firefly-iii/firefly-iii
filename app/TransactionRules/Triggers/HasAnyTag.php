@@ -52,6 +52,8 @@ final class HasAnyTag extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when journal has any tag
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

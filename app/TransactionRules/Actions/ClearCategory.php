@@ -31,6 +31,7 @@ use Log;
  */
 class ClearCategory implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -44,6 +45,8 @@ class ClearCategory implements ActionInterface
     }
 
     /**
+     * Clear all categories
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

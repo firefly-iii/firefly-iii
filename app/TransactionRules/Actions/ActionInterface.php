@@ -38,6 +38,8 @@ interface ActionInterface
     public function __construct(RuleAction $action);
 
     /**
+     * Execute the action.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

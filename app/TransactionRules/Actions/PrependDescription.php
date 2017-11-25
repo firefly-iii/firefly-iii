@@ -31,6 +31,7 @@ use Log;
  */
 class PrependDescription implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -44,6 +45,8 @@ class PrependDescription implements ActionInterface
     }
 
     /**
+     * Prepend description with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

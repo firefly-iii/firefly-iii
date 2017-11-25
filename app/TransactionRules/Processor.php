@@ -39,15 +39,15 @@ use Log;
  */
 final class Processor
 {
-    /** @var Collection */
+    /** @var Collection Actions to exectute */
     public $actions;
-    /** @var TransactionJournal */
+    /** @var TransactionJournal Journal to run them on */
     public $journal;
-    /** @var Rule */
+    /** @var Rule Rule that applies */
     public $rule;
-    /** @var Collection */
+    /** @var Collection All triggers*/
     public $triggers;
-    /** @var int */
+    /** @var int Found triggers */
     private $foundTriggers = 0;
 
     /**
@@ -132,6 +132,8 @@ final class Processor
     }
 
     /**
+     * Return found triggers
+     *
      * @return int
      */
     public function getFoundTriggers(): int
@@ -140,6 +142,8 @@ final class Processor
     }
 
     /**
+     * Set found triggers
+     *
      * @param int $foundTriggers
      */
     public function setFoundTriggers(int $foundTriggers)
@@ -148,6 +152,8 @@ final class Processor
     }
 
     /**
+     * Returns the rule
+     *
      * @return \FireflyIII\Models\Rule
      */
     public function getRule(): Rule
@@ -216,6 +222,8 @@ final class Processor
     }
 
     /**
+     * Run the actions
+     *
      * @return bool
      */
     private function actions()

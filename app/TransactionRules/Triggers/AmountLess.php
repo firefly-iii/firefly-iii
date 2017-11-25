@@ -57,6 +57,8 @@ final class AmountLess extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when amount is less than X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

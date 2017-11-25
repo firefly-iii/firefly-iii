@@ -32,15 +32,15 @@ use FireflyIII\Models\TransactionJournal;
  */
 class AbstractTrigger
 {
-    /** @var bool */
+    /** @var bool Whether to stop processing after this one is checked. */
     public $stopProcessing;
-    /** @var string */
+    /** @var string Value to check for */
     protected $checkValue;
-    /** @var TransactionJournal */
+    /** @var TransactionJournal Journal to check */
     protected $journal;
-    /** @var RuleTrigger */
+    /** @var RuleTrigger Trigger object */
     protected $trigger;
-    /** @var string */
+    /** @var string Trigger value */
     protected $triggerValue;
 
     /**
@@ -53,6 +53,8 @@ class AbstractTrigger
     }
 
     /**
+     * Make a new trigger from the value given in the string.
+     *
      * @codeCoverageIgnore
      *
      * @param string $triggerValue
@@ -70,6 +72,7 @@ class AbstractTrigger
     }
 
     /**
+     * Make a new trigger from the rule trigger in the parameter
      * @codeCoverageIgnore
      *
      * @param RuleTrigger $trigger
@@ -87,6 +90,8 @@ class AbstractTrigger
     }
 
     /**
+     * Make a new trigger from a trigger value.
+     *
      * @codeCoverageIgnore
      *
      * @param string $triggerValue
@@ -102,6 +107,8 @@ class AbstractTrigger
     }
 
     /**
+     * Returns trigger
+     *
      * @codeCoverageIgnore
      *
      * @return RuleTrigger
@@ -112,6 +119,8 @@ class AbstractTrigger
     }
 
     /**
+     * Returns trigger value
+     *
      * @codeCoverageIgnore
      *
      * @return string

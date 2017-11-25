@@ -63,6 +63,7 @@ final class DescriptionContains extends AbstractTrigger implements TriggerInterf
     }
 
     /**
+     * Returns true when description contains X
      * @param TransactionJournal $journal
      *
      * @return bool

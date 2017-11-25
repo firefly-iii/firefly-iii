@@ -31,6 +31,7 @@ use Log;
  */
 class AppendDescription implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -44,6 +45,8 @@ class AppendDescription implements ActionInterface
     }
 
     /**
+     * Append description with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

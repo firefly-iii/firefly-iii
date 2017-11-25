@@ -63,6 +63,8 @@ final class FromAccountContains extends AbstractTrigger implements TriggerInterf
     }
 
     /**
+     * Returns true when from-account contains X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

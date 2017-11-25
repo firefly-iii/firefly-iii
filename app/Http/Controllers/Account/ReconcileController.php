@@ -45,6 +45,7 @@ use View;
 
 /**
  * Class ReconcileController.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
 {
@@ -100,7 +101,7 @@ class ReconcileController extends Controller
 
         return view(
             'accounts.reconcile.edit',
-            compact('journal', 'optionalFields', 'assetAccounts', 'what', 'budgetList', 'subTitle')
+            compact('journal', 'subTitle')
         )->with('data', $preFilled);
 
     }
@@ -136,8 +137,6 @@ class ReconcileController extends Controller
 
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            // {% if transaction.date > end %}
-
             $amount = bcadd($amount, $transaction->amount);
         }
 
@@ -148,24 +147,12 @@ class ReconcileController extends Controller
                 ++$countCleared;
             }
         }
-
-        // final difference:
-        //{% set diff = (startBalance - endBalance) + clearedAmount + amount %}
         $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare = bccomp($difference, '0');
-
         $return         = [
-            'is_zero'  => false,
             'post_uri' => $route,
-            'html'     => '',
+            'html'     => view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared'))->render(),
         ];
-        $return['html'] = view(
-            'accounts.reconcile.overview',
-            compact(
-                'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount', 'startBalance', 'endBalance', 'amount',
-                'route', 'countCleared'
-            )
-        )->render();
 
         return Response::json($return);
     }
@@ -175,7 +162,7 @@ class ReconcileController extends Controller
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
@@ -219,28 +206,14 @@ class ReconcileController extends Controller
         $overviewUri     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
         $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
 
-        return view(
-            'accounts.reconcile.index',
-            compact(
-                'account',
-                'currency',
-                'subTitleIcon',
-                'start',
-                'end',
-                'subTitle',
-                'startBalance',
-                'endBalance',
-                'transactionsUri',
-                'selectionStart',
-                'selectionEnd',
-                'overviewUri',
-                'indexUri'
-            )
-        );
+        return view('accounts.reconcile.index', compact('account', 'currency', 'subTitleIcon', 'start', 'end', 'subTitle', 'startBalance', 'endBalance', 'transactionsUri', 'overviewUri', 'indexUri'));
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
@@ -257,9 +230,12 @@ class ReconcileController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function submit(Request $request, Account $account, Carbon $start, Carbon $end)
     {

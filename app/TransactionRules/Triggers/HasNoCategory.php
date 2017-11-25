@@ -53,6 +53,8 @@ final class HasNoCategory extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when journal has no category
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

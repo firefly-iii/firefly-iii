@@ -58,6 +58,8 @@ final class TagIs extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when tag is X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

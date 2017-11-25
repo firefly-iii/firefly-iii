@@ -45,7 +45,7 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register link type repository
      */
     private function linkType()
     {

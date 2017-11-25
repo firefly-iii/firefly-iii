@@ -63,6 +63,8 @@ final class DescriptionEnds extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when description ends with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

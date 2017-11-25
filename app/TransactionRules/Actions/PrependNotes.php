@@ -32,6 +32,7 @@ use Log;
  */
 class PrependNotes implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -45,6 +46,8 @@ class PrependNotes implements ActionInterface
     }
 
     /**
+     * Prepend notes with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

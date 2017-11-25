@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -32,6 +33,7 @@ use Log;
  */
 class SetNotes implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -45,6 +47,8 @@ class SetNotes implements ActionInterface
     }
 
     /**
+     * Set notes to X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

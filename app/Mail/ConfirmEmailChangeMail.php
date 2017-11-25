@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * ConfirmEmailChangeMail.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
@@ -22,23 +19,30 @@ declare(strict_types=1);
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class ConfirmEmailChangeMail
+ *
+ * Sends message to new address to confirm change.
+ */
 class ConfirmEmailChangeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string */
+    /** @var string IP address of user */
     public $ipAddress;
-    /** @var string */
+    /** @var string New email address */
     public $newEmail;
-    /** @var string */
+    /** @var string Old email address */
     public $oldEmail;
-    /** @var string */
+    /** @var string Confirmation link */
     public $uri;
 
     /**

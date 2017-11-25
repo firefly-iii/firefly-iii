@@ -32,6 +32,7 @@ use Log;
  */
 class AppendNotes implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -45,6 +46,8 @@ class AppendNotes implements ActionInterface
     }
 
     /**
+     * Append notes with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

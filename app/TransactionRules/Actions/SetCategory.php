@@ -32,6 +32,7 @@ use Log;
  */
 class SetCategory implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -45,6 +46,8 @@ class SetCategory implements ActionInterface
     }
 
     /**
+     * Set category X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

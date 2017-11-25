@@ -25,6 +25,9 @@ namespace FireflyIII\TransactionRules\Triggers;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
+/**
+ * Class HasAttachment
+ */
 class HasAttachment extends AbstractTrigger implements TriggerInterface
 {
     /**
@@ -54,6 +57,8 @@ class HasAttachment extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when journal has more than X attachments.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

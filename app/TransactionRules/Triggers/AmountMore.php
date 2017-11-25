@@ -63,6 +63,8 @@ final class AmountMore extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when amount is more than X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

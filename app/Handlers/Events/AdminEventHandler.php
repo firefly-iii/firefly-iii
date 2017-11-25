@@ -35,6 +35,8 @@ use Swift_TransportException;
 class AdminEventHandler
 {
     /**
+     * Sends a test message to an administrator.
+     *
      * @param AdminRequestedTestMessage $event
      *
      * @return bool

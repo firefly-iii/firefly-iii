@@ -63,6 +63,7 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when to-account is X.
      * @param TransactionJournal $journal
      *
      * @return bool

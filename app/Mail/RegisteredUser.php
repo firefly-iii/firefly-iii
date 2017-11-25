@@ -36,12 +36,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Sends newly registered user an email message.
+ *
+ * Class RegisteredUser
+ */
 class RegisteredUser extends Mailable
 {
     use Queueable, SerializesModels;
-    /** @var string */
+    /** @var string Email address of user */
     public $address;
-    /** @var string */
+    /** @var string IP address of user */
     public $ipAddress;
 
     /**

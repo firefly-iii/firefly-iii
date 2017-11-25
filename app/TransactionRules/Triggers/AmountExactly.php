@@ -57,6 +57,8 @@ final class AmountExactly extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * When the amount is exactly X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

@@ -51,7 +51,7 @@ class AccountServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register account repository
      */
     private function registerRepository()
     {

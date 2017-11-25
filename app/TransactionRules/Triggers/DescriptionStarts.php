@@ -63,6 +63,8 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
     }
 
     /**
+     * Returns true when description starts with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

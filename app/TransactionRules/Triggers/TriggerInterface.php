@@ -48,6 +48,8 @@ interface TriggerInterface
     public static function willMatchEverything($value = null);
 
     /**
+     * Triggers on a value and journal.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

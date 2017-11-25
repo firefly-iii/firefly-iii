@@ -36,12 +36,16 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Sends user link for new password.
+ * Class RequestedNewPassword
+ */
 class RequestedNewPassword extends Mailable
 {
     use Queueable, SerializesModels;
-    /** @var string */
+    /** @var string IP address of user */
     public $ipAddress;
-    /** @var string */
+    /** @var string URI of password change link */
     public $url;
 
     /**

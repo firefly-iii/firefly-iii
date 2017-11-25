@@ -34,6 +34,7 @@ use Log;
  */
 class SetBudget implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
 
     /**
@@ -47,6 +48,8 @@ class SetBudget implements ActionInterface
     }
 
     /**
+     * Set budget X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

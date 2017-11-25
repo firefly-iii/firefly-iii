@@ -36,15 +36,15 @@ use Log;
  */
 class TransactionMatcher
 {
-    /** @var int */
+    /** @var int Limit of matcher */
     private $limit = 10;
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
     private $range = 200;
-    /** @var Rule */
+    /** @var Rule The rule to apply */
     private $rule;
-    /** @var JournalTaskerInterface */
+    /** @var JournalTaskerInterface Tasker for some related tasks */
     private $tasker;
-    /** @var array */
+    /** @var array Types that can be matched using this matcher */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
     private $triggers = [];
@@ -108,6 +108,7 @@ class TransactionMatcher
     }
 
     /**
+     * Return limit
      * @return int
      */
     public function getLimit(): int
@@ -116,6 +117,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set limit
+     *
      * @param int $limit
      *
      * @return TransactionMatcher
@@ -128,6 +131,7 @@ class TransactionMatcher
     }
 
     /**
+     * Get range
      * @return int
      */
     public function getRange(): int
@@ -136,6 +140,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set range
+     *
      * @param int $range
      *
      * @return TransactionMatcher
@@ -148,6 +154,7 @@ class TransactionMatcher
     }
 
     /**
+     * Get triggers
      * @return array
      */
     public function getTriggers(): array
@@ -156,6 +163,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set triggers
+     *
      * @param array $triggers
      *
      * @return TransactionMatcher
@@ -168,6 +177,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set rule
+     *
      * @param Rule $rule
      */
     public function setRule(Rule $rule)
@@ -176,6 +187,8 @@ class TransactionMatcher
     }
 
     /**
+     * Run the processor.
+     *
      * @param Processor $processor
      *
      * @return Collection
