@@ -411,6 +411,7 @@ class JournalRepository implements JournalRepositoryInterface
         return $journal;
     }
 
+
     /**
      * Same as above but for transaction journal with multiple transactions.
      *

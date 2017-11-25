@@ -35,7 +35,7 @@ return [
     'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
     'version'                    => '4.6.11',
     'maxUploadSize'              => 15242880,
-    'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf'],
+    'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf','text/plain'],
     'list_length'                => 10,
     'export_formats'             => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',

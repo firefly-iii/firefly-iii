@@ -75,6 +75,14 @@ class Bill extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function attachments()
+    {
+        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+    }
+
+    /**
      * @param $value
      *
      * @return string
@@ -100,6 +108,14 @@ class Bill extends Model
         }
 
         return $value;
+    }
+
+    /**
+     * Get all of the notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
     }
 
     /**

@@ -20,6 +20,11 @@
             </td>
             <td data-value="{{ entry.name }}">
                 <a href="{{ route('bills.show',entry.id) }}" title="{{ entry.name }}">{{ entry.name }}</a>
+                {# count attachments #}
+                {% if entry.attachments.count > 0 %}
+                    <i class="fa fa-paperclip"></i>
+                {% endif %}
+
             </td>
             <td class="hidden-sm hidden-md hidden-xs" data-value="{{ entry.match }}">
                 {% for match in entry.match|split(',') %}

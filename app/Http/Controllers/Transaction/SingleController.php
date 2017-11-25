@@ -44,7 +44,6 @@ use Illuminate\Http\Request;
 use Log;
 use Preferences;
 use Session;
-use Steam;
 use View;
 
 /**
@@ -75,8 +74,8 @@ class SingleController extends Controller
     {
         parent::__construct();
 
-        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
+        $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 
@@ -109,8 +108,8 @@ class SingleController extends Controller
         $tags         = join(',', $journal->tags()->get()->pluck('tag')->toArray());
         /** @var Transaction $transaction */
         $transaction   = $journal->transactions()->first();
-        $amount        = Steam::positive($transaction->amount);
-        $foreignAmount = null === $transaction->foreign_amount ? null : Steam::positive($transaction->foreign_amount);
+        $amount        = app('steam')->positive($transaction->amount);
+        $foreignAmount = null === $transaction->foreign_amount ? null : app('steam')->positive($transaction->foreign_amount);
 
         $preFilled = [
             'description'               => $journal->description,
@@ -158,7 +157,6 @@ class SingleController extends Controller
     {
         $what           = strtolower($what);
         $what           = $request->old('what') ?? $what;
-        $uploadSize     = min(Steam::phpBytes(ini_get('upload_max_filesize')), Steam::phpBytes(ini_get('post_max_size')));
         $assetAccounts  = $this->groupedActiveAccountList();
         $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $piggyBanks     = $this->piggyBanks->getPiggyBanksWithAmount();
@@ -182,7 +180,7 @@ class SingleController extends Controller
 
         return view(
             'transactions.single.create',
-            compact('assetAccounts', 'subTitleIcon', 'uploadSize', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
+            compact('assetAccounts', 'subTitleIcon', 'budgets', 'what', 'piggies', 'subTitle', 'optionalFields', 'preFilled')
         );
     }
 

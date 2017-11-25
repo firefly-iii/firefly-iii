@@ -53,6 +53,7 @@ class BillFormRequest extends Request
             'skip'                          => $this->integer('skip'),
             'automatch'                     => $this->boolean('automatch'),
             'active'                        => $this->boolean('active'),
+            'notes'                         => $this->string('notes'),
         ];
     }
 

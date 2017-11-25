@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('bills.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+    <form method="POST" action="{{ route('bills.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -32,9 +32,12 @@
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
+                        {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                         {{ ExpandedForm.integer('skip',0) }}
                         {{ ExpandedForm.checkbox('automatch',1,true) }}
                         {{ ExpandedForm.checkbox('active',1,true) }}
+
                     </div>
                 </div>
 

@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -536,6 +537,11 @@ class BillRepository implements BillRepositoryInterface
             ]
         );
 
+        // update note:
+        if (isset($data['notes'])) {
+            $this->updateNote($bill, $data['notes']);
+        }
+
         return $bill;
     }
 
@@ -557,6 +563,11 @@ class BillRepository implements BillRepositoryInterface
         $bill->automatch   = $data['automatch'];
         $bill->active      = $data['active'];
         $bill->save();
+
+        // update note:
+        if (isset($data['notes']) && null !== $data['notes']) {
+            $this->updateNote($bill, strval($data['notes']));
+        }
 
         return $bill;
     }
@@ -597,5 +608,33 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $wordMatch;
+    }
+
+
+    /**
+     * @param Bill $bill
+     * @param string             $note
+     *
+     * @return bool
+     */
+    protected function updateNote(Bill $bill, string $note): bool
+    {
+        if (0 === strlen($note)) {
+            $dbNote = $bill->notes()->first();
+            if (null !== $dbNote) {
+                $dbNote->delete();
+            }
+
+            return true;
+        }
+        $dbNote = $bill->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note();
+            $dbNote->noteable()->associate($bill);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
     }
 }
