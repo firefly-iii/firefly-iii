@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Extension;
 
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionJournal as JournalModel;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\SingleCacheProperties;
@@ -48,7 +48,7 @@ class TransactionJournal extends Twig_Extension
         $transactions = $journal->transactions()->where('amount', '>', 0)->get();
         $totals       = [];
         $type         = $journal->transactionType->type;
-        /** @var Transaction $transaction */
+        /** @var TransactionModel $transaction */
         foreach ($transactions as $transaction) {
             $currencyId = $transaction->transaction_currency_id;
             $currency   = $transaction->transactionCurrency;

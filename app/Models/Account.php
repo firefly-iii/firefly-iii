@@ -115,7 +115,7 @@ class Account extends Model
      *
      * @return Account
      */
-    public static function routeBinder(self $value)
+    public static function routeBinder(Account $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {

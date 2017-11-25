@@ -487,7 +487,7 @@ class BillRepository implements BillRepositoryInterface
         $wordMatch   = $this->doWordMatch($matches, $description);
         $amountMatch = $this->doAmountMatch($journal->amountPositive(), $bill->amount_min, $bill->amount_max);
 
-        // If both, update!
+        // when both, update!
         if ($wordMatch && $amountMatch) {
             $journal->bill()->associate($bill);
             $journal->save();

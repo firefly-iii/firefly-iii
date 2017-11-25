@@ -34,6 +34,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Hash;
+use Illuminate\Contracts\Auth\Guard;
 use Log;
 use Preferences;
 use Session;
@@ -41,6 +42,8 @@ use View;
 
 /**
  * Class ProfileController.
+ *
+ * @method Guard guard()
  */
 class ProfileController extends Controller
 {

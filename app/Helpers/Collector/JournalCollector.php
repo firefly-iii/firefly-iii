@@ -168,8 +168,8 @@ class JournalCollector implements JournalCollectorInterface
                 $q1->where(
                     function (EloquentBuilder $q2) use ($amount) {
                         // amount < 0 and .amount > -$amount
-                        $amount = bcmul($amount, '-1');
-                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $amount);
+                        $invertedAmount = bcmul($amount, '-1');
+                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $invertedAmount);
                     }
                 )
                    ->orWhere(
@@ -196,8 +196,8 @@ class JournalCollector implements JournalCollectorInterface
                 $q1->where(
                     function (EloquentBuilder $q2) use ($amount) {
                         // amount < 0 and .amount < -$amount
-                        $amount = bcmul($amount, '-1');
-                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $amount);
+                        $invertedAmount = bcmul($amount, '-1');
+                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $invertedAmount);
                     }
                 )
                    ->orWhere(

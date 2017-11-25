@@ -88,6 +88,7 @@ class BankController extends Controller
         $remoteAccounts = array_keys($remoteAccounts);
         $class          = config(sprintf('firefly.import_pre.%s', $bank));
         // get import file
+        unset($remoteAccounts, $class);
 
         // get import config
     }

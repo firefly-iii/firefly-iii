@@ -18,8 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
-
+/** global: infoIncomeUri, spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
 /**
  *
  */
@@ -150,9 +149,6 @@ function updateBudgetedAmounts(e) {
             link.attr('href', 'budgets/show/' + id + '/' + data.limit);
         }
     });
-
-
-    return;
 }
 
 /**

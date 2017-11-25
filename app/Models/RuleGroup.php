@@ -53,7 +53,7 @@ class RuleGroup extends Model
      *
      * @return RuleGroup
      */
-    public static function routeBinder(self $value)
+    public static function routeBinder(RuleGroup $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {

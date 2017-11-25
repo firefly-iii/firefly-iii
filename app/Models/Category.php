@@ -87,7 +87,7 @@ class Category extends Model
      *
      * @return Category
      */
-    public static function routeBinder(self $value)
+    public static function routeBinder(Category $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {

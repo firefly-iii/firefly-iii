@@ -156,29 +156,6 @@ function countChecked() {
     }
 }
 
-function getAmounts() {
-    $('.mass_reconcile span').html(reconcile_selected_txt + ' (<i class="fa fa-spinner fa-spin "></i>)');
-    var checked = $('.select_all_single:checked');
-    var ids = [];
-    $.each(checked, function (i, v) {
-        ids.push(parseInt($(v).data('transaction')));
-    });
-
-    // go to specially crafted URL:
-    var bases = document.getElementsByTagName('base');
-    var baseHref = null;
-
-    if (bases.length > 0) {
-        baseHref = bases[0].href;
-    }
-
-    $.getJSON(baseHref + 'json/transactions/amount', {transactions: ids}).done(function (data) {
-        $('.mass_reconcile span').text(reconcile_selected_txt + ' (' + data.amounts + ')');
-        console.log(data);
-    });
-    return;
-}
-
 /**
  *
  */

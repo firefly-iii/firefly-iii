@@ -32,19 +32,6 @@ use Illuminate\Session\Middleware\StartSession;
 class StartFireflySession extends StartSession
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param Closure                  $next
-     *
-     * @return mixed
-     */
-    //    public function handle($request, Closure $next)
-    //    {
-    //        return parent::handle($request, $next); // defer to the right stuff
-    //    }
-
-    /**
      * Store the current URL for the request if necessary.
      *
      * @param \Illuminate\Http\Request              $request

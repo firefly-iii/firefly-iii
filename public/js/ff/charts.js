@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart */
+/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart, todayText */
 var allCharts = {};
 
 
@@ -131,7 +131,6 @@ function lineChart(URI, container) {
 
 function lineChartWithDay(URI, container, today) {
     "use strict";
-    console.log('in lineChartWithDay');
     var colorData = true;
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'line';
@@ -342,7 +341,6 @@ function drawAChart(URI, container, chartType, options, colorData, today) {
             };
             if (today >= 0) {
                 chartOpts.lineAtIndex.push(today - 1);
-                console.log('push opt');
             }
             allCharts[container] = new Chart(ctx, chartOpts);
         }

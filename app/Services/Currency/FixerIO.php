@@ -42,7 +42,6 @@ class FixerIO implements ExchangeRateInterface
     {
         $uri        = sprintf('https://api.fixer.io/%s?base=%s&symbols=%s', $date->format('Y-m-d'), $fromCurrency->code, $toCurrency->code);
         $statusCode = -1;
-        $body       = '';
         try {
             $result     = Requests::get($uri);
             $statusCode = $result->status_code;

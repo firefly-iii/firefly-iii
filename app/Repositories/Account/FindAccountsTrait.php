@@ -257,4 +257,11 @@ trait FindAccountsTrait
 
         return $account;
     }
+
+    /**
+     * @param array $data
+     *
+     * @return Account
+     */
+    abstract protected function storeAccount(array $data): Account;
 }

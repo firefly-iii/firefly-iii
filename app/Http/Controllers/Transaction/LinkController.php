@@ -143,7 +143,7 @@ class LinkController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
+    public function switchLink(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
     {
         $repository->switchLink($link);
 

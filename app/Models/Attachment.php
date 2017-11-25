@@ -56,7 +56,7 @@ class Attachment extends Model
      *
      * @return Attachment
      */
-    public static function routeBinder(self $value)
+    public static function routeBinder(Attachment $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {

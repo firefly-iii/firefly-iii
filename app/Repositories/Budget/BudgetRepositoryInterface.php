@@ -210,7 +210,7 @@ interface BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
-     * @param int    $amount
+     * @param string $amount
      *
      * @return BudgetLimit
      */

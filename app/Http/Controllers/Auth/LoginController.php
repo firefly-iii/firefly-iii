@@ -74,9 +74,9 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void
      */
     public function login(Request $request)
     {
@@ -109,9 +109,10 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request   $request
+     * @param CookieJar $cookieJar
      *
-     * @return \Illuminate\Http\Response
+     * @return $this
      */
     public function logout(Request $request, CookieJar $cookieJar)
     {
@@ -127,11 +128,10 @@ class LoginController extends Controller
      * Show the application's login form.
      *
      * @param Request   $request
-     * @param CookieJar $cookieJar
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showLoginForm(Request $request, CookieJar $cookieJar)
+    public function showLoginForm(Request $request)
     {
         // check for presence of tables:
         $hasTable = Schema::hasTable('users');
@@ -166,6 +166,6 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        return view('auth.login', compact('allowRegistration', 'email', 'remember')); //->withCookie($cookie);
+        return view('auth.login', compact('allowRegistration', 'email', 'remember'));
     }
 }

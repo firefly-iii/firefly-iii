@@ -18,6 +18,8 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** global: overviewUri, transactionsUri, indexUri,accounting */
+
 var balanceDifference = 0;
 var difference = 0;
 var selectedAmount = 0;
@@ -101,14 +103,11 @@ function storeReconcile() {
 function checkReconciledBox(e) {
     var el = $(e.target);
     var amount = parseFloat(el.val());
-    console.log('Amount is ' + amount);
     // if checked, add to selected amount
     if (el.prop('checked') === true && el.data('younger') === false) {
-        console.log("Sum is: " + selectedAmount + " - " + amount + " = " + (selectedAmount - amount));
         selectedAmount = selectedAmount - amount;
     }
     if (el.prop('checked') === false && el.data('younger') === false) {
-        console.log("Sum is: " + selectedAmount + " + " + amount + " = " + (selectedAmount + amount));
         selectedAmount = selectedAmount + amount;
     }
     difference = balanceDifference - selectedAmount;

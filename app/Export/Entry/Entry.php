@@ -105,7 +105,7 @@ final class Entry
      *
      * @return Entry
      */
-    public static function fromTransaction(Transaction $transaction): self
+    public static function fromTransaction(Transaction $transaction): Entry
     {
         $entry                 = new self();
         $entry->journal_id     = $transaction->journal_id;

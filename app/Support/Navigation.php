@@ -238,8 +238,6 @@ class Navigation
             '1W'      => trans('config.week_in_year'),
             'week'    => trans('config.week_in_year'),
             'weekly'  => trans('config.week_in_year'),
-            //'3M'      => trans('config.quarter_of_year'),
-            //'quarter' => trans('config.quarter_of_year'),
             '1M'      => trans('config.month'),
             'month'   => trans('config.month'),
             'monthly' => trans('config.month'),

@@ -53,7 +53,7 @@ class Rule extends Model
      *
      * @return Rule
      */
-    public static function routeBinder(self $value)
+    public static function routeBinder(Rule $value)
     {
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {

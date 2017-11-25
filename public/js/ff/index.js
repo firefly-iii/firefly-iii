@@ -18,7 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: accountFrontpageUri, token, billCount, accountExpenseUri, accountRevenueUri */
+/** global: accountFrontpageUri, today, piggyInfoUri, token, billCount, accountExpenseUri, accountRevenueUri */
 
 $(function () {
     "use strict";

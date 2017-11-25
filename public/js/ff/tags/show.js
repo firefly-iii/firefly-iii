@@ -18,7 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: zoomLevel, latitude, longitude, google, doPlaceMarker */
+/** global: zoomLevel, latitude, longitude, L, mapboxToken, doPlaceMarker */
 
 /*
  Some vars as prep for the map:

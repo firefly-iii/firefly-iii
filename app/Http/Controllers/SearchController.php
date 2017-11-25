@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Response;
 use View;
 
@@ -70,8 +71,8 @@ class SearchController extends Controller
 
     public function search(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = strval($request->get('query'));
-
+        $fullQuery    = strval($request->get('query'));
+        $transactions = new Collection;
         // cache
         $cache = new CacheProperties;
         $cache->addProperty('search');
