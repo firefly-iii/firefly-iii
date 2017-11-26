@@ -2,6 +2,7 @@
   "name": "Firefly III",
   "description": "A free and open source personal finances manager",
   "repository": "https://github.com/firefly-iii/firefly-iii",
+  "website": "https://firefly-iii.github.io/",
   "logo": "https://raw.githubusercontent.com/firefly-iii/firefly-iii/master/public/mstile-150x150.png",
   "keywords": [
     "finance",
@@ -36,18 +37,18 @@
     "transfers",
     "management"
   ],
-  "website": "https://firefly-iii.github.io/",
   "addons": [
     {
-      "plan": "heroku-postgresql"
+      "plan": "heroku-postgresql",
+      "as": "firefly-iii-database"
     }
   ],
   "scripts": {
-    "postdeploy": "export APP_KEY=$(php artisan --no-ansi key:generate --show)"
+    "postdeploy": "export APP_KEY=$(php artisan --no-ansi key:generate --show) && php artisan migrate:refresh --seed"
   },
   "buildpacks": [
     {
-      "url": "heroku/php"
+      "url": "https://github.com/lifekent/heroku-buildpack-laravel"
     }
   ],
   "env": {
