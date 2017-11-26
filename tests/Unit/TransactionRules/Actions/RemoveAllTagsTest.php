@@ -22,11 +22,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
 use Tests\TestCase;
-use DB;
+
 /**
  * Class RemoveAllTagsTest
  */
