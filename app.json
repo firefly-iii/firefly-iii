@@ -39,8 +39,7 @@
   ],
   "addons": [
     {
-      "plan": "heroku-postgresql",
-      "as": "firefly-iii-database"
+      "plan": "heroku-postgresql"
     }
   ],
   "scripts": {
