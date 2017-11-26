@@ -109,49 +109,7 @@ class ImportJournal
         Log::debug(sprintf('credit amount is %s', var_export($this->amountCredit, true)));
 
         if (null === $this->convertedAmount) {
-            // first check if the amount is set:
-            Log::debug('convertedAmount is NULL');
-
-            $info           = [];
-            $converterClass = '';
-
-            if (!is_null($this->amount)) {
-                Log::debug('Amount value is not NULL, assume this is the correct value.');
-                $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amount['role'])));
-                $info           = $this->amount;
-            }
-            if (!is_null($this->amountDebet)) {
-                Log::debug('Amount DEBET value is not NULL, assume this is the correct value (overrules Amount).');
-                $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountDebet['role'])));
-                $info           = $this->amountDebet;
-            }
-            if (!is_null($this->amountCredit)) {
-                Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebet).');
-                $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountCredit['role'])));
-                $info           = $this->amountCredit;
-            }
-            if (0 === count($info)) {
-                throw new FireflyException('No amount information for this row.');
-            }
-
-            Log::debug(sprintf('Converter class is %s', $converterClass));
-            /** @var ConverterInterface $amountConverter */
-            $amountConverter       = app($converterClass);
-            $this->convertedAmount = $amountConverter->convert($info['value']);
-            Log::debug(sprintf('First attempt to convert gives "%s"', $this->convertedAmount));
-            // modify
-            foreach ($this->modifiers as $modifier) {
-                $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
-                /** @var ConverterInterface $converter */
-                $converter = app($class);
-                Log::debug(sprintf('Now launching converter %s', $class));
-                if ($converter->convert($modifier['value']) === -1) {
-                    $this->convertedAmount = Steam::negative($this->convertedAmount);
-                }
-                Log::debug(sprintf('convertedAmount after conversion is  %s', $this->convertedAmount));
-            }
-
-            Log::debug(sprintf('After modifiers the result is: "%s"', $this->convertedAmount));
+            $this->calculateAmount();
         }
         Log::debug(sprintf('convertedAmount is: "%s"', $this->convertedAmount));
         if (0 === bccomp($this->convertedAmount, '0')) {
@@ -322,6 +280,71 @@ class ImportJournal
                 $this->metaDates['process_date'] = $array['value'];
                 break;
         }
+    }
+
+    /**
+     * If convertedAmount is NULL, this method will try to calculate the correct amount.
+     * It starts with amount, but can be overruled by debet and credit amounts.
+     *
+     * @throws FireflyException
+     */
+    private function calculateAmount()
+    {
+        // first check if the amount is set:
+        Log::debug('convertedAmount is NULL');
+
+        $info = $this->selectAmountInput();
+
+        if (0 === count($info)) {
+            throw new FireflyException('No amount information for this row.');
+        }
+
+        Log::debug(sprintf('Converter class is %s', $info['class']));
+        /** @var ConverterInterface $amountConverter */
+        $amountConverter       = app($info['class']);
+        $this->convertedAmount = $amountConverter->convert($info['value']);
+        Log::debug(sprintf('First attempt to convert gives "%s"', $this->convertedAmount));
+        // modify
+        foreach ($this->modifiers as $modifier) {
+            $class = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $modifier['role'])));
+            /** @var ConverterInterface $converter */
+            $converter = app($class);
+            Log::debug(sprintf('Now launching converter %s', $class));
+            if ($converter->convert($modifier['value']) === -1) {
+                $this->convertedAmount = Steam::negative($this->convertedAmount);
+            }
+            Log::debug(sprintf('convertedAmount after conversion is  %s', $this->convertedAmount));
+        }
+
+        Log::debug(sprintf('After modifiers the result is: "%s"', $this->convertedAmount));
+    }
+
+    /**
+     * This methods decides which input to use for the amount calculation.
+     *
+     * @return array
+     */
+    private function selectAmountInput()
+    {
+        $converterClass = '';
+        if (!is_null($this->amount)) {
+            Log::debug('Amount value is not NULL, assume this is the correct value.');
+            $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amount['role'])));
+            $info           = $this->amount;
+        }
+        if (!is_null($this->amountDebet)) {
+            Log::debug('Amount DEBET value is not NULL, assume this is the correct value (overrules Amount).');
+            $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountDebet['role'])));
+            $info           = $this->amountDebet;
+        }
+        if (!is_null($this->amountCredit)) {
+            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebet).');
+            $converterClass = sprintf('FireflyIII\Import\Converter\%s', config(sprintf('csv.import_roles.%s.converter', $this->amountCredit['role'])));
+            $info           = $this->amountCredit;
+        }
+        $info['class'] = $converterClass;
+
+        return $info;
     }
 
     /**

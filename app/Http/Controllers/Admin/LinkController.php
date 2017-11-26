@@ -137,7 +137,7 @@ class LinkController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('link_types.edit.fromUpdate')) {
-            $this->rememberPreviousUri('link_types.edit.uri');
+            $this->rememberPreviousUri('link_types.edit.uri'); // @codeCoverageIgnore
         }
         $request->session()->forget('link_types.edit.fromUpdate');
 
@@ -197,7 +197,7 @@ class LinkController extends Controller
             // set value so create routine will not overwrite URL:
             $request->session()->put('link_types.create.fromStore', true);
 
-            return redirect(route('link_types.create', [$request->input('what')]))->withInput();
+            return redirect(route('admin.links.create'))->withInput();
         }
 
         // redirect to previous URL.

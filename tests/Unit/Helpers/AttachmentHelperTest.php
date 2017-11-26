@@ -65,8 +65,8 @@ class AttachmentHelperTest extends TestCase
     {
         $journal = TransactionJournal::first();
         $helper  = new AttachmentHelper;
-        $path    = resource_path('stubs/csv.csv');
-        $file    = new UploadedFile($path, 'csv.csv', 'text/plain', filesize($path), null, true);
+        $path    = resource_path('stubs/binary.bin');
+        $file    = new UploadedFile($path, 'binary.bin', 'application/octet-stream', filesize($path), null, true);
 
         $helper->saveAttachmentsForModel($journal, [$file]);
         $errors   = $helper->getErrors();
@@ -74,7 +74,7 @@ class AttachmentHelperTest extends TestCase
 
         $this->assertCount(1, $errors);
         $this->assertCount(0, $messages);
-        $this->assertEquals('File "csv.csv" is of type "text/plain" which is not accepted as a new upload.', $errors->first());
+        $this->assertEquals('File "binary.bin" is of type "application/octet-stream" which is not accepted as a new upload.', $errors->first());
     }
 
     /**

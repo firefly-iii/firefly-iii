@@ -284,7 +284,7 @@ class AccountController extends Controller
         $currencyId    = intval($account->getMeta('currency_id'));
         $currency      = $currencyRepos->find($currencyId);
         if (0 === $currencyId) {
-            $currency = app('amount')->getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 
         // prep for "all" view.
@@ -348,8 +348,10 @@ class AccountController extends Controller
         // update preferences if necessary:
         $frontPage = Preferences::get('frontPageAccounts', [])->data;
         if (count($frontPage) > 0 && AccountType::ASSET === $account->accountType->type) {
+            // @codeCoverageIgnoreStart
             $frontPage[] = $account->id;
             Preferences::set('frontPageAccounts', $frontPage);
+            // @codeCoverageIgnoreEnd
         }
 
         if (1 === intval($request->get('create_another'))) {

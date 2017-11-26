@@ -107,7 +107,9 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentsForModel(Model $model, ?array $files): bool
     {
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
+            Log::debug('$files is an array.');
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
                 if (null !== $entry) {
@@ -155,6 +157,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function processFile(UploadedFile $file, Model $model): Attachment
     {
+        Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
         if (false === $validation) {
             return new Attachment;
@@ -199,8 +202,11 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validMime(UploadedFile $file): bool
     {
+        Log::debug('Now in validMime()');
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
+        Log::debug(sprintf('Name is %, and mime is %s', $name, $mime));
+        Log::debug('Valid mimes are', $this->allowedMimes);
 
         if (!in_array($mime, $this->allowedMimes)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
@@ -243,6 +249,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validateUpload(UploadedFile $file, Model $model): bool
     {
+        Log::debug('Now in validateUpload()');
         if (!$this->validMime($file)) {
             return false;
         }
