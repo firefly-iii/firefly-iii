@@ -43,11 +43,11 @@
     }
   ],
   "scripts": {
-    "postdeploy": "export APP_KEY=$(php artisan --no-ansi key:generate --show) && php artisan migrate:refresh --seed"
+    "postdeploy": "php artisan migrate:refresh --seed"
   },
   "buildpacks": [
     {
-      "url": "https://github.com/lifekent/heroku-buildpack-laravel"
+      "url": "heroku/php"
     }
   ],
   "env": {
