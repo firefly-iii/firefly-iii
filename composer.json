@@ -120,7 +120,7 @@
       "php artisan firefly:instructions install"
     ],
     "compile": [
-      "@php artisan key:generate --force"
+      "@php -r \"file_exists('.env.heroku') || copy('.env.heroku', '.env');\""
     ]
   },
   "config": {
