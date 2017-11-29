@@ -21,7 +21,7 @@ bcscale(12);
 
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*
@@ -51,33 +51,36 @@ $app->singleton(
 );
 
 /* Overrule logging */
-$app->configureMonologUsing(
-    function (Logger $monolog) use ($app) {
-        $interface = php_sapi_name();
-        $path      = $app->storagePath() . '/logs/ff3-' . $interface . '.log';
-        $level     = 'debug';
-        if ($app->bound('config')) {
-            $level = $app->make('config')->get('app.log_level', 'debug');
+if ($app->make('config')->get('app.log') === 'daily') {
+    $app->configureMonologUsing(
+        function (Logger $monolog) use ($app) {
+
+            $interface = php_sapi_name();
+            $path      = $app->storagePath() . '/logs/ff3-' . $interface . '.log';
+            $level     = 'debug';
+            if ($app->bound('config')) {
+                $level = $app->make('config')->get('app.log_level', 'debug');
+            }
+            $levels = [
+                'debug'     => Logger::DEBUG,
+                'info'      => Logger::INFO,
+                'notice'    => Logger::NOTICE,
+                'warning'   => Logger::WARNING,
+                'error'     => Logger::ERROR,
+                'critical'  => Logger::CRITICAL,
+                'alert'     => Logger::ALERT,
+                'emergency' => Logger::EMERGENCY,
+            ];
+
+            $useLevel = $levels[$level];
+
+            $formatter = new LineFormatter(null, null, true, true);
+            $handler   = new RotatingFileHandler($path, 5, $useLevel);
+            $handler->setFormatter($formatter);
+            $monolog->pushHandler($handler);
         }
-        $levels = [
-            'debug'     => Logger::DEBUG,
-            'info'      => Logger::INFO,
-            'notice'    => Logger::NOTICE,
-            'warning'   => Logger::WARNING,
-            'error'     => Logger::ERROR,
-            'critical'  => Logger::CRITICAL,
-            'alert'     => Logger::ALERT,
-            'emergency' => Logger::EMERGENCY,
-        ];
-
-        $useLevel = $levels[$level];
-
-        $formatter = new LineFormatter(null, null, true, true);
-        $handler   = new RotatingFileHandler($path, 5, $useLevel);
-        $handler->setFormatter($formatter);
-        $monolog->pushHandler($handler);
-    }
-);
+    );
+}
 
 /*
 |--------------------------------------------------------------------------
