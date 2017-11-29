@@ -51,7 +51,7 @@ $app->singleton(
 );
 
 /* Overrule logging */
-if ($app->make('config')->get('app.log') === 'daily') {
+if (env('APP_LOG', 'errorlog') === 'daily') {
     $app->configureMonologUsing(
         function (Logger $monolog) use ($app) {
 
