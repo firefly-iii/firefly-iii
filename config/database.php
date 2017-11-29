@@ -28,13 +28,13 @@ $username    = '';
 $password    = '';
 $database    = '';
 
-+if (!($databaseUrl === false)) {
-        $options  = parse_url($databaseUrl);
-        $host     = $options['host'];
-        $username = $options['user'];
-        $password = $options['pass'];
-        $database = substr($options['path'], 1);
-    }
+if (!($databaseUrl === false)) {
+    $options  = parse_url($databaseUrl);
+    $host     = $options['host'];
+    $username = $options['user'];
+    $password = $options['pass'];
+    $database = substr($options['path'], 1);
+}
 
 return [
 
