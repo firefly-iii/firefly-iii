@@ -74,14 +74,6 @@ class BudgetLimit extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function limitrepetitions()
-    {
-        return $this->hasMany('FireflyIII\Models\LimitRepetition');
-    }
-
-    /**
      * @param $value
      */
     public function setAmountAttribute($value)
