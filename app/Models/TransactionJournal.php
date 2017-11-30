@@ -364,6 +364,8 @@ class TransactionJournal extends Model
             return new TransactionJournalMeta();
         }
         if (is_string($value) && 0 === strlen($value)) {
+            $this->deleteMeta($name);
+            
             return new TransactionJournalMeta();
         }
 
