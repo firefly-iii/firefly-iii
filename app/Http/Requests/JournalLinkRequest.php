@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Models\LinkType;
 
 /**
- * Class JournalLink
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class JournalLink.
  */
 class JournalLinkRequest extends Request
 {
@@ -54,7 +50,7 @@ class JournalLinkRequest extends Request
         $return['transaction_journal_id'] = $this->integer('link_journal_id');
         $return['comments']               = strlen($this->string('comments')) > 0 ? $this->string('comments') : null;
         $return['direction']              = $parts[1];
-        if ($return['transaction_journal_id'] === 0 && ctype_digit($this->string('link_other'))) {
+        if (0 === $return['transaction_journal_id'] && ctype_digit($this->string('link_other'))) {
             $return['transaction_journal_id'] = $this->integer('link_other');
         }
 

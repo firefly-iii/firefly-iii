@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules;
@@ -36,26 +35,23 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class Processor
- *
- * @package FireflyIII\TransactionRules
+ * Class Processor.
  */
 final class Processor
 {
-    /** @var  Collection */
+    /** @var Collection Actions to exectute */
     public $actions;
-    /** @var  TransactionJournal */
+    /** @var TransactionJournal Journal to run them on */
     public $journal;
-    /** @var  Rule */
+    /** @var Rule Rule that applies */
     public $rule;
-    /** @var Collection */
+    /** @var Collection All triggers*/
     public $triggers;
-    /** @var int */
-    protected $foundTriggers = 0;
+    /** @var int Found triggers */
+    private $foundTriggers = 0;
 
     /**
      * Processor constructor.
-     *
      */
     private function __construct()
     {
@@ -68,7 +64,6 @@ final class Processor
      * and actions found in the given Rule.
      *
      * @param Rule $rule
-     *
      * @param bool $includeActions
      *
      * @return Processor
@@ -128,7 +123,7 @@ final class Processor
     {
         $self = new self;
         foreach ($triggers as $entry) {
-            $entry['value'] = is_null($entry['value']) ? '' : $entry['value'];
+            $entry['value'] = null === $entry['value'] ? '' : $entry['value'];
             $trigger        = TriggerFactory::makeTriggerFromStrings($entry['type'], $entry['value'], $entry['stopProcessing']);
             $self->triggers->push($trigger);
         }
@@ -137,6 +132,8 @@ final class Processor
     }
 
     /**
+     * Return found triggers
+     *
      * @return int
      */
     public function getFoundTriggers(): int
@@ -145,6 +142,8 @@ final class Processor
     }
 
     /**
+     * Set found triggers
+     *
      * @param int $foundTriggers
      */
     public function setFoundTriggers(int $foundTriggers)
@@ -153,6 +152,7 @@ final class Processor
     }
 
     /**
+     * Returns the rule
      *
      * @return \FireflyIII\Models\Rule
      */
@@ -185,7 +185,7 @@ final class Processor
                 Log::debug('Has more than zero actions.');
                 $this->actions();
             }
-            if ($this->actions->count() === 0) {
+            if (0 === $this->actions->count()) {
                 Log::info('Rule has no actions!');
             }
 
@@ -193,7 +193,6 @@ final class Processor
         }
 
         return false;
-
     }
 
     /**
@@ -220,16 +219,17 @@ final class Processor
         }
 
         return false;
-
     }
 
     /**
+     * Run the actions
+     *
      * @return bool
      */
     private function actions()
     {
         /**
-         * @var int        $index
+         * @var int
          * @var RuleAction $action
          */
         foreach ($this->actions as $action) {
@@ -241,7 +241,6 @@ final class Processor
                 Log::debug('Stop processing now and break.');
                 break;
             }
-
         }
 
         return true;
@@ -249,7 +248,7 @@ final class Processor
 
     /**
      * Method to check whether the current transaction would be triggered
-     * by the given list of triggers
+     * by the given list of triggers.
      *
      * @return bool
      */
@@ -261,25 +260,21 @@ final class Processor
         Log::debug(sprintf('Found triggers starts at %d', $foundTriggers));
         /** @var AbstractTrigger $trigger */
         foreach ($this->triggers as $trigger) {
-            $foundTriggers++;
+            ++$foundTriggers;
             Log::debug(sprintf('Now checking trigger %s with value %s', get_class($trigger), $trigger->getTriggerValue()));
             /** @var AbstractTrigger $trigger */
             if ($trigger->triggered($this->journal)) {
                 Log::debug('Is a match!');
-                $hitTriggers++;
+                ++$hitTriggers;
             }
             if ($trigger->stopProcessing) {
                 Log::debug('Stop processing this trigger and break.');
                 break;
             }
-
         }
         $result = ($hitTriggers === $foundTriggers && $foundTriggers > 0);
         Log::debug('Result of triggered()', ['hitTriggers' => $hitTriggers, 'foundTriggers' => $foundTriggers, 'result' => $result]);
 
         return $result;
-
     }
-
-
 }

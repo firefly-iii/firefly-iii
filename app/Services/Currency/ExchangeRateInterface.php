@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Currency;
-
 
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
@@ -46,5 +44,4 @@ interface ExchangeRateInterface
      * @return mixed
      */
     public function setUser(User $user);
-
 }

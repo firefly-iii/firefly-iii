@@ -58,7 +58,7 @@
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only">{{ 'toggleNavigation'|_ }}</span>
             </a>
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
@@ -143,7 +143,7 @@
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b> {{ Config.get('firefly.version') }}
+            <b>{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
     </footer>
@@ -185,7 +185,7 @@
 <script src="js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="lib/adminlte/js/app.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script type="text/javascript" src="js/lib/accounting.min.js?v={{ FF_VERSION }}"></script>
-<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript"></script>
 <script type="text/javascript" src="js/ff/firefly.js?v={{ FF_VERSION }}"></script>
 <script type="text/javascript" src="js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
@@ -32,7 +30,6 @@ use Tests\TestCase;
 /**
  * Class AttachmentControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -103,7 +100,6 @@ class AttachmentControllerTest extends TestCase
         $repository->shouldReceive('exists')->once()->andReturn(false);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-
         $this->be($this->user());
         $response = $this->get(route('attachments.download', [1]));
         $response->assertStatus(500);
@@ -159,6 +155,4 @@ class AttachmentControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
-
 }

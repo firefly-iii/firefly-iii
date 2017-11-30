@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'ID de la caja de ahorro (coincide con Firefly)',
     'column_account-name'           => 'Caja de ahorro (nombre)',
     'column_amount'                 => 'Monto',
+    'column_amount_debet'           => 'Amount (debet column)',
+    'column_amount_credit'          => 'Amount (credit column)',
     'column_amount-comma-separated' => 'Monto (coma como separador de decimales)',
     'column_bill-id'                => 'ID de factura (coincide con Firefly)',
     'column_bill-name'              => 'Nombre de factura',

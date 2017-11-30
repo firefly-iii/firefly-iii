@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,17 +27,15 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class SetDescription
- *
- * @package FireflyIII\TransactionRules\Actions
+ * Class SetDescription.
  */
 class SetDescription implements ActionInterface
 {
-
+    /** @var RuleAction The rule action */
     private $action;
 
-
     /**
+     *
      * TriggerInterface constructor.
      *
      * @param RuleAction $action
@@ -49,6 +46,8 @@ class SetDescription implements ActionInterface
     }
 
     /**
+     * Set description to X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -61,7 +60,8 @@ class SetDescription implements ActionInterface
 
         Log::debug(
             sprintf(
-                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".', $journal->id,
+                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
+                $journal->id,
                 $oldDescription,
                 $this->action->action_value
             )

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * Handler.php
@@ -38,7 +36,6 @@ use Exception;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Request;
-
 
 class Handler extends ExceptionHandler
 {
@@ -59,21 +56,19 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport
         = [
-            //
         ];
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Exception               $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $exception
      *
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
         if ($exception instanceof FireflyException || $exception instanceof ErrorException) {
-
             $isDebug = env('APP_DEBUG', false);
 
             return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
@@ -88,9 +83,10 @@ class Handler extends ExceptionHandler
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five its fine.
-     * @param  \Exception $exception
      *
-     * @return void
+     * @param \Exception $exception
+     *
+     * @return mixed|void
      */
     public function report(Exception $exception)
     {
@@ -120,7 +116,6 @@ class Handler extends ExceptionHandler
             $job       = new MailError($userData, env('SITE_OWNER', ''), $ipAddress, $data);
             dispatch($job);
         }
-
 
         parent::report($exception);
     }

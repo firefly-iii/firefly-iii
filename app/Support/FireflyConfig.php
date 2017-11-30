@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -28,9 +27,7 @@ use FireflyIII\Models\Configuration;
 use Log;
 
 /**
- * Class FireflyConfig
- *
- * @package FireflyIII\Support
+ * Class FireflyConfig.
  */
 class FireflyConfig
 {
@@ -38,6 +35,7 @@ class FireflyConfig
      * @param $name
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function delete($name): bool
@@ -72,7 +70,7 @@ class FireflyConfig
             return $config;
         }
         // no preference found and default is null:
-        if (is_null($default)) {
+        if (null === $default) {
             return null;
         }
 
@@ -100,7 +98,7 @@ class FireflyConfig
     {
         Log::debug('Set new value for ', ['name' => $name]);
         $config = Configuration::whereName($name)->first();
-        if (is_null($config)) {
+        if (null === $config) {
             Log::debug('Does not exist yet ', ['name' => $name]);
             $item       = new Configuration;
             $item->name = $name;
@@ -117,7 +115,5 @@ class FireflyConfig
         Cache::forget('ff-config-' . $name);
 
         return $config;
-
     }
-
 }

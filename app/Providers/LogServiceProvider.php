@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -27,23 +26,20 @@ use Illuminate\Log\LogServiceProvider as LaravelLogServiceProvider;
 use Illuminate\Log\Writer;
 
 /**
- * Class LogServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class LogServiceProvider.
  */
 class LogServiceProvider extends LaravelLogServiceProvider
 {
     /**
      * Configure the Monolog handlers for the application.
      *
-     * @param  \Illuminate\Log\Writer $log
-     *
-     * @return void
+     * @param \Illuminate\Log\Writer $log
      */
     protected function configureDailyHandler(Writer $log)
     {
         $log->useDailyFiles(
-            $this->app->storagePath() . '/logs/firefly-iii.log', $this->maxFiles(),
+            $this->app->storagePath() . '/logs/firefly-iii.log',
+            $this->maxFiles(),
             $this->logLevel()
         );
     }
@@ -51,9 +47,7 @@ class LogServiceProvider extends LaravelLogServiceProvider
     /**
      * Configure the Monolog handlers for the application.
      *
-     * @param  \Illuminate\Log\Writer $log
-     *
-     * @return void
+     * @param \Illuminate\Log\Writer $log
      */
     protected function configureSingleHandler(Writer $log)
     {

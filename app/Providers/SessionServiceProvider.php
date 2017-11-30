@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -27,16 +26,12 @@ use FireflyIII\Http\Middleware\StartFireflySession;
 use Illuminate\Session\SessionServiceProvider as BaseSessionServiceProvider;
 
 /**
- * Class SessionServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class SessionServiceProvider.
  */
 class SessionServiceProvider extends BaseSessionServiceProvider
 {
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {

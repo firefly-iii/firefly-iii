@@ -18,20 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Events;
-
 
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
 /**
- * Class AdminRequestedTestMessage
- *
- * @package FireflyIII\Events
+ * Class AdminRequestedTestMessage.
  */
 class AdminRequestedTestMessage extends Event
 {
@@ -43,7 +39,7 @@ class AdminRequestedTestMessage extends Event
     /**
      * Create a new event instance.
      *
-     * @param  User  $user
+     * @param User   $user
      * @param string $ipAddress
      */
     public function __construct(User $user, string $ipAddress)

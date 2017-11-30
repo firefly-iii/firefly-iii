@@ -18,42 +18,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use Cookie;
 use Illuminate\Support\Facades\Auth;
 use Preferences;
 
-
 /**
- * Class RedirectIfTwoFactorAuthenticated
- *
- * @package FireflyIII\Http\Middleware
+ * Class RedirectIfTwoFactorAuthenticated.
  */
 class RedirectIfTwoFactorAuthenticated
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  string|null              $guard
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null              $guard
      *
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-
             $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
-            $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+            $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
 
-            // grab 2auth information from cookie
-            $is2faAuthed = Cookie::get('twoFactorAuthenticated') === 'true';
+            // grab 2auth information from cookie.
+            $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
 
             if ($is2faEnabled && $has2faSecret && $is2faAuthed) {
                 return redirect('/');

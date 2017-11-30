@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
@@ -34,9 +33,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
 /**
- * Class ExecuteRuleGroupOnExistingTransactions
- *
- * @package FireflyIII\Jobs
+ * Class ExecuteRuleGroupOnExistingTransactions.
  */
 class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
 {
@@ -44,13 +41,13 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
 
     /** @var Collection */
     private $accounts;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $endDate;
     /** @var RuleGroup */
     private $ruleGroup;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $startDate;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -72,7 +69,6 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param Collection $accounts
      */
     public function setAccounts(Collection $accounts)
@@ -89,7 +85,6 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param Carbon $date
      */
     public function setEndDate(Carbon $date)
@@ -106,7 +101,6 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param Carbon $date
      */
     public function setStartDate(Carbon $date)
@@ -123,7 +117,6 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     *
      * @param User $user
      */
     public function setUser(User $user)
@@ -133,8 +126,6 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
@@ -159,7 +150,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     * Collect all journals that should be processed
+     * Collect all journals that should be processed.
      *
      * @return Collection
      */
@@ -174,7 +165,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
-     * Collects a list of rule processors, one for each rule within the rule group
+     * Collects a list of rule processors, one for each rule within the rule group.
      *
      * @return array
      */
@@ -192,8 +183,8 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
         return array_map(
             function ($rule) {
                 return Processor::make($rule);
-            }, $rules->all()
+            },
+            $rules->all()
         );
     }
-
 }

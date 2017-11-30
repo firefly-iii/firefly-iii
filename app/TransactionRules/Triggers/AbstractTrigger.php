@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -30,33 +29,34 @@ use FireflyIII\Models\TransactionJournal;
  * This class will be magical!
  *
  * Class AbstractTrigger
- *
- * @package FireflyIII\TransactionRules\Triggers
  */
 class AbstractTrigger
 {
-    /** @var  bool */
+    /** @var bool Whether to stop processing after this one is checked. */
     public $stopProcessing;
-    /** @var  string */
+    /** @var string Value to check for */
     protected $checkValue;
-    /** @var  TransactionJournal */
+    /** @var TransactionJournal Journal to check */
     protected $journal;
-    /** @var RuleTrigger */
+    /** @var RuleTrigger Trigger object */
     protected $trigger;
-    /** @var  string */
+    /** @var string Trigger value */
     protected $triggerValue;
 
     /**
      * AbstractTrigger constructor.
+     *
      * @codeCoverageIgnore
      */
     private function __construct()
     {
-
     }
 
     /**
+     * Make a new trigger from the value given in the string.
+     *
      * @codeCoverageIgnore
+     *
      * @param string $triggerValue
      * @param bool   $stopProcessing
      *
@@ -72,7 +72,9 @@ class AbstractTrigger
     }
 
     /**
+     * Make a new trigger from the rule trigger in the parameter
      * @codeCoverageIgnore
+     *
      * @param RuleTrigger $trigger
      *
      * @return AbstractTrigger
@@ -88,7 +90,10 @@ class AbstractTrigger
     }
 
     /**
+     * Make a new trigger from a trigger value.
+     *
      * @codeCoverageIgnore
+     *
      * @param string $triggerValue
      *
      * @return AbstractTrigger
@@ -102,7 +107,10 @@ class AbstractTrigger
     }
 
     /**
+     * Returns trigger
+     *
      * @codeCoverageIgnore
+     *
      * @return RuleTrigger
      */
     public function getTrigger(): RuleTrigger
@@ -111,13 +119,14 @@ class AbstractTrigger
     }
 
     /**
+     * Returns trigger value
+     *
      * @codeCoverageIgnore
+     *
      * @return string
      */
     public function getTriggerValue(): string
     {
         return $this->triggerValue;
     }
-
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -44,19 +43,16 @@ use Response;
 use Steam;
 
 /**
- * Class BudgetController
+ * Class BudgetController.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // can't realy be helped.
- *
- * @package FireflyIII\Http\Controllers\Chart
  */
 class BudgetController extends Controller
 {
-
     /** @var GeneratorInterface */
     protected $generator;
 
-    /** @var  BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface */
     protected $repository;
 
     /**
@@ -77,7 +73,6 @@ class BudgetController extends Controller
     }
 
     /**
-     *
      * @param Budget $budget
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -94,7 +89,7 @@ class BudgetController extends Controller
         $cache->addProperty('chart.budget.budget');
 
         if ($cache->has()) {
-             return Response::json($cache->get()); // @codeCoverageIgnore
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $final = clone $last;
@@ -125,10 +120,12 @@ class BudgetController extends Controller
      * Shows the amount left in a specific budget limit.
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
+     *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws FireflyException
      */
     public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit)
@@ -185,7 +182,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget);
-        if (!is_null($budgetLimit->id)) {
+        if (null !== $budgetLimit->id) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -208,7 +205,6 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -230,7 +226,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget)->withCategoryInformation();
-        if (!is_null($budgetLimit->id)) {
+        if (null !== $budgetLimit->id) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -255,7 +251,6 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
@@ -277,7 +272,7 @@ class BudgetController extends Controller
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withOpposingAccount();
-        if (!is_null($budgetLimit->id)) {
+        if (null !== $budgetLimit->id) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
@@ -301,11 +296,11 @@ class BudgetController extends Controller
         $cache->store($data);
 
         return Response::json($data);
-
     }
 
     /**
      * Shows a budget list with spent/left/overspent.
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // 46 lines, I'm fine with this.
      *
@@ -325,9 +320,9 @@ class BudgetController extends Controller
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [
-            ['label' => strval(trans('firefly.spent_in_budget')), 'entries' => [], 'type' => 'bar',],
-            ['label' => strval(trans('firefly.left_to_spend')), 'entries' => [], 'type' => 'bar',],
-            ['label' => strval(trans('firefly.overspent')), 'entries' => [], 'type' => 'bar',],
+            ['label' => strval(trans('firefly.spent_in_budget')), 'entries' => [], 'type' => 'bar'],
+            ['label' => strval(trans('firefly.left_to_spend')), 'entries' => [], 'type' => 'bar'],
+            ['label' => strval(trans('firefly.overspent')), 'entries' => [], 'type' => 'bar'],
         ];
 
         /** @var Budget $budget */
@@ -345,7 +340,7 @@ class BudgetController extends Controller
         // for no budget:
         $spent = $this->spentInPeriodWithout($start, $end);
         $name  = strval(trans('firefly.no_budget'));
-        if (bccomp($spent, '0') !== 0) {
+        if (0 !== bccomp($spent, '0')) {
             $chartData[0]['entries'][$name] = bcmul($spent, '-1');
             $chartData[1]['entries'][$name] = '0';
             $chartData[2]['entries'][$name] = '0';
@@ -356,7 +351,6 @@ class BudgetController extends Controller
 
         return Response::json($data);
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's exactly five.
@@ -386,8 +380,8 @@ class BudgetController extends Controller
 
         // join them into one set of data:
         $chartData = [
-            ['label' => strval(trans('firefly.spent')), 'type' => 'bar', 'entries' => [],],
-            ['label' => strval(trans('firefly.budgeted')), 'type' => 'bar', 'entries' => [],],
+            ['label' => strval(trans('firefly.spent')), 'type' => 'bar', 'entries' => []],
+            ['label' => strval(trans('firefly.budgeted')), 'type' => 'bar', 'entries' => []],
         ];
 
         foreach (array_keys($periods) as $period) {
@@ -512,7 +506,6 @@ class BudgetController extends Controller
     }
 
     /**
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 6 but ok.
      *
      * @param Collection $limits
@@ -525,9 +518,9 @@ class BudgetController extends Controller
     private function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array
     {
         $return = [];
-        if ($limits->count() === 0) {
+        if (0 === $limits->count()) {
             $spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
-            if (bccomp($spent, '0') !== 0) {
+            if (0 !== bccomp($spent, '0')) {
                 $return[$budget->name]['spent']     = bcmul($spent, '-1');
                 $return[$budget->name]['left']      = 0;
                 $return[$budget->name]['overspent'] = 0;
@@ -538,7 +531,7 @@ class BudgetController extends Controller
 
         $rows = $this->spentInPeriodMulti($budget, $limits);
         foreach ($rows as $name => $row) {
-            if (bccomp($row['spent'], '0') !== 0 || bccomp($row['left'], '0') !== 0) {
+            if (0 !== bccomp($row['spent'], '0') || 0 !== bccomp($row['left'], '0')) {
                 $return[$name] = $row;
             }
         }
@@ -610,7 +603,7 @@ class BudgetController extends Controller
      * 'name' => "no budget" in local language
      * 'repetition_left' => left in budget repetition (always zero)
      * 'repetition_overspent' => spent more than budget repetition? (always zero)
-     * 'spent' => actually spent in period for budget
+     * 'spent' => actually spent in period for budget.
      *
      * @param Carbon $start
      * @param Carbon $end

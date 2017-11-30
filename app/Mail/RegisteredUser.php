@@ -19,9 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * RegisteredUser.php
@@ -38,12 +36,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Sends newly registered user an email message.
+ *
+ * Class RegisteredUser
+ */
 class RegisteredUser extends Mailable
 {
     use Queueable, SerializesModels;
-    /** @var  string */
+    /** @var string Email address of user */
     public $address;
-    /** @var  string */
+    /** @var string IP address of user */
     public $ipAddress;
 
     /**

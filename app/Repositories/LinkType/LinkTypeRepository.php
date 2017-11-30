@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
@@ -30,9 +29,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Class LinkTypeRepository
- *
- * @package FireflyIII\Repositories\LinkType
+ * Class LinkTypeRepository.
  */
 class LinkTypeRepository implements LinkTypeRepositoryInterface
 {
@@ -57,7 +54,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function destroy(LinkType $linkType, LinkType $moveTo): bool
     {
-        if (!is_null($moveTo->id)) {
+        if (null !== $moveTo->id) {
             TransactionJournalLink::where('link_type_id', $linkType->id)->update(['link_type_id' => $moveTo->id]);
         }
         $linkType->delete();
@@ -85,7 +82,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     public function find(int $id): LinkType
     {
         $linkType = LinkType::find($id);
-        if (is_null($linkType)) {
+        if (null === $linkType) {
             return new LinkType;
         }
 
@@ -105,9 +102,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $count         = TransactionJournalLink::whereDestinationId($one->id)->whereSourceId($two->id)->count();
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 
-        return ($count + $opposingCount > 0);
-
-
+        return $count + $opposingCount > 0;
     }
 
     /**
@@ -187,6 +182,5 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $linkType->save();
 
         return $linkType;
-
     }
 }

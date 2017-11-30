@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
-
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
@@ -33,9 +31,7 @@ use Illuminate\Support\Collection;
 use Navigation;
 
 /**
- * Class CategoryController
- *
- * @package FireflyIII\Http\Controllers\Report
+ * Class CategoryController.
  */
 class CategoryController extends Controller
 {
@@ -71,7 +67,6 @@ class CategoryController extends Controller
     }
 
     /**
-     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -108,6 +103,7 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
+     *
      * @internal param ReportHelperInterface $helper
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
@@ -129,7 +125,7 @@ class CategoryController extends Controller
         /** @var Category $category */
         foreach ($categories as $category) {
             $spent = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $end);
-            if (bccomp($spent, '0') !== 0) {
+            if (0 !== bccomp($spent, '0')) {
                 $report[$category->id] = ['name' => $category->name, 'spent' => $spent, 'id' => $category->id];
             }
         }
@@ -150,7 +146,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Filters empty results from category period report
+     * Filters empty results from category period report.
      *
      * @param array $data
      *
@@ -164,14 +160,11 @@ class CategoryController extends Controller
                 $sum = bcadd($amount, $sum);
             }
             $data[$categoryId]['sum'] = $sum;
-            if (bccomp('0', $sum) === 0) {
+            if (0 === bccomp('0', $sum)) {
                 unset($data[$categoryId]);
             }
         }
 
-
         return $data;
     }
-
-
 }

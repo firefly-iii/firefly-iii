@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -32,9 +31,7 @@ use Steam;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class PiggyBank
- *
- * @package FireflyIII\Models
+ * Class PiggyBank.
  */
 class PiggyBank extends Model
 {
@@ -46,19 +43,22 @@ class PiggyBank extends Model
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'startdate'  => 'date',
             'targetdate' => 'date',
             'order'      => 'int',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    /** @var array */
+    protected $dates = ['startdate', 'targetdate'];
+    /** @var array */
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
-    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
+    /** @var array */
+    protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
      * @param PiggyBank $value
@@ -84,19 +84,19 @@ class PiggyBank extends Model
     }
 
     /**
-     * Grabs the PiggyBankRepetition that's currently relevant / active
+     * Grabs the PiggyBankRepetition that's currently relevant / active.
      *
      * @returns PiggyBankRepetition
      */
     public function currentRelevantRep(): PiggyBankRepetition
     {
-        if (!is_null($this->currentRep)) {
+        if (null !== $this->currentRep) {
             return $this->currentRep;
         }
         // repeating piggy banks are no longer supported.
         /** @var PiggyBankRepetition $rep */
         $rep = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
-        if (is_null($rep)) {
+        if (null === $rep) {
             return new PiggyBankRepetition();
         }
         $this->currentRep = $rep;
@@ -105,14 +105,12 @@ class PiggyBank extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
      */
     public function getNameAttribute($value)
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -132,12 +130,12 @@ class PiggyBank extends Model
             $remainingAmount = bcsub($this->targetamount, $this->currentRelevantRep()->currentamount);
 
             // more than 1 month to go and still need money to save:
-            if ($diffInMonths > 0 && bccomp($remainingAmount, '0') === 1) {
+            if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
                 $savePerMonth = bcdiv($remainingAmount, strval($diffInMonths));
             }
 
             // less than 1 month to go but still need money to save:
-            if ($diffInMonths === 0 && bccomp($remainingAmount, '0') === 1) {
+            if (0 === $diffInMonths && 1 === bccomp($remainingAmount, '0')) {
                 $savePerMonth = $remainingAmount;
             }
         }
@@ -146,16 +144,14 @@ class PiggyBank extends Model
     }
 
     /**
-     *
      * @param Carbon $date
      *
      * @return string
      */
     public function leftOnAccount(Carbon $date): string
     {
-
         $balance = Steam::balanceIgnoreVirtual($this->account, $date);
-        /** @var PiggyBank $p */
+        // @var PiggyBank $p
         foreach ($this->account->piggyBanks as $piggyBank) {
             $currentAmount = $piggyBank->currentRelevantRep()->currentamount ?? '0';
 
@@ -163,7 +159,6 @@ class PiggyBank extends Model
         }
 
         return $balance;
-
     }
 
     /**
@@ -191,7 +186,6 @@ class PiggyBank extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setNameAttribute($value)

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collection;
@@ -29,24 +28,20 @@ use FireflyIII\Models\BudgetLimit;
 use Illuminate\Support\Collection;
 
 /**
- *
- * Class BalanceLine
- *
- * @package FireflyIII\Helpers\Collection
+ * Class BalanceLine.
  */
 class BalanceLine
 {
-
     const ROLE_DEFAULTROLE = 1;
     const ROLE_TAGROLE     = 2;
     const ROLE_DIFFROLE    = 3;
 
-    /** @var  Collection */
+    /** @var Collection */
     protected $balanceEntries;
 
     /** @var BudgetModel */
     protected $budget;
-    /** @var  BudgetLimit */
+    /** @var BudgetLimit */
     protected $budgetLimit;
     /** @var int */
     protected $role = self::ROLE_DEFAULTROLE;
@@ -57,7 +52,6 @@ class BalanceLine
     public function __construct()
     {
         $this->balanceEntries = new Collection;
-
     }
 
     /**
@@ -150,20 +144,21 @@ class BalanceLine
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @return string
      */
     public function getTitle(): string
     {
-        if ($this->getBudget() instanceof BudgetModel && !is_null($this->getBudget()->id)) {
+        if ($this->getBudget() instanceof BudgetModel && null !== $this->getBudget()->id) {
             return $this->getBudget()->name;
         }
-        if ($this->getRole() === self::ROLE_DEFAULTROLE) {
+        if (self::ROLE_DEFAULTROLE === $this->getRole()) {
             return strval(trans('firefly.no_budget'));
         }
-        if ($this->getRole() === self::ROLE_TAGROLE) {
+        if (self::ROLE_TAGROLE === $this->getRole()) {
             return strval(trans('firefly.coveredWithTags'));
         }
-        if ($this->getRole() === self::ROLE_DIFFROLE) {
+        if (self::ROLE_DIFFROLE === $this->getRole()) {
             return strval(trans('firefly.leftUnbalanced'));
         }
 
@@ -174,7 +169,7 @@ class BalanceLine
      * If a BalanceLine has a budget/repetition, each BalanceEntry in this BalanceLine
      * should have a "spent" value, which is the amount of money that has been spent
      * on the given budget/repetition. If you subtract all those amounts from the budget/repetition's
-     * total amount, this is returned:
+     * total amount, this is returned:.
      *
      * @return string
      */

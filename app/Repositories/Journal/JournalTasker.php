@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
@@ -28,6 +27,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\SingleCacheProperties;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
@@ -35,16 +35,12 @@ use Illuminate\Support\Collection;
 use Steam;
 
 /**
- * Class JournalTasker
- *
- * @package FireflyIII\Repositories\Journal
+ * Class JournalTasker.
  */
 class JournalTasker implements JournalTaskerInterface
 {
-
     /** @var User */
     private $user;
-
 
     /**
      * @param TransactionJournal $journal
@@ -74,17 +70,25 @@ class JournalTasker implements JournalTaskerInterface
      */
     public function getTransactionsOverview(TransactionJournal $journal): array
     {
+        $cache = new SingleCacheProperties;
+        $cache->addProperty('transaction-overview');
+        $cache->addProperty($journal->id);
+        $cache->addProperty($journal->updated_at);
+        if ($cache->has()) {
+            return $cache->get();
+        }
         // get all transaction data + the opposite site in one list.
         $set = $journal
             ->transactions()// "source"
             ->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join
-                    ->on('transactions.transaction_journal_id', '=', 'destination.transaction_journal_id')
-                    ->where('transactions.amount', '=', DB::raw('destination.amount * -1'))
-                    ->where('transactions.identifier', '=', DB::raw('destination.identifier'))
-                    ->whereNull('destination.deleted_at');
-            }
+                'transactions as destination',
+                function (JoinClause $join) {
+                    $join
+                        ->on('transactions.transaction_journal_id', '=', 'destination.transaction_journal_id')
+                        ->where('transactions.amount', '=', DB::raw('destination.amount * -1'))
+                        ->where('transactions.identifier', '=', DB::raw('destination.identifier'))
+                        ->whereNull('destination.deleted_at');
+                }
             )
             ->with(['budgets', 'categories'])
             ->leftJoin('accounts as source_accounts', 'transactions.account_id', '=', 'source_accounts.id')
@@ -119,11 +123,11 @@ class JournalTasker implements JournalTaskerInterface
                     'foreign_currencies.decimal_places as foreign_currency_dp',
                     'foreign_currencies.code as foreign_currency_code',
                     'foreign_currencies.symbol as foreign_currency_symbol',
-
                 ]
             );
 
-        $transactions = [];
+        $transactions    = [];
+        $transactionType = $journal->transactionType->type;
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
@@ -132,7 +136,10 @@ class JournalTasker implements JournalTaskerInterface
             $budget             = $entry->budgets->first();
             $category           = $entry->categories->first();
             $transaction        = [
+                'journal_type'                => $transactionType,
+                'updated_at'                  => $journal->updated_at,
                 'source_id'                   => $entry->id,
+                'source'                      => $journal->transactions()->find($entry->id),
                 'source_amount'               => $entry->amount,
                 'foreign_source_amount'       => $entry->foreign_amount,
                 'description'                 => $entry->description,
@@ -143,14 +150,14 @@ class JournalTasker implements JournalTaskerInterface
                 'source_account_after'        => bcadd($sourceBalance, $entry->amount),
                 'destination_id'              => $entry->destination_id,
                 'destination_amount'          => bcmul($entry->amount, '-1'),
-                'foreign_destination_amount'  => is_null($entry->foreign_amount) ? null : bcmul($entry->foreign_amount, '-1'),
+                'foreign_destination_amount'  => null === $entry->foreign_amount ? null : bcmul($entry->foreign_amount, '-1'),
                 'destination_account_id'      => $entry->destination_account_id,
                 'destination_account_type'    => $entry->destination_account_type,
                 'destination_account_name'    => Steam::decrypt(intval($entry->destination_account_encrypted), $entry->destination_account_name),
                 'destination_account_before'  => $destinationBalance,
                 'destination_account_after'   => bcadd($destinationBalance, bcmul($entry->amount, '-1')),
-                'budget_id'                   => is_null($budget) ? 0 : $budget->id,
-                'category'                    => is_null($category) ? '' : $category->name,
+                'budget_id'                   => null === $budget ? 0 : $budget->id,
+                'category'                    => null === $category ? '' : $category->name,
                 'transaction_currency_id'     => $entry->transaction_currency_id,
                 'transaction_currency_code'   => $entry->transaction_currency_code,
                 'transaction_currency_symbol' => $entry->transaction_currency_symbol,
@@ -160,17 +167,17 @@ class JournalTasker implements JournalTaskerInterface
                 'foreign_currency_symbol'     => $entry->foreign_currency_symbol,
                 'foreign_currency_dp'         => $entry->foreign_currency_dp,
             ];
-            if ($entry->destination_account_type === AccountType::CASH) {
+            if (AccountType::CASH === $entry->destination_account_type) {
                 $transaction['destination_account_name'] = '';
             }
 
-            if ($entry->account_type === AccountType::CASH) {
+            if (AccountType::CASH === $entry->account_type) {
                 $transaction['source_account_name'] = '';
             }
 
-
             $transactions[] = $transaction;
         }
+        $cache->store($transactions);
 
         return $transactions;
     }
@@ -186,7 +193,7 @@ class JournalTasker implements JournalTaskerInterface
     /**
      * Collect the balance of an account before the given transaction has hit. This is tricky, because
      * the balance does not depend on the transaction itself but the journal it's part of. And of course
-     * the order of transactions within the journal. So the query is pretty complex:
+     * the order of transactions within the journal. So the query is pretty complex:.
      *
      * @param int $transactionId
      *

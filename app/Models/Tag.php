@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -30,9 +29,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Tag
- *
- * @package FireflyIII\Models
+ * Class Tag.
  */
 class Tag extends Model
 {
@@ -44,18 +41,19 @@ class Tag extends Model
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'date'       => 'date',
             'zoomLevel'  => 'int',
-
         ];
-    protected $dates    = ['created_at', 'updated_at', 'date', 'deleted_at'];
+    /** @var array */
+    protected $dates = ['date'];
+    /** @var array */
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
-    protected $rules    = ['tag' => 'required|between:1,200',];
-
+    /** @var array */
+    protected $rules = ['tag' => 'required|between:1,200'];
 
     /**
      * @param array $fields
@@ -86,7 +84,6 @@ class Tag extends Model
         $tag                   = self::create($fields);
 
         return $tag;
-
     }
 
     /**
@@ -109,7 +106,7 @@ class Tag extends Model
      *
      * @return string
      */
-    public static function tagSum(Tag $tag): string
+    public static function tagSum(self $tag): string
     {
         $sum = '0';
         /** @var TransactionJournal $journal */
@@ -121,14 +118,13 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
      */
     public function getDescriptionAttribute($value)
     {
-        if (is_null($value)) {
+        if (null === $value) {
             return $value;
         }
 
@@ -136,14 +132,13 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
      */
     public function getTagAttribute($value)
     {
-        if (is_null($value)) {
+        if (null === $value) {
             return null;
         }
 
@@ -153,7 +148,7 @@ class Tag extends Model
     /**
      * Save the model to the database.
      *
-     * @param  array $options
+     * @param array $options
      *
      * @return bool
      */
@@ -169,7 +164,6 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -178,7 +172,6 @@ class Tag extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setTagAttribute($value)
@@ -201,6 +194,4 @@ class Tag extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-
 }

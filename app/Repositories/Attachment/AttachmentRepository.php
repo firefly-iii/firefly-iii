@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
@@ -33,9 +32,7 @@ use Log;
 use Storage;
 
 /**
- * Class AttachmentRepository
- *
- * @package FireflyIII\Repositories\Attachment
+ * Class AttachmentRepository.
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
@@ -80,7 +77,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function find(int $id): Attachment
     {
         $attachment = $this->user->attachments()->find($id);
-        if (is_null($attachment)) {
+        if (null === $attachment) {
             return new Attachment;
         }
 
@@ -95,7 +92,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     public function findWithoutUser(int $id): Attachment
     {
         $attachment = Attachment::find($id);
-        if (is_null($attachment)) {
+        if (null === $attachment) {
             return new Attachment;
         }
 
@@ -168,13 +165,11 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function update(Attachment $attachment, array $data): Attachment
     {
-
         $attachment->title       = $data['title'];
         $attachment->description = $data['description'];
         $attachment->notes       = $data['notes'];
         $attachment->save();
 
         return $attachment;
-
     }
 }

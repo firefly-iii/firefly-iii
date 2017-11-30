@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\MapperPreProcess;
 
 /**
- * Interface PreProcessorInterface
- *
- * @package FireflyIII\Import\MapperPreProcess
+ * Interface PreProcessorInterface.
  */
 interface PreProcessorInterface
 {
@@ -36,5 +33,4 @@ interface PreProcessorInterface
      * @return array
      */
     public function run(string $value): array;
-
 }

@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\User;
@@ -34,8 +34,6 @@ use Log;
  * @property User $user
  *
  * Trait FindAccountsTrait
- *
- * @package FireflyIII\Repositories\Account
  */
 trait FindAccountsTrait
 {
@@ -47,7 +45,7 @@ trait FindAccountsTrait
     public function find(int $accountId): Account
     {
         $account = $this->user->accounts()->find($accountId);
-        if (is_null($account)) {
+        if (null === $account) {
             return new Account;
         }
 
@@ -120,7 +118,6 @@ trait FindAccountsTrait
         if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
-
         }
         Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
@@ -226,4 +223,45 @@ trait FindAccountsTrait
 
         return $account;
     }
+
+    /**
+     * @param Account $account
+     *
+     * @return Account|null
+     *
+     * @throws FireflyException
+     */
+    public function getReconciliation(Account $account): ?Account
+    {
+        if (AccountType::ASSET !== $account->accountType->type) {
+            throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
+        }
+        $name     = $account->name . ' reconciliation';
+        $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name) {
+                return $account;
+            }
+        }
+        // assume nothing was found. create it!
+        $data    = [
+            'accountType'    => 'reconcile',
+            'name'           => $name,
+            'iban'           => null,
+            'virtualBalance' => null,
+            'active'         => true,
+        ];
+        $account = $this->storeAccount($data);
+
+        return $account;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Account
+     */
+    abstract protected function storeAccount(array $data): Account;
 }

@@ -104,8 +104,7 @@
       "@php artisan key:generate"
     ],
     "post-autoload-dump": [
-      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-      "@php artisan package:discover"
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
     ],
     "post-update-cmd": [
       "php artisan firefly:upgrade-database",
@@ -116,6 +115,9 @@
     "post-install-cmd": [
       "php artisan optimize",
       "php artisan firefly:instructions install"
+    ],
+    "compile": [
+      "@php -r \"file_exists('.env.heroku') || copy('.env.heroku', '.env');\""
     ]
   },
   "config": {

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,9 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Rule
- *
- * @package FireflyIII\Models
+ * Class Rule.
  */
 class Rule extends Model
 {
@@ -43,15 +40,13 @@ class Rule extends Model
      */
     protected $casts
         = [
-            'created_at'      => 'date',
-            'updated_at'      => 'date',
-            'deleted_at'      => 'date',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'deleted_at'      => 'datetime',
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * @param Rule $value
@@ -99,5 +94,4 @@ class Rule extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

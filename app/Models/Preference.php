@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -31,30 +30,29 @@ use Illuminate\Database\Eloquent\Model;
 use Log;
 
 /**
- * Class Preference
- *
- * @package FireflyIII\Models
+ * Class Preference.
  */
 class Preference extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
-    protected $dates    = ['created_at', 'updated_at'];
+
+    /** @var array */
     protected $fillable = ['user_id', 'data', 'name', 'data'];
 
     /**
      * @param $value
      *
      * @return mixed
+     *
      * @throws FireflyException
      */
     public function getDataAttribute($value)
@@ -73,7 +71,7 @@ class Preference extends Model
         } catch (Exception $e) {
             // don't care, assume is false.
         }
-        if (!($unserialized === false)) {
+        if (!(false === $unserialized)) {
             return $unserialized;
         }
 
@@ -95,5 +93,4 @@ class Preference extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

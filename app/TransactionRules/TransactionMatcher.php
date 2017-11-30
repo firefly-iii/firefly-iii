@@ -1,7 +1,7 @@
 <?php
 /**
  * TransactionMatcher.php
- * Copyright (C) 2016 Robert Horlings
+ * Copyright (C) 2016 Robert Horlings.
  *
  * This file is part of Firefly III.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules;
@@ -33,21 +32,19 @@ use Log;
 
 /**
  * Class TransactionMatcher is used to find a list of
- * transaction matching a set of triggers
- *
- * @package FireflyIII\TransactionRules
+ * transaction matching a set of triggers.
  */
 class TransactionMatcher
 {
-    /** @var int */
+    /** @var int Limit of matcher */
     private $limit = 10;
     /** @var int Maximum number of transaction to search in (for performance reasons) * */
     private $range = 200;
-    /** @var  Rule */
+    /** @var Rule The rule to apply */
     private $rule;
-    /** @var  JournalTaskerInterface */
+    /** @var JournalTaskerInterface Tasker for some related tasks */
     private $tasker;
-    /** @var array */
+    /** @var array Types that can be matched using this matcher */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
     private $triggers = [];
@@ -60,7 +57,6 @@ class TransactionMatcher
     public function __construct(JournalTaskerInterface $tasker)
     {
         $this->tasker = $tasker;
-
     }
 
     /**
@@ -69,11 +65,10 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
-     *
      */
     public function findTransactionsByRule()
     {
-        if (count($this->rule->ruleTriggers) === 0) {
+        if (0 === count($this->rule->ruleTriggers)) {
             return new Collection;
         }
 
@@ -94,11 +89,10 @@ class TransactionMatcher
      * triggers onto each transaction journal until enough matches are found ($limit).
      *
      * @return Collection
-     *
      */
     public function findTransactionsByTriggers(): Collection
     {
-        if (count($this->triggers) === 0) {
+        if (0 === count($this->triggers)) {
             return new Collection;
         }
 
@@ -114,6 +108,7 @@ class TransactionMatcher
     }
 
     /**
+     * Return limit
      * @return int
      */
     public function getLimit(): int
@@ -122,6 +117,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set limit
+     *
      * @param int $limit
      *
      * @return TransactionMatcher
@@ -134,6 +131,7 @@ class TransactionMatcher
     }
 
     /**
+     * Get range
      * @return int
      */
     public function getRange(): int
@@ -142,6 +140,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set range
+     *
      * @param int $range
      *
      * @return TransactionMatcher
@@ -151,10 +151,10 @@ class TransactionMatcher
         $this->range = $range;
 
         return $this;
-
     }
 
     /**
+     * Get triggers
      * @return array
      */
     public function getTriggers(): array
@@ -163,6 +163,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set triggers
+     *
      * @param array $triggers
      *
      * @return TransactionMatcher
@@ -175,6 +177,8 @@ class TransactionMatcher
     }
 
     /**
+     * Set rule
+     *
      * @param Rule $rule
      */
     public function setRule(Rule $rule)
@@ -183,6 +187,8 @@ class TransactionMatcher
     }
 
     /**
+     * Run the processor.
+     *
      * @param Processor $processor
      *
      * @return Collection
@@ -223,7 +229,7 @@ class TransactionMatcher
             Log::debug(sprintf('Total count is now %d', $result->count()));
 
             // Update counters
-            $page++;
+            ++$page;
             $processed += count($set);
 
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
@@ -236,11 +242,8 @@ class TransactionMatcher
             Log::debug(sprintf('reachedEndOfList: %s', var_export($reachedEndOfList, true)));
             Log::debug(sprintf('foundEnough: %s', var_export($foundEnough, true)));
             Log::debug(sprintf('searchedEnough: %s', var_export($searchedEnough, true)));
-
         } while (!$reachedEndOfList && !$foundEnough && !$searchedEnough);
 
         return $result;
     }
-
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
 /**
- * Class AccountFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class AccountFormRequest.
  */
 class AccountFormRequest extends Request
 {
@@ -52,12 +48,12 @@ class AccountFormRequest extends Request
             'active'               => $this->boolean('active'),
             'accountType'          => $this->string('what'),
             'currency_id'          => $this->integer('currency_id'),
-            'virtualBalance'       => $this->float('virtualBalance'),
+            'virtualBalance'       => $this->string('virtualBalance'),
             'iban'                 => $this->string('iban'),
             'BIC'                  => $this->string('BIC'),
             'accountNumber'        => $this->string('accountNumber'),
             'accountRole'          => $this->string('accountRole'),
-            'openingBalance'       => $this->float('openingBalance'),
+            'openingBalance'       => $this->string('openingBalance'),
             'openingBalanceDate'   => $this->date('openingBalanceDate'),
             'ccType'               => $this->string('ccType'),
             'ccMonthlyPaymentDate' => $this->string('ccMonthlyPaymentDate'),
@@ -77,7 +73,7 @@ class AccountFormRequest extends Request
 
         $nameRule = 'required|min:1|uniqueAccountForUser';
         $idRule   = '';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $idRule   = 'belongsToUser:accounts';
             $nameRule = 'required|min:1|uniqueAccountForUser:' . intval($this->get('id'));
         }

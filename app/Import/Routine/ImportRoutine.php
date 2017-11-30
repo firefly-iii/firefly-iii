@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Routine;
-
 
 use Carbon\Carbon;
 use DB;
@@ -36,19 +34,17 @@ use Log;
 
 class ImportRoutine
 {
-
-    /** @var  Collection */
+    /** @var Collection */
     public $errors;
-    /** @var  Collection */
+    /** @var Collection */
     public $journals;
     /** @var int */
     public $lines = 0;
-    /** @var  ImportJob */
+    /** @var ImportJob */
     private $job;
 
     /**
      * ImportRoutine constructor.
-     *
      */
     public function __construct()
     {
@@ -61,7 +57,7 @@ class ImportRoutine
      */
     public function run(): bool
     {
-        if ($this->job->status !== 'configured') {
+        if ('configured' !== $this->job->status) {
             Log::error(sprintf('Job %s is in state "%s" so it cannot be started.', $this->job->key, $this->job->status));
 
             return false;
@@ -94,7 +90,6 @@ class ImportRoutine
 
         Log::info(sprintf('Done with import job %s', $this->job->key));
 
-
         return true;
     }
 
@@ -118,8 +113,7 @@ class ImportRoutine
         $processor = app($class);
         $processor->setJob($this->job);
 
-        if ($this->job->status === 'configured') {
-
+        if ('configured' === $this->job->status) {
             // set job as "running"...
             $this->job->status = 'running';
             $this->job->save();
@@ -138,6 +132,13 @@ class ImportRoutine
     private function createImportTag(): Tag
     {
         Log::debug('Now in createImportTag()');
+
+        if ($this->journals->count() < 1) {
+            Log::info(sprintf('Will not create tag, %d journals imported.', $this->journals->count()));
+
+            return new Tag;
+        }
+
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser($this->job->user);

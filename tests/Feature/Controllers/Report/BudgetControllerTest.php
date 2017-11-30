@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
-
 
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -32,7 +30,6 @@ use Tests\TestCase;
 /**
  * Class BudgetControllerTest
  *
- * @package Tests\Feature\Controllers\Report
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -70,5 +67,4 @@ class BudgetControllerTest extends TestCase
         $response = $this->get(route('report-data.budget.period', ['1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
-
 }

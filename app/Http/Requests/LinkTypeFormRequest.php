@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 
 /**
- * Class BillFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class BillFormRequest.
  */
 class LinkTypeFormRequest extends Request
 {
@@ -53,7 +49,7 @@ class LinkTypeFormRequest extends Request
         $repository = app(LinkTypeRepositoryInterface::class);
         $nameRule   = 'required|min:1|unique:link_types,name';
         $idRule     = '';
-        if (!is_null($repository->find($this->integer('id'))->id)) {
+        if (null !== $repository->find($this->integer('id'))->id) {
             $idRule   = 'exists:link_types,id';
             $nameRule = 'required|min:1';
         }

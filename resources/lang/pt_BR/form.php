@@ -91,6 +91,7 @@ return [
     'deletePermanently'          => 'Apagar permanentemente',
     'cancel'                     => 'Cancelar',
     'targetdate'                 => 'Data Alvo',
+    'startdate'                  => 'Start date',
     'tag'                        => 'Etiqueta',
     'under'                      => 'Debaixo',
     'symbol'                     => 'Símbolo',

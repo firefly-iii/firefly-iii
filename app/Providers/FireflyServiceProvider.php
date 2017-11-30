@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -56,6 +55,8 @@ use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journal;
+use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
+use FireflyIII\Support\Twig\Loader\TransactionLoader;
 use FireflyIII\Support\Twig\PiggyBank;
 use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Transaction;
@@ -68,9 +69,7 @@ use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
- * Class FireflyServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class FireflyServiceProvider.
  */
 class FireflyServiceProvider extends ServiceProvider
 {
@@ -83,6 +82,8 @@ class FireflyServiceProvider extends ServiceProvider
         );
         $config = app('config');
         Twig::addExtension(new Functions($config));
+        Twig::addRuntimeLoader(new TransactionLoader);
+        Twig::addRuntimeLoader(new TransactionJournalLoader);
         Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);
         Twig::addExtension(new Journal);
@@ -98,36 +99,42 @@ class FireflyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            'preferences', function () {
-            return new Preferences;
-        }
+            'preferences',
+            function () {
+                return new Preferences;
+            }
         );
 
         $this->app->bind(
-            'fireflyconfig', function () {
-            return new FireflyConfig;
-        }
+            'fireflyconfig',
+            function () {
+                return new FireflyConfig;
+            }
         );
         $this->app->bind(
-            'navigation', function () {
-            return new Navigation;
-        }
+            'navigation',
+            function () {
+                return new Navigation;
+            }
         );
         $this->app->bind(
-            'amount', function () {
-            return new Amount;
-        }
+            'amount',
+            function () {
+                return new Amount;
+            }
         );
 
         $this->app->bind(
-            'steam', function () {
-            return new Steam;
-        }
+            'steam',
+            function () {
+                return new Steam;
+            }
         );
         $this->app->bind(
-            'expandedform', function () {
-            return new ExpandedForm;
-        }
+            'expandedform',
+            function () {
+                return new ExpandedForm;
+            }
         );
 
         // chart generator:
@@ -164,5 +171,4 @@ class FireflyServiceProvider extends ServiceProvider
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifier::class);
     }
-
 }

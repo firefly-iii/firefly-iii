@@ -8,9 +8,7 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
-
 
 use FireflyIII\Models\Role;
 use Illuminate\Database\Seeder;
@@ -33,7 +31,5 @@ class PermissionSeeder extends Seeder
         $demo->display_name = 'Demo User';
         $demo->description  = 'User is a demo user';
         $demo->save();
-
     }
-
 }

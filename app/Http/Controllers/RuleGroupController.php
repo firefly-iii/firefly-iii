@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -38,9 +37,7 @@ use Session;
 use View;
 
 /**
- * Class RuleGroupController
- *
- * @package FireflyIII\Http\Controllers
+ * Class RuleGroupController.
  */
 class RuleGroupController extends Controller
 {
@@ -50,7 +47,6 @@ class RuleGroupController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -71,7 +67,7 @@ class RuleGroupController extends Controller
         $subTitle     = trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rule-groups.create.fromStore') !== true) {
+        if (true !== session('rule-groups.create.fromStore')) {
             $this->rememberPreviousUri('rule-groups.create.uri');
         }
         Session::forget('rule-groups.create.fromStore');
@@ -111,12 +107,10 @@ class RuleGroupController extends Controller
      */
     public function destroy(Request $request, RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
-
         $title  = $ruleGroup->title;
         $moveTo = auth()->user()->ruleGroups()->find(intval($request->get('move_rules_before_delete')));
 
         $repository->destroy($ruleGroup, $moveTo);
-
 
         Session::flash('success', strval(trans('firefly.deleted_rule_group', ['title' => $title])));
         Preferences::mark();
@@ -135,7 +129,6 @@ class RuleGroupController extends Controller
         $repository->moveDown($ruleGroup);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -148,7 +141,7 @@ class RuleGroupController extends Controller
         $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rule-groups.edit.fromUpdate') !== true) {
+        if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUri('rule-groups.edit.uri');
         }
         Session::forget('rule-groups.edit.fromUpdate');
@@ -156,11 +149,10 @@ class RuleGroupController extends Controller
         Session::flash('gaEventAction', 'edit-rule-group');
 
         return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
-
     }
 
     /**
-     * Execute the given rulegroup on a set of existing transactions
+     * Execute the given rulegroup on a set of existing transactions.
      *
      * @param SelectTransactionsRequest  $request
      * @param AccountRepositoryInterface $repository
@@ -226,7 +218,7 @@ class RuleGroupController extends Controller
         Session::flash('success', strval(trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
-        if (intval($request->get('create_another')) === 1) {
+        if (1 === intval($request->get('create_another'))) {
             // @codeCoverageIgnoreStart
             Session::put('rule-groups.create.fromStore', true);
 
@@ -248,7 +240,6 @@ class RuleGroupController extends Controller
         $repository->moveUp($ruleGroup);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -263,7 +254,7 @@ class RuleGroupController extends Controller
         $data = [
             'title'       => $request->input('title'),
             'description' => $request->input('description'),
-            'active'      => intval($request->input('active')) === 1,
+            'active'      => 1 === intval($request->input('active')),
         ];
 
         $repository->update($ruleGroup, $data);
@@ -271,7 +262,7 @@ class RuleGroupController extends Controller
         Session::flash('success', strval(trans('firefly.updated_rule_group', ['title' => $ruleGroup->title])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             Session::put('rule-groups.edit.fromUpdate', true);
 
@@ -281,6 +272,5 @@ class RuleGroupController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('rule-groups.edit.uri'));
-
     }
 }

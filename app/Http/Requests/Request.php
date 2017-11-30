@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -27,9 +26,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class Request
- *
- * @package FireflyIII\Http\Requests
+ * Class Request.
  */
 class Request extends FormRequest
 {
@@ -40,7 +37,7 @@ class Request extends FormRequest
      */
     public function boolean(string $field): bool
     {
-        return intval($this->input($field)) === 1;
+        return 1 === intval($this->input($field));
     }
 
     /**

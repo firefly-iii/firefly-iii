@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -28,14 +27,10 @@ use Twig_Extension;
 use Twig_SimpleFunction;
 
 /**
- *
- * Class PiggyBank
- *
- * @package FireflyIII\Support\Twig
+ * Class PiggyBank.
  */
 class PiggyBank extends Twig_Extension
 {
-
     /**
      *
      */
@@ -44,15 +39,17 @@ class PiggyBank extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'currentRelevantRepAmount', function (PB $piggyBank) {
-            return $piggyBank->currentRelevantRep()->currentamount;
-        }
+            'currentRelevantRepAmount',
+            function (PB $piggyBank) {
+                return $piggyBank->currentRelevantRep()->currentamount;
+            }
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'suggestedMonthlyAmount', function (PB $piggyBank) {
-            return $piggyBank->getSuggestedMonthlyAmount();
-        }
+            'suggestedMonthlyAmount',
+            function (PB $piggyBank) {
+                return $piggyBank->getSuggestedMonthlyAmount();
+            }
         );
 
         return $functions;

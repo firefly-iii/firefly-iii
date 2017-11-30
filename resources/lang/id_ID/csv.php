@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'ID akun aset (yang cocok dengan Firefly)',
     'column_account-name'           => 'Akun aset (nama)',
     'column_amount'                 => 'Jumlah',
+    'column_amount_debet'           => 'Amount (debet column)',
+    'column_amount_credit'          => 'Amount (credit column)',
     'column_amount-comma-separated' => 'Jumlah (koma sebagai tanda desimal)',
     'column_bill-id'                => 'ID tagihan (yang cocok dengan Firefly)',
     'column_bill-name'              => 'Nama tagihan',

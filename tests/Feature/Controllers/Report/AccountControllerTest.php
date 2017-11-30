@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
-
 
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Tests\TestCase;
@@ -30,7 +28,6 @@ use Tests\TestCase;
 /**
  * Class AccountControllerTest
  *
- * @package Tests\Feature\Controllers\Report
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -52,10 +49,8 @@ class AccountControllerTest extends TestCase
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('getAccountReport')->andReturn($return);
 
-
         $this->be($this->user());
         $response = $this->get(route('report-data.account.general', ['1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
-
 }

@@ -54,7 +54,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
+                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i
+                                                class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
                                     </a>
                                 </li>
                             </ul>
@@ -88,11 +89,13 @@
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
-                                {{ journalAmount(journal) }}
+                                {{ journal|journalTotalAmount }}
 
+                                {# if more transactions, list each one: #}
                                 {% if transactions|length > 1 %}
-                                    ({{ journalTotalAmount(journal) }})
+                                    ({% for transaction in transactions %}{{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}{% endfor %})
                                 {% endif %}
+
                             </td>
                         </tr>
                         <tr>
@@ -110,6 +113,7 @@
                                 <i class="fa fa-cog fa-fw"></i> {{ 'options'|_ }} <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
+
                                 {# convert to withdrawal #}
                                 {% if journal.transactionType.type != "Withdrawal" %}
                                     <li>
@@ -146,9 +150,11 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
+                                    <a href="#" data-toggle="modal" data-target="#linkJournalModal"><i
+                                                class="fa fa-fw fa-link"></i> {{ 'link_transaction'|_ }}
                                     </a>
                                 </li>
+
                             </ul>
                             <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}
                             </a>
@@ -238,7 +244,7 @@
                         {% if journal.notes.count == 1 %}
                             <tr>
                                 <td>{{ trans('list.notes') }}</td>
-                                <td>{{ journal.notes.first.markdown|raw }}</td>
+                                <td>{{ journal.notes.first.text|markdown }}</td>
                             </tr>
                         {% endif %}
 
@@ -326,7 +332,8 @@
                                     <td>
                                         <div class="btn-group btn-group-xs">
                                             <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                            <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i class="fa fa-fw fa-arrows-h"></i></a>
+                                            <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><i
+                                                        class="fa fa-fw fa-arrows-h"></i></a>
                                         </div>
                                     </td>
                                     <td>
@@ -336,12 +343,12 @@
                                             <a href="{{ route('transactions.show',link.destination.id) }}">
                                                 #{{ link.destination.id }}: {{ link.destination.description }}
                                             </a>
-                                            ({{ journalAmount(link.destination) }})
+                                            ({{ link.destination|journalTotalAmount }})
                                         {% else %}
                                             {{ journalLinkTranslation('inward', link.linkType.inward) }}
                                             <a href="{{ route('transactions.show',link.source.id) }}">
                                                 #{{ link.source.id }}: {{ link.source.description }}</a>
-                                            ({{ journalAmount(link.source) }})
+                                            ({{ link.source|journalTotalAmount }})
                                         {% endif %}
                                         {% if link.comment != "" %}
                                             <br/><em>{{ link.comment }}</em>
@@ -358,7 +365,6 @@
             {% endif %}
         </div>
     </div>
-
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="box">
@@ -390,7 +396,7 @@
                             </td>
                             <td>
                                 {% if transaction.source_account_type == 'Cash account' %}
-                                    <span class="text-success">(cash)</span>
+                                    <span class="text-success">({{ 'cash'|_ }})</span>
                                 {% else %}
                                     <a href="{{ route('accounts.show', transaction.source_account_id) }}">{{ transaction.source_account_name }}</a>
                                 {% endif %}
@@ -401,7 +407,7 @@
                             </td>
                             <td>
                                 {% if transaction.destination_account_type == 'Cash account' %}
-                                    <span class="text-success">(cash)</span>
+                                    <span class="text-success">({{ 'cash'|_ }})</span>
                                 {% else %}
                                     <a href="{{ route('accounts.show', transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
                                 {% endif %}
@@ -411,24 +417,13 @@
                                 {{ formatDestinationBefore(transaction) }} &rarr; {{ formatDestinationAfter(transaction) }}
                             </td>
                             <td>
-                                {% if journal.transactionType.type == "Withdrawal" %}
-                                    {{ formatAmountBySymbol(transaction.source_amount, transaction.transaction_currency_symbol, transaction.transaction_currency_dp, true) }}
-                                    {% if(transaction.foreign_source_amount) %}
-                                        ({{ formatAmountBySymbol(transaction.foreign_source_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_dp, true) }})
-                                    {% endif %}
-                                {% else %}
-                                    {{ formatAmountBySymbol(transaction.destination_amount, transaction.transaction_currency_symbol,2) }}
-
-                                    {% if(transaction.foreign_source_amount) %}
-                                        ({{ formatAmountBySymbol(transaction.foreign_destination_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_dp, true) }})
-                                    {% endif %}
-                                {% endif %}
+                                {{ transaction|transactionArrayAmount }}
                             </td>
                             <td class="hidden-md hidden-xs">
-                                {{ transactionIdBudgets(transaction.source_id) }}
+                                {{ transaction.source|transactionBudgets }}
                             </td>
                             <td class="hidden-md hidden-xs">
-                                {{ transactionIdCategories(transaction.source_id) }}
+                                {{ transaction.source|transactionCategories }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -478,7 +473,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
                         <button type="submit" class="btn btn-primary">{{ 'submit'|_ }}</button>
                     </div>
                 </div>

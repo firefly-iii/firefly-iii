@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -27,13 +26,10 @@ use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class BudgetLimit
- *
- * @package FireflyIII\Models
+ * Class BudgetLimit.
  */
 class BudgetLimit extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -41,14 +37,14 @@ class BudgetLimit extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             'start_date' => 'date',
             'end_date'   => 'date',
             'repeats'    => 'boolean',
         ];
     /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'start_date', 'end_date'];
+    protected $dates = ['start_date', 'end_date'];
 
     /**
      * @param $value
@@ -85,7 +81,6 @@ class BudgetLimit extends Model
         return $this->hasMany('FireflyIII\Models\LimitRepetition');
     }
 
-
     /**
      * @param $value
      */
@@ -93,5 +88,4 @@ class BudgetLimit extends Model
     {
         $this->attributes['amount'] = strval(round($value, 12));
     }
-
 }

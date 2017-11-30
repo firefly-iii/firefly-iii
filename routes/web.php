@@ -93,6 +93,17 @@ Route::group(
     Route::get('delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
     Route::get('show/{account}/{moment?}', ['uses' => 'AccountController@show', 'as' => 'show']);
 
+    // reconcile routes:
+    Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);
+    Route::get('reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@transactions', 'as' => 'reconcile.transactions']);
+    Route::get('reconcile/{account}/overview/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@overview', 'as' => 'reconcile.overview']);
+    Route::post('reconcile/{account}/submit/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@submit', 'as' => 'reconcile.submit']);
+
+    // show reconciliation
+    Route::get('reconcile/show/{tj}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
+    Route::get('reconcile/edit/{tj}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
+    Route::post('reconcile/update/{tj}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
+
     Route::post('store', ['uses' => 'AccountController@store', 'as' => 'store']);
     Route::post('update/{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
     Route::post('destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'destroy']);
@@ -700,6 +711,7 @@ Route::group(
     Route::get('{what}/{moment?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
+    Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
 }
 );
 
@@ -759,7 +771,7 @@ Route::group(
     Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
 
     Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
-    Route::get('switch/{journalLink}', ['uses' => 'LinkController@switch', 'as' => 'switch']);
+    Route::get('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
 
     Route::post('destroy/{journalLink}', ['uses' => 'LinkController@destroy', 'as' => 'destroy']);
 }

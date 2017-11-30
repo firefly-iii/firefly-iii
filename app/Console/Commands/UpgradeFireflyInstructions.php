@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -26,9 +25,7 @@ namespace FireflyIII\Console\Commands;
 use Illuminate\Console\Command;
 
 /**
- * Class UpgradeFireflyInstructions
- *
- * @package FireflyIII\Console\Commands
+ * Class UpgradeFireflyInstructions.
  */
 class UpgradeFireflyInstructions extends Command
 {
@@ -47,7 +44,6 @@ class UpgradeFireflyInstructions extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -59,17 +55,16 @@ class UpgradeFireflyInstructions extends Command
      */
     public function handle()
     {
-
-        if ($this->argument('task') === 'update') {
+        if ('update' === $this->argument('task')) {
             $this->updateInstructions();
         }
-        if ($this->argument('task') === 'install') {
+        if ('install' === $this->argument('task')) {
             $this->installInstructions();
         }
     }
 
     /**
-     * Show a nice box
+     * Show a nice box.
      *
      * @param string $text
      */
@@ -82,7 +77,7 @@ class UpgradeFireflyInstructions extends Command
     }
 
     /**
-     * Show a nice info box
+     * Show a nice info box.
      *
      * @param string $text
      */
@@ -109,12 +104,10 @@ class UpgradeFireflyInstructions extends Command
             if (substr($version, 0, $len) === $compare) {
                 $text = $config[$compare];
             }
-
         }
         $this->showLine();
         $this->boxed('');
-        if (is_null($text)) {
-
+        if (null === $text) {
             $this->boxed(sprintf('Thank you for installing Firefly III, v%s!', $version));
             $this->boxedInfo('There are no extra installation instructions.');
             $this->boxed('Firefly III should be ready for use.');
@@ -131,17 +124,16 @@ class UpgradeFireflyInstructions extends Command
     }
 
     /**
-     * Show a line
+     * Show a line.
      */
     private function showLine()
     {
         $line = '+';
-        for ($i = 0; $i < 78; $i++) {
+        for ($i = 0; $i < 78; ++$i) {
             $line .= '-';
         }
         $line .= '+';
         $this->line($line);
-
     }
 
     /**
@@ -159,12 +151,10 @@ class UpgradeFireflyInstructions extends Command
             if (substr($version, 0, $len) === $compare) {
                 $text = $config[$compare];
             }
-
         }
         $this->showLine();
         $this->boxed('');
-        if (is_null($text)) {
-
+        if (null === $text) {
             $this->boxed(sprintf('Thank you for updating to Firefly III, v%s', $version));
             $this->boxedInfo('There are no extra upgrade instructions.');
             $this->boxed('Firefly III should be ready for use.');

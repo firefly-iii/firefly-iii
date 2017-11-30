@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\AmountExactly;
@@ -30,8 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class AmountExactlyTest
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class AmountExactlyTest extends TestCase
 {
@@ -78,6 +74,4 @@ class AmountExactlyTest extends TestCase
         $result = AmountExactly::willMatchEverything($value);
         $this->assertTrue($result);
     }
-
-
 }

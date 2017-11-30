@@ -18,17 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
-
 
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
-use Illuminate\Support\Str;
 use Log;
 use Steam;
 
@@ -58,6 +55,7 @@ class Modifier
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public static function apply(array $modifier, Transaction $transaction): bool
@@ -75,16 +73,16 @@ class Modifier
                 Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'category':
-                $res               = self::category($transaction, $modifier['value']);
+                $res = self::category($transaction, $modifier['value']);
                 Log::debug(sprintf('Category is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'budget':
-                $res               = self::budget($transaction, $modifier['value']);
+                $res = self::budget($transaction, $modifier['value']);
                 Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'bill':
                 $name = Steam::tryDecrypt($transaction->bill_name);
-                $res               = self::stringCompare($name, $modifier['value']);
+                $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
         }
@@ -151,11 +149,10 @@ class Modifier
      */
     public static function stringCompare(string $haystack, string $needle): bool
     {
-        $res = !(strpos(strtolower($haystack), strtolower($needle)) === false);
+        $res = !(false === strpos(strtolower($haystack), strtolower($needle)));
         Log::debug(sprintf('"%s" is in "%s"? %s', $needle, $haystack, var_export($res, true)));
 
         return $res;
-
     }
 
     /**
@@ -167,11 +164,11 @@ class Modifier
     private static function budget(Transaction $transaction, string $search): bool
     {
         $journalBudget = '';
-        if (!is_null($transaction->transaction_journal_budget_name)) {
+        if (null !== $transaction->transaction_journal_budget_name) {
             $journalBudget = Steam::decrypt(intval($transaction->transaction_journal_budget_encrypted), $transaction->transaction_journal_budget_name);
         }
         $transactionBudget = '';
-        if (!is_null($transaction->transaction_budget_name)) {
+        if (null !== $transaction->transaction_budget_name) {
             $journalBudget = Steam::decrypt(intval($transaction->transaction_budget_encrypted), $transaction->transaction_budget_name);
         }
 
@@ -187,11 +184,11 @@ class Modifier
     private static function category(Transaction $transaction, string $search): bool
     {
         $journalCategory = '';
-        if (!is_null($transaction->transaction_journal_category_name)) {
+        if (null !== $transaction->transaction_journal_category_name) {
             $journalCategory = Steam::decrypt(intval($transaction->transaction_journal_category_encrypted), $transaction->transaction_journal_category_name);
         }
         $transactionCategory = '';
-        if (!is_null($transaction->transaction_category_name)) {
+        if (null !== $transaction->transaction_category_name) {
             $journalCategory = Steam::decrypt(intval($transaction->transaction_category_encrypted), $transaction->transaction_category_name);
         }
 

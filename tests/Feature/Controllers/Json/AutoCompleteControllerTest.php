@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Json;
-
 
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
@@ -35,13 +33,9 @@ use Tests\TestCase;
 
 /**
  * Class AutoCompleteControllerTest
- *
- * @package Tests\Feature\Controllers\Json
  */
 class AutoCompleteControllerTest extends TestCase
 {
-
-
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allAccounts
      */
@@ -131,5 +125,4 @@ class AutoCompleteControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertExactJson([]);
     }
-
 }

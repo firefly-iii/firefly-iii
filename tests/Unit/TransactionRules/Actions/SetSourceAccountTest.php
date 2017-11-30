@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
@@ -34,8 +33,6 @@ use Tests\TestCase;
 
 /**
  * Class SetSourceAccountTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class SetSourceAccountTest extends TestCase
 {
@@ -180,5 +177,4 @@ class SetSourceAccountTest extends TestCase
         $result                   = $action->act($journal);
         $this->assertFalse($result);
     }
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
@@ -39,9 +38,7 @@ use Session;
 use View;
 
 /**
- * Class MassController
- *
- * @package FireflyIII\Http\Controllers\Transaction
+ * Class MassController.
  */
 class MassController extends Controller
 {
@@ -51,7 +48,6 @@ class MassController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -78,7 +74,6 @@ class MassController extends Controller
         Session::flash('gaEventAction', 'mass-delete');
 
         return view('transactions.mass-delete', compact('journals', 'subTitle'));
-
     }
 
     /**
@@ -96,7 +91,7 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
                 $journal = $repository->find(intval($journalId));
-                if (!is_null($journal->id) && intval($journalId) === $journal->id) {
+                if (null !== $journal->id && intval($journalId) === $journal->id) {
                     $set->push($journal);
                 }
             }
@@ -107,7 +102,7 @@ class MassController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             $repository->delete($journal);
-            $count++;
+            ++$count;
         }
 
         Preferences::mark();
@@ -115,9 +110,7 @@ class MassController extends Controller
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
-
     }
-
 
     /**
      * @param Collection $journals
@@ -140,9 +133,7 @@ class MassController extends Controller
         // skip transactions that have multiple destinations, multiple sources or are an opening balance.
         $filtered = new Collection;
         $messages = [];
-        /**
-         * @var TransactionJournal $journal
-         */
+        // @var TransactionJournal
         foreach ($journals as $journal) {
             $sources      = $journal->sourceAccountList();
             $destinations = $journal->destinationAccountList();
@@ -155,10 +146,17 @@ class MassController extends Controller
                 $messages[] = trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
                 continue;
             }
-            if ($journal->transactionType->type === TransactionType::OPENING_BALANCE) {
+            if (TransactionType::OPENING_BALANCE === $journal->transactionType->type) {
                 $messages[] = trans('firefly.cannot_edit_opening_balance');
                 continue;
             }
+
+            // cannot edit reconciled transactions / journals:
+            if ($journal->transactions->first()->reconciled) {
+                $messages[] = trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
+                continue;
+            }
+
             $filtered->push($journal);
         }
 
@@ -186,18 +184,18 @@ class MassController extends Controller
                 $journal->foreign_amount   = floatval($transaction->foreign_amount);
                 $journal->foreign_currency = $transaction->foreignCurrency;
 
-                if (!is_null($sources->first())) {
+                if (null !== $sources->first()) {
                     $journal->source_account_id   = $sources->first()->id;
                     $journal->source_account_name = $sources->first()->editname;
                 }
-                if (!is_null($destinations->first())) {
+                if (null !== $destinations->first()) {
                     $journal->destination_account_id   = $destinations->first()->id;
                     $journal->destination_account_name = $destinations->first()->editname;
                 }
             }
         );
 
-        if ($filtered->count() === 0) {
+        if (0 === $filtered->count()) {
             Session::flash('error', trans('firefly.no_edit_multiple_left'));
         }
 
@@ -260,16 +258,14 @@ class MassController extends Controller
                     // call repository update function.
                     $repository->update($journal, $data);
 
-                    $count++;
+                    ++$count;
                 }
             }
-
         }
         Preferences::mark();
         Session::flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
-
     }
 }

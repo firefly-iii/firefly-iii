@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Chart\Basic;
@@ -27,15 +26,12 @@ use FireflyIII\Support\ChartColour;
 use Steam;
 
 /**
- * Class ChartJsGenerator
- *
- * @package FireflyIII\Generator\Chart\Basic
+ * Class ChartJsGenerator.
  */
 class ChartJsGenerator implements GeneratorInterface
 {
-
     /**
-     * Will generate a Chart JS compatible array from the given input. Expects this format
+     * Will generate a Chart JS compatible array from the given input. Expects this format.
      *
      * Will take labels for all from first set.
      *
@@ -102,7 +98,7 @@ class ChartJsGenerator implements GeneratorInterface
     }
 
     /**
-     * Expects data as:
+     * Expects data as:.
      *
      * key => value
      *
@@ -123,7 +119,7 @@ class ChartJsGenerator implements GeneratorInterface
         // different sort when values are positive and when they're negative.
         asort($data);
         $next = next($data);
-        if (!is_bool($next) && bccomp($next, '0') === 1) {
+        if (!is_bool($next) && 1 === bccomp($next, '0')) {
             // next is positive, sort other way around.
             arsort($data);
         }
@@ -131,19 +127,18 @@ class ChartJsGenerator implements GeneratorInterface
 
         $index = 0;
         foreach ($data as $key => $value) {
-
             // make larger than 0
             $chartData['datasets'][0]['data'][]            = floatval(Steam::positive($value));
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['labels'][]                         = $key;
-            $index++;
+            ++$index;
         }
 
         return $chartData;
     }
 
     /**
-     * Will generate a (ChartJS) compatible array from the given input. Expects this format:
+     * Will generate a (ChartJS) compatible array from the given input. Expects this format:.
      *
      * 'label-of-entry' => value
      * 'label-of-entry' => value

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
-
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalLinkRequest;
@@ -37,14 +35,10 @@ use URL;
 use View;
 
 /**
- * Class LinkController
- *
- * @package FireflyIII\Http\Controllers\Transaction
+ * Class LinkController.
  */
 class LinkController extends Controller
 {
-
-
     /**
      *
      */
@@ -60,9 +54,7 @@ class LinkController extends Controller
                 return $next($request);
             }
         );
-
     }
-
 
     /**
      * @param TransactionJournalLink $link
@@ -103,10 +95,13 @@ class LinkController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(
-        JournalLinkRequest $request, LinkTypeRepositoryInterface $repository, JournalRepositoryInterface $journalRepository, TransactionJournal $journal
+        JournalLinkRequest $request,
+        LinkTypeRepositoryInterface $repository,
+        JournalRepositoryInterface $journalRepository,
+        TransactionJournal $journal
     ) {
         $linkInfo = $request->getLinkInfo();
-        if ($linkInfo['transaction_journal_id'] === 0) {
+        if (0 === $linkInfo['transaction_journal_id']) {
             Session::flash('error', trans('firefly.invalid_link_selection'));
 
             return redirect(route('transactions.show', [$journal->id]));
@@ -123,13 +118,13 @@ class LinkController extends Controller
 
         $journalLink = new TransactionJournalLink;
         $journalLink->linkType()->associate($linkType);
-        if ($linkInfo['direction'] === 'inward') {
+        if ('inward' === $linkInfo['direction']) {
             Log::debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->inward, $other->id, $journal->id));
             $journalLink->source()->associate($other);
             $journalLink->destination()->associate($journal);
         }
 
-        if ($linkInfo['direction'] === 'outward') {
+        if ('outward' === $linkInfo['direction']) {
             Log::debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->outward, $journal->id, $other->id));
             $journalLink->source()->associate($journal);
             $journalLink->destination()->associate($other);
@@ -148,12 +143,10 @@ class LinkController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function switch(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
+    public function switchLink(LinkTypeRepositoryInterface $repository, TransactionJournalLink $link)
     {
-
         $repository->switchLink($link);
 
         return redirect(URL::previous());
     }
-
 }

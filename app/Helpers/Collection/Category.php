@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collection;
@@ -26,17 +25,12 @@ namespace FireflyIII\Helpers\Collection;
 use FireflyIII\Models\Category as CategoryModel;
 use Illuminate\Support\Collection;
 
-
 /**
- *
- * Class Category
- *
- * @package FireflyIII\Helpers\Collection
+ * Class Category.
  */
 class Category
 {
-
-    /** @var  Collection */
+    /** @var Collection */
     protected $categories;
     /** @var string */
     protected $total = '0';
@@ -80,7 +74,6 @@ class Category
             }
         );
 
-
         return $set;
     }
 
@@ -91,6 +84,4 @@ class Category
     {
         return $this->total;
     }
-
-
 }

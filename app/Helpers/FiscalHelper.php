@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers;
@@ -27,20 +26,15 @@ use Carbon\Carbon;
 use Preferences;
 
 /**
- * Class FiscalHelper
- *
- * @package FireflyIII\Helpers
+ * Class FiscalHelper.
  */
 class FiscalHelper implements FiscalHelperInterface
 {
-
     /** @var bool */
     protected $useCustomFiscalYear;
 
     /**
      * FiscalHelper constructor.
-     *
-     *
      */
     public function __construct()
     {
@@ -56,7 +50,7 @@ class FiscalHelper implements FiscalHelperInterface
     {
         // get start of fiscal year for passed date
         $endDate = $this->startOfFiscalYear($date);
-        if ($this->useCustomFiscalYear === true) {
+        if (true === $this->useCustomFiscalYear) {
             // add 1 year and sub 1 day
             $endDate->addYear();
             $endDate->subDay();
@@ -64,7 +58,6 @@ class FiscalHelper implements FiscalHelperInterface
             return $endDate;
         }
         $endDate->endOfYear();
-
 
         return $endDate;
     }
@@ -78,7 +71,7 @@ class FiscalHelper implements FiscalHelperInterface
     {
         // get start mm-dd. Then create a start date in the year passed.
         $startDate = clone $date;
-        if ($this->useCustomFiscalYear === true) {
+        if (true === $this->useCustomFiscalYear) {
             $prefStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
             list($mth, $day) = explode('-', $prefStartStr);
             $startDate->month(intval($mth))->day(intval($day));

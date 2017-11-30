@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Currency;
-
 
 use Carbon\Carbon;
 use FireflyIII\Models\CurrencyExchangeRate;
@@ -34,9 +32,7 @@ use Log;
 use Preferences;
 
 /**
- * Class CurrencyRepository
- *
- * @package FireflyIII\Repositories\Currency
+ * Class CurrencyRepository.
  */
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
@@ -55,7 +51,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is the only currency left
-        if ($this->get()->count() === 1) {
+        if (1 === $this->get()->count()) {
             return false;
         }
 
@@ -100,7 +96,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by ID
+     * Find by ID.
      *
      * @param int $currencyId
      *
@@ -109,7 +105,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function find(int $currencyId): TransactionCurrency
     {
         $currency = TransactionCurrency::find($currencyId);
-        if (is_null($currency)) {
+        if (null === $currency) {
             $currency = new TransactionCurrency;
         }
 
@@ -117,7 +113,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by currency code
+     * Find by currency code.
      *
      * @param string $currencyCode
      *
@@ -126,7 +122,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function findByCode(string $currencyCode): TransactionCurrency
     {
         $currency = TransactionCurrency::where('code', $currencyCode)->first();
-        if (is_null($currency)) {
+        if (null === $currency) {
             $currency = new TransactionCurrency;
         }
 
@@ -134,7 +130,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by currency name
+     * Find by currency name.
      *
      * @param string $currencyName
      *
@@ -143,7 +139,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function findByName(string $currencyName): TransactionCurrency
     {
         $preferred = TransactionCurrency::whereName($currencyName)->first();
-        if (is_null($preferred)) {
+        if (null === $preferred) {
             $preferred = new TransactionCurrency;
         }
 
@@ -151,7 +147,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by currency symbol
+     * Find by currency symbol.
      *
      * @param string $currencySymbol
      *
@@ -160,7 +156,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function findBySymbol(string $currencySymbol): TransactionCurrency
     {
         $currency = TransactionCurrency::whereSymbol($currencySymbol)->first();
-        if (is_null($currency)) {
+        if (null === $currency) {
             $currency = new TransactionCurrency;
         }
 
@@ -172,7 +168,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function get(): Collection
     {
-        return TransactionCurrency::get();
+        return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
     /**
@@ -182,7 +178,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function getByIds(array $ids): Collection
     {
-        return TransactionCurrency::whereIn('id', $ids)->get();
+        return TransactionCurrency::orderBy('code', 'ASC')->whereIn('id', $ids)->get();
     }
 
     /**
@@ -193,7 +189,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency
     {
         $preferred = TransactionCurrency::where('code', $preference->data)->first();
-        if (is_null($preferred)) {
+        if (null === $preferred) {
             $preferred = TransactionCurrency::first();
         }
 
@@ -221,15 +217,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
                            ->where('from_currency_id', $fromCurrency->id)
                            ->where('to_currency_id', $toCurrency->id)
                            ->where('date', $date->format('Y-m-d'))->first();
-        if (!is_null($rate)) {
+        if (null !== $rate) {
             Log::debug(sprintf('Found cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
             return $rate;
         }
 
         return new CurrencyExchangeRate;
-
-
     }
 
     /**

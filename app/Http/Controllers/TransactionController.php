@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -29,6 +28,7 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalTaskerInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
@@ -42,9 +42,7 @@ use Response;
 use View;
 
 /**
- * Class TransactionController
- *
- * @package FireflyIII\Http\Controllers
+ * Class TransactionController.
  */
 class TransactionController extends Controller
 {
@@ -55,7 +53,6 @@ class TransactionController extends Controller
     {
         parent::__construct();
 
-
         $this->middleware(
             function ($request, $next) {
                 View::share('title', trans('firefly.transactions'));
@@ -64,14 +61,12 @@ class TransactionController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
      * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      * @param string                     $what
-     *
      * @param string                     $moment
      *
      * @return View
@@ -90,7 +85,7 @@ class TransactionController extends Controller
         $path         = route('transactions.index', [$what]);
 
         // prep for "all" view.
-        if ($moment === 'all') {
+        if ('all' === $moment) {
             $subTitle = trans('firefly.all_' . $what);
             $first    = $repository->first();
             $start    = $first->date ?? new Carbon;
@@ -99,7 +94,7 @@ class TransactionController extends Controller
         }
 
         // prep for "specific date" view.
-        if (strlen($moment) > 0 && $moment !== 'all') {
+        if (strlen($moment) > 0 && 'all' !== $moment) {
             $start    = new Carbon($moment);
             $end      = Navigation::endOfPeriod($start, $range);
             $path     = route('transactions.index', [$what, $moment]);
@@ -111,7 +106,7 @@ class TransactionController extends Controller
         }
 
         // prep for current period
-        if (strlen($moment) === 0) {
+        if (0 === strlen($moment)) {
             $start    = clone session('start', Navigation::startOfPeriod(new Carbon, $range));
             $end      = clone session('end', Navigation::endOfPeriod(new Carbon, $range));
             $periods  = $this->getPeriodOverview($what);
@@ -125,12 +120,26 @@ class TransactionController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath($path);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath($path);
 
+        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end', 'moment'));
+    }
 
-        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals', 'periods', 'start', 'end', 'moment'));
+    /**
+     * @param Request                    $request
+     * @param JournalRepositoryInterface $repository
+     */
+    public function reconcile(Request $request, JournalRepositoryInterface $repository)
+    {
+        $transactionIds = $request->get('transactions');
+        foreach ($transactionIds as $transactionId) {
+            $transactionId = intval($transactionId);
+            $transaction   = $repository->findTransaction($transactionId);
+            Log::debug(sprintf('Transaction ID is %d', $transaction->id));
 
+            $repository->reconcile($transaction);
+        }
     }
 
     /**
@@ -150,20 +159,18 @@ class TransactionController extends Controller
                 $journal = $repository->find(intval($id));
                 if ($journal && $journal->date->isSameDay($date)) {
                     $repository->setOrder($journal, $order);
-                    $order++;
+                    ++$order;
                 }
             }
         }
         Preferences::mark();
 
         return Response::json([true]);
-
     }
 
     /**
      * @param TransactionJournal          $journal
      * @param JournalTaskerInterface      $tasker
-     *
      * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
@@ -173,6 +180,9 @@ class TransactionController extends Controller
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal);
         }
+        if ($journal->transactionType->type === TransactionType::RECONCILIATION) {
+            return redirect(route('accounts.reconcile.show', [$journal->id]));
+        }
         $linkTypes    = $linkTypeRepository->get();
         $links        = $linkTypeRepository->getLinks($journal);
         $events       = $tasker->getPiggyBankEvents($journal);
@@ -181,14 +191,13 @@ class TransactionController extends Controller
         $subTitle     = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
-
-
     }
 
     /**
      * @param string $what
      *
      * @return Collection
+     *
      * @throws FireflyException
      */
     private function getPeriodOverview(string $what): Collection
@@ -280,11 +289,10 @@ class TransactionController extends Controller
             }
             // save amount:
             $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $transaction->transaction_amount);
-            $return[$currencyId]['count']++;
+            ++$return[$currencyId]['count'];
         }
         asort($return);
 
         return $return;
     }
-
 }

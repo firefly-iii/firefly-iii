@@ -28,7 +28,7 @@
 }
 
 p.tagcloud .label {
-    line-height:2;
+    line-height: 2;
 }
 
 .handle {
@@ -126,4 +126,10 @@ span.info-box-icon a {
 span.info-box-text a:hover, span.info-box-number a:hover {
     color: #000;
     text-decoration: underline;
+}
+
+.dropdown-menu {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

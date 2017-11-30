@@ -18,27 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
-
 
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface RuleGroupRepositoryInterface
- *
- * @package FireflyIII\Repositories\RuleGroup
+ * Interface RuleGroupRepositoryInterface.
  */
 interface RuleGroupRepositoryInterface
 {
-
     /**
-     *
-     *
      * @return int
      */
     public function count(): int;
@@ -141,6 +134,4 @@ interface RuleGroupRepositoryInterface
      * @return RuleGroup
      */
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup;
-
-
 }

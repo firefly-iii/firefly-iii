@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
-
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\LinkTypeFormRequest;
@@ -33,9 +31,7 @@ use Preferences;
 use View;
 
 /**
- * Class LinkController
- *
- * @package FireflyIII\Http\Controllers\Admin
+ * Class LinkController.
  */
 class LinkController extends Controller
 {
@@ -65,7 +61,7 @@ class LinkController extends Controller
         $subTitleIcon = 'fa-link';
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('link_types.create.fromStore') !== true) {
+        if (true !== session('link_types.create.fromStore')) {
             $this->rememberPreviousUri('link_types.create.uri');
         }
 
@@ -140,8 +136,8 @@ class LinkController extends Controller
         $subTitleIcon = 'fa-link';
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('link_types.edit.fromUpdate') !== true) {
-            $this->rememberPreviousUri('link_types.edit.uri');
+        if (true !== session('link_types.edit.fromUpdate')) {
+            $this->rememberPreviousUri('link_types.edit.uri'); // @codeCoverageIgnore
         }
         $request->session()->forget('link_types.edit.fromUpdate');
 
@@ -197,11 +193,11 @@ class LinkController extends Controller
         $linkType = $repository->store($data);
         $request->session()->flash('success', strval(trans('firefly.stored_new_link_type', ['name' => $linkType->name])));
 
-        if (intval($request->get('create_another')) === 1) {
+        if (1 === intval($request->get('create_another'))) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('link_types.create.fromStore', true);
 
-            return redirect(route('link_types.create', [$request->input('what')]))->withInput();
+            return redirect(route('admin.links.create'))->withInput();
         }
 
         // redirect to previous URL.
@@ -226,7 +222,7 @@ class LinkController extends Controller
         $request->session()->flash('success', strval(trans('firefly.updated_link_type', ['name' => $linkType->name])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('link_types.edit.fromUpdate', true);
 
@@ -236,5 +232,4 @@ class LinkController extends Controller
         // redirect to previous URL.
         return redirect($this->getPreviousUri('link_types.edit.uri'));
     }
-
 }

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 /**
  * RegisterController.php
@@ -66,7 +64,6 @@ class RegisterController extends Controller
 
     /**
      * Create a new controller instance.
-     *
      */
     public function __construct()
     {
@@ -77,7 +74,7 @@ class RegisterController extends Controller
     /**
      * Handle a registration request for the application.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -86,7 +83,7 @@ class RegisterController extends Controller
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount      = User::count();
-        if ($singleUserMode === true && $userCount > 0) {
+        if (true === $singleUserMode && $userCount > 0) {
             $message = 'Registration is currently not available.';
 
             return view('error', compact('message'));
@@ -119,7 +116,7 @@ class RegisterController extends Controller
         // is allowed to?
         $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount      = User::count();
-        if ($singleUserMode === true && $userCount > 0) {
+        if (true === $singleUserMode && $userCount > 0) {
             $message = 'Registration is currently not available.';
 
             return view('error', compact('message'));
@@ -127,14 +124,13 @@ class RegisterController extends Controller
 
         $email = $request->old('email');
 
-
         return view('auth.register', compact('isDemoSite', 'email'));
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array $data
+     * @param array $data
      *
      * @return \FireflyIII\User
      */
@@ -151,17 +147,18 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array $data
+     * @param array $data
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make(
-            $data, [
-                     'email'    => 'required|string|email|max:255|unique:users',
-                     'password' => 'required|string|secure_password|confirmed',
-                 ]
+            $data,
+            [
+                'email'    => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|secure_password|confirmed',
+            ]
         );
     }
 }

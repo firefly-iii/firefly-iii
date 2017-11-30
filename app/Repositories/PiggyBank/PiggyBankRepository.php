@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
@@ -34,13 +33,10 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class PiggyBankRepository
- *
- * @package FireflyIII\Repositories\PiggyBank
+ * Class PiggyBankRepository.
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
-
     /** @var User */
     private $user;
 
@@ -142,6 +138,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function destroy(PiggyBank $piggyBank): bool
@@ -159,7 +156,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function find(int $piggyBankid): PiggyBank
     {
         $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankid)->first(['piggy_banks.*']);
-        if (!is_null($piggyBank)) {
+        if (null !== $piggyBank) {
             return $piggyBank;
         }
 
@@ -200,9 +197,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             Log::debug(sprintf('Account #%d is the source, so will remove amount from piggy bank.', $piggyBank->account_id));
         }
 
-
         // if the amount is positive, make sure it fits in piggy bank:
-        if (bccomp($amount, '0') === 1 && bccomp($room, $amount) === -1) {
+        if (1 === bccomp($amount, '0') && bccomp($room, $amount) === -1) {
             // amount is positive and $room is smaller than $amount
             Log::debug(sprintf('Room in piggy bank for extra money is %f', $room));
             Log::debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
@@ -212,7 +208,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         // amount is negative and $currentamount is smaller than $amount
-        if (bccomp($amount, '0') === -1 && bccomp($compare, $amount) === 1) {
+        if (bccomp($amount, '0') === -1 && 1 === bccomp($compare, $amount)) {
             Log::debug(sprintf('Max amount to remove is %f', $repetition->currentamount));
             Log::debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
             Log::debug(sprintf('New amount is %f', $compare));
@@ -269,7 +265,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function getRepetition(PiggyBank $piggyBank, Carbon $date): PiggyBankRepetition
     {
         $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($date)->first();
-        if (is_null($repetition)) {
+        if (null === $repetition) {
             return new PiggyBankRepetition;
         }
 
@@ -313,7 +309,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     *
      * set id of piggy bank.
      *
      * @param int $piggyBankId
@@ -365,7 +360,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-
         $piggyBank->name         = $data['name'];
         $piggyBank->account_id   = intval($data['account_id']);
         $piggyBank->targetamount = round($data['targetamount'], 2);
@@ -380,7 +374,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         // remove money from the rep.
         $repetition = $piggyBank->currentRelevantRep();
         if ($repetition->currentamount > $piggyBank->targetamount) {
-
             $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
             $this->createEvent($piggyBank, $diff);
 
@@ -399,16 +392,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     private function updateNote(PiggyBank $piggyBank, string $note): bool
     {
-        if (strlen($note) === 0) {
+        if (0 === strlen($note)) {
             $dbNote = $piggyBank->notes()->first();
-            if (!is_null($dbNote)) {
+            if (null !== $dbNote) {
                 $dbNote->delete();
             }
 
             return true;
         }
         $dbNote = $piggyBank->notes()->first();
-        if (is_null($dbNote)) {
+        if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);
         }

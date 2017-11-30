@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\Handlers\Events;
-
 
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -36,7 +34,6 @@ use Tests\TestCase;
 /**
  * Class UserEventHandlerTest
  *
- * @package Tests\Unit\Handlers\Events
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -76,7 +73,7 @@ class UserEventHandlerTest extends TestCase
 
         Mail::assertSent(
             RequestedNewPasswordMail::class, function ($mail) use ($user) {
-            return $mail->hasTo($user->email) && $mail->ipAddress === '127.0.0.1';
+            return $mail->hasTo($user->email) && '127.0.0.1' === $mail->ipAddress;
         }
         );
 
@@ -99,11 +96,10 @@ class UserEventHandlerTest extends TestCase
         // must send user an email:
         Mail::assertSent(
             RegisteredUserMail::class, function ($mail) use ($user) {
-            return $mail->hasTo($user->email) && $mail->ipAddress === '127.0.0.1';
+            return $mail->hasTo($user->email) && '127.0.0.1' === $mail->ipAddress;
         }
         );
 
         $this->assertTrue(true);
     }
-
 }

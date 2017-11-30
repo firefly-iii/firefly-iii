@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -36,15 +35,12 @@ use Tests\TestCase;
 /**
  * Class TransactionControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionControllerTest extends TestCase
 {
-
-
     /**
      * @covers \FireflyIII\Http\Controllers\TransactionController::index
      * @covers \FireflyIII\Http\Controllers\TransactionController::__construct
@@ -254,5 +250,4 @@ class TransactionControllerTest extends TestCase
         $response = $this->get(route('transactions.show', [$journal->id]));
         $response->assertStatus(302);
     }
-
 }

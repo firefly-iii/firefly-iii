@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Information;
@@ -38,14 +37,11 @@ use Log;
 use Preferences;
 
 /**
- * Class BunqInformation
- *
- * @package FireflyIII\Support\Import\Information
+ * Class BunqInformation.
  */
 class BunqInformation implements InformationInterface
 {
-
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -83,7 +79,6 @@ class BunqInformation implements InformationInterface
         $return   = [];
         /** @var MonetaryAccountBank $account */
         foreach ($accounts as $account) {
-
             $current = [
                 'id'       => $account->getId(),
                 'name'     => $account->getDescription(),
@@ -93,7 +88,7 @@ class BunqInformation implements InformationInterface
             ];
             /** @var Alias $alias */
             foreach ($account->getAliases() as $alias) {
-                if ($alias->getType() === 'IBAN') {
+                if ('IBAN' === $alias->getType()) {
                     $current['number'] = $alias->getValue();
                 }
             }
@@ -156,13 +151,13 @@ class BunqInformation implements InformationInterface
         $request->call();
 
         return $request->getMonetaryAccounts();
-
     }
 
     /**
      * @param SessionToken $sessionToken
      *
      * @return int
+     *
      * @throws FireflyException
      */
     private function getUserInformation(SessionToken $sessionToken): int

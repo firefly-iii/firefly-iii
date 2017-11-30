@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Password;
@@ -28,13 +27,10 @@ use Requests;
 use Requests_Exception;
 
 /**
- * Class PwndVerifier
- *
- * @package FireflyIII\Services\Password
+ * Class PwndVerifier.
  */
 class PwndVerifier implements Verifier
 {
-
     /**
      * Verify the given password against (some) service.
      *
@@ -54,7 +50,7 @@ class PwndVerifier implements Verifier
             return true;
         }
         Log::debug(sprintf('Status code returned is %d', $result->status_code));
-        if ($result->status_code === 404) {
+        if (404 === $result->status_code) {
             return true;
         }
 

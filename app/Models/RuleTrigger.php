@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -26,9 +25,7 @@ namespace FireflyIII\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class RuleTrigger
- *
- * @package FireflyIII\Models
+ * Class RuleTrigger.
  */
 class RuleTrigger extends Model
 {
@@ -39,14 +36,12 @@ class RuleTrigger extends Model
      */
     protected $casts
         = [
-            'created_at'      => 'date',
-            'updated_at'      => 'date',
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
             'active'          => 'boolean',
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

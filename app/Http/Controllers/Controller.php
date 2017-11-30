@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -40,15 +39,13 @@ use URL;
 use View;
 
 /**
- * Class Controller
- *
- * @package FireflyIII\Http\Controllers
+ * Class Controller.
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var  string */
+    /** @var string */
     protected $dateTimeFormat;
     /** @var string */
     protected $monthAndDayFormat;
@@ -75,7 +72,6 @@ class Controller extends BaseController
         View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
         View::share('FF_VERSION', config('firefly.version'));
 
-
         $this->middleware(
             function ($request, $next) {
                 // translations for specific strings:
@@ -86,7 +82,7 @@ class Controller extends BaseController
                 // get shown-intro-preference:
                 if (auth()->check()) {
                     // some routes have a "what" parameter, which indicates a special page:
-                    $specificPage = is_null(Route::current()->parameter('what')) ? '' : '_' . Route::current()->parameter('what');
+                    $specificPage = null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
                     $page         = str_replace('.', '_', Route::currentRouteName());
 
                     // indicator if user has seen the help for this page ( + special page):
@@ -110,11 +106,10 @@ class Controller extends BaseController
                 return $next($request);
             }
         );
-
     }
 
     /**
-     * Functionality:
+     * Functionality:.
      *
      * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
      *   will be returned.
@@ -127,10 +122,10 @@ class Controller extends BaseController
     protected function getPreviousUri(string $identifier): string
     {
         $uri = strval(session($identifier));
-        if (!(strpos($identifier, 'delete') === false) && !(strpos($uri, '/show/') === false)) {
+        if (!(false === strpos($identifier, 'delete')) && !(false === strpos($uri, '/show/'))) {
             $uri = $this->redirectUri;
         }
-        if (!(strpos($uri, 'jscript') === false)) {
+        if (!(false === strpos($uri, 'jscript'))) {
             $uri = $this->redirectUri;
         }
 
@@ -144,7 +139,7 @@ class Controller extends BaseController
      */
     protected function isOpeningBalance(TransactionJournal $journal): bool
     {
-        return $journal->transactionTypeStr() === TransactionType::OPENING_BALANCE;
+        return TransactionType::OPENING_BALANCE === $journal->transactionTypeStr();
     }
 
     /**
@@ -162,7 +157,6 @@ class Controller extends BaseController
             if (in_array($account->accountType->type, $valid)) {
                 return redirect(route('accounts.show', [$account->id]));
             }
-
         }
         // @codeCoverageIgnoreStart
         Session::flash('error', strval(trans('firefly.cannot_redirect_to_account')));
@@ -178,5 +172,4 @@ class Controller extends BaseController
     {
         Session::put($identifier, URL::previous());
     }
-
 }

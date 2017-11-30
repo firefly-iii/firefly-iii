@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
@@ -30,9 +29,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface AccountRepositoryInterface
- *
- * @package FireflyIII\Repositories\Account
+ * Interface AccountRepositoryInterface.
  */
 interface AccountRepositoryInterface
 {
@@ -114,6 +111,15 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
+     * Find or create the opposing reconciliation account.
+     *
+     * @param Account $account
+     *
+     * @return Account|null
+     */
+    public function getReconciliation(Account $account): ?Account;
+
+    /**
      * Returns the date of the very last transaction in this account.
      *
      * @param Account $account
@@ -160,4 +166,11 @@ interface AccountRepositoryInterface
      */
     public function update(Account $account, array $data): Account;
 
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal;
 }

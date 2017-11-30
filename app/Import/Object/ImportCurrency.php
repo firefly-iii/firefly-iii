@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
-
 
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -33,17 +31,17 @@ class ImportCurrency
 {
     /** @var array */
     private $code = [];
-    /** @var  TransactionCurrency */
+    /** @var TransactionCurrency */
     private $currency;
     /** @var array */
     private $id = [];
     /** @var array */
     private $name = [];
-    /** @var  CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface */
     private $repository;
     /** @var array */
     private $symbol = [];
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -60,15 +58,14 @@ class ImportCurrency
      */
     public function getTransactionCurrency(): TransactionCurrency
     {
-        if (!is_null($this->currency->id)) {
+        if (null !== $this->currency->id) {
             return $this->currency;
         }
         Log::debug('In createCurrency()');
         // check if any of them is mapped:
         $mapped = $this->findMappedObject();
 
-        if (!is_null($mapped->id)) {
-
+        if (null !== $mapped->id) {
             Log::debug('Mapped existing currency.', ['new' => $mapped->toArray()]);
             $this->currency = $mapped;
 
@@ -76,7 +73,7 @@ class ImportCurrency
         }
 
         $searched = $this->findExistingObject();
-        if (!is_null($searched->id)) {
+        if (null !== $searched->id) {
             Log::debug('Found existing currency.', ['found' => $searched->toArray()]);
             $this->currency = $searched;
 
@@ -88,7 +85,7 @@ class ImportCurrency
             'name'           => $this->name['value'] ?? null,
             'decimal_places' => 2,
         ];
-        if (is_null($data['code'])) {
+        if (null === $data['code']) {
             Log::debug('Need at least a code to create currency, return nothing.');
 
             return new TransactionCurrency();
@@ -99,9 +96,7 @@ class ImportCurrency
         $this->currency = $currency;
         Log::info('Made new currency.', ['input' => $data, 'new' => $currency->toArray()]);
 
-
         return $currency;
-
     }
 
     /**
@@ -159,11 +154,11 @@ class ImportCurrency
         ];
         foreach ($search as $field => $function) {
             $value = $this->$field['value'] ?? null;
-            if (!is_null($value)) {
+            if (null !== $value) {
                 Log::debug(sprintf('Searching for %s using function %s and value %s', $field, $function, $value));
                 $currency = $this->repository->$function($value);
 
-                if (!is_null($currency->id)) {
+                if (null !== $currency->id) {
                     return $currency;
                 }
             }
@@ -184,12 +179,11 @@ class ImportCurrency
             Log::debug(sprintf('Find mapped currency based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (!is_null($mapped->id)) {
+            if (null !== $mapped->id) {
                 Log::debug(sprintf('Found currency #%d!', $mapped->id));
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no currency on mapped data or no map present.');
 
@@ -204,13 +198,13 @@ class ImportCurrency
     private function getMappedObject(array $array): TransactionCurrency
     {
         Log::debug('In getMappedObject()');
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return new TransactionCurrency;
         }
 
-        if (array_key_exists('mapped', $array) && is_null($array['mapped'])) {
+        if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
             return new TransactionCurrency;
@@ -221,8 +215,7 @@ class ImportCurrency
         $search   = intval($array['mapped']);
         $currency = $this->repository->find($search);
 
-
-        if (is_null($currency->id)) {
+        if (null === $currency->id) {
             Log::error(sprintf('There is no currency with id #%d. Invalid mapping will be ignored!', $search));
 
             return new TransactionCurrency;
@@ -232,6 +225,4 @@ class ImportCurrency
 
         return $currency;
     }
-
-
 }

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
@@ -30,12 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class CategoryIsTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class CategoryIsTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs::triggered
      */
@@ -64,7 +59,6 @@ class CategoryIsTest extends TestCase
         $journal->categories()->save($category);
         $this->assertEquals(1, $journal->categories()->count());
 
-
         $trigger = CategoryIs::makeFromStrings($otherCategory->name, false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
@@ -83,7 +77,6 @@ class CategoryIsTest extends TestCase
         $transaction->categories()->save($category);
         $this->assertEquals(0, $journal->categories()->count());
         $this->assertEquals(1, $transaction->categories()->count());
-
 
         $trigger = CategoryIs::makeFromStrings($category->name, false);
         $result  = $trigger->triggered($journal);

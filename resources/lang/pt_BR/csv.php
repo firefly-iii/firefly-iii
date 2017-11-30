@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'ID da Conta de Ativo (correspondente Firefly)',
     'column_account-name'           => 'Conta de Ativo (nome)',
     'column_amount'                 => 'Quantia',
+    'column_amount_debet'           => 'Amount (debet column)',
+    'column_amount_credit'          => 'Amount (credit column)',
     'column_amount-comma-separated' => 'Quantia (vírgula como separador decimal)',
     'column_bill-id'                => 'ID Fatura (correspondente Firefly)',
     'column_bill-name'              => 'Nome da Fatura',

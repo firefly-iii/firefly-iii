@@ -18,23 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
-
 
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface UserRepositoryInterface
- *
- * @package FireflyIII\Repositories\User
+ * Interface UserRepositoryInterface.
  */
 interface UserRepositoryInterface
 {
-
     /**
      * Returns a collection of all users.
      *

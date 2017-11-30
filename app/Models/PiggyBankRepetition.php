@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,27 +27,26 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class PiggyBankRepetition
- *
- * @package FireflyIII\Models
+ * Class PiggyBankRepetition.
  */
 class PiggyBankRepetition extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'startdate'  => 'date',
             'targetdate' => 'date',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'startdate', 'targetdate'];
+    /** @var array */
+    protected $dates = ['startdate', 'targetdate'];
+    /** @var array */
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**
@@ -87,7 +85,6 @@ class PiggyBankRepetition extends Model
         )
                      ->where(
                          function (EloquentBuilder $q) use ($date) {
-
                              $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
                              $q->orWhereNull('targetdate');
                          }
@@ -101,5 +98,4 @@ class PiggyBankRepetition extends Model
     {
         $this->attributes['currentamount'] = strval(round($value, 12));
     }
-
 }

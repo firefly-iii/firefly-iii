@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support;
@@ -27,19 +26,17 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 
 /**
- * Class Navigation
- *
- * @package FireflyIII\Support
+ * Class Navigation.
  */
 class Navigation
 {
-
     /**
      * @param \Carbon\Carbon $theDate
      * @param                $repeatFreq
      * @param                $skip
      *
      * @return \Carbon\Carbon
+     *
      * @throws FireflyException
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
@@ -75,7 +72,7 @@ class Navigation
         // if period is 1M and diff in month is 2 and new DOM = 1, sub a day:
         $months     = ['1M', 'month', 'monthly'];
         $difference = $date->month - $theDate->month;
-        if (in_array($repeatFreq, $months) && $difference === 2 && $date->day === 1) {
+        if (in_array($repeatFreq, $months) && 2 === $difference && 1 === $date->day) {
             $date->subDay();
         }
 
@@ -87,6 +84,7 @@ class Navigation
      * @param                $repeatFreq
      *
      * @return \Carbon\Carbon
+     *
      * @throws FireflyException
      */
     public function endOfPeriod(\Carbon\Carbon $end, string $repeatFreq): Carbon
@@ -113,7 +111,7 @@ class Navigation
         // if the range is custom, the end of the period
         // is another X days (x is the difference between start)
         // and end added to $theCurrentEnd
-        if ($repeatFreq === 'custom') {
+        if ('custom' === $repeatFreq) {
             /** @var Carbon $tStart */
             $tStart = session('start', Carbon::now()->startOfMonth());
             /** @var Carbon $tEnd */
@@ -176,10 +174,9 @@ class Navigation
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
             $currentEnd->$function();
-
         }
 
-        if (!is_null($maxDate) && $currentEnd > $maxDate) {
+        if (null !== $maxDate && $currentEnd > $maxDate) {
             return clone $maxDate;
         }
 
@@ -221,7 +218,6 @@ class Navigation
         }
 
         return $entries;
-
     }
 
     /**
@@ -229,6 +225,7 @@ class Navigation
      * @param                $repeatFrequency
      *
      * @return string
+     *
      * @throws FireflyException
      */
     public function periodShow(Carbon $theDate, string $repeatFrequency): string
@@ -241,8 +238,6 @@ class Navigation
             '1W'      => trans('config.week_in_year'),
             'week'    => trans('config.week_in_year'),
             'weekly'  => trans('config.week_in_year'),
-            //'3M'      => trans('config.quarter_of_year'),
-            //'quarter' => trans('config.quarter_of_year'),
             '1M'      => trans('config.month'),
             'month'   => trans('config.month'),
             'monthly' => trans('config.month'),
@@ -250,13 +245,12 @@ class Navigation
             'year'    => trans('config.year'),
             'yearly'  => trans('config.year'),
             '6M'      => trans('config.half_year'),
-
         ];
 
         if (isset($formatMap[$repeatFrequency])) {
             return $date->formatLocalized(strval($formatMap[$repeatFrequency]));
         }
-        if ($repeatFrequency === '3M' || $repeatFrequency === 'quarter') {
+        if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
             $quarter = ceil($theDate->month / 3);
 
             return sprintf('Q%d %d', $quarter, $theDate->year);
@@ -310,7 +304,6 @@ class Navigation
         }
 
         return $format;
-
     }
 
     /**
@@ -357,7 +350,6 @@ class Navigation
         }
 
         return $format;
-
     }
 
     /**
@@ -381,7 +373,6 @@ class Navigation
         }
 
         return $format;
-
     }
 
     /**
@@ -389,6 +380,7 @@ class Navigation
      * @param                $repeatFreq
      *
      * @return \Carbon\Carbon
+     *
      * @throws FireflyException
      */
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
@@ -417,7 +409,7 @@ class Navigation
 
             return $date;
         }
-        if ($repeatFreq === 'half-year' || $repeatFreq === '6M') {
+        if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
             $month = $date->month;
             $date->startOfYear();
             if ($month >= 7) {
@@ -426,10 +418,9 @@ class Navigation
 
             return $date;
         }
-        if ($repeatFreq === 'custom') {
+        if ('custom' === $repeatFreq) {
             return $date; // the date is already at the start.
         }
-
 
         throw new FireflyException(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
     }
@@ -440,6 +431,7 @@ class Navigation
      * @param int            $subtract
      *
      * @return \Carbon\Carbon
+     *
      * @throws FireflyException
      */
     public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1): Carbon
@@ -481,7 +473,7 @@ class Navigation
         // a custom range requires the session start
         // and session end to calculate the difference in days.
         // this is then subtracted from $theDate (* $subtract).
-        if ($repeatFreq === 'custom') {
+        if ('custom' === $repeatFreq) {
             /** @var Carbon $tStart */
             $tStart = session('start', Carbon::now()->startOfMonth());
             /** @var Carbon $tEnd */
@@ -500,6 +492,7 @@ class Navigation
      * @param \Carbon\Carbon $start
      *
      * @return \Carbon\Carbon
+     *
      * @throws FireflyException
      */
     public function updateEndDate(string $range, Carbon $start): Carbon
@@ -520,7 +513,7 @@ class Navigation
 
             return $end;
         }
-        if ($range === '6M') {
+        if ('6M' === $range) {
             if ($start->month >= 7) {
                 $end->endOfYear();
 
@@ -538,6 +531,7 @@ class Navigation
      * @param \Carbon\Carbon $start
      *
      * @return \Carbon\Carbon
+     *
      * @throws FireflyException
      */
     public function updateStartDate(string $range, Carbon $start): Carbon
@@ -556,7 +550,7 @@ class Navigation
 
             return $start;
         }
-        if ($range === '6M') {
+        if ('6M' === $range) {
             if ($start->month >= 7) {
                 $start->startOfYear()->addMonths(6);
 
@@ -565,11 +559,7 @@ class Navigation
             $start->startOfYear();
 
             return $start;
-
-
         }
         throw new FireflyException(sprintf('updateStartDate cannot handle range "%s"', $range));
     }
-
-
 }

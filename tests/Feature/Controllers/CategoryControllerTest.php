@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -40,7 +39,6 @@ use Tests\TestCase;
 /**
  * Class CategoryControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -88,7 +86,6 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
 
         $repository->shouldReceive('destroy')->andReturn(true);
 
@@ -360,7 +357,6 @@ class CategoryControllerTest extends TestCase
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
         $repository->shouldReceive('earnedInPeriod')->andReturn('1');
 
-
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('categories.show', [1, '2015-01-01']));
@@ -456,6 +452,4 @@ class CategoryControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
-
 }

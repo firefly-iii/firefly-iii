@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -28,13 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class FromAccountIs
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class FromAccountIs.
  */
 final class FromAccountIs extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -53,9 +49,9 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
-            $res = strval($value) === '';
-            if ($res === true) {
+        if (null !== $value) {
+            $res = '' === strval($value);
+            if (true === $res) {
                 Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
             }
 
@@ -67,6 +63,8 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when from-account is X.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -91,6 +89,5 @@ final class FromAccountIs extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger FromAccountIs for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $name, $search));
 
         return false;
-
     }
 }

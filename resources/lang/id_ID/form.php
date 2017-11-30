@@ -91,6 +91,7 @@ return [
     'deletePermanently'          => 'Delete permanently',
     'cancel'                     => 'Cancel',
     'targetdate'                 => 'Target date',
+    'startdate'                  => 'Start date',
     'tag'                        => 'Tag',
     'under'                      => 'Under',
     'symbol'                     => 'Symbol',

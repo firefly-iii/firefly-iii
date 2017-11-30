@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -29,15 +28,12 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class AppendNotes
- *
- * @package FireflyIII\TransactionRules\Actions
+ * Class AppendNotes.
  */
 class AppendNotes implements ActionInterface
 {
-
+    /** @var RuleAction The rule action */
     private $action;
-
 
     /**
      * TriggerInterface constructor.
@@ -50,6 +46,8 @@ class AppendNotes implements ActionInterface
     }
 
     /**
+     * Append notes with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -57,7 +55,7 @@ class AppendNotes implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         $dbNote = $journal->notes()->first();
-        if (is_null($dbNote)) {
+        if (null === $dbNote) {
             $dbNote = new Note;
             $dbNote->noteable()->associate($journal);
         }

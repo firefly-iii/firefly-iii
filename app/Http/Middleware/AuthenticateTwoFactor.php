@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
-use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Log;
@@ -32,24 +30,21 @@ use Preferences;
 use Session;
 
 /**
- * Class AuthenticateTwoFactor
- *
- * @package FireflyIII\Http\Middleware
+ * Class AuthenticateTwoFactor.
  */
 class AuthenticateTwoFactor
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  string|null              $guard
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null              $guard
      *
      * @return mixed
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
-
         // do the usual auth, again:
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
@@ -59,17 +54,17 @@ class AuthenticateTwoFactor
             return redirect()->guest('login');
         }
 
-        if (intval(auth()->user()->blocked) === 1) {
+        if (1 === intval(auth()->user()->blocked)) {
             Auth::guard($guard)->logout();
             Session::flash('logoutMessage', trans('firefly.block_account_logout'));
 
             return redirect()->guest('login');
         }
         $is2faEnabled = Preferences::get('twoFactorAuthEnabled', false)->data;
-        $has2faSecret = !is_null(Preferences::get('twoFactorAuthSecret'));
+        $has2faSecret = null !== Preferences::get('twoFactorAuthSecret');
 
-        // grab 2auth information from cookie, not from session.
-        $is2faAuthed = Cookie::get('twoFactorAuthenticated') === 'true';
+        // grab 2auth information from session.
+        $is2faAuthed = 'true' === $request->cookie('twoFactorAuthenticated');
 
         if ($is2faEnabled && $has2faSecret && !$is2faAuthed) {
             Log::debug('Does not seem to be 2 factor authed, redirect.');

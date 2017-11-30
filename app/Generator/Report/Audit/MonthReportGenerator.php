@@ -18,33 +18,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Audit;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Steam;
 
 /**
- * Class MonthReportGenerator
- *
- * @package FireflyIII\Generator\Report\Audit
+ * Class MonthReportGenerator.
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var  Collection */
+    /** @var Collection */
     private $accounts;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $end;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $start;
 
     /**
@@ -52,8 +47,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-
-
         $auditData = [];
         $dayBefore = clone $this->start;
         $dayBefore->subDay();
@@ -77,11 +70,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
                         'create_date', 'update_date',
         ];
 
-
         return view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
             ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
             ->render();
-
     }
 
     /**
@@ -157,7 +148,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @return array
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // not that long
-     *
      */
     private function getAuditReport(Account $account, Carbon $date): array
     {
@@ -173,7 +163,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $startBalance     = $dayBeforeBalance;
         $currency         = $currencyRepos->find(intval($account->getMeta('currency_id')));
 
-        /** @var Transaction $journal */
+        // @var Transaction $journal
         foreach ($journals as $transaction) {
             $transaction->before = $startBalance;
             $transactionAmount   = $transaction->transaction_amount;

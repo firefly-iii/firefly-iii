@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
-
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -36,19 +34,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
- * Class TransactionJournalTrait
+ * Class TransactionJournalTrait.
  *
  * @property int             $id
  * @property Carbon          $date
  * @property string          $transaction_type_type
  * @property TransactionType $transactionType
- *
- * @package FireflyIII\Support\Models
  */
 trait TransactionJournalTrait
 {
     /**
      * @return string
+     *
      * @throws FireflyException
      */
     public function amount(): string
@@ -101,7 +98,7 @@ trait TransactionJournalTrait
     public function budgetId(): int
     {
         $budget = $this->budgets()->first();
-        if (!is_null($budget)) {
+        if (null !== $budget) {
             return $budget->id;
         }
 
@@ -124,7 +121,7 @@ trait TransactionJournalTrait
     public function categoryAsString(): string
     {
         $category = $this->categories()->first();
-        if (!is_null($category)) {
+        if (null !== $category) {
             return $category->name;
         }
 
@@ -138,10 +135,10 @@ trait TransactionJournalTrait
      */
     public function dateAsString(string $dateField = ''): string
     {
-        if ($dateField === '') {
+        if ('' === $dateField) {
             return $this->date->format('Y-m-d');
         }
-        if (!is_null($this->$dateField) && $this->$dateField instanceof Carbon) {
+        if (null !== $this->$dateField && $this->$dateField instanceof Carbon) {
             // make field NULL
             $carbon           = clone $this->$dateField;
             $this->$dateField = null;
@@ -154,15 +151,13 @@ trait TransactionJournalTrait
             return $carbon->format('Y-m-d');
         }
         $metaField = $this->getMeta($dateField);
-        if (!is_null($metaField)) {
+        if (null !== $metaField) {
             $carbon = new Carbon($metaField);
 
             return $carbon->format('Y-m-d');
         }
 
         return '';
-
-
     }
 
     /**
@@ -208,7 +203,6 @@ trait TransactionJournalTrait
     }
 
     /**
-     *
      * @param string $name
      *
      * @return string
@@ -229,7 +223,7 @@ trait TransactionJournalTrait
     public function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if (is_null($joins)) {
+        if (null === $joins) {
             return false;
         }
         foreach ($joins as $join) {
@@ -242,19 +236,16 @@ trait TransactionJournalTrait
     }
 
     /**
-     *
      * @return bool
      */
     abstract public function isOpeningBalance(): bool;
 
     /**
-     *
      * @return bool
      */
     abstract public function isTransfer(): bool;
 
     /**
-     *
      * @return bool
      */
     abstract public function isWithdrawal(): bool;
@@ -287,7 +278,7 @@ trait TransactionJournalTrait
     /**
      * Save the model to the database.
      *
-     * @param  array $options
+     * @param array $options
      *
      * @return bool
      */

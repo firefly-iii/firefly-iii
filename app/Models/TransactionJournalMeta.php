@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,13 +27,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class TransactionJournalMeta
- *
- * @package FireflyIII\Models
+ * Class TransactionJournalMeta.
  */
 class TransactionJournalMeta extends Model
 {
-
     use SoftDeletes;
     /**
      * The attributes that should be casted to native types.
@@ -42,14 +38,15 @@ class TransactionJournalMeta extends Model
      * @var array
      */
     protected $casts
-                        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
-    protected $table    = 'journal_meta';
+    /** @var string */
+    protected $table = 'journal_meta';
 
     /**
      * @param $value
@@ -72,7 +69,6 @@ class TransactionJournalMeta extends Model
     }
 
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionJournal(): BelongsTo

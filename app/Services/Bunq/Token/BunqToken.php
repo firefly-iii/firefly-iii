@@ -18,28 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Token;
 
-
 use Carbon\Carbon;
 
 /**
- * Class BunqToken
- *
- * @package Bunq\Token
+ * Class BunqToken.
  */
 class BunqToken
 {
-    /** @var  Carbon */
+    /** @var Carbon */
     private $created;
     /** @var int */
     private $id = 0;
     /** @var string */
     private $token = '';
-    /** @var  Carbon */
+    /** @var Carbon */
     private $updated;
 
     /**
@@ -96,5 +92,4 @@ class BunqToken
 
         return;
     }
-
 }

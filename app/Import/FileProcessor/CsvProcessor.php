@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\FileProcessor;
@@ -37,12 +36,10 @@ use Log;
  * Class CsvProcessor, as the name suggests, goes over CSV file line by line and creates
  * "ImportJournal" objects, which are used in another step to create new journals and transactions
  * and what-not.
- *
- * @package FireflyIII\Import\FileProcessor
  */
 class CsvProcessor implements FileProcessorInterface
 {
-    /** @var  ImportJob */
+    /** @var ImportJob */
     private $job;
     /** @var Collection */
     private $objects;
@@ -136,6 +133,7 @@ class CsvProcessor implements FileProcessorInterface
      * @param string $value
      *
      * @return array
+     *
      * @throws FireflyException
      */
     private function annotateValue(int $index, string $value)
@@ -167,7 +165,7 @@ class CsvProcessor implements FileProcessorInterface
         $config    = $this->job->configuration;
         $reader    = Reader::createFromString($content);
         $delimiter = $config['delimiter'];
-        if ($delimiter === 'tab') {
+        if ('tab' === $delimiter) {
             $delimiter = "\t";
         }
         $reader->setDelimiter($delimiter);
@@ -213,6 +211,7 @@ class CsvProcessor implements FileProcessorInterface
      * @param array $array
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function getRowHash(array $array): string
@@ -220,7 +219,7 @@ class CsvProcessor implements FileProcessorInterface
         $json      = json_encode($array);
         $jsonError = json_last_error();
 
-        if ($json === false) {
+        if (false === $json) {
             throw new FireflyException(sprintf('Error while encoding JSON for CSV row: %s', $this->getJsonError($jsonError)));
         }
         $hash = hash('sha256', $json);
@@ -235,6 +234,7 @@ class CsvProcessor implements FileProcessorInterface
      * @param array $row
      *
      * @return ImportJournal
+     *
      * @throws FireflyException
      */
     private function importRow(int $index, array $row): ImportJournal
@@ -248,7 +248,7 @@ class CsvProcessor implements FileProcessorInterface
         $journal->setHash($hash);
 
         /**
-         * @var int    $rowIndex
+         * @var int
          * @var string $value
          */
         foreach ($row as $rowIndex => $value) {
@@ -280,12 +280,11 @@ class CsvProcessor implements FileProcessorInterface
                                        ->where('data', $json)
                                        ->where('name', 'importHash')
                                        ->first();
-        if (!is_null($entry)) {
+        if (null !== $entry) {
             return true;
         }
 
         return false;
-
     }
 
     /**
@@ -294,6 +293,7 @@ class CsvProcessor implements FileProcessorInterface
      * @param array $row
      *
      * @return array
+     *
      * @throws FireflyException
      */
     private function specifics(array $row): array
@@ -301,7 +301,6 @@ class CsvProcessor implements FileProcessorInterface
         $config = $this->job->configuration;
         $names  = array_keys($config['specifics']);
         foreach ($names as $name) {
-
             if (!in_array($name, $this->validSpecifics)) {
                 throw new FireflyException(sprintf('"%s" is not a valid class name', $name));
             }
@@ -314,6 +313,5 @@ class CsvProcessor implements FileProcessorInterface
         }
 
         return $row;
-
     }
 }

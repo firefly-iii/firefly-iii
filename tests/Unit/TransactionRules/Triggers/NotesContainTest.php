@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -31,12 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class NotesContainTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class NotesContainTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
@@ -51,38 +46,6 @@ class NotesContainTest extends TestCase
         $trigger = NotesContain::makeFromStrings('blIEp', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
-     */
-    public function testTriggeredEmpty()
-    {
-        $journal = TransactionJournal::find(44);
-        $journal->notes()->delete();
-        $note = new Note();
-        $note->noteable()->associate($journal);
-        $note->text = '';
-        $note->save();
-        $trigger = NotesContain::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
-     */
-    public function testTriggeredPartial()
-    {
-        $journal = TransactionJournal::find(45);
-        $journal->notes()->delete();
-        $note = new Note();
-        $note->noteable()->associate($journal);
-        $note->text = 'Some note';
-        $note->save();
-        $trigger = NotesContain::makeFromStrings('Some note contains', false);
-        $result  = $trigger->triggered($journal);
-        $this->assertFalse($result);
     }
 
     /**
@@ -104,11 +67,43 @@ class NotesContainTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
      */
+    public function testTriggeredEmpty()
+    {
+        $journal = TransactionJournal::find(44);
+        $journal->notes()->delete();
+        $note = new Note();
+        $note->noteable()->associate($journal);
+        $note->text = '';
+        $note->save();
+        $trigger = NotesContain::makeFromStrings('', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
+     */
     public function testTriggeredNone()
     {
         $journal = TransactionJournal::find(47);
         $journal->notes()->delete();
         $trigger = NotesContain::makeFromStrings('Bla bla', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::triggered
+     */
+    public function testTriggeredPartial()
+    {
+        $journal = TransactionJournal::find(45);
+        $journal->notes()->delete();
+        $note = new Note();
+        $note->noteable()->associate($journal);
+        $note->text = 'Some note';
+        $note->save();
+        $trigger = NotesContain::makeFromStrings('Some note contains', false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
@@ -122,7 +117,6 @@ class NotesContainTest extends TestCase
         $result = NotesContain::willMatchEverything($value);
         $this->assertTrue($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesContain::willMatchEverything

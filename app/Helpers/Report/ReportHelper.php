@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
@@ -35,14 +34,11 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
- * Class ReportHelper
- *
- * @package FireflyIII\Helpers\Report
+ * Class ReportHelper.
  */
 class ReportHelper implements ReportHelperInterface
 {
-
-    /** @var  BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface */
     protected $budgetRepository;
 
     /**
@@ -95,7 +91,7 @@ class ReportHelper implements ReportHelperInterface
                 }
             );
             $first = $entry->first();
-            if (!is_null($first)) {
+            if (null !== $first) {
                 $billLine->setTransactionJournalId($first->id);
                 $billLine->setAmount($first->transaction_amount);
                 $billLine->setLastHitDate($first->date);
@@ -153,5 +149,4 @@ class ReportHelper implements ReportHelperInterface
 
         return $months;
     }
-
 }

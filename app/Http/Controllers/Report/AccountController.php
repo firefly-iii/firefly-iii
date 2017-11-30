@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
-
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
@@ -31,13 +29,10 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
- * Class AccountController
- *
- * @package FireflyIII\Http\Controllers\Report
+ * Class AccountController.
  */
 class AccountController extends Controller
 {
-
     /**
      * @param Collection $accounts
      * @param Carbon     $start

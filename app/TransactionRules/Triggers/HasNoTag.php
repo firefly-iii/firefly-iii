@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -27,13 +26,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class HasNoTag
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class HasNoTag.
  */
 final class HasNoTag extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -56,6 +52,8 @@ final class HasNoTag extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Return true when journal has no tags.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -63,7 +61,7 @@ final class HasNoTag extends AbstractTrigger implements TriggerInterface
     public function triggered(TransactionJournal $journal): bool
     {
         $count = $journal->tags()->count();
-        if ($count === 0) {
+        if (0 === $count) {
             Log::debug(sprintf('RuleTrigger HasNoTag for journal #%d: count is %d, return true.', $journal->id, $count));
 
             return true;
@@ -71,6 +69,5 @@ final class HasNoTag extends AbstractTrigger implements TriggerInterface
         Log::debug(sprintf('RuleTrigger HasNoTag for journal #%d: count is %d, return false.', $journal->id, $count));
 
         return false;
-
     }
 }

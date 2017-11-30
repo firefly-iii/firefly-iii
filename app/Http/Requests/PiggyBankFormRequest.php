@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 
 /**
- * Class PiggyBankFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class PiggyBankFormRequest.
  */
 class PiggyBankFormRequest extends Request
 {
@@ -49,9 +45,9 @@ class PiggyBankFormRequest extends Request
     {
         return [
             'name'         => $this->string('name'),
-            'startdate'    => new Carbon,
+            'startdate'    => $this->date('startdate'),
             'account_id'   => $this->integer('account_id'),
-            'targetamount' => $this->float('targetamount'),
+            'targetamount' => $this->string('targetamount'),
             'targetdate'   => $this->date('targetdate'),
             'note'         => $this->string('note'),
         ];
@@ -62,12 +58,10 @@ class PiggyBankFormRequest extends Request
      */
     public function rules()
     {
-
         $nameRule = 'required|between:1,255|uniquePiggyBankForUser';
         if (intval($this->get('id'))) {
             $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval($this->get('id'));
         }
-
 
         $rules = [
             'name'                            => $nameRule,
@@ -77,7 +71,6 @@ class PiggyBankFormRequest extends Request
             'startdate'                       => 'date',
             'targetdate'                      => 'date|nullable',
             'order'                           => 'integer|min:1',
-
         ];
 
         return $rules;

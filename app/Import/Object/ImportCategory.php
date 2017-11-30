@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Object;
-
 
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -40,7 +38,7 @@ class ImportCategory
     private $name = [];
     /** @var CategoryRepositoryInterface */
     private $repository;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     /**
@@ -58,7 +56,7 @@ class ImportCategory
      */
     public function getCategory(): Category
     {
-        if (is_null($this->category->id)) {
+        if (null === $this->category->id) {
             $this->store();
         }
 
@@ -98,11 +96,11 @@ class ImportCategory
         Log::debug('In findExistingObject() for Category');
         // 1: find by ID, or name
 
-        if (count($this->id) === 3) {
+        if (3 === count($this->id)) {
             Log::debug(sprintf('Finding category with ID #%d', $this->id['value']));
             /** @var Category $category */
             $category = $this->repository->find(intval($this->id['value']));
-            if (!is_null($category->id)) {
+            if (null !== $category->id) {
                 Log::debug(sprintf('Found unmapped category by ID (#%d): %s', $category->id, $category->name));
 
                 return $category;
@@ -110,7 +108,7 @@ class ImportCategory
             Log::debug('Found nothing.');
         }
         // 2: find by name
-        if (count($this->name) === 3) {
+        if (3 === count($this->name)) {
             /** @var Collection $categories */
             $categories = $this->repository->getCategories();
             $name       = $this->name['value'];
@@ -127,7 +125,7 @@ class ImportCategory
                 }
             );
 
-            if ($filtered->count() === 1) {
+            if (1 === $filtered->count()) {
                 return $filtered->first();
             }
             Log::debug('Found nothing.');
@@ -137,7 +135,6 @@ class ImportCategory
         Log::debug('Found NO existing categories.');
 
         return new Category;
-
     }
 
     /**
@@ -152,12 +149,11 @@ class ImportCategory
             Log::debug(sprintf('Find mapped category based on field "%s" with value', $field), $array);
             // check if a pre-mapped object exists.
             $mapped = $this->getMappedObject($array);
-            if (!is_null($mapped->id)) {
+            if (null !== $mapped->id) {
                 Log::debug(sprintf('Found category #%d!', $mapped->id));
 
                 return $mapped;
             }
-
         }
         Log::debug('Found no category on mapped data or no map present.');
 
@@ -172,13 +168,13 @@ class ImportCategory
     private function getMappedObject(array $array): Category
     {
         Log::debug('In getMappedObject() for Category');
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             Log::debug('Array is empty, nothing will come of this.');
 
             return new Category;
         }
 
-        if (array_key_exists('mapped', $array) && is_null($array['mapped'])) {
+        if (array_key_exists('mapped', $array) && null === $array['mapped']) {
             Log::debug(sprintf('No map present for value "%s". Return NULL.', $array['value']));
 
             return new Category;
@@ -189,7 +185,7 @@ class ImportCategory
         $search   = intval($array['mapped']);
         $category = $this->repository->find($search);
 
-        if (is_null($category->id)) {
+        if (null === $category->id) {
             Log::error(sprintf('There is no category with id #%d. Invalid mapping will be ignored!', $search));
 
             return new Category;
@@ -207,21 +203,21 @@ class ImportCategory
     {
         // 1: find mapped object:
         $mapped = $this->findMappedObject();
-        if (!is_null($mapped->id)) {
+        if (null !== $mapped->id) {
             $this->category = $mapped;
 
             return true;
         }
         // 2: find existing by given values:
         $found = $this->findExistingObject();
-        if (!is_null($found->id)) {
+        if (null !== $found->id) {
             $this->category = $found;
 
             return true;
         }
         $name = $this->name['value'] ?? '';
 
-        if (strlen($name) === 0) {
+        if (0 === strlen($name)) {
             return true;
         }
 
@@ -236,6 +232,4 @@ class ImportCategory
 
         return true;
     }
-
-
 }

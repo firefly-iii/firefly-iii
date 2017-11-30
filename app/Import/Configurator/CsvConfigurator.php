@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Configurator;
@@ -32,13 +31,11 @@ use FireflyIII\Support\Import\Configuration\Csv\Roles;
 use Log;
 
 /**
- * Class CsvConfigurator
- *
- * @package FireflyIII\Import\Configurator
+ * Class CsvConfigurator.
  */
 class CsvConfigurator implements ConfiguratorInterface
 {
-    /** @var  ImportJob */
+    /** @var ImportJob */
     private $job;
 
     /** @var string */
@@ -57,6 +54,7 @@ class CsvConfigurator implements ConfiguratorInterface
      * @param array $data
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     public function configureJob(array $data): bool
@@ -76,6 +74,7 @@ class CsvConfigurator implements ConfiguratorInterface
      * Return the data required for the next step in the job configuration.
      *
      * @return array
+     *
      * @throws FireflyException
      */
     public function getNextData(): array
@@ -87,11 +86,11 @@ class CsvConfigurator implements ConfiguratorInterface
         $object->setJob($job);
 
         return $object->getData();
-
     }
 
     /**
      * @return string
+     *
      * @throws FireflyException
      */
     public function getNextView(): string
@@ -147,7 +146,7 @@ class CsvConfigurator implements ConfiguratorInterface
     public function setJob(ImportJob $job)
     {
         $this->job = $job;
-        if (is_null($this->job->configuration) || count($this->job->configuration) === 0) {
+        if (null === $this->job->configuration || 0 === count($this->job->configuration)) {
             Log::debug(sprintf('Gave import job %s initial configuration.', $this->job->key));
             $this->job->configuration = config('csv.default_config');
             $this->job->save();
@@ -156,26 +155,27 @@ class CsvConfigurator implements ConfiguratorInterface
 
     /**
      * @return string
+     *
      * @throws FireflyException
      */
     private function getConfigurationClass(): string
     {
         $class = false;
         switch (true) {
-            case (!$this->job->configuration['initial-config-complete']):
+            case !$this->job->configuration['initial-config-complete']:
                 $class = Initial::class;
                 break;
-            case (!$this->job->configuration['column-roles-complete']):
+            case !$this->job->configuration['column-roles-complete']:
                 $class = Roles::class;
                 break;
-            case (!$this->job->configuration['column-mapping-complete']):
+            case !$this->job->configuration['column-mapping-complete']:
                 $class = Map::class;
                 break;
             default:
                 break;
         }
 
-        if ($class === false || strlen($class) === 0) {
+        if (false === $class || 0 === strlen($class)) {
             throw new FireflyException('Cannot handle current job state in getConfigurationClass().');
         }
         if (!class_exists($class)) {

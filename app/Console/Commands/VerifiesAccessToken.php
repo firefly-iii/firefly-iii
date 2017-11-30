@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -28,11 +27,9 @@ use Log;
 use Preferences;
 
 /**
- * Trait VerifiesAccessToken
+ * Trait VerifiesAccessToken.
  *
  * Verifies user access token for sensitive commands.
- *
- * @package FireflyIII\Console\Commands
  */
 trait VerifiesAccessToken
 {
@@ -58,13 +55,13 @@ trait VerifiesAccessToken
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);
 
-        if (is_null($user->id)) {
+        if (null === $user->id) {
             Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
 
             return false;
         }
         $accessToken = Preferences::getForUser($user, 'access_token', null);
-        if (is_null($accessToken)) {
+        if (null === $accessToken) {
             Log::error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
 
             return false;
@@ -77,5 +74,4 @@ trait VerifiesAccessToken
 
         return true;
     }
-
 }

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace Tests\Feature\Controllers\Admin;
 
@@ -31,7 +29,6 @@ use Tests\TestCase;
 /**
  * Class UserControllerTest
  *
- * @package Tests\Feature\Controllers\Admin
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -111,6 +108,4 @@ class UserControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
-
 }

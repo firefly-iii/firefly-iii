@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
@@ -28,13 +27,11 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class InternalTransferFilter
+ * Class InternalTransferFilter.
  *
  * This filter removes any filters that are from A to B or from B to A given a set of
  * account id's (in $parameters) where A and B are mentioned. So transfers between the mentioned
  * accounts will be removed.
- *
- * @package FireflyIII\Helpers\Filter
  */
 class InternalTransferFilter implements FilterInterface
 {
@@ -60,7 +57,7 @@ class InternalTransferFilter implements FilterInterface
     {
         return $set->filter(
             function (Transaction $transaction) {
-                if (is_null($transaction->opposing_account_id)) {
+                if (null === $transaction->opposing_account_id) {
                     return $transaction;
                 }
                 // both id's in $parameters?
@@ -68,18 +65,18 @@ class InternalTransferFilter implements FilterInterface
                     Log::debug(
                         sprintf(
                             'Transaction #%d has #%d and #%d in set, so removed',
-                            $transaction->id, $transaction->account_id, $transaction->opposing_account_id
-                        ), $this->accounts
+                            $transaction->id,
+                            $transaction->account_id,
+                            $transaction->opposing_account_id
+                        ),
+                        $this->accounts
                     );
 
                     return false;
                 }
 
                 return $transaction;
-
             }
         );
-
-
     }
 }

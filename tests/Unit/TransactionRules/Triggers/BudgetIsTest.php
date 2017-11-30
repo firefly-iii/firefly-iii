@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
@@ -30,12 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class BudgetIsTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class BudgetIsTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
      */
@@ -64,7 +59,6 @@ class BudgetIsTest extends TestCase
         $journal->budgets()->save($budget);
         $this->assertEquals(1, $journal->budgets()->count());
 
-
         $trigger = BudgetIs::makeFromStrings($otherBudget->name, false);
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
@@ -83,7 +77,6 @@ class BudgetIsTest extends TestCase
         $transaction->budgets()->save($budget);
         $this->assertEquals(0, $journal->budgets()->count());
         $this->assertEquals(1, $transaction->budgets()->count());
-
 
         $trigger = BudgetIs::makeFromStrings($budget->name, false);
         $result  = $trigger->triggered($journal);

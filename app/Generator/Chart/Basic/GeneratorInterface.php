@@ -18,21 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Chart\Basic;
 
 /**
- * Interface GeneratorInterface
- *
- * @package FireflyIII\Generator\Chart\Basic
+ * Interface GeneratorInterface.
  */
 interface GeneratorInterface
 {
-
     /**
-     * Will generate a Chart JS compatible array from the given input. Expects this format
+     * Will generate a Chart JS compatible array from the given input. Expects this format.
      *
      * Will take labels for all from first set.
      *
@@ -66,7 +62,7 @@ interface GeneratorInterface
     public function multiSet(array $data): array;
 
     /**
-     * Expects data as:
+     * Expects data as:.
      *
      * key => value
      *
@@ -77,7 +73,7 @@ interface GeneratorInterface
     public function pieChart(array $data): array;
 
     /**
-     * Will generate a (ChartJS) compatible array from the given input. Expects this format:
+     * Will generate a (ChartJS) compatible array from the given input. Expects this format:.
      *
      * 'label-of-entry' => value
      * 'label-of-entry' => value
@@ -88,5 +84,4 @@ interface GeneratorInterface
      * @return array
      */
     public function singleSet(string $setLabel, array $data): array;
-
 }

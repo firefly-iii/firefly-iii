@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -31,12 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class NotesAreTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class NotesAreTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
      */
@@ -51,22 +46,6 @@ class NotesAreTest extends TestCase
         $trigger = NotesAre::makeFromStrings('Bla bla bla', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
-     */
-    public function testTriggeredEmpty()
-    {
-        $journal = TransactionJournal::find(40);
-        $journal->notes()->delete();
-        $note = new Note();
-        $note->noteable()->associate($journal);
-        $note->text = '';
-        $note->save();
-        $trigger = NotesAre::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
-        $this->assertFalse($result);
     }
 
     /**
@@ -88,6 +67,22 @@ class NotesAreTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
      */
+    public function testTriggeredEmpty()
+    {
+        $journal = TransactionJournal::find(40);
+        $journal->notes()->delete();
+        $note = new Note();
+        $note->noteable()->associate($journal);
+        $note->text = '';
+        $note->save();
+        $trigger = NotesAre::makeFromStrings('', false);
+        $result  = $trigger->triggered($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::triggered
+     */
     public function testTriggeredNone()
     {
         $journal = TransactionJournal::find(42);
@@ -96,7 +91,6 @@ class NotesAreTest extends TestCase
         $result  = $trigger->triggered($journal);
         $this->assertFalse($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesAre::willMatchEverything

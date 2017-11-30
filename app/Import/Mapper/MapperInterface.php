@@ -18,19 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
 
 /**
- * Interface MapperInterface
- *
- * @package FireflyIII\Import\Mapper
+ * Interface MapperInterface.
  */
 interface MapperInterface
 {
-
     /**
      * @return array
      */

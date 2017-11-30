@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
-
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
@@ -31,13 +29,10 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
- * Class OperationsController
- *
- * @package FireflyIII\Http\Controllers\Report
+ * Class OperationsController.
  */
 class OperationsController extends Controller
 {
-
     /**
      * @param AccountTaskerInterface $tasker
      * @param Collection             $accounts
@@ -63,7 +58,6 @@ class OperationsController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
 
     /**
@@ -92,7 +86,6 @@ class OperationsController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
 
     /**
@@ -121,7 +114,8 @@ class OperationsController extends Controller
             array_map(
                 function ($item) {
                     return $item['sum'];
-                }, $incomes
+                },
+                $incomes
             )
         );
 
@@ -129,7 +123,8 @@ class OperationsController extends Controller
             array_map(
                 function ($item) {
                     return $item['sum'];
-                }, $expenses
+                },
+                $expenses
             )
         );
 
@@ -137,7 +132,5 @@ class OperationsController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
-
 }

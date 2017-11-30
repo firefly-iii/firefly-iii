@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -45,9 +44,7 @@ use Session;
 use View;
 
 /**
- * Class RuleController
- *
- * @package FireflyIII\Http\Controllers
+ * Class RuleController.
  */
 class RuleController extends Controller
 {
@@ -57,7 +54,6 @@ class RuleController extends Controller
     public function __construct()
     {
         parent::__construct();
-
 
         $this->middleware(
             function ($request, $next) {
@@ -102,7 +98,7 @@ class RuleController extends Controller
         $subTitle     = trans('firefly.make_new_rule', ['title' => $ruleGroup->title]);
 
         // put previous url in session if not redirect from store (not "create another").
-        if (session('rules.create.fromStore') !== true) {
+        if (true !== session('rules.create.fromStore')) {
             $this->rememberPreviousUri('rules.create.uri');
         }
         Session::forget('rules.create.fromStore');
@@ -110,7 +106,8 @@ class RuleController extends Controller
         Session::flash('gaEventAction', 'create-rule');
 
         return view(
-            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
+            'rules.rule.create',
+            compact('subTitleIcon', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
         );
     }
 
@@ -143,7 +140,6 @@ class RuleController extends Controller
      */
     public function destroy(RuleRepositoryInterface $repository, Rule $rule)
     {
-
         $title = $rule->title;
         $repository->destroy($rule);
 
@@ -164,7 +160,6 @@ class RuleController extends Controller
         $repository->moveDown($rule);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -192,7 +187,7 @@ class RuleController extends Controller
         }
 
         // overrule old input when it as no rule data:
-        if ($triggerCount === 0 && $actionCount === 0) {
+        if (0 === $triggerCount && 0 === $actionCount) {
             $oldTriggers  = $this->getCurrentTriggers($rule);
             $triggerCount = count($oldTriggers);
             $oldActions   = $this->getCurrentActions($rule);
@@ -204,7 +199,7 @@ class RuleController extends Controller
         $subTitle       = trans('firefly.edit_rule', ['title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('rules.edit.fromUpdate') !== true) {
+        if (true !== session('rules.edit.fromUpdate')) {
             $this->rememberPreviousUri('rules.edit.uri');
         }
         Session::forget('rules.edit.fromUpdate');
@@ -212,21 +207,29 @@ class RuleController extends Controller
         Session::flash('gaEventAction', 'edit-rule');
 
         return view(
-            'rules.rule.edit', compact(
-                                 'rule', 'subTitle',
-                                 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroups'
-                             )
+            'rules.rule.edit',
+            compact(
+                'rule',
+                'subTitle',
+                'primaryTrigger',
+                'oldTriggers',
+                'oldActions',
+                'triggerCount',
+                'actionCount',
+                'ruleGroups'
+            )
         );
     }
 
     /**
-     * Execute the given rule on a set of existing transactions
+     * Execute the given rule on a set of existing transactions.
      *
      * @param SelectTransactionsRequest  $request
      * @param AccountRepositoryInterface $repository
      * @param Rule                       $rule
      *
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @internal param RuleGroup $ruleGroup
      */
     public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, Rule $rule)
@@ -283,7 +286,6 @@ class RuleController extends Controller
         }
 
         return Response::json('true');
-
     }
 
     /**
@@ -301,7 +303,6 @@ class RuleController extends Controller
         }
 
         return Response::json('true');
-
     }
 
     /**
@@ -339,7 +340,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.stored_new_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (intval($request->get('create_another')) === 1) {
+        if (1 === intval($request->get('create_another'))) {
             // @codeCoverageIgnoreStart
             Session::put('rules.create.fromStore', true);
 
@@ -367,7 +368,7 @@ class RuleController extends Controller
         // build trigger array from response
         $triggers = $this->getValidTriggerList($request);
 
-        if (count($triggers) === 0) {
+        if (0 === count($triggers)) {
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
@@ -386,7 +387,7 @@ class RuleController extends Controller
         if (count($matchingTransactions) === $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
         }
-        if (count($matchingTransactions) === 0) {
+        if (0 === count($matchingTransactions)) {
             $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
         }
 
@@ -411,10 +412,9 @@ class RuleController extends Controller
      */
     public function testTriggersByRule(Rule $rule)
     {
-
         $triggers = $rule->ruleTriggers;
 
-        if (count($triggers) === 0) {
+        if (0 === count($triggers)) {
             return Response::json(['html' => '', 'warning' => trans('firefly.warning_no_valid_triggers')]);
         }
 
@@ -433,7 +433,7 @@ class RuleController extends Controller
         if (count($matchingTransactions) === $limit) {
             $warning = trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]);
         }
-        if (count($matchingTransactions) === 0) {
+        if (0 === count($matchingTransactions)) {
             $warning = trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]);
         }
 
@@ -454,7 +454,6 @@ class RuleController extends Controller
         $repository->moveUp($rule);
 
         return redirect(route('rules.index'));
-
     }
 
     /**
@@ -472,7 +471,7 @@ class RuleController extends Controller
         Session::flash('success', trans('firefly.updated_rule', ['title' => $rule->title]));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             Session::put('rules.edit.fromUpdate', true);
 
@@ -488,7 +487,7 @@ class RuleController extends Controller
         /** @var RuleRepositoryInterface $repository */
         $repository = app(RuleRepositoryInterface::class);
 
-        if ($repository->count() === 0) {
+        if (0 === $repository->count()) {
             $data = [
                 'rule_group_id'       => $repository->getFirstRuleGroup()->id,
                 'stop_processing'     => 0,
@@ -510,7 +509,6 @@ class RuleController extends Controller
 
             $repository->store($data);
         }
-
     }
 
     /**
@@ -518,11 +516,10 @@ class RuleController extends Controller
      */
     private function createDefaultRuleGroup()
     {
-
         /** @var RuleGroupRepositoryInterface $repository */
         $repository = app(RuleGroupRepositoryInterface::class);
 
-        if ($repository->count() === 0) {
+        if (0 === $repository->count()) {
             $data = [
                 'title'       => trans('firefly.default_rule_group_name'),
                 'description' => trans('firefly.default_rule_group_description'),
@@ -554,7 +551,7 @@ class RuleController extends Controller
                     'count'      => $count,
                 ]
             )->render();
-            $index++;
+            ++$index;
         }
 
         return $actions;
@@ -572,7 +569,7 @@ class RuleController extends Controller
 
         /** @var RuleTrigger $entry */
         foreach ($rule->ruleTriggers as $entry) {
-            if ($entry->trigger_type !== 'user_action') {
+            if ('user_action' !== $entry->trigger_type) {
                 $count      = ($index + 1);
                 $triggers[] = view(
                     'rules.partials.trigger',
@@ -583,7 +580,7 @@ class RuleController extends Controller
                         'count'      => $count,
                     ]
                 )->render();
-                $index++;
+                ++$index;
             }
         }
 
@@ -613,7 +610,7 @@ class RuleController extends Controller
                     'count'      => $count,
                 ]
             )->render();
-            $newIndex++;
+            ++$newIndex;
         }
 
         return $actions;
@@ -642,7 +639,7 @@ class RuleController extends Controller
                     'count'      => $count,
                 ]
             )->render();
-            $newIndex++;
+            ++$newIndex;
         }
 
         return $triggers;
@@ -655,7 +652,6 @@ class RuleController extends Controller
      */
     private function getValidTriggerList(TestRuleFormRequest $request): array
     {
-
         $triggers = [];
         $data     = [
             'rule-triggers'       => $request->get('rule-trigger'),
@@ -668,13 +664,11 @@ class RuleController extends Controller
                 $triggers[]                        = [
                     'type'           => $triggerType,
                     'value'          => $data['rule-trigger-values'][$index],
-                    'stopProcessing' => intval($data['rule-trigger-stop'][$index]) === 1 ? true : false,
+                    'stopProcessing' => 1 === intval($data['rule-trigger-stop'][$index]) ? true : false,
                 ];
             }
         }
 
         return $triggers;
     }
-
-
 }

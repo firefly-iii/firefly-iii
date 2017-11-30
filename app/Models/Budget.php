@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -31,13 +30,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Budget
- *
- * @package FireflyIII\Models
+ * Class Budget.
  */
 class Budget extends Model
 {
-
     use SoftDeletes, ValidatingTrait;
 
     /**
@@ -47,17 +43,18 @@ class Budget extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
     /** @var array */
-    protected $dates    = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = ['user_id', 'name', 'active'];
-    protected $hidden   = ['encrypted'];
-    protected $rules    = ['name' => 'required|between:1,200',];
+    /** @var array */
+    protected $hidden = ['encrypted'];
+    /** @var array */
+    protected $rules = ['name' => 'required|between:1,200'];
 
     /**
      * @param array $fields
@@ -84,7 +81,6 @@ class Budget extends Model
         $budget = self::create($fields);
 
         return $budget;
-
     }
 
     /**
@@ -103,7 +99,6 @@ class Budget extends Model
     }
 
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function budgetlimits()
@@ -118,7 +113,6 @@ class Budget extends Model
      */
     public function getNameAttribute($value)
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -159,6 +153,4 @@ class Budget extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-
 }

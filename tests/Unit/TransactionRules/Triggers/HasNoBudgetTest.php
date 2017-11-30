@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasNoBudget;
@@ -30,12 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class HasNoBudgetTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class HasNoBudgetTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
      */
@@ -61,7 +56,6 @@ class HasNoBudgetTest extends TestCase
         $journal->budgets()->detach();
         $this->assertEquals(0, $journal->budgets()->count());
 
-
         $trigger = HasNoBudget::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
@@ -80,7 +74,6 @@ class HasNoBudgetTest extends TestCase
         $transaction->budgets()->save($budget);
         $this->assertEquals(0, $journal->budgets()->count());
         $this->assertEquals(1, $transaction->budgets()->count());
-
 
         $trigger = HasNoBudget::makeFromStrings('', false);
         $result  = $trigger->triggered($journal);

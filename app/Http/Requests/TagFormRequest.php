@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -26,10 +25,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 
 /**
- * Class TagFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class TagFormRequest.
  */
 class TagFormRequest extends Request
 {
@@ -51,7 +47,7 @@ class TagFormRequest extends Request
         $longitude = null;
         $zoomLevel = null;
 
-        if ($this->get('tag_position_has_tag') === 'true') {
+        if ('true' === $this->get('tag_position_has_tag')) {
             $latitude  = $this->string('tag_position_latitude');
             $longitude = $this->string('tag_position_longitude');
             $zoomLevel = $this->integer('tag_position_zoomlevel');
@@ -67,8 +63,6 @@ class TagFormRequest extends Request
         ];
 
         return $data;
-
-
     }
 
     /**
@@ -80,7 +74,7 @@ class TagFormRequest extends Request
         $repository = app(TagRepositoryInterface::class);
         $idRule     = '';
         $tagRule    = 'required|min:1|uniqueObjectForUser:tags,tag';
-        if (!is_null($repository->find(intval($this->get('id')))->id)) {
+        if (null !== $repository->find(intval($this->get('id')))->id) {
             $idRule  = 'belongsToUser:tags';
             $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $this->get('id');
         }

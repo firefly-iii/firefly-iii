@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Providers;
 
@@ -29,28 +27,20 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-
 /**
- * Class RuleGroupServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class RuleGroupServiceProvider.
  */
 class RuleGroupServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
-        //
     }
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {

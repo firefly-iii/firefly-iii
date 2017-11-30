@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ImportJob;
@@ -28,9 +27,7 @@ use FireflyIII\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Interface ImportJobRepositoryInterface
- *
- * @package FireflyIII\Repositories\ImportJob
+ * Interface ImportJobRepositoryInterface.
  */
 interface ImportJobRepositoryInterface
 {

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
-
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ConfigurationRequest;
@@ -33,9 +31,7 @@ use Session;
 use View;
 
 /**
- * Class ConfigurationController
- *
- * @package FireflyIII\Http\Controllers\Admin
+ * Class ConfigurationController.
  */
 class ConfigurationController extends Controller
 {
@@ -46,7 +42,6 @@ class ConfigurationController extends Controller
     {
         parent::__construct();
 
-
         $this->middleware(
             function ($request, $next) {
                 View::share('title', strval(trans('firefly.administration')));
@@ -55,7 +50,6 @@ class ConfigurationController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -76,7 +70,6 @@ class ConfigurationController extends Controller
             'admin.configuration.index',
             compact('subTitle', 'subTitleIcon', 'singleUserMode', 'isDemoSite', 'siteOwner')
         );
-
     }
 
     /**
@@ -99,5 +92,4 @@ class ConfigurationController extends Controller
 
         return Redirect::route('admin.configuration.index');
     }
-
 }

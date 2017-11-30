@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 /**
@@ -36,9 +35,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 /**
- * Class UseEncryption
- *
- * @package FireflyIII\Console\Commands
+ * Class UseEncryption.
  */
 class UseEncryption extends Command
 {
@@ -57,7 +54,6 @@ class UseEncryption extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {

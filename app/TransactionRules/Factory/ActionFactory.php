@@ -1,7 +1,7 @@
 <?php
 /**
  * ActionFactory.php
- * Copyright (C) 2016 Robert Horlings
+ * Copyright (C) 2016 Robert Horlings.
  *
  * This file is part of Firefly III.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Factory;
@@ -30,13 +29,13 @@ use FireflyIII\TransactionRules\Actions\ActionInterface;
 use Log;
 
 /**
- * @codeCoverageIgnore
- * Class ActionFactory
+ * Class ActionFactory can create actions.
  *
- * @package FireflyIII\TransactionRules\Factory
+ * @codeCoverageIgnore
  */
 class ActionFactory
 {
+    /** @var array array of action types */
     protected static $actionTypes = [];
 
     /**
@@ -65,6 +64,7 @@ class ActionFactory
      * @param string $actionType
      *
      * @return string
+     *
      * @throws FireflyException
      */
     public static function getActionClass(string $actionType): string
@@ -84,13 +84,13 @@ class ActionFactory
     }
 
     /**
-     * Returns a map with actiontypes, mapped to the class representing that type
+     * Returns a map with actiontypes, mapped to the class representing that type.
      *
      * @return array
      */
     protected static function getActionTypes(): array
     {
-        if (count(self::$actionTypes) === 0) {
+        if (0 === count(self::$actionTypes)) {
             self::$actionTypes = Domain::getRuleActions();
         }
 

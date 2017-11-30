@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\DescriptionContains;
@@ -30,8 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class DescriptionContains
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class DescriptionContainsTest extends TestCase
 {
@@ -46,19 +42,6 @@ class DescriptionContainsTest extends TestCase
         $result               = $trigger->triggered($journal);
         $this->assertTrue($result);
     }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionContains::triggered
-     */
-    public function testTriggeredNot()
-    {
-        $journal              = new TransactionJournal;
-        $journal->description = 'Lorem IPSUM bla bla ';
-        $trigger              = DescriptionContains::makeFromStrings('blurb', false);
-        $result               = $trigger->triggered($journal);
-        $this->assertFalse($result);
-    }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionContains::triggered
@@ -82,6 +65,18 @@ class DescriptionContainsTest extends TestCase
         $trigger              = DescriptionContains::makeFromStrings('pen', false);
         $result               = $trigger->triggered($journal);
         $this->assertTrue($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionContains::triggered
+     */
+    public function testTriggeredNot()
+    {
+        $journal              = new TransactionJournal;
+        $journal->description = 'Lorem IPSUM bla bla ';
+        $trigger              = DescriptionContains::makeFromStrings('blurb', false);
+        $result               = $trigger->triggered($journal);
+        $this->assertFalse($result);
     }
 
     /**

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
@@ -29,8 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class HasAttachmentTest
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class HasAttachmentTest extends TestCase
 {
@@ -81,5 +78,4 @@ class HasAttachmentTest extends TestCase
         $result = HasAttachment::willMatchEverything($value);
         $this->assertTrue($result);
     }
-
 }

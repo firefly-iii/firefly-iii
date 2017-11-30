@@ -120,7 +120,7 @@ function callExport() {
         var response = jqXHR.responseJSON;
         var errorText = 'The export failed. Please check the log files to find out why.';
         if (typeof response === 'object') {
-            errorText =response.message;
+            errorText = response.message;
         }
 
         showError(errorText);

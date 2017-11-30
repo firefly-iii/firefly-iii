@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -35,18 +34,15 @@ use Illuminate\Support\Collection;
 use Response;
 
 /**
- * Class BillController
- *
- * @package FireflyIII\Http\Controllers\Chart
+ * Class BillController.
  */
 class BillController extends Controller
 {
-
     /** @var GeneratorInterface */
     protected $generator;
 
     /**
-     * checked
+     * checked.
      */
     public function __construct()
     {
@@ -108,9 +104,9 @@ class BillController extends Controller
             }
         );
         $chartData = [
-            ['type' => 'bar', 'label' => trans('firefly.min-amount'), 'entries' => [],],
-            ['type' => 'bar', 'label' => trans('firefly.max-amount'), 'entries' => [],],
-            ['type' => 'line', 'label' => trans('firefly.journal-amount'), 'entries' => [],],
+            ['type' => 'bar', 'label' => trans('firefly.min-amount'), 'entries' => []],
+            ['type' => 'bar', 'label' => trans('firefly.max-amount'), 'entries' => []],
+            ['type' => 'line', 'label' => trans('firefly.journal-amount'), 'entries' => []],
         ];
 
         /** @var Transaction $entry */

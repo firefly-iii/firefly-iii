@@ -1,0 +1,73 @@
+
+<tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
+    data-transaction-id="{{ transaction.id }}"
+>
+    {# input buttons #}
+    <td class="hidden-xs">
+        <div class="select_single" style="display:none;">
+            <input name="select_all_single[]" class="select_all_single" data-transaction="{{ transaction.id }}" value="{{ transaction.journal_id }}" type="checkbox"/>
+        </div>
+        <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">{% if sorting %}<a href="#" class="handle btn btn-default btn-xs"><i
+                    class="fa fa-fw fa-arrows-v"></i></a>{% endif %}<a href="{{ route('transactions.edit',transaction.journal_id) }}"
+                                                                       class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a><a
+                    href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i
+                        class="fa fa-fw fa-trash-o"></i></a></div>
+    </td>
+
+    {# icon #}
+    <td class="hidden-xs">
+        {{ transaction|transactionIcon }}
+    </td>
+
+    {# description #}
+    <td>
+        {# is reconciled? #}
+        {{ transaction|transactionReconciled }}
+
+        <a href="{{ route('transactions.show',transaction.journal_id) }}">
+            {{ transaction|transactionDescription }}
+        </a>
+        {# is a split journal #}
+        {{ transaction|transactionIsSplit }}
+
+        {# count attachments #}
+        {{ transaction|transactionHasAtt }}
+
+
+    </td>
+    <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
+    <td class="hidden-sm hidden-xs">
+        {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+    </td>
+    <td class="hidden-xs hidden-sm hidden-md">
+        {# all source accounts #}
+        {{ transaction|transactionSourceAccount }}
+    </td>
+    <td class="hidden-xs hidden-sm hidden-md">
+        {# all destination accounts #}
+        {{ transaction|transactionDestinationAccount }}
+    </td>
+
+    {# Do NOT hide the budget? #}
+    {% if not hideBudgets %}
+        <td class="hidden-xs">
+            {{ transaction|transactionBudgets }}
+        </td>
+    {% endif %}
+
+    {# Do NOT hide the category? #}
+    {% if not hideCategories %}
+        <td class="hidden-xs">
+            {{ transaction|transactionCategories }}
+        </td>
+    {% endif %}
+
+    {# Do NOT hide the bill? #}
+    {% if not hideBills %}
+        <td class="hidden-xs">
+            {% if transaction.bill_id %}
+                <a href="{{ route('bills.show',transaction.bill_id) }}">{{ transaction.bill_name }}</a>
+            {% endif %}
+        </td>
+    {% endif %}
+</tr>

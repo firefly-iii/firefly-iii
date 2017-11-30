@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII;
 
@@ -34,9 +32,7 @@ use Illuminate\Notifications\Notifiable;
 use Request;
 
 /**
- * Class User
- *
- * @package FireflyIII
+ * Class User.
  */
 class User extends Authenticatable
 {
@@ -63,6 +59,8 @@ class User extends Authenticatable
     protected $table = 'users';
 
     /**
+     * Link to accounts.
+     *
      * @return HasMany
      */
     public function accounts(): HasMany
@@ -91,6 +89,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to attachments
+     *
      * @return HasMany
      */
     public function attachments(): HasMany
@@ -99,6 +99,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to available budgets
+     *
      * @return HasMany
      */
     public function availableBudgets(): HasMany
@@ -107,6 +109,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to bills.
+     *
      * @return HasMany
      */
     public function bills(): HasMany
@@ -115,6 +119,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to budgets.
+     *
      * @return HasMany
      */
     public function budgets(): HasMany
@@ -123,6 +129,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to categories
+     *
      * @return HasMany
      */
     public function categories(): HasMany
@@ -131,6 +139,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to currency exchange rates
+     *
      * @return HasMany
      */
     public function currencyExchangeRates(): HasMany
@@ -139,6 +149,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to export jobs
+     *
      * @return HasMany
      */
     public function exportJobs(): HasMany
@@ -147,6 +159,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Generates access token.
+     *
      * @return string
      */
     public function generateAccessToken(): string
@@ -167,7 +181,6 @@ class User extends Authenticatable
      */
     public function hasRole(string $name): bool
     {
-
         foreach ($this->roles as $role) {
             if ($role->name === $name) {
                 return true;
@@ -178,6 +191,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to import jobs.
+     *
      * @return HasMany
      */
     public function importJobs(): HasMany
@@ -186,6 +201,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to piggy banks.
+     *
      * @return HasManyThrough
      */
     public function piggyBanks(): HasManyThrough
@@ -194,6 +211,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to preferences.
+     *
      * @return HasMany
      */
     public function preferences(): HasMany
@@ -202,6 +221,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to roles.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles(): BelongsToMany
@@ -210,6 +231,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to rule groups.
+     *
      * @return HasMany
      */
     public function ruleGroups(): HasMany
@@ -218,6 +241,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to rules.
+     *
      * @return HasMany
      */
     public function rules(): HasMany
@@ -228,9 +253,7 @@ class User extends Authenticatable
     /**
      * Send the password reset notification.
      *
-     * @param  string $token
-     *
-     * @return void
+     * @param string $token
      */
     public function sendPasswordResetNotification($token)
     {
@@ -240,6 +263,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to tags.
+     *
      * @return HasMany
      */
     public function tags(): HasMany
@@ -248,6 +273,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to transaction journals.
+     *
      * @return HasMany
      */
     public function transactionJournals(): HasMany
@@ -256,12 +283,12 @@ class User extends Authenticatable
     }
 
     /**
+     * Link to transactions.
+     *
      * @return HasManyThrough
      */
     public function transactions(): HasManyThrough
     {
         return $this->hasManyThrough('FireflyIII\Models\Transaction', 'FireflyIII\Models\TransactionJournal');
     }
-
-
 }

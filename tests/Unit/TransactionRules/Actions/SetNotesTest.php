@@ -18,23 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
-
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Actions\ClearNotes;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use Tests\TestCase;
 
 /**
  * Class SetNotesTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class SetNotesTest extends TestCase
 {
@@ -65,7 +60,6 @@ class SetNotesTest extends TestCase
         // assert result
         $this->assertEquals(1, $journal->notes()->count());
         $this->assertEquals($note->id, $journal->notes()->first()->id);
-
     }
 
     /**

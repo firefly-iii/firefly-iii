@@ -18,8 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
-
+/** global: infoIncomeUri, spent, budgeted, available, currencySymbol, budgetIndexUri, updateIncomeUri, periodStart, periodEnd, budgetAmountUri, accounting */
 /**
  *
  */
@@ -38,7 +37,7 @@ $(function () {
     /*
      When the input changes, update the percentages for the budgeted bar:
      */
-    $('input[type="number"]').on('input', updateBudgetedAmounts);
+    $('input[type="number"]').on('change', updateBudgetedAmounts);
 
     //
     $('.selectPeriod').change(function (e) {
@@ -104,46 +103,52 @@ function updateBudgetedAmounts(e) {
     "use strict";
     var target = $(e.target);
     var id = target.data('id');
-
+    var leftCell = $('td[class$="left"][data-id="' + id + '"]');
+    var link = $('a[data-id="'+id+'"][class="budget-link"]');
     var value = target.val();
     var original = target.data('original');
-    var difference = value - original;
 
-    var spentCell = $('td[class="spent"][data-id="' + id + '"]');
-    var leftCell = $('td[class="left"][data-id="' + id + '"]');
-    var spentAmount = parseFloat(spentCell.data('spent'));
-    var newAmountLeft = spentAmount + parseFloat(value);
-    var amountLeftString = accounting.formatMoney(newAmountLeft);
-    if (newAmountLeft < 0) {
-        leftCell.html('<span class="text-danger">' + amountLeftString + '</span>');
-    }
-    if (newAmountLeft > 0) {
-        leftCell.html('<span class="text-success">' + amountLeftString + '</span>');
-    }
-    if (newAmountLeft === 0.0) {
-        leftCell.html('<span style="color:#999">' + amountLeftString + '</span>');
-    }
+    // disable input
+    target.prop('disabled', true);
 
-    if (difference !== 0) {
-        // add difference to 'budgeted' var
+    // replace link (for now)
+    link.attr('href','#');
+
+    // replace "left" with spinner.
+    leftCell.empty().html('<i class="fa fa-fw fa-spin fa-spinner"></i>');
+
+    // send a post to Firefly to update the amount:
+    var newUri = budgetAmountUri.replace("REPLACE", id);
+
+    $.post(newUri, {amount: value, start: periodStart, end: periodEnd}).done(function (data) {
+
+        // difference between new value and original value
+        var difference = value - original;
+
+        // update budgeted value
         budgeted = budgeted + difference;
 
-        // update original:
-        target.data('original', value);
+        // fill in "left" value:
+        leftCell.html(data.left);
+
+        // update "budgeted" input:
+        target.val(data.amount);
+
+        // enable thing again
+        target.prop('disabled', false);
+
+        // set new original value:
+        target.data('original', data.amount);
+
         // run drawBudgetedBar() again:
         drawBudgetedBar();
 
-        // send a post to Firefly to update the amount:
-        var newUri = budgetAmountUri.replace("REPLACE", id);
-        $.post(newUri, {amount: value, start: periodStart, end: periodEnd}).done(function (data) {
-            // update the link if relevant:
-            if (data.repetition > 0) {
-                $('.budget-link[data-id="' + id + '"]').attr('href', 'budgets/show/' + id + '/' + data.repetition);
-            } else {
-                $('.budget-link[data-id="' + id + '"]').attr('href', 'budgets/show/' + id);
-            }
-        });
-    }
+        // update the link if relevant:
+        link.attr('href', 'budgets/show/' + id);
+        if (data.limit > 0) {
+            link.attr('href', 'budgets/show/' + id + '/' + data.limit);
+        }
+    });
 }
 
 /**

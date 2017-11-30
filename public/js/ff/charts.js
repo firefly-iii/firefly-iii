@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart */
+/** global: Chart, defaultChartOptions, accounting, defaultPieOptions, noDataForChart, todayText */
 var allCharts = {};
+
 
 /*
  Make some colours:
@@ -59,6 +60,42 @@ Chart.defaults.global.maintainAspectRatio = false;
 
 
 /**
+ * Chart line thing
+ */
+const verticalLinePlugin = {
+    getLinePosition: function (chart, pointIndex) {
+        const meta = chart.getDatasetMeta(0); // first dataset is used to discover X coordinate of a point
+        const data = meta.data;
+        return data[pointIndex]._model.x;
+    },
+    renderVerticalLine: function (chartInstance, pointIndex) {
+        const lineLeftOffset = this.getLinePosition(chartInstance, pointIndex);
+        const scale = chartInstance.scales['y-axis-0'];
+        const context = chartInstance.chart.ctx;
+
+        // render vertical line
+        context.beginPath();
+        context.strokeStyle = fillColors[3];
+        context.moveTo(lineLeftOffset, scale.top);
+        context.lineTo(lineLeftOffset, scale.bottom);
+        context.stroke();
+
+        // write label
+        context.fillStyle = "#444444";
+        context.textAlign = 'left';
+        context.fillText(todayText, lineLeftOffset, scale.top * 3); // (scale.bottom - scale.top) / 2 + scale.top
+    },
+
+    afterDatasetsDraw: function (chart, easing) {
+        if (chart.config.lineAtIndex) {
+            chart.config.lineAtIndex.forEach(pointIndex => this.renderVerticalLine(chart, pointIndex));
+        }
+    }
+};
+
+Chart.plugins.register(verticalLinePlugin);
+
+/**
  *
  * @param data
  * @returns {{}}
@@ -89,7 +126,16 @@ function lineChart(URI, container) {
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'line';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URI, container, chartType, options, colorData, -1);
+}
+
+function lineChartWithDay(URI, container, today) {
+    "use strict";
+    var colorData = true;
+    var options = $.extend(true, {}, defaultChartOptions);
+    var chartType = 'line';
+
+    drawAChart(URI, container, chartType, options, colorData, today);
 }
 
 /**
@@ -248,8 +294,9 @@ function pieChart(URI, container) {
  * @param chartType
  * @param options
  * @param colorData
+ * @param today
  */
-function drawAChart(URI, container, chartType, options, colorData) {
+function drawAChart(URI, container, chartType, options, colorData, today) {
     var containerObj = $('#' + container);
     if (containerObj.length === 0) {
         return;
@@ -286,11 +333,16 @@ function drawAChart(URI, container, chartType, options, colorData) {
         } else {
             // new chart!
             var ctx = document.getElementById(container).getContext("2d");
-            allCharts[container] = new Chart(ctx, {
+            var chartOpts = {
                 type: chartType,
                 data: data,
-                options: options
-            });
+                options: options,
+                lineAtIndex: []
+            };
+            if (today >= 0) {
+                chartOpts.lineAtIndex.push(today - 1);
+            }
+            allCharts[container] = new Chart(ctx, chartOpts);
         }
 
     }).fail(function () {

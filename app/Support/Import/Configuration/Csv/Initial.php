@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Csv;
@@ -31,9 +30,7 @@ use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 use Log;
 
 /**
- * Class CsvInitial
- *
- * @package FireflyIII\Support\Import\Configuration
+ * Class CsvInitial.
  */
 class Initial implements ConfigurationInterface
 {
@@ -109,23 +106,22 @@ class Initial implements ConfigurationInterface
         $importId   = $data['csv_import_account'] ?? 0;
         $account    = $repository->find(intval($importId));
 
-        $hasHeaders                        = isset($data['has_headers']) && intval($data['has_headers']) === 1 ? true : false;
+        $hasHeaders                        = isset($data['has_headers']) && 1 === intval($data['has_headers']) ? true : false;
         $config                            = $this->job->configuration;
         $config['initial-config-complete'] = true;
         $config['has-headers']             = $hasHeaders;
         $config['date-format']             = $data['date_format'];
         $config['delimiter']               = $data['csv_delimiter'];
-        $config['delimiter']               = $config['delimiter'] === 'tab' ? "\t" : $config['delimiter'];
+        $config['delimiter']               = 'tab' === $config['delimiter'] ? "\t" : $config['delimiter'];
 
         Log::debug('Entered import account.', ['id' => $importId]);
 
-
-        if (!is_null($account->id)) {
+        if (null !== $account->id) {
             Log::debug('Found account.', ['id' => $account->id, 'name' => $account->name]);
             $config['import-account'] = $account->id;
         }
 
-        if (is_null($account->id)) {
+        if (null === $account->id) {
             Log::error('Could not find anything for csv_import_account.', ['id' => $importId]);
         }
 

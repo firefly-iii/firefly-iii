@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
@@ -28,14 +27,10 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
- *
- * Class Budget
- *
- * @package FireflyIII\Support\Twig
+ * Class Budget.
  */
 class Translation extends Twig_Extension
 {
-
     /**
      * @return array
      */
@@ -44,31 +39,28 @@ class Translation extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            '_', function ($name) {
-
-            return strval(trans(sprintf('firefly.%s', $name)));
-
-        }, ['is_safe' => ['html']]
+            '_',
+            function ($name) {
+                return strval(trans(sprintf('firefly.%s', $name)));
+            },
+            ['is_safe' => ['html']]
         );
 
         return $filters;
     }
 
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFunctions(): array
     {
         return [
             $this->journalLinkTranslation(),
-
         ];
-
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -81,17 +73,17 @@ class Translation extends Twig_Extension
     public function journalLinkTranslation(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'journalLinkTranslation', function (string $direction, string $original) {
-            $key         = sprintf('firefly.%s_%s', $original, $direction);
-            $translation = trans($key);
-            if ($key === $translation) {
-                return $original;
-            }
+            'journalLinkTranslation',
+            function (string $direction, string $original) {
+                $key         = sprintf('firefly.%s_%s', $original, $direction);
+                $translation = trans($key);
+                if ($key === $translation) {
+                    return $original;
+                }
 
-            return $translation;
-
-
-        }, ['is_safe' => ['html']]
+                return $translation;
+            },
+            ['is_safe' => ['html']]
         );
     }
 }

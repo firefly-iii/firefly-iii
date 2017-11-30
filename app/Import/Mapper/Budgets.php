@@ -18,23 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Mapper;
-
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
- * Class Budgets
- *
- * @package FireflyIII\Import\Mapper
+ * Class Budgets.
  */
 class Budgets implements MapperInterface
 {
-
     /**
      * @return array
      */
@@ -54,6 +49,5 @@ class Budgets implements MapperInterface
         $list = [0 => trans('csv.map_do_not_map')] + $list;
 
         return $list;
-
     }
 }

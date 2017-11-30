@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
-
 
 use Illuminate\Support\Collection;
 
@@ -34,5 +32,4 @@ interface FilterInterface
      * @return Collection
      */
     public function filter(Collection $set): Collection;
-
 }

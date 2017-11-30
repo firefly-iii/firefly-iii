@@ -17,7 +17,7 @@ return [
     'id'                      => 'Identifiant',
     'create_date'             => 'Créé le',
     'update_date'             => 'Mis à jour le',
-    'updated_at'             => 'Mis à jour le',
+    'updated_at'              => 'Mis à jour le',
     'balance_before'          => 'Solde avant',
     'balance_after'           => 'Solde après',
     'name'                    => 'Nom',
@@ -89,4 +89,5 @@ return [
     'sum_withdrawals'         => 'Somme des retraits',
     'sum_deposits'            => 'Somme des dépôts',
     'sum_transfers'           => 'Somme des transferts',
+    'reconcile'               => 'Rapprocher',
 ];

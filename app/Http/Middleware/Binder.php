@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -27,11 +26,8 @@ use Closure;
 use FireflyIII\Support\Domain;
 use Illuminate\Http\Request;
 
-
 /**
- * Class Binder
- *
- * @package FireflyIII\Http\Middleware
+ * Class Binder.
  */
 class Binder
 {
@@ -48,8 +44,8 @@ class Binder
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
      *
      * @return mixed
      */

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
@@ -33,24 +32,21 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
 /**
- * Class SetSourceAccount
- *
- * @package FireflyIII\TransactionRules\Action
+ * Class SetSourceAccount.
  */
 class SetSourceAccount implements ActionInterface
 {
-
+    /** @var RuleAction The rule action */
     private $action;
 
-    /** @var  TransactionJournal */
+    /** @var TransactionJournal The journal */
     private $journal;
 
-    /** @var  Account */
+    /** @var Account The new source account*/
     private $newSourceAccount;
 
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface Account repository */
     private $repository;
-
 
     /**
      * TriggerInterface constructor.
@@ -63,6 +59,8 @@ class SetSourceAccount implements ActionInterface
     }
 
     /**
+     * Set source account to X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -82,11 +80,12 @@ class SetSourceAccount implements ActionInterface
         // journal type:
         $type = $journal->transactionType->type;
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
-        if (($type === TransactionType::WITHDRAWAL || $type === TransactionType::TRANSFER) && !$this->findAssetAccount()) {
+        if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && !$this->findAssetAccount()) {
             Log::error(
                 sprintf(
                     'Cannot change source account of journal #%d because no asset account with name "%s" exists.',
-                    $journal->id, $this->action->action_value
+                    $journal->id,
+                    $this->action->action_value
                 )
             );
 
@@ -94,7 +93,7 @@ class SetSourceAccount implements ActionInterface
         }
 
         // if this is a deposit, the new source account must be a revenue account and may be created:
-        if ($type === TransactionType::DEPOSIT) {
+        if (TransactionType::DEPOSIT === $type) {
             $this->findRevenueAccount();
         }
 
@@ -117,7 +116,7 @@ class SetSourceAccount implements ActionInterface
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::DEFAULT, AccountType::ASSET]);
 
-        if (is_null($account->id)) {
+        if (null === $account->id) {
             Log::debug(sprintf('There is NO asset account called "%s".', $this->action->action_value));
 
             return false;
@@ -134,7 +133,7 @@ class SetSourceAccount implements ActionInterface
     private function findRevenueAccount()
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::REVENUE]);
-        if (is_null($account->id)) {
+        if (null === $account->id) {
             // create new revenue account with this name:
             $data    = [
                 'name'           => $this->action->action_value,

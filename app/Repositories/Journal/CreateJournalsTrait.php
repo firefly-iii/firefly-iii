@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
-
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -40,8 +38,6 @@ use Log;
  * @property User $user
  *
  * Trait CreateJournalsTrait
- *
- * @package FireflyIII\Repositories\Journal
  */
 trait CreateJournalsTrait
 {
@@ -55,7 +51,6 @@ trait CreateJournalsTrait
     abstract public function storeAccounts(User $user, TransactionType $type, array $data): array;
 
     /**
-     *
      * * Remember: a balancingAct takes at most one expense and one transfer.
      *            an advancePayment takes at most one expense, infinite deposits and NO transfers.
      *
@@ -72,7 +67,7 @@ trait CreateJournalsTrait
         foreach ($array as $name) {
             if (strlen(trim($name)) > 0) {
                 $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-                if (!is_null($tag)) {
+                if (null !== $tag) {
                     Log::debug(sprintf('Will try to connect tag #%d to journal #%d.', $tag->id, $journal->id));
                     $tagRepository->connect($journal, $tag);
                 }
@@ -88,7 +83,7 @@ trait CreateJournalsTrait
      */
     protected function storeBudgetWithTransaction(Transaction $transaction, int $budgetId)
     {
-        if (intval($budgetId) > 0 && $transaction->transactionJournal->transactionType->type !== TransactionType::TRANSFER) {
+        if (intval($budgetId) > 0 && TransactionType::TRANSFER !== $transaction->transactionJournal->transactionType->type) {
             /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::find($budgetId);
             $transaction->budgets()->save($budget);
@@ -124,7 +119,7 @@ trait CreateJournalsTrait
 
         // store transaction one way:
         $amount        = bcmul(strval($transaction['amount']), '-1');
-        $foreignAmount = is_null($transaction['foreign_amount']) ? null : bcmul(strval($transaction['foreign_amount']), '-1');
+        $foreignAmount = null === $transaction['foreign_amount'] ? null : bcmul(strval($transaction['foreign_amount']), '-1');
         $one           = $this->storeTransaction(
             [
                 'journal'                 => $journal,
@@ -144,7 +139,7 @@ trait CreateJournalsTrait
 
         // and the other way:
         $amount        = strval($transaction['amount']);
-        $foreignAmount = is_null($transaction['foreign_amount']) ? null : strval($transaction['foreign_amount']);
+        $foreignAmount = null === $transaction['foreign_amount'] ? null : strval($transaction['foreign_amount']);
         $two           = $this->storeTransaction(
             [
                 'journal'                 => $journal,
@@ -183,11 +178,10 @@ trait CreateJournalsTrait
             'identifier'              => $data['identifier'],
         ];
 
-
-        if (is_null($data['foreign_currency_id'])) {
+        if (null === $data['foreign_currency_id']) {
             unset($fields['foreign_currency_id']);
         }
-        if (is_null($data['foreign_amount'])) {
+        if (null === $data['foreign_amount']) {
             unset($fields['foreign_amount']);
         }
 
@@ -196,18 +190,16 @@ trait CreateJournalsTrait
 
         Log::debug(sprintf('Transaction stored with ID: %s', $transaction->id));
 
-        if (!is_null($data['category'])) {
+        if (null !== $data['category']) {
             $transaction->categories()->save($data['category']);
         }
 
-        if (!is_null($data['budget'])) {
+        if (null !== $data['budget']) {
             $transaction->categories()->save($data['budget']);
         }
 
         return $transaction;
-
     }
-
 
     /**
      * @param TransactionJournal $journal
@@ -217,16 +209,16 @@ trait CreateJournalsTrait
      */
     protected function updateNote(TransactionJournal $journal, string $note): bool
     {
-        if (strlen($note) === 0) {
+        if (0 === strlen($note)) {
             $dbNote = $journal->notes()->first();
-            if (!is_null($dbNote)) {
+            if (null !== $dbNote) {
                 $dbNote->delete();
             }
 
             return true;
         }
         $dbNote = $journal->notes()->first();
-        if (is_null($dbNote)) {
+        if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($journal);
         }

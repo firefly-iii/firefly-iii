@@ -18,25 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
-
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class RemoveAllTags
- *
- * @package FireflyIII\TransactionRules\Actions
+ * Class RemoveAllTags.
  */
 class RemoveAllTags implements ActionInterface
 {
+    /** @var RuleAction The rule action */
     private $action;
-
 
     /**
      * TriggerInterface constructor.
@@ -49,6 +45,8 @@ class RemoveAllTags implements ActionInterface
     }
 
     /**
+     * Remove all tags
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -59,6 +57,5 @@ class RemoveAllTags implements ActionInterface
         $journal->tags()->detach();
 
         return true;
-
     }
 }

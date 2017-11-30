@@ -18,18 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
 
-
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
+/**
+ * Class HasAttachment
+ */
 class HasAttachment extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -57,18 +57,23 @@ class HasAttachment extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when journal has more than X attachments.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
      */
     public function triggered(TransactionJournal $journal): bool
     {
-        $minimum = intval($this->triggerValue);
+        $minimum     = intval($this->triggerValue);
         $attachments = $journal->attachments()->count();
         if ($attachments >= $minimum) {
             Log::debug(
                 sprintf(
-                    'RuleTrigger HasAttachment for journal #%d: count is %d, is more than or equal to %d, return true.', $journal->id, $attachments, $minimum
+                    'RuleTrigger HasAttachment for journal #%d: count is %d, is more than or equal to %d, return true.',
+                    $journal->id,
+                    $attachments,
+                    $minimum
                 )
             );
 

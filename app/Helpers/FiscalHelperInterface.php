@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers;
@@ -26,13 +25,10 @@ namespace FireflyIII\Helpers;
 use Carbon\Carbon;
 
 /**
- * Interface FiscalHelperInterface
- *
- * @package FireflyIII\Helpers
+ * Interface FiscalHelperInterface.
  */
 interface FiscalHelperInterface
 {
-
     /**
      * This method produces a clone of the Carbon date object passed, checks preferences
      * and calculates the last day of the fiscal year.
@@ -52,5 +48,4 @@ interface FiscalHelperInterface
      * @return Carbon date object
      */
     public function startOfFiscalYear(Carbon $date): Carbon;
-
 }

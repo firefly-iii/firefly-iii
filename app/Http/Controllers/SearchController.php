@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -26,13 +25,12 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Response;
 use View;
 
 /**
- * Class SearchController
- *
- * @package FireflyIII\Http\Controllers
+ * Class SearchController.
  */
 class SearchController extends Controller
 {
@@ -51,7 +49,6 @@ class SearchController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -74,8 +71,8 @@ class SearchController extends Controller
 
     public function search(Request $request, SearchInterface $searcher)
     {
-        $fullQuery = strval($request->get('query'));
-
+        $fullQuery    = strval($request->get('query'));
+        $transactions = new Collection;
         // cache
         $cache = new CacheProperties;
         $cache->addProperty('search');
@@ -96,8 +93,5 @@ class SearchController extends Controller
         $html = view('search.search', compact('transactions'))->render();
 
         return Response::json(['count' => $transactions->count(), 'html' => $html]);
-
-
     }
-
 }

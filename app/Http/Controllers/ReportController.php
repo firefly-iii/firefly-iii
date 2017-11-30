@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -42,9 +41,7 @@ use Session;
 use View;
 
 /**
- * Class ReportController
- *
- * @package FireflyIII\Http\Controllers
+ * Class ReportController.
  */
 class ReportController extends Controller
 {
@@ -69,7 +66,6 @@ class ReportController extends Controller
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -89,22 +85,21 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
-                          'firefly.report_audit',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+            'subTitle',
+            trans(
+                'firefly.report_audit',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
-
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -125,13 +120,14 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
-                          'firefly.report_budget',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+            'subTitle',
+            trans(
+                'firefly.report_budget',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Budget', $start, $end);
@@ -140,7 +136,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -161,13 +156,14 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
-                          'firefly.report_category',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+            'subTitle',
+            trans(
+                'firefly.report_category',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
@@ -176,7 +172,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -197,13 +192,14 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
-                          'firefly.report_default',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+            'subTitle',
+            trans(
+                'firefly.report_default',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
@@ -211,7 +207,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -227,7 +222,6 @@ class ReportController extends Controller
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $accountList      = join(',', $accounts->pluck('id')->toArray());
-
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'customFiscalYear'));
     }
@@ -275,26 +269,26 @@ class ReportController extends Controller
         $tags       = join(',', $request->getTagList()->pluck('tag')->toArray());
         $uri        = route('reports.index');
 
-        if ($request->getAccountList()->count() === 0) {
+        if (0 === $request->getAccountList()->count()) {
             Log::debug('Account count is zero');
             Session::flash('error', trans('firefly.select_more_than_one_account'));
 
             return redirect(route('reports.index'));
         }
 
-        if ($request->getCategoryList()->count() === 0 && $reportType === 'category') {
+        if (0 === $request->getCategoryList()->count() && 'category' === $reportType) {
             Session::flash('error', trans('firefly.select_more_than_one_category'));
 
             return redirect(route('reports.index'));
         }
 
-        if ($request->getBudgetList()->count() === 0 && $reportType === 'budget') {
+        if (0 === $request->getBudgetList()->count() && 'budget' === $reportType) {
             Session::flash('error', trans('firefly.select_more_than_one_budget'));
 
             return redirect(route('reports.index'));
         }
 
-        if ($request->getTagList()->count() === 0 && $reportType === 'tag') {
+        if (0 === $request->getTagList()->count() && 'tag' === $reportType) {
             Session::flash('error', trans('firefly.select_more_than_one_tag'));
 
             return redirect(route('reports.index'));
@@ -343,13 +337,14 @@ class ReportController extends Controller
         }
 
         View::share(
-            'subTitle', trans(
-                          'firefly.report_tag',
-                          [
-                              'start' => $start->formatLocalized($this->monthFormat),
-                              'end'   => $end->formatLocalized($this->monthFormat),
-                          ]
-                      )
+            'subTitle',
+            trans(
+                'firefly.report_tag',
+                [
+                    'start' => $start->formatLocalized($this->monthFormat),
+                    'end'   => $end->formatLocalized($this->monthFormat),
+                ]
+            )
         );
 
         $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);
@@ -358,7 +353,6 @@ class ReportController extends Controller
         $result = $generator->generate();
 
         return $result;
-
     }
 
     /**
@@ -372,7 +366,6 @@ class ReportController extends Controller
         $result     = view('reports.options.budget', compact('budgets'))->render();
 
         return $result;
-
     }
 
     /**
@@ -386,7 +379,6 @@ class ReportController extends Controller
         $result     = view('reports.options.category', compact('categories'))->render();
 
         return $result;
-
     }
 
     /**
@@ -412,6 +404,5 @@ class ReportController extends Controller
         $result     = view('reports.options.tag', compact('tags'))->render();
 
         return $result;
-
     }
 }

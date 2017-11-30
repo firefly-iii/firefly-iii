@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
-
 
 use DB;
 use FireflyIII\Models\AccountType;
@@ -37,8 +35,6 @@ use Tests\TestCase;
  * Try split journal
  *
  * Class SetDestinationAccountTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class SetDestinationAccountTest extends TestCase
 {
@@ -166,6 +162,7 @@ class SetDestinationAccountTest extends TestCase
 
     /**
      * Test this on a split journal.
+     *
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::__construct()
      * @covers \FireflyIII\TransactionRules\Actions\SetDestinationAccount::act()
      */
@@ -182,5 +179,4 @@ class SetDestinationAccountTest extends TestCase
         $result                   = $action->act($journal);
         $this->assertFalse($result);
     }
-
 }

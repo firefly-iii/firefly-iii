@@ -8,7 +8,6 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
@@ -24,7 +23,6 @@ class ExpandTransactionsTable extends Migration
      */
     public function down()
     {
-        //
     }
 
     /**
@@ -35,9 +33,10 @@ class ExpandTransactionsTable extends Migration
     public function up()
     {
         Schema::table(
-            'transactions', function (Blueprint $table) {
-            $table->smallInteger('identifier', false, true)->default(0);
-        }
+            'transactions',
+            function (Blueprint $table) {
+                $table->smallInteger('identifier', false, true)->default(0);
+            }
         );
     }
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
@@ -28,11 +27,9 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class NegativeAmountFilter
+ * Class NegativeAmountFilter.
  *
  * This filter removes entries with a negative amount (the original modifier is -1).
- *
- * @package FireflyIII\Helpers\Filter
  */
 class NegativeAmountFilter implements FilterInterface
 {

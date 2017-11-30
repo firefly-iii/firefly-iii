@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
@@ -33,10 +32,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
- * Class CategoryFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class CategoryFormRequest.
  */
 class ReportFormRequest extends Request
 {
@@ -62,7 +58,7 @@ class ReportFormRequest extends Request
         if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->find(intval($accountId));
-                if (!is_null($account->id)) {
+                if (null !== $account->id) {
                     $collection->push($account);
                 }
             }
@@ -83,7 +79,7 @@ class ReportFormRequest extends Request
         if (is_array($set)) {
             foreach ($set as $budgetId) {
                 $budget = $repository->find(intval($budgetId));
-                if (!is_null($budget->id)) {
+                if (null !== $budget->id) {
                     $collection->push($budget);
                 }
             }
@@ -104,7 +100,7 @@ class ReportFormRequest extends Request
         if (is_array($set)) {
             foreach ($set as $categoryId) {
                 $category = $repository->find(intval($categoryId));
-                if (!is_null($category->id)) {
+                if (null !== $category->id) {
                     $collection->push($category);
                 }
             }
@@ -115,6 +111,7 @@ class ReportFormRequest extends Request
 
     /**
      * @return Carbon
+     *
      * @throws FireflyException
      */
     public function getEndDate(): Carbon
@@ -122,7 +119,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', strval($range));
-        if (count($parts) === 2) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
             } catch (Exception $e) {
@@ -135,6 +132,7 @@ class ReportFormRequest extends Request
 
     /**
      * @return Carbon
+     *
      * @throws FireflyException
      */
     public function getStartDate(): Carbon
@@ -142,7 +140,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', strval($range));
-        if (count($parts) === 2) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);
             } catch (Exception $e) {
@@ -165,7 +163,7 @@ class ReportFormRequest extends Request
         if (is_array($set)) {
             foreach ($set as $tagTag) {
                 $tag = $repository->findByTag($tagTag);
-                if (!is_null($tag->id)) {
+                if (null !== $tag->id) {
                     $collection->push($tag);
                 }
             }
@@ -183,5 +181,4 @@ class ReportFormRequest extends Request
             'report_type' => 'in:audit,default,category,budget,tag',
         ];
     }
-
 }

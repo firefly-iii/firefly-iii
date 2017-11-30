@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -27,9 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class AccountType
- *
- * @package FireflyIII\Models
+ * Class AccountType.
  */
 class AccountType extends Model
 {
@@ -41,8 +38,8 @@ class AccountType extends Model
     const INITIAL_BALANCE = 'Initial balance account';
     const BENEFICIARY     = 'Beneficiary account';
     const IMPORT          = 'Import account';
-
-
+    const RECONCILIATION  = 'Reconciliation account';
+    const LOAN            = 'Loan';
     /**
      * The attributes that should be casted to native types.
      *
@@ -50,14 +47,11 @@ class AccountType extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
-
     /** @var array */
-    protected $dates = ['created_at', 'updated_at'];
-
-    //
+    protected $fillable = ['type'];
 
     /**
      * @return HasMany

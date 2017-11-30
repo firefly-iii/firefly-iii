@@ -18,12 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
-
+use DB;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
@@ -31,8 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class RemoveAllTagsTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class RemoveAllTagsTest extends TestCase
 {
@@ -42,14 +39,11 @@ class RemoveAllTagsTest extends TestCase
      */
     public function testAct()
     {
-        // get journal, link al tags:
-        $journal = TransactionJournal::find(9);
-        $tags    = $journal->user->tags()->get();
-        foreach ($tags as $tag) {
-            $journal->tags()->save($tag);
-            $journal->save();
-        }
-        $this->assertGreaterThan(0, $journal->tags()->count());
+        // find journal with at least one tag
+        $journalIds = DB::table('tag_transaction_journal')->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $journalId  = intval($journalIds[0]);
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::find($journalId);
 
         // fire the action:
         $ruleAction               = new RuleAction;

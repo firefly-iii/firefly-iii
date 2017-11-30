@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Events;
@@ -27,9 +26,7 @@ use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class RegisteredUser
- *
- * @package FireflyIII\Events
+ * Class RegisteredUser.
  */
 class RegisteredUser extends Event
 {
@@ -41,7 +38,7 @@ class RegisteredUser extends Event
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      *
-     * @param  User  $user
+     * @param User   $user
      * @param string $ipAddress
      */
     public function __construct(User $user, string $ipAddress)

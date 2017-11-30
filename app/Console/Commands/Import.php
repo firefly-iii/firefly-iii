@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -31,9 +30,7 @@ use Illuminate\Support\MessageBag;
 use Log;
 
 /**
- * Class Import
- *
- * @package FireflyIII\Console\Commands
+ * Class Import.
  */
 class Import extends Command
 {
@@ -53,7 +50,6 @@ class Import extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -68,7 +64,7 @@ class Import extends Command
         Log::debug('Start start-import command');
         $jobKey = $this->argument('key');
         $job    = ImportJob::where('key', $jobKey)->first();
-        if (is_null($job)) {
+        if (null === $job) {
             $this->error(sprintf('No job found with key "%s"', $jobKey));
 
             return;
@@ -109,14 +105,14 @@ class Import extends Command
      */
     private function isValid(ImportJob $job): bool
     {
-        if (is_null($job)) {
+        if (null === $job) {
             Log::error('This job does not seem to exist.');
             $this->error('This job does not seem to exist.');
 
             return false;
         }
 
-        if ($job->status !== 'configured') {
+        if ('configured' !== $job->status) {
             Log::error(sprintf('This job is not ready to be imported (status is %s).', $job->status));
             $this->error('This job is not ready to be imported.');
 

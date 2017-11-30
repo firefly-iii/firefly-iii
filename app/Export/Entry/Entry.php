@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Export\Entry;
@@ -27,7 +26,7 @@ use FireflyIII\Models\Transaction;
 
 /**
  * To extend the exported object, in case of new features in Firefly III for example,
- * do the following:
+ * do the following:.
  *
  * - Add the field(s) to this class. If you add more than one related field, add a new object.
  * - Make sure the "fromJournal"-routine fills these fields.
@@ -39,10 +38,9 @@ use FireflyIII\Models\Transaction;
  *
  *
  * Class Entry
+ *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
- *
- * @package FireflyIII\Export\Entry
  */
 final class Entry
 {
@@ -84,7 +82,10 @@ final class Entry
     public $bill_name;
 
     public $notes;
+
     public $tags;
+
+
     // @formatter:on
 
     /**
@@ -106,7 +107,7 @@ final class Entry
      */
     public static function fromTransaction(Transaction $transaction): Entry
     {
-        $entry                 = new self;
+        $entry                 = new self();
         $entry->journal_id     = $transaction->journal_id;
         $entry->transaction_id = $transaction->id;
         $entry->date           = $transaction->date->format('Ymd');
@@ -117,12 +118,13 @@ final class Entry
         $entry->currency_code = $transaction->transactionCurrency->code;
         $entry->amount        = round($transaction->transaction_amount, $transaction->transactionCurrency->decimal_places);
 
-        $entry->foreign_currency_code = is_null($transaction->foreign_currency_id) ? null : $transaction->foreignCurrency->code;
-        $entry->foreign_amount        = is_null($transaction->foreign_currency_id)
+        $entry->foreign_currency_code = null === $transaction->foreign_currency_id ? null : $transaction->foreignCurrency->code;
+        $entry->foreign_amount        = null === $transaction->foreign_currency_id
             ? null
             : strval(
                 round(
-                    $transaction->transaction_foreign_amount, $transaction->foreignCurrency->decimal_places
+                    $transaction->transaction_foreign_amount,
+                    $transaction->foreignCurrency->decimal_places
                 )
             );
 
@@ -141,23 +143,23 @@ final class Entry
         $entry->opposing_account_bic    = $transaction->opposing_account_bic;
         $entry->opposing_currency_code  = $transaction->opposing_currency_code;
 
-        /** budget */
+        // budget
         $entry->budget_id   = $transaction->transaction_budget_id;
         $entry->budget_name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
-        if (is_null($transaction->transaction_budget_id)) {
+        if (null === $transaction->transaction_budget_id) {
             $entry->budget_id   = $transaction->transaction_journal_budget_id;
             $entry->budget_name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
         }
 
-        /** category */
+        // category
         $entry->category_id   = $transaction->transaction_category_id;
         $entry->category_name = app('steam')->tryDecrypt($transaction->transaction_category_name);
-        if (is_null($transaction->transaction_category_id)) {
+        if (null === $transaction->transaction_category_id) {
             $entry->category_id   = $transaction->transaction_journal_category_id;
             $entry->category_name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
         }
 
-        /** budget */
+        // budget
         $entry->bill_id   = $transaction->bill_id;
         $entry->bill_name = app('steam')->tryDecrypt($transaction->bill_name);
 
@@ -166,6 +168,4 @@ final class Entry
 
         return $entry;
     }
-
-
 }

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
-
 
 use DB;
 use FireflyIII\Models\AccountType;
@@ -36,7 +34,6 @@ use Tests\TestCase;
 /**
  * Class MassControllerTest
  *
- * @package Tests\Feature\Controllers\Transaction
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -192,7 +189,6 @@ class MassControllerTest extends TestCase
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->once();
         $repository->shouldReceive('find')->once()->andReturn($deposit);
-
 
         $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 

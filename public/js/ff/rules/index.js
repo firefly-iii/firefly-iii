@@ -58,7 +58,7 @@ function testRuleTriggers(e) {
     var obj = $(e.target);
     var ruleId = parseInt(obj.data('id'));
     var icon = obj;
-    if(obj.prop("tagName") === 'A') {
+    if (obj.prop("tagName") === 'A') {
         icon = $('i', obj);
     }
     // change icon:

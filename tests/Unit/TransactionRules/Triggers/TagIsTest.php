@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\TagIs;
@@ -30,34 +28,9 @@ use Tests\TestCase;
 
 /**
  * Class TagIsTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class TagIsTest extends TestCase
 {
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
-     */
-    public function testTriggered()
-    {
-        $journal = TransactionJournal::find(57);
-        $journal->tags()->detach();
-        $tags   = $journal->user->tags()->take(3)->get();
-        $search = '';
-        foreach ($tags as $index => $tag) {
-            $journal->tags()->save($tag);
-            if ($index === 1) {
-                $search = $tag->tag;
-            }
-        }
-        $this->assertEquals(3, $journal->tags()->count());
-
-        $trigger = TagIs::makeFromStrings($search, false);
-        $result  = $trigger->triggered($journal);
-        $this->assertTrue($result);
-    }
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
      */
@@ -73,6 +46,28 @@ class TagIsTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
+     */
+    public function testTriggered()
+    {
+        $journal = TransactionJournal::find(57);
+        $journal->tags()->detach();
+        $tags   = $journal->user->tags()->take(3)->get();
+        $search = '';
+        foreach ($tags as $index => $tag) {
+            $journal->tags()->save($tag);
+            if (1 === $index) {
+                $search = $tag->tag;
+            }
+        }
+        $this->assertEquals(3, $journal->tags()->count());
+
+        $trigger = TagIs::makeFromStrings($search, false);
+        $result  = $trigger->triggered($journal);
+        $this->assertTrue($result);
+    }
+
+    /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
      */
     public function testWillMatchEverythingEmpty()
@@ -81,7 +76,6 @@ class TagIsTest extends TestCase
         $result = TagIs::willMatchEverything($value);
         $this->assertFalse($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything

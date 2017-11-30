@@ -18,19 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Class Role
- *
- * @package FireflyIII\Models
+ * Class Role.
  */
 class Role extends Model
 {
@@ -40,11 +36,10 @@ class Role extends Model
      * @var array
      */
     protected $casts
-                     = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+        = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
-    protected $dates = ['created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -53,5 +48,4 @@ class Role extends Model
     {
         return $this->belongsToMany('FireflyIII\User');
     }
-
 }

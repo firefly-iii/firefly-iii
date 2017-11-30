@@ -28,7 +28,7 @@
                                 class="fa fa-fw fa-trash-o"></i></a></div>
             </td>
             <td class="hidden-xs">
-                {{ transaction|typeIconTransaction }}
+                {{ transaction|transactionIcon }}
             </td>
             <td>
                 <a href="{{ route('transactions.show',transaction.journal_id) }}">
@@ -39,7 +39,7 @@
                         {{ transaction.description }}
                     {% endif %}
                 </a>
-                {{ splitJournalIndicator(transaction.journal_id) }}
+                {{ transaction|transactionIsSplit }}
 
                 {% if transaction.transactionJournal.attachments|length > 0 %}
                     <i class="fa fa-paperclip"
@@ -48,23 +48,23 @@
             </td>
             <td style="text-align: right;">
                                             <span style="margin-right:5px;">
-                                                {{ transactionAmount(transaction) }}
+                                                {{ transaction|transactionAmount }}
                                             </span>
             </td>
             <td class="hidden-sm hidden-xs">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
             </td>
             <td class="hidden-xs">
-                {{ transactionSourceAccount(transaction) }}
+                {{ transaction|transactionSourceAccount }}
             </td>
             <td class="hidden-xs">
-                {{ transactionDestinationAccount(transaction) }}
+                {{ transaction|transactionDestinationAccount }}
             </td>
             <td class="hidden-xs">
-                {{ transactionBudgets(transaction) }}
+                {{ transaction|transactionBudgets }}
             </td>
             <td class="hidden-xs">
-                {{ transactionCategories(transaction) }}
+                {{ transaction|transactionCategories }}
             </td>
             <td class="hidden-xs">
                 {% if transaction.bill_id %}

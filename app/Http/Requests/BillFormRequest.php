@@ -18,16 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
 /**
- * Class BillFormRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class BillFormRequest.
  */
 class BillFormRequest extends Request
 {
@@ -48,15 +44,16 @@ class BillFormRequest extends Request
         return [
             'name'                          => $this->string('name'),
             'match'                         => $this->string('match'),
-            'amount_min'                    => $this->float('amount_min'),
+            'amount_min'                    => $this->string('amount_min'),
             'amount_currency_id_amount_min' => $this->integer('amount_currency_id_amount_min'),
             'amount_currency_id_amount_max' => $this->integer('amount_currency_id_amount_max'),
-            'amount_max'                    => $this->float('amount_max'),
+            'amount_max'                    => $this->string('amount_max'),
             'date'                          => $this->date('date'),
             'repeat_freq'                   => $this->string('repeat_freq'),
             'skip'                          => $this->integer('skip'),
             'automatch'                     => $this->boolean('automatch'),
             'active'                        => $this->boolean('active'),
+            'notes'                         => $this->string('notes'),
         ];
     }
 

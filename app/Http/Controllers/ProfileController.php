@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -35,15 +34,16 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Hash;
+use Illuminate\Contracts\Auth\Guard;
 use Log;
 use Preferences;
 use Session;
 use View;
 
 /**
- * Class ProfileController
+ * Class ProfileController.
  *
- * @package FireflyIII\Http\Controllers
+ * @method Guard guard()
  */
 class ProfileController extends Controller
 {
@@ -54,7 +54,6 @@ class ProfileController extends Controller
     {
         parent::__construct();
 
-
         $this->middleware(
             function ($request, $next) {
                 View::share('title', trans('firefly.profile'));
@@ -64,7 +63,6 @@ class ProfileController extends Controller
             }
         );
         $this->middleware(IsLimitedUser::class)->except(['confirmEmailChange', 'undoEmailChange']);
-
     }
 
     /**
@@ -96,6 +94,7 @@ class ProfileController extends Controller
      * @param string $token
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
      * @throws FireflyException
      */
     public function confirmEmailChange(string $token)
@@ -110,7 +109,7 @@ class ProfileController extends Controller
             }
         }
         // update user to clear blocked and blocked_code.
-        if (is_null($user)) {
+        if (null === $user) {
             throw new FireflyException('Invalid token.');
         }
         $user->blocked      = 0;
@@ -137,7 +136,6 @@ class ProfileController extends Controller
 
     /**
      * @return View
-     *
      */
     public function index()
     {
@@ -146,7 +144,7 @@ class ProfileController extends Controller
 
         // get access token or create one.
         $accessToken = Preferences::get('access_token', null);
-        if (is_null($accessToken)) {
+        if (null === $accessToken) {
             $token       = auth()->user()->generateAccessToken();
             $accessToken = Preferences::set('access_token', $token);
         }
@@ -172,7 +170,7 @@ class ProfileController extends Controller
             return redirect(route('profile.change-email'))->withInput();
         }
         $existing = $repository->findByEmail($newEmail);
-        if (!is_null($existing)) {
+        if (null !== $existing) {
             // force user logout.
             $this->guard()->logout();
             $request->session()->invalidate();
@@ -246,14 +244,13 @@ class ProfileController extends Controller
         Session::flash('gaEventCategory', 'user');
         Session::flash('gaEventAction', 'delete-account');
 
-
         return redirect(route('index'));
     }
 
     /**
      *
      */
-    function regenerate()
+    public function regenerate()
     {
         $token = auth()->user()->generateAccessToken();
         Preferences::set('access_token', $token);
@@ -265,6 +262,8 @@ class ProfileController extends Controller
     /**
      * @param string $token
      * @param string $hash
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
      */
@@ -279,7 +278,7 @@ class ProfileController extends Controller
                 $user = $preference->user;
             }
         }
-        if (is_null($user)) {
+        if (null === $user) {
             throw new FireflyException('Invalid token.');
         }
 
@@ -294,7 +293,7 @@ class ProfileController extends Controller
                 break;
             }
         }
-        if (is_null($match)) {
+        if (null === $match) {
             throw new FireflyException('Invalid token.');
         }
         // change user back
@@ -315,6 +314,7 @@ class ProfileController extends Controller
      * @param string $new
      *
      * @return bool
+     *
      * @throws ValidationException
      */
     protected function validatePassword(User $user, string $current, string $new): bool
@@ -328,8 +328,5 @@ class ProfileController extends Controller
         }
 
         return true;
-
     }
-
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
@@ -28,15 +27,13 @@ use FireflyIII\Services\Bunq\Token\SessionToken;
 use Illuminate\Support\Collection;
 
 /**
- * Class ListMonetaryAccountRequest
- *
- * @package FireflyIII\Services\Bunq\Request
+ * Class ListMonetaryAccountRequest.
  */
 class ListMonetaryAccountRequest extends BunqRequest
 {
-    /** @var  Collection */
+    /** @var Collection */
     private $monetaryAccounts;
-    /** @var  SessionToken */
+    /** @var SessionToken */
     private $sessionToken;
     /** @var int */
     private $userId = 0;
@@ -86,5 +83,4 @@ class ListMonetaryAccountRequest extends BunqRequest
     {
         $this->userId = $userId;
     }
-
 }

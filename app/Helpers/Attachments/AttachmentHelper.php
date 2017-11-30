@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Attachments;
@@ -33,14 +32,11 @@ use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class AttachmentHelper
- *
- * @package FireflyIII\Helpers\Attachments
+ * Class AttachmentHelper.
  */
 class AttachmentHelper implements AttachmentHelperInterface
 {
-
-    /** @var  Collection */
+    /** @var Collection */
     public $attachments;
     /** @var MessageBag */
     public $errors;
@@ -111,10 +107,12 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentsForModel(Model $model, ?array $files): bool
     {
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
+            Log::debug('$files is an array.');
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
-                if (!is_null($entry)) {
+                if (null !== $entry) {
                     $this->processFile($entry, $model);
                 }
             }
@@ -152,7 +150,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     *
      * @param UploadedFile $file
      * @param Model        $model
      *
@@ -160,8 +157,9 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function processFile(UploadedFile $file, Model $model): Attachment
     {
+        Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
-        if ($validation === false) {
+        if (false === $validation) {
             return new Attachment;
         }
 
@@ -204,8 +202,11 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validMime(UploadedFile $file): bool
     {
+        Log::debug('Now in validMime()');
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
+        Log::debug(sprintf('Name is %, and mime is %s', $name, $mime));
+        Log::debug('Valid mimes are', $this->allowedMimes);
 
         if (!in_array($mime, $this->allowedMimes)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
@@ -248,6 +249,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validateUpload(UploadedFile $file, Model $model): bool
     {
+        Log::debug('Now in validateUpload()');
         if (!$this->validMime($file)) {
             return false;
         }

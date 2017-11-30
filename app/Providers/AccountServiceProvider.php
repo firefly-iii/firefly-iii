@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Providers;
 
@@ -32,26 +30,19 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class AccountServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class AccountServiceProvider.
  */
 class AccountServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
-        //
     }
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -60,7 +51,7 @@ class AccountServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register account repository
      */
     private function registerRepository()
     {
@@ -80,7 +71,7 @@ class AccountServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register the tasker.
      */
     private function registerTasker()
     {

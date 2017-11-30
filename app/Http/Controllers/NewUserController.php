@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -32,9 +31,7 @@ use Session;
 use View;
 
 /**
- * Class NewUserController
- *
- * @package FireflyIII\Http\Controllers
+ * Class NewUserController.
  */
 class NewUserController extends Controller
 {
@@ -47,12 +44,10 @@ class NewUserController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-
                 return $next($request);
             }
         );
     }
-
 
     /**
      * @param AccountRepositoryInterface $repository
@@ -61,7 +56,6 @@ class NewUserController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-
         View::share('title', trans('firefly.welcome'));
         View::share('mainTitleIcon', 'fa-fire');
 
@@ -70,15 +64,15 @@ class NewUserController extends Controller
 
         if ($count > 0) {
             return redirect(route('index'));
-
         }
 
         return view('new-user.index');
     }
 
     /**
-     * @param NewUserFormRequest         $request
-     * @param AccountRepositoryInterface $repository
+     * @param NewUserFormRequest          $request
+     * @param AccountRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -93,12 +87,11 @@ class NewUserController extends Controller
         // also store currency preference from input:
         $currency = $currencyRepository->find(intval($request->input('amount_currency_id_bank_balance')));
 
-        if(!is_null($currency->id)) {
+        if (null !== $currency->id) {
             // store currency preference:
             Preferences::set('currencyPreference', $currency->code);
             Preferences::mark();
         }
-
 
         Session::flash('success', strval(trans('firefly.stored_new_accounts_new_user')));
         Preferences::mark();
@@ -154,5 +147,4 @@ class NewUserController extends Controller
 
         return true;
     }
-
 }

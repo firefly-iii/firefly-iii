@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
@@ -32,14 +31,10 @@ use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 
 /**
- * Class PopupReport
- *
- * @package FireflyIII\Helpers\Report
+ * Class PopupReport.
  */
 class PopupReport implements PopupReportInterface
 {
-
-
     /**
      * @param $account
      * @param $attributes
@@ -58,11 +53,10 @@ class PopupReport implements PopupReportInterface
             ->withoutBudget();
         $journals = $collector->getJournals();
 
-
         return $journals->filter(
             function (Transaction $transaction) {
                 $tags = $transaction->transactionJournal->tags()->where('tagMode', 'balancingAct')->count();
-                if ($tags === 0) {
+                if (0 === $tags) {
                     return true;
                 }
 
@@ -120,10 +114,10 @@ class PopupReport implements PopupReportInterface
 
         $collector->setAccounts($attributes['accounts'])->setRange($attributes['startDate'], $attributes['endDate']);
 
-        if (is_null($budget->id)) {
+        if (null === $budget->id) {
             $collector->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
         }
-        if (!is_null($budget->id)) {
+        if (null !== $budget->id) {
             $collector->setBudget($budget);
         }
         $journals = $collector->getJournals();

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -28,9 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class TransactionType
- *
- * @package FireflyIII\Models
+ * Class TransactionType.
  */
 class TransactionType extends Model
 {
@@ -40,7 +37,7 @@ class TransactionType extends Model
     const DEPOSIT         = 'Deposit';
     const TRANSFER        = 'Transfer';
     const OPENING_BALANCE = 'Opening balance';
-
+    const RECONCILIATION  = 'Reconciliation';
     /**
      * The attributes that should be casted to native types.
      *
@@ -48,12 +45,12 @@ class TransactionType extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
-
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    /** @var array */
+    protected $fillable = ['type'];
 
     /**
      * @param string $type
@@ -63,23 +60,21 @@ class TransactionType extends Model
     public static function routeBinder(string $type)
     {
         if (!auth()->check()) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         $transactionType = self::where('type', ucfirst($type))->first();
-        if (!is_null($transactionType)) {
+        if (null !== $transactionType) {
             return $transactionType;
         }
-        throw new NotFoundHttpException;
-
+        throw new NotFoundHttpException();
     }
-
 
     /**
      * @return bool
      */
     public function isDeposit()
     {
-        return $this->type === self::DEPOSIT;
+        return self::DEPOSIT === $this->type;
     }
 
     /**
@@ -87,7 +82,7 @@ class TransactionType extends Model
      */
     public function isOpeningBalance()
     {
-        return $this->type === self::OPENING_BALANCE;
+        return self::OPENING_BALANCE === $this->type;
     }
 
     /**
@@ -95,7 +90,7 @@ class TransactionType extends Model
      */
     public function isTransfer()
     {
-        return $this->type === self::TRANSFER;
+        return self::TRANSFER === $this->type;
     }
 
     /**
@@ -103,11 +98,10 @@ class TransactionType extends Model
      */
     public function isWithdrawal()
     {
-        return $this->type === self::WITHDRAWAL;
+        return self::WITHDRAWAL === $this->type;
     }
 
     /**
-     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionJournals()

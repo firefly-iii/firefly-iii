@@ -1,0 +1,139 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, account, moment, start, end) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'reconcile_range'|_ }}</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th colspan="2" style="width:50%;">{{ 'start_balance'|_ }}</th>
+                            <th colspan="2">{{ 'end_balance'|_ }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="width:25%;">
+                                {{ 'date'|_ }}
+                            </td>
+                            <td style="width:25%;">
+                                {{ 'balance'|_ }}
+                            </td>
+                            <td style="width:25%;">
+                                {{ 'date'|_ }}
+                            </td>
+                            <td style="width:25%;">
+                                {{ 'balance'|_ }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="date" value="{{ start.format('Y-m-d') }}" name="start_date" class="form-control">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon non-selectable-currency-symbol">{{ currency.symbol }}</span>
+                                    <input type="number" value="{{ startBalance }}" name="start_balance" class="form-control">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="date" value="{{ end.format('Y-m-d') }}" name="end_date" class="form-control">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon non-selectable-currency-symbol">{{ currency.symbol }}</span>
+                                    <input type="number" value="{{ endBalance }}" name="end_balance" class="form-control">
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <div class="update_balance_instruction">
+                                    {{ 'update_balance_dates_instruction'|_ }}
+                                </div>
+                                <div class="select_transactions_instruction" style="display:none;">
+                                    {{ 'select_transactions_instruction'|_ }}
+                                </div>
+                                <div class="date_change_warning text-danger" style="display:none;">
+                                    {{ 'date_change_instruction'|_ }}
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-default start_reconcile">{{ 'start_reconcile'|_ }}</a>
+                                <a href="#" class="btn btn-default change_date_button" style="display: none;">{{ 'update_selection'|_ }}</a>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'reconcile_options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p class="lead" id="difference"></p>
+
+                    <div class="btn-group">
+                        <button class="btn btn-default store_reconcile" disabled><i class="fa fa-fw fa-check"></i> {{ 'store_reconcile'|_ }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="transactions_holder">
+                        <p class="text-center lead">{{ 'select_range_and_balance'|_ }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        currencySymbol = "{{ currency.symbol }}";
+        var accountID = {{ account.id }};
+        var startBalance = {{ startBalance }};
+        var endBalance = {{ endBalance }};
+        var transactionsUri = '{{ transactionsUri }}';
+        var overviewUri = '{{ overviewUri }}';
+        var indexUri = '{{ indexUri }}';
+    </script>
+    <script src="js/ff/accounts/reconcile.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+{% endblock %}

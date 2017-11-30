@@ -7,9 +7,7 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
-
 
 use FireflyIII\Models\LinkType;
 use Illuminate\Database\Seeder;
@@ -51,7 +49,5 @@ class LinkTypeSeeder extends Seeder
         $link->outward  = '(partially) reimburses';
         $link->editable = false;
         $link->save();
-
     }
-
 }

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
-
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -34,9 +32,7 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class Search
- *
- * @package FireflyIII\Search
+ * Class Search.
  */
 class Search implements SearchInterface
 {
@@ -44,13 +40,13 @@ class Search implements SearchInterface
     private $limit = 100;
     /** @var Collection */
     private $modifiers;
-    /** @var  string */
+    /** @var string */
     private $originalQuery = '';
     /** @var User */
     private $user;
     /** @var array */
     private $validModifiers = [];
-    /** @var  array */
+    /** @var array */
     private $words = [];
 
     /**
@@ -68,7 +64,7 @@ class Search implements SearchInterface
     public function getWordsAsString(): string
     {
         $string = join(' ', $this->words);
-        if (strlen($string) === 0) {
+        if (0 === strlen($string)) {
             return is_string($this->originalQuery) ? $this->originalQuery : '';
         }
 
@@ -134,7 +130,6 @@ class Search implements SearchInterface
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(
                 function (Transaction $transaction) {
-
                     if ($this->matchModifiers($transaction)) {
                         return $transaction;
                     }
@@ -152,7 +147,7 @@ class Search implements SearchInterface
             Log::debug(sprintf('Total count is now %d', $result->count()));
 
             // Update counters
-            $page++;
+            ++$page;
             $processed += count($set);
 
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
@@ -167,7 +162,6 @@ class Search implements SearchInterface
             // break at some point so the script does not crash:
             $currentTime = microtime(true) - $startTime;
             Log::debug(sprintf('Have been running for %f seconds.', $currentTime));
-
         } while (!$reachedEndOfList && !$foundEnough && $currentTime <= 30);
 
         $result = $result->slice(0, $this->limit);
@@ -238,7 +232,6 @@ class Search implements SearchInterface
             }
         }
 
-
         return $collector;
     }
 
@@ -248,12 +241,12 @@ class Search implements SearchInterface
     private function extractModifier(string $string)
     {
         $parts = explode(':', $string);
-        if (count($parts) === 2 && strlen(trim(strval($parts[0]))) > 0 && strlen(trim(strval($parts[1])))) {
+        if (2 === count($parts) && strlen(trim(strval($parts[0]))) > 0 && strlen(trim(strval($parts[1])))) {
             $type  = trim(strval($parts[0]));
             $value = trim(strval($parts[1]));
             if (in_array($type, $this->validModifiers)) {
                 // filter for valid type
-                $this->modifiers->push(['type' => $type, 'value' => $value,]);
+                $this->modifiers->push(['type' => $type, 'value' => $value]);
             }
         }
     }
@@ -262,6 +255,7 @@ class Search implements SearchInterface
      * @param Transaction $transaction
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     private function matchModifiers(Transaction $transaction): bool
@@ -281,13 +275,12 @@ class Search implements SearchInterface
         // then a for-each and a switch for every possible other thingie.
         foreach ($this->modifiers as $modifier) {
             $res = Modifier::apply($modifier, $transaction);
-            if ($res === false) {
+            if (false === $res) {
                 return $res;
             }
         }
 
         return true;
-
     }
 
     /**
@@ -298,11 +291,11 @@ class Search implements SearchInterface
      */
     private function strposArray(string $haystack, array $needle)
     {
-        if (strlen($haystack) === 0) {
+        if (0 === strlen($haystack)) {
             return false;
         }
         foreach ($needle as $what) {
-            if (stripos($haystack, $what) !== false) {
+            if (false !== stripos($haystack, $what)) {
                 return true;
             }
         }

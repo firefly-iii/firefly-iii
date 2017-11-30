@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -31,12 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class NotesStartTest
- *
- * @package Unit\TransactionRules\Triggers
  */
 class NotesStartTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
      */
@@ -94,7 +89,6 @@ class NotesStartTest extends TestCase
         $result = NotesStart::willMatchEverything($value);
         $this->assertTrue($result);
     }
-
 
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything

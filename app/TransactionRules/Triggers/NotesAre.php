@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -28,13 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class NotesAre
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class NotesAre.
  */
 final class NotesAre extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -53,7 +49,7 @@ final class NotesAre extends AbstractTrigger implements TriggerInterface
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
+        if (null !== $value) {
             return false;
         }
 
@@ -63,6 +59,8 @@ final class NotesAre extends AbstractTrigger implements TriggerInterface
     }
 
     /**
+     * Returns true when notes are specifically X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -72,13 +70,12 @@ final class NotesAre extends AbstractTrigger implements TriggerInterface
         /** @var Note $note */
         $note = $journal->notes()->first();
         $text = '';
-        if (!is_null($note)) {
+        if (null !== $note) {
             $text = strtolower($note->text);
         }
         $search = strtolower($this->triggerValue);
 
         if ($text === $search && strlen($text) > 0) {
-
             Log::debug(sprintf('RuleTrigger NotesAre for journal #%d: "%s" is "%s", return true.', $journal->id, $text, $search));
 
             return true;

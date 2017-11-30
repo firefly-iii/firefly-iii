@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -31,13 +32,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
- * Interface JournalRepositoryInterface
- *
- * @package FireflyIII\Repositories\Journal
+ * Interface JournalRepositoryInterface.
  */
 interface JournalRepositoryInterface
 {
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -65,7 +63,7 @@ interface JournalRepositoryInterface
     public function delete(TransactionJournal $journal): bool;
 
     /**
-     * Find a specific journal
+     * Find a specific journal.
      *
      * @param int $journalId
      *
@@ -74,11 +72,32 @@ interface JournalRepositoryInterface
     public function find(int $journalId): TransactionJournal;
 
     /**
-     * Get users very first transaction journal
+     * @param Transaction $transaction
+     *
+     * @return Transaction|null
+     */
+    public function findOpposingTransaction(Transaction $transaction): ?Transaction;
+
+    /**
+     * @param int $transactionid
+     *
+     * @return Transaction|null
+     */
+    public function findTransaction(int $transactionid): ?Transaction;
+
+    /**
+     * Get users very first transaction journal.
      *
      * @return TransactionJournal
      */
     public function first(): TransactionJournal;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction|null
+     */
+    public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
 
     /**
      * @return Collection
@@ -86,11 +105,25 @@ interface JournalRepositoryInterface
     public function getTransactionTypes(): Collection;
 
     /**
+     * @param array $transactionIds
+     *
+     * @return Collection
+     */
+    public function getTransactionsById(array $transactionIds): Collection;
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return bool
      */
     public function isTransfer(TransactionJournal $journal): bool;
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return bool
+     */
+    public function reconcile(Transaction $transaction): bool;
 
     /**
      * @param TransactionJournal $journal
@@ -127,5 +160,4 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function updateSplitJournal(TransactionJournal $journal, array $data): TransactionJournal;
-
 }

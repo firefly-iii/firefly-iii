@@ -18,7 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: accountFrontpageUri, token, billCount, accountExpenseUri, accountRevenueUri */
+/** global: accountFrontpageUri, today, piggyInfoUri, token, billCount, accountExpenseUri, accountRevenueUri */
 
 $(function () {
     "use strict";
@@ -29,7 +29,12 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    lineChart(accountFrontpageUri, 'accounts-chart');
+    if (today >= 0) {
+        lineChartWithDay(accountFrontpageUri, 'accounts-chart', today);
+    } else {
+        lineChart(accountFrontpageUri, 'accounts-chart');
+    }
+
     if (billCount > 0) {
         pieChart('chart/bill/frontpage', 'bills-chart');
     }

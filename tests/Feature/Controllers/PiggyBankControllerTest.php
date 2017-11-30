@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -37,14 +36,12 @@ use Tests\TestCase;
 /**
  * Class PiggyBankControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PiggyBankControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController::add
      */
@@ -138,7 +135,6 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('destroy')->andReturn(true);
-
 
         $this->session(['piggy-banks.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -240,7 +236,6 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('canAddAmount')->once()->andReturn(false);
 
-
         $data = ['amount' => '1000'];
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.add', [1]), $data);
@@ -297,7 +292,6 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.remove', [1]));
         $response->assertStatus(200);
@@ -352,7 +346,6 @@ class PiggyBankControllerTest extends TestCase
             'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,
-
         ];
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.store'), $data);
@@ -378,7 +371,6 @@ class PiggyBankControllerTest extends TestCase
             'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,
-
         ];
         $this->be($this->user());
         $response = $this->post(route('piggy-banks.update', [3]), $data);
@@ -386,6 +378,4 @@ class PiggyBankControllerTest extends TestCase
         $response->assertSessionHas('success');
         $response->assertRedirect(route('index'));
     }
-
-
 }

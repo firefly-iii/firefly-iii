@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ImportJob;
@@ -35,9 +34,7 @@ use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class ImportJobRepository
- *
- * @package FireflyIII\Repositories\ImportJob
+ * Class ImportJobRepository.
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {
@@ -48,6 +45,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param string $fileType
      *
      * @return ImportJob
+     *
      * @throws FireflyException
      */
     public function create(string $fileType): ImportJob
@@ -62,7 +60,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
-            if (is_null($existing->id)) {
+            if (null === $existing->id) {
                 $importJob = new ImportJob;
                 $importJob->user()->associate($this->user);
                 $importJob->file_type       = $fileType;
@@ -80,8 +78,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 // breaks the loop:
                 return $importJob;
             }
-            $count++;
-
+            ++$count;
         }
 
         return new ImportJob;
@@ -95,7 +92,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function findByKey(string $key): ImportJob
     {
         $result = $this->user->importJobs()->where('key', $key)->first(['import_jobs.*']);
-        if (is_null($result)) {
+        if (null === $result) {
             return new ImportJob;
         }
 
@@ -115,14 +112,15 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         // demo user's configuration upload is ignored completely.
         if (!$repository->hasRole($this->user, 'demo')) {
             Log::debug(
-                'Uploaded configuration file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
+                'Uploaded configuration file',
+                ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
             );
 
             $configFileObject = new SplFileObject($file->getRealPath());
             $configRaw        = $configFileObject->fread($configFileObject->getSize());
             $configuration    = json_decode($configRaw, true);
 
-            if (!is_null($configuration) && is_array($configuration)) {
+            if (null !== $configuration && is_array($configuration)) {
                 Log::debug('Found configuration', $configuration);
                 $this->setConfiguration($job, $configuration);
             }
@@ -146,7 +144,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $content          = $uploaded->fread($uploaded->getSize());
         $contentEncrypted = Crypt::encrypt($content);
         $disk             = Storage::disk('upload');
-
 
         // user is demo user, replace upload with prepared file.
         if ($repository->hasRole($this->user, 'demo')) {

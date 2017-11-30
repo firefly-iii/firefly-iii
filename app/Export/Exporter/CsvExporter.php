@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Export\Exporter;
@@ -28,13 +27,11 @@ use League\Csv\Writer;
 use SplFileObject;
 
 /**
- * Class CsvExporter
- *
- * @package FireflyIII\Export\Exporter
+ * Class CsvExporter.
  */
 class CsvExporter extends BasicExporter implements ExporterInterface
 {
-    /** @var  string */
+    /** @var string */
     private $fileName;
 
     /**
@@ -69,7 +66,7 @@ class CsvExporter extends BasicExporter implements ExporterInterface
         // get field names for header row:
         $first   = $this->getEntries()->first();
         $headers = [];
-        if (!is_null($first)) {
+        if (null !== $first) {
             $headers = array_keys(get_object_vars($first));
         }
 
@@ -87,7 +84,6 @@ class CsvExporter extends BasicExporter implements ExporterInterface
 
         return true;
     }
-
 
     private function tempFile()
     {

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Information;
@@ -26,13 +25,10 @@ namespace FireflyIII\Support\Import\Information;
 use FireflyIII\User;
 
 /**
- * Interface InformationInterface
- *
- * @package FireflyIII\Support\Import\Information
+ * Interface InformationInterface.
  */
 interface InformationInterface
 {
-
     /**
      * Returns a collection of accounts. Preferrably, these follow a uniform Firefly III format so they can be managed over banks.
      *

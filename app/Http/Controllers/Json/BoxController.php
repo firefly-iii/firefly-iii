@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
-
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
@@ -36,9 +34,7 @@ use FireflyIII\Support\CacheProperties;
 use Response;
 
 /**
- * Class BoxController
- *
- * @package FireflyIII\Http\Controllers\Json
+ * Class BoxController.
  */
 class BoxController extends Controller
 {
@@ -64,7 +60,6 @@ class BoxController extends Controller
         $currency  = app('amount')->getDefaultCurrency();
         $available = $repository->getAvailableBudget($currency, $start, $end);
 
-
         // get spent amount:
         $budgets           = $repository->getActiveBudgets();
         $budgetInformation = $repository->collectBudgetInformation($budgets, $start, $end);
@@ -76,7 +71,7 @@ class BoxController extends Controller
         }
         $days   = $today->diffInDays($end) + 1;
         $perDay = '0';
-        if ($days !== 0) {
+        if (0 !== $days) {
             $perDay = bcdiv($left, strval($days));
         }
 
@@ -214,5 +209,4 @@ class BoxController extends Controller
 
         return Response::json($return);
     }
-
 }

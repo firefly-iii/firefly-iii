@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -31,9 +30,7 @@ use Illuminate\Http\Request;
 use Response;
 
 /**
- * Class JsonController
- *
- * @package FireflyIII\Http\Controllers
+ * Class JsonController.
  */
 class JsonController extends Controller
 {
@@ -59,7 +56,6 @@ class JsonController extends Controller
             $actions[$key] = trans('firefly.rule_action_' . $key . '_choice');
         }
         $view = view('rules.partials.action', compact('actions', 'count'))->render();
-
 
         return Response::json(['html' => $view]);
     }
@@ -105,7 +101,6 @@ class JsonController extends Controller
         sort($return);
 
         return Response::json($return);
-
     }
 
     /**
@@ -132,7 +127,7 @@ class JsonController extends Controller
         $keys     = array_keys(config('firefly.rule-triggers'));
         $triggers = [];
         foreach ($keys as $key) {
-            if ($key !== 'user_action') {
+            if ('user_action' !== $key) {
                 $triggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
             }
         }
@@ -140,8 +135,6 @@ class JsonController extends Controller
 
         $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
 
-
         return Response::json(['html' => $view]);
     }
-
 }

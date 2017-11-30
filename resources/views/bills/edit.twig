@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    {{ Form.model(bill, {'class' : 'form-horizontal','id' : 'update','url' : route('bills.update', bill.id)}) }}
+    {{ Form.model(bill, {'class' : 'form-horizontal','enctype': 'multipart/form-data','id' : 'update','url' : route('bills.update', bill.id)}) }}
 
     <input type="hidden" name="id" value="{{ bill.id }}"/>
 
@@ -34,6 +34,8 @@
                     <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                 </div>
                 <div class="box-body">
+                    {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
+                    {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     {{ ExpandedForm.integer('skip') }}
                     {{ ExpandedForm.checkbox('automatch',1) }}
                     {{ ExpandedForm.checkbox('active',1) }}

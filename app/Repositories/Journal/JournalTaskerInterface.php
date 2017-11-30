@@ -18,20 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface JournalTaskerInterface
- *
- * @package FireflyIII\Repositories\Journal
+ * Interface JournalTaskerInterface.
  */
 interface JournalTaskerInterface
 {

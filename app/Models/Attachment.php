@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -31,9 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Attachment
- *
- * @package FireflyIII\Models
+ * Class Attachment.
  */
 class Attachment extends Model
 {
@@ -46,13 +43,11 @@ class Attachment extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'uploaded'   => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /** @var array */
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'notes', 'description', 'size', 'uploaded'];
 
@@ -64,7 +59,6 @@ class Attachment extends Model
     public static function routeBinder(Attachment $value)
     {
         if (auth()->check()) {
-
             if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
             }
@@ -99,7 +93,7 @@ class Attachment extends Model
      */
     public function getDescriptionAttribute($value)
     {
-        if (is_null($value) || strlen($value) === 0) {
+        if (null === $value || 0 === strlen($value)) {
             return null;
         }
 
@@ -113,7 +107,7 @@ class Attachment extends Model
      */
     public function getFilenameAttribute($value)
     {
-        if (is_null($value) || strlen($value) === 0) {
+        if (null === $value || 0 === strlen($value)) {
             return null;
         }
 
@@ -127,7 +121,7 @@ class Attachment extends Model
      */
     public function getMimeAttribute($value)
     {
-        if (is_null($value) || strlen($value) === 0) {
+        if (null === $value || 0 === strlen($value)) {
             return null;
         }
 
@@ -135,14 +129,13 @@ class Attachment extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return null|string
      */
     public function getNotesAttribute($value)
     {
-        if (is_null($value) || strlen($value) === 0) {
+        if (null === $value || 0 === strlen($value)) {
             return null;
         }
 
@@ -150,14 +143,13 @@ class Attachment extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return null|string
      */
     public function getTitleAttribute($value)
     {
-        if (is_null($value) || strlen($value) === 0) {
+        if (null === $value || 0 === strlen($value)) {
             return null;
         }
 
@@ -211,5 +203,4 @@ class Attachment extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
 }

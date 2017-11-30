@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Storage;
@@ -35,21 +34,19 @@ use Log;
 
 /**
  * Is capable of storing individual ImportJournal objects.
- * Class ImportStorage
- *
- * @package FireflyIII\Import\Storage
+ * Class ImportStorage.
  */
 class ImportStorage
 {
     use ImportSupport;
 
-    /** @var  Collection */
+    /** @var Collection */
     public $errors;
     /** @var Collection */
     public $journals;
-    /** @var  int */
+    /** @var int */
     protected $defaultCurrencyId = 1; // yes, hard coded
-    /** @var  ImportJob */
+    /** @var ImportJob */
     protected $job;
     /** @var Collection */
     protected $rules;
@@ -57,7 +54,7 @@ class ImportStorage
     private $dateFormat = 'Ymd';
     /** @var Collection */
     private $objects;
-    /** @var  array */
+    /** @var array */
     private $transfers = [];
 
     /**
@@ -125,6 +122,7 @@ class ImportStorage
      * @param ImportJournal $importJournal
      *
      * @return bool
+     *
      * @throws FireflyException
      */
     protected function storeImportJournal(int $index, ImportJournal $importJournal): bool
@@ -139,7 +137,7 @@ class ImportStorage
         $transactionType   = $this->getTransactionType($amount, $opposingAccount);
         $description       = $importJournal->getDescription();
 
-        /*** First step done! */
+        // First step done!
         $this->job->addStepsDone(1);
 
         /**
@@ -159,7 +157,6 @@ class ImportStorage
             $message = sprintf('Detected a possible duplicate, skip this one (hash: %s).', $importJournal->hash);
             Log::error($message, $parameters);
             throw new FireflyException($message);
-
         }
         unset($parameters);
 
@@ -174,12 +171,11 @@ class ImportStorage
             'date'             => $date,
             'hash'             => $importJournal->hash,
             'amount'           => $amount,
-
         ];
         $journal    = $this->storeJournal($parameters);
         unset($parameters);
 
-        /*** Another step done! */
+        // Another step done!
         $this->job->addStepsDone(1);
 
         // store meta object things:
@@ -203,12 +199,12 @@ class ImportStorage
         $journal->completed = true;
         $journal->save();
 
-        /*** Another step done! */
+        // Another step done!
         $this->job->addStepsDone(1);
 
         // run rules:
         $this->applyRules($journal);
-        /*** Another step done! */
+        // Another step done!
         $this->job->addStepsDone(1);
         $this->journals->push($journal);
 
@@ -225,7 +221,7 @@ class ImportStorage
     private function isDoubleTransfer(array $parameters): bool
     {
         Log::debug('Check if is a double transfer.');
-        if ($parameters['type'] !== TransactionType::TRANSFER) {
+        if (TransactionType::TRANSFER !== $parameters['type']) {
             Log::debug(sprintf('Is a %s, not a transfer so no.', $parameters['type']));
 
             return false;
@@ -240,31 +236,31 @@ class ImportStorage
         foreach ($this->transfers as $transfer) {
             $hits = 0;
             if ($parameters['description'] === $transfer['description']) {
-                $hits++;
+                ++$hits;
                 Log::debug(sprintf('Description "%s" equals "%s", hits = %d', $parameters['description'], $transfer['description'], $hits));
             }
             if ($names === $transfer['names']) {
-                $hits++;
+                ++$hits;
                 Log::debug(sprintf('Involved accounts, "%s" equals "%s", hits = %d', join(',', $names), join(',', $transfer['names']), $hits));
             }
-            if (bccomp($amount, $transfer['amount']) === 0) {
-                $hits++;
+            if (0 === bccomp($amount, $transfer['amount'])) {
+                ++$hits;
                 Log::debug(sprintf('Amount %s equals %s, hits = %d', $amount, $transfer['amount'], $hits));
             }
             if ($parameters['date'] === $transfer['date']) {
-                $hits++;
+                ++$hits;
                 Log::debug(sprintf('Date %s equals %s, hits = %d', $parameters['date'], $transfer['date'], $hits));
             }
             // number of hits is 4? Then it's a match
-            if ($hits === 4) {
+            if (4 === $hits) {
                 Log::error(
-                    'There already is a transfer imported with these properties. Compare existing with new. ', ['existing' => $transfer, 'new' => $parameters]
+                    'There already is a transfer imported with these properties. Compare existing with new. ',
+                    ['existing' => $transfer, 'new' => $parameters]
                 );
 
                 return true;
             }
         }
-
 
         return false;
     }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -36,13 +35,13 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Preferences;
 use Steam;
 use Tests\TestCase;
 
 /**
  * Class AccountControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -78,7 +77,6 @@ class AccountControllerTest extends TestCase
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -191,7 +189,6 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
-
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('accounts.show', [1]));
@@ -221,7 +218,6 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->andReturnSelf();
 
         $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
-
 
         $tasker = $this->mock(AccountTaskerInterface::class);
         $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
@@ -351,6 +347,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('find')->andReturn(new Account)->once();
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
+
+        // change the preference:
+        Preferences::setForUser($this->user(), 'frontPageAccounts', [1]);
 
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());

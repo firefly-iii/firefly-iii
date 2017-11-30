@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,8 +28,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property int $journalCount
  * Class LinkType
- *
- * @package FireflyIII\Models
  */
 class LinkType extends Model
 {
@@ -42,9 +38,9 @@ class LinkType extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'editable'   => 'boolean',
         ];
 
@@ -55,13 +51,14 @@ class LinkType extends Model
      * @param $value
      *
      * @return mixed
+     *
      * @throws NotFoundHttpException
      */
     public static function routeBinder($value)
     {
         if (auth()->check()) {
             $model = self::where('id', $value)->first();
-            if (!is_null($model)) {
+            if (null !== $model) {
                 return $model;
             }
         }
@@ -72,5 +69,4 @@ class LinkType extends Model
     {
         return $this->hasMany(TransactionJournalLink::class);
     }
-
 }

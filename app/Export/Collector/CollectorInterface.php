@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
@@ -27,9 +26,7 @@ use FireflyIII\Models\ExportJob;
 use Illuminate\Support\Collection;
 
 /**
- * Interface CollectorInterface
- *
- * @package FireflyIII\Export\Collector
+ * Interface CollectorInterface.
  */
 interface CollectorInterface
 {
@@ -45,9 +42,6 @@ interface CollectorInterface
 
     /**
      * @param Collection $entries
-     *
-     * @return void
-     *
      */
     public function setEntries(Collection $entries);
 
@@ -57,5 +51,4 @@ interface CollectorInterface
      * @return mixed
      */
     public function setJob(ExportJob $job);
-
 }

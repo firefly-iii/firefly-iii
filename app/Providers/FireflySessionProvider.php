@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -27,12 +26,13 @@ use FireflyIII\Http\Middleware\StartFireflySession;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class FireflySessionProvider
+ */
 class FireflySessionProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
@@ -45,32 +45,30 @@ class FireflySessionProvider extends ServiceProvider
 
     /**
      * Register the session driver instance.
-     *
-     * @return void
      */
     protected function registerSessionDriver()
     {
         $this->app->singleton(
-            'session.store', function ($app) {
-            // First, we will create the session manager which is responsible for the
-            // creation of the various session drivers when they are needed by the
-            // application instance, and will resolve them on a lazy load basis.
-            return $app->make('session')->driver();
-        }
+            'session.store',
+            function ($app) {
+                // First, we will create the session manager which is responsible for the
+                // creation of the various session drivers when they are needed by the
+                // application instance, and will resolve them on a lazy load basis.
+                return $app->make('session')->driver();
+            }
         );
     }
 
     /**
      * Register the session manager instance.
-     *
-     * @return void
      */
     protected function registerSessionManager()
     {
         $this->app->singleton(
-            'session', function ($app) {
-            return new SessionManager($app);
-        }
+            'session',
+            function ($app) {
+                return new SessionManager($app);
+            }
         );
     }
 }

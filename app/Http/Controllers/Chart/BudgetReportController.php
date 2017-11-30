@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -46,15 +44,12 @@ use Response;
  * Separate controller because many helper functions are shared.
  *
  * Class BudgetReportController
- *
- * @package FireflyIII\Http\Controllers\Chart
  */
 class BudgetReportController extends Controller
 {
-
     /** @var BudgetRepositoryInterface */
     private $budgetRepository;
-    /** @var  GeneratorInterface */
+    /** @var GeneratorInterface */
     private $generator;
 
     /**
@@ -90,12 +85,11 @@ class BudgetReportController extends Controller
         $helper->setBudgets($budgets);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('expense', 'account');
         $data      = $this->generator->pieChart($chartData);
 
         return Response::json($data);
-
     }
 
     /**
@@ -115,7 +109,7 @@ class BudgetReportController extends Controller
         $helper->setBudgets($budgets);
         $helper->setStart($start);
         $helper->setEnd($end);
-        $helper->setCollectOtherObjects(intval($others) === 1);
+        $helper->setCollectOtherObjects(1 === intval($others));
         $chartData = $helper->generate('expense', 'budget');
         $data      = $this->generator->pieChart($chartData);
 
@@ -277,5 +271,4 @@ class BudgetReportController extends Controller
 
         return $grouped;
     }
-
 }

@@ -91,6 +91,7 @@ return [
     'deletePermanently'          => 'Verwijderen',
     'cancel'                     => 'Annuleren',
     'targetdate'                 => 'Doeldatum',
+    'startdate'                  => 'Startdatum',
     'tag'                        => 'Tag',
     'under'                      => 'Onder',
     'symbol'                     => 'Symbool',
@@ -184,6 +185,8 @@ return [
     'csv_tab'               => 'Een tab (onzichtbaar)',
     'csv_delimiter'         => 'CSV scheidingsteken',
     'csv_import_account'    => 'Standaard rekening voor importeren',
+    'csv_config'            => 'Configuratiebestand',
+
 
     'due_date'           => 'Vervaldatum',
     'payment_date'       => 'Betalingsdatum',

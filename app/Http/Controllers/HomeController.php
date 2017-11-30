@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -35,15 +34,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Log;
+use Monolog\Handler\RotatingFileHandler;
 use Preferences;
 use Route as RouteFacade;
 use Session;
 use View;
 
 /**
- * Class HomeController
- *
- * @package FireflyIII\Http\Controllers
+ * Class HomeController.
  */
 class HomeController extends Controller
 {
@@ -62,7 +60,6 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request)
     {
-
         $start         = new Carbon($request->get('start'));
         $end           = new Carbon($request->get('end'));
         $label         = $request->get('label');
@@ -88,16 +85,58 @@ class HomeController extends Controller
         Session::put('end', $end);
     }
 
-    public function displayDebug()
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function displayDebug(Request $request)
     {
-        $phpVersion = PHP_VERSION;
-        $now        = Carbon::create()->format('Y-m-d H:i:s e');
-        $extensions = join(', ', get_loaded_extensions());
-        $drivers    = join(', ', DB::availableDrivers());
-        $currentDriver = DB::getDriverName();
+        $phpVersion     = PHP_VERSION;
+        $phpOs          = php_uname();
+        $interface      = PHP_SAPI;
+        $now            = Carbon::create()->format('Y-m-d H:i:s e');
+        $extensions     = join(', ', get_loaded_extensions());
+        $drivers        = join(', ', DB::availableDrivers());
+        $currentDriver  = DB::getDriverName();
+        $userAgent      = $request->header('user-agent');
+        $isSandstorm    = var_export(env('IS_SANDSTORM', 'unknown'), true);
+        $isDocker       = var_export(env('IS_DOCKER', 'unknown'), true);
+        $trustedProxies = env('TRUSTED_PROXIES', '(none)');
 
-        return view('debug', compact('phpVersion', 'extensions', 'carbon', 'now', 'drivers','currentDriver'));
+        // get latest log file:
+        $logger     = Log::getMonolog();
+        $handlers   = $logger->getHandlers();
+        $logContent = '';
+        foreach ($handlers as $handler) {
+            if ($handler instanceof RotatingFileHandler) {
+                $logFile = $handler->getUrl();
+                if (null !== $logFile) {
+                    $logContent = file_get_contents($logFile);
+                }
+            }
+        }
+        // last few lines
+        $logContent = 'Truncated from this point <----|' . substr($logContent, -4096);
 
+        return view(
+            'debug',
+            compact(
+                'phpVersion',
+                'extensions',
+                'carbon',
+                'now',
+                'drivers',
+                'currentDriver',
+                'userAgent',
+                'phpOs',
+                'interface',
+                'logContent',
+                'isDocker',
+                'isSandstorm',
+                'trustedProxies'
+            )
+        );
     }
 
     /**
@@ -140,14 +179,15 @@ class HomeController extends Controller
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
 
-        if ($count === 0) {
+        if (0 === $count) {
             return redirect(route('new-user.index'));
         }
 
         $subTitle     = trans('firefly.welcomeBack');
         $transactions = [];
         $frontPage    = Preferences::get(
-            'frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
+            'frontPageAccounts',
+            $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
         );
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
@@ -155,12 +195,12 @@ class HomeController extends Controller
         $end      = session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccountsById($frontPage->data);
         $showDeps = Preferences::get('showDepositsFrontpage', false)->data;
+        $today    = new Carbon;
 
         // zero bills? Hide some elements from view.
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);
         $billCount      = $billRepository->getBills()->count();
-
 
         foreach ($accounts as $account) {
             $collector = app(JournalCollectorInterface::class);
@@ -170,7 +210,8 @@ class HomeController extends Controller
         }
 
         return view(
-            'index', compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount')
+            'index',
+            compact('count', 'subTitle', 'transactions', 'showDeps', 'billCount', 'start', 'end', 'today')
         );
     }
 
@@ -183,23 +224,21 @@ class HomeController extends Controller
                    'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
                    'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
                    'two-factor.lost', 'report.options',
-
         ];
 
         /** @var Route $route */
         foreach ($set as $route) {
             $name = $route->getName();
-            if (!is_null($name) && in_array('GET', $route->methods()) && strlen($name) > 0) {
+            if (null !== $name && in_array('GET', $route->methods()) && strlen($name) > 0) {
                 $found = false;
                 foreach ($ignore as $string) {
-                    if (strpos($name, $string) !== false) {
+                    if (false !== strpos($name, $string)) {
                         $found = true;
                     }
                 }
                 if (!$found) {
                     echo 'touch ' . $route->getName() . '.md;';
                 }
-
             }
         }
 
@@ -218,5 +257,4 @@ class HomeController extends Controller
 
         return redirect(route('home'));
     }
-
 }

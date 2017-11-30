@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
-
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Import\Information\InformationInterface;
@@ -33,7 +31,6 @@ use Session;
 
 class BankController extends Controller
 {
-
     /**
      * This method must ask the user all parameters necessary to start importing data. This may not be enough
      * to finish the import itself (ie. mapping) but it should be enough to begin: accounts to import from,
@@ -60,7 +57,6 @@ class BankController extends Controller
         $remoteAccounts = $object->getAccounts();
 
         return view('import.bank.form', compact('remoteAccounts', 'bank'));
-
     }
 
     /**
@@ -75,7 +71,6 @@ class BankController extends Controller
      */
     public function postForm(Request $request, string $bank)
     {
-
         $class = config(sprintf('firefly.import_pre.%s', $bank));
         /** @var PrerequisitesInterface $object */
         $object = app($class);
@@ -85,7 +80,7 @@ class BankController extends Controller
             return redirect(route('import.bank.prerequisites', [$bank]));
         }
         $remoteAccounts = $request->get('do_import');
-        if (!is_array($remoteAccounts) || count($remoteAccounts) === 0) {
+        if (!is_array($remoteAccounts) || 0 === count($remoteAccounts)) {
             Session::flash('error', 'Must select accounts');
 
             return redirect(route('import.bank.form', [$bank]));
@@ -93,10 +88,9 @@ class BankController extends Controller
         $remoteAccounts = array_keys($remoteAccounts);
         $class          = config(sprintf('firefly.import_pre.%s', $bank));
         // get import file
+        unset($remoteAccounts, $class);
 
         // get import config
-
-
     }
 
     /**
@@ -161,5 +155,4 @@ class BankController extends Controller
 
         return redirect(route('import.bank.form', [$bank]));
     }
-
 }

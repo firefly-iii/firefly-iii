@@ -176,7 +176,7 @@ return [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location',
                     'multiRadio', 'file', 'multiCheckbox', 'staticText', 'amountSmall', 'password', 'nonSelectableBalance', 'nonSelectableAmount',
-                    'number'
+                    'number',
                 ],
             ],
             'Form'         => [

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -34,14 +33,12 @@ use Tests\TestCase;
 /**
  * Class CurrencyControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CurrencyControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController::create
      */
@@ -73,7 +70,6 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('canDeleteCurrency')->andReturn(false);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
-
         $this->be($this->user());
         $response = $this->get(route('currencies.delete', [2]));
         $response->assertStatus(302);
@@ -94,7 +90,6 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('canDeleteCurrency')->andReturn(false);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
-
 
         $this->session(['currencies.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -173,7 +168,6 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('destroy')->andReturn(true)->once();
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
-
 
         $this->session(['currencies.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -328,5 +322,4 @@ class CurrencyControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
 }

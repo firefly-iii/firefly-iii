@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -32,13 +31,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Bill
- *
- * @package FireflyIII\Models
+ * Class Bill.
  */
 class Bill extends Model
 {
-
     use SoftDeletes, ValidatingTrait;
     /**
      * The attributes that should be casted to native types.
@@ -46,10 +42,10 @@ class Bill extends Model
      * @var array
      */
     protected $casts
-        = [
-            'created_at'      => 'date',
-            'updated_at'      => 'date',
-            'deleted_at'      => 'date',
+                      = [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'deleted_at'      => 'datetime',
             'date'            => 'date',
             'skip'            => 'int',
             'automatch'       => 'boolean',
@@ -57,13 +53,11 @@ class Bill extends Model
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
         ];
-    /** @var array */
-    protected $dates  = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable
                       = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
                          'automatch', 'active',];
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-    protected $rules  = ['name' => 'required|between:1,200',];
+    protected $rules  = ['name' => 'required|between:1,200'];
 
     /**
      * @param Bill $value
@@ -81,14 +75,21 @@ class Bill extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function attachments()
+    {
+        return $this->morphMany('FireflyIII\Models\Attachment', 'attachable');
+    }
+
+    /**
      * @param $value
      *
      * @return string
      */
     public function getMatchAttribute($value)
     {
-
-        if (intval($this->match_encrypted) === 1) {
+        if (1 === intval($this->match_encrypted)) {
             return Crypt::decrypt($value);
         }
 
@@ -102,12 +103,19 @@ class Bill extends Model
      */
     public function getNameAttribute($value)
     {
-
-        if (intval($this->name_encrypted) === 1) {
+        if (1 === intval($this->name_encrypted)) {
             return Crypt::decrypt($value);
         }
 
         return $value;
+    }
+
+    /**
+     * Get all of the notes.
+     */
+    public function notes()
+    {
+        return $this->morphMany('FireflyIII\Models\Note', 'noteable');
     }
 
     /**
@@ -161,6 +169,4 @@ class Bill extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-
 }

@@ -19,6 +19,9 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+
 namespace FireflyIII\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -26,17 +29,17 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class AdminTestMail
+ * Class AdminTestMail.
  *
- * @package FireflyIII\Mail
+ * Sends a test mail to administrators.
  */
 class AdminTestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var  string */
+    /** @var string Email address of admin */
     public $email;
-    /** @var  string */
+    /** @var string IP address of admin */
     public $ipAddress;
 
     /**

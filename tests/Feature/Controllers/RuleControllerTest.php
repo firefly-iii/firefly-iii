@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -37,14 +36,12 @@ use Tests\TestCase;
 /**
  * Class RuleControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RuleControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\RuleController::create
      */
@@ -76,7 +73,6 @@ class RuleControllerTest extends TestCase
             'rule-action-value'  => ['x'],
         ];
         $this->session(['_old_input' => $old]);
-
 
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -223,7 +219,7 @@ class RuleControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
 
-        $data = ['actions' => [1, 2, 3],];
+        $data = ['actions' => [1, 2, 3]];
         $repository->shouldReceive('reorderRuleActions')->once();
 
         $this->be($this->user());
@@ -241,7 +237,7 @@ class RuleControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-        $data = ['triggers' => [1, 2, 3],];
+        $data = ['triggers' => [1, 2, 3]];
         $repository->shouldReceive('reorderRuleTriggers')->once();
 
         $this->be($this->user());
@@ -289,7 +285,6 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     *
      * @covers \FireflyIII\Http\Controllers\RuleController::testTriggers
      * @covers \FireflyIII\Http\Controllers\RuleController::getValidTriggerList
      */
@@ -419,5 +414,4 @@ class RuleControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
-
 }

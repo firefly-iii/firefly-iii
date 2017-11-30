@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -37,14 +35,12 @@ use Tests\TestCase;
 /**
  * Class CategoryControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CategoryControllerTest extends TestCase
 {
-
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::all
      * @covers       \FireflyIII\Http\Controllers\Chart\CategoryController::__construct
@@ -63,7 +59,6 @@ class CategoryControllerTest extends TestCase
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon('1900-01-01'))->once();
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
-
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -108,7 +103,6 @@ class CategoryControllerTest extends TestCase
         $repository->shouldReceive('periodExpenses')->andReturn([])->once();
         $repository->shouldReceive('periodIncome')->andReturn([])->once();
         $generator->shouldReceive('multiSet')->andReturn([])->once();
-
 
         $this->be($this->user());
         $response = $this->get(route('chart.category.period', [1, '1', '20120101', '20120131']));
@@ -156,5 +150,4 @@ class CategoryControllerTest extends TestCase
         $response = $this->get(route('chart.category.specific', ['1', '2012-01-01']));
         $response->assertStatus(200);
     }
-
 }

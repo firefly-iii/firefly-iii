@@ -18,23 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Filter;
-
 
 use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class OpposingAccountFilter
+ * Class OpposingAccountFilter.
  *
  * This filter is similar to the internal transfer filter but only removes transactions when the opposing account is
  * amongst $parameters (list of account ID's).
- *
- * @package FireflyIII\Helpers\Filter
  */
 class OpposingAccountFilter implements FilterInterface
 {

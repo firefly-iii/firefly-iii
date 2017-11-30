@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collection;
-
 
 use Carbon\Carbon;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -30,20 +28,17 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class Bill
- *
- * @package FireflyIII\Helpers\Collection
+ * Class Bill.
  */
 class Bill
 {
-
     /**
      * @var Collection
      */
     private $bills;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $endDate;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $startDate;
 
     /**
@@ -106,13 +101,12 @@ class Bill
     {
         $set = $this->bills->sortBy(
             function (BillLine $bill) {
-                $active = intval($bill->getBill()->active) === 0 ? 1 : 0;
+                $active = 0 === intval($bill->getBill()->active) ? 1 : 0;
                 $name   = $bill->getBill()->name;
 
                 return $active . $name;
             }
         );
-
 
         return $set;
     }
@@ -132,5 +126,4 @@ class Bill
     {
         $this->startDate = $startDate;
     }
-
 }

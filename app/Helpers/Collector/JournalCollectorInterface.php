@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
@@ -32,9 +31,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
- * Interface JournalCollectorInterface
- *
- * @package FireflyIII\Helpers\Collector
+ * Interface JournalCollectorInterface.
  */
 interface JournalCollectorInterface
 {
@@ -50,7 +47,7 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function amountMore(string $amount): JournalCollectorInterface;
+    public function amountIs(string $amount): JournalCollectorInterface;
 
     /**
      * @param string $amount
@@ -64,7 +61,7 @@ interface JournalCollectorInterface
      *
      * @return JournalCollectorInterface
      */
-    public function amountIs(string $amount): JournalCollectorInterface;
+    public function amountMore(string $amount): JournalCollectorInterface;
 
     /**
      * @return int

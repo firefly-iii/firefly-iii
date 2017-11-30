@@ -27,12 +27,10 @@ use View;
 
 /**
  * Class ImportController.
- *
- * @package FireflyIII\Http\Controllers
  */
 class ImportController extends Controller
 {
-    /** @var  ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface */
     public $repository;
 
     /**
@@ -53,9 +51,8 @@ class ImportController extends Controller
         );
     }
 
-
     /**
-     * General import index
+     * General import index.
      *
      * @return View
      */
@@ -72,5 +69,4 @@ class ImportController extends Controller
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'importFileTypes', 'defaultImportType'));
     }
-
 }

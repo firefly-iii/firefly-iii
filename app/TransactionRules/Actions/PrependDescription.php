@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
@@ -28,15 +27,12 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class AppendDescription
- *
- * @package FireflyIII\TransactionRules\Actions
+ * Class AppendDescription.
  */
 class PrependDescription implements ActionInterface
 {
-
+    /** @var RuleAction The rule action */
     private $action;
-
 
     /**
      * TriggerInterface constructor.
@@ -49,6 +45,8 @@ class PrependDescription implements ActionInterface
     }
 
     /**
+     * Prepend description with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -58,7 +56,6 @@ class PrependDescription implements ActionInterface
         Log::debug(sprintf('RuleAction PrependDescription prepended "%s" to "%s".', $this->action->action_value, $journal->description));
         $journal->description = $this->action->action_value . $journal->description;
         $journal->save();
-
 
         return true;
     }

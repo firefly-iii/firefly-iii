@@ -18,16 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
 /**
- * Class ImportUploadRequest
- *
- *
- * @package FireflyIII\Http\Requests
+ * Class ImportUploadRequest.
  */
 class ImportUploadRequest extends Request
 {
@@ -53,6 +49,5 @@ class ImportUploadRequest extends Request
             'import_file_type'   => 'required|in:' . join(',', $types),
             'configuration_file' => 'file',
         ];
-
     }
 }

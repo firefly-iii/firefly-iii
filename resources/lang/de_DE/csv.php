@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'Bestandskonto (vgl. ID in Firefly)',
     'column_account-name'           => 'Bestandskonto (Name)',
     'column_amount'                 => 'Betrag',
+    'column_amount_debet'           => 'Amount (debet column)',
+    'column_amount_credit'          => 'Amount (credit column)',
     'column_amount-comma-separated' => 'Betrag (Komma als Dezimaltrennzeichen)',
     'column_bill-id'                => 'Rechnung (ID übereinstimmend mit Firefly)',
     'column_bill-name'              => 'Name der Rechnung',

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
@@ -38,14 +36,12 @@ use Tests\TestCase;
 /**
  * Class CategoryReportControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CategoryReportControllerTest extends TestCase
 {
-
     /**
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::accountExpense
      * @covers \FireflyIII\Http\Controllers\Chart\CategoryReportController::__construct
@@ -160,5 +156,4 @@ class CategoryReportControllerTest extends TestCase
         $response = $this->get(route('chart.category.main', ['1', '1', '20120101', '20120131']));
         $response->assertStatus(200);
     }
-
 }

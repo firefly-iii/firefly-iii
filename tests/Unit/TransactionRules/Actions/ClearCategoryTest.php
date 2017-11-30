@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
+
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
@@ -29,8 +29,6 @@ use Tests\TestCase;
 
 /**
  * Class ClearCategoryTest
- *
- * @package Tests\Unit\TransactionRules\Actions
  */
 class ClearCategoryTest extends TestCase
 {
@@ -41,7 +39,7 @@ class ClearCategoryTest extends TestCase
     public function testAct()
     {
         // associate budget with journal:
-        $journal = TransactionJournal::find(5);
+        $journal  = TransactionJournal::find(5);
         $category = $journal->user->categories()->first();
         $journal->budgets()->save($category);
         $this->assertGreaterThan(0, $journal->categories()->count());
@@ -55,6 +53,5 @@ class ClearCategoryTest extends TestCase
 
         // assert result
         $this->assertEquals(0, $journal->categories()->count());
-
     }
 }

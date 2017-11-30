@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Export\Collector;
@@ -33,19 +32,17 @@ use Log;
 use Storage;
 
 /**
- * Class AttachmentCollector
- *
- * @package FireflyIII\Export\Collector
+ * Class AttachmentCollector.
  */
 class AttachmentCollector extends BasicCollector implements CollectorInterface
 {
-    /** @var  Carbon */
+    /** @var Carbon */
     private $end;
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     private $exportDisk;
-    /** @var  AttachmentRepositoryInterface */
+    /** @var AttachmentRepositoryInterface */
     private $repository;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $start;
     /** @var \Illuminate\Contracts\Filesystem\Filesystem */
     private $uploadDisk;
@@ -55,7 +52,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     public function __construct()
     {
-        /** @var AttachmentRepositoryInterface repository */
+        // @var AttachmentRepositoryInterface repository
         $this->repository = app(AttachmentRepositoryInterface::class);
         // make storage:
         $this->uploadDisk = Storage::disk('upload');
@@ -104,11 +101,9 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
                 $exportFile = $this->exportFileName($attachment);
                 $this->exportDisk->put($exportFile, $decrypted);
                 $this->getEntries()->push($exportFile);
-
             } catch (DecryptException $e) {
                 Log::error('Catchable error: could not decrypt attachment #' . $attachment->id . ' because: ' . $e->getMessage());
             }
-
         }
 
         return true;
@@ -123,7 +118,6 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      */
     private function exportFileName($attachment): string
     {
-
         return sprintf('%s-Attachment nr. %s - %s', $this->job->key, strval($attachment->id), $attachment->filename);
     }
 

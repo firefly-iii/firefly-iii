@@ -18,15 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Http\Request;
@@ -36,12 +37,12 @@ use URL;
 use View;
 
 /**
- * Class BillController
- *
- * @package FireflyIII\Http\Controllers
+ * Class BillController.
  */
 class BillController extends Controller
 {
+    /** @var AttachmentHelperInterface Helper for attachments. */
+    private $attachments;
 
     /**
      *
@@ -50,11 +51,16 @@ class BillController extends Controller
     {
         parent::__construct();
 
+        $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
+        $uploadSize  = min($maxFileSize, $maxPostSize);
+        View::share('uploadSize', $uploadSize);
 
         $this->middleware(
             function ($request, $next) {
                 View::share('title', trans('firefly.bills'));
                 View::share('mainTitleIcon', 'fa-calendar-o');
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }
@@ -74,9 +80,8 @@ class BillController extends Controller
         }
         $subTitle = trans('firefly.create_new_bill');
 
-
         // put previous url in session if not redirect from store (not "create another").
-        if (session('bills.create.fromStore') !== true) {
+        if (true !== session('bills.create.fromStore')) {
             $this->rememberPreviousUri('bills.create.uri');
         }
         $request->session()->forget('bills.create.fromStore');
@@ -136,13 +141,25 @@ class BillController extends Controller
         $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (session('bills.edit.fromUpdate') !== true) {
+        if (true !== session('bills.edit.fromUpdate')) {
             $this->rememberPreviousUri('bills.edit.uri');
         }
 
         $currency         = app('amount')->getDefaultCurrency();
         $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
         $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
+
+        $preFilled = [
+            'notes' => '',
+        ];
+
+        /** @var Note $note */
+        $note = $bill->notes()->first();
+        if (null !== $note) {
+            $preFilled['notes'] = $note->text;
+        }
+
+        $request->session()->flash('preFilled', $preFilled);
 
         $request->session()->forget('bills.edit.fromUpdate');
         $request->session()->flash('gaEventCategory', 'bills');
@@ -166,7 +183,6 @@ class BillController extends Controller
         $bills = $repository->getBills();
         $bills->each(
             function (Bill $bill) use ($repository, $start, $end) {
-
                 // paid in this period?
                 $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
                 $bill->payDates  = $repository->getPayDatesInRange($bill, $start, $end);
@@ -190,7 +206,7 @@ class BillController extends Controller
      */
     public function rescan(Request $request, BillRepositoryInterface $repository, Bill $bill)
     {
-        if (intval($bill->active) === 0) {
+        if (0 === intval($bill->active)) {
             $request->session()->flash('warning', strval(trans('firefly.cannot_scan_inactive_bill')));
 
             return redirect(URL::previous());
@@ -201,7 +217,6 @@ class BillController extends Controller
         foreach ($journals as $journal) {
             $repository->scan($bill, $journal);
         }
-
 
         $request->session()->flash('success', strval(trans('firefly.rescanned_bill')));
         Preferences::mark();
@@ -231,14 +246,14 @@ class BillController extends Controller
         $collector = app(JournalCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
                   ->withCategoryInformation();
-        $journals = $collector->getPaginatedJournals();
-        $journals->setPath(route('bills.show', [$bill->id]));
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath(route('bills.show', [$bill->id]));
 
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
         $hideBill                = true;
         $subTitle                = e($bill->name);
 
-        return view('bills.show', compact('journals', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
+        return view('bills.show', compact('transactions', 'yearAverage', 'overallAverage', 'year', 'hideBill', 'bill', 'subTitle'));
     }
 
     /**
@@ -254,7 +269,17 @@ class BillController extends Controller
         $request->session()->flash('success', strval(trans('firefly.stored_new_bill', ['name' => $bill->name])));
         Preferences::mark();
 
-        if (intval($request->get('create_another')) === 1) {
+
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($bill, $files);
+
+        // flash messages
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+        }
+
+        if (1 === intval($request->get('create_another'))) {
             // @codeCoverageIgnoreStart
             $request->session()->put('bills.create.fromStore', true);
 
@@ -264,7 +289,6 @@ class BillController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('bills.create.uri'));
-
     }
 
     /**
@@ -282,7 +306,16 @@ class BillController extends Controller
         $request->session()->flash('success', strval(trans('firefly.updated_bill', ['name' => $bill->name])));
         Preferences::mark();
 
-        if (intval($request->get('return_to_edit')) === 1) {
+        /** @var array $files */
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $this->attachments->saveAttachmentsForModel($bill, $files);
+
+        // flash messages
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
+        }
+
+        if (1 === intval($request->get('return_to_edit'))) {
             // @codeCoverageIgnoreStart
             $request->session()->put('bills.edit.fromUpdate', true);
 
@@ -291,7 +324,5 @@ class BillController extends Controller
         }
 
         return redirect($this->getPreviousUri('bills.edit.uri'));
-
     }
-
 }

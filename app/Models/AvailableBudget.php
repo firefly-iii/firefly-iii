@@ -18,20 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class AvailableBudget
- *
- * @package FireflyIII\Models
+ * Class AvailableBudget.
  */
 class AvailableBudget extends Model
 {
@@ -43,14 +39,12 @@ class AvailableBudget extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'start_date' => 'date',
             'end_date'   => 'date',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /** @var array */
     protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 

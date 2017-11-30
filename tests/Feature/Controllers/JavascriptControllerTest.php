@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
@@ -34,7 +33,6 @@ use Tests\TestCase;
 /**
  * Class JavascriptControllerTest
  *
- * @package Tests\Feature\Controllers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -83,12 +81,9 @@ class JavascriptControllerTest extends TestCase
      */
     public function testVariables(string $range)
     {
-
-
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('javascript.variables'));
         $response->assertStatus(200);
     }
-
 }

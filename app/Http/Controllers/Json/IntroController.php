@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
@@ -28,13 +27,10 @@ use Log;
 use Response;
 
 /**
- * Class IntroController
- *
- * @package FireflyIII\Http\Controllers\Json
+ * Class IntroController.
  */
 class IntroController
 {
-
     /**
      * @param string $route
      * @param string $specificPage
@@ -45,7 +41,7 @@ class IntroController
     {
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
-        if (count($specificSteps) === 0) {
+        if (0 === count($specificSteps)) {
             return Response::json($steps);
         }
         if ($this->hasOutroStep($route)) {
@@ -56,7 +52,6 @@ class IntroController
             // merge arrays and add last step again
             $steps   = array_merge($steps, $specificSteps);
             $steps[] = $lastStep;
-
         }
         if (!$this->hasOutroStep($route)) {
             $steps = array_merge($steps, $specificSteps);
@@ -92,7 +87,7 @@ class IntroController
     {
         $route = str_replace('.', '_', $route);
         $key   = 'shown_demo_' . $route;
-        if ($specialPage !== '') {
+        if ('' !== $specialPage) {
             $key .= '_' . $specialPage;
         }
         Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
@@ -110,7 +105,7 @@ class IntroController
     public function postFinished(string $route, string $specialPage = '')
     {
         $key = 'shown_demo_' . $route;
-        if ($specialPage !== '') {
+        if ('' !== $specialPage) {
             $key .= '_' . $specialPage;
         }
         Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
@@ -135,7 +130,6 @@ class IntroController
 
                 // get the text:
                 $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
-
 
                 // save in array:
                 $steps[] = $currentStep;
@@ -174,5 +168,4 @@ class IntroController
 
         return $steps;
     }
-
 }

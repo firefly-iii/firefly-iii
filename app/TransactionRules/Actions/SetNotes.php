@@ -29,15 +29,12 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class SetNotes
- *
- * @package FireflyIII\TransactionRules\Actions
+ * Class SetNotes.
  */
 class SetNotes implements ActionInterface
 {
-
+    /** @var RuleAction The rule action */
     private $action;
-
 
     /**
      * TriggerInterface constructor.
@@ -50,6 +47,8 @@ class SetNotes implements ActionInterface
     }
 
     /**
+     * Set notes to X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -57,7 +56,7 @@ class SetNotes implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         $dbNote = $journal->notes()->first();
-        if (is_null($dbNote)) {
+        if (null === $dbNote) {
             $dbNote = new Note;
             $dbNote->noteable()->associate($journal);
         }

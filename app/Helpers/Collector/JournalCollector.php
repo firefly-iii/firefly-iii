@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector;
-
 
 use Carbon\Carbon;
 use DB;
@@ -52,17 +50,16 @@ use Steam;
  *
  * Class JournalCollector
  *
- * @package FireflyIII\Helpers\Collector
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class JournalCollector implements JournalCollectorInterface
 {
-
     /** @var array */
     private $accountIds = [];
-    /** @var  int */
+    /** @var int */
     private $count = 0;
     /** @var array */
     private $fields
@@ -73,12 +70,14 @@ class JournalCollector implements JournalCollectorInterface
             'transaction_journals.encrypted',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.bill_id',
+            'transaction_journals.updated_at',
             'bills.name as bill_name',
             'bills.name_encrypted as bill_name_encrypted',
 
             'transactions.id as id',
             'transactions.description as transaction_description',
             'transactions.account_id',
+            'transactions.reconciled',
             'transactions.identifier',
             'transactions.transaction_journal_id',
             'transactions.amount as transaction_amount',
@@ -99,22 +98,21 @@ class JournalCollector implements JournalCollectorInterface
             'accounts.encrypted as account_encrypted',
             'accounts.iban as account_iban',
             'account_types.type as account_type',
-
         ];
     /** @var array */
     private $filters = [InternalTransferFilter::class];
 
-    /** @var  bool */
+    /** @var bool */
     private $joinedBudget = false;
-    /** @var  bool */
+    /** @var bool */
     private $joinedCategory = false;
     /** @var bool */
     private $joinedOpposing = false;
     /** @var bool */
     private $joinedTag = false;
-    /** @var  int */
+    /** @var int */
     private $limit;
-    /** @var  int */
+    /** @var int */
     private $offset;
     /** @var int */
     private $page = 1;
@@ -170,8 +168,8 @@ class JournalCollector implements JournalCollectorInterface
                 $q1->where(
                     function (EloquentBuilder $q2) use ($amount) {
                         // amount < 0 and .amount > -$amount
-                        $amount = bcmul($amount,'-1');
-                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $amount);
+                        $invertedAmount = bcmul($amount, '-1');
+                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '>', $invertedAmount);
                     }
                 )
                    ->orWhere(
@@ -198,8 +196,8 @@ class JournalCollector implements JournalCollectorInterface
                 $q1->where(
                     function (EloquentBuilder $q2) use ($amount) {
                         // amount < 0 and .amount < -$amount
-                        $amount = bcmul($amount,'-1');
-                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $amount);
+                        $invertedAmount = bcmul($amount, '-1');
+                        $q2->where('transactions.amount', '<', 0)->where('transactions.amount', '<', $invertedAmount);
                     }
                 )
                    ->orWhere(
@@ -210,16 +208,18 @@ class JournalCollector implements JournalCollectorInterface
                    );
             }
         );
+
         return $this;
     }
 
     /**
      * @return int
+     *
      * @throws FireflyException
      */
     public function count(): int
     {
-        if ($this->run === true) {
+        if (true === $this->run) {
             throw new FireflyException('Cannot count after run in JournalCollector.');
         }
 
@@ -255,14 +255,12 @@ class JournalCollector implements JournalCollectorInterface
                 $transaction->date        = new Carbon($transaction->date);
                 $transaction->description = Steam::decrypt(intval($transaction->encrypted), $transaction->description);
 
-                if (!is_null($transaction->bill_name)) {
+                if (null !== $transaction->bill_name) {
                     $transaction->bill_name = Steam::decrypt(intval($transaction->bill_name_encrypted), $transaction->bill_name);
                 }
                 $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
                 $transaction->account_iban          = app('steam')->tryDecrypt($transaction->account_iban);
                 $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
-
-
             }
         );
 
@@ -271,11 +269,12 @@ class JournalCollector implements JournalCollectorInterface
 
     /**
      * @return LengthAwarePaginator
+     *
      * @throws FireflyException
      */
     public function getPaginatedJournals(): LengthAwarePaginator
     {
-        if ($this->run === true) {
+        if (true === $this->run) {
             throw new FireflyException('Cannot getPaginatedJournals after run in JournalCollector.');
         }
         $this->count();
@@ -293,7 +292,7 @@ class JournalCollector implements JournalCollectorInterface
     public function removeFilter(string $filter): JournalCollectorInterface
     {
         $key = array_search($filter, $this->filters, true);
-        if (!($key === false)) {
+        if (!(false === $key)) {
             Log::debug(sprintf('Removed filter %s', $filter));
             unset($this->filters[$key]);
         }
@@ -318,7 +317,6 @@ class JournalCollector implements JournalCollectorInterface
         if ($accounts->count() > 1) {
             $this->addFilter(TransferFilter::class);
         }
-
 
         return $this;
     }
@@ -386,7 +384,6 @@ class JournalCollector implements JournalCollectorInterface
         }
 
         return $this;
-
     }
 
     /**
@@ -416,7 +413,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setBudgets(Collection $budgets): JournalCollectorInterface
     {
         $budgetIds = $budgets->pluck('id')->toArray();
-        if (count($budgetIds) === 0) {
+        if (0 === count($budgetIds)) {
             return $this;
         }
         $this->joinBudgetTables();
@@ -440,7 +437,7 @@ class JournalCollector implements JournalCollectorInterface
     public function setCategories(Collection $categories): JournalCollectorInterface
     {
         $categoryIds = $categories->pluck('id')->toArray();
-        if (count($categoryIds) === 0) {
+        if (0 === count($categoryIds)) {
             return $this;
         }
         $this->joinCategoryTables();
@@ -514,11 +511,11 @@ class JournalCollector implements JournalCollectorInterface
         $this->page = $page;
 
         if ($page > 0) {
-            $page--;
+            --$page;
         }
         Log::debug(sprintf('Page is %d', $page));
 
-        if (!is_null($this->limit)) {
+        if (null !== $this->limit) {
             $offset       = ($this->limit * $page);
             $this->offset = $offset;
             $this->query->skip($offset);
@@ -626,7 +623,6 @@ class JournalCollector implements JournalCollectorInterface
                             ->orderBy('transactions.amount', 'DESC');
 
         $this->query = $query;
-
     }
 
     /**
@@ -644,7 +640,6 @@ class JournalCollector implements JournalCollectorInterface
      */
     public function withCategoryInformation(): JournalCollectorInterface
     {
-
         $this->joinCategoryTables();
 
         return $this;
@@ -756,7 +751,10 @@ class JournalCollector implements JournalCollectorInterface
             $this->joinedCategory = true;
             $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin(
-                'categories as transaction_journal_categories', 'transaction_journal_categories.id', '=', 'category_transaction_journal.category_id'
+                'categories as transaction_journal_categories',
+                'transaction_journal_categories.id',
+                '=',
+                'category_transaction_journal.category_id'
             );
 
             $this->query->leftJoin('category_transaction', 'category_transaction.transaction_id', '=', 'transactions.id');
@@ -781,11 +779,12 @@ class JournalCollector implements JournalCollectorInterface
             Log::debug('joinedOpposing is false');
             // join opposing transaction (hard):
             $this->query->leftJoin(
-                'transactions as opposing', function (JoinClause $join) {
-                $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
-                     ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
-                     ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
-            }
+                'transactions as opposing',
+                function (JoinClause $join) {
+                    $join->on('opposing.transaction_journal_id', '=', 'transactions.transaction_journal_id')
+                         ->where('opposing.identifier', '=', DB::raw('transactions.identifier'))
+                         ->where('opposing.amount', '=', DB::raw('transactions.amount * -1'));
+                }
             );
             $this->query->leftJoin('accounts as opposing_accounts', 'opposing.account_id', '=', 'opposing_accounts.id');
             $this->query->leftJoin('account_types as opposing_account_types', 'opposing_accounts.account_type_id', '=', 'opposing_account_types.id');

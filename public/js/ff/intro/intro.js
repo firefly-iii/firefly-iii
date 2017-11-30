@@ -18,7 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: routeForTour, routeStepsUri, routeForFinishedTour, forceDemoOff */
+/** global: routeForTour, token, routeStepsUri, routeForFinishedTour, forceDemoOff */
 
 $(function () {
     "use strict";
@@ -42,5 +42,5 @@ function setupIntro(steps) {
 }
 
 function reportIntroFinished() {
-    $.post(routeForFinishedTour, {_token:token});
+    $.post(routeForFinishedTour, {_token: token});
 }

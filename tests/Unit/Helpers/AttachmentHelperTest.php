@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\Helpers;
-
 
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Models\Attachment;
@@ -34,7 +32,6 @@ use Tests\TestCase;
 /**
  * Class AttachmentHelperTest
  *
- * @package Tests\Unit\Helpers
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -63,14 +60,13 @@ class AttachmentHelperTest extends TestCase
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::hasFile
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
-     *
      */
     public function testInvalidMime()
     {
         $journal = TransactionJournal::first();
         $helper  = new AttachmentHelper;
-        $path    = resource_path('stubs/csv.csv');
-        $file    = new UploadedFile($path, 'csv.csv', 'text/plain', filesize($path), null, true);
+        $path    = resource_path('stubs/binary.bin');
+        $file    = new UploadedFile($path, 'binary.bin', 'application/octet-stream', filesize($path), null, true);
 
         $helper->saveAttachmentsForModel($journal, [$file]);
         $errors   = $helper->getErrors();
@@ -78,7 +74,7 @@ class AttachmentHelperTest extends TestCase
 
         $this->assertCount(1, $errors);
         $this->assertCount(0, $messages);
-        $this->assertEquals('File "csv.csv" is of type "text/plain" which is not accepted as a new upload.', $errors->first());
+        $this->assertEquals('File "binary.bin" is of type "application/octet-stream" which is not accepted as a new upload.', $errors->first());
     }
 
     /**
@@ -93,7 +89,6 @@ class AttachmentHelperTest extends TestCase
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachments
-     *
      */
     public function testSave()
     {
@@ -129,7 +124,6 @@ class AttachmentHelperTest extends TestCase
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachments
-     *
      */
     public function testSaveSecond()
     {
@@ -146,6 +140,4 @@ class AttachmentHelperTest extends TestCase
         $this->assertCount(0, $messages);
         $this->assertEquals('Uploaded file "apple-touch-icon.png" is already attached to this object.', $errors->first());
     }
-
-
 }

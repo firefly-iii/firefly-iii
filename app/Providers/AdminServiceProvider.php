@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Providers;
@@ -28,24 +27,20 @@ use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-
+/**
+ * Class AdminServiceProvider
+ */
 class AdminServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
-
-
     }
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -53,7 +48,7 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register link type repository
      */
     private function linkType()
     {
@@ -70,5 +65,4 @@ class AdminServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

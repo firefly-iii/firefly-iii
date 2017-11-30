@@ -18,7 +18,7 @@
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: zoomLevel, latitude, longitude, google, doPlaceMarker */
+/** global: zoomLevel, latitude, longitude, L, mapboxToken, doPlaceMarker */
 
 /*
  Some vars as prep for the map:
@@ -31,7 +31,14 @@ $(function () {
          */
 
         // make map:
-       var mymap = L.map('tag_location_map', {zoomControl: false, touchZoom: false, doubleClickZoom: false, scrollWheelZoom: false, boxZoom: false, dragging: false}).setView([latitude, longitude], zoomLevel);
+        var mymap = L.map('tag_location_map', {
+            zoomControl: false,
+            touchZoom: false,
+            doubleClickZoom: false,
+            scrollWheelZoom: false,
+            boxZoom: false,
+            dragging: false
+        }).setView([latitude, longitude], zoomLevel);
 
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -40,7 +47,7 @@ $(function () {
             accessToken: mapboxToken
         }).addTo(mymap);
 
-        if(doPlaceMarker) {
+        if (doPlaceMarker) {
             var marker = L.marker([latitude, longitude]).addTo(mymap);
         }
     }

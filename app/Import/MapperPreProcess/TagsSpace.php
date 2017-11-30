@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\MapperPreProcess;
 
 /**
- * Class TagsSpace
- *
- * @package FireflyIII\Import\MapperPreProcess
+ * Class TagsSpace.
  */
 class TagsSpace implements PreProcessorInterface
 {

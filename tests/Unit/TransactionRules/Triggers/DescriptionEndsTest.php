@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
-
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\DescriptionEnds;
@@ -30,8 +28,6 @@ use Tests\TestCase;
 
 /**
  * Class DescriptionEnds
- *
- * @package Tests\Unit\TransactionRules\Triggers
  */
 class DescriptionEndsTest extends TestCase
 {
@@ -43,31 +39,6 @@ class DescriptionEndsTest extends TestCase
         $journal              = new TransactionJournal;
         $journal->description = 'Lorem IPSUMbla';
         $trigger              = DescriptionEnds::makeFromStrings('umbla', false);
-        $result               = $trigger->triggered($journal);
-        $this->assertTrue($result);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
-     */
-    public function testTriggeredNot()
-    {
-        $journal              = new TransactionJournal;
-        $journal->description = 'Lorem IPSUM blabla';
-        $trigger              = DescriptionEnds::makeFromStrings('lorem', false);
-        $result               = $trigger->triggered($journal);
-        $this->assertFalse($result);
-    }
-
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
-     */
-    public function testTriggeredDefault()
-    {
-        $journal              = new TransactionJournal;
-        $journal->description = 'Should contain test string';
-        $trigger              = DescriptionEnds::makeFromStrings('string', false);
         $result               = $trigger->triggered($journal);
         $this->assertTrue($result);
     }
@@ -87,6 +58,30 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
+    public function testTriggeredDefault()
+    {
+        $journal              = new TransactionJournal;
+        $journal->description = 'Should contain test string';
+        $trigger              = DescriptionEnds::makeFromStrings('string', false);
+        $result               = $trigger->triggered($journal);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     */
+    public function testTriggeredLongSearch()
+    {
+        $journal              = new TransactionJournal;
+        $journal->description = 'Something';
+        $trigger              = DescriptionEnds::makeFromStrings('Something is', false);
+        $result               = $trigger->triggered($journal);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     */
     public function testTriggeredLonger()
     {
         $journal              = new TransactionJournal;
@@ -99,11 +94,11 @@ class DescriptionEndsTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
      */
-    public function testTriggeredLongSearch()
+    public function testTriggeredNot()
     {
         $journal              = new TransactionJournal;
-        $journal->description = 'Something';
-        $trigger              = DescriptionEnds::makeFromStrings('Something is', false);
+        $journal->description = 'Lorem IPSUM blabla';
+        $trigger              = DescriptionEnds::makeFromStrings('lorem', false);
         $result               = $trigger->triggered($journal);
         $this->assertFalse($result);
     }

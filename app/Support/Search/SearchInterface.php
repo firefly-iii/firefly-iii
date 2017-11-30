@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
@@ -27,9 +26,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
- * Interface SearchInterface
- *
- * @package FireflyIII\Support\Search
+ * Interface SearchInterface.
  */
 interface SearchInterface
 {
@@ -47,7 +44,6 @@ interface SearchInterface
      * @param string $query
      */
     public function parseQuery(string $query);
-
 
     /**
      * @return Collection

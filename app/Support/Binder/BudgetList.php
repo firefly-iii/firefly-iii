@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
@@ -27,15 +26,11 @@ use FireflyIII\Models\Budget;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 /**
- * Class BudgetList
- *
- * @package FireflyIII\Support\Binder
+ * Class BudgetList.
  */
 class BudgetList implements BinderInterface
 {
-
     /**
      * @param $value
      * @param $route

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Configuration\Csv;
-
 
 use FireflyIII\Import\Specifics\SpecificInterface;
 use FireflyIII\Models\ImportJob;
@@ -31,14 +29,12 @@ use League\Csv\Reader;
 use Log;
 
 /**
- * Class Roles
- *
- * @package FireflyIII\Support\Import\Configuration\Csv
+ * Class Roles.
  */
 class Roles implements ConfigurationInterface
 {
     private $data = [];
-    /** @var  ImportJob */
+    /** @var ImportJob */
     private $job;
 
     /** @var string */
@@ -76,7 +72,7 @@ class Roles implements ConfigurationInterface
             $count               = count($row);
             $this->data['total'] = $count > $this->data['total'] ? $count : $this->data['total'];
             $this->processRow($row);
-            $start++;
+            ++$start;
         }
 
         $this->updateColumCount();
@@ -119,7 +115,7 @@ class Roles implements ConfigurationInterface
         Log::debug('Now in storeConfiguration of Roles.');
         $config = $this->job->configuration;
         $count  = $config['column-count'];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $role                            = $data['role'][$i] ?? '_ignore';
             $mapping                         = isset($data['map'][$i]) && $data['map'][$i] === '1' ? true : false;
             $config['column-roles'][$i]      = $role;
@@ -127,14 +123,12 @@ class Roles implements ConfigurationInterface
             Log::debug(sprintf('Column %d has been given role %s', $i, $role));
         }
 
-
         $this->job->configuration = $config;
         $this->job->save();
 
         $this->ignoreUnmappableColumns();
         $this->setRolesComplete();
         $this->isMappingNecessary();
-
 
         return true;
     }
@@ -150,7 +144,6 @@ class Roles implements ConfigurationInterface
         }
 
         return $roles;
-
     }
 
     /**
@@ -160,11 +153,11 @@ class Roles implements ConfigurationInterface
     {
         $config = $this->job->configuration;
         $count  = $config['column-count'];
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $role    = $config['column-roles'][$i] ?? '_ignore';
             $mapping = $config['column-do-mapping'][$i] ?? false;
 
-            if ($role === '_ignore' && $mapping === true) {
+            if ('_ignore' === $role && true === $mapping) {
                 $mapping = false;
                 Log::debug(sprintf('Column %d has type %s so it cannot be mapped.', $i, $role));
             }
@@ -175,7 +168,6 @@ class Roles implements ConfigurationInterface
         $this->job->save();
 
         return true;
-
     }
 
     /**
@@ -186,14 +178,14 @@ class Roles implements ConfigurationInterface
         $config     = $this->job->configuration;
         $count      = $config['column-count'];
         $toBeMapped = 0;
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $mapping = $config['column-do-mapping'][$i] ?? false;
-            if ($mapping === true) {
-                $toBeMapped++;
+            if (true === $mapping) {
+                ++$toBeMapped;
             }
         }
         Log::debug(sprintf('Found %d columns that need mapping.', $toBeMapped));
-        if ($toBeMapped === 0) {
+        if (0 === $toBeMapped) {
             // skip setting of map, because none need to be mapped:
             $config['column-mapping-complete'] = true;
             $this->job->configuration          = $config;
@@ -204,7 +196,7 @@ class Roles implements ConfigurationInterface
     }
 
     /**
-     * make unique example data
+     * make unique example data.
      */
     private function makeExamplesUnique(): bool
     {
@@ -261,12 +253,12 @@ class Roles implements ConfigurationInterface
         $count     = $config['column-count'];
         $assigned  = 0;
         $hasAmount = false;
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $role = $config['column-roles'][$i] ?? '_ignore';
-            if ($role !== '_ignore') {
-                $assigned++;
+            if ('_ignore' !== $role) {
+                ++$assigned;
             }
-            if ($role === 'amount') {
+            if (in_array($role, ['amount', 'amount_credit', 'amount_debet'])) {
                 $hasAmount = true;
             }
         }
@@ -276,7 +268,7 @@ class Roles implements ConfigurationInterface
             $this->job->save();
             $this->warning = '';
         }
-        if ($assigned === 0 || !$hasAmount) {
+        if (0 === $assigned || !$hasAmount) {
             $this->warning = strval(trans('csv.roles_warning'));
         }
 

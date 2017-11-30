@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -36,9 +34,7 @@ use Navigation;
 use Preferences;
 
 /**
- * Class JavascriptController
- *
- * @package FireflyIII\Http\Controllers
+ * Class JavascriptController.
  */
 class JavascriptController extends Controller
 {
@@ -54,18 +50,16 @@ class JavascriptController extends Controller
         $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
         $default    = $currencyRepository->findByCode($preference->data);
 
-        $data = ['accounts' => [],];
-
+        $data = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId                    = $account->id;
             $currency                     = intval($account->getMeta('currency_id'));
-            $currency                     = $currency === 0 ? $default->id : $currency;
+            $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
         }
-
 
         return response()
             ->view('javascript.accounts', $data, 200)
@@ -80,7 +74,7 @@ class JavascriptController extends Controller
     public function currencies(CurrencyRepositoryInterface $repository)
     {
         $currencies = $repository->get();
-        $data       = ['currencies' => [],];
+        $data       = ['currencies' => []];
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             $currencyId                      = $currency->id;
@@ -98,20 +92,30 @@ class JavascriptController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function variables(Request $request)
+    public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository)
     {
+        $account    = $repository->find(intval($request->get('account')));
+        $currencyId = 0;
+        if (null !== $account) {
+            $currencyId = intval($account->getMeta('currency_id'));
+        }
+        /** @var TransactionCurrency $currency */
+        $currency = $currencyRepository->find($currencyId);
+        if (0 === $currencyId) {
+            $currency = app('amount')->getDefaultCurrency();
+        }
+
         $localeconv                = localeconv();
         $accounting                = app('amount')->getJsConfig($localeconv);
         $localeconv                = localeconv();
-        $defaultCurrency           = app('amount')->getDefaultCurrency();
-        $localeconv['frac_digits'] = $defaultCurrency->decimal_places;
+        $localeconv['frac_digits'] = $currency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang                      = $pref->data;
         $dateRange                 = $this->getDateRangeConfig();
 
         $data = [
-            'currencyCode'    => app('amount')->getCurrencyCode(),
-            'currencySymbol'  => app('amount')->getCurrencySymbol(),
+            'currencyCode'    => $currency->code,
+            'currencySymbol'  => $currency->symbol,
             'accounting'      => $accounting,
             'localeconv'      => $localeconv,
             'language'        => $lang,
@@ -181,8 +185,6 @@ class JavascriptController extends Controller
             ],
         ];
 
-
         return $return;
-
     }
 }

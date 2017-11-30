@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Popup;
-
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -39,13 +37,10 @@ use Response;
 use View;
 
 /**
- * Class ReportController
- *
- * @package FireflyIII\Http\Controllers\Popup
+ * Class ReportController.
  */
 class ReportController extends Controller
 {
-
     /** @var AccountRepositoryInterface */
     private $accountRepository;
     /** @var BudgetRepositoryInterface */
@@ -55,7 +50,6 @@ class ReportController extends Controller
     /** @var PopupReportInterface */
     private $popupHelper;
 
-
     /**
      *
      */
@@ -64,30 +58,28 @@ class ReportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-
-                /** @var AccountRepositoryInterface $repository */
+                // @var AccountRepositoryInterface $repository
                 $this->accountRepository = app(AccountRepositoryInterface::class);
 
-                /** @var BudgetRepositoryInterface $repository */
+                // @var BudgetRepositoryInterface $repository
                 $this->budgetRepository = app(BudgetRepositoryInterface::class);
 
-                /** @var CategoryRepositoryInterface categoryRepository */
+                // @var CategoryRepositoryInterface categoryRepository
                 $this->categoryRepository = app(CategoryRepositoryInterface::class);
 
-                /** @var PopupReportInterface popupHelper */
+                // @var PopupReportInterface popupHelper
                 $this->popupHelper = app(PopupReportInterface::class);
 
                 return $next($request);
             }
         );
-
     }
-
 
     /**
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     *
      * @throws FireflyException
      */
     public function general(Request $request)
@@ -119,14 +111,13 @@ class ReportController extends Controller
         }
 
         return Response::json(['html' => $html]);
-
-
     }
 
     /**
      * @param $attributes
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function balanceAmount(array $attributes): string
@@ -136,20 +127,20 @@ class ReportController extends Controller
         $account = $this->accountRepository->find(intval($attributes['accountId']));
 
         switch (true) {
-            case ($role === BalanceLine::ROLE_DEFAULTROLE && !is_null($budget->id)):
+            case BalanceLine::ROLE_DEFAULTROLE === $role && null !== $budget->id:
                 // normal row with a budget:
                 $journals = $this->popupHelper->balanceForBudget($budget, $account, $attributes);
                 break;
-            case ($role === BalanceLine::ROLE_DEFAULTROLE && is_null($budget->id)):
+            case BalanceLine::ROLE_DEFAULTROLE === $role && null === $budget->id:
                 // normal row without a budget:
                 $journals     = $this->popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = strval(trans('firefly.no_budget'));
                 break;
-            case ($role === BalanceLine::ROLE_DIFFROLE):
+            case BalanceLine::ROLE_DIFFROLE === $role:
                 $journals     = $this->popupHelper->balanceDifference($account, $attributes);
                 $budget->name = strval(trans('firefly.leftUnbalanced'));
                 break;
-            case ($role === BalanceLine::ROLE_TAGROLE):
+            case BalanceLine::ROLE_TAGROLE === $role:
                 // row with tag info.
                 throw new FireflyException('Firefly cannot handle this type of info-button (BalanceLine::TagRole)');
         }
@@ -164,6 +155,7 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function budgetSpentAmount(array $attributes): string
@@ -181,6 +173,7 @@ class ReportController extends Controller
      * @param $attributes
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function categoryEntry(array $attributes): string
@@ -198,6 +191,7 @@ class ReportController extends Controller
      * @param $attributes
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function expenseEntry(array $attributes): string
@@ -215,6 +209,7 @@ class ReportController extends Controller
      * @param $attributes
      *
      * @return string
+     *
      * @throws FireflyException
      */
     private function incomeEntry(array $attributes): string
@@ -230,6 +225,7 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return array
+     *
      * @throws FireflyException
      */
     private function parseAttributes(array $attributes): array
@@ -248,8 +244,6 @@ class ReportController extends Controller
             throw new FireflyException('Could not parse start date "' . e($attributes['endDate']) . '".');
         }
 
-
         return $attributes;
     }
-
 }

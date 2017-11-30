@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
-
 
 use DB;
 use FireflyIII\Models\Account;
@@ -37,7 +35,6 @@ use Tests\TestCase;
 /**
  * Class ConvertControllerTest
  *
- * @package Tests\Feature\Controllers\Transaction
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -217,7 +214,7 @@ class ConvertControllerTest extends TestCase
         $accountRepos->shouldReceive('store')->andReturn(new Account);
 
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $data    = ['destination_account_expense' => 'New expense name.',];
+        $data    = ['destination_account_expense' => 'New expense name.'];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['withdrawal', $deposit->id]), $data);
         $response->assertStatus(302);
@@ -240,7 +237,7 @@ class ConvertControllerTest extends TestCase
         $accountRepos->shouldReceive('getCashAccount')->andReturn(new Account)->once();
 
         $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $data    = ['destination_account_expense' => '',];
+        $data    = ['destination_account_expense' => ''];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['withdrawal', $deposit->id]), $data);
         $response->assertStatus(302);
@@ -260,7 +257,6 @@ class ConvertControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('convert')->andReturn($messageBag);
         $repository->shouldReceive('first')->once()->andReturn(new TransactionJournal);
-
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
         $data       = [
@@ -360,7 +356,7 @@ class ConvertControllerTest extends TestCase
         $accountRepos->shouldReceive('store')->andReturn(new Account)->once();
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
-        $data       = ['source_account_revenue' => 'New revenue name.',];
+        $data       = ['source_account_revenue' => 'New revenue name.'];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
         $response->assertStatus(302);
@@ -383,7 +379,7 @@ class ConvertControllerTest extends TestCase
         $accountRepos->shouldReceive('getCashAccount')->andReturn(new Account)->once();
 
         $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
-        $data       = ['source_account_revenue' => '',];
+        $data       = ['source_account_revenue' => ''];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
         $response->assertStatus(302);
@@ -414,6 +410,4 @@ class ConvertControllerTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
     }
-
-
 }

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -27,9 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class Configuration
- *
- * @package FireflyIII\Models
+ * Class Configuration.
  */
 class Configuration extends Model
 {
@@ -41,12 +38,10 @@ class Configuration extends Model
      * @var array
      */
     protected $casts
-        = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
+                     = [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $table = 'configuration';
 
     /**
@@ -66,6 +61,4 @@ class Configuration extends Model
     {
         $this->attributes['data'] = json_encode($value);
     }
-
-
 }

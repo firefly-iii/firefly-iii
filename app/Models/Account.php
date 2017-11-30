@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -36,11 +35,8 @@ use Illuminate\Database\Query\JoinClause;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Watson\Validating\ValidatingTrait;
 
-
 /**
- * Class Account
- *
- * @package FireflyIII\Models
+ * Class Account.
  */
 class Account extends Model
 {
@@ -53,14 +49,12 @@ class Account extends Model
      */
     protected $casts
         = [
-            'created_at' => 'date',
-            'updated_at' => 'date',
-            'deleted_at' => 'date',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     /** @var array */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array */
@@ -73,13 +67,14 @@ class Account extends Model
             'active'          => 'required|boolean',
             'iban'            => 'between:1,50|iban',
         ];
-    /** @var  bool */
+    /** @var bool */
     private $joinedAccountTypes;
 
     /**
      * @param array $fields
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     public static function firstOrCreateEncrypted(array $fields)
@@ -102,7 +97,6 @@ class Account extends Model
             $fields['name'] = $fields['iban'];
         }
 
-
         /** @var Account $account */
         foreach ($set as $account) {
             if ($account->name === $fields['name']) {
@@ -114,7 +108,6 @@ class Account extends Model
         $account = self::create($fields);
 
         return $account;
-
     }
 
     /**
@@ -124,7 +117,6 @@ class Account extends Model
      */
     public static function routeBinder(Account $value)
     {
-
         if (auth()->check()) {
             if (intval($value->user_id) === auth()->user()->id) {
                 return $value;
@@ -156,7 +148,7 @@ class Account extends Model
     {
         $name = $this->name;
 
-        if ($this->accountType->type === AccountType::CASH) {
+        if (AccountType::CASH === $this->accountType->type) {
             return '';
         }
 
@@ -164,16 +156,17 @@ class Account extends Model
     }
 
     /**
-     * FIxxME can return null
+     * FIxxME can return null.
      *
      * @param $value
      *
      * @return string
+     *
      * @throws FireflyException
      */
     public function getIbanAttribute($value): string
     {
-        if (is_null($value) || strlen(strval($value)) === 0) {
+        if (null === $value || 0 === strlen(strval($value))) {
             return '';
         }
         try {
@@ -181,7 +174,7 @@ class Account extends Model
         } catch (DecryptException $e) {
             throw new FireflyException('Cannot decrypt value "' . $value . '" for account #' . $this->id);
         }
-        if (is_null($result)) {
+        if (null === $result) {
             return '';
         }
 
@@ -189,7 +182,6 @@ class Account extends Model
     }
 
     /**
-     *
      * @param string $fieldName
      *
      * @return string
@@ -206,14 +198,12 @@ class Account extends Model
     }
 
     /**
-     *
      * @param $value
      *
      * @return string
      */
     public function getNameAttribute($value): string
     {
-
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
@@ -222,9 +212,10 @@ class Account extends Model
     }
 
     /**
-     * Returns the opening balance
+     * Returns the opening balance.
      *
      * @return TransactionJournal
+     *
      * @throws FireflyException
      */
     public function getOpeningBalance(): TransactionJournal
@@ -234,7 +225,7 @@ class Account extends Model
                                      ->where('transactions.account_id', $this->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
+        if (null === $journal) {
             return new TransactionJournal;
         }
 
@@ -245,6 +236,7 @@ class Account extends Model
      * Returns the amount of the opening balance for this account.
      *
      * @return string
+     *
      * @throws FireflyException
      */
     public function getOpeningBalanceAmount(): string
@@ -254,16 +246,16 @@ class Account extends Model
                                      ->where('transactions.account_id', $this->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
+        if (null === $journal) {
             return '0';
         }
 
         $count = $journal->transactions()->count();
-        if ($count !== 2) {
+        if (2 !== $count) {
             throw new FireflyException(sprintf('Cannot use getFirstTransaction on journal #%d', $journal->id));
         }
         $transaction = $journal->transactions()->where('account_id', $this->id)->first();
-        if (is_null($transaction)) {
+        if (null === $transaction) {
             return '0';
         }
 
@@ -271,9 +263,10 @@ class Account extends Model
     }
 
     /**
-     * Returns the date of the opening balance for this account. If no date, will return 01-01-1900
+     * Returns the date of the opening balance for this account. If no date, will return 01-01-1900.
      *
      * @return Carbon
+     *
      * @throws FireflyException
      */
     public function getOpeningBalanceDate(): Carbon
@@ -284,7 +277,7 @@ class Account extends Model
                                      ->where('transactions.account_id', $this->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
                                      ->first(['transaction_journals.*']);
-        if (is_null($journal)) {
+        if (null === $journal) {
             return $date;
         }
 
@@ -300,13 +293,12 @@ class Account extends Model
     }
 
     /**
-     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
     {
-        if (is_null($this->joinedAccountTypes)) {
+        if (null === $this->joinedAccountTypes) {
             $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
             $this->joinedAccountTypes = true;
         }
@@ -314,7 +306,6 @@ class Account extends Model
     }
 
     /**
-     *
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
@@ -323,15 +314,15 @@ class Account extends Model
     {
         $joinName = str_replace('.', '_', $name);
         $query->leftJoin(
-            'account_meta as ' . $joinName, function (JoinClause $join) use ($joinName, $name) {
-            $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
-        }
+            'account_meta as ' . $joinName,
+            function (JoinClause $join) use ($joinName, $name) {
+                $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
+            }
         );
         $query->where($joinName . '.data', json_encode($value));
     }
 
     /**
-     *
      * @param $value
      */
     public function setIbanAttribute($value)
@@ -340,7 +331,6 @@ class Account extends Model
     }
 
     /**
-     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -352,7 +342,6 @@ class Account extends Model
 
     /**
      * @param $value
-     *
      */
     public function setVirtualBalanceAttribute($value)
     {

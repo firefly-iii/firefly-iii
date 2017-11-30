@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Specifics;
@@ -26,9 +25,7 @@ namespace FireflyIII\Import\Specifics;
 use Log;
 
 /**
- * Class RabobankDescription
- *
- * @package FireflyIII\Import\Specifics
+ * Class RabobankDescription.
  */
 class RabobankDescription implements SpecificInterface
 {
@@ -64,7 +61,8 @@ class RabobankDescription implements SpecificInterface
             Log::debug(
                 sprintf(
                     'Rabobank specific: Opposite account and opposite name are' .
-                    ' both empty. Will use "%s" (from description) instead', $alternateName
+                    ' both empty. Will use "%s" (from description) instead',
+                    $alternateName
                 )
             );
             $row[6]  = $alternateName;

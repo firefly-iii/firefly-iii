@@ -8,7 +8,6 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
 
 use FireflyIII\Models\TransactionType;
@@ -25,6 +24,6 @@ class TransactionTypeSeeder extends Seeder
         TransactionType::create(['type' => TransactionType::DEPOSIT]);
         TransactionType::create(['type' => TransactionType::TRANSFER]);
         TransactionType::create(['type' => TransactionType::OPENING_BALANCE]);
+        TransactionType::create(['type' => TransactionType::RECONCILIATION]);
     }
-
-} 
+}

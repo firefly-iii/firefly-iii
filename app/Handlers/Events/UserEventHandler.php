@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
@@ -37,17 +36,14 @@ use Preferences;
 use Swift_TransportException;
 
 /**
- * Class UserEventHandler
+ * Class UserEventHandler.
  *
  * This class responds to any events that have anything to do with the User object.
  *
  * The method name reflects what is being done. This is in the present tense.
- *
- * @package FireflyIII\Handlers\Events
  */
 class UserEventHandler
 {
-
     /**
      * This method will bestow upon a user the "owner" role if he is the first user in the system.
      *
@@ -61,7 +57,7 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         // first user ever?
-        if ($repository->count() === 1) {
+        if (1 === $repository->count()) {
             $repository->attachRole($event->user, 'owner');
         }
 
@@ -152,7 +148,6 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event)
     {
-
         $sendMail = env('SEND_REGISTRATION_MAIL', true);
         if (!$sendMail) {
             return true; // @codeCoverageIgnore

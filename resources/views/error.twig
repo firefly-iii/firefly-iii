@@ -10,9 +10,20 @@
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <p>{{ message |default('General unknown errror') }}</p>
+            <p>{{ message |default('General unknown errror')|raw }}</p>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <p>
+                If you do not know how to handle this error, please open an issue on
+                <a href="https://github.com/firefly-iii/firefly-iii/issues">Github</a>
+                or <a href="mailto:thegrumpydictator@gmail.com">send me a message</a>.
+            </p>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <p><a href="{{ route('index') }}">Follow this link back to the index.</a></p>

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
@@ -29,9 +28,7 @@ use FireflyIII\Models\TransactionJournalLink;
 use Illuminate\Support\Collection;
 
 /**
- * Interface LinkTypeRepositoryInterface
- *
- * @package FireflyIII\Repositories\LinkType
+ * Interface LinkTypeRepositoryInterface.
  */
 interface LinkTypeRepositoryInterface
 {
@@ -109,5 +106,4 @@ interface LinkTypeRepositoryInterface
      * @return LinkType
      */
     public function update(LinkType $linkType, array $data): LinkType;
-
 }

@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
-
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\RuleAction;
@@ -32,15 +30,12 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Log;
 
 /**
- * Class SetBudget
- *
- * @package FireflyIII\TransactionRules\Action
+ * Class SetBudget.
  */
 class SetBudget implements ActionInterface
 {
-
+    /** @var RuleAction The rule action */
     private $action;
-
 
     /**
      * TriggerInterface constructor.
@@ -53,6 +48,8 @@ class SetBudget implements ActionInterface
     }
 
     /**
+     * Set budget X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -69,14 +66,21 @@ class SetBudget implements ActionInterface
                 return $current->name === $search;
             }
         )->first();
-        if (is_null($budget)) {
+        if (null === $budget) {
             Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
 
             return true;
         }
 
-        if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
-            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.', $journal->id, $search, $journal->transactionType->type));
+        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
+            Log::debug(
+                sprintf(
+                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
+                    $journal->id,
+                    $search,
+                    $journal->transactionType->type
+                )
+            );
 
             return true;
         }
@@ -84,7 +88,6 @@ class SetBudget implements ActionInterface
         Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
 
         $journal->budgets()->sync([$budget->id]);
-
 
         return true;
     }

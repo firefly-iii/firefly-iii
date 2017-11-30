@@ -18,25 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
-use FireflyIII\Helpers\Collection\Expense;
-use FireflyIII\Helpers\Collection\Income;
 use Illuminate\Support\Collection;
 
 /**
- * Interface ReportHelperInterface
- *
- * @package FireflyIII\Helpers\Report
+ * Interface ReportHelperInterface.
  */
 interface ReportHelperInterface
 {
-
     /**
      * This method generates a full report for the given period on all
      * the users bills and their payments.
@@ -57,5 +51,4 @@ interface ReportHelperInterface
      * @return array
      */
     public function listOfMonths(Carbon $date): array;
-
 }

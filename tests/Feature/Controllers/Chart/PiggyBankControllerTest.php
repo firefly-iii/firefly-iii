@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
-
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\PiggyBankEvent;
@@ -33,7 +31,6 @@ use Tests\TestCase;
 /**
  * Class PiggyBankControllerTest
  *
- * @package Tests\Feature\Controllers\Chart
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -57,6 +54,4 @@ class PiggyBankControllerTest extends TestCase
         $response = $this->get(route('chart.piggy-bank.history', [1]));
         $response->assertStatus(200);
     }
-
-
 }

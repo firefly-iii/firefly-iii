@@ -31,6 +31,8 @@ You can install Firefly III on any Linux or Windows machine. You'll need a web s
 
 Register for a free Heroku account and instantly run Firefly III on your very own cloud instance.
 
+_My Heroku configuration is currently broken, but I'm trying to fix it._
+
 ### Using Sandstorm.io
 
 You can find Firefly III in [the Sandstorm.io marketplace](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70). You can run it on your own installation or on Oasis.

@@ -107,6 +107,10 @@ function selectsForeignCurrency() {
     if (foreignCurrencyId === nativeCurrencyId) {
         $('#exchange_rate_instruction_holder').hide();
         $('#native_amount_holder').hide();
+
+        // make all other inputs empty
+        $('input[name="destination_amount"]').val("");
+        $('input[name="native_amount"]').val("");
     }
 
     return false;

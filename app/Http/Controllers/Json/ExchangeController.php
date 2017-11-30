@@ -18,11 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
-
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
@@ -34,9 +32,7 @@ use Log;
 use Response;
 
 /**
- * Class ExchangeController
- *
- * @package FireflyIII\Http\Controllers\Json
+ * Class ExchangeController.
  */
 class ExchangeController extends Controller
 {
@@ -53,7 +49,7 @@ class ExchangeController extends Controller
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
         $rate       = $repository->getExchangeRate($fromCurrency, $toCurrency, $date);
-        if (is_null($rate->id)) {
+        if (null === $rate->id) {
             Log::debug(sprintf('No cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
             $preferred = env('EXCHANGE_RATE_SERVICE', config('firefly.preferred_exchange_service'));
             $class     = config('firefly.currency_exchange_services.' . $preferred);
@@ -64,7 +60,7 @@ class ExchangeController extends Controller
         }
         $return           = $rate->toArray();
         $return['amount'] = null;
-        if (!is_null($request->get('amount'))) {
+        if (null !== $request->get('amount')) {
             // assume amount is in "from" currency:
             $return['amount'] = bcmul($request->get('amount'), strval($rate->rate), 12);
             // round to toCurrency decimal places:
@@ -73,5 +69,4 @@ class ExchangeController extends Controller
 
         return Response::json($return);
     }
-
 }

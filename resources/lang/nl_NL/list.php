@@ -17,7 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Aangemaakt op',
     'update_date'             => 'Bijgewerkt op',
-    'updated_at'             => 'Bijgewerkt op',
+    'updated_at'              => 'Bijgewerkt op',
     'balance_before'          => 'Saldo voor',
     'balance_after'           => 'Saldo na',
     'name'                    => 'Naam',
@@ -89,4 +89,5 @@ return [
     'sum_withdrawals'         => 'Som van uitgaven',
     'sum_deposits'            => 'Som van inkomsten',
     'sum_transfers'           => 'Som van overschrijvingen',
+    'reconcile'               => 'Afstemmen',
 ];

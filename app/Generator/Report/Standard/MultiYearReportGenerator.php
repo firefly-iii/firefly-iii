@@ -18,28 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Standard;
-
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
 
 /**
- * Class MonthReportGenerator
- *
- * @package FireflyIII\Generator\Report\Standard
+ * Class MonthReportGenerator.
  */
 class MultiYearReportGenerator implements ReportGeneratorInterface
 {
-    /** @var  Collection */
+    /** @var Collection */
     private $accounts;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $end;
-    /** @var  Carbon */
+    /** @var Carbon */
     private $start;
 
     /**

@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
@@ -37,13 +36,11 @@ use Session;
 use View;
 
 /**
- * Class ConvertController
- *
- * @package FireflyIII\Http\Controllers\Transaction
+ * Class ConvertController.
  */
 class ConvertController extends Controller
 {
-    /** @var  AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface */
     private $accounts;
 
     /**
@@ -107,13 +104,18 @@ class ConvertController extends Controller
         return view(
             'transactions.convert',
             compact(
-                'sourceType', 'destinationType', 'journal', 'assetAccounts',
-                'positiveAmount', 'sourceAccount', 'destinationAccount', 'sourceType',
-                'subTitle', 'subTitleIcon'
-
+                'sourceType',
+                'destinationType',
+                'journal',
+                'assetAccounts',
+                'positiveAmount',
+                'sourceAccount',
+                'destinationAccount',
+                'sourceType',
+                'subTitle',
+                'subTitleIcon'
             )
         );
-
 
         // convert withdrawal to deposit requires a new source account ()
         //  or to transfer requires
@@ -171,6 +173,7 @@ class ConvertController extends Controller
      * @param array              $data
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     private function getDestinationAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account
@@ -195,7 +198,7 @@ class ConvertController extends Controller
             case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL:
             case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL:
                 // three and five
-                if ($data['destination_account_expense'] === '' || is_null($data['destination_account_expense'])) {
+                if ('' === $data['destination_account_expense'] || null === $data['destination_account_expense']) {
                     // destination is a cash account.
                     $destination = $accountRepository->getCashAccount();
 
@@ -226,6 +229,7 @@ class ConvertController extends Controller
      * @param array              $data
      *
      * @return Account
+     *
      * @throws FireflyException
      */
     private function getSourceAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account
@@ -242,7 +246,7 @@ class ConvertController extends Controller
             case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT:
             case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT:
 
-                if ($data['source_account_revenue'] === '' || is_null($data['source_account_revenue'])) {
+                if ('' === $data['source_account_revenue'] || null === $data['source_account_revenue']) {
                     // destination is a cash account.
                     $destination = $accountRepository->getCashAccount();
 
@@ -271,7 +275,5 @@ class ConvertController extends Controller
         }
 
         return $source;
-
     }
-
 }

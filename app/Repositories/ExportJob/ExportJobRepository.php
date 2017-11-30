@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ExportJob;
@@ -31,9 +30,7 @@ use Log;
 use Storage;
 
 /**
- * Class ExportJobRepository
- *
- * @package FireflyIII\Repositories\ExportJob
+ * Class ExportJobRepository.
  */
 class ExportJobRepository implements ExportJobRepositoryInterface
 {
@@ -91,7 +88,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
-            if (is_null($existing->id)) {
+            if (null === $existing->id) {
                 $exportJob = new ExportJob;
                 $exportJob->user()->associate($this->user);
                 $exportJob->key    = Str::random(12);
@@ -102,12 +99,10 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
                 return $exportJob;
             }
-            $count++;
-
+            ++$count;
         }
 
         return new ExportJob;
-
     }
 
     /**
@@ -131,7 +126,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     public function findByKey(string $key): ExportJob
     {
         $result = $this->user->exportJobs()->where('key', $key)->first(['export_jobs.*']);
-        if (is_null($result)) {
+        if (null === $result) {
             return new ExportJob;
         }
 

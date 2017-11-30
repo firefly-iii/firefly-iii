@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Account;
@@ -33,9 +32,7 @@ use Log;
 use Steam;
 
 /**
- * Class AccountTasker
- *
- * @package FireflyIII\Repositories\Account
+ * Class AccountTasker.
  */
 class AccountTasker implements AccountTaskerInterface
 {
@@ -83,7 +80,7 @@ class AccountTasker implements AccountTaskerInterface
             $entry['end_balance']   = $endSet[$account->id] ?? '0';
 
             // first journal exists, and is on start, then this is the actual opening balance:
-            if (!is_null($first->id) && $first->date->isSameDay($start)) {
+            if (null !== $first->id && $first->date->isSameDay($start)) {
                 Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
                 Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
@@ -162,7 +159,7 @@ class AccountTasker implements AccountTaskerInterface
         $transactions = $transactions->filter(
             function (Transaction $transaction) {
                 // return positive amounts only.
-                if (bccomp($transaction->transaction_amount, '0') === 1) {
+                if (1 === bccomp($transaction->transaction_amount, '0')) {
                     return $transaction;
                 }
 
@@ -213,7 +210,7 @@ class AccountTasker implements AccountTaskerInterface
                 ];
             }
             $expenses[$opposingId]['sum'] = bcadd($expenses[$opposingId]['sum'], $transaction->transaction_amount);
-            $expenses[$opposingId]['count']++;
+            ++$expenses[$opposingId]['count'];
         }
         // do averages:
         $keys = array_keys($expenses);
@@ -222,7 +219,6 @@ class AccountTasker implements AccountTaskerInterface
                 $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], strval($expenses[$key]['count']));
             }
         }
-
 
         return $expenses;
     }

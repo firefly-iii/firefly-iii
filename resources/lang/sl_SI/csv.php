@@ -51,6 +51,8 @@ return [
     'column_account-id'             => 'ID premoženjskega računa (Firefly)',
     'column_account-name'           => 'premoženjski račun (ime)',
     'column_amount'                 => 'znesek',
+    'column_amount_debet'           => 'Znesek v breme',
+    'column_amount_credit'          => 'Znesek v dobro',
     'column_amount-comma-separated' => 'znesek (z decimalno vejico)',
     'column_bill-id'                => 'ID trajnika (Firefly)',
     'column_bill-name'              => 'Ime trajnika',

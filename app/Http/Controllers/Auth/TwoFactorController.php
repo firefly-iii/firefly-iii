@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -32,38 +31,35 @@ use Log;
 use Preferences;
 
 /**
- * Class TwoFactorController
- *
- * @package FireflyIII\Http\Controllers\Auth
+ * Class TwoFactorController.
  */
 class TwoFactorController extends Controller
 {
-
     /**
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     *
      * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(Request $request)
     {
-
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
         $secretPreference = Preferences::get('twoFactorAuthSecret', null);
-        $secret           = is_null($secretPreference) ? null : $secretPreference->data;
+        $secret           = null === $secretPreference ? null : $secretPreference->data;
         $title            = strval(trans('firefly.two_factor_title'));
 
         // make sure the user has two factor configured:
         $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;
-        if (is_null($has2FA) || $has2FA === false) {
+        if (null === $has2FA || false === $has2FA) {
             return redirect(route('index'));
         }
 
-        if (strlen(strval($secret)) === 0) {
+        if (0 === strlen(strval($secret))) {
             throw new FireflyException('Your two factor authentication secret is empty, which it cannot be at this point. Please check the log files.');
         }
         $request->session()->flash('two-factor-secret', $secret);
@@ -73,6 +69,7 @@ class TwoFactorController extends Controller
 
     /**
      * @return mixed
+     *
      * @throws FireflyException
      */
     public function lostTwoFactor()
@@ -96,14 +93,24 @@ class TwoFactorController extends Controller
      *
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter) // it's unused but the class does some validation.
-     *
      */
     public function postIndex(TokenFormRequest $request, CookieJar $cookieJar)
     {
-        // set cookie!
-        $cookie = $cookieJar->forever('twoFactorAuthenticated', 'true');
+        // wants to remember session?
+        $remember = $request->session()->get('remember_login') ?? false;
+
+        $minutes = config('session.lifetime');
+        if (true === $remember) {
+            // set cookie with a long lifetime (30 days)
+            $minutes = 43200;
+        }
+        $cookie = $cookieJar->make(
+            'twoFactorAuthenticated', 'true', $minutes, config('session.path'), config('session.domain'), config('session.secure'), config('session.http_only')
+        );
+
+        // whatever the case, forget about it:
+        $request->session()->forget('remember_login');
 
         return redirect(route('home'))->withCookie($cookie);
     }
-
 }

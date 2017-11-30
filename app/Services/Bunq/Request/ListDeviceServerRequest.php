@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq\Request;
@@ -28,15 +27,13 @@ use FireflyIII\Services\Bunq\Token\InstallationToken;
 use Illuminate\Support\Collection;
 
 /**
- * Class ListDeviceServerRequest
- *
- * @package FireflyIII\Services\Bunq\Request
+ * Class ListDeviceServerRequest.
  */
 class ListDeviceServerRequest extends BunqRequest
 {
     /** @var Collection */
     private $devices;
-    /** @var  InstallationToken */
+    /** @var InstallationToken */
     private $installationToken;
 
     public function __construct()

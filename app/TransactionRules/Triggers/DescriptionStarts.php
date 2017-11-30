@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Triggers;
@@ -27,13 +26,10 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class DescriptionStarts
- *
- * @package FireflyIII\TransactionRules\Triggers
+ * Class DescriptionStarts.
  */
 final class DescriptionStarts extends AbstractTrigger implements TriggerInterface
 {
-
     /**
      * A trigger is said to "match anything", or match any given transaction,
      * when the trigger value is very vague or has no restrictions. Easy examples
@@ -52,9 +48,9 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
      */
     public static function willMatchEverything($value = null)
     {
-        if (!is_null($value)) {
-            $res = strval($value) === '';
-            if ($res === true) {
+        if (null !== $value) {
+            $res = '' === strval($value);
+            if (true === $res) {
                 Log::error(sprintf('Cannot use %s with "" as a value.', self::class));
             }
 
@@ -67,6 +63,8 @@ final class DescriptionStarts extends AbstractTrigger implements TriggerInterfac
     }
 
     /**
+     * Returns true when description starts with X
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

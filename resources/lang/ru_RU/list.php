@@ -17,7 +17,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Создан',
     'update_date'             => 'Обновлён',
-    'updated_at'             => 'Updated at',
+    'updated_at'              => 'Updated at',
     'balance_before'          => 'Баланс до',
     'balance_after'           => 'Баланс после',
     'name'                    => 'Имя',
@@ -89,4 +89,5 @@ return [
     'sum_withdrawals'         => 'Sum of withdrawals',
     'sum_deposits'            => 'Sum of deposits',
     'sum_transfers'           => 'Sum of transfers',
+    'reconcile'               => 'Reconcile',
 ];

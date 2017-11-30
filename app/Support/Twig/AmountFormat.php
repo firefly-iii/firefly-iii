@@ -18,29 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-
 use FireflyIII\Models\Account as AccountModel;
-use FireflyIII\Models\Transaction as TransactionModel;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
  * Contains all amount formatting routines.
- *
- * @package FireflyIII\Support\Twig
  */
 class AmountFormat extends Twig_Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFilters(): array
     {
@@ -48,27 +42,22 @@ class AmountFormat extends Twig_Extension
             $this->formatAmount(),
             $this->formatAmountPlain(),
         ];
-
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFunctions(): array
     {
         return [
             $this->formatAmountByAccount(),
             $this->formatAmountBySymbol(),
-            $this->transactionAmount(),
-            $this->journalAmount(),
-            $this->journalTotalAmount(),
             $this->formatDestinationAfter(),
             $this->formatDestinationBefore(),
             $this->formatSourceAfter(),
             $this->formatSourceBefore(),
             $this->formatAmountByCurrency(),
         ];
-
     }
 
     /**
@@ -82,18 +71,18 @@ class AmountFormat extends Twig_Extension
     }
 
     /**
-     *
      * @return Twig_SimpleFilter
      */
     protected function formatAmount(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'formatAmount', function (string $string): string {
+            'formatAmount',
+            function (string $string): string {
+                $currency = app('amount')->getDefaultCurrency();
 
-            $currency = app('amount')->getDefaultCurrency();
-
-            return app('amount')->formatAnything($currency, $string, true);
-        }, ['is_safe' => ['html']]
+                return app('amount')->formatAnything($currency, $string, true);
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -105,20 +94,20 @@ class AmountFormat extends Twig_Extension
     protected function formatAmountByAccount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountByAccount', function (AccountModel $account, string $amount, bool $coloured = true): string {
-            $currencyId = intval($account->getMeta('currency_id'));
+            'formatAmountByAccount',
+            function (AccountModel $account, string $amount, bool $coloured = true): string {
+                $currencyId = intval($account->getMeta('currency_id'));
 
-            if ($currencyId !== 0) {
-                $currency = TransactionCurrency::find($currencyId);
+                if (0 !== $currencyId) {
+                    $currency = TransactionCurrency::find($currencyId);
+
+                    return app('amount')->formatAnything($currency, $amount, $coloured);
+                }
+                $currency = app('amount')->getDefaultCurrency();
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
-            }
-            $currency = app('amount')->getDefaultCurrency();
-
-            return app('amount')->formatAnything($currency, $amount, $coloured);
-
-
-        }, ['is_safe' => ['html']]
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -130,12 +119,11 @@ class AmountFormat extends Twig_Extension
     protected function formatAmountByCurrency(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountByCurrency', function (TransactionCurrency $currency, string $amount, bool $coloured = true): string {
-
-            return app('amount')->formatAnything($currency, $amount, $coloured);
-
-
-        }, ['is_safe' => ['html']]
+            'formatAmountByCurrency',
+            function (TransactionCurrency $currency, string $amount, bool $coloured = true): string {
+                return app('amount')->formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -147,16 +135,15 @@ class AmountFormat extends Twig_Extension
     protected function formatAmountBySymbol(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatAmountBySymbol', function (string $amount, string $symbol, int $decimalPlaces = 2, bool $coloured = true): string {
+            'formatAmountBySymbol',
+            function (string $amount, string $symbol, int $decimalPlaces = 2, bool $coloured = true): string {
+                $currency                 = new TransactionCurrency;
+                $currency->symbol         = $symbol;
+                $currency->decimal_places = $decimalPlaces;
 
-            $currency                 = new TransactionCurrency;
-            $currency->symbol         = $symbol;
-            $currency->decimal_places = $decimalPlaces;
-
-            return app('amount')->formatAnything($currency, $amount, $coloured);
-
-
-        }, ['is_safe' => ['html']]
+                return app('amount')->formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -166,12 +153,13 @@ class AmountFormat extends Twig_Extension
     protected function formatAmountPlain(): Twig_SimpleFilter
     {
         return new Twig_SimpleFilter(
-            'formatAmountPlain', function (string $string): string {
+            'formatAmountPlain',
+            function (string $string): string {
+                $currency = app('amount')->getDefaultCurrency();
 
-            $currency = app('amount')->getDefaultCurrency();
-
-            return app('amount')->formatAnything($currency, $string, false);
-        }, ['is_safe' => ['html']]
+                return app('amount')->formatAnything($currency, $string, false);
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -181,27 +169,26 @@ class AmountFormat extends Twig_Extension
     protected function formatDestinationAfter(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatDestinationAfter', function (array $transaction): string {
-
-            // build fake currency for main amount.
-            $format                 = new TransactionCurrency;
-            $format->decimal_places = $transaction['transaction_currency_dp'];
-            $format->symbol         = $transaction['transaction_currency_symbol'];
-            $string                 = app('amount')->formatAnything($format, $transaction['destination_account_after'], true);
-
-            // also append foreign amount for clarity:
-            if (!is_null($transaction['foreign_destination_amount'])) {
-                // build fake currency for foreign amount
+            'formatDestinationAfter',
+            function (array $transaction): string {
+                // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
-                $format->decimal_places = $transaction['foreign_currency_dp'];
-                $format->symbol         = $transaction['foreign_currency_symbol'];
-                $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_destination_amount'], true) . ')';
-            }
+                $format->decimal_places = $transaction['transaction_currency_dp'];
+                $format->symbol         = $transaction['transaction_currency_symbol'];
+                $string                 = app('amount')->formatAnything($format, $transaction['destination_account_after'], true);
 
+                // also append foreign amount for clarity:
+                if (null !== $transaction['foreign_destination_amount']) {
+                    // build fake currency for foreign amount
+                    $format                 = new TransactionCurrency;
+                    $format->decimal_places = $transaction['foreign_currency_dp'];
+                    $format->symbol         = $transaction['foreign_currency_symbol'];
+                    $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_destination_amount'], true) . ')';
+                }
 
-            return $string;
-
-        }, ['is_safe' => ['html']]
+                return $string;
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -211,16 +198,16 @@ class AmountFormat extends Twig_Extension
     protected function formatDestinationBefore(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatDestinationBefore', function (array $transaction): string {
+            'formatDestinationBefore',
+            function (array $transaction): string {
+                // build fake currency for main amount.
+                $format                 = new TransactionCurrency;
+                $format->decimal_places = $transaction['transaction_currency_dp'];
+                $format->symbol         = $transaction['transaction_currency_symbol'];
 
-            // build fake currency for main amount.
-            $format                 = new TransactionCurrency;
-            $format->decimal_places = $transaction['transaction_currency_dp'];
-            $format->symbol         = $transaction['transaction_currency_symbol'];
-
-            return app('amount')->formatAnything($format, $transaction['destination_account_before'], true);
-
-        }, ['is_safe' => ['html']]
+                return app('amount')->formatAnything($format, $transaction['destination_account_before'], true);
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -230,28 +217,26 @@ class AmountFormat extends Twig_Extension
     protected function formatSourceAfter(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatSourceAfter', function (array $transaction): string {
-
-            // build fake currency for main amount.
-            $format                 = new TransactionCurrency;
-            $format->decimal_places = $transaction['transaction_currency_dp'];
-            $format->symbol         = $transaction['transaction_currency_symbol'];
-            $string                 = app('amount')->formatAnything($format, $transaction['source_account_after'], true);
-
-            // also append foreign amount for clarity:
-            if (!is_null($transaction['foreign_source_amount'])) {
-                // build fake currency for foreign amount
+            'formatSourceAfter',
+            function (array $transaction): string {
+                // build fake currency for main amount.
                 $format                 = new TransactionCurrency;
-                $format->decimal_places = $transaction['foreign_currency_dp'];
-                $format->symbol         = $transaction['foreign_currency_symbol'];
-                $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_source_amount'], true) . ')';
-            }
+                $format->decimal_places = $transaction['transaction_currency_dp'];
+                $format->symbol         = $transaction['transaction_currency_symbol'];
+                $string                 = app('amount')->formatAnything($format, $transaction['source_account_after'], true);
 
+                // also append foreign amount for clarity:
+                if (null !== $transaction['foreign_source_amount']) {
+                    // build fake currency for foreign amount
+                    $format                 = new TransactionCurrency;
+                    $format->decimal_places = $transaction['foreign_currency_dp'];
+                    $format->symbol         = $transaction['foreign_currency_symbol'];
+                    $string                 .= ' (' . app('amount')->formatAnything($format, $transaction['foreign_source_amount'], true) . ')';
+                }
 
-            return $string;
-
-
-        }, ['is_safe' => ['html']]
+                return $string;
+            },
+            ['is_safe' => ['html']]
         );
     }
 
@@ -261,56 +246,16 @@ class AmountFormat extends Twig_Extension
     protected function formatSourceBefore(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'formatSourceBefore', function (array $transaction): string {
+            'formatSourceBefore',
+            function (array $transaction): string {
+                // build fake currency for main amount.
+                $format                 = new TransactionCurrency;
+                $format->decimal_places = $transaction['transaction_currency_dp'];
+                $format->symbol         = $transaction['transaction_currency_symbol'];
 
-            // build fake currency for main amount.
-            $format                 = new TransactionCurrency;
-            $format->decimal_places = $transaction['transaction_currency_dp'];
-            $format->symbol         = $transaction['transaction_currency_symbol'];
-
-            return app('amount')->formatAnything($format, $transaction['source_account_before'], true);
-
-        }, ['is_safe' => ['html']]
+                return app('amount')->formatAnything($format, $transaction['source_account_before'], true);
+            },
+            ['is_safe' => ['html']]
         );
     }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function journalAmount(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'journalAmount', function (TransactionJournal $journal): string {
-
-            return app('amount')->journalAmount($journal, true);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function journalTotalAmount(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'journalTotalAmount', function (TransactionJournal $journal): string {
-
-            return app('amount')->journalTotalAmount($journal, true);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function transactionAmount(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'transactionAmount', function (TransactionModel $transaction): string {
-
-            return app('amount')->transactionAmount($transaction, true);
-        }, ['is_safe' => ['html']]
-        );
-    }
-
 }

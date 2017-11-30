@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
@@ -33,9 +32,7 @@ use Illuminate\Http\Request;
 use View;
 
 /**
- * Class Sandstorm
- *
- * @package FireflyIII\Http\Middleware
+ * Class Sandstorm.
  */
 class Sandstorm
 {
@@ -43,18 +40,19 @@ class Sandstorm
      * Detects if is using Sandstorm, and responds by logging the user
      * in and/or creating an account.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param  string|null              $guard
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null              $guard
      *
      * @return mixed
+     *
      * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function handle(Request $request, Closure $next, $guard = null)
     {
         // is in Sandstorm environment?
-        $sandstorm = intval(getenv('SANDSTORM')) === 1;
+        $sandstorm = 1 === intval(getenv('SANDSTORM'));
         View::share('SANDSTORM', $sandstorm);
         if (!$sandstorm) {
             return $next($request);
@@ -72,7 +70,7 @@ class Sandstorm
             // access the same data so we have no choice but to simply login
             // the new user to the same account and just forget about Bob and Alice
             // and any other differences there may be between these users.
-            if ($count === 1 && strlen($userId) > 0) {
+            if (1 === $count && strlen($userId) > 0) {
                 // login as first user user.
                 $user = User::first();
                 Auth::guard($guard)->login($user);
@@ -81,7 +79,7 @@ class Sandstorm
                 return $next($request);
             }
 
-            if ($count === 1 && strlen($userId) === 0) {
+            if (1 === $count && 0 === strlen($userId)) {
                 // login but indicate anonymous
                 $user = User::first();
                 Auth::guard($guard)->login($user);
@@ -90,7 +88,7 @@ class Sandstorm
                 return $next($request);
             }
 
-            if ($count === 0 && strlen($userId) > 0) {
+            if (0 === $count && strlen($userId) > 0) {
                 // create new user.
                 $email = $userId . '@firefly';
                 /** @var User $user */
@@ -110,14 +108,13 @@ class Sandstorm
                 return $next($request);
             }
 
-            if ($count === 0 && strlen($userId) === 0) {
+            if (0 === $count && 0 === strlen($userId)) {
                 throw new FireflyException('The first visit to a new Firefly III administration cannot be by a guest user.');
             }
 
             if ($count > 1) {
                 throw new FireflyException('Your Firefly III installation has more than one user, which is weird.');
             }
-
         }
 
         return $next($request);

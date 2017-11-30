@@ -8,7 +8,6 @@
  *
  * See the LICENSE file for details.
  */
-
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
@@ -24,7 +23,6 @@ class ChangesForV420 extends Migration
      */
     public function down()
     {
-        //
     }
 
     /**
@@ -35,9 +33,10 @@ class ChangesForV420 extends Migration
     public function up()
     {
         Schema::table(
-            'journal_meta', function (Blueprint $table) {
-            $table->softDeletes();
-        }
+            'journal_meta',
+            function (Blueprint $table) {
+                $table->softDeletes();
+            }
         );
     }
 }

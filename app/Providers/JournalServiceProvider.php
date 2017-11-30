@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
-
 
 namespace FireflyIII\Providers;
 
@@ -34,26 +32,19 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class JournalServiceProvider
- *
- * @package FireflyIII\Providers
+ * Class JournalServiceProvider.
  */
 class JournalServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot()
     {
-        //
     }
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -63,7 +54,7 @@ class JournalServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register the collector.
      */
     private function registerCollector()
     {
@@ -76,14 +67,13 @@ class JournalServiceProvider extends ServiceProvider
                     $collector->setUser(auth()->user());
                 }
 
-
                 return $collector;
             }
         );
     }
 
     /**
-     *
+     * Register repository.
      */
     private function registerRepository()
     {
@@ -93,7 +83,6 @@ class JournalServiceProvider extends ServiceProvider
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepository::class);
                 if ($app->auth->check()) {
-
                     $repository->setUser(auth()->user());
                 }
 
@@ -103,7 +92,7 @@ class JournalServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * Register the tasker.
      */
     private function registerTasker()
     {
@@ -121,5 +110,4 @@ class JournalServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

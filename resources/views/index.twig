@@ -79,7 +79,7 @@
 
                         <div class="box-footer clearfix">
                             <a class="btn btn-sm btn-default btn-flat pull-right"
-                               href="{{ route('accounts.show',data[1].id) }}">{{ (data[1]|balance)|formatAmountPlain }}</a>
+                               href="{{ route('accounts.show',data[1].id) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -142,6 +142,14 @@
         var accountRevenueUri = '{{ route('chart.account.revenue') }}';
         var accountExpenseUri = '{{ route('chart.account.expense') }}';
         var piggyInfoUri = '{{ route('json.fp.piggy-banks') }}';
+        var todayText = ' {{ 'today'|_ }}';
+
+        <!-- render vertical line with text "today"  -->
+        {% if start.lte(today) and end.gte(today) %}
+            var today = {{ today.day }};
+        {% else %}
+            var today = -1;
+        {% endif %}
     </script>
 
     <script type="text/javascript" src="js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>

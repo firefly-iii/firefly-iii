@@ -3,8 +3,7 @@
     <div class="col-sm-8">
         {% if env('MAPBOX_API_KEY','') == '' %}
             <p class="text-danger">
-                To use map, get an API key from <a href="https://www.mapbox.com/">Mapbox</a>.
-                Open your <code>.env</code> file en enter this code after <code>MAPBOX_API_KEY=</code>.
+                {{ trans('firefly.mapbox_api_key')|raw }}
             </p>
         {% else %}
         <div id="{{ name }}_map" style="width:100%;height:300px;"></div>

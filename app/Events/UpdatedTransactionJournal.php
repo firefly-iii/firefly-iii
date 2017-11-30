@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Events;
@@ -27,13 +26,10 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UpdatedTransactionJournal
- *
- * @package FireflyIII\Events
+ * Class UpdatedTransactionJournal.
  */
 class UpdatedTransactionJournal extends Event
 {
-
     use SerializesModels;
 
     /** @var TransactionJournal */
@@ -46,8 +42,6 @@ class UpdatedTransactionJournal extends Event
      */
     public function __construct(TransactionJournal $journal)
     {
-        //
         $this->journal = $journal;
     }
-
 }

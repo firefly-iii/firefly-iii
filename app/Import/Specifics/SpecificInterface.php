@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Specifics;
 
 /**
- * Interface SpecificInterface
- *
- * @package FireflyIII\Import\Specifics
+ * Interface SpecificInterface.
  */
 interface SpecificInterface
 {
@@ -46,5 +43,4 @@ interface SpecificInterface
      * @return array
      */
     public function run(array $row): array;
-
 }
