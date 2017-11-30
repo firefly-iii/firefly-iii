@@ -204,6 +204,7 @@ opt/app/.dockerignore
 opt/app/.env
 opt/app/.env.docker
 opt/app/.env.example
+opt/app/.env.heroku
 opt/app/.env.sandstorm
 opt/app/.gitattributes
 opt/app/.sandstorm/.gitattributes
@@ -333,6 +334,7 @@ opt/app/app/Helpers/Report/PopupReport.php
 opt/app/app/Helpers/Report/PopupReportInterface.php
 opt/app/app/Helpers/Report/ReportHelper.php
 opt/app/app/Helpers/Report/ReportHelperInterface.php
+opt/app/app/Http/Controllers/Account/ReconcileController.php
 opt/app/app/Http/Controllers/AccountController.php
 opt/app/app/Http/Controllers/Admin/ConfigurationController.php
 opt/app/app/Http/Controllers/Admin/HomeController.php
@@ -370,7 +372,6 @@ opt/app/app/Http/Controllers/Json/BoxController.php
 opt/app/app/Http/Controllers/Json/ExchangeController.php
 opt/app/app/Http/Controllers/Json/FrontpageController.php
 opt/app/app/Http/Controllers/Json/IntroController.php
-opt/app/app/Http/Controllers/Json/TransactionController.php
 opt/app/app/Http/Controllers/JsonController.php
 opt/app/app/Http/Controllers/NewUserController.php
 opt/app/app/Http/Controllers/PiggyBankController.php
@@ -428,6 +429,7 @@ opt/app/app/Http/Requests/MassEditJournalRequest.php
 opt/app/app/Http/Requests/NewUserFormRequest.php
 opt/app/app/Http/Requests/PiggyBankFormRequest.php
 opt/app/app/Http/Requests/ProfileFormRequest.php
+opt/app/app/Http/Requests/ReconciliationFormRequest.php
 opt/app/app/Http/Requests/ReportFormRequest.php
 opt/app/app/Http/Requests/Request.php
 opt/app/app/Http/Requests/RuleFormRequest.php
@@ -443,6 +445,8 @@ opt/app/app/Http/breadcrumbs.php
 opt/app/app/Import/Configurator/ConfiguratorInterface.php
 opt/app/app/Import/Configurator/CsvConfigurator.php
 opt/app/app/Import/Converter/Amount.php
+opt/app/app/Import/Converter/AmountCredit.php
+opt/app/app/Import/Converter/AmountDebet.php
 opt/app/app/Import/Converter/ConverterInterface.php
 opt/app/app/Import/Converter/INGDebetCredit.php
 opt/app/app/Import/Converter/RabobankDebetCredit.php
@@ -499,7 +503,6 @@ opt/app/app/Models/Configuration.php
 opt/app/app/Models/CurrencyExchangeRate.php
 opt/app/app/Models/ExportJob.php
 opt/app/app/Models/ImportJob.php
-opt/app/app/Models/LimitRepetition.php
 opt/app/app/Models/LinkType.php
 opt/app/app/Models/Note.php
 opt/app/app/Models/PiggyBank.php
@@ -741,6 +744,7 @@ opt/app/config/session.php
 opt/app/config/twigbridge.php
 opt/app/config/upgrade.php
 opt/app/config/view.php
+opt/app/crowdin.yml
 opt/app/database/factories/ModelFactory.php
 opt/app/database/migrations/2016_06_16_000000_create_support_tables.php
 opt/app/database/migrations/2016_06_16_000001_create_users_table.php
@@ -850,7 +854,9 @@ opt/app/public/images/page_green.png
 opt/app/public/images/page_white_acrobat.png
 opt/app/public/index.php
 opt/app/public/js/ff/accounts/create.js
+opt/app/public/js/ff/accounts/edit-reconciliation.js
 opt/app/public/js/ff/accounts/edit.js
+opt/app/public/js/ff/accounts/reconcile.js
 opt/app/public/js/ff/accounts/show.js
 opt/app/public/js/ff/bills/create.js
 opt/app/public/js/ff/bills/edit.js
@@ -1098,6 +1104,7 @@ opt/app/resources/lang/sl_SI/list.php
 opt/app/resources/lang/sl_SI/pagination.php
 opt/app/resources/lang/sl_SI/passwords.php
 opt/app/resources/lang/sl_SI/validation.php
+opt/app/resources/stubs/binary.bin
 opt/app/resources/stubs/csv.csv
 opt/app/resources/stubs/demo-configuration.json
 opt/app/resources/stubs/demo-import.csv
@@ -1106,6 +1113,11 @@ opt/app/resources/views/accounts/create.twig
 opt/app/resources/views/accounts/delete.twig
 opt/app/resources/views/accounts/edit.twig
 opt/app/resources/views/accounts/index.twig
+opt/app/resources/views/accounts/reconcile/edit.twig
+opt/app/resources/views/accounts/reconcile/index.twig
+opt/app/resources/views/accounts/reconcile/overview.twig
+opt/app/resources/views/accounts/reconcile/show.twig
+opt/app/resources/views/accounts/reconcile/transactions.twig
 opt/app/resources/views/accounts/show.twig
 opt/app/resources/views/admin/configuration/index.twig
 opt/app/resources/views/admin/index.twig
@@ -2390,6 +2402,7 @@ opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/Inte
 opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithContainer.php
 opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithDatabase.php
 opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithExceptionHandling.php
+opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithRedis.php
 opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/InteractsWithSession.php
 opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php
 opt/app/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MocksApplicationServices.php
