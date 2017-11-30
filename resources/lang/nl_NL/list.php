@@ -89,5 +89,5 @@ return [
     'sum_withdrawals'         => 'Som van uitgaven',
     'sum_deposits'            => 'Som van inkomsten',
     'sum_transfers'           => 'Som van overschrijvingen',
-    'reconcile'               => 'Reconcile',
+    'reconcile'               => 'Afstemmen',
 ];

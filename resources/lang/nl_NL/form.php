@@ -91,7 +91,7 @@ return [
     'deletePermanently'          => 'Verwijderen',
     'cancel'                     => 'Annuleren',
     'targetdate'                 => 'Doeldatum',
-    'startdate'                  => 'Start date',
+    'startdate'                  => 'Startdatum',
     'tag'                        => 'Tag',
     'under'                      => 'Onder',
     'symbol'                     => 'Symbool',

@@ -89,5 +89,5 @@ return [
     'sum_withdrawals'         => 'Vsota odlivov',
     'sum_deposits'            => 'Vsota prilivov',
     'sum_transfers'           => 'Vsota prenosov',
-    'reconcile'               => 'Reconcile',
+    'reconcile'               => 'Poravnaj',
 ];
