@@ -621,7 +621,7 @@ return [
     'revenue_accounts'                         => 'Comptes de recettes',
     'cash_accounts'                            => 'Comptes de trésorerie',
     'Cash account'                             => 'Compte de trésorerie',
-    'reconcile_account'                        => 'Rapprocher le compte ": compte"',
+    'reconcile_account'                        => 'Rapprocher le compte ":account"',
     'delete_reconciliation'                    => 'Supprimer le rapprochement',
     'update_reconciliation'                    => 'Mettre à jour le rapprochement',
     'amount_cannot_be_zero'                    => 'Le montant ne peut pas être zéro',
