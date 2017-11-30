@@ -31,6 +31,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 1010](https://github.com/firefly-iii/firefly-iii/issues/1010)
 - [Issue 1014](https://github.com/firefly-iii/firefly-iii/issues/1014), reported by [ursweiss](https://github.com/ursweiss)
 - [Issue 1016](https://github.com/firefly-iii/firefly-iii/issues/1016)
+- [Issue 1024](https://github.com/firefly-iii/firefly-iii/issues/1024), reported by [gavu](https://github.com/gavu)
+- [Issue 1025](https://github.com/firefly-iii/firefly-iii/issues/1025), reported by [gavu](https://github.com/gavu)
 
 
 ## [4.6.10] - 2017-11-xx
