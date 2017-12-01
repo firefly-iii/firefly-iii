@@ -34,11 +34,41 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-6">
-
+                                <h4>{{ 'mandatoryFields'|_ }}</h4>
                                 {{ ExpandedForm.checkbox('has_headers',1,job.configuration['has-headers'],{helpText: trans('csv.initial_header_help')}) }}
                                 {{ ExpandedForm.text('date_format',job.configuration['date-format'],{helpText: trans('csv.initial_date_help', {dateExample: phpdate('Ymd')}) }) }}
                                 {{ ExpandedForm.select('csv_delimiter', data.delimiters, job.configuration['delimiter'], {helpText: trans('csv.initial_delimiter_help') } ) }}
                                 {{ ExpandedForm.select('csv_import_account', data.accounts, job.configuration['import-account'], {helpText: trans('csv.initial_import_account_help')} ) }}
+
+                                <h4>{{ 'optionalFields'|_ }}</h4>
+                                <div class="form-group">
+                                    <label for="apply_rules_label" class="col-sm-4 control-label">
+                                        {{ trans('csv.apply_rules_title') }}
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <div class="radio"><label>
+                                                {{ Form.checkbox('apply_rules', '1',
+                                                    job.configuration.apply_rules == '1', {'id': 'apply_rules_label'}) }}
+                                                {{ trans('csv.apply_rules_description') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="match_bills_label" class="col-sm-4 control-label">
+                                        {{ trans('csv.match_bills_title') }}
+                                    </label>
+
+                                    <div class="col-sm-8">
+                                        <div class="radio"><label>
+                                                {{ Form.checkbox('match_bills', '1',
+                                                    job.configuration.match_bills == '1', {'id': 'match_bills_label'}) }}
+                                                {{ trans('csv.match_bills_description') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {% for type, specific in data.specifics %}
                                     <div class="form-group">

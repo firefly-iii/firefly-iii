@@ -29,6 +29,7 @@ use FireflyIII\Import\Object\ImportJournal;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -44,14 +45,22 @@ class ImportStorage
     public $errors;
     /** @var Collection */
     public $journals;
-    /** @var int */
-    protected $defaultCurrencyId = 1; // yes, hard coded
+        /** @var BillRepositoryInterface */
+    protected $billRepository; // yes, hard coded
+    /** @var Collection */
+    protected $bills;
+/** @var int */
+    protected $defaultCurrencyId = 1;
     /** @var ImportJob */
     protected $job;
     /** @var Collection */
     protected $rules;
+    /** @var bool */
+    private $applyRules = false;
     /** @var string */
     private $dateFormat = 'Ymd';
+    /** @var bool */
+    private $matchBills = false;
     /** @var Collection */
     private $objects;
     /** @var array */
@@ -84,7 +93,21 @@ class ImportStorage
         $currency                = app('amount')->getDefaultCurrencyByUser($this->job->user);
         $this->defaultCurrencyId = $currency->id;
         $this->transfers         = $this->getTransfers();
-        $this->rules             = $this->getRules();
+        $config                  = $job->configuration;
+        $this->applyRules        = $config['apply_rules'] ?? false;
+        $this->matchBills        = $config['match_bills'] ?? false;
+        if ($this->applyRules === true) {
+            Log::debug('applyRules seems to be true, get the rules.');
+            $this->rules = $this->getRules();
+        }
+        if ($this->matchBills === true) {
+            Log::debug('matchBills seems to be true, get the bills');
+            $this->bills          = $this->getBills();
+            $this->billRepository = app(BillRepositoryInterface::class);
+            $this->billRepository->setUser($job->user);
+        }
+        Log::debug(sprintf('Value of apply rules is %s', var_export($this->applyRules, true)));
+        Log::debug(sprintf('Value of match bills is %s', var_export($this->matchBills, true)));
     }
 
     /**
@@ -202,8 +225,26 @@ class ImportStorage
         // Another step done!
         $this->job->addStepsDone(1);
 
-        // run rules:
-        $this->applyRules($journal);
+        // run rules if config calls for it:
+        if ($this->applyRules === true) {
+            Log::info('Will apply rules to this journal.');
+            $this->applyRules($journal);
+        }
+        if (!($this->applyRules === true)) {
+            Log::info('Will NOT apply rules to this journal.');
+        }
+
+        // match bills if config calls for it.
+        if ($this->matchBills === true) {
+            //$this->/applyRules($journal);
+            Log::info('Cannot match bills (yet).');
+            $this->matchBills($journal);
+        }
+
+        if (!($this->matchBills === true)) {
+            Log::info('Cannot match bills (yet), but do not have to.');
+        }
+
         // Another step done!
         $this->job->addStepsDone(1);
         $this->journals->push($journal);

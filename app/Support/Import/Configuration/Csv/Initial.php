@@ -113,6 +113,8 @@ class Initial implements ConfigurationInterface
         $config['date-format']             = $data['date_format'];
         $config['delimiter']               = $data['csv_delimiter'];
         $config['delimiter']               = 'tab' === $config['delimiter'] ? "\t" : $config['delimiter'];
+        $config['apply_rules']             = isset($data['apply_rules']) && 1 === intval($data['apply_rules']) ? true : false;
+        $config['match_bills']             = isset($data['match_bills']) && 1 === intval($data['match_bills']) ? true : false;
 
         Log::debug('Entered import account.', ['id' => $importId]);
 

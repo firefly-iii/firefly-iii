@@ -38,6 +38,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 use Illuminate\Database\Query\JoinClause;
@@ -49,6 +50,10 @@ use Log;
  */
 trait ImportSupport
 {
+    /** @var BillRepositoryInterface */
+    protected $billRepository;
+    /** @var Collection */
+    protected $bills;
     /** @var int */
     protected $defaultCurrencyId = 1;
     /** @var ImportJob */
@@ -82,6 +87,29 @@ trait ImportSupport
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    protected function matchBills(TransactionJournal $journal): bool
+    {
+        if(!is_null($journal->bill_id)) {
+            Log::debug('Journal is already linked to a bill, will not scan.');
+            return true;
+        }
+        if ($this->bills->count() > 0) {
+            $this->bills->each(
+                function (Bill $bill) use ($journal) {
+                    Log::debug(sprintf('Going to match bill #%d to journal %d.', $bill->id, $journal->id));
+                    $this->billRepository->scan($bill, $journal);
+                }
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * @param array $parameters
      *
      * @return bool
@@ -105,6 +133,17 @@ trait ImportSupport
         Log::debug(sprintf('Created transaction with ID #%d, account #%d, amount %s', $transaction->id, $parameters['account'], $parameters['amount']));
 
         return true;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getBills(): Collection
+    {
+        $set = Bill::where('user_id', $this->job->user->id)->where('active', 1)->where('automatch', 1)->get(['bills.*']);
+        Log::debug(sprintf('Found %d user bills.', $set->count()));
+
+        return $set;
     }
 
     /**
@@ -224,7 +263,7 @@ trait ImportSupport
      * @param Account $account
      *
      * @return string
-     *
+     *x
      * @throws FireflyException
      *
      * @see ImportSupport::getOpposingAccount()
