@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 return [
     // general stuff:
-    'language_incomplete'                        => 'Incomplete translation',
     'close'                                      => 'Close',
     'actions'                                    => 'Actions',
     'edit'                                       => 'Edit',

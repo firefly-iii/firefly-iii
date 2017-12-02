@@ -127,19 +127,19 @@ return [
         ],
     'languages'                  => [
         // completed languages
-        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch', 'complete' => true],
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German', 'complete' => true],
-        'en_US' => ['name_locale' => 'English', 'name_english' => 'English', 'complete' => true],
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French', 'complete' => true],
-        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish ', 'complete' => true],
+        'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
+        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
 
         // incomplete languages:
-        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)', 'complete' => false],
-        'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian', 'complete' => false],
-        'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish', 'complete' => false],
-        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian', 'complete' => false],
-        'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian', 'complete' => false],
-        'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish', 'complete' => false],
+        //'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
+        //'id_ID' => ['name_locale' => 'Indonesian', 'name_english' => 'Indonesian'],
+        //'es_ES' => ['name_locale' => 'Spanish', 'name_english' => 'Spanish'],
+        //'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
+        //'sl_SI' => ['name_locale' => 'Slovenščina', 'name_english' => 'Slovenian'],
+        //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
     ],
     'transactionTypesByWhat'     => [
         'expenses'   => ['Withdrawal'],
