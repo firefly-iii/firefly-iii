@@ -142,7 +142,7 @@
         var accountRevenueUri = '{{ route('chart.account.revenue') }}';
         var accountExpenseUri = '{{ route('chart.account.expense') }}';
         var piggyInfoUri = '{{ route('json.fp.piggy-banks') }}';
-        var todayText = ' {{ 'today'|_ }}';
+        var todayText = ' {{ trans('firefly.today')|escape('js') }}';
 
         <!-- render vertical line with text "today"  -->
         {% if start.lte(today) and end.gte(today) %}
