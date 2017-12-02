@@ -29,21 +29,19 @@
                                         <h3>{{ 'pref_languages'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_languages_help'|_ }}</p>
                                         {% for key, lang in Config.get('firefly.languages') %}
-                                            {% if lang.complete == true or (lang.complete == false and showIncomplete) %}
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="language" value="{{ key }}"
-                                                                {% if language == key %}
-                                                                    checked
-                                                                {% endif %}
-                                                        />
-                                                        {{ lang.name_locale }} ({{ lang.name_english }})
-                                                        {% if lang.complete == false %}
-                                                            <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
-                                                        {% endif %}
-                                                    </label>
-                                                </div>
-                                            {% endif %}
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="language" value="{{ key }}"
+                                                            {% if language == key %}
+                                                                checked
+                                                            {% endif %}
+                                                    />
+                                                    {{ lang.name_locale }} ({{ lang.name_english }})
+                                                    {% if lang.complete == false %}
+                                                        <span class="small text-danger">({{ 'language_incomplete'|_ }})</span>
+                                                    {% endif %}
+                                                </label>
+                                            </div>
                                         {% endfor %}
 
                                         <p class="text-info">

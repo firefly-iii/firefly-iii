@@ -102,7 +102,6 @@ class PreferencesController extends Controller
         $tjOptionalFields    = Preferences::get('transaction_journal_optional_fields', [])->data;
         $is2faEnabled        = Preferences::get('twoFactorAuthEnabled', 0)->data; // twoFactorAuthEnabled
         $has2faSecret        = null !== Preferences::get('twoFactorAuthSecret'); // hasTwoFactorAuthSecret
-        $showIncomplete      = true === env('SHOW_INCOMPLETE_TRANSLATIONS', false);
 
         return view(
             'preferences.index',
@@ -117,7 +116,6 @@ class PreferencesController extends Controller
                 'fiscalYearStart',
                 'is2faEnabled',
                 'has2faSecret',
-                'showIncomplete',
                 'showDeps'
             )
         );
