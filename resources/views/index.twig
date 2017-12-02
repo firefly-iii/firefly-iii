@@ -146,7 +146,7 @@
 
         <!-- render vertical line with text "today"  -->
         {% if start.lte(today) and end.gte(today) %}
-            var today = {{ today.day }};
+            var today = {{ today.diffInDays(start) + 1 }};
         {% else %}
             var today = -1;
         {% endif %}
