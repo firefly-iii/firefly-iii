@@ -138,13 +138,8 @@
     <script type="text/javascript">
 
         // some useful translations.
-        var langImportSingleError = '{{ 'import_status_errors_single'|_|escape }}';
-        var langImportMultiError = '{{ 'import_status_errors_multi'|_|escape }}';
-
-        //var langImportFatalError = '{{ 'import_error_fatal'|_|escape }}';
-        //var langImportTimeOutError = '{{ 'import_error_timeout'|_|escape }}';
-        //var langImportFinished = '{{ 'import_finished_all'|_|escape }}';
-
+        var langImportSingleError = '{{ trans('firefly.import_status_errors_single')|escape('js') }}';
+        var langImportMultiError = '{{ trans('firefly.import_status_errors_multi')|escape('js') }}';
 
         var jobKey = '{{ job.key }}';
         var jobImportUrl = '{{ route('import.file.json', [job.key]) }}';

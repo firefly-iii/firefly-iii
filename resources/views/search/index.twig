@@ -107,9 +107,8 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
-        var edit_selected_txt = "{{ 'edit'|_ }}";
-        var delete_selected_txt = "{{ 'delete'|_ }}";
-        {# var reconcile_selected_txt = "{{ 'reconcile_selected'|_ }}"; #}
+        var edit_selected_txt = "{{ trans('firefly.edit')|escape('js') }}";
+        var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
 
         var searchQuery = "{{ fullQuery|escape('js') }}";
         var searchUri = "{{ route('search.search') }}";
