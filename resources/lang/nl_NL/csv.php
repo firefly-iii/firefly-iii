@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Als jouw CSV bestand geen referenties bevat naar jouw rekening(en), geef dan hier aan om welke rekening het gaat.',
     'initial_submit'                => 'Ga verder met stap 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Regels toepassen',
+    'apply_rules_description'       => 'Past regels toe tijdens de import. Dit vertraagt de import behoorlijk.',
+    'match_bills_title'             => 'Match contracten',
+    'match_bills_description'       => 'Checkt of bestaande contracten matchen met nieuwe uitgaves. Dit vertraagt de import behoorlijk.',
+
     // roles config
     'roles_title'                   => 'Importinstellingen (2/3) - rol van elke kolom definiëren',
     'roles_text'                    => 'Elke kolom in je CSV-bestand bevat bepaalde gegevens. Gelieve aan te geven wat voor soort gegevens de import-routine kan verwachten. De optie "maak een link" betekent dat u elke vermelding in die kolom linkt aan een waarde uit je database. Een vaak gelinkte kolom is die met de IBAN-code van de tegenrekening. Die kan je dan linken aan de IBAN in jouw database.',

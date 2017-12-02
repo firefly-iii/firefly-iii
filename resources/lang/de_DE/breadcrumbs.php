@@ -36,7 +36,7 @@ return [
     'create_deposit'      => 'Erstelle ein neues Einkommen',
     'create_transfer'     => 'Erstelle eine neue Überweisung',
     'edit_journal'        => 'Bearbeite Transaktion ":description"',
-    'edit_reconciliation' => 'Edit ":description"',
+    'edit_reconciliation' => '":description" bearbeiten',
     'delete_journal'      => 'Lösche Transaktion ":description"',
     'tags'                => 'Tags',
     'createTag'           => 'Neuen Tag erstellen',

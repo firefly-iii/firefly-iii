@@ -590,6 +590,7 @@ return [
     'not_or_not_yet'                           => 'Pas du tout (pas encore)',
     'not_expected_period'                      => 'Cette période n\'est pas prévu',
     'bill_is_active'                           => 'Facture en cours',
+    'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'La facture sera automatiquement liée aux transactions correspondantes',
     'skips_over'                               => 'saute',
 

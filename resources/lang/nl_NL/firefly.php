@@ -589,6 +589,7 @@ return [
     'not_or_not_yet'                           => '(nog) niet',
     'not_expected_period'                      => 'Niet verwacht deze periode',
     'bill_is_active'                           => 'Contract is actief',
+    'bill_expected_between'                    => 'Verwacht tussen :start en :end',
     'bill_will_automatch'                      => 'Waar van toepassing wordt dit contract automatisch gekoppeld aan transacties',
     'skips_over'                               => 'slaat over',
 
@@ -620,7 +621,7 @@ return [
     'revenue_accounts'                         => 'Debiteuren',
     'cash_accounts'                            => 'Contant geldrekeningen',
     'Cash account'                             => 'Contant geldrekening',
-    'reconcile_account'                        => 'Afstemmen betaalrekening ": account"',
+    'reconcile_account'                        => 'Afstemmen betaalrekening ":account"',
     'delete_reconciliation'                    => 'Verwijder correctie',
     'update_reconciliation'                    => 'Update correctie',
     'amount_cannot_be_zero'                    => 'Het bedrag mag niet nul zijn',

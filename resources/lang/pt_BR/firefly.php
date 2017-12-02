@@ -589,6 +589,7 @@ return [
     'not_or_not_yet'                           => 'Não (ainda)',
     'not_expected_period'                      => 'Não esperado neste período',
     'bill_is_active'                           => 'Bill is active',
+    'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'Bill will automatically linked to matching transactions',
     'skips_over'                               => 'skips over',
 

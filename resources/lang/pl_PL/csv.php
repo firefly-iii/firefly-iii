@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Jeśli plik CSV NIE zawiera informacji na temat Twojego konta aktywów, skorzystaj z tego menu rozwijanego, aby wybrać, do którego konta należą transakcje z CSV.',
     'initial_submit'                => 'Przejdź do kroku 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Apply rules',
+    'apply_rules_description'       => 'Apply your rules. Note that this slows the import significantly.',
+    'match_bills_title'             => 'Match bills',
+    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+
     // roles config
     'roles_title'                   => 'Konfiguracja importu (2/3) - Określ rolę każdej z kolumn',
     'roles_text'                    => 'Każda kolumna w pliku CSV zawiera pewne dane. Proszę podać, jakich danych importer powinien oczekiwać. Opcja "mapowania" oznacza powiązanie każdego wpisu znalezionego w kolumnie z wartością w bazie danych. Często mapowaną kolumną jest kolumna, która zawiera IBAN przeciwnego konta. Można to łatwo dopasować do obecnego w bazie danych IBAN.',

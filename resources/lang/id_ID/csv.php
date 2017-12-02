@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Jika file CSV Anda TIDAK berisi informasi tentang akun-akun aset Anda, gunakan daftar ini untuk memilih akun yang akan digunakan untuk menyimpan transaksi dari CSV Anda.',
     'initial_submit'                => 'Lanjutkan dengan langkah 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Apply rules',
+    'apply_rules_description'       => 'Apply your rules. Note that this slows the import significantly.',
+    'match_bills_title'             => 'Match bills',
+    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+
     // roles config
     'roles_title'                   => 'Pengaturan impor (2/3) - Tentukan peran masing-masing kolom',
     'roles_text'                    => 'Setiap kolom dalam file CSV Anda berisi data tertentu. Mohon tunjukkan jenis data yang akan dibaca oleh pengimpor. Pilihan untuk memetakan data berarti Anda akan menghubungkan setiap entri yang ditemukan di kolom ke nilai di basis data Anda. Kolom yang sering dipetakan adalah kolom yang berisi IBAN dari akun lawan. Itu dapat dengan mudah disesuaikan dengan IBAN yang sudah ada dalam basis data Anda.',

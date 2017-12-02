@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Si su archivo CSV NO contiene información sobre su(s) caja(s) de ahorros, seleccione una opción del desplegable para definir a qué cuenta pertenecen las transacciones del CSV.',
     'initial_submit'                => 'Continúe con el paso 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Apply rules',
+    'apply_rules_description'       => 'Apply your rules. Note that this slows the import significantly.',
+    'match_bills_title'             => 'Match bills',
+    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+
     // roles config
     'roles_title'                   => 'Configuración de importación (2/3) - Define el rol de cada columna',
     'roles_text'                    => 'Cada columna en su archivo CSV contiene ciertos datos. Indique qué tipo de datos debe esperar el importador. La opción de "mapear" datos significa que enlazará cada entrada encontrada en la columna con un valor en su base de datos. Una columna a menudo mapeada es la columna que contiene el IBAN de la cuenta de contrapartida. Eso puede enlazarse fácilmente con cuentas IBAN ya presentes en su base de datos.',

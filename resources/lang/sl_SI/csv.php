@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Če vaša CSV datoteka ne vsebuje informacij o vaših premoženjskih računih, uporabite ta seznam, da izberete kateremu računu pripadajo transakcije v CSV datoteki.',
     'initial_submit'                => 'Nadaljujte s korakom 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Apply rules',
+    'apply_rules_description'       => 'Apply your rules. Note that this slows the import significantly.',
+    'match_bills_title'             => 'Match bills',
+    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+
     // roles config
     'roles_title'                   => 'Nastavitve uvoza (1/3) - Določite vlogo vsakega stolpca',
     'roles_text'                    => 'Vsak stolpec v vaši datoteki CSV vsebuje določene podatke. Določite, kateri podatki se pričakujejo v katerih stolpcih. Možnost »mapiranja« podatkov pomeni, da boste vsak vnos, ki ste ga našli v stolpcu, povezal z vrednostjo v svoji bazi podatkov. Često izbran je stolpec, ki vsebuje IBAN protiračuna. Tako je mogoče transackijo enostavno povezati s protiračunom v vaši bazi podatkov.',

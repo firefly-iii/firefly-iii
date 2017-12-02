@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Si votre fichier CSV ne contient AUCUNE information concernant vos compte(s) actif, utilisez cette liste déroulante pour choisir à quel compte les opérations contenues dans le CSV font référence.',
     'initial_submit'                => 'Passez à l’étape 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Apply rules',
+    'apply_rules_description'       => 'Apply your rules. Note that this slows the import significantly.',
+    'match_bills_title'             => 'Match bills',
+    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+
     // roles config
     'roles_title'                   => 'Importer la configuration (1/3) - Définir le rôle de chaque colonne',
     'roles_text'                    => 'Chaque colonne de votre fichier CSV contient certaines données. Veuillez indiquer quel type de données, l’importateur doit attendre. L’option de « mapper » les données signifie que vous allez lier chaque entrée trouvée dans la colonne à une valeur dans votre base de données. Souvent une colonne est la colonne contenant l’IBAN du compte opposé. Qui peut être facilement adapté aux IBAN déjà présents dans votre base de données.',
