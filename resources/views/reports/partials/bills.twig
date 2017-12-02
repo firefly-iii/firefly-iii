@@ -18,6 +18,9 @@
                 <tr>
                     <td data-value="{{ line.getBill.name }}">
                         <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
+                        <small class="text-muted"><br />
+                            {{ trans('firefly.bill_expected_between', {start: line.getPayDate.formatLocalized(monthAndDayFormat), end: line.getEndOfPayDate.formatLocalized(monthAndDayFormat) }) }}
+                        </small>
                     </td>
                     <td class="hidden-xs" data-value="{{ line.getMin }}" style="text-align: right;">{{ line.getMin|formatAmount }}</td>
                     <td class="hidden-xs" data-value="{{ line.getMax }}" style="text-align: right;">{{ line.getMax|formatAmount }}</td>

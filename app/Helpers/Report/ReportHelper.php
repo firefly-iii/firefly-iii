@@ -71,34 +71,43 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $collector  = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setBills($bills);
-        $journals   = $collector->getJournals();
+
         $collection = new BillCollection;
         $collection->setStartDate($start);
         $collection->setEndDate($end);
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $billLine = new BillLine;
-            $billLine->setBill($bill);
-            $billLine->setMin(strval($bill->amount_min));
-            $billLine->setMax(strval($bill->amount_max));
-            $billLine->setHit(false);
-            $entry = $journals->filter(
-                function (Transaction $transaction) use ($bill) {
-                    return $transaction->bill_id === $bill->id;
+            $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
+            foreach($expectedDates as $payDate) {
+                $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
+
+                $collector  = app(JournalCollectorInterface::class);
+                $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBills($bills);
+                $journals   = $collector->getJournals();
+
+                $billLine = new BillLine;
+                $billLine->setBill($bill);
+                $billLine->setPayDate($payDate);
+                $billLine->setEndOfPayDate($endOfPayPeriod);
+                $billLine->setMin(strval($bill->amount_min));
+                $billLine->setMax(strval($bill->amount_max));
+                $billLine->setHit(false);
+                $entry = $journals->filter(
+                    function (Transaction $transaction) use ($bill) {
+                        return $transaction->bill_id === $bill->id;
+                    }
+                );
+                $first = $entry->first();
+                if (null !== $first) {
+                    $billLine->setTransactionJournalId($first->id);
+                    $billLine->setAmount($first->transaction_amount);
+                    $billLine->setLastHitDate($first->date);
+                    $billLine->setHit(true);
                 }
-            );
-            $first = $entry->first();
-            if (null !== $first) {
-                $billLine->setTransactionJournalId($first->id);
-                $billLine->setAmount($first->transaction_amount);
-                $billLine->setLastHitDate($first->date);
-                $billLine->setHit(true);
-            }
-            if ($billLine->isActive() || $billLine->isHit()) {
-                $collection->addBill($billLine);
+                if ($billLine->isActive() || $billLine->isHit()) {
+                    $collection->addBill($billLine);
+                }
             }
         }
         $collection->filterBills();
