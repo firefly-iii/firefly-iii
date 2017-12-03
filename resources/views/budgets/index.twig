@@ -141,7 +141,7 @@
                             <th data-defaultsign="az">{{ 'budget'|_ }}</th>
                             <th data-defaultsign="_19" style="width:25%;">{{ 'budgeted'|_ }}</th>
                             <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ 'spent'|_ }}</th>
-                            <th data-defaultsign="_19" class="hidden-sm hidden-xs">{{ 'left'|_ }}</th>
+                            <th data-defaultsign="_19">{{ 'left'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -182,7 +182,7 @@
                                 data-value="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
                             </td>
-                            <td class="hidden-sm hidden-xs left" data-id="{{ budget.id }}"
+                            <td class="left" data-id="{{ budget.id }}"
                                 data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                             </td>
