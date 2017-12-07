@@ -25,10 +25,10 @@ return [
     'initial_submit'                => 'Passez à l’étape 2/3',
 
     // new options:
-    'apply_rules_title'             => 'Apply rules',
-    'apply_rules_description'       => 'Apply your rules. Note that this slows the import significantly.',
-    'match_bills_title'             => 'Match bills',
-    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+    'apply_rules_title'             => 'Appliquer les règles',
+    'apply_rules_description'       => 'Appliquer les règles. Notez que cela ralentit considérablement l\'import.',
+    'match_bills_title'             => 'Faire correspondre les factures',
+    'match_bills_description'       => 'Faire correspondre vos factures aux retraits nouvellement créés. Notez que cela ralentit considérablement l\'import.',
 
     // roles config
     'roles_title'                   => 'Importer la configuration (1/3) - Définir le rôle de chaque colonne',
