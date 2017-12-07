@@ -43,7 +43,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function countJournals(LinkType $linkType): int
     {
-        return $linkType->transactionJournalLinks()->count() * 2;
+        return $linkType->transactionJournalLinks()->count();
     }
 
     /**
