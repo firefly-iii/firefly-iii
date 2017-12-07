@@ -1,4 +1,4 @@
-FROM php:7-apache
+FROM php:7.1-apache
 
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends libcurl4-openssl-dev \
@@ -6,7 +6,6 @@ RUN apt-get update -y && \
                                                libjpeg62-turbo-dev \
                                                libpng12-dev \
                                                libicu-dev \
-                                               libmcrypt-dev \
                                                libedit-dev \
                                                libtidy-dev \
                                                libxml2-dev \
@@ -18,7 +17,7 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install -j$(nproc) curl gd intl json mcrypt readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
+RUN docker-php-ext-install -j$(nproc) curl gd intl json readline tidy zip bcmath xml mbstring pdo_sqlite pdo_mysql bz2 pdo_pgsql
 
 # Generate locales supported by firefly
 RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
