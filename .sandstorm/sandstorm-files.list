@@ -6010,8 +6010,6 @@ usr/lib/x86_64-linux-gnu/libxml2.so.2
 usr/lib/x86_64-linux-gnu/libxml2.so.2.9.1
 usr/lib/x86_64-linux-gnu/libxslt.so.1
 usr/lib/x86_64-linux-gnu/libxslt.so.1.1.28
-usr/lib/x86_64-linux-gnu/libzip.so.4
-usr/lib/x86_64-linux-gnu/libzip.so.4.0.0
 usr/sbin/mysqld
 usr/sbin/nginx
 usr/sbin/php-fpm7.1
