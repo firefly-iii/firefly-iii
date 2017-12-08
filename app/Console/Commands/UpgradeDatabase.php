@@ -79,7 +79,6 @@ class UpgradeDatabase extends Command
     public function handle()
     {
         $this->setTransactionIdentifier();
-        $this->migrateRepetitions();
         $this->updateAccountCurrencies();
         $this->createNewTypes();
         $this->line('Updating currency information..');
@@ -88,28 +87,6 @@ class UpgradeDatabase extends Command
         $this->line('Done updating currency information..');
         $this->migrateNotes();
         $this->info('Firefly III database is up to date.');
-
-        return;
-    }
-
-    /**
-     * Migrate budget repetitions to new format where the end date is in the budget limit as well,
-     * making the limit_repetition table obsolete.
-     */
-    public function migrateRepetitions(): void
-    {
-        $set = BudgetLimit::whereNull('end_date')->get();
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($set as $budgetLimit) {
-            /** @var LimitRepetition $repetition */
-            $repetition = $budgetLimit->limitrepetitions()->first();
-            if (null !== $repetition) {
-                $budgetLimit->end_date = $repetition->enddate;
-                $budgetLimit->save();
-                $this->line(sprintf('Updated budget limit #%d', $budgetLimit->id));
-                $repetition->delete();
-            }
-        }
 
         return;
     }

@@ -20,6 +20,60 @@
 
 /** global: accounting */
 
+
+/**
+ * Takes a string phrase and breaks it into separate phrases no bigger than 'maxwidth', breaks are made at complete words.
+ * https://stackoverflow.com/questions/21409717/chart-js-and-long-labels
+ *
+ * @param str
+ * @param maxwidth
+ * @returns {Array}
+ */
+function formatLabel(str, maxwidth){
+    var sections = [];
+    var words = str.split(" ");
+    var temp = "";
+
+    words.forEach(function(item, index){
+        if(temp.length > 0)
+        {
+            var concat = temp + ' ' + item;
+
+            if(concat.length > maxwidth){
+                sections.push(temp);
+                temp = "";
+            }
+            else{
+                if(index === (words.length-1))
+                {
+                    sections.push(concat);
+                    return;
+                }
+                else{
+                    temp = concat;
+                    return;
+                }
+            }
+        }
+
+        if(index === (words.length-1))
+        {
+            sections.push(item);
+            return;
+        }
+
+        if(item.length < maxwidth) {
+            temp = item;
+        }
+        else {
+            sections.push(item);
+        }
+
+    });
+
+    return sections;
+}
+
 var defaultChartOptions = {
     elements: {
         line: {
@@ -31,6 +85,12 @@ var defaultChartOptions = {
             {
                 gridLines: {
                     display: false
+                },
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function (value, index, values) {
+                        return formatLabel(value, 20);
+                    }
                 }
             }
         ],

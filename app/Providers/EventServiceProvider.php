@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Log;
 
@@ -44,10 +46,15 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-            'FireflyIII\Events\RegisteredUser'            => [
+            RegisteredUser::class                         => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
             ],
+            // is a User related event.
+            Login::class                                  => [
+                'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
+            ],
+
             // is a User related event.
             'FireflyIII\Events\RequestedNewPassword'      => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',

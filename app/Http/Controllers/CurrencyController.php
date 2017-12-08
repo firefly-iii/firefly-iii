@@ -205,6 +205,11 @@ class CurrencyController extends Controller
     public function index(Request $request)
     {
         $currencies      = $this->repository->get();
+        $currencies      = $currencies->sortBy(
+            function (TransactionCurrency $currency) {
+                return $currency->name;
+            }
+        );
         $defaultCurrency = $this->repository->getCurrencyByPreference(Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR')));
         $isOwner         = true;
         if (!$this->userRepository->hasRole(auth()->user(), 'owner')) {

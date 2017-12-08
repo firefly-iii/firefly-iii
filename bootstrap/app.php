@@ -50,8 +50,8 @@ $app->singleton(
     FireflyIII\Exceptions\Handler::class
 );
 
-/* Overrule logging */
-if (env('APP_LOG', 'errorlog') === 'daily') {
+/* Overrule logging if not Sandstorm */
+if (!(env('IS_SANDSTORM') === true)) {
     $app->configureMonologUsing(
         function (Logger $monolog) use ($app) {
 

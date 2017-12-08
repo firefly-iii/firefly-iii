@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 return [
     // general stuff:
-    'language_incomplete'                        => 'Incomplete translation',
     'close'                                      => 'Close',
     'actions'                                    => 'Actions',
     'edit'                                       => 'Edit',
@@ -589,6 +588,7 @@ return [
     'not_or_not_yet'                           => 'Not (yet)',
     'not_expected_period'                      => 'Not expected this period',
     'bill_is_active'                           => 'Bill is active',
+    'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'Bill will automatically linked to matching transactions',
     'skips_over'                               => 'skips over',
 

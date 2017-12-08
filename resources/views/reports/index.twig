@@ -173,9 +173,9 @@
     <script type="text/javascript">
         var minDate = "{{ start.format('m/d/Y') }}";
         var picker;
-        var nonSelectedText = "{{ 'multi_select_no_selection'|_ }}";
-        var allSelectedText = "{{ 'multi_select_all_selected'|_ }}";
-        var filterPlaceholder = "{{ 'multi_select_filter_placeholder'|_ }}";
+        var nonSelectedText = "{{ trans('firefly.multi_select_no_selection')|escape('js') }}";
+        var allSelectedText = "{{ trans('firefly.multi_select_all_selected')|escape('js') }}";
+        var filterPlaceholder = "{{ trans('firefly.multi_select_filter_placeholder')|escape('js') }}";
     </script>
     <script type="text/javascript" src="js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="js/ff/reports/index.js?v={{ FF_VERSION }}"></script>

@@ -66,7 +66,7 @@ class RemoveTag implements ActionInterface
         if (null !== $tag) {
             Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal->id));
             $journal->tags()->detach([$tag->id]);
-
+            $journal->touch();
             return true;
         }
         Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal->id));

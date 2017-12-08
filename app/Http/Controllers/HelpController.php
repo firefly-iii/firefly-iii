@@ -73,7 +73,6 @@ class HelpController extends Controller
     private function getHelpText(string $route, string $language): string
     {
         // get language and default variables.
-
         $content = '<p>' . strval(trans('firefly.route_has_no_help')) . '</p>';
 
         // if no such route, log error and return default text.

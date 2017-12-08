@@ -55,6 +55,7 @@ class RemoveAllTags implements ActionInterface
     {
         Log::debug(sprintf('RuleAction ClearCategory removed all tags from journal %d.', $journal->id));
         $journal->tags()->detach();
+        $journal->touch();
 
         return true;
     }

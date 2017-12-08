@@ -603,7 +603,7 @@ class BudgetController extends Controller
             $collector = app(JournalCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($end, $currentEnd)->withoutBudget()->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL]);
             $set      = $collector->getJournals();
-            $sum      = $set->sum('transaction_amount') ?? '0';
+            $sum      = strval($set->sum('transaction_amount') ?? '0');
             $journals = $set->count();
             $dateStr  = $end->format('Y-m-d');
             $dateName = Navigation::periodShow($end, $range);

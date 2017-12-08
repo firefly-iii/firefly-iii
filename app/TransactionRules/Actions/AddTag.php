@@ -60,6 +60,7 @@ class AddTag implements ActionInterface
         $count = $journal->tags()->where('tag_id', $tag->id)->count();
         if (0 === $count) {
             $journal->tags()->save($tag);
+            $journal->touch();
             Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal->id));
 
             return true;

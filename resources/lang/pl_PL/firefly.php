@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 return [
     // general stuff:
-    'language_incomplete'                        => 'Niepełne tłumaczenie',
     'close'                                      => 'Zamknij',
     'actions'                                    => 'Akcje',
     'edit'                                       => 'Modyfikuj',
@@ -589,6 +588,7 @@ return [
     'not_or_not_yet'                           => 'Nie (jeszcze)',
     'not_expected_period'                      => 'Nie oczekiwany w tym okresie',
     'bill_is_active'                           => 'Rachunek jest aktywny',
+    'bill_expected_between'                    => 'Expected between :start and :end',
     'bill_will_automatch'                      => 'Rachunek będzie automatycznie powiązany z pasującymi transakcjami',
     'skips_over'                               => 'pomija',
 

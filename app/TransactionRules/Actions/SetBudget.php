@@ -88,7 +88,7 @@ class SetBudget implements ActionInterface
         Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
 
         $journal->budgets()->sync([$budget->id]);
-
+        $journal->touch();
         return true;
     }
 }

@@ -42,8 +42,38 @@ class BillLine
     protected $min;
     /** @var Carbon */
     private $lastHitDate;
+    /** @var Carbon */
+    private $payDate;
+    /** @var Carbon */
+    private $endOfPayDate;
     /** @var int */
     private $transactionJournalId;
+
+    /**
+     * @return Carbon
+     */
+    public function getPayDate(): Carbon
+    {
+        return $this->payDate;
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function getEndOfPayDate(): Carbon
+    {
+        return $this->endOfPayDate;
+    }
+
+    /**
+     * @param Carbon $endOfPayDate
+     */
+    public function setEndOfPayDate(Carbon $endOfPayDate): void
+    {
+        $this->endOfPayDate = $endOfPayDate;
+    }
+
+
 
     /**
      * BillLine constructor.
@@ -171,5 +201,13 @@ class BillLine
     public function setHit(bool $hit)
     {
         $this->hit = $hit;
+    }
+
+    /**
+     * @param Carbon $payDate
+     */
+    public function setPayDate(Carbon $payDate): void
+    {
+        $this->payDate = $payDate;
     }
 }

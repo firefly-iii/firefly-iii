@@ -104,6 +104,7 @@ class SetSourceAccount implements ActionInterface
         $transaction             = $journal->transactions()->where('amount', '<', 0)->first();
         $transaction->account_id = $this->newSourceAccount->id;
         $transaction->save();
+        $journal->touch();
         Log::debug(sprintf('Updated transaction #%d and gave it new account ID.', $transaction->id));
 
         return true;

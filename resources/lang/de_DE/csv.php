@@ -24,6 +24,12 @@ return [
     'initial_import_account_help'   => 'Wenn ihre CSV-Datei KEINE Informationen über ihre Girokonten enthält, nutzen Sie bitte diese Dropdown-Liste um anzugeben, zu welchem Girokonto die Transaktionen in der CSV-Datei gehören.',
     'initial_submit'                => 'Fortfahren mit Schritt 2/3',
 
+    // new options:
+    'apply_rules_title'             => 'Regeln anwenden',
+    'apply_rules_description'       => 'Regeln anwenden. Beachten Sie, dass dadurch der Import erheblich verlangsamt wird.',
+    'match_bills_title'             => 'Rechnungen zuordnen',
+    'match_bills_description'       => 'Match your bills to newly created withdrawals. Note that this slows the import significantly.',
+
     // roles config
     'roles_title'                   => 'Import Einrichten (2/3) - Jeder Spalte eine Rolle zuordnen',
     'roles_text'                    => 'Jede Spalte in Ihrer CSV-Datei enthält bestimmte Daten. Bitte geben Sie an, welche Art von Daten enthalten sind. Die Option "Daten zuordnen" bedeutet, dass jeder Eintrag in der Spalte mit einem Wert aus Ihrer der Datenbank ersetzt wird. Eine oft zugeordnete Spalte ist die Spalte, welche die IBAN des fremden Kontos enthält. Diese können leicht mit bereits angelegten IBANs in Ihrer Datenbank verglichen werden.',

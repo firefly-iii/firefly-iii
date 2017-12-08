@@ -54,6 +54,7 @@ class ClearBudget implements ActionInterface
     public function act(TransactionJournal $journal): bool
     {
         $journal->budgets()->detach();
+        $journal->touch();
         Log::debug(sprintf('RuleAction ClearBudget removed all budgets from journal %d.', $journal->id));
 
         return true;

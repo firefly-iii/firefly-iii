@@ -60,6 +60,7 @@ class ClearNotes implements ActionInterface
         foreach ($notes as $note) {
             $note->delete();
         }
+        $journal->touch();
 
         return true;
     }

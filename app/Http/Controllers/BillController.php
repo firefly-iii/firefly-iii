@@ -186,11 +186,12 @@ class BillController extends Controller
                 // paid in this period?
                 $bill->paidDates = $repository->getPaidDatesInRange($bill, $start, $end);
                 $bill->payDates  = $repository->getPayDatesInRange($bill, $start, $end);
-                $lastDate        = clone $start;
+                $lastPaidDate    = $this->lastPaidDate($repository->getPaidDatesInRange($bill, $start, $end), $start);
                 if ($bill->paidDates->count() >= $bill->payDates->count()) {
-                    $lastDate = $end;
+                    // if all bills have been been paid, jump to next period.
+                    $lastPaidDate = $end;
                 }
-                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastDate);
+                $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
             }
         );
 
@@ -235,6 +236,8 @@ class BillController extends Controller
     {
         /** @var Carbon $date */
         $date           = session('start');
+        /** @var Carbon $end */
+        $end            = session('end');
         $year           = $date->year;
         $page           = intval($request->get('page'));
         $pageSize       = intval(Preferences::get('transactionPageSize', 50)->data);
@@ -249,7 +252,15 @@ class BillController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('bills.show', [$bill->id]));
 
-        $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, new Carbon);
+
+        $bill->paidDates = $repository->getPaidDatesInRange($bill, $date, $end);
+        $bill->payDates  = $repository->getPayDatesInRange($bill, $date, $end);
+        $lastPaidDate    = $this->lastPaidDate($repository->getPaidDatesInRange($bill, $date, $end), $date);
+        if ($bill->paidDates->count() >= $bill->payDates->count()) {
+            // if all bills have been been paid, jump to next period.
+            $lastPaidDate = $end;
+        }
+        $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill, $lastPaidDate);
         $hideBill                = true;
         $subTitle                = e($bill->name);
 
@@ -324,5 +335,30 @@ class BillController extends Controller
         }
 
         return redirect($this->getPreviousUri('bills.edit.uri'));
+    }
+
+    /**
+     * Returns the latest date in the set, or start when set is empty.
+     *
+     * @param Collection $dates
+     * @param Carbon     $default
+     *
+     * @return Carbon
+     */
+    private function lastPaidDate(Collection $dates, Carbon $default): Carbon
+    {
+        if ($dates->count() === 0) {
+            return $default;
+        }
+        $latest = $dates->first();
+        /** @var Carbon $date */
+        foreach ($dates as $date) {
+            if ($date->gte($latest)) {
+                $latest = $date;
+            }
+        }
+
+        return $latest;
+
     }
 }

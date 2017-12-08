@@ -66,6 +66,7 @@ class SetDescription implements ActionInterface
                 $this->action->action_value
             )
         );
+        $journal->touch();
 
         return true;
     }
