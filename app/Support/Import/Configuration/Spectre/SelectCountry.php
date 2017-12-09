@@ -13,7 +13,7 @@ use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
  */
 class SelectCountry implements ConfigurationInterface
 {
-    private $allCountries
+    public static $allCountries
         = [
             'AF' => 'Afghanistan',
             'AX' => 'Aland Islands',
@@ -282,7 +282,7 @@ class SelectCountry implements ConfigurationInterface
         $countries = [];
         /** @var SpectreProvider $provider */
         foreach ($providers as $provider) {
-            $countries[$provider->country_code] = $this->allCountries[$provider->country_code] ?? $provider->country_code;
+            $countries[$provider->country_code] = self::$allCountries[$provider->country_code] ?? $provider->country_code;
         }
         asort($countries);
 

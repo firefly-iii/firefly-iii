@@ -25,7 +25,8 @@ namespace FireflyIII\Import\Configurator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
-use FireflyIII\Support\Import\Configuration\Spectre\SelectBank;
+use FireflyIII\Support\Import\Configuration\Spectre\SelectProvider;
+use FireflyIII\Support\Import\Configuration\Spectre\InputMandatory;
 use FireflyIII\Support\Import\Configuration\Spectre\SelectCountry;
 use Log;
 
@@ -97,8 +98,11 @@ class SpectreConfigurator implements ConfiguratorInterface
         if (!$this->job->configuration['selected-country']) {
             return 'import.spectre.select-country';
         }
-        if (!$this->job->configuration['selected-bank']) {
-            return 'import.spectre.select-bank';
+        if (!$this->job->configuration['selected-provider']) {
+            return 'import.spectre.select-provider';
+        }
+        if (!$this->job->configuration['has-input-mandatory']) {
+            return 'import.spectre.input-fields';
         }
 
         throw new FireflyException('No view for state');
@@ -119,13 +123,14 @@ class SpectreConfigurator implements ConfiguratorInterface
      */
     public function isJobConfigured(): bool
     {
-        $config                     = $this->job->configuration;
-        $config['selected-country'] = $config['selected-country'] ?? false;
-        $config['selected-bank']    = $config['selected-bank'] ?? false;
-        $this->job->configuration   = $config;
+        $config                        = $this->job->configuration;
+        $config['selected-country']    = $config['selected-country'] ?? false;
+        $config['selected-provider']       = $config['selected-provider'] ?? false;
+        $config['has-input-mandatory'] = $config['has-input-mandatory'] ?? false;
+        $this->job->configuration      = $config;
         $this->job->save();
 
-        if ($config['selected-country'] && $config['selected-bank'] && false) {
+        if ($config['selected-country'] && $config['selected-provider'] && $config['has-input-mandatory'] && false) {
             return true;
         }
 
@@ -159,9 +164,11 @@ class SpectreConfigurator implements ConfiguratorInterface
             case !$this->job->configuration['selected-country']:
                 $class = SelectCountry::class;
                 break;
-            case !$this->job->configuration['selected-bank']:
-                $class = SelectBank::class;
+            case !$this->job->configuration['selected-provider']:
+                $class = SelectProvider::class;
                 break;
+            case !$this->job->configuration['has-input-mandatory']:
+                $class = InputMandatory::class;
             default:
                 break;
         }

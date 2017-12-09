@@ -52,7 +52,7 @@ class BankController extends Controller
         }
         $importJob = $repository->create($bank);
 
-        return redirect(route('import.bank.configure', [$bank, $importJob->key]));
+        return redirect(route('import.file.configure', [$importJob->key]));
     }
 
     /**

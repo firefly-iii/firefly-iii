@@ -16,14 +16,14 @@
                         <div class="row">
                             <div class="col-lg-8">
                                 <p>
-                                    {{ trans('bank.spectre_select_bank_title') }}
+                                    {{ trans('bank.spectre_select_provider_text',{country: data.country})|raw }}
                                 </p>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-8">
-                                {{ ExpandedForm.select('bank_code', data.providers, null)|raw }}
+                                {{ ExpandedForm.select('provider_code', data.providers, null)|raw }}
                             </div>
                         </div>
                         <div class="box-footer">

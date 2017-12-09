@@ -9,9 +9,9 @@ use FireflyIII\Models\SpectreProvider;
 use FireflyIII\Support\Import\Configuration\ConfigurationInterface;
 
 /**
- * Class SelectBank
+ * Class SelectProvider
  */
-class SelectBank implements ConfigurationInterface
+class SelectProvider implements ConfigurationInterface
 {
     /** @var ImportJob */
     private $job;
@@ -32,8 +32,9 @@ class SelectBank implements ConfigurationInterface
             $name                   = $provider->data['name'];
             $providers[$providerId] = $name;
         }
+        $country = SelectCountry::$allCountries[$config['country']] ?? $config['country'];
 
-        return compact('providers');
+        return compact('providers', 'country');
     }
 
     /**
@@ -66,8 +67,8 @@ class SelectBank implements ConfigurationInterface
     public function storeConfiguration(array $data): bool
     {
         $config                   = $this->job->configuration;
-        $config['bank']           = intval($data['bank_code']) ?? 0; // default to fake country.
-        $config['selected-bank']  = true;
+        $config['provider']       = intval($data['provider_code']) ?? 0; // default to fake country.
+        $config['selected-provider']  = true;
         $this->job->configuration = $config;
         $this->job->save();
 
