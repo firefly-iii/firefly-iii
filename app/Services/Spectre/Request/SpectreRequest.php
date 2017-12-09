@@ -20,46 +20,76 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Services\Bunq\Request;
+namespace FireflyIII\Services\Spectre\Request;
 
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Services\Bunq\Object\ServerPublicKey;
+use FireflyIII\User;
 use Log;
 use Requests;
 use Requests_Exception;
 
+//use FireflyIII\Services\Bunq\Object\ServerPublicKey;
+
 /**
  * Class BunqRequest.
  */
-abstract class BunqRequest
+abstract class SpectreRequest
 {
     /** @var string */
-    protected $secret = '';
+    protected $clientId  = '';
+    protected $expiresAt = 0;
     /** @var ServerPublicKey */
     protected $serverPublicKey;
+    /** @var string */
+    protected $serviceSecret = '';
     /** @var string */
     private $privateKey = '';
     /** @var string */
     private $server = '';
-    private $upperCaseHeaders
-                    = [
-            'x-bunq-client-response-id' => 'X-Bunq-Client-Response-Id',
-            'x-bunq-client-request-id'  => 'X-Bunq-Client-Request-Id',
-        ];
+    /** @var User */
+    private $user;
 
     /**
-     * BunqRequest constructor.
+     * SpectreRequest constructor.
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        $this->server = config('firefly.bunq.server');
+        $this->user       = $user;
+        $this->server     = config('firefly.spectre.server');
+        $this->expiresAt  = time() + 180;
+        $privateKey       = app('preferences')->get('spectre_private_key', null);
+        $this->privateKey = $privateKey->data;
+
+        // set client ID
+        $clientId       = app('preferences')->get('spectre_client_id', null);
+        $this->clientId = $clientId->data;
+
+        // set service secret
+        $serviceSecret       = app('preferences')->get('spectre_service_secret', null);
+        $this->serviceSecret = $serviceSecret->data;
     }
 
     /**
      *
      */
     abstract public function call(): void;
+
+    /**
+     * @return string
+     */
+    public function getClientId(): string
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param string $clientId
+     */
+    public function setClientId(string $clientId): void
+    {
+        $this->clientId = $clientId;
+    }
 
     /**
      * @return string
@@ -86,6 +116,22 @@ abstract class BunqRequest
     }
 
     /**
+     * @return string
+     */
+    public function getServiceSecret(): string
+    {
+        return $this->serviceSecret;
+    }
+
+    /**
+     * @param string $serviceSecret
+     */
+    public function setServiceSecret(string $serviceSecret): void
+    {
+        $this->serviceSecret = $serviceSecret;
+    }
+
+    /**
      * @param string $privateKey
      */
     public function setPrivateKey(string $privateKey)
@@ -104,14 +150,13 @@ abstract class BunqRequest
     /**
      * @param string $method
      * @param string $uri
-     * @param array  $headers
      * @param string $data
      *
      * @return string
      *
      * @throws FireflyException
      */
-    protected function generateSignature(string $method, string $uri, array $headers, string $data): string
+    protected function generateSignature(string $method, string $uri, string $data): string
     {
         if (0 === strlen($this->privateKey)) {
             throw new FireflyException('No private key present.');
@@ -119,45 +164,17 @@ abstract class BunqRequest
         if ('get' === strtolower($method) || 'delete' === strtolower($method)) {
             $data = '';
         }
-
-        $uri           = str_replace(['https://api.bunq.com', 'https://sandbox.public.api.bunq.com'], '', $uri);
-        $toSign        = sprintf("%s %s\n", strtoupper($method), $uri);
-        $headersToSign = ['Cache-Control', 'User-Agent'];
-        ksort($headers);
-        foreach ($headers as $name => $value) {
-            if (in_array($name, $headersToSign) || 'X-Bunq-' === substr($name, 0, 7)) {
-                $toSign .= sprintf("%s: %s\n", $name, $value);
-            }
-        }
-        $toSign    .= "\n" . $data;
+        // base64(sha1_signature(private_key, "Expires-at|request_method|original_url|post_body|md5_of_uploaded_file|")))
+        // Prepare the signature
+        $toSign = $this->expiresAt . '|' . strtoupper($method) . '|' . $uri . '|' . $data . ''; // no file so no content there.
+        Log::debug(sprintf('String to sign: %s', $toSign));
         $signature = '';
 
-        openssl_sign($toSign, $signature, $this->privateKey, OPENSSL_ALGO_SHA256);
+        // Sign the data
+        openssl_sign($toSign, $signature, $this->privateKey, OPENSSL_ALGO_SHA1);
         $signature = base64_encode($signature);
 
         return $signature;
-    }
-
-    /**
-     * @param string $key
-     * @param array  $response
-     *
-     * @return array
-     */
-    protected function getArrayFromResponse(string $key, array $response): array
-    {
-        $result = [];
-        if (isset($response['Response'])) {
-            foreach ($response['Response'] as $entry) {
-                $currentKey = key($entry);
-                $data       = current($entry);
-                if ($currentKey === $key) {
-                    $result[] = $data;
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -168,34 +185,14 @@ abstract class BunqRequest
         $userAgent = sprintf('FireflyIII v%s', config('firefly.version'));
 
         return [
-            'X-Bunq-Client-Request-Id' => uniqid('FFIII'),
-            'Cache-Control'            => 'no-cache',
-            'User-Agent'               => $userAgent,
-            'X-Bunq-Language'          => 'en_US',
-            'X-Bunq-Region'            => 'nl_NL',
-            'X-Bunq-Geolocation'       => '0 0 0 0 NL',
+            'Client-Id'      => $this->getClientId(),
+            'Service-Secret' => $this->getServiceSecret(),
+            'Accept'         => 'application/json',
+            'Content-type'   => 'application/json',
+            'Cache-Control'  => 'no-cache',
+            'User-Agent'     => $userAgent,
+            'Expires-at'     => $this->expiresAt,
         ];
-    }
-
-    /**
-     * @param string $key
-     * @param array  $response
-     *
-     * @return array
-     */
-    protected function getKeyFromResponse(string $key, array $response): array
-    {
-        if (isset($response['Response'])) {
-            foreach ($response['Response'] as $entry) {
-                $currentKey = key($entry);
-                $data       = current($entry);
-                if ($currentKey === $key) {
-                    return $data;
-                }
-            }
-        }
-
-        return [];
     }
 
     /**
@@ -249,18 +246,14 @@ abstract class BunqRequest
      *
      * @throws Exception
      */
-    protected function sendSignedBunqGet(string $uri, array $data, array $headers): array
+    protected function sendSignedBunqPost(string $uri, array $data, array $headers): array
     {
-        if (0 === strlen($this->server)) {
-            throw new FireflyException('No bunq server defined');
-        }
-
         $body                               = json_encode($data);
         $fullUri                            = $this->server . $uri;
-        $signature                          = $this->generateSignature('get', $uri, $headers, $body);
+        $signature                          = $this->generateSignature('post', $uri, $headers, $body);
         $headers['X-Bunq-Client-Signature'] = $signature;
         try {
-            $response = Requests::get($fullUri, $headers);
+            $response = Requests::post($fullUri, $headers, $body);
         } catch (Requests_Exception $e) {
             return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
         }
@@ -292,32 +285,35 @@ abstract class BunqRequest
      *
      * @throws Exception
      */
-    protected function sendSignedBunqPost(string $uri, array $data, array $headers): array
+    protected function sendSignedSpectreGet(string $uri, array $data): array
     {
-        $body                               = json_encode($data);
-        $fullUri                            = $this->server . $uri;
-        $signature                          = $this->generateSignature('post', $uri, $headers, $body);
-        $headers['X-Bunq-Client-Signature'] = $signature;
+        if (0 === strlen($this->server)) {
+            throw new FireflyException('No Spectre server defined');
+        }
+
+        $headers              = $this->getDefaultHeaders();
+        $body                 = json_encode($data);
+        $fullUri              = $this->server . $uri;
+        $signature            = $this->generateSignature('get', $fullUri, $body);
+        $headers['Signature'] = $signature;
+
+        Log::debug('Final headers for spectre signed get request:', $headers);
         try {
-            $response = Requests::post($fullUri, $headers, $body);
+            $response = Requests::get($fullUri, $headers);
         } catch (Requests_Exception $e) {
-            return ['Error' => [0 => ['error_description' => $e->getMessage(), 'error_description_translated' => $e->getMessage()]]];
+            throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
+        }
+        $statusCode = intval($response->status_code);
+
+        if ($statusCode !== 200) {
+            throw new FireflyException(sprintf('Status code %d: %s', $statusCode, $response->body));
         }
 
         $body                        = $response->body;
         $array                       = json_decode($body, true);
         $responseHeaders             = $response->headers->getAll();
-        $statusCode                  = intval($response->status_code);
         $array['ResponseHeaders']    = $responseHeaders;
         $array['ResponseStatusCode'] = $statusCode;
-
-        if ($this->isErrorResponse($array)) {
-            $this->throwResponseError($array);
-        }
-
-        if (!$this->verifyServerSignature($body, $responseHeaders, $statusCode)) {
-            throw new FireflyException(sprintf('Could not verify signature for request to "%s"', $uri));
-        }
 
         return $array;
     }
@@ -378,108 +374,5 @@ abstract class BunqRequest
         }
 
         return $array;
-    }
-
-    /**
-     * @param array $response
-     *
-     * @return bool
-     */
-    private function isErrorResponse(array $response): bool
-    {
-        $key = key($response);
-        if ('Error' === $key) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param array $headers
-     *
-     * @return string
-     */
-    private function joinHeaders(array $headers): string
-    {
-        $string = '';
-        foreach ($headers as $header => $value) {
-            $string .= $header . ': ' . trim($value) . "\n";
-        }
-
-        return $string;
-    }
-
-    /**
-     * @param array $response
-     *
-     * @throws Exception
-     */
-    private function throwResponseError(array $response)
-    {
-        $message = [];
-        if (isset($response['Error'])) {
-            foreach ($response['Error'] as $error) {
-                $message[] = $error['error_description'];
-            }
-        }
-        throw new FireflyException('Bunq ERROR ' . $response['ResponseStatusCode'] . ': ' . join(', ', $message));
-    }
-
-    /**
-     * @param string $body
-     * @param array  $headers
-     * @param int    $statusCode
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    private function verifyServerSignature(string $body, array $headers, int $statusCode): bool
-    {
-        Log::debug('Going to verify signature for body+headers+status');
-        $dataToVerify  = $statusCode . "\n";
-        $verifyHeaders = [];
-
-        // false when no public key is present
-        if (null === $this->serverPublicKey) {
-            Log::error('No public key present in class, so return FALSE.');
-
-            return false;
-        }
-        foreach ($headers as $header => $value) {
-            // skip non-bunq headers or signature
-            if ('x-bunq-' !== substr($header, 0, 7) || 'x-bunq-server-signature' === $header) {
-                continue;
-            }
-            // need to have upper case variant of header:
-            if (!isset($this->upperCaseHeaders[$header])) {
-                throw new FireflyException(sprintf('No upper case variant for header "%s"', $header));
-            }
-            $header                 = $this->upperCaseHeaders[$header];
-            $verifyHeaders[$header] = $value[0];
-        }
-        // sort verification headers:
-        ksort($verifyHeaders);
-
-        // add them to data to sign:
-        $dataToVerify .= $this->joinHeaders($verifyHeaders);
-        $signature    = $headers['x-bunq-server-signature'][0];
-        $dataToVerify .= "\n" . $body;
-        $result       = openssl_verify($dataToVerify, base64_decode($signature), $this->serverPublicKey->getPublicKey(), OPENSSL_ALGO_SHA256);
-
-        if (is_int($result) && $result < 1) {
-            Log::error(sprintf('Result of verification is %d, return false.', $result));
-
-            return false;
-        }
-        if (!is_int($result)) {
-            Log::error(sprintf('Result of verification is a boolean (%d), return false.', $result));
-
-            return false;
-        }
-        Log::info('Signature is a match, return true.');
-
-        return true;
     }
 }

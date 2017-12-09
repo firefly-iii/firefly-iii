@@ -28,39 +28,49 @@ declare(strict_types=1);
  */
 
 return [
-    'configuration'              => [
+    'configuration'        => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'encryption'                 => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
-    'version'                    => '4.6.11.1',
-    'maxUploadSize'              => 15242880,
-    'allowedMimes'               => ['image/png', 'image/jpeg', 'application/pdf','text/plain'],
-    'list_length'                => 10,
-    'export_formats'             => [
+    'encryption'           => (is_null(env('USE_ENCRYPTION')) || env('USE_ENCRYPTION') === true),
+    'version'              => '4.6.11.1',
+    'maxUploadSize'        => 15242880,
+    'allowedMimes'         => ['image/png', 'image/jpeg', 'application/pdf', 'text/plain'],
+    'list_length'          => 10,
+    'export_formats'       => [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
-    'import_formats'             => [
+    'import_formats'       => [
         'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
     ],
-    'import_configurators'       => [
+    'import_configurators' => [
         'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
     ],
-    'import_processors'          => [
+    'import_processors'    => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
     ],
-    'import_pre'                 => [
-        'bunq' => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
+    'import_pre'           => [
+        'bunq'    => 'FireflyIII\Support\Import\Prerequisites\BunqPrerequisites',
+        'spectre' => 'FireflyIII\Support\Import\Prerequisites\SpectrePrerequisites',
+        'plaid'   => 'FireflyIII\Support\Import\Prerequisites\PlairPrerequisites',
     ],
-    'import_info'                => [
-        'bunq' => 'FireflyIII\Support\Import\Information\BunqInformation',
+    'import_info'          => [
+        'bunq'    => 'FireflyIII\Support\Import\Information\BunqInformation',
+        'spectre' => 'FireflyIII\Support\Import\Information\SpectreInformation',
+        'plaid'   => 'FireflyIII\Support\Import\Information\PlaidInformation',
     ],
-    'import_transactions'        => [
-        'bunq' => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
+    'import_transactions'  => [
+        'bunq'    => 'FireflyIII\Support\Import\Transactions\BunqTransactions',
+        'spectre' => 'FireflyIII\Support\Import\Transactions\SpectreTransactions',
+        'plaid'   => 'FireflyIII\Support\Import\Transactions\PlaidTransactions',
     ],
-    'bunq'                       => [
+    'bunq'                 => [
         'server' => 'https://sandbox.public.api.bunq.com',
     ],
+    'spectre'              => [
+        'server' => 'https://www.saltedge.com',
+    ],
+
     'default_export_format'      => 'csv',
     'default_import_format'      => 'csv',
     'bill_periods'               => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
