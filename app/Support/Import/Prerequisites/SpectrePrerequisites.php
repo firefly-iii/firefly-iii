@@ -1,6 +1,6 @@
 <?php
 /**
- * BunqPrerequisites.php
+ * SpectrePrerequisites.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,20 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\Prerequisites;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\GetSpectreProviders;
-use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Log;
 use Preferences;
-use Requests;
-use Requests_Exception;
 
 /**
- * This class contains all the routines necessary to connect to Bunq.
+ * This class contains all the routines necessary to connect to Spectre.
  */
 class SpectrePrerequisites implements PrerequisitesInterface
 {
@@ -159,26 +155,6 @@ class SpectrePrerequisites implements PrerequisitesInterface
     }
 
     /**
-     * Get the private key from the users preferences.
-     *
-     * @return string
-     */
-    private function getPrivateKey(): string
-    {
-        Log::debug('get private key');
-        $preference = Preferences::getForUser($this->user, 'spectre_private_key', null);
-        if (null === $preference) {
-            Log::debug('private key is null');
-            // create key pair
-            $this->createKeyPair();
-        }
-        $preference = Preferences::getForUser($this->user, 'spectre_private_key', null);
-        Log::debug('Return private key for user');
-
-        return $preference->data;
-    }
-
-    /**
      * Get a public key from the users preferences.
      *
      * @return string
@@ -197,33 +173,4 @@ class SpectrePrerequisites implements PrerequisitesInterface
 
         return $preference->data;
     }
-
-    /**
-     * Request users server remote IP. Let's assume this value will not change any time soon.
-     *
-     * @return string
-     *
-     * @throws FireflyException
-     */
-    private function getRemoteIp(): string
-    {
-        $preference = Preferences::getForUser($this->user, 'external_ip', null);
-        if (null === $preference) {
-            try {
-                $response = Requests::get('https://api.ipify.org');
-            } catch (Requests_Exception $e) {
-                throw new FireflyException(sprintf('Could not retrieve external IP: %s', $e->getMessage()));
-            }
-            if (200 !== $response->status_code) {
-                throw new FireflyException(sprintf('Could not retrieve external IP: %d %s', $response->status_code, $response->body));
-            }
-            $serverIp = $response->body;
-            Preferences::setForUser($this->user, 'external_ip', $serverIp);
-
-            return $serverIp;
-        }
-
-        return $preference->data;
-    }
-
 }

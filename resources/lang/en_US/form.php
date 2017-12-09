@@ -190,6 +190,7 @@ return [
     'service_secret'        => 'Service secret',
     'app_secret'            => 'App secret',
     'public_key'            => 'Public key',
+    'country_code'          => 'Country code',
 
 
     'due_date'           => 'Due date',

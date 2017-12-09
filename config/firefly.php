@@ -41,10 +41,12 @@ return [
         'csv' => 'FireflyIII\Export\Exporter\CsvExporter',
     ],
     'import_formats'       => [
-        'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
+        'csv'     => 'FireflyIII\Import\Configurator\CsvConfigurator',
+        'spectre' => '',
     ],
     'import_configurators' => [
         'csv' => 'FireflyIII\Import\Configurator\CsvConfigurator',
+        'spectre' => 'FireflyIII\Import\Configurator\SpectreConfigurator',
     ],
     'import_processors'    => [
         'csv' => 'FireflyIII\Import\FileProcessor\CsvProcessor',
