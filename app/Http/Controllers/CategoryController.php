@@ -233,6 +233,7 @@ class CategoryController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
+        $path = route('categories.show', [$category->id]);
 
         // prep for "all" view.
         if ('all' === $moment) {
@@ -241,6 +242,7 @@ class CategoryController extends Controller
             /** @var Carbon $start */
             $start = null === $first ? new Carbon : $first;
             $end   = new Carbon;
+            $path = route('categories.show', [$category->id,'all']);
         }
 
         // prep for "specific date" view.
@@ -253,6 +255,7 @@ class CategoryController extends Controller
                  'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
             );
             $periods  = $this->getPeriodOverview($category);
+            $path = route('categories.show', [$category->id, $moment]);
         }
 
         // prep for current period
@@ -275,7 +278,7 @@ class CategoryController extends Controller
                   ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
         $transactions = $collector->getPaginatedJournals();
-        $transactions->setPath(route('categories.show', [$category->id]));
+        $transactions->setPath($path);
 
         return view('categories.show', compact('category', 'moment', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
