@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Configuration\Spectre;
 
 
+use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\SpectreProvider;
@@ -81,7 +82,7 @@ class InputMandatory implements ConfigurationInterface
         $fields    = $provider->data['required_fields'] ?? [];
         foreach ($fields as $field) {
             $name             = $field['name'];
-            $mandatory[$name] = app('crypt')->encrypt($data[$name]) ?? null;
+            $mandatory[$name] = Crypt::encrypt($data[$name]) ?? null;
         }
 
         // store in config of job:
