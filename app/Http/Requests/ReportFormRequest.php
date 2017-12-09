@@ -48,6 +48,28 @@ class ReportFormRequest extends Request
     /**
      * @return Collection
      */
+    public function getExpenseList(): Collection
+    {
+        // fixed
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $set        = $this->get('exp_rev');
+        $collection = new Collection;
+        if (is_array($set)) {
+            foreach ($set as $accountId) {
+                $account = $repository->find(intval($accountId));
+                if (null !== $account->id) {
+                    $collection->push($account);
+                }
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
     public function getAccountList(): Collection
     {
         // fixed
@@ -178,7 +200,7 @@ class ReportFormRequest extends Request
     public function rules(): array
     {
         return [
-            'report_type' => 'in:audit,default,category,budget,tag',
+            'report_type' => 'in:audit,default,category,budget,tag,account',
         ];
     }
 }

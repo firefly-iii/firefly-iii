@@ -20,11 +20,10 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Generator\Report\Standard;
+namespace FireflyIII\Generator\Report\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Report\ReportHelperInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -32,28 +31,29 @@ use Illuminate\Support\Collection;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
+
     /** @var Collection */
     private $accounts;
     /** @var Carbon */
     private $end;
+    /** @var Collection */
+    private $expense;
     /** @var Carbon */
     private $start;
 
     /**
      * @return string
+     * @throws \Throwable
      */
     public function generate(): string
     {
-        /** @var ReportHelperInterface $helper */
-        $helper     = app(ReportHelperInterface::class);
-        $bills      = $helper->getBillReport($this->start, $this->end, $this->accounts);
         $accountIds = join(',', $this->accounts->pluck('id')->toArray());
-        $reportType = 'default';
+        $expenseIds = join(',', $this->expense->pluck('id')->toArray());
+        $reportType = 'account';
 
-        // continue!
         return view(
-            'reports.default.month',
-            compact('bills', 'accountIds', 'reportType')
+            'reports.account.report',
+            compact('accountIds', 'reportType','expenseIds')
         )->with('start', $this->start)->with('end', $this->end)->render();
     }
 
@@ -108,6 +108,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
+        $this->expense = $expense;
+
         return $this;
     }
 

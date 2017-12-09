@@ -124,10 +124,22 @@ function setOptionalFromCookies() {
     if ((readCookie('report-tags') !== null)) {
         arr = readCookie('report-tags').split(',');
         arr.forEach(function (val) {
-            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
+            $('#inputTags').find('option[value="' + val + '"]').prop('selected', true);
         });
     }
     $('#inputTags').multiselect(defaultMultiSelect);
+
+    // and expense/revenue thing
+    if ((readCookie('report-exp-rev') !== null)) {
+        arr = readCookie('report-exp-rev').split(',');
+        arr.forEach(function (val) {
+            $('#inputExpRevAccounts').find('option[value="' + val + '"]').prop('selected', true);
+        });
+    }
+    $('#inputExpRevAccounts').multiselect(defaultMultiSelect);
+
+
+
 }
 
 function catchSubmit() {
@@ -140,6 +152,7 @@ function catchSubmit() {
     var categories = $('#inputCategories').val();
     var budgets = $('#inputBudgets').val();
     var tags = $('#inputTags').val();
+    var expRev = $('#inputExpRevAccounts').val();
 
     // remember all
     // set cookie to remember choices.
@@ -148,6 +161,7 @@ function catchSubmit() {
     createCookie('report-categories', categories, 365);
     createCookie('report-budgets', budgets, 365);
     createCookie('report-tags', tags, 365);
+    createCookie('report-exp-rev', expRev   , 365);
     createCookie('report-start', moment(picker.startDate).format("YYYYMMDD"), 365);
     createCookie('report-end', moment(picker.endDate).format("YYYYMMDD"), 365);
 

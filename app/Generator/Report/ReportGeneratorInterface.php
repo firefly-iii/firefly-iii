@@ -64,6 +64,13 @@ interface ReportGeneratorInterface
     public function setEndDate(Carbon $date): ReportGeneratorInterface;
 
     /**
+     * @param Collection $expense
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setExpense(Collection $expense): ReportGeneratorInterface;
+
+    /**
      * @param Carbon $date
      *
      * @return ReportGeneratorInterface

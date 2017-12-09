@@ -180,6 +180,7 @@ return [
         'jobKey'            => 'FireflyIII\Models\ExportJob',
         'importJob'         => 'FireflyIII\Models\ImportJob',
         'accountList'       => 'FireflyIII\Support\Binder\AccountList',
+        'expenseList'       => 'FireflyIII\Support\Binder\AccountList',
         'budgetList'        => 'FireflyIII\Support\Binder\BudgetList',
         'journalList'       => 'FireflyIII\Support\Binder\JournalList',
         'categoryList'      => 'FireflyIII\Support\Binder\CategoryList',
