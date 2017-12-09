@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Import\Information\InformationInterface;
 use FireflyIII\Support\Import\Prerequisites\PrerequisitesInterface;
@@ -43,6 +44,9 @@ class BankController extends Controller
     public function form(string $bank)
     {
         $class = config(sprintf('firefly.import_pre.%s', $bank));
+        if(!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
+        }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser(auth()->user());
@@ -72,6 +76,9 @@ class BankController extends Controller
     public function postForm(Request $request, string $bank)
     {
         $class = config(sprintf('firefly.import_pre.%s', $bank));
+        if(!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
+        }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser(auth()->user());
@@ -110,6 +117,9 @@ class BankController extends Controller
     {
         Log::debug(sprintf('Now in postPrerequisites for %s', $bank));
         $class = config(sprintf('firefly.import_pre.%s', $bank));
+        if(!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
+        }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser(auth()->user());
@@ -142,13 +152,17 @@ class BankController extends Controller
     public function prerequisites(string $bank)
     {
         $class = config(sprintf('firefly.import_pre.%s', $bank));
+        if(!class_exists($class)) {
+            throw new FireflyException(sprintf('Cannot find class %s', $class));
+        }
         /** @var PrerequisitesInterface $object */
         $object = app($class);
         $object->setUser(auth()->user());
 
         if ($object->hasPrerequisites()) {
             $view       = $object->getView();
-            $parameters = $object->getViewParameters();
+            $parameters = ['title' => strval(trans('firefly.import_index_title')),'mainTitleIcon' => 'fa-archive'];
+            $parameters = $object->getViewParameters() + $parameters;
 
             return view($view, $parameters);
         }
