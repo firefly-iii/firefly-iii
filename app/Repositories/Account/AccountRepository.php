@@ -160,6 +160,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     * @throws FireflyException
      */
     public function store(array $data): Account
     {
@@ -364,13 +365,13 @@ class AccountRepository implements AccountRepositoryInterface
                 'date'                    => $data['openingBalanceDate'],
             ]
         );
-        Log::debug(sprintf('Created new opening balance journal: #%d', $journal->id));
+        Log::notice(sprintf('Created new opening balance journal: #%d', $journal->id));
 
         $firstAccount  = $account;
         $secondAccount = $opposing;
         $firstAmount   = $amount;
         $secondAmount  = bcmul($amount, '-1');
-        Log::debug(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
+        Log::notice(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
 
         if (bccomp($amount, '0') === -1) {
             Log::debug(sprintf('%s is a negative number.', $amount));
@@ -378,7 +379,7 @@ class AccountRepository implements AccountRepositoryInterface
             $secondAccount = $account;
             $firstAmount   = bcmul($amount, '-1');
             $secondAmount  = $amount;
-            Log::debug(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
+            Log::notice(sprintf('First amount is %s, second amount is %s', $firstAmount, $secondAmount));
         }
 
         $one = new Transaction(
@@ -400,7 +401,7 @@ class AccountRepository implements AccountRepositoryInterface
         );
         $two->save(); // second transaction: to
 
-        Log::debug(sprintf('Stored two transactions, #%d and #%d', $one->id, $two->id));
+        Log::notice(sprintf('Stored two transactions for new account, #%d and #%d', $one->id, $two->id));
 
         return $journal;
     }
