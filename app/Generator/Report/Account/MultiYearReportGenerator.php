@@ -28,4 +28,11 @@ namespace FireflyIII\Generator\Report\Account;
 class MultiYearReportGenerator extends MonthReportGenerator
 {
     // Doesn't do anything different.
+
+    /**
+     * @return string
+     */
+    protected function preferredPeriod(): string {
+        return 'year';
+    }
 }

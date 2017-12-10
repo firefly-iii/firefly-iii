@@ -1,14 +1,4 @@
 <?php
-/**
- * web.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
 declare(strict_types=1);
 
 
@@ -95,7 +85,9 @@ Route::group(
 
     // reconcile routes:
     Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile']);
-    Route::get('reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@transactions', 'as' => 'reconcile.transactions']);
+    Route::get(
+        'reconcile/{account}/transactions/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@transactions', 'as' => 'reconcile.transactions']
+    );
     Route::get('reconcile/{account}/overview/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@overview', 'as' => 'reconcile.overview']);
     Route::post('reconcile/{account}/submit/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@submit', 'as' => 'reconcile.submit']);
 
@@ -224,7 +216,7 @@ Route::group(
 );
 
 /**
- * Chart\Account Controller
+ * Chart\Account Controller (default report)
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'], function () {
@@ -245,6 +237,7 @@ Route::group(
     Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget']);
 }
 );
+
 
 /**
  * Chart\Bill Controller
@@ -373,6 +366,19 @@ Route::group(
 
 }
 );
+
+/**
+ * Chart\Expense Controller (for expense/revenue report).
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Chart', 'prefix' => 'chart/expense', 'as' => 'chart.expense.'], function () {
+    Route::get(
+        'operations/{accountList}/{expenseList}/{start_date}/{end_date}',
+        ['uses' => 'ExpenseReportController@mainChart', 'as' => 'main']
+    );
+}
+);
+
 
 /**
  * Chart\PiggyBank Controller
@@ -579,6 +585,27 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account.'], function () {
     Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general']);
+}
+);
+
+/**
+ * Report Data Expense / Revenue Account Controller
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'Report', 'prefix' => 'report-data/expense', 'as' => 'report-data.expense.'], function () {
+
+    // spent per period / spent grouped
+    Route::get('spent/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@spent', 'as' => 'spent']);
+    Route::get('spent-grouped/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@spentGrouped', 'as' => 'spent-grouped']);
+
+    // per category && per budget
+    Route::get('category/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@category', 'as' => 'category']);
+    Route::get('budget/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@budget', 'as' => 'budget']);
+
+    //expense earned top X
+    Route::get('expenses/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topX', 'as' => 'expenses']);
+    Route::get('income/{accountList}/{expenseList}/{start_date}/{end_date}', ['uses' => 'ExpenseController@topXPeriod', 'as' => 'income']);
+
 }
 );
 

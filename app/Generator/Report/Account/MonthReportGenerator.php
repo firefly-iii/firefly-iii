@@ -47,13 +47,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $accountIds = join(',', $this->accounts->pluck('id')->toArray());
-        $expenseIds = join(',', $this->expense->pluck('id')->toArray());
-        $reportType = 'account';
+        $accountIds      = join(',', $this->accounts->pluck('id')->toArray());
+        $expenseIds      = join(',', $this->expense->pluck('id')->toArray());
+        $reportType      = 'account';
+        $preferredPeriod = $this->preferredPeriod();
 
         return view(
             'reports.account.report',
-            compact('accountIds', 'reportType','expenseIds')
+            compact('accountIds', 'reportType', 'expenseIds', 'preferredPeriod')
         )->with('start', $this->start)->with('end', $this->end)->render();
     }
 
@@ -133,5 +134,13 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function preferredPeriod(): string
+    {
+        return 'day';
     }
 }
