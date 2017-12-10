@@ -34,7 +34,7 @@
     "transfers",
     "management"
   ],
-  "license": "Creative Commons Attribution-ShareAlike 4.0 International License",
+  "license": "GPLv3",
   "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
   "authors": [

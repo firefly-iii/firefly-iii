@@ -1,16 +1,5 @@
 <?php
 declare(strict_types=1);
-
-/**
- * firefly.php
- * Copyright (C) 2016 thegrumpydictator@gmail.com
- *
- * This software may be modified and distributed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International License.
- *
- * See the LICENSE file for details.
- */
-
 return [
     // general stuff:
     'close'                                      => 'Close',
@@ -874,53 +863,55 @@ return [
     'account_role_ccAsset'                     => 'Credit card',
     'budget_chart_click'                       => 'Please click on a budget name in the table above to see a chart.',
     'category_chart_click'                     => 'Please click on a category name in the table above to see a chart.',
-
-    'in_out_accounts'               => 'Earned and spent per combined account',
-    'in_out_accounts_period'        => 'Earned and spent, grouped by :period',
-    'in_out_per_category'           => 'Earned and spent per category',
-    'out_per_budget'                => 'Spent per budget',
+    'in_out_accounts'                          => 'Earned and spent per combined account',
+    'in_out_accounts_period_day'               => 'Earned and spent, grouped by day',
+    'in_out_accounts_period_month'             => 'Earned and spent, grouped by month',
+    'in_out_accounts_period_year'              => 'Earned and spent, grouped by year',
+    'in_out_per_category'                      => 'Earned and spent per category',
+    'out_per_budget'                           => 'Spent per budget',
+    'select_expense_revenue'                   => 'Select expense/revenue account',
 
     // charts:
-    'chart'                         => 'Chart',
-    'month'                         => 'Month',
-    'budget'                        => 'Budget',
-    'spent'                         => 'Spent',
-    'spent_in_budget'               => 'Spent in budget',
-    'left_to_spend'                 => 'Left to spend',
-    'earned'                        => 'Earned',
-    'overspent'                     => 'Overspent',
-    'left'                          => 'Left',
-    'max-amount'                    => 'Maximum amount',
-    'min-amount'                    => 'Minumum amount',
-    'journal-amount'                => 'Current bill entry',
-    'name'                          => 'Name',
-    'date'                          => 'Date',
-    'paid'                          => 'Paid',
-    'unpaid'                        => 'Unpaid',
-    'day'                           => 'Day',
-    'budgeted'                      => 'Budgeted',
-    'period'                        => 'Period',
-    'balance'                       => 'Balance',
-    'sum'                           => 'Sum',
-    'average'                       => 'Average',
-    'balanceFor'                    => 'Balance for :name',
+    'chart'                                    => 'Chart',
+    'month'                                    => 'Month',
+    'budget'                                   => 'Budget',
+    'spent'                                    => 'Spent',
+    'spent_in_budget'                          => 'Spent in budget',
+    'left_to_spend'                            => 'Left to spend',
+    'earned'                                   => 'Earned',
+    'overspent'                                => 'Overspent',
+    'left'                                     => 'Left',
+    'max-amount'                               => 'Maximum amount',
+    'min-amount'                               => 'Minumum amount',
+    'journal-amount'                           => 'Current bill entry',
+    'name'                                     => 'Name',
+    'date'                                     => 'Date',
+    'paid'                                     => 'Paid',
+    'unpaid'                                   => 'Unpaid',
+    'day'                                      => 'Day',
+    'budgeted'                                 => 'Budgeted',
+    'period'                                   => 'Period',
+    'balance'                                  => 'Balance',
+    'sum'                                      => 'Sum',
+    'average'                                  => 'Average',
+    'balanceFor'                               => 'Balance for :name',
 
     // piggy banks:
-    'add_money_to_piggy'            => 'Add money to piggy bank ":name"',
-    'piggy_bank'                    => 'Piggy bank',
-    'new_piggy_bank'                => 'New piggy bank',
-    'store_piggy_bank'              => 'Store new piggy bank',
-    'stored_piggy_bank'             => 'Store new piggy bank ":name"',
-    'account_status'                => 'Account status',
-    'left_for_piggy_banks'          => 'Left for piggy banks',
-    'sum_of_piggy_banks'            => 'Sum of piggy banks',
-    'saved_so_far'                  => 'Saved so far',
-    'left_to_save'                  => 'Left to save',
-    'suggested_amount'              => 'Suggested monthly amount to save',
-    'add_money_to_piggy_title'      => 'Add money to piggy bank ":name"',
-    'remove_money_from_piggy_title' => 'Remove money from piggy bank ":name"',
-    'add'                           => 'Add',
-    'no_money_for_piggy'            => 'You have no money to put in this piggy bank.',
+    'add_money_to_piggy'                       => 'Add money to piggy bank ":name"',
+    'piggy_bank'                               => 'Piggy bank',
+    'new_piggy_bank'                           => 'New piggy bank',
+    'store_piggy_bank'                         => 'Store new piggy bank',
+    'stored_piggy_bank'                        => 'Store new piggy bank ":name"',
+    'account_status'                           => 'Account status',
+    'left_for_piggy_banks'                     => 'Left for piggy banks',
+    'sum_of_piggy_banks'                       => 'Sum of piggy banks',
+    'saved_so_far'                             => 'Saved so far',
+    'left_to_save'                             => 'Left to save',
+    'suggested_amount'                         => 'Suggested monthly amount to save',
+    'add_money_to_piggy_title'                 => 'Add money to piggy bank ":name"',
+    'remove_money_from_piggy_title'            => 'Remove money from piggy bank ":name"',
+    'add'                                      => 'Add',
+    'no_money_for_piggy'                       => 'You have no money to put in this piggy bank.',
 
     'remove'                    => 'Remove',
     'max_amount_add'            => 'The maximum amount you can add is',
